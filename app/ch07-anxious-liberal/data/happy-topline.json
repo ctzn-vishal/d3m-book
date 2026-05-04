@@ -1,0 +1,380 @@
+{
+  "metadata": {
+    "title": "Prevalence of 'Feeling Happy'",
+    "subtitle": "% of US Population Who Feel Very Happy, by Year",
+    "years_n": 35,
+    "year_max": 2024,
+    "year_min": 1972,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1972 - 2024; 70869 Observations"
+    },
+    "dataview_type": "timetrend",
+    "original_question": "Taken all together, how would you say things are these days--would you say that you are very happy, pretty happy, or not too happy?",
+    "value_measure": "Percent",
+    "demo_key": [],
+    "demo_title": "",
+    "dim_key": [
+      "year"
+    ],
+    "dim_title": "Year",
+    "graph_id": "gss_happy_rec_year_percent_timetrend",
+    "data_filepath": "gss/2graph_jsons/timetrend/gss_happy_rec_year_percent_timetrend.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1972",
+      "value": 30.255747192818717,
+      "n_actual": 1606,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "value": 36.06213982540392,
+      "n_actual": 1500,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "value": 36.43091080858976,
+      "n_actual": 1480,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "value": 32.52156672946148,
+      "n_actual": 1485,
+      "ci_upper": 35.46887394698161,
+      "ci_lower": 29.574259511941353,
+      "standard_error": 1.4673738999085397
+    },
+    {
+      "year": "1976",
+      "value": 34.373663761578186,
+      "n_actual": 1499,
+      "ci_upper": 37.290030137850216,
+      "ci_lower": 31.45729738530615,
+      "standard_error": 1.45196940368949
+    },
+    {
+      "year": "1977",
+      "value": 35.545858363284225,
+      "n_actual": 1527,
+      "ci_upper": 38.59683540321653,
+      "ci_lower": 32.49488132335192,
+      "standard_error": 1.5189879259969967
+    },
+    {
+      "year": "1978",
+      "value": 33.63715055068579,
+      "n_actual": 1517,
+      "ci_upper": 36.74524200014476,
+      "ci_lower": 30.529059101226817,
+      "standard_error": 1.547423439386958
+    },
+    {
+      "year": "1980",
+      "value": 34.10914834432089,
+      "n_actual": 1462,
+      "ci_upper": 37.271558992113235,
+      "ci_lower": 30.946737696528555,
+      "standard_error": 1.5744673028242424
+    },
+    {
+      "year": "1982",
+      "value": 33.88324037073547,
+      "n_actual": 1855,
+      "ci_upper": 36.46326143614189,
+      "ci_lower": 31.303219305329055,
+      "standard_error": 1.2889036968711542
+    },
+    {
+      "year": "1983",
+      "value": 31.399105096959968,
+      "n_actual": 1573,
+      "ci_upper": 34.546230653841846,
+      "ci_lower": 28.251979540078086,
+      "standard_error": 1.5817194498347016
+    },
+    {
+      "year": "1984",
+      "value": 35.23902968684568,
+      "n_actual": 1445,
+      "ci_upper": 38.16978101652065,
+      "ci_lower": 32.308278357170714,
+      "standard_error": 1.4661296095026009
+    },
+    {
+      "year": "1985",
+      "value": 29.07438422506931,
+      "n_actual": 1530,
+      "ci_upper": 32.835049223612,
+      "ci_lower": 25.313719226526615,
+      "standard_error": 1.8757563214399098
+    },
+    {
+      "year": "1986",
+      "value": 32.81010364692465,
+      "n_actual": 1449,
+      "ci_upper": 36.720221951178885,
+      "ci_lower": 28.899985342670426,
+      "standard_error": 1.9503011115387718
+    },
+    {
+      "year": "1987",
+      "value": 33.5646328127995,
+      "n_actual": 1780,
+      "ci_upper": 36.78240527903355,
+      "ci_lower": 30.346860346565464,
+      "standard_error": 1.6062834765482843
+    },
+    {
+      "year": "1988",
+      "value": 36.05905163605952,
+      "n_actual": 1466,
+      "ci_upper": 38.641468690410754,
+      "ci_lower": 33.476634581708296,
+      "standard_error": 1.2934303696077776
+    },
+    {
+      "year": "1989",
+      "value": 34.22303610613803,
+      "n_actual": 1526,
+      "ci_upper": 37.11934691377187,
+      "ci_lower": 31.326725298504194,
+      "standard_error": 1.4502307504471779
+    },
+    {
+      "year": "1990",
+      "value": 35.05255393169907,
+      "n_actual": 1361,
+      "ci_upper": 38.472247370486336,
+      "ci_lower": 31.632860492911806,
+      "standard_error": 1.711789896794234
+    },
+    {
+      "year": "1991",
+      "value": 31.729077685369084,
+      "n_actual": 1504,
+      "ci_upper": 34.392452834980816,
+      "ci_lower": 29.065702535757353,
+      "standard_error": 1.333200988359649
+    },
+    {
+      "year": "1993",
+      "value": 31.362144454066858,
+      "n_actual": 1601,
+      "ci_upper": 34.087312733748206,
+      "ci_lower": 28.636976174385513,
+      "standard_error": 1.3706242853052566
+    },
+    {
+      "year": "1994",
+      "value": 30.00302664103981,
+      "n_actual": 2977,
+      "ci_upper": 32.123024279344484,
+      "ci_lower": 27.88302900273513,
+      "standard_error": 1.0693032212078502
+    },
+    {
+      "year": "1996",
+      "value": 32.23173235176415,
+      "n_actual": 2885,
+      "ci_upper": 34.228833105228716,
+      "ci_lower": 30.23463159829959,
+      "standard_error": 1.0070917604201595
+    },
+    {
+      "year": "1998",
+      "value": 33.35096365851533,
+      "n_actual": 2806,
+      "ci_upper": 35.18212760135665,
+      "ci_lower": 31.51979971567401,
+      "standard_error": 0.9234136613361908
+    },
+    {
+      "year": "2000",
+      "value": 34.74111880239988,
+      "n_actual": 2777,
+      "ci_upper": 36.86776731661803,
+      "ci_lower": 32.61447028818173,
+      "standard_error": 1.0721722197766974
+    },
+    {
+      "year": "2002",
+      "value": 32.63211364674127,
+      "n_actual": 1369,
+      "ci_upper": 35.76901095045285,
+      "ci_lower": 29.495216343029686,
+      "standard_error": 1.5813118306610399
+    },
+    {
+      "year": "2004",
+      "value": 32.200903520380216,
+      "n_actual": 1337,
+      "ci_upper": 35.23050741815131,
+      "ci_lower": 29.171299622609116,
+      "standard_error": 1.5280984980064023
+    },
+    {
+      "year": "2006",
+      "value": 32.35723533482776,
+      "n_actual": 2986,
+      "ci_upper": 34.37587452143061,
+      "ci_lower": 30.338596148224912,
+      "standard_error": 1.021571723005289
+    },
+    {
+      "year": "2008",
+      "value": 31.09195027299996,
+      "n_actual": 2015,
+      "ci_upper": 33.49859785718086,
+      "ci_lower": 28.685302688819053,
+      "standard_error": 1.2168147645772862
+    },
+    {
+      "year": "2010",
+      "value": 27.55644095929344,
+      "n_actual": 2039,
+      "ci_upper": 29.772590665615212,
+      "ci_lower": 25.340291252971664,
+      "standard_error": 1.1204979494676388
+    },
+    {
+      "year": "2012",
+      "value": 31.878911960039723,
+      "n_actual": 1964,
+      "ci_upper": 35.08251573830405,
+      "ci_lower": 28.675308181775392,
+      "standard_error": 1.6045581839755563
+    },
+    {
+      "year": "2014",
+      "value": 31.745250512183876,
+      "n_actual": 2530,
+      "ci_upper": 33.8390131741271,
+      "ci_lower": 29.65148785024065,
+      "standard_error": 1.0483816130800019
+    },
+    {
+      "year": "2016",
+      "value": 30.474983070053934,
+      "n_actual": 2859,
+      "ci_upper": 32.93835277313094,
+      "ci_lower": 28.011613366976935,
+      "standard_error": 1.2334499749495933
+    },
+    {
+      "year": "2018",
+      "value": 31.579912367962738,
+      "n_actual": 2344,
+      "ci_upper": 34.28450472887256,
+      "ci_lower": 28.875320007052913,
+      "standard_error": 1.3585133701526153
+    },
+    {
+      "year": "2021",
+      "value": 19.369583285089444,
+      "n_actual": 4014,
+      "ci_upper": 20.80342417946102,
+      "ci_lower": 17.93574239071787,
+      "standard_error": 0.7313150026059743
+    },
+    {
+      "year": "2022",
+      "value": 24.538788610338063,
+      "n_actual": 3520,
+      "ci_upper": 27.09683342224811,
+      "ci_lower": 21.98074379842802,
+      "standard_error": 1.2812232791628981
+    },
+    {
+      "year": "2024",
+      "value": 23.601864470433526,
+      "n_actual": 3281,
+      "ci_upper": 25.957748614874237,
+      "ci_lower": 21.24598032599281,
+      "standard_error": 1.1802977375769323
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1972",
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "General Happiness",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "happy_rec",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

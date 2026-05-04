@@ -1,0 +1,290 @@
+{
+  "metadata": {
+    "title": "Opinion on Government Spending: Too Little on Social Security",
+    "subtitle": "% of US Population Who Believe Too Little Government Spending on Social Security, by Year",
+    "years_n": 25,
+    "year_max": 2024,
+    "year_min": 1984,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1984 - 2024; 55384 Observations"
+    },
+    "dataview_type": "timetrend",
+    "original_question": "Are we spending too much, too little, or about the right amount on Social Security?",
+    "value_measure": "Percent",
+    "demo_key": [],
+    "demo_title": "",
+    "dim_key": [
+      "year"
+    ],
+    "dim_title": "Year",
+    "graph_id": "gss_natsoc_toolittle_year_percent_timetrend",
+    "data_filepath": "gss/2graph_jsons/timetrend/gss_natsoc_toolittle_year_percent_timetrend.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1984",
+      "value": 52.65736893731111,
+      "n_actual": 922,
+      "ci_upper": 56.79410728159865,
+      "ci_lower": 48.520630593023576,
+      "standard_error": 2.0694333606247497
+    },
+    {
+      "year": "1985",
+      "value": 54.213718081317154,
+      "n_actual": 1481,
+      "ci_upper": 57.46177400728647,
+      "ci_lower": 50.965662155347836,
+      "standard_error": 1.6200755552244765
+    },
+    {
+      "year": "1986",
+      "value": 56.2957735992524,
+      "n_actual": 1419,
+      "ci_upper": 59.48395019051842,
+      "ci_lower": 53.10759700798637,
+      "standard_error": 1.5902087522423316
+    },
+    {
+      "year": "1987",
+      "value": 57.07050457137209,
+      "n_actual": 1726,
+      "ci_upper": 60.16517511263992,
+      "ci_lower": 53.97583403010427,
+      "standard_error": 1.5448320874026937
+    },
+    {
+      "year": "1988",
+      "value": 55.027899458889785,
+      "n_actual": 1406,
+      "ci_upper": 58.05057922714757,
+      "ci_lower": 52.005219690631996,
+      "standard_error": 1.513940516802322
+    },
+    {
+      "year": "1989",
+      "value": 58.166577063302405,
+      "n_actual": 1454,
+      "ci_upper": 61.60117304081948,
+      "ci_lower": 54.73198108578533,
+      "standard_error": 1.71975904272051
+    },
+    {
+      "year": "1990",
+      "value": 52.85353738840172,
+      "n_actual": 1281,
+      "ci_upper": 56.24337596876613,
+      "ci_lower": 49.46369880803731,
+      "standard_error": 1.6968455031129723
+    },
+    {
+      "year": "1991",
+      "value": 55.14343142253466,
+      "n_actual": 1414,
+      "ci_upper": 58.28877020245825,
+      "ci_lower": 51.99809264261107,
+      "standard_error": 1.5739753625555772
+    },
+    {
+      "year": "1993",
+      "value": 47.764592605639734,
+      "n_actual": 1492,
+      "ci_upper": 51.255659811025346,
+      "ci_lower": 44.27352540025412,
+      "standard_error": 1.755531647744049
+    },
+    {
+      "year": "1994",
+      "value": 49.28418916987412,
+      "n_actual": 2797,
+      "ci_upper": 52.059487091446044,
+      "ci_lower": 46.5088912483022,
+      "standard_error": 1.3998293930749246
+    },
+    {
+      "year": "1996",
+      "value": 51.694423634558696,
+      "n_actual": 2678,
+      "ci_upper": 54.42467134217146,
+      "ci_lower": 48.964175926945934,
+      "standard_error": 1.376800827636173
+    },
+    {
+      "year": "1998",
+      "value": 58.64711255457069,
+      "n_actual": 2658,
+      "ci_upper": 61.568707450710924,
+      "ci_lower": 55.725517658430455,
+      "standard_error": 1.4732927931072564
+    },
+    {
+      "year": "2000",
+      "value": 59.31064612265814,
+      "n_actual": 2654,
+      "ci_upper": 61.67914411265255,
+      "ci_lower": 56.942148132663725,
+      "standard_error": 1.1941031771310708
+    },
+    {
+      "year": "2002",
+      "value": 59.92997448400864,
+      "n_actual": 2661,
+      "ci_upper": 62.42693983398014,
+      "ci_lower": 57.433009134037135,
+      "standard_error": 1.2588713480792095
+    },
+    {
+      "year": "2004",
+      "value": 65.7742019836845,
+      "n_actual": 2702,
+      "ci_upper": 67.8468764945827,
+      "ci_lower": 63.70152747278629,
+      "standard_error": 1.0457661498897721
+    },
+    {
+      "year": "2006",
+      "value": 62.71080202157621,
+      "n_actual": 2864,
+      "ci_upper": 65.1931584515071,
+      "ci_lower": 60.22844559164531,
+      "standard_error": 1.256175382834916
+    },
+    {
+      "year": "2008",
+      "value": 60.72271233772552,
+      "n_actual": 1926,
+      "ci_upper": 63.766100465756146,
+      "ci_lower": 57.67932420969488,
+      "standard_error": 1.5386490034922282
+    },
+    {
+      "year": "2010",
+      "value": 57.116693192683876,
+      "n_actual": 1948,
+      "ci_upper": 60.22066406582772,
+      "ci_lower": 54.01272231954003,
+      "standard_error": 1.5693854023686487
+    },
+    {
+      "year": "2012",
+      "value": 54.922438276769434,
+      "n_actual": 1877,
+      "ci_upper": 58.69600195926198,
+      "ci_lower": 51.1488745942769,
+      "standard_error": 1.890028514317962
+    },
+    {
+      "year": "2014",
+      "value": 54.0603861591356,
+      "n_actual": 2411,
+      "ci_upper": 56.249584962429765,
+      "ci_lower": 51.87118735584143,
+      "standard_error": 1.0961680683617905
+    },
+    {
+      "year": "2016",
+      "value": 58.09989310536303,
+      "n_actual": 2756,
+      "ci_upper": 60.66838257157732,
+      "ci_lower": 55.53140363914875,
+      "standard_error": 1.2860851799074342
+    },
+    {
+      "year": "2018",
+      "value": 59.07256957377377,
+      "n_actual": 2230,
+      "ci_upper": 62.087811053223305,
+      "ci_lower": 56.057328094324234,
+      "standard_error": 1.514552035003522
+    },
+    {
+      "year": "2021",
+      "value": 56.3952906333276,
+      "n_actual": 4002,
+      "ci_upper": 58.34579376978027,
+      "ci_lower": 54.44478749687492,
+      "standard_error": 0.994831628877225
+    },
+    {
+      "year": "2022",
+      "value": 60.48973095015002,
+      "n_actual": 3425,
+      "ci_upper": 63.603444929478826,
+      "ci_lower": 57.37601697082122,
+      "standard_error": 1.5595359457335745
+    },
+    {
+      "year": "2024",
+      "value": 60.84203402848536,
+      "n_actual": 3200,
+      "ci_upper": 63.4659043015699,
+      "ci_lower": 58.21816375540082,
+      "standard_error": 1.3145587631399687
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Government Spending Too Little on Social Security",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "natsoc_toolittle",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

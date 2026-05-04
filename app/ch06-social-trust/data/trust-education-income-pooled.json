@@ -1,0 +1,167 @@
+{
+  "metadata": {
+    "outcome": "trust_rec",
+    "outcome_question": "Most people can be trusted (vs. \"Can't be too careful\" / \"Depends\")",
+    "method": "Weighted percentages \u2014 weighted mean of binary outcome \u00d7 100. Weight: weight_use. Standard errors / CIs intentionally omitted (per editorial decision: this is a disentangling-of-effects figure where point estimates are sufficient and the design-based variance computation is computationally heavy for the marginal value).",
+    "education_var": "College (derived in 03_trust_education_income.py from raw `degree`: BACHELOR'S or GRADUATE \u2192 'College'; LESS THAN HIGH SCHOOL / HIGH SCHOOL / ASSOCIATE/JUNIOR COLLEGE \u2192 'No College'). This BA+ cutoff matches the upstream `College` column on this parquet (sanity-checked, zero mismatches).",
+    "education_buckets": [
+      "No College",
+      "College"
+    ],
+    "income_var": "Income (collapsed: Bottom 20% + 21-40% \u2192 Low income; 61-80% + Top 20% \u2192 High income; 41-60% middle quintile dropped)",
+    "income_buckets": [
+      "Low income",
+      "High income"
+    ],
+    "party_var": "party_3cat (derived from partyid)",
+    "party_buckets": [
+      "Democrat",
+      "Independent",
+      "Republican"
+    ],
+    "n_total": 29991,
+    "years_pooled": [
+      1972,
+      1973,
+      1975,
+      1976,
+      1978,
+      1980,
+      1983,
+      1984,
+      1986,
+      1987,
+      1988,
+      1989,
+      1990,
+      1991,
+      1993,
+      1994,
+      1996,
+      1998,
+      2000,
+      2002,
+      2004,
+      2006,
+      2008,
+      2010,
+      2012,
+      2014,
+      2016,
+      2018,
+      2022
+    ]
+  },
+  "rows": [
+    {
+      "education": "No College",
+      "income": "Low income",
+      "party": "Democrat",
+      "value": 23.97,
+      "n_actual": 5689
+    },
+    {
+      "education": "No College",
+      "income": "Low income",
+      "party": "Independent",
+      "value": 21.97,
+      "n_actual": 5324
+    },
+    {
+      "education": "No College",
+      "income": "Low income",
+      "party": "Republican",
+      "value": 31.71,
+      "n_actual": 2613
+    },
+    {
+      "education": "No College",
+      "income": "High income",
+      "party": "Democrat",
+      "value": 39.01,
+      "n_actual": 3226
+    },
+    {
+      "education": "No College",
+      "income": "High income",
+      "party": "Independent",
+      "value": 39.14,
+      "n_actual": 3387
+    },
+    {
+      "education": "No College",
+      "income": "High income",
+      "party": "Republican",
+      "value": 45.84,
+      "n_actual": 2863
+    },
+    {
+      "education": "College",
+      "income": "Low income",
+      "party": "Democrat",
+      "value": 51.39,
+      "n_actual": 533
+    },
+    {
+      "education": "College",
+      "income": "Low income",
+      "party": "Independent",
+      "value": 49.7,
+      "n_actual": 549
+    },
+    {
+      "education": "College",
+      "income": "Low income",
+      "party": "Republican",
+      "value": 52.42,
+      "n_actual": 327
+    },
+    {
+      "education": "College",
+      "income": "High income",
+      "party": "Democrat",
+      "value": 62.83,
+      "n_actual": 1828
+    },
+    {
+      "education": "College",
+      "income": "High income",
+      "party": "Independent",
+      "value": 54.71,
+      "n_actual": 1799
+    },
+    {
+      "education": "College",
+      "income": "High income",
+      "party": "Republican",
+      "value": 59.71,
+      "n_actual": 1853
+    }
+  ],
+  "main_effects": [
+    {
+      "education": "No College",
+      "income": "Low income",
+      "value": 24.68,
+      "n_actual": 13626
+    },
+    {
+      "education": "No College",
+      "income": "High income",
+      "value": 41.14,
+      "n_actual": 9476
+    },
+    {
+      "education": "College",
+      "income": "Low income",
+      "value": 50.95,
+      "n_actual": 1409
+    },
+    {
+      "education": "College",
+      "income": "High income",
+      "value": 59.02,
+      "n_actual": 5480
+    }
+  ]
+}

@@ -1,0 +1,326 @@
+{
+  "metadata": {
+    "title": "Opinion on 'Do People Get Ahead by Hard Work or Luck?'",
+    "subtitle": "% of US Population Who Believe People Get Ahead by Own Hard Work, by Year",
+    "years_n": 29,
+    "year_max": 2024,
+    "year_min": 1973,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1973 - 2024; 42285 Observations"
+    },
+    "dataview_type": "timetrend",
+    "original_question": "Some people say that people get ahead by their own hard work; others say that lucky breaks or help from other people are more important. Which do you think is most important?",
+    "value_measure": "Percent",
+    "demo_key": [],
+    "demo_title": "",
+    "dim_key": [
+      "year"
+    ],
+    "dim_title": "Year",
+    "graph_id": "gss_getahead_rec_year_percent_timetrend",
+    "data_filepath": "gss/2graph_jsons/timetrend/gss_getahead_rec_year_percent_timetrend.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1973",
+      "value": 64.29858498579752,
+      "n_actual": 1495,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "value": 60.63466026763954,
+      "n_actual": 1471,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1976",
+      "value": 61.323873235851224,
+      "n_actual": 1485,
+      "ci_upper": 64.65220666300362,
+      "ci_lower": 57.995539808698815,
+      "standard_error": 1.6570751675171191
+    },
+    {
+      "year": "1977",
+      "value": 60.5298462186051,
+      "n_actual": 1516,
+      "ci_upper": 64.20403740933669,
+      "ci_lower": 56.85565502787351,
+      "standard_error": 1.8292671440915353
+    },
+    {
+      "year": "1980",
+      "value": 63.36814691842449,
+      "n_actual": 1454,
+      "ci_upper": 67.45938134078521,
+      "ci_lower": 59.27691249606378,
+      "standard_error": 2.036900182679549
+    },
+    {
+      "year": "1982",
+      "value": 61.26961265725045,
+      "n_actual": 1825,
+      "ci_upper": 63.85058514068399,
+      "ci_lower": 58.68864017381691,
+      "standard_error": 1.2893789977238765
+    },
+    {
+      "year": "1984",
+      "value": 66.59995860925861,
+      "n_actual": 1459,
+      "ci_upper": 69.55742678897337,
+      "ci_lower": 63.642490429543855,
+      "standard_error": 1.4794949075131734
+    },
+    {
+      "year": "1985",
+      "value": 66.32780541832268,
+      "n_actual": 1509,
+      "ci_upper": 69.99628944776194,
+      "ci_lower": 62.65932138888343,
+      "standard_error": 1.8297780076099792
+    },
+    {
+      "year": "1987",
+      "value": 65.82733412958926,
+      "n_actual": 1798,
+      "ci_upper": 69.19983893793696,
+      "ci_lower": 62.454829321241554,
+      "standard_error": 1.6835244894020218
+    },
+    {
+      "year": "1988",
+      "value": 67.71458840454754,
+      "n_actual": 971,
+      "ci_upper": 71.15136197833637,
+      "ci_lower": 64.2778148307587,
+      "standard_error": 1.7208494012093272
+    },
+    {
+      "year": "1989",
+      "value": 66.02716089768865,
+      "n_actual": 1021,
+      "ci_upper": 70.05978297512443,
+      "ci_lower": 61.99453882025286,
+      "standard_error": 2.0192006072743673
+    },
+    {
+      "year": "1990",
+      "value": 65.0890511218225,
+      "n_actual": 910,
+      "ci_upper": 68.70684476329896,
+      "ci_lower": 61.47125748034603,
+      "standard_error": 1.81095256490653
+    },
+    {
+      "year": "1991",
+      "value": 67.4782488607169,
+      "n_actual": 979,
+      "ci_upper": 71.58065021703341,
+      "ci_lower": 63.3758475044004,
+      "standard_error": 2.0535317916766127
+    },
+    {
+      "year": "1993",
+      "value": 65.97342614753289,
+      "n_actual": 1068,
+      "ci_upper": 70.19514088871979,
+      "ci_lower": 61.75171140634599,
+      "standard_error": 2.1229479124514756
+    },
+    {
+      "year": "1994",
+      "value": 70.08172892703331,
+      "n_actual": 1974,
+      "ci_upper": 72.61202094663875,
+      "ci_lower": 67.55143690742786,
+      "standard_error": 1.2762511421117826
+    },
+    {
+      "year": "1996",
+      "value": 69.20255181080398,
+      "n_actual": 1895,
+      "ci_upper": 71.82083231615515,
+      "ci_lower": 66.58427130545282,
+      "standard_error": 1.320187486036764
+    },
+    {
+      "year": "1998",
+      "value": 68.11320182562034,
+      "n_actual": 1859,
+      "ci_upper": 70.86612266583114,
+      "ci_lower": 65.36028098540953,
+      "standard_error": 1.3882343644683988
+    },
+    {
+      "year": "2000",
+      "value": 65.63163100445787,
+      "n_actual": 1838,
+      "ci_upper": 68.13937022115798,
+      "ci_lower": 63.123891787757756,
+      "standard_error": 1.2643031063264052
+    },
+    {
+      "year": "2002",
+      "value": 64.55161271147793,
+      "n_actual": 918,
+      "ci_upper": 68.756035926739,
+      "ci_lower": 60.34718949621687,
+      "standard_error": 2.1178295378414114
+    },
+    {
+      "year": "2004",
+      "value": 66.20519886175045,
+      "n_actual": 893,
+      "ci_upper": 70.05409841472809,
+      "ci_lower": 62.35629930877281,
+      "standard_error": 1.9382093042580713
+    },
+    {
+      "year": "2006",
+      "value": 68.75544185090578,
+      "n_actual": 2726,
+      "ci_upper": 71.46236168820136,
+      "ci_lower": 66.04852201361022,
+      "standard_error": 1.3698137873830005
+    },
+    {
+      "year": "2008",
+      "value": 66.83734860569926,
+      "n_actual": 1342,
+      "ci_upper": 69.89174914156085,
+      "ci_lower": 63.78294806983767,
+      "standard_error": 1.5433092454157222
+    },
+    {
+      "year": "2010",
+      "value": 69.07499602878869,
+      "n_actual": 1269,
+      "ci_upper": 73.48648910594474,
+      "ci_lower": 64.66350295163265,
+      "standard_error": 2.2295234589246986
+    },
+    {
+      "year": "2012",
+      "value": 68.98197281440507,
+      "n_actual": 1302,
+      "ci_upper": 72.60003416200614,
+      "ci_lower": 65.363911466804,
+      "standard_error": 1.8121435568303086
+    },
+    {
+      "year": "2014",
+      "value": 70.22362169124571,
+      "n_actual": 1700,
+      "ci_upper": 72.83865131445539,
+      "ci_lower": 67.60859206803602,
+      "standard_error": 1.3093886066762297
+    },
+    {
+      "year": "2016",
+      "value": 70.65021776599384,
+      "n_actual": 1876,
+      "ci_upper": 73.72894640820896,
+      "ci_lower": 67.57148912377872,
+      "standard_error": 1.5415703789298982
+    },
+    {
+      "year": "2018",
+      "value": 73.05195378483445,
+      "n_actual": 1559,
+      "ci_upper": 76.21362176538166,
+      "ci_lower": 69.89028580428726,
+      "standard_error": 1.588101883905307
+    },
+    {
+      "year": "2022",
+      "value": 57.90029642992104,
+      "n_actual": 1184,
+      "ci_upper": 62.0031838891923,
+      "ci_lower": 53.79740897064978,
+      "standard_error": 2.054383646733091
+    },
+    {
+      "year": "2024",
+      "value": 64.75996920946459,
+      "n_actual": 989,
+      "ci_upper": 69.3094647407918,
+      "ci_lower": 60.210473678137376,
+      "standard_error": 2.278662029705277
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1973",
+        "1974",
+        "1976",
+        "1977",
+        "1980",
+        "1982",
+        "1984",
+        "1985",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Do People Get Ahead by Hard Work or Luck?",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "getahead_rec",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

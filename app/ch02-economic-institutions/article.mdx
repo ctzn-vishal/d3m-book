@@ -1,0 +1,177 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Callout } from '@/components/Book/Callout';
+import { Figure } from '@/components/Book/Figure';
+import { TabSet, Tab } from '@/components/Book/TabSet';
+import { PullQuote } from '@/components/Book/PullQuote';
+import { Annotation } from '@/components/Book/Annotation';
+import TimeseriesLineV1 from '@/components/Book/charts/timeseries-line-v1';
+
+import businessTopline from './data/business-topline.json';
+import businessByParty from './data/business-by-party.json';
+import businessByIncome from './data/business-by-income.json';
+import banksTopline from './data/banks-topline.json';
+import banksByParty from './data/banks-by-party.json';
+import banksByIncome from './data/banks-by-income.json';
+import laborTopline from './data/labor-topline.json';
+import laborByParty from './data/labor-by-party.json';
+import laborByAge from './data/labor-by-age.json';
+import laborByCollege from './data/labor-by-college.json';
+
+export const businessToplineWithGroup = {
+  ...businessTopline,
+  dataPoints: businessTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+export const banksToplineWithGroup = {
+  ...banksTopline,
+  dataPoints: banksTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+export const laborToplineWithGroup = {
+  ...laborTopline,
+  dataPoints: laborTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+
+<DropCap>
+
+For the half-century the GSS has been asking the question, the rule for guessing how someone will answer "do you have a great deal of confidence in major companies?" was simple: ask them what party they belong to, and if they said Republican, predict yes. From 1973 through the late 2010s, the Republican line on confidence in major companies sat ten to fifteen points above the Democratic line, almost without exception. Then, sometime between 2018 and 2024, the gap closed. In the most recent wave, 14% of Democrats and 16% of Republicans said they had a great deal of confidence in major companies. The Republican coalition is now skeptical of big business at almost the same rate as the Democratic coalition is. The fifty-year sorting on this question reversed in less than a decade.
+
+</DropCap>
+
+<KeyNumber
+  value="2"
+  unit="pts"
+  label="The 2024 partisan gap on confidence in major companies — D=14%, R=16%, the smallest difference on record. The 1973–2018 average partisan gap was 10–15 points, with Republicans the more trusting party throughout. Whatever populism on the right means as a political program, on this measure it is doing what the polling suggests: making big business a lower-confidence object for Republican-coalition voters."
+  align="center"
+/>
+
+<Callout variant="caveat">
+The 2008 financial crisis is the dominant feature of the banks series — a 20-point bipartisan collapse over four years — and it is the kind of period effect that any reader of these charts has to weigh against partisan dynamics. The 2021 mode shift adds a smaller but real complication for the 2018→2022 step. Where a reading hinges on either, the caption flags it.
+</Callout>
+
+## Business: from a partisan asset to a partisan wash
+
+Confidence in major companies has fallen roughly in half over the GSS's history — from 31% in 1973 to 15% in 2024 — and the decline has been close to monotonic. The peak of the series was 1984, in the early Reagan-era boom; the trough was 2010, two years after the financial crisis. The shape is a long slow grind.
+
+<Figure
+  caption="Figure 1. Share of US adults saying they have 'a great deal of confidence' in major companies, GSS 1973–2024. The peak (33%) is in 1984; the trough (14%) is in 2010. The series is essentially flat from 2010 forward."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={businessToplineWithGroup}
+      demographicGroups={['Overall']}
+      demographic="Overall"
+      defaultVisibleGroups={['Overall']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The topline understates what has changed. For most of the series, "Republicans more trusting of major companies than Democrats" was one of the most reliable patterns in American politics — a 10-to-15-point gap, present in nearly every wave. Figure 2 shows what happened to it.
+
+<Figure
+  width="page-outset"
+  caption="Figure 2. Confidence in major companies, by party, GSS 1973–2024. Republicans were the higher-confidence party from 1973 through 2018, with a gap that ranged from 4 to 15 points. By 2024 the gap had closed to 2 points (D=14%, R=16%) — the smallest in the half-century history of the question. The Democratic line is roughly flat from 2010 onward; the Republican line falls 11 points between 2018 and 2024."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={businessByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+Two things are worth noting about the closure of this gap.
+
+The first is that it is happening *via the Republican line falling*, not via the Democratic line rising. Democratic confidence in major companies has been in the low-to-mid teens since 2010, with a small bump around 2018. Republican confidence was 27% in 2018 and is 16% in 2024. If the closure persists, the contemporary Republican coalition will be the first in the GSS's history that does not have higher confidence in big business than the Democratic coalition does.
+
+The second is that this has happened during a six-year period in which the Republican Party has held the presidency for half the time and held a majority of the Supreme Court throughout. The closure is not a partisan-control effect of the kind that drives confidence in the executive branch (Ch. 1). It is something more durable — a coalition shift, in which the kinds of voters joining the Republican Party have grown more skeptical of corporate America at the same time the Democratic Party's traditional skepticism has stayed roughly where it was.
+
+## Banks: the 2008 bipartisan collapse, with a partisan twist after
+
+Confidence in banks and financial institutions is the cleanest example in this entire chapter of a *period effect* — a sharp, time-anchored shock that overrides partisan structure for the duration of the shock and resets the baseline after.
+
+<Figure
+  caption="Figure 3. Share of US adults saying they have 'a great deal of confidence' in banks and financial institutions, GSS 1975–2024. The 2008–2010 collapse is unmistakable: from 31% in 2006 to 11% in 2010. The recovery is partial; 2024 is at 17%, still ten points below the 2006 reading and twenty-five points below the 1977 peak."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={banksToplineWithGroup}
+      demographicGroups={['Overall']}
+      demographic="Overall"
+      defaultVisibleGroups={['Overall']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The 2008 financial crisis is the kind of thing that, in a long-run survey, is supposed to look like a small ripple — short shocks regress to the mean. The banks series shows that some shocks do not. Confidence in banks fell 20 points in four years and *did not recover to anything near the pre-crisis baseline in the 14 years that followed*. The contemporary level of confidence in banks (17% in 2024) is closer to the post-crash trough (11% in 2010) than it is to the pre-crash 2006 level (31%). The American public's relationship to its financial institutions has been remade by an event sixteen years in the rear-view mirror.
+
+The partisan twist on this series is more recent and easier to miss in the chart. From the 1990s through 2018, Republicans were modestly more trusting of banks than Democrats were — typically 5 to 8 points more confident, the same direction as on major companies but smaller in magnitude. By 2024 that gap had reversed: D=20%, R=14%. Democrats are now more confident in banks than Republicans are. This is the same coalition-realignment story as on major companies, just measurable on a different institution.
+
+## Labor: the only economic institution moving the other way
+
+Of the three major economic institutions the GSS tracks, labor is the outlier. Confidence in major companies has fallen by half. Confidence in banks has fallen by half and stayed there. Confidence in organized labor — never high to begin with — has *not fallen at all*.
+
+<Figure
+  caption="Figure 4. Share of US adults saying they have 'a great deal of confidence' in organized labor, GSS 1973–2024. The 1973 reading is 16%; the 2024 reading is 18%. The 1990s trough (8% in 1993) is the lowest reading; the 2024 reading is the highest since 1976. The shape is roughly U-shaped over fifty years."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={laborToplineWithGroup}
+      demographicGroups={['Overall']}
+      demographic="Overall"
+      defaultVisibleGroups={['Overall']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+Labor is the only institution covered in this section whose 2024 reading is *higher* than its 1973 reading. Not by much — 18% versus 16%. But against a backdrop where business and banks have lost half their confidence, "barely any change" is itself a finding. The story underneath that flat topline is a redistribution: which Americans express confidence in organized labor has changed dramatically.
+
+<Figure
+  width="page-outset"
+  caption="Figure 5. Confidence in organized labor by age, GSS 1973–2024. In 1973, older Americans (50+) were the highest-confidence group at 22–24%, while the youngest (18–34) sat at 12%. By 2024 the order has reversed: 18–34-year-olds are at 27%, and the 50–64 group has fallen to 12%. The age polarity on labor confidence has flipped over fifty years."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={laborByAge}
+      demographicGroups={['18-34', '35-49', '50-64', '65+']}
+      demographic="Age"
+      defaultVisibleGroups={['18-34', '50-64']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+The fifty-year reversal in the age structure of labor confidence is one of the clearer examples of a *generational* dynamic in this book. It is not a story of older Americans gradually changing their minds — the 50–64 cohort in 1973 (people born 1909–1923) and the 50–64 cohort in 2024 (people born 1960–1974) are different cohorts, and the question is largely about what those different cohorts brought into adulthood with them. The 1973 50-somethings came of age during peak American unionization. The 2024 50-somethings came of age during the Reagan-era decline. The 2024 18–34-year-olds — the highest-confidence group on the chart — are the cohort whose entry into the labor market has been characterized by Amazon warehouses, gig platforms, and the recent unionization waves at companies like Starbucks and the *New York Times*.
+
+The party gap on labor is comparatively boring. Democrats have been more confident in labor than Republicans throughout the series, by roughly 4 to 6 points, with no sharp recent inflection. This is the one economic institution where the partisan story has been stable for fifty years.
+
+<Figure
+  caption="Figure 6. Confidence in organized labor by party. The Democratic line is consistently 3–6 points above the Republican line; both have moved up and down together; no sharp recent inflection. Compare to the partisan reversals on major companies (Fig. 2) and banks — labor is the institution where the partisan signal has stayed put."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={laborByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+## Three institutions, three different stories
+
+Read together, the three economic institutions in this section illustrate something the standard "trust in institutions has collapsed" narrative misses: institutional trust does not move as a single block. Each of these three series is *its own story*, with its own period effects, demographic structure, and political coalitions.
+
+Major companies show the contemporary Republican populist turn. The 2018 → 2024 step in Republican confidence in big business is one of the largest short-window shifts in this entire book.
+
+Banks show what a generational period effect looks like in survey data. The 2008 collapse remade the baseline; sixteen years later, the country has not recovered.
+
+Labor shows what cohort replacement looks like when the underlying topic moves slowly. The institution itself has barely changed in its weight in American life — union density continues its long decline — but the *kinds* of Americans expressing confidence in it have rotated almost completely. The young replace the old; the gig-economy generation replaces the New Deal generation.
+
+A book that stopped at "trust in institutions is down across the board" — a true sentence, taken on average — would miss all three. Part II spends one chapter per domain because that level of resolution is what these data require. The next section turns to the institutions that asked Americans to trust them in moral terms: organized religion, the military, and the sociocultural battery.

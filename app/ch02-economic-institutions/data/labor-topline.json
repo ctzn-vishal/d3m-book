@@ -1,0 +1,362 @@
+{
+  "metadata": {
+    "title": "Confidence in Institutions: Organized Labor",
+    "subtitle": "% of US Population Who Have a Great Deal of Confidence in Organized Labor, by Year",
+    "years_n": 33,
+    "year_max": 2024,
+    "year_min": 1973,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1973 - 2024; 47463 Observations"
+    },
+    "dataview_type": "timetrend",
+    "original_question": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Organized labor.",
+    "value_measure": "Percent",
+    "demo_key": [],
+    "demo_title": "",
+    "dim_key": [
+      "year"
+    ],
+    "dim_title": "Year",
+    "graph_id": "gss_conlabor_high_year_percent_timetrend",
+    "data_filepath": "gss/2graph_jsons/timetrend/gss_conlabor_high_year_percent_timetrend.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1973",
+      "value": 16.184379760946594,
+      "n_actual": 1433,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "value": 19.839254015404624,
+      "n_actual": 1440,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "value": 10.326372500418536,
+      "n_actual": 1393,
+      "ci_upper": 11.95709825767841,
+      "ci_lower": 8.695646743158662,
+      "standard_error": 0.8118883568999329
+    },
+    {
+      "year": "1976",
+      "value": 12.893910874071846,
+      "n_actual": 1376,
+      "ci_upper": 15.119497330186734,
+      "ci_lower": 10.668324417956956,
+      "standard_error": 1.1080512605810933
+    },
+    {
+      "year": "1977",
+      "value": 14.873563306735122,
+      "n_actual": 1465,
+      "ci_upper": 17.024564529863774,
+      "ci_lower": 12.722562083606467,
+      "standard_error": 1.0709175598416483
+    },
+    {
+      "year": "1978",
+      "value": 11.863886579540862,
+      "n_actual": 1450,
+      "ci_upper": 13.982040767012634,
+      "ci_lower": 9.74573239206909,
+      "standard_error": 1.054564027869902
+    },
+    {
+      "year": "1980",
+      "value": 15.343754716717244,
+      "n_actual": 1381,
+      "ci_upper": 17.349241426833554,
+      "ci_lower": 13.338268006600934,
+      "standard_error": 0.9984703452510103
+    },
+    {
+      "year": "1982",
+      "value": 14.010103489547019,
+      "n_actual": 1767,
+      "ci_upper": 15.883115553286622,
+      "ci_lower": 12.137091425807414,
+      "standard_error": 0.9357025047615092
+    },
+    {
+      "year": "1983",
+      "value": 9.327634335099612,
+      "n_actual": 1531,
+      "ci_upper": 11.328753280231851,
+      "ci_lower": 7.326515389967373,
+      "standard_error": 1.0057459417298877
+    },
+    {
+      "year": "1984",
+      "value": 9.123414855083347,
+      "n_actual": 954,
+      "ci_upper": 11.591893809430085,
+      "ci_lower": 6.654935900736608,
+      "standard_error": 1.2348745008683981
+    },
+    {
+      "year": "1986",
+      "value": 9.40089898267919,
+      "n_actual": 1386,
+      "ci_upper": 11.144506021598904,
+      "ci_lower": 7.657291943759474,
+      "standard_error": 0.869681805379679
+    },
+    {
+      "year": "1987",
+      "value": 11.183447117893387,
+      "n_actual": 1708,
+      "ci_upper": 13.170481048898406,
+      "ci_lower": 9.196413186888366,
+      "standard_error": 0.9919097152477148
+    },
+    {
+      "year": "1988",
+      "value": 11.323324797714438,
+      "n_actual": 941,
+      "ci_upper": 14.02495331166106,
+      "ci_lower": 8.62169628376782,
+      "standard_error": 1.351509259099417
+    },
+    {
+      "year": "1989",
+      "value": 10.182934467967316,
+      "n_actual": 966,
+      "ci_upper": 12.824110677216519,
+      "ci_lower": 7.541758258718115,
+      "standard_error": 1.3220889040420605
+    },
+    {
+      "year": "1990",
+      "value": 11.57305857104823,
+      "n_actual": 851,
+      "ci_upper": 13.803679028292922,
+      "ci_lower": 9.342438113803539,
+      "standard_error": 1.1162364020453432
+    },
+    {
+      "year": "1991",
+      "value": 12.837488158981811,
+      "n_actual": 948,
+      "ci_upper": 15.666952533618359,
+      "ci_lower": 10.008023784345264,
+      "standard_error": 1.415907006053839
+    },
+    {
+      "year": "1993",
+      "value": 8.435659272846507,
+      "n_actual": 980,
+      "ci_upper": 10.320480323236533,
+      "ci_lower": 6.550838222456481,
+      "standard_error": 0.9476416110455662
+    },
+    {
+      "year": "1994",
+      "value": 11.590776478426239,
+      "n_actual": 1891,
+      "ci_upper": 13.505795910001444,
+      "ci_lower": 9.675757046851032,
+      "standard_error": 0.9658082913421535
+    },
+    {
+      "year": "1996",
+      "value": 13.069556223868883,
+      "n_actual": 1761,
+      "ci_upper": 14.92809821718959,
+      "ci_lower": 11.211014230548177,
+      "standard_error": 0.937219779533447
+    },
+    {
+      "year": "1998",
+      "value": 12.836254433575705,
+      "n_actual": 1752,
+      "ci_upper": 14.697694845267364,
+      "ci_lower": 10.974814021884049,
+      "standard_error": 0.9386813849404709
+    },
+    {
+      "year": "2000",
+      "value": 14.46108346711535,
+      "n_actual": 1701,
+      "ci_upper": 16.299524194901302,
+      "ci_lower": 12.622642739329395,
+      "standard_error": 0.9265321145392448
+    },
+    {
+      "year": "2002",
+      "value": 13.01524625876298,
+      "n_actual": 861,
+      "ci_upper": 15.874382784420213,
+      "ci_lower": 10.156109733105747,
+      "standard_error": 1.4399913218699345
+    },
+    {
+      "year": "2004",
+      "value": 13.534005961028459,
+      "n_actual": 830,
+      "ci_upper": 16.440615730924872,
+      "ci_lower": 10.627396191132043,
+      "standard_error": 1.464101901854529
+    },
+    {
+      "year": "2006",
+      "value": 12.850798206916345,
+      "n_actual": 1878,
+      "ci_upper": 14.750297587531666,
+      "ci_lower": 10.951298826301024,
+      "standard_error": 0.9607125131447739
+    },
+    {
+      "year": "2008",
+      "value": 12.822140222975184,
+      "n_actual": 1304,
+      "ci_upper": 15.202619587315377,
+      "ci_lower": 10.441660858634991,
+      "standard_error": 1.2026032340878046
+    },
+    {
+      "year": "2010",
+      "value": 12.97240967689076,
+      "n_actual": 1300,
+      "ci_upper": 15.26320414703781,
+      "ci_lower": 10.681615206743707,
+      "standard_error": 1.157997089198561
+    },
+    {
+      "year": "2012",
+      "value": 12.179998026157076,
+      "n_actual": 1256,
+      "ci_upper": 14.532381652179454,
+      "ci_lower": 9.827614400134694,
+      "standard_error": 1.1782157408458596
+    },
+    {
+      "year": "2014",
+      "value": 12.451901813006055,
+      "n_actual": 1613,
+      "ci_upper": 14.501036955670758,
+      "ci_lower": 10.402766670341354,
+      "standard_error": 1.0260358756669756
+    },
+    {
+      "year": "2016",
+      "value": 14.09844492228708,
+      "n_actual": 1874,
+      "ci_upper": 16.49811893042049,
+      "ci_lower": 11.69877091415367,
+      "standard_error": 1.2015564864348844
+    },
+    {
+      "year": "2018",
+      "value": 13.814936487092508,
+      "n_actual": 1488,
+      "ci_upper": 16.110175107567407,
+      "ci_lower": 11.519697866617609,
+      "standard_error": 1.1528954968122669
+    },
+    {
+      "year": "2021",
+      "value": 12.693742025542337,
+      "n_actual": 2648,
+      "ci_upper": 14.39042238094592,
+      "ci_lower": 10.997061670138756,
+      "standard_error": 0.8652318512944337
+    },
+    {
+      "year": "2022",
+      "value": 16.457815163935166,
+      "n_actual": 2276,
+      "ci_upper": 19.000853042116436,
+      "ci_lower": 13.914777285753896,
+      "standard_error": 1.2737069007348731
+    },
+    {
+      "year": "2024",
+      "value": 17.57161326893507,
+      "n_actual": 1060,
+      "ci_upper": 20.88731365867472,
+      "ci_lower": 14.25591287919542,
+      "standard_error": 1.6611655873348257
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Confidence in Organized Labor",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "conlabor_high",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

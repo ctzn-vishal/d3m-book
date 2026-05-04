@@ -1,0 +1,184 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Callout } from '@/components/Book/Callout';
+import { Figure } from '@/components/Book/Figure';
+import { TabSet, Tab } from '@/components/Book/TabSet';
+import { PullQuote } from '@/components/Book/PullQuote';
+import { Annotation } from '@/components/Book/Annotation';
+import TimeseriesLineV1 from '@/components/Book/charts/timeseries-line-v1';
+
+import religionTopline from './data/religion-topline.json';
+import religionByParty from './data/religion-by-party.json';
+import religionByAttendance from './data/religion-by-attendance.json';
+import religionByAge from './data/religion-by-age.json';
+import militaryTopline from './data/military-topline.json';
+import militaryByParty from './data/military-by-party.json';
+import militaryByIdeology from './data/military-by-ideology.json';
+import militaryByAge from './data/military-by-age.json';
+
+export const religionToplineWithGroup = {
+  ...religionTopline,
+  dataPoints: religionTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+
+export const militaryToplineWithGroup = {
+  ...militaryTopline,
+  dataPoints: militaryTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+
+<DropCap>
+
+This chapter pairs two institutions that almost no one would think to put on the same page: organized religion and the United States military. They share little in their function and less in their politics. But they share a structural feature in the GSS that turns out to matter for the larger argument of this book. Both are institutions whose authority is rooted in *belief* rather than performance — soldiers and clergy are trusted because of what they represent, not because of what they recently produced. Both have moved in unexpected ways. And both, in the most recent years of the data, have lost ground in the same direction: they have lost the unconditional trust of the American conservative coalition, the very coalition for which "trust the military" and "trust the church" had been ideological commitments for fifty years.
+
+</DropCap>
+
+<KeyNumber
+  value="30"
+  unit="pts"
+  label="The Republican drop in 'great deal of confidence' in the military between 2018 (74%) and 2024 (44%) — the single largest six-year shift on any high-confidence institutional measure in this book. The Conservative drop on the same measure is the same: 71% → 42% (29 points). For fifty years, the military was the institution Republicans and Conservatives trusted most strongly and most consistently. That fact ended sometime between Trump's first inauguration and his second."
+  align="center"
+/>
+
+<Callout variant="caveat">
+The 2021 mode shift matters somewhat differently for the two institutions in this chapter. On the religion series, the 2021 reading (15%) is the lowest in the half-century history of the question; this is consistent with both a real continued decline and a mode-related downward bias on subjective items. On the military, the 2018 → 2022 step is large enough (a ~25-point drop on the Republican line) that mode effects alone cannot explain it. Where the year-over-year reading depends on the mode boundary, we say so.
+</Callout>
+
+## Religion: a long, asymmetric collapse
+
+Confidence in organized religion is the second-steepest declining institution covered in Part II of this book — after the press, and before banks. From the early-1970s peak above 45%, it has fallen by two-thirds.
+
+<Figure
+  caption="Figure 1. Share of US adults saying they have 'a great deal of confidence' in organized religion, GSS 1973–2024. The peak (45%) is in 1974, the year *Time* magazine's cover read 'How True is the Bible?'. The 2024 reading (15%) is the lowest in the series, and the 2021 trough (15%) was lower still. The decline is roughly linear, with two visible inflections: a downward step around 1990 and a sharper drop in the post-2008 period."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={religionToplineWithGroup}
+      demographicGroups={['Overall']}
+      demographic="Overall"
+      defaultVisibleGroups={['Overall']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+What makes the religion series unusual is that the decline has not run on partisan lines. It has run on attendance lines — and the attendance gap, in absolute terms, has narrowed.
+
+<Figure
+  width="page-outset"
+  caption="Figure 2. Confidence in organized religion by church attendance, GSS 1973–2024. Weekly attenders started highest (44%) and have stayed highest, but they too have lost roughly a third of their confidence in the institution. Rarely-attenders have lost more — from 24% to 9%. The gap between weekly attenders and the rarely-attending is roughly the same in 2024 as it was in 1973: about 19 points, on a smaller base."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={religionByAttendance}
+      demographicGroups={['Weekly', 'Sometimes', 'Rarely']}
+      demographic="ChurchAttendance"
+      defaultVisibleGroups={['Weekly', 'Sometimes', 'Rarely']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+Two readings of Figure 2 point in slightly different directions. On a *relative* basis, weekly church attenders have held confidence in the church somewhat better than the secular have: a 35% relative decline (44 → 28) versus a 63% relative decline (24 → 9). On an *absolute* basis, what is striking is that weekly attendance has not protected the institution from confidence loss. *Believers themselves are 16 percentage points less confident in the church than they were in 1973.* The 2002 Boston Globe Spotlight investigation, the cascade of clerical-abuse stories that followed in subsequent years, the ongoing decline of mainline Protestantism, and the slow politicization of evangelical Christianity all show up somewhere on this series — but the GSS does not tell us which. It tells us only that the result, summed across causes, is a roughly two-thirds decline in confidence over half a century, regardless of the respondent's relationship to the institution.
+
+The party gap on religion is small but recently widening on a particular dimension.
+
+<Figure
+  caption="Figure 3. Confidence in organized religion, by party. Republicans have been more confident than Democrats throughout the series, with the gap widening in the 2018+ era. By 2024, Republicans are at 21% — almost twice the Democratic figure (11%). What is novel is not the direction (Republicans always more church-confident) but the magnitude: a 10-point partisan gap on a 15-point topline."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={religionByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The Democratic line on church confidence is at 11% in 2024 — the lowest reading from any major partisan group on any institution in this chapter. The Republican line is at 21%, also a historical low for that party. What makes the partisan gap relatively *more* visible now is just that the topline floor is so close to zero: a 10-point gap matters more when the average reading is 15% than it did when the average reading was 35%.
+
+Generationally, the church story is a slow handoff. In 1973 the 65+ cohort was the most church-confident at 50%; in 2024 the 65+ cohort is the most church-confident at 21%. The gap *between* age cohorts has narrowed, but the order is the same. Religion is one of the few institutions where younger Americans have not "diverged" from older ones — they have moved together, in the same direction, at roughly the same rate.
+
+<Figure
+  caption="Figure 4. Confidence in organized religion, by age. Older cohorts are consistently more confident, but every cohort has fallen. The 1973 18–34 cohort (28%) is roughly where the 2018 65+ cohort would land (31%) — a ~45-year handoff in confidence levels."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={religionByAge}
+      demographicGroups={['18-34', '35-49', '50-64', '65+']}
+      demographic="Age"
+      defaultVisibleGroups={['18-34', '65+']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+## Military: the Gulf War peak, the Trump-era reversal
+
+The military series has a completely different shape, and it carries a finding that, more than any other in this chapter, would have been hard to predict five years ago.
+
+<Figure
+  caption="Figure 5. Share of US adults saying they have 'a great deal of confidence' in the military, GSS 1973–2024. The post-Vietnam trough (29% in 1980) and the Gulf War peak (63% in 1991) bracket the long arc; the post-2001 War on Terror sustains the institution at 50%+ for two decades. The 2018→2022 step is the dominant feature of the recent era — a ~13-point drop in just four years, the steepest contraction in the series outside the immediate post-Vietnam period."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={militaryToplineWithGroup}
+      demographicGroups={['Overall']}
+      demographic="Overall"
+      defaultVisibleGroups={['Overall']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The military's long arc is well-known to historians of public opinion. After Vietnam, in the late 1970s, fewer than one in three Americans expressed high confidence in the military. The Reagan defense buildup, the Iran hostage crisis, and the cumulative effect of professionalization (the post-draft volunteer force) brought the number back up through the 1980s. The 1991 Gulf War took it to 63%, the highest reading ever recorded for any institution covered in Part II. The post-9/11 War on Terror consolidated the level at 50%+ for nearly two decades.
+
+What was *not* predicted, and what Figure 6 documents, is what the partisan structure of military trust did between 2018 and 2024.
+
+<Figure
+  width="page-outset"
+  caption="Figure 6. Confidence in the military, by party, GSS 1973–2024. Republicans have been the higher-confidence party throughout the series — typically 5 to 15 points more confident than Democrats. In 2018 the Republican reading was 74%, the highest single-year partisan reading in this entire chapter. By 2024 it had fallen to 44%, four-tenths of a point below the Democratic reading. The R-D gap closed from +21 points to −0.3 points in six years."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={militaryByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+This is a remarkable fact. For fifty years, "Republicans trust the military more than Democrats do" was one of the most reliable patterns in the entire institutional-confidence battery. As recently as 2018, three-quarters of Republicans expressed high confidence in the military. By 2024 the figure had collapsed by 30 points. The Conservative line by ideology shows the same 30-point fall.
+
+What happened? The data themselves cannot answer that, but the period contains a number of plausible drivers: the late-Trump and Biden-era civil-military controversies (the ouster of Mark Milley, the politicization of military leadership decisions); the August 2021 Afghanistan withdrawal; the Pentagon's vaccine mandate; recruitment shortfalls and the public conversation around them. Several of these are events that conservatives have particular reasons to be unhappy with. The data make clear only that *something* in this period unmade the institutional priors of the modern Republican coalition with respect to its own armed forces.
+
+<Figure
+  caption="Figure 7. Confidence in the military by ideology — same shape as the partisan version. Conservatives' high-confidence reading peaks at 71% in 2018 and falls to 42% in 2024, a 29-point drop. The contemporary Conservative–Liberal gap on military confidence is essentially closed (42% Conservative, 40% Liberal). For Liberals the recent decline is much smaller (52% → 40%). The American Right's 'institutional patriotism' on the military is, on this measure, in something like free-fall."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={militaryByIdeology}
+      demographicGroups={['Liberal', 'Moderate', 'Conservative']}
+      demographic="Ideology"
+      defaultVisibleGroups={['Liberal', 'Conservative']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The age structure of the recent military decline is also worth noting briefly: the 2018 → 2024 fall is sharpest among older cohorts, who had been the highest-confidence group on military matters throughout the series. The 50–64 cohort fell from 70% to 46% (24 points), and the 65+ cohort fell from 63% to 47% (16 points). Younger cohorts (18–34) have actually been more confidence-stable. Whatever happened in this period landed disproportionately on the cohorts whose adulthood was structured by the post-Vietnam recovery and the Reagan-era buildup — not on the cohorts who came of age during Iraq and Afghanistan.
+
+## Two institutions, one larger pattern
+
+The pairing of religion and the military in this section was not arbitrary. Both are institutions whose authority comes from belief rather than performance. Both have, over the period of this book, become objects of reduced confidence on the American Right specifically. Religion's loss is older and steadier. The military's loss is sharper and more recent. But on both, the largest absolute losses in the most recent six years are inside the Republican and Conservative coalitions — the very coalitions for which "trust the church" and "trust the troops" had been near-axiomatic.
+
+<PullQuote attribution="The pattern of this chapter">
+For fifty years, the military and the church were the institutions Republicans and Conservatives trusted unconditionally. They are still the institutions Republicans and Conservatives trust *most* — but the unconditional part is gone.
+</PullQuote>
+
+This is the third domain in this chapter where the recent partisan story is not "Republicans diverging from Democrats" but "the Republican coalition's relationship to a longstanding institutional commitment is changing." Major companies (Ch. 2.5) showed it on business. The GSS's institutional battery, taken as a whole, suggests that something has been happening to the structure of conservative institutional trust that is broader than any single political event. Whether the cause is Trump-era civic disruption, generational replacement, the cumulative effect of culture-war controversies, or all three, the data alone cannot say. They can say, very clearly, that the *fact* of the change is real.
+
+The next chapter switches register entirely. Part III turns from what Americans say about institutions to what they say about each other — beginning with the most foundational measure of social trust the GSS asks about: whether people, in general, can be trusted.

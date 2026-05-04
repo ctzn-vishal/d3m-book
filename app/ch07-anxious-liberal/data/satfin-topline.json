@@ -1,0 +1,380 @@
+{
+  "metadata": {
+    "title": "Satisfaction with Financial Situation",
+    "subtitle": "% of US Population Who are Satisfied with Their Financial Situation, by Year",
+    "years_n": 35,
+    "year_max": 2024,
+    "year_min": 1972,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1972 - 2024; 71013 Observations"
+    },
+    "dataview_type": "timetrend",
+    "original_question": "We are interested in how people are getting along financially these days. So far as you and your family are concerned, would you say that you are pretty well satisfied with your present financial situation, more or less satisfied, or not satisfied at all?",
+    "value_measure": "Percent",
+    "demo_key": [],
+    "demo_title": "",
+    "dim_key": [
+      "year"
+    ],
+    "dim_title": "Year",
+    "graph_id": "gss_satfin_rec_year_percent_timetrend",
+    "data_filepath": "gss/2graph_jsons/timetrend/gss_satfin_rec_year_percent_timetrend.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1972",
+      "value": 33.133601456525156,
+      "n_actual": 1608,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "value": 31.44034291884567,
+      "n_actual": 1501,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "value": 30.429601586771827,
+      "n_actual": 1478,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "value": 31.142787842874718,
+      "n_actual": 1479,
+      "ci_upper": 34.48648629790449,
+      "ci_lower": 27.79908938784495,
+      "standard_error": 1.6647249438093865
+    },
+    {
+      "year": "1976",
+      "value": 30.552074158638533,
+      "n_actual": 1492,
+      "ci_upper": 33.580896541036566,
+      "ci_lower": 27.5232517762405,
+      "standard_error": 1.507957801266886
+    },
+    {
+      "year": "1977",
+      "value": 34.68637490556909,
+      "n_actual": 1521,
+      "ci_upper": 37.63268863839096,
+      "ci_lower": 31.740061172747218,
+      "standard_error": 1.4668792743372672
+    },
+    {
+      "year": "1978",
+      "value": 34.85158480424735,
+      "n_actual": 1529,
+      "ci_upper": 37.84677252734481,
+      "ci_lower": 31.856397081149897,
+      "standard_error": 1.4912121356312882
+    },
+    {
+      "year": "1980",
+      "value": 26.849456897723993,
+      "n_actual": 1462,
+      "ci_upper": 30.43702272096126,
+      "ci_lower": 23.261891074486726,
+      "standard_error": 1.7861390295279964
+    },
+    {
+      "year": "1982",
+      "value": 27.900067236557728,
+      "n_actual": 1847,
+      "ci_upper": 30.61013073744066,
+      "ci_lower": 25.1900037356748,
+      "standard_error": 1.353869126062098
+    },
+    {
+      "year": "1983",
+      "value": 28.27994015280954,
+      "n_actual": 1592,
+      "ci_upper": 31.505410536686686,
+      "ci_lower": 25.054469768932396,
+      "standard_error": 1.6210949162444743
+    },
+    {
+      "year": "1984",
+      "value": 28.613974133753022,
+      "n_actual": 1464,
+      "ci_upper": 31.993067771006295,
+      "ci_lower": 25.234880496499752,
+      "standard_error": 1.6904161007096776
+    },
+    {
+      "year": "1985",
+      "value": 29.06308981388812,
+      "n_actual": 1525,
+      "ci_upper": 32.478673067272034,
+      "ci_lower": 25.64750656050421,
+      "standard_error": 1.7036353627408698
+    },
+    {
+      "year": "1986",
+      "value": 31.375138959184717,
+      "n_actual": 1466,
+      "ci_upper": 34.97204657169359,
+      "ci_lower": 27.778231346675845,
+      "standard_error": 1.7940768971480767
+    },
+    {
+      "year": "1987",
+      "value": 29.38174871548984,
+      "n_actual": 1811,
+      "ci_upper": 32.687986407657036,
+      "ci_lower": 26.07551102332265,
+      "standard_error": 1.6504445327313024
+    },
+    {
+      "year": "1988",
+      "value": 30.591307140979406,
+      "n_actual": 1474,
+      "ci_upper": 33.58197733951254,
+      "ci_lower": 27.600636942446272,
+      "standard_error": 1.4979081917639676
+    },
+    {
+      "year": "1989",
+      "value": 29.78446255090604,
+      "n_actual": 1532,
+      "ci_upper": 32.747178992620334,
+      "ci_lower": 26.82174610919174,
+      "standard_error": 1.4834811503326417
+    },
+    {
+      "year": "1990",
+      "value": 29.888426090745355,
+      "n_actual": 1367,
+      "ci_upper": 33.63696120542747,
+      "ci_lower": 26.139890976063246,
+      "standard_error": 1.8763975929277543
+    },
+    {
+      "year": "1991",
+      "value": 28.229346964819086,
+      "n_actual": 1506,
+      "ci_upper": 31.493575919473816,
+      "ci_lower": 24.965118010164357,
+      "standard_error": 1.6339693149169374
+    },
+    {
+      "year": "1993",
+      "value": 26.232230014215848,
+      "n_actual": 1596,
+      "ci_upper": 28.987895612650068,
+      "ci_lower": 23.476564415781628,
+      "standard_error": 1.3859629218331528
+    },
+    {
+      "year": "1994",
+      "value": 27.998464818604766,
+      "n_actual": 2976,
+      "ci_upper": 29.930227063603592,
+      "ci_lower": 26.066702573605944,
+      "standard_error": 0.9743593831721471
+    },
+    {
+      "year": "1996",
+      "value": 27.98946850522452,
+      "n_actual": 2896,
+      "ci_upper": 30.382670443299332,
+      "ci_lower": 25.596266567149705,
+      "standard_error": 1.2068364346042795
+    },
+    {
+      "year": "1998",
+      "value": 30.26060424332357,
+      "n_actual": 2824,
+      "ci_upper": 32.63116264883033,
+      "ci_lower": 27.8900458378168,
+      "standard_error": 1.1954178243831763
+    },
+    {
+      "year": "2000",
+      "value": 31.013939009599746,
+      "n_actual": 2803,
+      "ci_upper": 33.41139691800966,
+      "ci_lower": 28.616481101189834,
+      "standard_error": 1.2087036246448477
+    },
+    {
+      "year": "2002",
+      "value": 30.389088434444112,
+      "n_actual": 1369,
+      "ci_upper": 33.04386454048819,
+      "ci_lower": 27.734312328400033,
+      "standard_error": 1.338274242920426
+    },
+    {
+      "year": "2004",
+      "value": 32.88583601901541,
+      "n_actual": 1335,
+      "ci_upper": 35.925372805740516,
+      "ci_lower": 29.846299232290303,
+      "standard_error": 1.5332739532295838
+    },
+    {
+      "year": "2006",
+      "value": 30.398777911483947,
+      "n_actual": 2980,
+      "ci_upper": 32.49292605297627,
+      "ci_lower": 28.304629769991624,
+      "standard_error": 1.059784502020336
+    },
+    {
+      "year": "2008",
+      "value": 28.47688707361784,
+      "n_actual": 2016,
+      "ci_upper": 31.091240371440936,
+      "ci_lower": 25.862533775794745,
+      "standard_error": 1.3218319597446049
+    },
+    {
+      "year": "2010",
+      "value": 22.93652042153894,
+      "n_actual": 2038,
+      "ci_upper": 25.579802620368998,
+      "ci_lower": 20.293238222708883,
+      "standard_error": 1.3364585773265245
+    },
+    {
+      "year": "2012",
+      "value": 27.263451456783656,
+      "n_actual": 1967,
+      "ci_upper": 30.001808299860734,
+      "ci_lower": 24.52509461370658,
+      "standard_error": 1.3715344303861812
+    },
+    {
+      "year": "2014",
+      "value": 27.498637076862682,
+      "n_actual": 2532,
+      "ci_upper": 29.824202869092275,
+      "ci_lower": 25.173071284633085,
+      "standard_error": 1.1644492763657088
+    },
+    {
+      "year": "2016",
+      "value": 28.6946141917149,
+      "n_actual": 2856,
+      "ci_upper": 30.96394442200081,
+      "ci_lower": 26.425283961428992,
+      "standard_error": 1.1362911998966876
+    },
+    {
+      "year": "2018",
+      "value": 33.315380748220505,
+      "n_actual": 2338,
+      "ci_upper": 35.91530381604378,
+      "ci_lower": 30.715457680397236,
+      "standard_error": 1.305938114761939
+    },
+    {
+      "year": "2021",
+      "value": 27.000969390930674,
+      "n_actual": 4016,
+      "ci_upper": 28.65149202174761,
+      "ci_lower": 25.350446760113737,
+      "standard_error": 0.8418310918165537
+    },
+    {
+      "year": "2022",
+      "value": 26.700392885787892,
+      "n_actual": 3526,
+      "ci_upper": 29.32638304422732,
+      "ci_lower": 24.074402727348463,
+      "standard_error": 1.3152544107830026
+    },
+    {
+      "year": "2024",
+      "value": 22.714748422190713,
+      "n_actual": 3291,
+      "ci_upper": 25.32615297556146,
+      "ci_lower": 20.103343868819962,
+      "standard_error": 1.308313438721036
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1972",
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Financial Satisfaction",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "satfin_rec",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

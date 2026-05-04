@@ -1,0 +1,362 @@
+{
+  "metadata": {
+    "title": "Confidence in Institutions: Congress",
+    "subtitle": "% of US Population Who Have a Great Deal of Confidence in Congress, by Year",
+    "years_n": 33,
+    "year_max": 2024,
+    "year_min": 1973,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1973 - 2024; 49846 Observations"
+    },
+    "dataview_type": "timetrend",
+    "original_question": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? Congress.",
+    "value_measure": "Percent",
+    "demo_key": [],
+    "demo_title": "",
+    "dim_key": [
+      "year"
+    ],
+    "dim_title": "Year",
+    "graph_id": "gss_conlegis_high_year_percent_timetrend",
+    "data_filepath": "gss/2graph_jsons/timetrend/gss_conlegis_high_year_percent_timetrend.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1973",
+      "value": 24.135111220034833,
+      "n_actual": 1458,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "value": 17.53726253534781,
+      "n_actual": 1436,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "value": 13.924212706743305,
+      "n_actual": 1444,
+      "ci_upper": 15.625488880672842,
+      "ci_lower": 12.222936532813769,
+      "standard_error": 0.8470132463018044
+    },
+    {
+      "year": "1976",
+      "value": 13.670872908103215,
+      "n_actual": 1455,
+      "ci_upper": 15.721988867355364,
+      "ci_lower": 11.61975694885107,
+      "standard_error": 1.021187749414492
+    },
+    {
+      "year": "1977",
+      "value": 19.069023418036544,
+      "n_actual": 1479,
+      "ci_upper": 21.744696837804966,
+      "ci_lower": 16.39334999826812,
+      "standard_error": 1.3321357602315838
+    },
+    {
+      "year": "1978",
+      "value": 13.269063736386997,
+      "n_actual": 1479,
+      "ci_upper": 15.76787354603739,
+      "ci_lower": 10.770253926736602,
+      "standard_error": 1.2440807913474239
+    },
+    {
+      "year": "1980",
+      "value": 9.571747833693351,
+      "n_actual": 1408,
+      "ci_upper": 11.792734101727397,
+      "ci_lower": 7.3507615656593055,
+      "standard_error": 1.1057609679762457
+    },
+    {
+      "year": "1982",
+      "value": 13.95933799450878,
+      "n_actual": 1808,
+      "ci_upper": 16.06732013635645,
+      "ci_lower": 11.851355852661111,
+      "standard_error": 1.053086741033193
+    },
+    {
+      "year": "1983",
+      "value": 11.36748337697616,
+      "n_actual": 1545,
+      "ci_upper": 13.640605237965653,
+      "ci_lower": 9.094361515986668,
+      "standard_error": 1.1424523726132603
+    },
+    {
+      "year": "1984",
+      "value": 14.29200452418254,
+      "n_actual": 957,
+      "ci_upper": 17.18152806134772,
+      "ci_lower": 11.402480987017357,
+      "standard_error": 1.4455051072730876
+    },
+    {
+      "year": "1986",
+      "value": 17.68454490739457,
+      "n_actual": 1428,
+      "ci_upper": 20.308479524046763,
+      "ci_lower": 15.060610290742376,
+      "standard_error": 1.3087743646768963
+    },
+    {
+      "year": "1987",
+      "value": 17.441362320114663,
+      "n_actual": 1751,
+      "ci_upper": 19.476849667219646,
+      "ci_lower": 15.405874973009679,
+      "standard_error": 1.0160972308288834
+    },
+    {
+      "year": "1988",
+      "value": 16.779651070389683,
+      "n_actual": 962,
+      "ci_upper": 19.98323010511894,
+      "ci_lower": 13.576072035660431,
+      "standard_error": 1.6031196718294092
+    },
+    {
+      "year": "1989",
+      "value": 18.120735290764653,
+      "n_actual": 999,
+      "ci_upper": 21.05998697723071,
+      "ci_lower": 15.181483604298595,
+      "standard_error": 1.4712960185145443
+    },
+    {
+      "year": "1990",
+      "value": 16.62651249999706,
+      "n_actual": 869,
+      "ci_upper": 19.500899128028042,
+      "ci_lower": 13.752125871966077,
+      "standard_error": 1.4383867848696
+    },
+    {
+      "year": "1991",
+      "value": 18.936204457767268,
+      "n_actual": 981,
+      "ci_upper": 21.921847566138197,
+      "ci_lower": 15.950561349396336,
+      "standard_error": 1.4940612197182321
+    },
+    {
+      "year": "1993",
+      "value": 6.912287525027737,
+      "n_actual": 1029,
+      "ci_upper": 8.8803317541655,
+      "ci_lower": 4.944243295889973,
+      "standard_error": 0.9896583838550773
+    },
+    {
+      "year": "1994",
+      "value": 8.999442595359225,
+      "n_actual": 1949,
+      "ci_upper": 10.917857792317271,
+      "ci_lower": 7.081027398401179,
+      "standard_error": 0.9675208892971006
+    },
+    {
+      "year": "1996",
+      "value": 7.75408678125401,
+      "n_actual": 1859,
+      "ci_upper": 9.219188495487385,
+      "ci_lower": 6.288985067020636,
+      "standard_error": 0.7388169385155967
+    },
+    {
+      "year": "1998",
+      "value": 11.570470590989759,
+      "n_actual": 1842,
+      "ci_upper": 13.412679927546206,
+      "ci_lower": 9.728261254433313,
+      "standard_error": 0.9289835981467438
+    },
+    {
+      "year": "2000",
+      "value": 13.998402019331008,
+      "n_actual": 1803,
+      "ci_upper": 16.016931318289913,
+      "ci_lower": 11.979872720372105,
+      "standard_error": 1.0175418421262807
+    },
+    {
+      "year": "2002",
+      "value": 15.191181317779131,
+      "n_actual": 892,
+      "ci_upper": 18.24213734446472,
+      "ci_lower": 12.140225291093543,
+      "standard_error": 1.5368112250252626
+    },
+    {
+      "year": "2004",
+      "value": 16.104319535716442,
+      "n_actual": 863,
+      "ci_upper": 19.447244805344507,
+      "ci_lower": 12.76139426608838,
+      "standard_error": 1.683880407927768
+    },
+    {
+      "year": "2006",
+      "value": 12.014312510086652,
+      "n_actual": 1938,
+      "ci_upper": 13.856597567849171,
+      "ci_lower": 10.172027452324135,
+      "standard_error": 0.9317158537464874
+    },
+    {
+      "year": "2008",
+      "value": 10.256522606665804,
+      "n_actual": 1338,
+      "ci_upper": 12.68809994773833,
+      "ci_lower": 7.824945265593278,
+      "standard_error": 1.2285160249446856
+    },
+    {
+      "year": "2010",
+      "value": 11.175714240123263,
+      "n_actual": 1347,
+      "ci_upper": 14.308057876271713,
+      "ci_lower": 8.043370603974813,
+      "standard_error": 1.5834003706132145
+    },
+    {
+      "year": "2012",
+      "value": 7.440486175491107,
+      "n_actual": 1295,
+      "ci_upper": 9.122208813486987,
+      "ci_lower": 5.758763537495226,
+      "standard_error": 0.8423082280903101
+    },
+    {
+      "year": "2014",
+      "value": 5.8957296401305745,
+      "n_actual": 1644,
+      "ci_upper": 7.182059113054429,
+      "ci_lower": 4.6094001672067195,
+      "standard_error": 0.6440864536788767
+    },
+    {
+      "year": "2016",
+      "value": 5.951175645378644,
+      "n_actual": 1925,
+      "ci_upper": 7.216003177450037,
+      "ci_lower": 4.686348113307251,
+      "standard_error": 0.6333200760731487
+    },
+    {
+      "year": "2018",
+      "value": 6.113395591695758,
+      "n_actual": 1523,
+      "ci_upper": 7.962427381115902,
+      "ci_lower": 4.2643638022756125,
+      "standard_error": 0.9287663620108231
+    },
+    {
+      "year": "2021",
+      "value": 6.971064969122074,
+      "n_actual": 2661,
+      "ci_upper": 8.356051435316761,
+      "ci_lower": 5.586078502927388,
+      "standard_error": 0.7062829576651053
+    },
+    {
+      "year": "2022",
+      "value": 5.716575618491796,
+      "n_actual": 2331,
+      "ci_upper": 7.384192813310575,
+      "ci_lower": 4.048958423673017,
+      "standard_error": 0.8352433705564353
+    },
+    {
+      "year": "2024",
+      "value": 5.623686192632421,
+      "n_actual": 2148,
+      "ci_upper": 7.281045044125972,
+      "ci_lower": 3.9663273411388693,
+      "standard_error": 0.8303366306815304
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Confidence in Congress",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "conlegis_high",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

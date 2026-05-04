@@ -1,0 +1,1460 @@
+{
+  "metadata": {
+    "title": "Belief that People are Fair",
+    "subtitle": "% of US Population Who Believe People are Fair, by Year and Income",
+    "years_n": 30,
+    "year_max": 2024,
+    "year_min": 1972,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1972 - 2024; 38835 Observations"
+    },
+    "dataview_type": "timetrend_demo",
+    "original_question": "Do you think most people would try to take advantage of you if they got a chance, or would they try to be fair?",
+    "value_measure": "Percent",
+    "demo_key": [
+      "Income"
+    ],
+    "demo_title": "Income",
+    "dim_key": [
+      "year",
+      "Income"
+    ],
+    "dim_title": "Year, Income",
+    "graph_id": "gss_fair_rec_year_income_percent_timetrend_demo",
+    "data_filepath": "gss/2graph_jsons/timetrend_demo/gss_fair_rec_year_income_percent_timetrend_demo.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1972",
+      "Income": "21-40%",
+      "value": 60.224875410446735,
+      "n_actual": 291,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "Income": "41-60%",
+      "value": 58.479636998062915,
+      "n_actual": 291,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "Income": "61-80%",
+      "value": 58.91370892257003,
+      "n_actual": 291,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "Income": "Bottom 20%",
+      "value": 54.924996669669234,
+      "n_actual": 291,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "Income": "Top 20%",
+      "value": 69.60753823199765,
+      "n_actual": 292,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Income": "21-40%",
+      "value": 55.24587361161535,
+      "n_actual": 278,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Income": "41-60%",
+      "value": 57.25032605829614,
+      "n_actual": 277,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Income": "61-80%",
+      "value": 64.77047475204277,
+      "n_actual": 279,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Income": "Bottom 20%",
+      "value": 50.90402471553468,
+      "n_actual": 277,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Income": "Top 20%",
+      "value": 64.77777443198013,
+      "n_actual": 278,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "Income": "21-40%",
+      "value": 55.81580250364853,
+      "n_actual": 280,
+      "ci_upper": 62.41135956905227,
+      "ci_lower": 49.22024543824479,
+      "standard_error": 3.2726323222820026
+    },
+    {
+      "year": "1975",
+      "Income": "41-60%",
+      "value": 57.99429595954199,
+      "n_actual": 279,
+      "ci_upper": 63.76939851799711,
+      "ci_lower": 52.21919340108686,
+      "standard_error": 2.85744044292181
+    },
+    {
+      "year": "1975",
+      "Income": "61-80%",
+      "value": 68.18847267096079,
+      "n_actual": 276,
+      "ci_upper": 73.99304224607808,
+      "ci_lower": 62.38390309584349,
+      "standard_error": 2.859241863125958
+    },
+    {
+      "year": "1975",
+      "Income": "Bottom 20%",
+      "value": 54.53564705505223,
+      "n_actual": 279,
+      "ci_upper": 63.2194330008954,
+      "ci_lower": 45.85186110920906,
+      "standard_error": 4.281747266963529
+    },
+    {
+      "year": "1975",
+      "Income": "Top 20%",
+      "value": 71.60795703719809,
+      "n_actual": 280,
+      "ci_upper": 77.46902107411489,
+      "ci_lower": 65.74689300028129,
+      "standard_error": 2.887070167726589
+    },
+    {
+      "year": "1976",
+      "Income": "21-40%",
+      "value": 56.49320474129361,
+      "n_actual": 278,
+      "ci_upper": 63.39179406746841,
+      "ci_lower": 49.59461541511882,
+      "standard_error": 3.415919472367572
+    },
+    {
+      "year": "1976",
+      "Income": "41-60%",
+      "value": 60.10107762611451,
+      "n_actual": 278,
+      "ci_upper": 67.56454868340822,
+      "ci_lower": 52.63760656882079,
+      "standard_error": 3.692821699324491
+    },
+    {
+      "year": "1976",
+      "Income": "61-80%",
+      "value": 64.77471179214398,
+      "n_actual": 278,
+      "ci_upper": 70.0727599569325,
+      "ci_lower": 59.47666362735545,
+      "standard_error": 2.6233922670212637
+    },
+    {
+      "year": "1976",
+      "Income": "Bottom 20%",
+      "value": 45.4517889170161,
+      "n_actual": 277,
+      "ci_upper": 52.07565211741779,
+      "ci_lower": 38.82792571661441,
+      "standard_error": 3.286677469855523
+    },
+    {
+      "year": "1976",
+      "Income": "Top 20%",
+      "value": 64.6239542282975,
+      "n_actual": 277,
+      "ci_upper": 69.80710079260668,
+      "ci_lower": 59.44080766398835,
+      "standard_error": 2.5445832977060734
+    },
+    {
+      "year": "1978",
+      "Income": "21-40%",
+      "value": 55.67770020233004,
+      "n_actual": 284,
+      "ci_upper": 61.940248736419015,
+      "ci_lower": 49.415151668241066,
+      "standard_error": 3.0935420807512757
+    },
+    {
+      "year": "1978",
+      "Income": "41-60%",
+      "value": 57.849816597143885,
+      "n_actual": 282,
+      "ci_upper": 66.32144331329316,
+      "ci_lower": 49.37818988099462,
+      "standard_error": 4.200753451316466
+    },
+    {
+      "year": "1978",
+      "Income": "61-80%",
+      "value": 66.28265901515266,
+      "n_actual": 285,
+      "ci_upper": 73.6429541874905,
+      "ci_lower": 58.9223638428148,
+      "standard_error": 3.641771706112594
+    },
+    {
+      "year": "1978",
+      "Income": "Bottom 20%",
+      "value": 57.83532639745395,
+      "n_actual": 283,
+      "ci_upper": 65.46129344859523,
+      "ci_lower": 50.20935934631267,
+      "standard_error": 3.7760893008645438
+    },
+    {
+      "year": "1978",
+      "Income": "Top 20%",
+      "value": 75.38876359095228,
+      "n_actual": 285,
+      "ci_upper": 80.55996364689555,
+      "ci_lower": 70.21756353500899,
+      "standard_error": 2.558637881964233
+    },
+    {
+      "year": "1980",
+      "Income": "21-40%",
+      "value": 56.45001246362248,
+      "n_actual": 271,
+      "ci_upper": 62.98901936114332,
+      "ci_lower": 49.91100556610164,
+      "standard_error": 3.2445728414210437
+    },
+    {
+      "year": "1980",
+      "Income": "41-60%",
+      "value": 50.30407941827766,
+      "n_actual": 268,
+      "ci_upper": 56.82957920640859,
+      "ci_lower": 43.77857963014674,
+      "standard_error": 3.2311797005557947
+    },
+    {
+      "year": "1980",
+      "Income": "61-80%",
+      "value": 72.86107040499196,
+      "n_actual": 269,
+      "ci_upper": 77.05024634905766,
+      "ci_lower": 68.67189446092625,
+      "standard_error": 2.056609244242439
+    },
+    {
+      "year": "1980",
+      "Income": "Bottom 20%",
+      "value": 55.67315823264691,
+      "n_actual": 266,
+      "ci_upper": 62.19976552637573,
+      "ci_lower": 49.146550938918104,
+      "standard_error": 3.221119125066574
+    },
+    {
+      "year": "1980",
+      "Income": "Top 20%",
+      "value": 65.40319636703464,
+      "n_actual": 268,
+      "ci_upper": 71.97734394326011,
+      "ci_lower": 58.82904879080918,
+      "standard_error": 3.2190355189590703
+    },
+    {
+      "year": "1983",
+      "Income": "21-40%",
+      "value": 56.48813410073341,
+      "n_actual": 290,
+      "ci_upper": 62.973761958979246,
+      "ci_lower": 50.00250624248758,
+      "standard_error": 3.2256618630771388
+    },
+    {
+      "year": "1983",
+      "Income": "41-60%",
+      "value": 61.37811293009962,
+      "n_actual": 289,
+      "ci_upper": 68.92664316600529,
+      "ci_lower": 53.82958269419393,
+      "standard_error": 3.7454856035326713
+    },
+    {
+      "year": "1983",
+      "Income": "61-80%",
+      "value": 62.404057259007025,
+      "n_actual": 289,
+      "ci_upper": 70.06829550509337,
+      "ci_lower": 54.73981901292069,
+      "standard_error": 3.8227928689976274
+    },
+    {
+      "year": "1983",
+      "Income": "Bottom 20%",
+      "value": 49.62082258054449,
+      "n_actual": 287,
+      "ci_upper": 56.75886149234821,
+      "ci_lower": 42.48278366874077,
+      "standard_error": 3.537041588472243
+    },
+    {
+      "year": "1983",
+      "Income": "Top 20%",
+      "value": 68.94425661614932,
+      "n_actual": 288,
+      "ci_upper": 72.74358766252593,
+      "ci_lower": 65.1449255697727,
+      "standard_error": 1.8714921475387212
+    },
+    {
+      "year": "1984",
+      "Income": "21-40%",
+      "value": 56.17334842846829,
+      "n_actual": 268,
+      "ci_upper": 63.78312275206552,
+      "ci_lower": 48.56357410487105,
+      "standard_error": 3.7652105211394686
+    },
+    {
+      "year": "1984",
+      "Income": "41-60%",
+      "value": 57.03214995173318,
+      "n_actual": 268,
+      "ci_upper": 64.03586078481347,
+      "ci_lower": 50.0284391186529,
+      "standard_error": 3.4679716507804237
+    },
+    {
+      "year": "1984",
+      "Income": "61-80%",
+      "value": 68.21812518890171,
+      "n_actual": 267,
+      "ci_upper": 75.08242038312002,
+      "ci_lower": 61.353829994683394,
+      "standard_error": 3.3989383204828534
+    },
+    {
+      "year": "1984",
+      "Income": "Bottom 20%",
+      "value": 57.94458576584751,
+      "n_actual": 267,
+      "ci_upper": 64.63818558967894,
+      "ci_lower": 51.25098594201608,
+      "standard_error": 3.2819591533746815
+    },
+    {
+      "year": "1984",
+      "Income": "Top 20%",
+      "value": 72.71605991571376,
+      "n_actual": 266,
+      "ci_upper": 79.0747638157152,
+      "ci_lower": 66.35735601571233,
+      "standard_error": 3.1461982717219885
+    },
+    {
+      "year": "1986",
+      "Income": "21-40%",
+      "value": 59.33547619691676,
+      "n_actual": 264,
+      "ci_upper": 65.24450984995926,
+      "ci_lower": 53.42644254387425,
+      "standard_error": 2.9237076862071194
+    },
+    {
+      "year": "1986",
+      "Income": "41-60%",
+      "value": 64.71885966034964,
+      "n_actual": 265,
+      "ci_upper": 71.45862579007208,
+      "ci_lower": 57.9790935306272,
+      "standard_error": 3.334742564304389
+    },
+    {
+      "year": "1986",
+      "Income": "61-80%",
+      "value": 63.43268415790908,
+      "n_actual": 268,
+      "ci_upper": 70.84313236811958,
+      "ci_lower": 56.022235947698576,
+      "standard_error": 3.6720258648899655
+    },
+    {
+      "year": "1986",
+      "Income": "Bottom 20%",
+      "value": 48.537418609780325,
+      "n_actual": 270,
+      "ci_upper": 55.985125823676064,
+      "ci_lower": 41.089711395884585,
+      "standard_error": 3.656333300158194
+    },
+    {
+      "year": "1986",
+      "Income": "Top 20%",
+      "value": 74.39186364066501,
+      "n_actual": 267,
+      "ci_upper": 78.2165907389245,
+      "ci_lower": 70.5671365424055,
+      "standard_error": 1.8820211252747157
+    },
+    {
+      "year": "1987",
+      "Income": "21-40%",
+      "value": 50.313559678810805,
+      "n_actual": 329,
+      "ci_upper": 58.45810606409836,
+      "ci_lower": 42.16901329352324,
+      "standard_error": 4.038566910907893
+    },
+    {
+      "year": "1987",
+      "Income": "41-60%",
+      "value": 56.96194559063832,
+      "n_actual": 330,
+      "ci_upper": 63.972394110727336,
+      "ci_lower": 49.95149707054931,
+      "standard_error": 3.4885225447461856
+    },
+    {
+      "year": "1987",
+      "Income": "61-80%",
+      "value": 61.95118467354108,
+      "n_actual": 330,
+      "ci_upper": 68.85242447653893,
+      "ci_lower": 55.049944870543236,
+      "standard_error": 3.4323686969145797
+    },
+    {
+      "year": "1987",
+      "Income": "Bottom 20%",
+      "value": 46.06175562324244,
+      "n_actual": 325,
+      "ci_upper": 52.45767371484651,
+      "ci_lower": 39.665837531638374,
+      "standard_error": 3.147218783113534
+    },
+    {
+      "year": "1987",
+      "Income": "Top 20%",
+      "value": 65.4275679654217,
+      "n_actual": 331,
+      "ci_upper": 71.34248290670212,
+      "ci_lower": 59.51265302414128,
+      "standard_error": 2.9266176658477203
+    },
+    {
+      "year": "1988",
+      "Income": "21-40%",
+      "value": 54.290780921954195,
+      "n_actual": 187,
+      "ci_upper": 62.29060273534741,
+      "ci_lower": 46.29095910856098,
+      "standard_error": 3.9171178109514857
+    },
+    {
+      "year": "1988",
+      "Income": "41-60%",
+      "value": 55.963200445621716,
+      "n_actual": 176,
+      "ci_upper": 63.96074531377699,
+      "ci_lower": 47.96565557746645,
+      "standard_error": 3.8749699315874997
+    },
+    {
+      "year": "1988",
+      "Income": "61-80%",
+      "value": 63.07656464169597,
+      "n_actual": 174,
+      "ci_upper": 69.18862030808697,
+      "ci_lower": 56.96450897530496,
+      "standard_error": 2.996820480487798
+    },
+    {
+      "year": "1988",
+      "Income": "Bottom 20%",
+      "value": 49.74498467653057,
+      "n_actual": 187,
+      "ci_upper": 58.22170367625175,
+      "ci_lower": 41.26826567680939,
+      "standard_error": 4.131295899752074
+    },
+    {
+      "year": "1988",
+      "Income": "Top 20%",
+      "value": 75.72489125164577,
+      "n_actual": 179,
+      "ci_upper": 81.69056130002795,
+      "ci_lower": 69.75922120326358,
+      "standard_error": 2.907486754128073
+    },
+    {
+      "year": "1989",
+      "Income": "21-40%",
+      "value": 51.14388643065063,
+      "n_actual": 174,
+      "ci_upper": 58.76053256160005,
+      "ci_lower": 43.527240299701205,
+      "standard_error": 3.7241031393457704
+    },
+    {
+      "year": "1989",
+      "Income": "41-60%",
+      "value": 58.08126629044325,
+      "n_actual": 196,
+      "ci_upper": 65.23548254520963,
+      "ci_lower": 50.92705003567688,
+      "standard_error": 3.516422935593348
+    },
+    {
+      "year": "1989",
+      "Income": "61-80%",
+      "value": 65.28834182462168,
+      "n_actual": 192,
+      "ci_upper": 72.69491063597421,
+      "ci_lower": 57.88177301326917,
+      "standard_error": 3.631537131779688
+    },
+    {
+      "year": "1989",
+      "Income": "Bottom 20%",
+      "value": 46.2160459855148,
+      "n_actual": 189,
+      "ci_upper": 54.5570409200558,
+      "ci_lower": 37.8750510509738,
+      "standard_error": 4.089698427474752
+    },
+    {
+      "year": "1989",
+      "Income": "Top 20%",
+      "value": 71.44886256275582,
+      "n_actual": 180,
+      "ci_upper": 78.47398045534176,
+      "ci_lower": 64.42374467016988,
+      "standard_error": 3.439853419611378
+    },
+    {
+      "year": "1990",
+      "Income": "21-40%",
+      "value": 57.829651957663685,
+      "n_actual": 161,
+      "ci_upper": 66.92419479071351,
+      "ci_lower": 48.735109124613864,
+      "standard_error": 4.415815776253269
+    },
+    {
+      "year": "1990",
+      "Income": "41-60%",
+      "value": 59.37800015250411,
+      "n_actual": 158,
+      "ci_upper": 67.75820874485639,
+      "ci_lower": 50.99779156015182,
+      "standard_error": 4.068973887936795
+    },
+    {
+      "year": "1990",
+      "Income": "61-80%",
+      "value": 56.68619830247119,
+      "n_actual": 157,
+      "ci_upper": 66.35858419913998,
+      "ci_lower": 47.013812405802405,
+      "standard_error": 4.6963849663014345
+    },
+    {
+      "year": "1990",
+      "Income": "Bottom 20%",
+      "value": 49.31980176296432,
+      "n_actual": 164,
+      "ci_upper": 58.135081668340064,
+      "ci_lower": 40.504521857588564,
+      "standard_error": 4.2885690370826755
+    },
+    {
+      "year": "1990",
+      "Income": "Top 20%",
+      "value": 64.86424028388635,
+      "n_actual": 150,
+      "ci_upper": 72.48588991985957,
+      "ci_lower": 57.242590647913104,
+      "standard_error": 3.675080097200044
+    },
+    {
+      "year": "1991",
+      "Income": "21-40%",
+      "value": 53.270684871895135,
+      "n_actual": 181,
+      "ci_upper": 62.56100787896207,
+      "ci_lower": 43.9803618648282,
+      "standard_error": 4.571459272972009
+    },
+    {
+      "year": "1991",
+      "Income": "41-60%",
+      "value": 60.46780813589822,
+      "n_actual": 186,
+      "ci_upper": 69.44107926078195,
+      "ci_lower": 51.494537011014486,
+      "standard_error": 4.428637105612813
+    },
+    {
+      "year": "1991",
+      "Income": "61-80%",
+      "value": 56.3191645916553,
+      "n_actual": 166,
+      "ci_upper": 62.23572413236107,
+      "ci_lower": 50.40260505094953,
+      "standard_error": 2.904640723616129
+    },
+    {
+      "year": "1991",
+      "Income": "Bottom 20%",
+      "value": 47.12542501847971,
+      "n_actual": 186,
+      "ci_upper": 54.75524591852907,
+      "ci_lower": 39.49560411843035,
+      "standard_error": 3.704626402768443
+    },
+    {
+      "year": "1991",
+      "Income": "Top 20%",
+      "value": 64.43084675177587,
+      "n_actual": 189,
+      "ci_upper": 70.73699235693378,
+      "ci_lower": 58.124701146617966,
+      "standard_error": 3.103044725299844
+    },
+    {
+      "year": "1993",
+      "Income": "21-40%",
+      "value": 57.7841745583217,
+      "n_actual": 188,
+      "ci_upper": 65.73780432797928,
+      "ci_lower": 49.83054478866412,
+      "standard_error": 3.8888688124839503
+    },
+    {
+      "year": "1993",
+      "Income": "41-60%",
+      "value": 51.968929278181385,
+      "n_actual": 189,
+      "ci_upper": 59.786133797765906,
+      "ci_lower": 44.15172475859686,
+      "standard_error": 3.837732120534481
+    },
+    {
+      "year": "1993",
+      "Income": "61-80%",
+      "value": 56.411178774832116,
+      "n_actual": 195,
+      "ci_upper": 63.60661358808135,
+      "ci_lower": 49.215743961582874,
+      "standard_error": 3.55120993910531
+    },
+    {
+      "year": "1993",
+      "Income": "Bottom 20%",
+      "value": 47.27727528526402,
+      "n_actual": 184,
+      "ci_upper": 54.21427298508028,
+      "ci_lower": 40.34027758544776,
+      "standard_error": 3.3865326664193383
+    },
+    {
+      "year": "1993",
+      "Income": "Top 20%",
+      "value": 59.07381931941552,
+      "n_actual": 191,
+      "ci_upper": 64.7499242476671,
+      "ci_lower": 53.397714391163944,
+      "standard_error": 2.793022641826309
+    },
+    {
+      "year": "1994",
+      "Income": "21-40%",
+      "value": 48.291970760223506,
+      "n_actual": 353,
+      "ci_upper": 53.35536508301216,
+      "ci_lower": 43.22857643743485,
+      "standard_error": 2.52553575301024
+    },
+    {
+      "year": "1994",
+      "Income": "41-60%",
+      "value": 55.209106087697194,
+      "n_actual": 346,
+      "ci_upper": 60.66701267566356,
+      "ci_lower": 49.751199499730824,
+      "standard_error": 2.7145191672780173
+    },
+    {
+      "year": "1994",
+      "Income": "61-80%",
+      "value": 55.951739167617006,
+      "n_actual": 354,
+      "ci_upper": 61.08313766886106,
+      "ci_lower": 50.82034066637296,
+      "standard_error": 2.566182225369703
+    },
+    {
+      "year": "1994",
+      "Income": "Bottom 20%",
+      "value": 42.48601765304679,
+      "n_actual": 364,
+      "ci_upper": 48.274061847447115,
+      "ci_lower": 36.69797345864646,
+      "standard_error": 2.8802326419332203
+    },
+    {
+      "year": "1994",
+      "Income": "Top 20%",
+      "value": 65.77315795082251,
+      "n_actual": 356,
+      "ci_upper": 71.44072230272033,
+      "ci_lower": 60.10559359892468,
+      "standard_error": 2.823077390691498
+    },
+    {
+      "year": "1996",
+      "Income": "21-40%",
+      "value": 44.14529099760127,
+      "n_actual": 325,
+      "ci_upper": 50.52412060125604,
+      "ci_lower": 37.7664613939465,
+      "standard_error": 3.1725451773210187
+    },
+    {
+      "year": "1996",
+      "Income": "41-60%",
+      "value": 52.9032147625063,
+      "n_actual": 340,
+      "ci_upper": 57.75969435770081,
+      "ci_lower": 48.046735167311795,
+      "standard_error": 2.4223301740942382
+    },
+    {
+      "year": "1996",
+      "Income": "61-80%",
+      "value": 54.211982815111085,
+      "n_actual": 335,
+      "ci_upper": 60.644979647324426,
+      "ci_lower": 47.77898598289774,
+      "standard_error": 3.2148983963967823
+    },
+    {
+      "year": "1996",
+      "Income": "Bottom 20%",
+      "value": 39.74063351464683,
+      "n_actual": 331,
+      "ci_upper": 45.67438546685496,
+      "ci_lower": 33.80688156243871,
+      "standard_error": 2.9402932219845557
+    },
+    {
+      "year": "1996",
+      "Income": "Top 20%",
+      "value": 58.85685267576501,
+      "n_actual": 329,
+      "ci_upper": 63.922451999100616,
+      "ci_lower": 53.791253352429415,
+      "standard_error": 2.5194030413167225
+    },
+    {
+      "year": "1998",
+      "Income": "21-40%",
+      "value": 49.501883347636976,
+      "n_actual": 329,
+      "ci_upper": 54.671607925415664,
+      "ci_lower": 44.33215876985829,
+      "standard_error": 2.5750978137093523
+    },
+    {
+      "year": "1998",
+      "Income": "41-60%",
+      "value": 50.4372979260728,
+      "n_actual": 309,
+      "ci_upper": 56.08140579821459,
+      "ci_lower": 44.79319005393101,
+      "standard_error": 2.810028262617867
+    },
+    {
+      "year": "1998",
+      "Income": "61-80%",
+      "value": 58.046372507969494,
+      "n_actual": 358,
+      "ci_upper": 63.73270069599919,
+      "ci_lower": 52.36004431993979,
+      "standard_error": 2.8281258773963853
+    },
+    {
+      "year": "1998",
+      "Income": "Bottom 20%",
+      "value": 41.13070563947541,
+      "n_actual": 339,
+      "ci_upper": 46.91745067763838,
+      "ci_lower": 35.34396060131243,
+      "standard_error": 2.876486802681302
+    },
+    {
+      "year": "1998",
+      "Income": "Top 20%",
+      "value": 67.88516791081413,
+      "n_actual": 330,
+      "ci_upper": 72.90114427861751,
+      "ci_lower": 62.86919154301077,
+      "standard_error": 2.49042645749707
+    },
+    {
+      "year": "2000",
+      "Income": "21-40%",
+      "value": 47.08238694779714,
+      "n_actual": 316,
+      "ci_upper": 52.83212945410109,
+      "ci_lower": 41.33264444149318,
+      "standard_error": 2.8564534143701064
+    },
+    {
+      "year": "2000",
+      "Income": "41-60%",
+      "value": 52.937924151439894,
+      "n_actual": 320,
+      "ci_upper": 58.61460270549594,
+      "ci_lower": 47.261245597383855,
+      "standard_error": 2.8148462894980195
+    },
+    {
+      "year": "2000",
+      "Income": "61-80%",
+      "value": 55.004569782718825,
+      "n_actual": 326,
+      "ci_upper": 60.7515737520346,
+      "ci_lower": 49.257565813403055,
+      "standard_error": 2.851590966428014
+    },
+    {
+      "year": "2000",
+      "Income": "Bottom 20%",
+      "value": 41.478535175080836,
+      "n_actual": 312,
+      "ci_upper": 45.4784681902454,
+      "ci_lower": 37.478602159916264,
+      "standard_error": 1.9775305141983204
+    },
+    {
+      "year": "2000",
+      "Income": "Top 20%",
+      "value": 65.22126683246766,
+      "n_actual": 341,
+      "ci_upper": 70.09428484871817,
+      "ci_lower": 60.34824881621715,
+      "standard_error": 2.4222895462874283
+    },
+    {
+      "year": "2002",
+      "Income": "21-40%",
+      "value": 43.717933678025986,
+      "n_actual": 181,
+      "ci_upper": 52.3798618772123,
+      "ci_lower": 35.05600547883968,
+      "standard_error": 4.247056186116825
+    },
+    {
+      "year": "2002",
+      "Income": "41-60%",
+      "value": 47.405550747778754,
+      "n_actual": 149,
+      "ci_upper": 53.67518094554239,
+      "ci_lower": 41.13592055001512,
+      "standard_error": 3.060734396907477
+    },
+    {
+      "year": "2002",
+      "Income": "61-80%",
+      "value": 52.63260354076418,
+      "n_actual": 158,
+      "ci_upper": 59.58535317725983,
+      "ci_lower": 45.67985390426852,
+      "standard_error": 3.3942225130118437
+    },
+    {
+      "year": "2002",
+      "Income": "Bottom 20%",
+      "value": 40.20956653246037,
+      "n_actual": 156,
+      "ci_upper": 46.89123323064393,
+      "ci_lower": 33.52789983427682,
+      "standard_error": 3.2218301117803994
+    },
+    {
+      "year": "2002",
+      "Income": "Top 20%",
+      "value": 60.909020721278694,
+      "n_actual": 178,
+      "ci_upper": 68.23575782597202,
+      "ci_lower": 53.58228361658537,
+      "standard_error": 3.5644038790953436
+    },
+    {
+      "year": "2004",
+      "Income": "21-40%",
+      "value": 48.9878415783221,
+      "n_actual": 150,
+      "ci_upper": 58.30990258356835,
+      "ci_lower": 39.66578057307584,
+      "standard_error": 4.4689474388753485
+    },
+    {
+      "year": "2004",
+      "Income": "41-60%",
+      "value": 43.25939539405238,
+      "n_actual": 158,
+      "ci_upper": 50.732196014600405,
+      "ci_lower": 35.78659477350437,
+      "standard_error": 3.6207208820638006
+    },
+    {
+      "year": "2004",
+      "Income": "61-80%",
+      "value": 58.548000396930846,
+      "n_actual": 150,
+      "ci_upper": 64.86163747941376,
+      "ci_lower": 52.23436331444793,
+      "standard_error": 2.9925066194492365
+    },
+    {
+      "year": "2004",
+      "Income": "Bottom 20%",
+      "value": 37.420162810713656,
+      "n_actual": 162,
+      "ci_upper": 42.90712717883128,
+      "ci_lower": 31.933198442596026,
+      "standard_error": 2.6304221079758765
+    },
+    {
+      "year": "2004",
+      "Income": "Top 20%",
+      "value": 66.87163443293058,
+      "n_actual": 149,
+      "ci_upper": 72.99715455823456,
+      "ci_lower": 60.746114307626584,
+      "standard_error": 2.9455084369791513
+    },
+    {
+      "year": "2006",
+      "Income": "21-40%",
+      "value": 40.28601472288133,
+      "n_actual": 339,
+      "ci_upper": 45.82366256291365,
+      "ci_lower": 34.74836688284901,
+      "standard_error": 2.7526650689981484
+    },
+    {
+      "year": "2006",
+      "Income": "41-60%",
+      "value": 46.78160459971908,
+      "n_actual": 332,
+      "ci_upper": 53.12896568414773,
+      "ci_lower": 40.434243515290426,
+      "standard_error": 3.168546358262539
+    },
+    {
+      "year": "2006",
+      "Income": "61-80%",
+      "value": 54.792767147076304,
+      "n_actual": 346,
+      "ci_upper": 59.668129095811906,
+      "ci_lower": 49.9174051983407,
+      "standard_error": 2.4158397263731652
+    },
+    {
+      "year": "2006",
+      "Income": "Bottom 20%",
+      "value": 35.65071402605216,
+      "n_actual": 353,
+      "ci_upper": 41.56710826050412,
+      "ci_lower": 29.73431979160019,
+      "standard_error": 2.922550528904429
+    },
+    {
+      "year": "2006",
+      "Income": "Top 20%",
+      "value": 63.5474597081767,
+      "n_actual": 340,
+      "ci_upper": 70.00324001140089,
+      "ci_lower": 57.09167940495251,
+      "standard_error": 3.2072107001922063
+    },
+    {
+      "year": "2008",
+      "Income": "21-40%",
+      "value": 45.61297753130526,
+      "n_actual": 250,
+      "ci_upper": 51.943781881378136,
+      "ci_lower": 39.28217318123238,
+      "standard_error": 3.1184570347100244
+    },
+    {
+      "year": "2008",
+      "Income": "41-60%",
+      "value": 49.769933023339306,
+      "n_actual": 241,
+      "ci_upper": 57.49582205349998,
+      "ci_lower": 42.04404399317863,
+      "standard_error": 3.8163956248673685
+    },
+    {
+      "year": "2008",
+      "Income": "61-80%",
+      "value": 54.758225944782154,
+      "n_actual": 244,
+      "ci_upper": 61.34580120214006,
+      "ci_lower": 48.17065068742425,
+      "standard_error": 3.254097139179645
+    },
+    {
+      "year": "2008",
+      "Income": "Bottom 20%",
+      "value": 42.338895888659465,
+      "n_actual": 238,
+      "ci_upper": 48.11227172113214,
+      "ci_lower": 36.5655200561868,
+      "standard_error": 2.8408864218857985
+    },
+    {
+      "year": "2008",
+      "Income": "Top 20%",
+      "value": 59.38969666620061,
+      "n_actual": 231,
+      "ci_upper": 64.72087417614101,
+      "ci_lower": 54.05851915626021,
+      "standard_error": 2.641705488184595
+    },
+    {
+      "year": "2010",
+      "Income": "21-40%",
+      "value": 45.88768310121707,
+      "n_actual": 232,
+      "ci_upper": 52.38322713370158,
+      "ci_lower": 39.392139068732554,
+      "standard_error": 3.205788270860424
+    },
+    {
+      "year": "2010",
+      "Income": "41-60%",
+      "value": 49.81605315355522,
+      "n_actual": 249,
+      "ci_upper": 55.73476718179127,
+      "ci_lower": 43.89733912531917,
+      "standard_error": 2.9236964489161723
+    },
+    {
+      "year": "2010",
+      "Income": "61-80%",
+      "value": 60.39134090414719,
+      "n_actual": 244,
+      "ci_upper": 67.52865028951557,
+      "ci_lower": 53.254031518778824,
+      "standard_error": 3.5157290339335274
+    },
+    {
+      "year": "2010",
+      "Income": "Bottom 20%",
+      "value": 39.404168581382315,
+      "n_actual": 241,
+      "ci_upper": 46.67079901228166,
+      "ci_lower": 32.13753815048297,
+      "standard_error": 3.589533382598377
+    },
+    {
+      "year": "2010",
+      "Income": "Top 20%",
+      "value": 64.76092819747532,
+      "n_actual": 238,
+      "ci_upper": 71.52115101342189,
+      "ci_lower": 58.000705381528746,
+      "standard_error": 3.3332886999707365
+    },
+    {
+      "year": "2012",
+      "Income": "21-40%",
+      "value": 40.798517659361515,
+      "n_actual": 237,
+      "ci_upper": 47.46157320683917,
+      "ci_lower": 34.13546211188386,
+      "standard_error": 3.2913825114975954
+    },
+    {
+      "year": "2012",
+      "Income": "41-60%",
+      "value": 52.69280906970641,
+      "n_actual": 243,
+      "ci_upper": 59.85376562759171,
+      "ci_lower": 45.531852511821114,
+      "standard_error": 3.5431417314918328
+    },
+    {
+      "year": "2012",
+      "Income": "61-80%",
+      "value": 57.80147198631188,
+      "n_actual": 234,
+      "ci_upper": 64.27277218259788,
+      "ci_lower": 51.330171790025894,
+      "standard_error": 3.2019093534681735
+    },
+    {
+      "year": "2012",
+      "Income": "Bottom 20%",
+      "value": 37.56780398404612,
+      "n_actual": 242,
+      "ci_upper": 42.89793706559941,
+      "ci_lower": 32.23767090249284,
+      "standard_error": 2.61985402038296
+    },
+    {
+      "year": "2012",
+      "Income": "Top 20%",
+      "value": 60.59790609631778,
+      "n_actual": 231,
+      "ci_upper": 68.0517913431132,
+      "ci_lower": 53.14402084952236,
+      "standard_error": 3.696094649272429
+    },
+    {
+      "year": "2014",
+      "Income": "21-40%",
+      "value": 43.56003519501082,
+      "n_actual": 305,
+      "ci_upper": 50.6057354549371,
+      "ci_lower": 36.51433493508454,
+      "standard_error": 3.5042168813651102
+    },
+    {
+      "year": "2014",
+      "Income": "41-60%",
+      "value": 53.748275157781464,
+      "n_actual": 303,
+      "ci_upper": 59.66206966122449,
+      "ci_lower": 47.83448065433844,
+      "standard_error": 2.9304039054433946
+    },
+    {
+      "year": "2014",
+      "Income": "61-80%",
+      "value": 51.27681482309138,
+      "n_actual": 298,
+      "ci_upper": 57.57769299589432,
+      "ci_lower": 44.97593665028844,
+      "standard_error": 3.1385381103233736
+    },
+    {
+      "year": "2014",
+      "Income": "Bottom 20%",
+      "value": 34.24973200223415,
+      "n_actual": 306,
+      "ci_upper": 39.292345177375324,
+      "ci_lower": 29.20711882709297,
+      "standard_error": 2.4909245763664702
+    },
+    {
+      "year": "2014",
+      "Income": "Top 20%",
+      "value": 65.24663034027995,
+      "n_actual": 313,
+      "ci_upper": 71.49291766341696,
+      "ci_lower": 59.00034301714293,
+      "standard_error": 3.1012744219688813
+    },
+    {
+      "year": "2016",
+      "Income": "21-40%",
+      "value": 43.84441030444018,
+      "n_actual": 363,
+      "ci_upper": 50.05223421570959,
+      "ci_lower": 37.63658639317079,
+      "standard_error": 3.087494577386383
+    },
+    {
+      "year": "2016",
+      "Income": "41-60%",
+      "value": 53.440879135796436,
+      "n_actual": 338,
+      "ci_upper": 59.769736227214445,
+      "ci_lower": 47.112022044378435,
+      "standard_error": 3.153946711226765
+    },
+    {
+      "year": "2016",
+      "Income": "61-80%",
+      "value": 60.6045742423054,
+      "n_actual": 344,
+      "ci_upper": 67.70167836799445,
+      "ci_lower": 53.50747011661635,
+      "standard_error": 3.536797859885896
+    },
+    {
+      "year": "2016",
+      "Income": "Bottom 20%",
+      "value": 44.329260506360086,
+      "n_actual": 364,
+      "ci_upper": 51.740021420210795,
+      "ci_lower": 36.918499592509384,
+      "standard_error": 3.6857817590934636
+    },
+    {
+      "year": "2016",
+      "Income": "Top 20%",
+      "value": 67.05150748008218,
+      "n_actual": 349,
+      "ci_upper": 72.91106049328616,
+      "ci_lower": 61.191954466878194,
+      "standard_error": 2.9126783366013616
+    },
+    {
+      "year": "2018",
+      "Income": "21-40%",
+      "value": 42.81256565658339,
+      "n_actual": 279,
+      "ci_upper": 49.70729493227145,
+      "ci_lower": 35.91783638089533,
+      "standard_error": 3.432674315707259
+    },
+    {
+      "year": "2018",
+      "Income": "41-60%",
+      "value": 48.74010017183376,
+      "n_actual": 287,
+      "ci_upper": 55.918297528700165,
+      "ci_lower": 41.56190281496736,
+      "standard_error": 3.5772101691038407
+    },
+    {
+      "year": "2018",
+      "Income": "61-80%",
+      "value": 56.26733665621617,
+      "n_actual": 293,
+      "ci_upper": 63.68736057179527,
+      "ci_lower": 48.84731274063707,
+      "standard_error": 3.6883603352116134
+    },
+    {
+      "year": "2018",
+      "Income": "Bottom 20%",
+      "value": 42.95303043997129,
+      "n_actual": 283,
+      "ci_upper": 50.19819442729041,
+      "ci_lower": 35.70786645265218,
+      "standard_error": 3.587530083995109
+    },
+    {
+      "year": "2018",
+      "Income": "Top 20%",
+      "value": 65.48379568446327,
+      "n_actual": 280,
+      "ci_upper": 71.71971212623157,
+      "ci_lower": 59.24787924269498,
+      "standard_error": 3.0941831757362652
+    },
+    {
+      "year": "2022",
+      "Income": "21-40%",
+      "value": 39.968097312764456,
+      "n_actual": 228,
+      "ci_upper": 46.95101957921453,
+      "ci_lower": 32.98517504631438,
+      "standard_error": 3.4522932778692486
+    },
+    {
+      "year": "2022",
+      "Income": "41-60%",
+      "value": 50.30012193236249,
+      "n_actual": 201,
+      "ci_upper": 58.68732005181322,
+      "ci_lower": 41.91292381291175,
+      "standard_error": 4.127061522861022
+    },
+    {
+      "year": "2022",
+      "Income": "61-80%",
+      "value": 49.64325528029171,
+      "n_actual": 183,
+      "ci_upper": 60.07463889928759,
+      "ci_lower": 39.21187166129583,
+      "standard_error": 5.138339432025278
+    },
+    {
+      "year": "2022",
+      "Income": "Bottom 20%",
+      "value": 32.607298717639836,
+      "n_actual": 262,
+      "ci_upper": 43.427903951410904,
+      "ci_lower": 21.786693483868756,
+      "standard_error": 5.349608843636092
+    },
+    {
+      "year": "2022",
+      "Income": "Top 20%",
+      "value": 57.13093718526602,
+      "n_actual": 181,
+      "ci_upper": 65.51195138665015,
+      "ci_lower": 48.74992298388187,
+      "standard_error": 4.10932039511309
+    },
+    {
+      "year": "2024",
+      "Income": "21-40%",
+      "value": 38.55448517776792,
+      "n_actual": 192,
+      "ci_upper": 47.13392661805358,
+      "ci_lower": 29.975043737482267,
+      "standard_error": 4.20092892787865
+    },
+    {
+      "year": "2024",
+      "Income": "41-60%",
+      "value": 42.39332432673032,
+      "n_actual": 167,
+      "ci_upper": 49.33700648052818,
+      "ci_lower": 35.449642172932464,
+      "standard_error": 3.408890220238016
+    },
+    {
+      "year": "2024",
+      "Income": "61-80%",
+      "value": 42.92512842048498,
+      "n_actual": 148,
+      "ci_upper": 54.28319230910025,
+      "ci_lower": 31.567064531869715,
+      "standard_error": 5.576060662506281
+    },
+    {
+      "year": "2024",
+      "Income": "Bottom 20%",
+      "value": 28.024993466261634,
+      "n_actual": 230,
+      "ci_upper": 35.39904501641925,
+      "ci_lower": 20.650941916104017,
+      "standard_error": 3.6054883022662345
+    },
+    {
+      "year": "2024",
+      "Income": "Top 20%",
+      "value": 57.076066157915065,
+      "n_actual": 104,
+      "ci_upper": 67.60875334987813,
+      "ci_lower": 46.543378965952,
+      "standard_error": 4.968470617924982
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1972",
+        "1973",
+        "1975",
+        "1976",
+        "1978",
+        "1980",
+        "1983",
+        "1984",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "Income",
+      "name": "Income",
+      "type": "ordinal",
+      "categories": [
+        "Bottom 20%",
+        "21-40%",
+        "41-60%",
+        "61-80%",
+        "Top 20%"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Are People Fair?",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "fair_rec",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

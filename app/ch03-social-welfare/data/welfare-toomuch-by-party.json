@@ -1,0 +1,1030 @@
+{
+  "metadata": {
+    "title": "Opinion on Government Spending: Too Much on Welfare",
+    "subtitle": "% of US Population Who Believe Too Much Government Spending on Welfare, by Year and Political Party",
+    "years_n": 34,
+    "year_max": 2024,
+    "year_min": 1973,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1973 - 2024; 40571 Observations"
+    },
+    "dataview_type": "timetrend_demo",
+    "original_question": "Are we spending too much, too little, or about the right amount on welfare?",
+    "value_measure": "Percent",
+    "demo_key": [
+      "PolParty"
+    ],
+    "demo_title": "Political Party",
+    "dim_key": [
+      "year",
+      "PolParty"
+    ],
+    "dim_title": "Year, Political Party",
+    "graph_id": "gss_natfare_toomuch_year_polparty_percent_timetrend_demo",
+    "data_filepath": "gss/2graph_jsons/timetrend_demo/gss_natfare_toomuch_year_polparty_percent_timetrend_demo.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1973",
+      "PolParty": "Democrat",
+      "value": 46.06716284388511,
+      "n_actual": 767,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "PolParty": "Other",
+      "value": 56.19162098598319,
+      "n_actual": 193,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "PolParty": "Republican",
+      "value": 65.74246661051289,
+      "n_actual": 462,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "PolParty": "Democrat",
+      "value": 39.97141690848022,
+      "n_actual": 798,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "PolParty": "Other",
+      "value": 39.20498085553126,
+      "n_actual": 192,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "PolParty": "Republican",
+      "value": 48.87589984754656,
+      "n_actual": 410,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "PolParty": "Democrat",
+      "value": 39.758840989771855,
+      "n_actual": 772,
+      "ci_upper": 43.52681910728601,
+      "ci_lower": 35.9908628722577,
+      "standard_error": 1.8759607794530921
+    },
+    {
+      "year": "1975",
+      "PolParty": "Other",
+      "value": 52.476231473278865,
+      "n_actual": 203,
+      "ci_upper": 60.02301975415089,
+      "ci_lower": 44.92944319240685,
+      "standard_error": 3.7211235165744982
+    },
+    {
+      "year": "1975",
+      "PolParty": "Republican",
+      "value": 50.13937525848279,
+      "n_actual": 426,
+      "ci_upper": 56.03412237712169,
+      "ci_lower": 44.24462813984389,
+      "standard_error": 2.9317841523858563
+    },
+    {
+      "year": "1976",
+      "PolParty": "Democrat",
+      "value": 57.44255061021774,
+      "n_actual": 795,
+      "ci_upper": 61.81078095965464,
+      "ci_lower": 53.07432026078083,
+      "standard_error": 2.1748079621456373
+    },
+    {
+      "year": "1976",
+      "PolParty": "Other",
+      "value": 63.05443695525001,
+      "n_actual": 224,
+      "ci_upper": 70.91264670892899,
+      "ci_lower": 55.19622720157105,
+      "standard_error": 3.8850274531989055
+    },
+    {
+      "year": "1976",
+      "PolParty": "Republican",
+      "value": 71.58460228489768,
+      "n_actual": 407,
+      "ci_upper": 77.17590303073358,
+      "ci_lower": 65.99330153906178,
+      "standard_error": 2.7793349627729276
+    },
+    {
+      "year": "1977",
+      "PolParty": "Democrat",
+      "value": 59.235741250101846,
+      "n_actual": 835,
+      "ci_upper": 62.95550791259523,
+      "ci_lower": 55.51597458760846,
+      "standard_error": 1.8519577741492796
+    },
+    {
+      "year": "1977",
+      "PolParty": "Other",
+      "value": 59.743551158167875,
+      "n_actual": 166,
+      "ci_upper": 68.24009658760389,
+      "ci_lower": 51.247005728731864,
+      "standard_error": 4.140958700629431
+    },
+    {
+      "year": "1977",
+      "PolParty": "Republican",
+      "value": 68.74954821454993,
+      "n_actual": 437,
+      "ci_upper": 74.87492555955468,
+      "ci_lower": 62.62417086954517,
+      "standard_error": 3.0448148273597724
+    },
+    {
+      "year": "1978",
+      "PolParty": "Democrat",
+      "value": 58.67386759210628,
+      "n_actual": 773,
+      "ci_upper": 62.18242809783463,
+      "ci_lower": 55.16530708637792,
+      "standard_error": 1.7459214469324764
+    },
+    {
+      "year": "1978",
+      "PolParty": "Other",
+      "value": 51.43490072759077,
+      "n_actual": 218,
+      "ci_upper": 57.99525087068408,
+      "ci_lower": 44.87455058449746,
+      "standard_error": 3.224527311894872
+    },
+    {
+      "year": "1978",
+      "PolParty": "Republican",
+      "value": 70.57295317814787,
+      "n_actual": 477,
+      "ci_upper": 75.44528909007391,
+      "ci_lower": 65.70061726622183,
+      "standard_error": 2.4245600870790818
+    },
+    {
+      "year": "1980",
+      "PolParty": "Democrat",
+      "value": 52.809048444802954,
+      "n_actual": 720,
+      "ci_upper": 57.9330729923273,
+      "ci_lower": 47.68502389727862,
+      "standard_error": 2.549804781056227
+    },
+    {
+      "year": "1980",
+      "PolParty": "Other",
+      "value": 57.90362320585057,
+      "n_actual": 235,
+      "ci_upper": 64.12835956929426,
+      "ci_lower": 51.67888684240689,
+      "standard_error": 3.0721347932258367
+    },
+    {
+      "year": "1980",
+      "PolParty": "Republican",
+      "value": 68.94523488688469,
+      "n_actual": 444,
+      "ci_upper": 73.90970555561982,
+      "ci_lower": 63.98076421814955,
+      "standard_error": 2.4663329143350414
+    },
+    {
+      "year": "1982",
+      "PolParty": "Democrat",
+      "value": 44.19117806829592,
+      "n_actual": 1050,
+      "ci_upper": 48.713875620068336,
+      "ci_lower": 39.668480516523495,
+      "standard_error": 2.2576905057988093
+    },
+    {
+      "year": "1982",
+      "PolParty": "Other",
+      "value": 48.222923597984405,
+      "n_actual": 220,
+      "ci_upper": 57.22356454329981,
+      "ci_lower": 39.222282652669,
+      "standard_error": 4.45677561240478
+    },
+    {
+      "year": "1982",
+      "PolParty": "Republican",
+      "value": 59.68842603285248,
+      "n_actual": 488,
+      "ci_upper": 63.90018365680794,
+      "ci_lower": 55.47666840889703,
+      "standard_error": 2.0979237261381436
+    },
+    {
+      "year": "1983",
+      "PolParty": "Democrat",
+      "value": 40.99425819878448,
+      "n_actual": 810,
+      "ci_upper": 44.70480935314971,
+      "ci_lower": 37.283707044419245,
+      "standard_error": 1.864176825571655
+    },
+    {
+      "year": "1983",
+      "PolParty": "Other",
+      "value": 46.601298753635525,
+      "n_actual": 187,
+      "ci_upper": 52.69442997052162,
+      "ci_lower": 40.50816753674944,
+      "standard_error": 2.987541576473531
+    },
+    {
+      "year": "1983",
+      "PolParty": "Republican",
+      "value": 60.47738089585709,
+      "n_actual": 527,
+      "ci_upper": 64.47824799182601,
+      "ci_lower": 56.476513799888174,
+      "standard_error": 1.9994384493737847
+    },
+    {
+      "year": "1984",
+      "PolParty": "Democrat",
+      "value": 33.063249264914944,
+      "n_actual": 246,
+      "ci_upper": 40.36068245961212,
+      "ci_lower": 25.765816070217774,
+      "standard_error": 3.618516101510833
+    },
+    {
+      "year": "1984",
+      "PolParty": "Other",
+      "value": 40.02280638344868,
+      "n_actual": 59,
+      "ci_upper": 51.0045355448691,
+      "ci_lower": 29.041077222028267,
+      "standard_error": 5.040235219799433
+    },
+    {
+      "year": "1984",
+      "PolParty": "Republican",
+      "value": 48.486460357606404,
+      "n_actual": 163,
+      "ci_upper": 55.66213874225133,
+      "ci_lower": 41.31078197296147,
+      "standard_error": 3.513575459780136
+    },
+    {
+      "year": "1985",
+      "PolParty": "Democrat",
+      "value": 37.850034015034076,
+      "n_actual": 338,
+      "ci_upper": 43.34389606858596,
+      "ci_lower": 32.3561719614822,
+      "standard_error": 2.7378321086171384
+    },
+    {
+      "year": "1985",
+      "PolParty": "Other",
+      "value": 46.686819842197586,
+      "n_actual": 79,
+      "ci_upper": 58.1085845261674,
+      "ci_lower": 35.265055158227774,
+      "standard_error": 5.286951673646416
+    },
+    {
+      "year": "1985",
+      "PolParty": "Republican",
+      "value": 53.58030181008059,
+      "n_actual": 299,
+      "ci_upper": 60.59379490183851,
+      "ci_lower": 46.56680871832267,
+      "standard_error": 3.477721138824917
+    },
+    {
+      "year": "1986",
+      "PolParty": "Democrat",
+      "value": 38.92717319125476,
+      "n_actual": 364,
+      "ci_upper": 43.98845104528219,
+      "ci_lower": 33.86589533722733,
+      "standard_error": 2.5198550660198467
+    },
+    {
+      "year": "1986",
+      "PolParty": "Other",
+      "value": 37.43620887220761,
+      "n_actual": 83,
+      "ci_upper": 47.36255338404954,
+      "ci_lower": 27.509864360365665,
+      "standard_error": 4.682447143034886
+    },
+    {
+      "year": "1986",
+      "PolParty": "Republican",
+      "value": 48.66668676933369,
+      "n_actual": 251,
+      "ci_upper": 55.62696682707099,
+      "ci_lower": 41.70640671159639,
+      "standard_error": 3.438203973225825
+    },
+    {
+      "year": "1987",
+      "PolParty": "Democrat",
+      "value": 37.249802490358235,
+      "n_actual": 327,
+      "ci_upper": 44.07209928436993,
+      "ci_lower": 30.427505696346536,
+      "standard_error": 3.38929490316044
+    },
+    {
+      "year": "1987",
+      "PolParty": "Other",
+      "value": 58.07686826523874,
+      "n_actual": 66,
+      "ci_upper": 71.17871141333883,
+      "ci_lower": 44.975025117138635,
+      "standard_error": 6.0132944738186005
+    },
+    {
+      "year": "1987",
+      "PolParty": "Republican",
+      "value": 51.73470253637311,
+      "n_actual": 172,
+      "ci_upper": 60.004849778770705,
+      "ci_lower": 43.46455529397552,
+      "standard_error": 4.054960881483776
+    },
+    {
+      "year": "1988",
+      "PolParty": "Democrat",
+      "value": 37.52673620163672,
+      "n_actual": 336,
+      "ci_upper": 43.988418443295316,
+      "ci_lower": 31.065053959978133,
+      "standard_error": 3.213752382005831
+    },
+    {
+      "year": "1988",
+      "PolParty": "Other",
+      "value": 47.25198680212907,
+      "n_actual": 90,
+      "ci_upper": 55.97294394564622,
+      "ci_lower": 38.53102965861191,
+      "standard_error": 4.002618776971481
+    },
+    {
+      "year": "1988",
+      "PolParty": "Republican",
+      "value": 50.59393180718937,
+      "n_actual": 259,
+      "ci_upper": 56.360577032053286,
+      "ci_lower": 44.82728658232547,
+      "standard_error": 2.8574884836477303
+    },
+    {
+      "year": "1989",
+      "PolParty": "Democrat",
+      "value": 33.29482813556795,
+      "n_actual": 332,
+      "ci_upper": 38.36749278574834,
+      "ci_lower": 28.222163485387558,
+      "standard_error": 2.521530294568495
+    },
+    {
+      "year": "1989",
+      "PolParty": "Other",
+      "value": 35.971527389372895,
+      "n_actual": 90,
+      "ci_upper": 41.256460866448315,
+      "ci_lower": 30.686593912297482,
+      "standard_error": 2.5250228089564706
+    },
+    {
+      "year": "1989",
+      "PolParty": "Republican",
+      "value": 55.089224316948325,
+      "n_actual": 295,
+      "ci_upper": 59.98474881155814,
+      "ci_lower": 50.19369982233851,
+      "standard_error": 2.4275020731890953
+    },
+    {
+      "year": "1990",
+      "PolParty": "Democrat",
+      "value": 33.41988843386503,
+      "n_actual": 279,
+      "ci_upper": 38.464656776224906,
+      "ci_lower": 28.375120091505163,
+      "standard_error": 2.5015063499980195
+    },
+    {
+      "year": "1990",
+      "PolParty": "Other",
+      "value": 37.1272776549729,
+      "n_actual": 72,
+      "ci_upper": 41.36306750729933,
+      "ci_lower": 32.89148780264647,
+      "standard_error": 1.901043935655532
+    },
+    {
+      "year": "1990",
+      "PolParty": "Republican",
+      "value": 41.938440507940925,
+      "n_actual": 281,
+      "ci_upper": 47.17240170692743,
+      "ci_lower": 36.70447930895441,
+      "standard_error": 2.5916588351473817
+    },
+    {
+      "year": "1991",
+      "PolParty": "Democrat",
+      "value": 31.111402101159314,
+      "n_actual": 311,
+      "ci_upper": 37.49510193172194,
+      "ci_lower": 24.727702270596687,
+      "standard_error": 3.176641368094287
+    },
+    {
+      "year": "1991",
+      "PolParty": "Other",
+      "value": 34.147746002568,
+      "n_actual": 88,
+      "ci_upper": 40.6846804026461,
+      "ci_lower": 27.610811602489893,
+      "standard_error": 3.083597367524007
+    },
+    {
+      "year": "1991",
+      "PolParty": "Republican",
+      "value": 46.91459384544804,
+      "n_actual": 306,
+      "ci_upper": 53.209138780550404,
+      "ci_lower": 40.62004891034567,
+      "standard_error": 3.1252342704214313
+    },
+    {
+      "year": "1993",
+      "PolParty": "Democrat",
+      "value": 51.44172811634521,
+      "n_actual": 352,
+      "ci_upper": 58.04620394008017,
+      "ci_lower": 44.83725229261025,
+      "standard_error": 3.302859534811733
+    },
+    {
+      "year": "1993",
+      "PolParty": "Other",
+      "value": 49.8139973798602,
+      "n_actual": 95,
+      "ci_upper": 57.340439641993314,
+      "ci_lower": 42.28755511772708,
+      "standard_error": 3.567346047308509
+    },
+    {
+      "year": "1993",
+      "PolParty": "Republican",
+      "value": 67.52242698437162,
+      "n_actual": 304,
+      "ci_upper": 73.49033560210536,
+      "ci_lower": 61.55451836663788,
+      "standard_error": 2.969736344014244
+    },
+    {
+      "year": "1994",
+      "PolParty": "Democrat",
+      "value": 52.685031267621554,
+      "n_actual": 700,
+      "ci_upper": 56.598590496094594,
+      "ci_lower": 48.77147203914852,
+      "standard_error": 1.9686563147766911
+    },
+    {
+      "year": "1994",
+      "PolParty": "Other",
+      "value": 59.47344987891475,
+      "n_actual": 180,
+      "ci_upper": 65.75937639167505,
+      "ci_lower": 53.18752336615445,
+      "standard_error": 3.0820716204969494
+    },
+    {
+      "year": "1994",
+      "PolParty": "Republican",
+      "value": 74.60672483996223,
+      "n_actual": 549,
+      "ci_upper": 78.77258560433634,
+      "ci_lower": 70.44086407558811,
+      "standard_error": 2.090725133202597
+    },
+    {
+      "year": "1996",
+      "PolParty": "Democrat",
+      "value": 47.32541199437767,
+      "n_actual": 627,
+      "ci_upper": 51.63806282021057,
+      "ci_lower": 43.01276116854476,
+      "standard_error": 2.169413259401589
+    },
+    {
+      "year": "1996",
+      "PolParty": "Other",
+      "value": 56.248067220637566,
+      "n_actual": 238,
+      "ci_upper": 63.496294136779596,
+      "ci_lower": 48.99984030449553,
+      "standard_error": 3.604944602025357
+    },
+    {
+      "year": "1996",
+      "PolParty": "Republican",
+      "value": 72.43185287946041,
+      "n_actual": 527,
+      "ci_upper": 76.02530208492708,
+      "ci_lower": 68.83840367399372,
+      "standard_error": 1.7987665136271858
+    },
+    {
+      "year": "1998",
+      "PolParty": "Democrat",
+      "value": 38.57282020584238,
+      "n_actual": 595,
+      "ci_upper": 42.47804599178798,
+      "ci_lower": 34.66759441989679,
+      "standard_error": 1.9627343968272437
+    },
+    {
+      "year": "1998",
+      "PolParty": "Other",
+      "value": 43.55280477543625,
+      "n_actual": 250,
+      "ci_upper": 49.422918498947666,
+      "ci_lower": 37.682691051924834,
+      "standard_error": 2.9021308522039204
+    },
+    {
+      "year": "1998",
+      "PolParty": "Republican",
+      "value": 55.752842062363406,
+      "n_actual": 468,
+      "ci_upper": 61.46402272910356,
+      "ci_lower": 50.04166139562325,
+      "standard_error": 2.856127878064916
+    },
+    {
+      "year": "2000",
+      "PolParty": "Democrat",
+      "value": 30.871682552467323,
+      "n_actual": 592,
+      "ci_upper": 34.68481775057431,
+      "ci_lower": 27.058547354360336,
+      "standard_error": 1.9149412586046073
+    },
+    {
+      "year": "2000",
+      "PolParty": "Other",
+      "value": 42.791885610720804,
+      "n_actual": 287,
+      "ci_upper": 48.570662185960565,
+      "ci_lower": 37.013109035481044,
+      "standard_error": 2.875620911558891
+    },
+    {
+      "year": "2000",
+      "PolParty": "Republican",
+      "value": 47.13770428092355,
+      "n_actual": 450,
+      "ci_upper": 51.72208282569129,
+      "ci_lower": 42.55332573615581,
+      "standard_error": 2.2918479909913416
+    },
+    {
+      "year": "2002",
+      "PolParty": "Democrat",
+      "value": 33.973125176850075,
+      "n_actual": 561,
+      "ci_upper": 38.35645921862755,
+      "ci_lower": 29.58979113507261,
+      "standard_error": 2.2021822094563643
+    },
+    {
+      "year": "2002",
+      "PolParty": "Other",
+      "value": 39.620834655234006,
+      "n_actual": 267,
+      "ci_upper": 46.154269962552775,
+      "ci_lower": 33.08739934791524,
+      "standard_error": 3.251152376186745
+    },
+    {
+      "year": "2002",
+      "PolParty": "Republican",
+      "value": 52.319051076740564,
+      "n_actual": 472,
+      "ci_upper": 57.440437776896204,
+      "ci_lower": 47.197664376584925,
+      "standard_error": 2.5594195550059524
+    },
+    {
+      "year": "2004",
+      "PolParty": "Democrat",
+      "value": 29.94196821490263,
+      "n_actual": 596,
+      "ci_upper": 34.75485180334086,
+      "ci_lower": 25.129084626464397,
+      "standard_error": 2.414897405478858
+    },
+    {
+      "year": "2004",
+      "PolParty": "Other",
+      "value": 40.487253175037445,
+      "n_actual": 225,
+      "ci_upper": 46.525599604064645,
+      "ci_lower": 34.44890674601025,
+      "standard_error": 2.974396752507326
+    },
+    {
+      "year": "2004",
+      "PolParty": "Republican",
+      "value": 52.07696865201441,
+      "n_actual": 535,
+      "ci_upper": 56.541539160258324,
+      "ci_lower": 47.6123981437705,
+      "standard_error": 2.233433778421048
+    },
+    {
+      "year": "2006",
+      "PolParty": "Democrat",
+      "value": 29.662925354648113,
+      "n_actual": 640,
+      "ci_upper": 34.16705402366031,
+      "ci_lower": 25.15879668563591,
+      "standard_error": 2.267169874445889
+    },
+    {
+      "year": "2006",
+      "PolParty": "Other",
+      "value": 33.496719031607576,
+      "n_actual": 314,
+      "ci_upper": 39.92845217810609,
+      "ci_lower": 27.06498588510906,
+      "standard_error": 3.182332127414531
+    },
+    {
+      "year": "2006",
+      "PolParty": "Republican",
+      "value": 54.424534690892216,
+      "n_actual": 476,
+      "ci_upper": 59.386367141651995,
+      "ci_lower": 49.46270224013243,
+      "standard_error": 2.4759089677707493
+    },
+    {
+      "year": "2008",
+      "PolParty": "Democrat",
+      "value": 28.439300808784964,
+      "n_actual": 465,
+      "ci_upper": 33.39736382341913,
+      "ci_lower": 23.481237794150793,
+      "standard_error": 2.4859460272633487
+    },
+    {
+      "year": "2008",
+      "PolParty": "Other",
+      "value": 37.79744807076685,
+      "n_actual": 177,
+      "ci_upper": 45.89635509328306,
+      "ci_lower": 29.698541048250632,
+      "standard_error": 3.9471617940496904
+    },
+    {
+      "year": "2008",
+      "PolParty": "Republican",
+      "value": 52.666170654856096,
+      "n_actual": 308,
+      "ci_upper": 57.63948235703158,
+      "ci_lower": 47.69285895268061,
+      "standard_error": 2.4607254761643675
+    },
+    {
+      "year": "2010",
+      "PolParty": "Democrat",
+      "value": 32.17842291053519,
+      "n_actual": 446,
+      "ci_upper": 36.66702994737213,
+      "ci_lower": 27.689815873698244,
+      "standard_error": 2.2499899008994495
+    },
+    {
+      "year": "2010",
+      "PolParty": "Other",
+      "value": 37.84934474271618,
+      "n_actual": 189,
+      "ci_upper": 44.93639823699044,
+      "ci_lower": 30.762291248441915,
+      "standard_error": 3.4651627124297404
+    },
+    {
+      "year": "2010",
+      "PolParty": "Republican",
+      "value": 58.39870510997158,
+      "n_actual": 341,
+      "ci_upper": 63.20165818638981,
+      "ci_lower": 53.59575203355335,
+      "standard_error": 2.390033967217593
+    },
+    {
+      "year": "2012",
+      "PolParty": "Democrat",
+      "value": 34.67653853739962,
+      "n_actual": 466,
+      "ci_upper": 40.578350615251146,
+      "ci_lower": 28.774726459548095,
+      "standard_error": 2.9524242979761155
+    },
+    {
+      "year": "2012",
+      "PolParty": "Other",
+      "value": 50.14488512668679,
+      "n_actual": 210,
+      "ci_upper": 58.614610157236754,
+      "ci_lower": 41.67516009613682,
+      "standard_error": 4.172056526004326
+    },
+    {
+      "year": "2012",
+      "PolParty": "Republican",
+      "value": 66.41444982833912,
+      "n_actual": 276,
+      "ci_upper": 73.43164249921556,
+      "ci_lower": 59.39725715746268,
+      "standard_error": 3.4720093592416923
+    },
+    {
+      "year": "2014",
+      "PolParty": "Democrat",
+      "value": 35.84937374695606,
+      "n_actual": 567,
+      "ci_upper": 40.58769750979759,
+      "ci_lower": 31.111049984114537,
+      "standard_error": 2.371854346057581
+    },
+    {
+      "year": "2014",
+      "PolParty": "Other",
+      "value": 44.79107278618333,
+      "n_actual": 258,
+      "ci_upper": 51.5901426651816,
+      "ci_lower": 37.99200290718506,
+      "standard_error": 3.373612816448532
+    },
+    {
+      "year": "2014",
+      "PolParty": "Republican",
+      "value": 73.37167789676275,
+      "n_actual": 385,
+      "ci_upper": 77.83072027690874,
+      "ci_lower": 68.91263551661677,
+      "standard_error": 2.2152377811048436
+    },
+    {
+      "year": "2016",
+      "PolParty": "Democrat",
+      "value": 32.742041901062684,
+      "n_actual": 648,
+      "ci_upper": 37.58595008766472,
+      "ci_lower": 27.89813371446065,
+      "standard_error": 2.4247065543292585
+    },
+    {
+      "year": "2016",
+      "PolParty": "Other",
+      "value": 37.28392451941121,
+      "n_actual": 257,
+      "ci_upper": 42.91242574320123,
+      "ci_lower": 31.655423295621187,
+      "standard_error": 2.794544339115356
+    },
+    {
+      "year": "2016",
+      "PolParty": "Republican",
+      "value": 61.9220958123341,
+      "n_actual": 465,
+      "ci_upper": 67.23296640678682,
+      "ci_lower": 56.61122521788139,
+      "standard_error": 2.6489727465100916
+    },
+    {
+      "year": "2018",
+      "PolParty": "Democrat",
+      "value": 23.335276668352694,
+      "n_actual": 486,
+      "ci_upper": 27.975700123288117,
+      "ci_lower": 18.69485321341727,
+      "standard_error": 2.3278195461108844
+    },
+    {
+      "year": "2018",
+      "PolParty": "Other",
+      "value": 32.89123730461996,
+      "n_actual": 236,
+      "ci_upper": 40.38155443971807,
+      "ci_lower": 25.400920169521857,
+      "standard_error": 3.703144687554131
+    },
+    {
+      "year": "2018",
+      "PolParty": "Republican",
+      "value": 58.404149177615786,
+      "n_actual": 401,
+      "ci_upper": 64.37899522808303,
+      "ci_lower": 52.42930312714854,
+      "standard_error": 2.983744874472239
+    },
+    {
+      "year": "2021",
+      "PolParty": "Democrat",
+      "value": 14.676254083472429,
+      "n_actual": 865,
+      "ci_upper": 17.742912131371266,
+      "ci_lower": 11.609596035573592,
+      "standard_error": 1.5623180013362639
+    },
+    {
+      "year": "2021",
+      "PolParty": "Other",
+      "value": 30.047172490380365,
+      "n_actual": 481,
+      "ci_upper": 34.83353963276216,
+      "ci_lower": 25.260805347998566,
+      "standard_error": 2.4356155274180926
+    },
+    {
+      "year": "2021",
+      "PolParty": "Republican",
+      "value": 58.74404064916502,
+      "n_actual": 601,
+      "ci_upper": 63.55774683529116,
+      "ci_lower": 53.930334463038875,
+      "standard_error": 2.4508026445461977
+    },
+    {
+      "year": "2022",
+      "PolParty": "Democrat",
+      "value": 17.733252326936206,
+      "n_actual": 702,
+      "ci_upper": 23.213443897998317,
+      "ci_lower": 12.253060755874094,
+      "standard_error": 2.7432098027967773
+    },
+    {
+      "year": "2022",
+      "PolParty": "Other",
+      "value": 31.561604059370573,
+      "n_actual": 478,
+      "ci_upper": 39.22569904078361,
+      "ci_lower": 23.897509077957537,
+      "standard_error": 3.831476941616348
+    },
+    {
+      "year": "2022",
+      "PolParty": "Republican",
+      "value": 55.545202094084175,
+      "n_actual": 525,
+      "ci_upper": 62.84085634643111,
+      "ci_lower": 48.24954784173725,
+      "standard_error": 3.637376950709417
+    },
+    {
+      "year": "2024",
+      "PolParty": "Democrat",
+      "value": 14.239063274395727,
+      "n_actual": 623,
+      "ci_upper": 17.789711997774475,
+      "ci_lower": 10.688414551016978,
+      "standard_error": 1.7762377768384487
+    },
+    {
+      "year": "2024",
+      "PolParty": "Other",
+      "value": 29.077530671207146,
+      "n_actual": 462,
+      "ci_upper": 34.15215868176086,
+      "ci_lower": 24.002902660653437,
+      "standard_error": 2.532192919474065
+    },
+    {
+      "year": "2024",
+      "PolParty": "Republican",
+      "value": 52.34447590116994,
+      "n_actual": 531,
+      "ci_upper": 59.5885279943061,
+      "ci_lower": 45.10042380803378,
+      "standard_error": 3.61002846881839
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "PolParty",
+      "name": "Political Party",
+      "type": "ordinal",
+      "categories": [
+        "Democrat",
+        "Other",
+        "Republican"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Government Spending Too Much on Welfare",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "natfare_toomuch",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

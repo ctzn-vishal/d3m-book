@@ -1,0 +1,3540 @@
+{
+  "metadata": {
+    "title": "Prevalence of 'Feeling Very Happy'",
+    "subtitle": "% Very Happy by Year, Age Bucket, and Ideology",
+    "years_n": 32,
+    "year_min": 1975,
+    "year_max": 2024,
+    "note": "Survey-weighted via svy (Taylor-series). Cross-classified by age bucket x ideology. Note: many pre-2004 GSS waves have single-PSU strata that produce inflated standard errors under Taylor variance; point estimates remain valid but SEs/CIs in those years are unreliable and should be interpreted with caution. Custom 3-way breakdown computed via svy v0.17.1; not in the standard GSS pre-computed catalog. Some pre-2004 cells have single-PSU strata, producing degenerate Taylor-series CIs/SEs (clamped or omitted at render time). Point estimates are reliable.",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1975-2024; 61949 Observations"
+    },
+    "dataview_type": "timetrend_cross",
+    "original_question": "Taken all together, how would you say things are these days--would you say that you are very happy, pretty happy, or not too happy?",
+    "value_measure": "Percent",
+    "demo_key": [
+      "age_bucket",
+      "ideology"
+    ],
+    "demo_title": "Age x Ideology",
+    "dim_key": [
+      "year",
+      "age_bucket",
+      "ideology"
+    ],
+    "dim_title": "Year, Age Bucket, Ideology",
+    "graph_id": "gss_happy_year_age_ideology_percent_timetrend_cross",
+    "analysis": {
+      "method": "svy package (Taylor-series weighted proportions)",
+      "svy_version": "0.17.1",
+      "weight_column": "wtssps only",
+      "design": "stratum=vstrat, psu=vpsu, wgt=wt_merged",
+      "happy_recode": "1 = (happy==1, 'very happy'); 0 = (happy in {2,3}); else null",
+      "ideology_recode": "Liberal=polviews 1-3; Moderate=polviews 4; Conservative=polviews 5-7",
+      "age_buckets": [
+        "18-34",
+        "35-49",
+        "50-64",
+        "65+"
+      ],
+      "sample_restriction": "non-null happy_binary, age_bucket, ideology, year, weight, vpsu, vstrat; age>=18"
+    },
+    "weight_var": "wtssps",
+    "design_psu": "vpsu",
+    "design_stratum": "vstrat",
+    "n_total": 61949
+  },
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal"
+    },
+    {
+      "id": "value",
+      "name": "Very Happy",
+      "type": "numeric",
+      "value_units": "Percent",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "AgeIdeology",
+      "name": "Age × Ideology",
+      "type": "categorical",
+      "categories": [
+        "18-34 · Liberal",
+        "18-34 · Moderate",
+        "18-34 · Conservative",
+        "35-49 · Liberal",
+        "35-49 · Moderate",
+        "35-49 · Conservative",
+        "50-64 · Liberal",
+        "50-64 · Moderate",
+        "50-64 · Conservative",
+        "65+ · Liberal",
+        "65+ · Moderate",
+        "65+ · Conservative"
+      ]
+    }
+  ],
+  "dataPoints": [
+    {
+      "year": "1975",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 30.704535302122487,
+      "n_actual": 120,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 27.85453203506471,
+      "n_actual": 225,
+      "ci_lower": 26.090449805708054,
+      "ci_upper": 29.618614264421367,
+      "standard_error": 0.8998655768229706
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 23.618354830995262,
+      "n_actual": 207,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 39.588460822151625,
+      "n_actual": 140,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 39.16264225974306,
+      "n_actual": 83,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 30.67212768455198,
+      "n_actual": 131,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 35.0878104742267,
+      "n_actual": 90,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 20.747469247530425
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 40.71862277925995,
+      "n_actual": 55,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 37.288699234921495,
+      "n_actual": 139,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 28.29287353571266,
+      "n_actual": 65,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 38.061159657491636,
+      "n_actual": 56,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1975",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 52.91994317310319,
+      "n_actual": 79,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 31.416145745999625,
+      "n_actual": 124,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 35.69656638638282,
+      "n_actual": 212,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 32.020104950624415,
+      "n_actual": 207,
+      "ci_lower": 22.220070755912182,
+      "ci_upper": 41.820139145336654,
+      "standard_error": 4.99903761670206
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 42.85723165893971,
+      "n_actual": 111,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 29.820619726237425,
+      "n_actual": 72,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 32.69148248722591,
+      "n_actual": 119,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 39.37246153342874,
+      "n_actual": 116,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 31.466217635165926,
+      "n_actual": 64,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 33.50512167307042,
+      "n_actual": 140,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 51.02663957448404,
+      "n_actual": 85,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 27.309288249739534,
+      "n_actual": 53,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1976",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 33.4280063299214,
+      "n_actual": 93,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 33.96316543491147,
+      "n_actual": 121,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 26.174984726482336,
+      "n_actual": 217,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 29.925501335434674,
+      "n_actual": 197,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 36.51042977585052,
+      "n_actual": 142,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 32.477465766385535,
+      "n_actual": 88,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 43.08238823053359,
+      "n_actual": 143,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 43.059935630459044,
+      "n_actual": 127,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 35.75318467252798,
+      "n_actual": 72,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 46.05549888718144,
+      "n_actual": 146,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 33.026870247979296,
+      "n_actual": 77,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 59.8447785814233,
+      "n_actual": 42,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1977",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 39.14978200946233,
+      "n_actual": 75,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 42.34088799033916,
+      "n_actual": 156,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 29.496306106695297,
+      "n_actual": 221,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 27.801851261463483,
+      "n_actual": 225,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 36.39250385434101,
+      "n_actual": 125,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 27.467242340175613,
+      "n_actual": 81,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 23.66603612845351,
+      "n_actual": 118,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 38.98043717739604,
+      "n_actual": 116,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 27.541945416895796,
+      "n_actual": 60,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 39.1061437529532,
+      "n_actual": 113,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 36.28547577473168,
+      "n_actual": 77,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 47.240945423069654,
+      "n_actual": 37,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 26.866087329834492
+    },
+    {
+      "year": "1978",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 35.80471715035707,
+      "n_actual": 88,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 35.15878226968241,
+      "n_actual": 151,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 25.27269851402797,
+      "n_actual": 206,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 24.829908490160403,
+      "n_actual": 204,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 26.892103319406175,
+      "n_actual": 126,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 42.03330571694381,
+      "n_actual": 65,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 36.420396997543875,
+      "n_actual": 131,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 38.0529452881107,
+      "n_actual": 111,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 40.25846896596539,
+      "n_actual": 55,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 37.76967359523602,
+      "n_actual": 140,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 24.083468426578907
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 46.66141315436181,
+      "n_actual": 86,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 30.49197616341096,
+      "n_actual": 38,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1980",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 53.61109614541819,
+      "n_actual": 103,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 35.56694836757435,
+      "n_actual": 178,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 23.389002244070603,
+      "n_actual": 240,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 29.436237342938647,
+      "n_actual": 287,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.70191950954827,
+      "n_actual": 127,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 29.69439644869929,
+      "n_actual": 124,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 27.0828522867949,
+      "n_actual": 137,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 48.55169743928593,
+      "n_actual": 119,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 36.69798486792076,
+      "n_actual": 81,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 33.44608179309547,
+      "n_actual": 164,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 46.76535641411687,
+      "n_actual": 102,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 42.14519429363741,
+      "n_actual": 65,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1982",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 43.26963128661793,
+      "n_actual": 105,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 38.224015145874766,
+      "n_actual": 88,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 26.3105114902699,
+      "n_actual": 96,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 22.169434051407187,
+      "n_actual": 114,
+      "ci_lower": 18.758179838568026,
+      "ci_upper": 25.580688264246344,
+      "standard_error": 1.7400947579670225
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 36.35451140004631,
+      "n_actual": 73,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 15.34770392367407,
+      "n_actual": 52,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 29.67538930687372,
+      "n_actual": 78,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 38.932915681076246,
+      "n_actual": 60,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 28.832251785607323,
+      "n_actual": 14,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 27.740233548746136,
+      "n_actual": 65,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 43.09744252974013,
+      "n_actual": 43,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 50.90534462119073,
+      "n_actual": 13,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1983",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 35.18741274787747,
+      "n_actual": 57,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 36.819498185362725,
+      "n_actual": 167,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 37.188406762975205,
+      "n_actual": 157,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 24.773082039489196,
+      "n_actual": 242,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 29.431016534116942,
+      "n_actual": 123,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 33.102154586010045,
+      "n_actual": 91,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 27.812766651733696,
+      "n_actual": 134,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 46.35282134780997,
+      "n_actual": 121,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 38.52444452791187,
+      "n_actual": 47,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 39.53988214387699,
+      "n_actual": 89,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 47.01856399007864,
+      "n_actual": 79,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 41.64351838050549,
+      "n_actual": 40,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1984",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 44.27549102221686,
+      "n_actual": 91,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 29.65943600860262,
+      "n_actual": 175,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 33.62905116106936,
+      "n_actual": 156,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 19.634530935164612,
+      "n_actual": 218,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 32.765685174016035,
+      "n_actual": 135,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 29.669968813038466,
+      "n_actual": 94,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 18.4989387738409,
+      "n_actual": 132,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 22.502115453684095
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 33.69255328213875,
+      "n_actual": 127,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 45.07198376197634,
+      "n_actual": 65,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 29.673495691360678,
+      "n_actual": 123,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 37.12980003912204,
+      "n_actual": 88,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 32.672133607576484,
+      "n_actual": 53,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1985",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 31.197580235800288,
+      "n_actual": 88,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 30.997347974205024,
+      "n_actual": 164,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 24.62314319046718,
+      "n_actual": 151,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 29.184828255079708,
+      "n_actual": 203,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 34.726981378244815,
+      "n_actual": 145,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 27.5227133566215,
+      "n_actual": 90,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 36.115586333531475,
+      "n_actual": 140,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 43.97836501871194,
+      "n_actual": 88,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 34.40726182813532,
+      "n_actual": 46,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 32.71527297035309,
+      "n_actual": 110,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 45.261278131516505,
+      "n_actual": 83,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 51.164682259602145,
+      "n_actual": 41,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1986",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 40.15683913422411,
+      "n_actual": 112,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 33.82435879698095,
+      "n_actual": 201,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 28.14995817943403,
+      "n_actual": 210,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 28.723430075721758,
+      "n_actual": 234,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 37.41106638653977,
+      "n_actual": 134,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 27.66384627439214,
+      "n_actual": 157,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 35.28686883034899,
+      "n_actual": 153,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 40.19696219345904,
+      "n_actual": 99,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 20.711469436153703,
+      "n_actual": 74,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 34.484106144298785,
+      "n_actual": 124,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 56.43279232032573,
+      "n_actual": 82,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 40.11422754438967,
+      "n_actual": 58,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1987",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 41.14261460237507,
+      "n_actual": 117,
+      "ci_lower": 19.655883757830264,
+      "ci_upper": 62.629345446919885,
+      "standard_error": 10.960469485891009
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 33.13044046366539,
+      "n_actual": 158,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 29.49893168422347,
+      "n_actual": 181,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 32.60986498691305,
+      "n_actual": 184,
+      "ci_lower": 23.815898268869937,
+      "ci_upper": 41.40383170495616,
+      "standard_error": 4.4858384726089575
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 50.25307801758383,
+      "n_actual": 145,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 45.165702081839164,
+      "n_actual": 115,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 27.84396575095165,
+      "n_actual": 125,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 37.204304587336324,
+      "n_actual": 93,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 37.567569594468644,
+      "n_actual": 57,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 31.222866156925743,
+      "n_actual": 87,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 17.33401471999512
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 42.95090695584483,
+      "n_actual": 101,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 37.28513451054244,
+      "n_actual": 41,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1988",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 37.854013973527415,
+      "n_actual": 113,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 33.26274640835739,
+      "n_actual": 160,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 36.30016182113752,
+      "n_actual": 159,
+      "ci_lower": 17.247872016616853,
+      "ci_upper": 55.3524516256582,
+      "standard_error": 9.718651131696857
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 32.17414120183239,
+      "n_actual": 208,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 32.340877053333855,
+      "n_actual": 131,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 30.731450187736144,
+      "n_actual": 129,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 36.442612160194614,
+      "n_actual": 146,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 43.91413564741646,
+      "n_actual": 91,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 23.781345676371085,
+      "n_actual": 61,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 42.08121717679539,
+      "n_actual": 100,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 31.322619396514,
+      "n_actual": 80,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 43.55940677251212,
+      "n_actual": 59,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1989",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 40.224848510035635,
+      "n_actual": 106,
+      "ci_lower": 38.2733623858908,
+      "ci_upper": 42.17633463418048,
+      "standard_error": 0.9954610717925801
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 38.86009369999381,
+      "n_actual": 163,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 38.87747630931083,
+      "n_actual": 129,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 17.428428688181803
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 32.14499789032866,
+      "n_actual": 169,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 36.04985224352211,
+      "n_actual": 132,
+      "ci_lower": 27.46213728012795,
+      "ci_upper": 44.63756720691627,
+      "standard_error": 4.380628607059995
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 24.416274763466646,
+      "n_actual": 132,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 34.80268341331093,
+      "n_actual": 122,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 43.353686594100196,
+      "n_actual": 81,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 33.75048459410298,
+      "n_actual": 48,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 38.55942077045535,
+      "n_actual": 89,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 35.82383322547747,
+      "n_actual": 104,
+      "ci_lower": 32.98717447333113,
+      "ci_upper": 38.66049197762382,
+      "standard_error": 1.4469912579874502
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 36.296552325119436,
+      "n_actual": 43,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1990",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 34.99146483067456,
+      "n_actual": 93,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 35.25181562399281,
+      "n_actual": 154,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 23.85581016394531,
+      "n_actual": 188,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 25.791843863319166,
+      "n_actual": 185,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 42.79887875385988,
+      "n_actual": 137,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 33.126333044375365,
+      "n_actual": 124,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 27.204201219124037,
+      "n_actual": 164,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 35.83569611254301,
+      "n_actual": 71,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 23.98286911654784,
+      "n_actual": 58,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 34.43026439387049,
+      "n_actual": 103,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 39.70114031150545,
+      "n_actual": 103,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 38.598858290590485,
+      "n_actual": 33,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1991",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 33.92153152244215,
+      "n_actual": 125,
+      "ci_lower": 8.436460065445212,
+      "ci_upper": 59.40660297943909,
+      "standard_error": 13.00003942298577
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 35.56400352180001,
+      "n_actual": 161,
+      "ci_lower": 33.43202036019729,
+      "ci_upper": 37.69598668340274,
+      "standard_error": 1.0875333505242288
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 27.764334372321713,
+      "n_actual": 143,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 22.888893875454134,
+      "n_actual": 203,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 34.7766575922993,
+      "n_actual": 161,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 25.72775940214602,
+      "n_actual": 158,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 27.44407870243431,
+      "n_actual": 186,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 40.05943849653781,
+      "n_actual": 115,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 30.496227758357282,
+      "n_actual": 63,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 36.44663530616965,
+      "n_actual": 89,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 43.716143945196094,
+      "n_actual": 119,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 36.31693373199753,
+      "n_actual": 46,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 22.242714317885802
+    },
+    {
+      "year": "1993",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 30.072042664377076,
+      "n_actual": 96,
+      "ci_lower": 27.338852764620963,
+      "ci_upper": 32.805232564133185,
+      "standard_error": 1.394211372225946
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 31.55823017389274,
+      "n_actual": 304,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 27.012545865407954,
+      "n_actual": 301,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 24.550150553522894,
+      "n_actual": 352,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.047313664926094,
+      "n_actual": 364,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 26.110389186967026,
+      "n_actual": 260,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 25.58514611418397,
+      "n_actual": 311,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 33.850735049902575,
+      "n_actual": 197,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 32.97976680782798,
+      "n_actual": 123,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 32.38510281818966,
+      "n_actual": 195,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 35.606105458369115,
+      "n_actual": 182,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 34.643334966513656,
+      "n_actual": 90,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1994",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 37.871384794956356,
+      "n_actual": 184,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 33.24852352101104,
+      "n_actual": 326,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 22.55162344169825,
+      "n_actual": 255,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 27.9166723875374,
+      "n_actual": 349,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 20.588748417578678
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.801875271426745,
+      "n_actual": 318,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 27.171556157977733,
+      "n_actual": 262,
+      "ci_lower": 0,
+      "ci_upper": 54.362193713328956,
+      "standard_error": 13.870055681505084
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 31.281119968864797,
+      "n_actual": 335,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 39.32004499647015,
+      "n_actual": 205,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 28.985713238639153,
+      "n_actual": 105,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 35.1295922949923,
+      "n_actual": 185,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 45.45076687525257,
+      "n_actual": 148,
+      "ci_lower": 16.274847580942748,
+      "ci_upper": 74.62668616956239,
+      "standard_error": 14.882756034954934
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 40.214779424601524,
+      "n_actual": 70,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1996",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 38.52022525667174,
+      "n_actual": 164,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 39.42562639022501,
+      "n_actual": 266,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 24.866997019253397,
+      "n_actual": 290,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 28.623040123808213,
+      "n_actual": 330,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 32.519446476316716,
+      "n_actual": 312,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 33.68028280606003,
+      "n_actual": 254,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 28.487536616171237,
+      "n_actual": 293,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 37.924883690218266,
+      "n_actual": 183,
+      "ci_lower": 16.898490246395394,
+      "ci_upper": 58.951277134041135,
+      "standard_error": 10.7256494906888
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 41.35415219068738,
+      "n_actual": 125,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 36.286402349739504,
+      "n_actual": 191,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 44.53404996812346,
+      "n_actual": 162,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 36.444444684379164,
+      "n_actual": 96,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "1998",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 31.62126504253428,
+      "n_actual": 161,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 41.10186320285699,
+      "n_actual": 247,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 24.265784331613098,
+      "n_actual": 235,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 27.162411824481925,
+      "n_actual": 337,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 36.70961066559866,
+      "n_actual": 297,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 34.56693664461157,
+      "n_actual": 238,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 32.87402801530849,
+      "n_actual": 339,
+      "ci_lower": 6.454213270946585,
+      "ci_upper": 59.29384275967039,
+      "standard_error": 13.476855805730487
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 41.846226577273555,
+      "n_actual": 185,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 35.518807435395566,
+      "n_actual": 133,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 33.447675400931736,
+      "n_actual": 177,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 43.79081422353849,
+      "n_actual": 150,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 28.381282713301037
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 33.92902392579315,
+      "n_actual": 80,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2000",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 36.69724667013299,
+      "n_actual": 184,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 36.16925329469972,
+      "n_actual": 109,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 31.83660439778594,
+      "n_actual": 134,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 24.90289615374422,
+      "n_actual": 178,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.40989280059806,
+      "n_actual": 140,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 26.583721018400077,
+      "n_actual": 98,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 36.54508529510281,
+      "n_actual": 153,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 38.36587606939141,
+      "n_actual": 117,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 32.87056273492715,
+      "n_actual": 68,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 27.581481287806064,
+      "n_actual": 93,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 36.4239931821374,
+      "n_actual": 92,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 27.546680198037848,
+      "n_actual": 47,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2002",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 36.38168135472079,
+      "n_actual": 93,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 40.75449670901416,
+      "n_actual": 129,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 29.195644472742355,
+      "n_actual": 118,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 28.689730967702953,
+      "n_actual": 156,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 37.00872729881286,
+      "n_actual": 165,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 28.70249668232242,
+      "n_actual": 93,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 24.747607209113536,
+      "n_actual": 152,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 34.34972218850431,
+      "n_actual": 122,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 25.602612527219513,
+      "n_actual": 72,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 27.41010461374881,
+      "n_actual": 100,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 43.65387214391967,
+      "n_actual": 76,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 37.16958609955584,
+      "n_actual": 35,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2004",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 28.65325547851667,
+      "n_actual": 84,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 32.4850831134253,
+      "n_actual": 243,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 23.66505457936412,
+      "n_actual": 261,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 28.35415682464555
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 28.00503596741737,
+      "n_actual": 327,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 38.882062248994245,
+      "n_actual": 314,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 24.994742316987274,
+      "n_actual": 232,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 31.341992381257484,
+      "n_actual": 355,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 36.86973444974145,
+      "n_actual": 258,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 27.18924514968283,
+      "n_actual": 189,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 33.47707496709405,
+      "n_actual": 224,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 43.653346643233654,
+      "n_actual": 191,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 33.900833354903234,
+      "n_actual": 99,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2006",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 36.20483615289426,
+      "n_actual": 188,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 32.53640389739206,
+      "n_actual": 142,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 21.875966808486023,
+      "n_actual": 193,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 28.99469717758715,
+      "n_actual": 207,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 32.173831200221024,
+      "n_actual": 199,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 28.098048649001324,
+      "n_actual": 165,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 25.40494488226844,
+      "n_actual": 205,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 39.42268697159948,
+      "n_actual": 185,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 25.527222573170455,
+      "n_actual": 111,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 30.462792262264227,
+      "n_actual": 188,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 45.02935119105056,
+      "n_actual": 135,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 27.122697072232615,
+      "n_actual": 57,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2008",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 39.134415191958894,
+      "n_actual": 129,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 29.332574042365977
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 36.620284042253544,
+      "n_actual": 161,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 24.270773237274486,
+      "n_actual": 186,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 29.683720291778165
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 21.46526638633724,
+      "n_actual": 236,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 25.06749008983758,
+      "n_actual": 179,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 29.955106860009362,
+      "n_actual": 141,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 28.881099135762256,
+      "n_actual": 211,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 26.659035083105735,
+      "n_actual": 183,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 33.854355940353415,
+      "n_actual": 142,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 25.710822638026798,
+      "n_actual": 184,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 27.79091240798321,
+      "n_actual": 136,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 37.32042716091385,
+      "n_actual": 96,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2010",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 30.831460925699965,
+      "n_actual": 114,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 47.54452075227927,
+      "n_actual": 139,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 27.3730299332895,
+      "n_actual": 161,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 27.999595891687196,
+      "n_actual": 235,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 38.859381539683504,
+      "n_actual": 172,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 28.471549098672305,
+      "n_actual": 155,
+      "ci_lower": 20.298714402902483,
+      "ci_upper": 36.64438379444213,
+      "standard_error": 4.168996481796539
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 30.058260383631453,
+      "n_actual": 187,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 31.02857743413457,
+      "n_actual": 185,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 19.200285402483697,
+      "n_actual": 134,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 33.96296438469096,
+      "n_actual": 161,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 34.67653958805988,
+      "n_actual": 127,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 28.999285798944786,
+      "n_actual": 80,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2012",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 27.477545358045578,
+      "n_actual": 127,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 31.11753375065267,
+      "n_actual": 158,
+      "ci_lower": 21.80290934472226,
+      "ci_upper": 40.43215815658308,
+      "standard_error": 4.751428093569473
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 25.76668683882421,
+      "n_actual": 204,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 17.60931689330986
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 29.055206621516632,
+      "n_actual": 287,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 39.011881904622875,
+      "n_actual": 201,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 32.279091097042446,
+      "n_actual": 175,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 33.511654693417526,
+      "n_actual": 257,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 34.005069567331006,
+      "n_actual": 254,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 30.635958987432215,
+      "n_actual": 175,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 29.172437844853672,
+      "n_actual": 261,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 38.207483763428705,
+      "n_actual": 182,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 35.25209628605149,
+      "n_actual": 105,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2014",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 33.71209543083723,
+      "n_actual": 176,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 32.91695926873011,
+      "n_actual": 193,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 28.304288533356942,
+      "n_actual": 257,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 26.63958327156608,
+      "n_actual": 306,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.31158838071604,
+      "n_actual": 218,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 29.3372226524562,
+      "n_actual": 184,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 22.345127267675547,
+      "n_actual": 254,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 32.66884285527685,
+      "n_actual": 286,
+      "ci_lower": 4.700383331953429,
+      "ci_upper": 60.637302378600275,
+      "standard_error": 14.266825855948786
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 35.37044205896315,
+      "n_actual": 213,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 27.449988326431406,
+      "n_actual": 277,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 39.72066761408147,
+      "n_actual": 228,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 29.32857281283337,
+      "n_actual": 139,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2016",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 28.760581563091847,
+      "n_actual": 187,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 29.069416282730053,
+      "n_actual": 146,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 27.10031619727507,
+      "n_actual": 222,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 23.739843754371087,
+      "n_actual": 271,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 26.292445555471637
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.20323750751531,
+      "n_actual": 171,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 31.142272941401966,
+      "n_actual": 158,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 32.96412041833083,
+      "n_actual": 229,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 38.215074626721936,
+      "n_actual": 230,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 24.23818678846892,
+      "n_actual": 137,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 36.250261732330586,
+      "n_actual": 204,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 37.35859870896021,
+      "n_actual": 187,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 36.416166257487916,
+      "n_actual": 138,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2018",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 30.1052777046513,
+      "n_actual": 147,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 20.658713786758533,
+      "n_actual": 172,
+      "ci_lower": 14.068801720557705,
+      "ci_upper": 27.248625852959357,
+      "standard_error": 3.361541159465726
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 10.54682611693107,
+      "n_actual": 339,
+      "ci_lower": 6.59254113548641,
+      "ci_upper": 14.50111109837573,
+      "standard_error": 2.01709697911746
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 15.033465410465679,
+      "n_actual": 271,
+      "ci_lower": 6.025287424444227,
+      "ci_upper": 24.04164339648713,
+      "standard_error": 4.595108518536241
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 20.819187077780164,
+      "n_actual": 247,
+      "ci_lower": 14.748855216789956,
+      "ci_upper": 26.889518938770372,
+      "standard_error": 3.0965011668355866
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 15.683452579814732,
+      "n_actual": 308,
+      "ci_lower": 11.167005542891168,
+      "ci_upper": 20.1998996167383,
+      "standard_error": 2.3038581481282705
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 25.814347226111828,
+      "n_actual": 342,
+      "ci_lower": 17.470490370097657,
+      "ci_upper": 34.158204082126,
+      "standard_error": 4.256235586820523
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 23.605257671768186,
+      "n_actual": 359,
+      "ci_lower": 18.6523657277613,
+      "ci_upper": 28.558149615775076,
+      "standard_error": 2.526490484381219
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 16.114343972897988,
+      "n_actual": 300,
+      "ci_lower": 10.98760172575061,
+      "ci_upper": 21.241086220045364,
+      "standard_error": 2.615172236690134
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 17.175902664636038,
+      "n_actual": 347,
+      "ci_lower": 12.832017989022294,
+      "ci_upper": 21.51978734024978,
+      "standard_error": 2.215833380226932
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 29.2833840526407,
+      "n_actual": 374,
+      "ci_lower": 12.362754558208769,
+      "ci_upper": 46.204013547072634,
+      "standard_error": 8.631282469053401
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 15.949586271111164,
+      "n_actual": 293,
+      "ci_lower": 11.305626419743891,
+      "ci_upper": 20.593546122478436,
+      "standard_error": 2.368902957498383
+    },
+    {
+      "year": "2021",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 20.986224996364466,
+      "n_actual": 291,
+      "ci_lower": 15.50121671055674,
+      "ci_upper": 26.47123328217219,
+      "standard_error": 2.7979252116763105
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 26.964386476354957,
+      "n_actual": 224,
+      "ci_lower": 22.510222130389657,
+      "ci_upper": 31.418550822320256,
+      "standard_error": 2.2720874921505816
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 20.36571063920642,
+      "n_actual": 361,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 24.15289685238939,
+      "n_actual": 328,
+      "ci_lower": 9.112005363568656,
+      "ci_upper": 39.19378834121012,
+      "standard_error": 7.672420406647015
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 35.05980877878042,
+      "n_actual": 245,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 27.83501002206093,
+      "n_actual": 238,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 27.81835637047736,
+      "n_actual": 308,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 22.493230522640953,
+      "n_actual": 291,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 18.919497977290387,
+      "n_actual": 208,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 18.817447680897054,
+      "n_actual": 277,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 31.07721436156866,
+      "n_actual": 273,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 21.92371286530455,
+      "n_actual": 215,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2022",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 26.609520126098264,
+      "n_actual": 249,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "18-34 · Conservative",
+      "value": 24.72946542419338,
+      "n_actual": 193,
+      "ci_lower": 0,
+      "ci_upper": 51.08568877866285,
+      "standard_error": 13.444417577061637
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "18-34 · Liberal",
+      "value": 18.21408407079821,
+      "n_actual": 253,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": 20.403301386191703
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "18-34 · Moderate",
+      "value": 20.517454259167486,
+      "n_actual": 304,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "35-49 · Conservative",
+      "value": 22.82722992384895,
+      "n_actual": 251,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "35-49 · Liberal",
+      "value": 25.492427771832897,
+      "n_actual": 237,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "35-49 · Moderate",
+      "value": 23.756259811315967,
+      "n_actual": 312,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "50-64 · Conservative",
+      "value": 27.01856783369215,
+      "n_actual": 285,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "50-64 · Liberal",
+      "value": 15.502408391583018,
+      "n_actual": 199,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "50-64 · Moderate",
+      "value": 23.54028702268102,
+      "n_actual": 261,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "65+ · Conservative",
+      "value": 27.90984833041704,
+      "n_actual": 320,
+      "ci_lower": 14.872190011765287,
+      "ci_upper": 40.9475066490688,
+      "standard_error": 6.650562954547165
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "65+ · Liberal",
+      "value": 26.611340335405785,
+      "n_actual": 215,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    },
+    {
+      "year": "2024",
+      "AgeIdeology": "65+ · Moderate",
+      "value": 28.57436876728783,
+      "n_actual": 220,
+      "ci_lower": null,
+      "ci_upper": null,
+      "standard_error": null
+    }
+  ]
+}

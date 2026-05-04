@@ -1,0 +1,200 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Callout } from '@/components/Book/Callout';
+import { Figure } from '@/components/Book/Figure';
+import { TabSet, Tab } from '@/components/Book/TabSet';
+import { PullQuote } from '@/components/Book/PullQuote';
+import { Annotation } from '@/components/Book/Annotation';
+import TimeseriesLineV1 from '@/components/Book/charts/timeseries-line-v1';
+
+import pressByParty from './data/press-by-party.json';
+import pressTopline from './data/press-topline.json';
+import pressByCollege from './data/press-by-college.json';
+import pressByAge from './data/press-by-age.json';
+import pressLowByParty from './data/press-low-by-party.json';
+import pressLowTopline from './data/press-low-topline.json';
+import tvByParty from './data/tv-by-party.json';
+import tvTopline from './data/tv-topline.json';
+
+export const pressToplineWithGroup = {
+  ...pressTopline,
+  dataPoints: pressTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+
+export const pressLowToplineWithGroup = {
+  ...pressLowTopline,
+  dataPoints: pressLowTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+
+<DropCap>
+
+The standard story about American media trust is a partisan one: Republicans don't trust the press, Democrats do, and the gap explains the country's two information ecosystems. The standard story is half right. The General Social Survey has asked Americans about confidence in the press in nearly every wave since 1973, and the trend it documents is something stranger and harder to argue away on partisan terms. Confidence in the press has collapsed across the board. In 1976, the peak year of the series, 29% of Americans said they had a great deal of confidence in the press. In 2024 the number was 7.7%. Democrats, Republicans, college graduates, non-graduates, the young, the old: every group's confidence in the press is much lower now than it was forty years ago. What separates the parties is not how much they trust the press. It is how strongly they reject it.
+
+</DropCap>
+
+<KeyNumber
+  value="78"
+  unit="%"
+  label="Share of Republicans who in 2024 said they had 'hardly any' confidence in the press, the GSS's measure of active distrust. The Democratic figure is 33%. The 45-point R–D gap on active distrust is the largest in the GSS's institutional-confidence battery. The corresponding partisan gap on 'great deal' of confidence — the headline framing — is only 12 points."
+  align="center"
+/>
+
+<Callout variant="caveat">
+The GSS shifted from face-to-face to web-based interviewing in 2021. On items about media institutions, the 2018 → 2022 step is partly real and partly mode-related; we treat the 2021–2024 readings as internally comparable to one another and not directly comparable to 2018 and earlier. The fifty-year topline trajectory is robust to the mode shift, but specific year-over-year comparisons across that boundary should be read with caution.
+</Callout>
+
+## The bipartisan collapse
+
+Almost every other chapter in this book opens with a chart in which the lines diverge — parties pulling apart, demographics drifting in different directions. This chapter has to open differently, because the most important fact about confidence in the press over the last fifty years is that *every* line has fallen.
+
+<Figure
+  caption="Figure 1. Share of US adults saying they have 'a great deal of confidence' in the press, GSS 1973–2024. The series peaks early, in 1976, at 29% and falls almost monotonically thereafter. The 2024 reading of 7.7% is the lowest in the half-century history of the question."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={pressToplineWithGroup}
+      demographicGroups={['Overall']}
+      demographic="Overall"
+      defaultVisibleGroups={['Overall']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The Watergate-era press is the press at its most-trusted in modern memory. By the turn of the millennium the figure had been cut roughly in half. By 2024 it had been cut in half again. Whatever else is happening in American media, *trust in it is not a partisan story laid on top of a stable baseline*. It is a story about a baseline that has fallen out from under everyone.
+
+This matters for how the partisan story gets read. A drop from 80% to 5% means something different than a drop from 25% to 5%. Press confidence at its peak was already a minority position; the institution was never trusted the way the military still is. What has happened since is a long erosion of even that minority position, until "high confidence in the press" is now a niche view held by less than one American in twelve.
+
+## The partisan gap on confidence — modest, and not the headline
+
+Read in isolation, Figure 1 might suggest the press story is mostly about everyone losing faith together. The party-broken-out version of the same question shows that this is *part* of the truth.
+
+<Figure
+  width="page-outset"
+  caption="Figure 2. Share saying they have 'a great deal of confidence' in the press, by party, GSS 1973–2024. The Democratic and Republican lines spent most of the 1970s and 80s within a few points of each other. The Republican line falls earlier and further; by 2024, Democrats are at 15% and Republicans at 3% — still both well below the 1970s level for both parties. The gap is real, but small in absolute terms because the floor is so close to zero."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={pressByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+A few things in Figure 2 are worth flagging.
+
+The Democratic line has not held steady. In 1976 it stood at 33% — its peak. By the 2010s it had fallen into the low teens, and the brief 2018 spike (likely a Trump-era reaction effect, with confidence in the press functioning as a proxy for the press's adversarial relationship with the administration) is bracketed by readings in the single-to-low double digits. *Democrats did not stop trusting the press; they just stopped trusting it less than Republicans did.* The most recent Democratic reading, 15%, is a third of the 1976 Democratic peak.
+
+The Republican line has fallen further. From 22% in 1973 to 3% in 2024 — an 86% relative decline, with the steepest legs in the late 1990s and the post-2014 period. The proposal that became this book described this as a "20+ point gap" by 2024. On the great-deal-of-confidence measure, the 2024 gap is 12 points (D=15, R=3), not 20. To find the 20+ point gap, you have to ask the question differently.
+
+## Active distrust is where the chasm lives
+
+The GSS asks every confidence question twice. *Great deal* of confidence captures the high end. *Hardly any* confidence — the low end — captures active distrust. For most institutions, the two are correlated and the great-deal series carries the story by itself. For the press, they are not correlated, and they do not.
+
+<Figure
+  width="page-outset"
+  caption="Figure 3. Share saying they have 'hardly any' confidence in the press, by party, GSS 1973–2024. This is the active-distrust measure. The Republican line rises from 15% (1973) to 78% (2024); the Democratic line rises from 13% to 33%. Both parties grew more distrustful, but Republicans did so by 63 points and Democrats by 20. The 45-point R–D gap is the largest active-distrust gap on any institution in the GSS battery."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={pressLowByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+This is the credibility chasm. In 2024, just over three in four Republicans have *hardly any* confidence in the press — not "some confidence," not "moderate," not "a fair amount," but the lowest available answer category. A third of Democrats give the same answer. Combined with the previous figure, the contemporary picture sharpens: a typical Democrat is mildly skeptical of the press; a typical Republican has rejected it. The R–D gap on active rejection (45 points) is over three times the gap on active confidence (12 points).
+
+The shape of the Republican line is also telling. The first big inflection is the late 1990s — the rise of Fox News, the Lewinsky-era partisan press wars, the early Internet. The second is post-2014 — the period the proposal correctly identified as the "fake news" turn, and which the active-distrust measure shows landing on the Republican coalition with much greater force than on the Democratic one. The 2018 reading of 67% Republican active distrust is, in retrospect, the moment where the press as a *trusted* institution stopped existing on one side of the political spectrum. The 2024 reading of 78% extends the trend.
+
+## The partisan and educational divides are not the same divide
+
+For some institutions covered earlier in this chapter — particularly the scientific community and higher education — the partisan gap and the educational gap point in the same direction and reinforce each other. Republicans and non-college-educated Americans have lost confidence in roughly the same patterns. Confidence in the press is structured differently.
+
+<Figure
+  caption="Figure 4. Press confidence by education and by age. The college / no-college gap on press confidence has reopened in the 2018+ era after being essentially zero for thirty years. The age gap is more consistent: older Americans have always been a bit more trusting of the press, with no recent inflection."
+>
+  <TabSet ariaLabel="Press confidence by education and by age">
+    <Tab label="By education">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={pressByCollege}
+          demographicGroups={['College', 'No College']}
+          demographic="College"
+          defaultVisibleGroups={['College', 'No College']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+    <Tab label="By age">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={pressByAge}
+          demographicGroups={['18-34', '35-49', '50-64', '65+']}
+          demographic="Age"
+          defaultVisibleGroups={['18-34', '65+']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+  </TabSet>
+</Figure>
+
+The education tab is the more interesting of the two. From 1973 through the 2010s, college and non-college Americans had nearly identical confidence in the press — the lines are within two or three points of each other across most years. In 2018 the lines split: college-educated Americans ticked up to 20%, non-college Americans stayed at 11%. By 2024, the 9-point spike has compressed (10% college, 7% non-college) but the gap is still wider than at any point pre-2018. This is the inverse of the diploma divide on confidence in the *scientific* community (Ch. 2.3), where the gap has been growing for decades. On press, the diploma divide is recent and modest.
+
+The age tab is steadier. Older Americans have been somewhat more confident in the press across the entire series, and no recent inflection has changed that. There is no generational cliff here — the press has not been suddenly *abandoned* by the young in the way that, for example, the scientific community has been suddenly *embraced* by them.
+
+## Television vs. the press: same direction, smaller magnitude
+
+The GSS asks the confidence battery about both "the press" and "television." The two questions are sometimes used interchangeably in journalism, but the data suggest that respondents do not treat them the same way. Confidence in television has fallen, like confidence in the press, but its partisan structure is much milder.
+
+<Figure
+  caption="Figure 5. 'Great deal of confidence' in television vs. the press, by party. Both decline; both end in the single digits. The R–D gap is much smaller for television (5 points in 2024) than for the press (12 points). 'TV news' may be a more partisan category than 'television' as a generic institution — respondents apparently distinguish."
+>
+  <TabSet ariaLabel="Television vs press confidence by party">
+    <Tab label="Press">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={pressByParty}
+          demographicGroups={['Democrat', 'Other', 'Republican']}
+          demographic="PolParty"
+          defaultVisibleGroups={['Democrat', 'Republican']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+    <Tab label="Television">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={tvByParty}
+          demographicGroups={['Democrat', 'Other', 'Republican']}
+          demographic="PolParty"
+          defaultVisibleGroups={['Democrat', 'Republican']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+  </TabSet>
+</Figure>
+
+Two readings of this difference are plausible. The first is methodological: respondents reading the survey item literally may interpret "television" to include sports, dramas, and entertainment programming, whereas "the press" calls to mind news specifically. On that reading, the gap between the two charts isn't about media at all; it's about which mental object the question summons. The second reading is substantive: as cable news and political talk television have come to dominate the partisan conversation, "the press" has become a partisan object in a way that "television" — encompassing weather, sports, *Jeopardy!*, and HBO — has not. Both readings probably contain some truth.
+
+For the book's purposes, the practical point is that the credibility chasm is a *press* phenomenon and not a generic media phenomenon. The data are inconsistent with a story in which Republicans have rejected mediated information broadly. They are consistent with a story in which Republicans have rejected the institution most associated with adversarial reporting on the Republican coalition — a much narrower claim, with much narrower implications.
+
+## What this chapter changes
+
+Three things to take into the rest of Part II.
+
+First, when other chapters discuss "the partisan gap" on an institution, the natural measure is high confidence by party. For the press, the natural measure is *active distrust* by party. The chasm in this domain is on the rejection side, not the affirmation side, and showing it on the wrong measure understates it by roughly four-fold.
+
+Second, the press story is not the science story (Ch. 2.3) or the higher-education story (Ch. 2.3 again). For science and academia, the partisan gap and the educational gap line up: Republicans and non-college-educated Americans have lost confidence in parallel. For the press, the educational gap is modest and recent; the partisan gap dwarfs it. Knowledge-class versus working-class is the wrong frame for media trust. Partisan-coalition is the right one.
+
+Third, the *baseline* — the total share of Americans with high confidence in the press — has fallen far enough that even the contemporary partisan winners (Democrats at 15%) are well below the cross-party 1970s baseline. There is no party in 2024 whose press confidence resembles the press confidence of any party in 1976. That is worth holding in mind through the rest of this section, because it limits how much partisan polarization on press trust can be explained by partisan dynamics alone. Whatever has happened to the institution, it has happened more thoroughly than any partisan story alone can carry.
+
+The next section turns from the institution that asks the questions to the institutions whose answers structure the economy: business, banks, and labor.

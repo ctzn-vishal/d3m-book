@@ -1,0 +1,274 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Callout } from '@/components/Book/Callout';
+import { Figure } from '@/components/Book/Figure';
+import { TabSet, Tab } from '@/components/Book/TabSet';
+import { PullQuote } from '@/components/Book/PullQuote';
+import { Annotation } from '@/components/Book/Annotation';
+import TimeseriesLineV1 from '@/components/Book/charts/timeseries-line-v1';
+
+import educationTopline from './data/education-topline.json';
+import educationByParty from './data/education-by-party.json';
+import healthTopline from './data/health-topline.json';
+import healthByParty from './data/health-by-party.json';
+import socsecTopline from './data/socsec-topline.json';
+import socsecByParty from './data/socsec-by-party.json';
+import welfareTopline from './data/welfare-topline.json';
+import welfareByParty from './data/welfare-by-party.json';
+import welfareToomuchByParty from './data/welfare-toomuch-by-party.json';
+import welfareByRace from './data/welfare-by-race.json';
+import childcareByParty from './data/childcare-by-party.json';
+import racialByParty from './data/racial-by-party.json';
+
+export const educationToplineWithGroup = {
+  ...educationTopline,
+  dataPoints: educationTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+export const healthToplineWithGroup = {
+  ...healthTopline,
+  dataPoints: healthTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+export const welfareToplineWithGroup = {
+  ...welfareTopline,
+  dataPoints: welfareTopline.dataPoints.map((d) => ({ ...d, Overall: 'Overall' })),
+};
+
+<DropCap>
+
+A common observation about American politics, repeated everywhere from cable news panels to graduate seminars, is that the country is split between people who want a bigger government and people who want a smaller one. The General Social Survey has been asking Americans whether the federal government spends too much, too little, or about the right amount on a long battery of programs since 1973. Across that battery, in nearly every wave, in nearly every domain, the most popular answer is *too little*. On education, 76% of Americans say too little. On health, 74%. On Social Security, 61%. The country that the GSS has been polling for fifty-two years does not, on the evidence of its own answers, want a smaller government. It wants a bigger one. What divides the parties is not how much should be spent, but how the spending is named.
+
+</DropCap>
+
+<KeyNumber
+  value="46"
+  unit="pts"
+  label="The 2024 partisan gap on whether the federal government spends 'too little' on improving the conditions of Black Americans (D=69%, R=23%) — the single largest spending-domain gap in the GSS battery, and roughly twice the size of the gap on welfare (34 pts) or health (15 pts). The same dollar, framed in different words, produces almost completely different partisan attitudes. This chapter is about which words matter."
+  align="center"
+/>
+
+<Callout variant="caveat">
+This chapter analyzes the *too little* side of each spending question. Some readers will be more familiar with the *too much* framing of opposition to welfare; we use the standard 'too little' direction throughout for cross-domain comparability and add the *too much* counter-question for welfare in Figure 7, where the asymmetry between the two framings is the finding. The 2021 mode shift affects all spending items somewhat (web respondents tend to give slightly higher 'too little' readings on most items than face-to-face respondents would, an artifact, not a real change in attitudes), but the pre-2018 trends and the partisan gaps in 2022 and 2024 are large enough that mode effects do not change any conclusion in this chapter.
+</Callout>
+
+## The bipartisan baseline: Americans want more, not less
+
+The starting point for any honest analysis of spending attitudes is the topline trajectory of the most-asked questions. Americans have always told the GSS, by large and growing majorities, that the federal government underspends on most of what it does.
+
+<Figure
+  caption="Figure 1. Share of US adults saying the government spends 'too little' on three universal programs — education, improving and protecting health, and Social Security — GSS 1973–2024. All three lines are above 50% for almost the entire series. Education has grown from 51% to 76%; health has grown from 63% to 74%; Social Security has held in the 50–66% range since the question began in 1984. There is no 'shrinking-government' majority in this picture."
+>
+  <TabSet ariaLabel="Three universal program toplines">
+    <Tab label="Education">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={educationToplineWithGroup}
+          demographicGroups={['Overall']}
+          demographic="Overall"
+          defaultVisibleGroups={['Overall']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+    <Tab label="Health">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={healthToplineWithGroup}
+          demographicGroups={['Overall']}
+          demographic="Overall"
+          defaultVisibleGroups={['Overall']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+    <Tab label="Welfare">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={welfareToplineWithGroup}
+          demographicGroups={['Overall']}
+          demographic="Overall"
+          defaultVisibleGroups={['Overall']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+  </TabSet>
+</Figure>
+
+The education line is the clearest. In the early 1970s, half of Americans wanted more education spending. By the mid-2000s the figure was over 70%; the 2024 reading of 76% is the highest in the series. The health line's profile is similar but starts higher — 63% in 1973, peaking at 78% in 2004 (the year of the Medicare prescription-drug expansion debate), settling at 74% in 2024. Even welfare — the program with the loudest partisan rhetoric and the lowest approval — has grown more popular over fifty years: 21% in 1973, 33% in 2024.
+
+This is one of the more counterintuitive findings in this book, and it bears repeating. The common rhetoric of contemporary American politics — "people want less government" — is, on the evidence of the country's longest-running survey instrument on the question, *false as a description of what people say*. Americans have not become more skeptical of federal spending over the last fifty years. They have become more enthusiastic about it, on every major domain except in periods immediately following sharp tax-and-deficit debates.
+
+What divides the parties is not the appetite. It is the framing.
+
+## Education and Social Security: the bipartisan domains
+
+Two of the four major social-welfare programs in the GSS battery enjoy *genuine* bipartisan supermajority support, in the sense that majorities of both Democratic and Republican voters say the federal government spends too little. Education is one. Social Security is the other.
+
+<Figure
+  caption="Figure 2. Share saying the government spends 'too little' on education, by party. Republicans are at 69%, Democrats at 83%, both well above majority. The partisan gap (14 points) is one of the smallest in the spending battery. The Republican line is roughly flat from 1990 to 2024; the Democratic line drifted upward 10 points over the same period."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={educationByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+Two-thirds of Republicans say the government spends too little on education. That is a fact worth holding alongside the contemporary discourse around "school choice" and "the education establishment." Whatever Republicans are angry about when they discuss education in cable-news terms, they are not telling the GSS that they want the federal government to spend less on it. They are telling the GSS that they want it to spend more.
+
+<Figure
+  caption="Figure 3. 'Too little' on Social Security, by party. The Democratic and Republican lines have moved together for most of the 1990 onwards series; the 2024 reading shows Republicans (63%) actually slightly ahead of Democrats (60%). Among the spending domains in this chapter, Social Security has the smallest partisan gap and the most stable trajectory."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={socsecByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+Social Security is the cleanest case in this chapter of an "earned-benefit" social program — paid into during working life, drawn down in retirement. It is bipartisan to the point of being non-political. In 2024, more Republicans than Democrats said the federal government spends too little on it. Whatever the partisan dynamics around social spending are, they are not running through Social Security.
+
+## Health: the same domain, with the ACA's footprint
+
+Health is the third large social-welfare domain, and is the one where partisan dynamics are most visible. From 1973 through the late 2000s, the partisan gap on health spending was modest — typically 7 to 15 points, with Democrats more enthusiastic than Republicans but both saying "too little" by majority margins. In 2010, that changed.
+
+<Figure
+  caption="Figure 4. 'Too little' on improving and protecting health, by party. The 2010 reading is the dramatic feature: the Republican line falls 22 points in a single wave, from 63% in 2008 to 41% in 2010 — coincident with the ACA debate and passage. The line then partially recovers, but the post-ACA partisan gap is roughly twice the pre-ACA partisan gap."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={healthByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+The 2010 reading is one of the largest single-wave partisan reversals in the GSS's entire spending battery. Republican support for "too little on health" fell 22 points in two years; Democratic support held steady. This is a direct instance of the *priming* effect that political scientists describe in the post-Reagan partisan literature: when a domain becomes politically named (here, "Obamacare"), the partisan signal in the responses to a generic question about that domain *changes*, even when the underlying preferences may not have. Republican respondents, asked about "improving and protecting the nation's health" in 2008, said too little by 63%. The same respondents (or, more precisely, the same partisan coalition) asked the same question in 2010 said too little by 41%.
+
+The recovery in subsequent years is partial but real. By 2024 the Republican reading is 64% — still above the 2010 trough, still below the pre-ACA baseline. The Democratic line, meanwhile, has hovered near 80% for the entire post-2008 period. The contemporary partisan gap on health spending is 15 points, more than triple the 2008 gap. The institution did not change. The question did not change. The political naming changed.
+
+## Welfare: where the framing matters most
+
+The "welfare" item in the GSS spending battery is famous among survey researchers for a particular kind of asymmetry: the partisan difference is not so much in whether people want welfare to grow as in whether they call it a budgetary priority. Even Democrats are not enthusiastic about *more* welfare spending — only 49% of them said too little in 2024, the highest reading in fifty years and still a minority. The partisan-divide story on welfare lives mostly on the *opposition* side.
+
+<Figure
+  width="page-outset"
+  caption="Figure 5. The two welfare framings, by party. Left tab: share saying 'too little' on welfare. Right tab: share saying 'too much' on welfare. Democratic opposition to welfare ('too much') has collapsed: from 46% in 1973 to 14% in 2024. Republican opposition has moved less: 66% in 1973, 52% in 2024. The 38-point partisan gap on the 'too much' framing is the largest in this chapter, larger than the 34-point gap on the 'too little' framing."
+>
+  <TabSet ariaLabel="Welfare too-little vs too-much by party">
+    <Tab label="Too little">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={welfareByParty}
+          demographicGroups={['Democrat', 'Other', 'Republican']}
+          demographic="PolParty"
+          defaultVisibleGroups={['Democrat', 'Republican']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+    <Tab label="Too much">
+      <div className="not-prose">
+        <TimeseriesLineV1
+          data={welfareToomuchByParty}
+          demographicGroups={['Democrat', 'Other', 'Republican']}
+          demographic="PolParty"
+          defaultVisibleGroups={['Democrat', 'Republican']}
+          density="medium"
+        />
+      </div>
+    </Tab>
+  </TabSet>
+</Figure>
+
+Two stories run through Figure 5.
+
+First: the Democratic line on "too much welfare" has fallen by *32 points* over fifty years (46% in 1973, 14% in 2024). This is one of the largest fifty-year shifts within a single partisan coalition on any spending question in the GSS. Democrats in the 1970s, including Democrats in northern industrial states, were nearly as opposed to "more welfare" as Republicans. Democrats today, even allowing for sample-composition changes, are not. The Democratic coalition has moved leftward on welfare in a way it has not moved on (say) Social Security.
+
+Second: the Republican line has held mostly steady. 66% of Republicans said too much welfare in 1973; 52% say so in 2024. There is real movement — a 14-point softening over fifty years — but it is much smaller than the Democratic shift. The widening partisan gap on welfare is not a story of two coalitions diverging. It is a story of one coalition moving while the other holds.
+
+## The same dollar, framed in different words
+
+The 2024 partisan gap on welfare spending ("too little") is 34 points. The 2024 partisan gap on the same question framed as "improving the conditions of Black Americans" is 46 points — the largest spending-domain gap the GSS reports.
+
+<Figure
+  width="page-outset"
+  caption="Figure 6. 'Too little' on improving the conditions of Black Americans, by party. The 1973 partisan gap was 24 points; the 2018 gap is 37 points; the 2024 gap is 46 points. The Democratic line rises sharply post-2014 (from 47% in 2010 to 74% in 2018) — a Black-Lives-Matter-era shift — and then settles at 69% in 2024. The Republican line is essentially flat for the entire fifty-year series."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={racialByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="comfortable"
+    />
+  </div>
+</Figure>
+
+The shape of Figure 6 is, in some ways, the canonical "sorting" chart: a Democratic line that moved sharply during a specific cultural moment, and a Republican line that did not. The post-2014 inflection on the Democratic line — from 47% to 74% in eight years — is one of the sharpest movements in the entire spending battery. It is roughly contemporaneous with the Ferguson protests, the killing of Michael Brown, the formation of Black Lives Matter, and the long-tail visibility of the issue in Democratic-aligned media. None of those events drove a corresponding Republican movement.
+
+What is notable about Figures 5 and 6 read together is that the dollar amount in question is, in policy terms, the same dollar. "Welfare" and "improving the conditions of Black Americans" are largely overlapping sets of programs — TANF, SNAP, housing assistance, job training, early-childhood programs. The GSS asks about both, and the Democratic line on the second framing is *21 points higher* than on the first (D=69% on race, D=49% on welfare). Republican readings show the same direction at smaller magnitudes (R=23% on race, R=15% on welfare). What this difference primarily measures is *not* how the respondent feels about transferring resources to low-income Americans. It is how the respondent feels about the words the survey uses for that transfer.
+
+<Figure
+  caption="Figure 7. 'Too little' on welfare by race of respondent, GSS 1973–2024. Black respondents are consistently more supportive than White respondents. The 2024 racial gap is 24 points (Black=52, White=28); the partisan gap (within either race) is comparable in size. For most of the spending battery, party is the dominant axis; for welfare, race and party reinforce each other."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={welfareByRace}
+      demographicGroups={['White', 'Black', 'Other']}
+      demographic="Race"
+      defaultVisibleGroups={['White', 'Black']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+The racial breakdown on welfare confirms what the partisan breakdown suggested: this is a question on which respondents' demographic and partisan identities sort together. Black respondents have been consistently more supportive of welfare than White respondents throughout the series. The gap has narrowed somewhat — from 43 points in 1973 to 24 in 2024 — but it has not closed. The partisan story is on top of the racial one.
+
+## Childcare: the new frontier
+
+One last piece of the social-welfare battery is worth flagging because it is the rare domain where the GSS shows a real recent rise in *both* parties.
+
+<Figure
+  caption="Figure 8. 'Too little' on childcare assistance, by party. Both lines have risen since 2018. The Democratic line is at 78% in 2024 — its highest reading in the series. The Republican line is at 50% — also its highest reading. The partisan gap (28 points) is wide, but the Republican rise (from 40% in 2010 to 50% in 2024) suggests that the family-policy framing is doing real work on the Republican coalition that 'welfare' framing never did."
+>
+  <div className="not-prose">
+    <TimeseriesLineV1
+      data={childcareByParty}
+      demographicGroups={['Democrat', 'Other', 'Republican']}
+      demographic="PolParty"
+      defaultVisibleGroups={['Democrat', 'Republican']}
+      density="medium"
+    />
+  </div>
+</Figure>
+
+Childcare, as a survey item, is a relatively recent addition (the GSS first asked it in 2002) and is presented in family-policy framing — not "child welfare," not "income transfers to low-income parents," but childcare assistance as a generic category. Both partisan coalitions have moved upward on it, and the Republican line in particular has moved more on childcare than on any of the welfare-adjacent items in the long-running battery. Whether this is a leading indicator of where the family-policy debate is going (the contemporary push for an expanded child tax credit, for example) or a one-time political moment, the data cannot say. But it is a place where the bipartisan-baseline story of this chapter shows up most cleanly.
+
+## What this chapter changes
+
+Three things to take into the rest of Part II.
+
+First, the polarization story on social spending is not a story about the size of government. Americans want more, not less, on every domain in this battery, and the trend over fifty years has been toward more, not less. The story is about which domains the parties have agreed to count as legitimate uses of federal money. Education, Social Security, and (to a lesser extent) health, the parties agree on. Welfare, the parties agree to disagree on. "Improving the conditions of Black Americans," the parties have decided to disagree on more sharply with each passing decade.
+
+<PullQuote attribution="The pattern of this chapter">
+The size of government is not what divides Americans on spending. The naming of government is.
+</PullQuote>
+
+Second, the 2010 ACA episode in Figure 4 is a clean illustration of how *priming* works in survey data. A question that produces broadly bipartisan support in one year can produce a 22-point partisan reversal two years later, with no real change in the underlying programs, simply because the political naming of the domain has been claimed by one coalition. Most of the partisan-gap widening this chapter documents has this character: not a divergence of underlying preferences, but a divergence in which framings each coalition will accept as legitimate.
+
+Third, the welfare/race overlap is the single sharpest example in this book of demographic + partisan reinforcement. The partisan gap on welfare is amplified by the racial gap on welfare; the racial gap is amplified by the partisan gap. Neither alone fully describes the structure of the divide. The two together do.
+
+The next chapter turns from social-welfare spending to security and order — military, police, border control — where the *too little* / *too much* asymmetry runs in the other direction.

@@ -1,0 +1,918 @@
+{
+  "metadata": {
+    "title": "Trust in People",
+    "subtitle": "% of US Population Who Believe People Can be Trusted, by Year and Education",
+    "years_n": 30,
+    "year_max": 2024,
+    "year_min": 1972,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1972 - 2024; 43290 Observations"
+    },
+    "dataview_type": "timetrend_demo",
+    "original_question": "Generally speaking, would you say that most people can be trusted or that you can't be too careful in dealing with people?",
+    "value_measure": "Percent",
+    "demo_key": [
+      "Education"
+    ],
+    "demo_title": "Education",
+    "dim_key": [
+      "year",
+      "Education"
+    ],
+    "dim_title": "Year, Education",
+    "graph_id": "gss_trust_rec_year_education_percent_timetrend_demo",
+    "data_filepath": "gss/2graph_jsons/timetrend_demo/gss_trust_rec_year_education_percent_timetrend_demo.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1972",
+      "Education": "College",
+      "value": 65.59845830417943,
+      "n_actual": 173,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "Education": "High School",
+      "value": 50.79094583204926,
+      "n_actual": 773,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "Education": "L/T High School",
+      "value": 36.28219197405673,
+      "n_actual": 628,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Education": "College",
+      "value": 65.72450401990467,
+      "n_actual": 196,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Education": "High School",
+      "value": 53.521484473270164,
+      "n_actual": 740,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "Education": "L/T High School",
+      "value": 32.47667625867566,
+      "n_actual": 549,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "Education": "College",
+      "value": 63.79997518758969,
+      "n_actual": 190,
+      "ci_upper": 69.74140107362939,
+      "ci_lower": 57.858549301549985,
+      "standard_error": 2.9005102378390353
+    },
+    {
+      "year": "1975",
+      "Education": "High School",
+      "value": 44.01532629455359,
+      "n_actual": 760,
+      "ci_upper": 48.53568354004929,
+      "ci_lower": 39.49496904905788,
+      "standard_error": 2.2505472795211103
+    },
+    {
+      "year": "1975",
+      "Education": "L/T High School",
+      "value": 25.06024194028277,
+      "n_actual": 527,
+      "ci_upper": 29.611955818013865,
+      "ci_lower": 20.508528062551672,
+      "standard_error": 2.2625750421918087
+    },
+    {
+      "year": "1976",
+      "Education": "College",
+      "value": 66.12636724539662,
+      "n_actual": 213,
+      "ci_upper": 71.62157284570692,
+      "ci_lower": 60.63116164508633,
+      "standard_error": 2.709541864259604
+    },
+    {
+      "year": "1976",
+      "Education": "High School",
+      "value": 46.366036802145096,
+      "n_actual": 749,
+      "ci_upper": 50.589504496421775,
+      "ci_lower": 42.142569107868425,
+      "standard_error": 2.102735074527797
+    },
+    {
+      "year": "1976",
+      "Education": "L/T High School",
+      "value": 28.257023413454885,
+      "n_actual": 527,
+      "ci_upper": 33.04801412090029,
+      "ci_lower": 23.466032706009475,
+      "standard_error": 2.3852873826722925
+    },
+    {
+      "year": "1978",
+      "Education": "College",
+      "value": 61.275344169921,
+      "n_actual": 213,
+      "ci_upper": 69.58645183243269,
+      "ci_lower": 52.96423650740931,
+      "standard_error": 4.101835247223644
+    },
+    {
+      "year": "1978",
+      "Education": "High School",
+      "value": 41.234873806017895,
+      "n_actual": 845,
+      "ci_upper": 46.18399832768386,
+      "ci_lower": 36.28574928435194,
+      "standard_error": 2.4640173604299096
+    },
+    {
+      "year": "1978",
+      "Education": "L/T High School",
+      "value": 23.5514834080849,
+      "n_actual": 467,
+      "ci_upper": 29.019576485419098,
+      "ci_lower": 18.083390330750696,
+      "standard_error": 2.71809064837908
+    },
+    {
+      "year": "1980",
+      "Education": "College",
+      "value": 58.54774133287778,
+      "n_actual": 227,
+      "ci_upper": 66.83446987690787,
+      "ci_lower": 50.26101278884768,
+      "standard_error": 4.045449937636677
+    },
+    {
+      "year": "1980",
+      "Education": "High School",
+      "value": 45.55138938754066,
+      "n_actual": 789,
+      "ci_upper": 50.622444883307026,
+      "ci_lower": 40.480333891774286,
+      "standard_error": 2.5221166979916
+    },
+    {
+      "year": "1980",
+      "Education": "L/T High School",
+      "value": 29.207213271858567,
+      "n_actual": 441,
+      "ci_upper": 34.60113394102283,
+      "ci_lower": 23.813292602694304,
+      "standard_error": 2.676395481183116
+    },
+    {
+      "year": "1983",
+      "Education": "College",
+      "value": 54.430471810502844,
+      "n_actual": 151,
+      "ci_upper": 64.01669164597728,
+      "ci_lower": 44.84425197502841,
+      "standard_error": 4.69389860588731
+    },
+    {
+      "year": "1983",
+      "Education": "High School",
+      "value": 37.02938451003384,
+      "n_actual": 441,
+      "ci_upper": 42.22639661438132,
+      "ci_lower": 31.83237240568636,
+      "standard_error": 2.602229962442533
+    },
+    {
+      "year": "1983",
+      "Education": "L/T High School",
+      "value": 16.528826412328264,
+      "n_actual": 207,
+      "ci_upper": 21.363999164272528,
+      "ci_lower": 11.693653660384001,
+      "standard_error": 2.3840969647396895
+    },
+    {
+      "year": "1984",
+      "Education": "College",
+      "value": 67.52036740429283,
+      "n_actual": 250,
+      "ci_upper": 73.33807014869328,
+      "ci_lower": 61.70266465989237,
+      "standard_error": 2.8712488327506294
+    },
+    {
+      "year": "1984",
+      "Education": "High School",
+      "value": 48.911550470327995,
+      "n_actual": 811,
+      "ci_upper": 53.59215521201379,
+      "ci_lower": 44.2309457286422,
+      "standard_error": 2.339953925947149
+    },
+    {
+      "year": "1984",
+      "Education": "L/T High School",
+      "value": 37.94697913019729,
+      "n_actual": 398,
+      "ci_upper": 44.953707657892544,
+      "ci_lower": 30.940250602502033,
+      "standard_error": 3.480919989817971
+    },
+    {
+      "year": "1986",
+      "Education": "College",
+      "value": 63.50676715376523,
+      "n_actual": 269,
+      "ci_upper": 68.62157958006155,
+      "ci_lower": 58.39195472746891,
+      "standard_error": 2.526589197635495
+    },
+    {
+      "year": "1986",
+      "Education": "High School",
+      "value": 35.839752786572916,
+      "n_actual": 798,
+      "ci_upper": 40.40522102751709,
+      "ci_lower": 31.274284545628735,
+      "standard_error": 2.277178615112684
+    },
+    {
+      "year": "1986",
+      "Education": "L/T High School",
+      "value": 22.716906819663492,
+      "n_actual": 399,
+      "ci_upper": 27.279514003115462,
+      "ci_lower": 18.154299636211523,
+      "standard_error": 2.2624211990302516
+    },
+    {
+      "year": "1987",
+      "Education": "College",
+      "value": 62.17911023964846,
+      "n_actual": 323,
+      "ci_upper": 67.91111873268711,
+      "ci_lower": 56.4471017466098,
+      "standard_error": 2.8361180985782175
+    },
+    {
+      "year": "1987",
+      "Education": "High School",
+      "value": 43.43184627564396,
+      "n_actual": 1008,
+      "ci_upper": 47.92288583056198,
+      "ci_lower": 38.94080672072594,
+      "standard_error": 2.240987622815041
+    },
+    {
+      "year": "1987",
+      "Education": "L/T High School",
+      "value": 28.23104698800541,
+      "n_actual": 469,
+      "ci_upper": 33.4855037332016,
+      "ci_lower": 22.976590242809223,
+      "standard_error": 2.6118958729197264
+    },
+    {
+      "year": "1988",
+      "Education": "College",
+      "value": 64.9815460939769,
+      "n_actual": 171,
+      "ci_upper": 72.63614596184476,
+      "ci_lower": 57.32694622610906,
+      "standard_error": 3.723906709369084
+    },
+    {
+      "year": "1988",
+      "Education": "High School",
+      "value": 36.65276558578705,
+      "n_actual": 591,
+      "ci_upper": 41.24658177730619,
+      "ci_lower": 32.05894939426791,
+      "standard_error": 2.293192300005358
+    },
+    {
+      "year": "1988",
+      "Education": "L/T High School",
+      "value": 26.902200268431542,
+      "n_actual": 228,
+      "ci_upper": 32.90081981364537,
+      "ci_lower": 20.90358072321771,
+      "standard_error": 2.937227854542943
+    },
+    {
+      "year": "1989",
+      "Education": "College",
+      "value": 62.057620339945196,
+      "n_actual": 185,
+      "ci_upper": 68.79173180559602,
+      "ci_lower": 55.32350887429438,
+      "standard_error": 3.292594301845095
+    },
+    {
+      "year": "1989",
+      "Education": "High School",
+      "value": 39.20643818871498,
+      "n_actual": 614,
+      "ci_upper": 43.16374834548993,
+      "ci_lower": 35.249128031940046,
+      "standard_error": 1.974661539389351
+    },
+    {
+      "year": "1989",
+      "Education": "L/T High School",
+      "value": 25.631151504419453,
+      "n_actual": 229,
+      "ci_upper": 33.24866908733488,
+      "ci_lower": 18.013633921504027,
+      "standard_error": 3.7441436751374977
+    },
+    {
+      "year": "1990",
+      "Education": "College",
+      "value": 58.55532895747565,
+      "n_actual": 180,
+      "ci_upper": 65.05616173922597,
+      "ci_lower": 52.054496175725326,
+      "standard_error": 3.1736038452067317
+    },
+    {
+      "year": "1990",
+      "Education": "High School",
+      "value": 36.284172869392805,
+      "n_actual": 525,
+      "ci_upper": 41.40842583867637,
+      "ci_lower": 31.15991990010924,
+      "standard_error": 2.55589102020935
+    },
+    {
+      "year": "1990",
+      "Education": "L/T High School",
+      "value": 27.05456838099182,
+      "n_actual": 192,
+      "ci_upper": 34.26864942147744,
+      "ci_lower": 19.8404873405062,
+      "standard_error": 3.495366087563476
+    },
+    {
+      "year": "1991",
+      "Education": "College",
+      "value": 60.248491338723134,
+      "n_actual": 211,
+      "ci_upper": 66.29334106163707,
+      "ci_lower": 54.2036416158092,
+      "standard_error": 2.977600175239805
+    },
+    {
+      "year": "1991",
+      "Education": "High School",
+      "value": 37.34151735168118,
+      "n_actual": 593,
+      "ci_upper": 41.32684900479692,
+      "ci_lower": 33.35618569856544,
+      "standard_error": 1.990212432691239
+    },
+    {
+      "year": "1991",
+      "Education": "L/T High School",
+      "value": 22.030898436873773,
+      "n_actual": 205,
+      "ci_upper": 27.88033625299309,
+      "ci_lower": 16.181460620754457,
+      "standard_error": 2.875101417744427
+    },
+    {
+      "year": "1993",
+      "Education": "College",
+      "value": 60.37168757486895,
+      "n_actual": 248,
+      "ci_upper": 66.99361867828824,
+      "ci_lower": 53.74975647144966,
+      "standard_error": 3.2789288260747895
+    },
+    {
+      "year": "1993",
+      "Education": "High School",
+      "value": 30.487791312961754,
+      "n_actual": 608,
+      "ci_upper": 34.33996596359255,
+      "ci_lower": 26.635616662330957,
+      "standard_error": 1.9319378437477468
+    },
+    {
+      "year": "1993",
+      "Education": "L/T High School",
+      "value": 15.709888415890601,
+      "n_actual": 193,
+      "ci_upper": 19.8621771482468,
+      "ci_lower": 11.557599683534402,
+      "standard_error": 2.033170804191531
+    },
+    {
+      "year": "1994",
+      "Education": "College",
+      "value": 49.139074301939154,
+      "n_actual": 484,
+      "ci_upper": 53.50806737023635,
+      "ci_lower": 44.77008123364196,
+      "standard_error": 2.1894568236482703
+    },
+    {
+      "year": "1994",
+      "Education": "High School",
+      "value": 31.982530542121978,
+      "n_actual": 1162,
+      "ci_upper": 35.55464108633646,
+      "ci_lower": 28.4104199979075,
+      "standard_error": 1.800484790732224
+    },
+    {
+      "year": "1994",
+      "Education": "L/T High School",
+      "value": 22.156358285843808,
+      "n_actual": 341,
+      "ci_upper": 25.937341669486464,
+      "ci_lower": 18.375374902201152,
+      "standard_error": 1.8735531759502853
+    },
+    {
+      "year": "1996",
+      "Education": "College",
+      "value": 52.60278361059729,
+      "n_actual": 455,
+      "ci_upper": 57.50239081110554,
+      "ci_lower": 47.70317641008904,
+      "standard_error": 2.45331440554006
+    },
+    {
+      "year": "1996",
+      "Education": "High School",
+      "value": 31.074568787849067,
+      "n_actual": 1170,
+      "ci_upper": 33.90286455915042,
+      "ci_lower": 28.24627301654771,
+      "standard_error": 1.4244585138931698
+    },
+    {
+      "year": "1996",
+      "Education": "L/T High School",
+      "value": 16.40206973069895,
+      "n_actual": 284,
+      "ci_upper": 19.413085580507033,
+      "ci_lower": 13.391053880890869,
+      "standard_error": 1.4886188591548923
+    },
+    {
+      "year": "1998",
+      "Education": "College",
+      "value": 57.153775590818476,
+      "n_actual": 548,
+      "ci_upper": 61.97359327657204,
+      "ci_lower": 52.33395790506492,
+      "standard_error": 2.413362475120329
+    },
+    {
+      "year": "1998",
+      "Education": "High School",
+      "value": 33.773186102064024,
+      "n_actual": 1430,
+      "ci_upper": 36.14303979066989,
+      "ci_lower": 31.403332413458156,
+      "standard_error": 1.194047464800203
+    },
+    {
+      "year": "1998",
+      "Education": "L/T High School",
+      "value": 22.042707846787458,
+      "n_actual": 360,
+      "ci_upper": 26.49460661840764,
+      "ci_lower": 17.590809075167275,
+      "standard_error": 2.1991264601441385
+    },
+    {
+      "year": "2000",
+      "Education": "College",
+      "value": 53.38813015587003,
+      "n_actual": 442,
+      "ci_upper": 57.69749737007837,
+      "ci_lower": 49.07876294166169,
+      "standard_error": 2.157132325134439
+    },
+    {
+      "year": "2000",
+      "Education": "High School",
+      "value": 32.83685155878305,
+      "n_actual": 1145,
+      "ci_upper": 35.89993405435458,
+      "ci_lower": 29.773769063211525,
+      "standard_error": 1.542044766653614
+    },
+    {
+      "year": "2000",
+      "Education": "L/T High School",
+      "value": 18.3818825377409,
+      "n_actual": 279,
+      "ci_upper": 22.551154819332098,
+      "ci_lower": 14.212610256149706,
+      "standard_error": 2.057688180005484
+    },
+    {
+      "year": "2002",
+      "Education": "College",
+      "value": 56.448441506416316,
+      "n_actual": 242,
+      "ci_upper": 62.40689195919613,
+      "ci_lower": 50.489991053636494,
+      "standard_error": 2.940712968536105
+    },
+    {
+      "year": "2002",
+      "Education": "High School",
+      "value": 27.193177019572474,
+      "n_actual": 543,
+      "ci_upper": 31.445910305472246,
+      "ci_lower": 22.9404437336727,
+      "standard_error": 2.135257203069387
+    },
+    {
+      "year": "2002",
+      "Education": "L/T High School",
+      "value": 21.595498956839922,
+      "n_actual": 125,
+      "ci_upper": 28.618358933516276,
+      "ci_lower": 14.572638980163575,
+      "standard_error": 3.3770019345086797
+    },
+    {
+      "year": "2004",
+      "Education": "College",
+      "value": 53.10991291463172,
+      "n_actual": 229,
+      "ci_upper": 60.23758142961757,
+      "ci_lower": 45.98224439964586,
+      "standard_error": 3.510980089186129
+    },
+    {
+      "year": "2004",
+      "Education": "High School",
+      "value": 30.018714886132695,
+      "n_actual": 527,
+      "ci_upper": 33.86101312780962,
+      "ci_lower": 26.176416644455774,
+      "standard_error": 1.9239023131710276
+    },
+    {
+      "year": "2004",
+      "Education": "L/T High School",
+      "value": 22.50144857747057,
+      "n_actual": 118,
+      "ci_upper": 30.59346931286474,
+      "ci_lower": 14.409427842076397,
+      "standard_error": 3.891116976312431
+    },
+    {
+      "year": "2006",
+      "Education": "College",
+      "value": 48.658830015247545,
+      "n_actual": 668,
+      "ci_upper": 53.856522045390555,
+      "ci_lower": 43.46113798510454,
+      "standard_error": 2.612800253381525
+    },
+    {
+      "year": "2006",
+      "Education": "High School",
+      "value": 30.740325229000824,
+      "n_actual": 1467,
+      "ci_upper": 33.40514190478554,
+      "ci_lower": 28.07550855321611,
+      "standard_error": 1.3460276050566238
+    },
+    {
+      "year": "2006",
+      "Education": "L/T High School",
+      "value": 12.984499208193734,
+      "n_actual": 374,
+      "ci_upper": 16.71102156350627,
+      "ci_lower": 9.257976852881198,
+      "standard_error": 1.8478389298770497
+    },
+    {
+      "year": "2008",
+      "Education": "College",
+      "value": 49.646052489155856,
+      "n_actual": 381,
+      "ci_upper": 55.48788657982403,
+      "ci_lower": 43.80421839848768,
+      "standard_error": 2.9112418169118652
+    },
+    {
+      "year": "2008",
+      "Education": "High School",
+      "value": 29.027980779000817,
+      "n_actual": 780,
+      "ci_upper": 32.753838190260446,
+      "ci_lower": 25.302123367741192,
+      "standard_error": 1.874843462544483
+    },
+    {
+      "year": "2008",
+      "Education": "L/T High School",
+      "value": 14.970866234001809,
+      "n_actual": 203,
+      "ci_upper": 21.551339320791076,
+      "ci_lower": 8.39039314721254,
+      "standard_error": 3.2013519062679614
+    },
+    {
+      "year": "2010",
+      "Education": "College",
+      "value": 56.46289336362338,
+      "n_actual": 398,
+      "ci_upper": 61.595094522963144,
+      "ci_lower": 51.330692204283615,
+      "standard_error": 2.564824094817763
+    },
+    {
+      "year": "2010",
+      "Education": "High School",
+      "value": 26.57649492328141,
+      "n_actual": 764,
+      "ci_upper": 30.18718167067863,
+      "ci_lower": 22.96580817588418,
+      "standard_error": 1.8153643846328769
+    },
+    {
+      "year": "2010",
+      "Education": "L/T High School",
+      "value": 16.893723318277758,
+      "n_actual": 210,
+      "ci_upper": 21.77745363761755,
+      "ci_lower": 12.009992998937967,
+      "standard_error": 2.3758989910473836
+    },
+    {
+      "year": "2012",
+      "Education": "College",
+      "value": 51.3190767212676,
+      "n_actual": 389,
+      "ci_upper": 57.061780247083426,
+      "ci_lower": 45.57637319545177,
+      "standard_error": 2.866706667743176
+    },
+    {
+      "year": "2012",
+      "Education": "High School",
+      "value": 27.46972556301871,
+      "n_actual": 729,
+      "ci_upper": 32.111449492503084,
+      "ci_lower": 22.82800163353433,
+      "standard_error": 2.3220560622959954
+    },
+    {
+      "year": "2012",
+      "Education": "L/T High School",
+      "value": 14.395194890425527,
+      "n_actual": 213,
+      "ci_upper": 21.380281538412348,
+      "ci_lower": 7.410108242438708,
+      "standard_error": 3.429217097561662
+    },
+    {
+      "year": "2014",
+      "Education": "College",
+      "value": 51.89326455482799,
+      "n_actual": 493,
+      "ci_upper": 56.81052633469751,
+      "ci_lower": 46.97600277495847,
+      "standard_error": 2.458264827243542
+    },
+    {
+      "year": "2014",
+      "Education": "High School",
+      "value": 22.75843932937226,
+      "n_actual": 968,
+      "ci_upper": 25.69884501888808,
+      "ci_lower": 19.81803363985644,
+      "standard_error": 1.471423727312633
+    },
+    {
+      "year": "2014",
+      "Education": "L/T High School",
+      "value": 14.327669789371763,
+      "n_actual": 222,
+      "ci_upper": 19.710937932615234,
+      "ci_lower": 8.944401646128295,
+      "standard_error": 2.6459708363915695
+    },
+    {
+      "year": "2016",
+      "Education": "College",
+      "value": 51.89434533086913,
+      "n_actual": 574,
+      "ci_upper": 57.159750291227894,
+      "ci_lower": 46.62894037051036,
+      "standard_error": 2.630443607583904
+    },
+    {
+      "year": "2016",
+      "Education": "High School",
+      "value": 25.37907576413088,
+      "n_actual": 1153,
+      "ci_upper": 28.43086053924628,
+      "ci_lower": 22.327290989015488,
+      "standard_error": 1.5271595156978701
+    },
+    {
+      "year": "2016",
+      "Education": "L/T High School",
+      "value": 16.484414596807596,
+      "n_actual": 216,
+      "ci_upper": 21.905711757043626,
+      "ci_lower": 11.063117436571567,
+      "standard_error": 2.6730995494366585
+    },
+    {
+      "year": "2018",
+      "Education": "College",
+      "value": 55.44322542818867,
+      "n_actual": 475,
+      "ci_upper": 61.873169401477114,
+      "ci_lower": 49.01328145490022,
+      "standard_error": 3.21957935216678
+    },
+    {
+      "year": "2018",
+      "Education": "High School",
+      "value": 27.32068533499532,
+      "n_actual": 906,
+      "ci_upper": 30.905947650742366,
+      "ci_lower": 23.735423019248277,
+      "standard_error": 1.8005044076991255
+    },
+    {
+      "year": "2018",
+      "Education": "L/T High School",
+      "value": 8.090518636188248,
+      "n_actual": 175,
+      "ci_upper": 13.430173192372056,
+      "ci_lower": 2.7508640800044413,
+      "standard_error": 2.5871690864360324
+    },
+    {
+      "year": "2022",
+      "Education": "College",
+      "value": 39.692378051035085,
+      "n_actual": 347,
+      "ci_upper": 47.3160929683919,
+      "ci_lower": 32.068663133678264,
+      "standard_error": 3.799231084476997
+    },
+    {
+      "year": "2022",
+      "Education": "High School",
+      "value": 24.94310663102128,
+      "n_actual": 687,
+      "ci_upper": 32.05692349068477,
+      "ci_lower": 17.829289771357793,
+      "standard_error": 3.5575779927008075
+    },
+    {
+      "year": "2022",
+      "Education": "L/T High School",
+      "value": 10.016474152744188,
+      "n_actual": 164,
+      "ci_upper": 18.710884873893878,
+      "ci_lower": 1.3220634315944975,
+      "standard_error": 4.244473934771494
+    },
+    {
+      "year": "2024",
+      "Education": "College",
+      "value": 38.927718800112196,
+      "n_actual": 252,
+      "ci_upper": 46.79820320506741,
+      "ci_lower": 31.05723439515698,
+      "standard_error": 3.912276136629241
+    },
+    {
+      "year": "2024",
+      "Education": "High School",
+      "value": 20.586562753168593,
+      "n_actual": 581,
+      "ci_upper": 24.84569368661407,
+      "ci_lower": 16.327431819723117,
+      "standard_error": 2.1277382883350247
+    },
+    {
+      "year": "2024",
+      "Education": "L/T High School",
+      "value": 16.15960744953323,
+      "n_actual": 113,
+      "ci_upper": 28.529588047866948,
+      "ci_lower": 3.789626851199515,
+      "standard_error": 5.948210351500924
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1972",
+        "1973",
+        "1975",
+        "1976",
+        "1978",
+        "1980",
+        "1983",
+        "1984",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "Education",
+      "name": "Education",
+      "type": "ordinal",
+      "categories": [
+        "L/T High School",
+        "High School",
+        "College"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Trust in People",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "trust_rec",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

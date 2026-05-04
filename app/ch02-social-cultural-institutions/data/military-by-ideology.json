@@ -1,0 +1,974 @@
+{
+  "metadata": {
+    "title": "Confidence in Institutions: Military",
+    "subtitle": "% of US Population Who Have a Great Deal of Confidence in the Military, by Year and Ideology",
+    "years_n": 32,
+    "year_max": 2024,
+    "year_min": 1974,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1974 - 2024; 45915 Observations"
+    },
+    "dataview_type": "timetrend_demo",
+    "original_question": "I am going to name some institutions in this country. As far as the people running these institutions are concerned, would you say you have a great deal of confidence, only some confidence, or hardly any confidence at all in them? The Military.",
+    "value_measure": "Percent",
+    "demo_key": [
+      "Ideology"
+    ],
+    "demo_title": "Ideology",
+    "dim_key": [
+      "year",
+      "Ideology"
+    ],
+    "dim_title": "Year, Ideology",
+    "graph_id": "gss_conarmy_high_year_ideology_percent_timetrend_demo",
+    "data_filepath": "gss/2graph_jsons/timetrend_demo/gss_conarmy_high_year_ideology_percent_timetrend_demo.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1974",
+      "Ideology": "Conservative",
+      "value": 48.333047644827275,
+      "n_actual": 408,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "Ideology": "Liberal",
+      "value": 29.911991579343965,
+      "n_actual": 418,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "Ideology": "Moderate",
+      "value": 42.47364981082885,
+      "n_actual": 556,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "Ideology": "Conservative",
+      "value": 36.94262156136918,
+      "n_actual": 399,
+      "ci_upper": 42.60325511301494,
+      "ci_lower": 31.281988009723428,
+      "standard_error": 2.8153465119315677
+    },
+    {
+      "year": "1975",
+      "Ideology": "Liberal",
+      "value": 29.55937103450863,
+      "n_actual": 408,
+      "ci_upper": 34.393309006437036,
+      "ci_lower": 24.725433062580226,
+      "standard_error": 2.4028635596577437
+    },
+    {
+      "year": "1975",
+      "Ideology": "Moderate",
+      "value": 39.985172320707285,
+      "n_actual": 540,
+      "ci_upper": 45.31420046353366,
+      "ci_lower": 34.65614417788091,
+      "standard_error": 2.6531597256566273
+    },
+    {
+      "year": "1976",
+      "Ideology": "Conservative",
+      "value": 44.652858241397134,
+      "n_actual": 413,
+      "ci_upper": 50.967737832172624,
+      "ci_lower": 38.33797865062164,
+      "standard_error": 3.140739294807159
+    },
+    {
+      "year": "1976",
+      "Ideology": "Liberal",
+      "value": 35.917957680281894,
+      "n_actual": 383,
+      "ci_upper": 41.377113561432296,
+      "ci_lower": 30.458801799131486,
+      "standard_error": 2.713648129016967
+    },
+    {
+      "year": "1976",
+      "Ideology": "Moderate",
+      "value": 45.698444291668416,
+      "n_actual": 522,
+      "ci_upper": 51.95061631226603,
+      "ci_lower": 39.446272271070804,
+      "standard_error": 3.1111908153929573
+    },
+    {
+      "year": "1977",
+      "Ideology": "Conservative",
+      "value": 38.215662250333935,
+      "n_actual": 453,
+      "ci_upper": 43.7222536046279,
+      "ci_lower": 32.70907089603997,
+      "standard_error": 2.740176756039429
+    },
+    {
+      "year": "1977",
+      "Ideology": "Liberal",
+      "value": 32.433033137047005,
+      "n_actual": 412,
+      "ci_upper": 37.95810094157853,
+      "ci_lower": 26.907965332515488,
+      "standard_error": 2.747922159199091
+    },
+    {
+      "year": "1977",
+      "Ideology": "Moderate",
+      "value": 38.46983184012744,
+      "n_actual": 555,
+      "ci_upper": 43.10728210785553,
+      "ci_lower": 33.83238157239934,
+      "standard_error": 2.3076768573008906
+    },
+    {
+      "year": "1978",
+      "Ideology": "Conservative",
+      "value": 28.224941978891096,
+      "n_actual": 462,
+      "ci_upper": 33.882940983821705,
+      "ci_lower": 22.566942973960487,
+      "standard_error": 2.814036205967167
+    },
+    {
+      "year": "1978",
+      "Ideology": "Liberal",
+      "value": 29.197934660381154,
+      "n_actual": 395,
+      "ci_upper": 34.93203527157133,
+      "ci_lower": 23.463834049190975,
+      "standard_error": 2.851885748740162
+    },
+    {
+      "year": "1978",
+      "Ideology": "Moderate",
+      "value": 34.531936157525216,
+      "n_actual": 538,
+      "ci_upper": 39.44460136226315,
+      "ci_lower": 29.619270952787286,
+      "standard_error": 2.443340435705359
+    },
+    {
+      "year": "1980",
+      "Ideology": "Conservative",
+      "value": 30.183506598232697,
+      "n_actual": 467,
+      "ci_upper": 35.52864775125322,
+      "ci_lower": 24.838365445212172,
+      "standard_error": 2.6504496596293357
+    },
+    {
+      "year": "1980",
+      "Ideology": "Liberal",
+      "value": 23.965188049780547,
+      "n_actual": 357,
+      "ci_upper": 29.694543509221322,
+      "ci_lower": 18.235832590339772,
+      "standard_error": 2.8479594760551663
+    },
+    {
+      "year": "1980",
+      "Ideology": "Moderate",
+      "value": 31.600332765316093,
+      "n_actual": 553,
+      "ci_upper": 36.97770736096629,
+      "ci_lower": 26.222958169665887,
+      "standard_error": 2.6772299422275814
+    },
+    {
+      "year": "1982",
+      "Ideology": "Conservative",
+      "value": 38.34772345889769,
+      "n_actual": 524,
+      "ci_upper": 44.065447525831814,
+      "ci_lower": 32.62999939196357,
+      "standard_error": 2.8506720593142623
+    },
+    {
+      "year": "1982",
+      "Ideology": "Liberal",
+      "value": 24.174900801024172,
+      "n_actual": 502,
+      "ci_upper": 29.54338421534833,
+      "ci_lower": 18.80641738670002,
+      "standard_error": 2.6765519795906973
+    },
+    {
+      "year": "1982",
+      "Ideology": "Moderate",
+      "value": 28.258079981176742,
+      "n_actual": 681,
+      "ci_upper": 32.73308504152985,
+      "ci_lower": 23.783074920823637,
+      "standard_error": 2.2347476904483154
+    },
+    {
+      "year": "1983",
+      "Ideology": "Conservative",
+      "value": 31.503853561527784,
+      "n_actual": 269,
+      "ci_upper": 40.160488643337665,
+      "ci_lower": 22.847218479717903,
+      "standard_error": 4.309873196988398
+    },
+    {
+      "year": "1983",
+      "Ideology": "Liberal",
+      "value": 26.902780261434415,
+      "n_actual": 179,
+      "ci_upper": 33.02767581319734,
+      "ci_lower": 20.777884709671493,
+      "standard_error": 3.0138575962098306
+    },
+    {
+      "year": "1983",
+      "Ideology": "Moderate",
+      "value": 30.632702026191332,
+      "n_actual": 312,
+      "ci_upper": 36.134048672093535,
+      "ci_lower": 25.131355380289133,
+      "standard_error": 2.7493050239616936
+    },
+    {
+      "year": "1984",
+      "Ideology": "Conservative",
+      "value": 37.5206063878926,
+      "n_actual": 343,
+      "ci_upper": 43.61852117362171,
+      "ci_lower": 31.422691602163493,
+      "standard_error": 3.0328306832487124
+    },
+    {
+      "year": "1984",
+      "Ideology": "Liberal",
+      "value": 30.77583298374169,
+      "n_actual": 218,
+      "ci_upper": 39.0286526376749,
+      "ci_lower": 22.523013329808478,
+      "standard_error": 4.094945139826899
+    },
+    {
+      "year": "1984",
+      "Ideology": "Moderate",
+      "value": 39.33470067203223,
+      "n_actual": 364,
+      "ci_upper": 44.75997498104796,
+      "ci_lower": 33.909426363016486,
+      "standard_error": 2.7023900019684985
+    },
+    {
+      "year": "1986",
+      "Ideology": "Conservative",
+      "value": 30.877646659093894,
+      "n_actual": 480,
+      "ci_upper": 36.1486945502974,
+      "ci_lower": 25.606598767890386,
+      "standard_error": 2.6255680929191105
+    },
+    {
+      "year": "1986",
+      "Ideology": "Liberal",
+      "value": 34.467399255327955,
+      "n_actual": 328,
+      "ci_upper": 41.74399204028935,
+      "ci_lower": 27.190806470366557,
+      "standard_error": 3.620960614222289
+    },
+    {
+      "year": "1986",
+      "Ideology": "Moderate",
+      "value": 31.05861802584703,
+      "n_actual": 564,
+      "ci_upper": 35.2966584902909,
+      "ci_lower": 26.82057756140316,
+      "standard_error": 2.11200120208179
+    },
+    {
+      "year": "1987",
+      "Ideology": "Conservative",
+      "value": 36.78631396215045,
+      "n_actual": 523,
+      "ci_upper": 41.92905935044677,
+      "ci_lower": 31.643568573854136,
+      "standard_error": 2.5651147271535524
+    },
+    {
+      "year": "1987",
+      "Ideology": "Liberal",
+      "value": 30.733609190613354,
+      "n_actual": 498,
+      "ci_upper": 35.25748986291312,
+      "ci_lower": 26.209728518313586,
+      "standard_error": 2.2523014856994767
+    },
+    {
+      "year": "1987",
+      "Ideology": "Moderate",
+      "value": 39.8858925159144,
+      "n_actual": 620,
+      "ci_upper": 45.456483458293064,
+      "ci_lower": 34.31530157353574,
+      "standard_error": 2.7807895925670314
+    },
+    {
+      "year": "1988",
+      "Ideology": "Conservative",
+      "value": 41.236288861048614,
+      "n_actual": 346,
+      "ci_upper": 45.844279576313255,
+      "ci_lower": 36.62829814578397,
+      "standard_error": 2.2849251447637893
+    },
+    {
+      "year": "1988",
+      "Ideology": "Liberal",
+      "value": 29.237382177879034,
+      "n_actual": 252,
+      "ci_upper": 35.14594314467409,
+      "ci_lower": 23.328821211083977,
+      "standard_error": 2.9317535132149795
+    },
+    {
+      "year": "1988",
+      "Ideology": "Moderate",
+      "value": 35.203032079797744,
+      "n_actual": 334,
+      "ci_upper": 40.31859419537046,
+      "ci_lower": 30.08746996422503,
+      "standard_error": 2.5493086788710944
+    },
+    {
+      "year": "1989",
+      "Ideology": "Conservative",
+      "value": 35.16016780792202,
+      "n_actual": 303,
+      "ci_upper": 40.481340609392056,
+      "ci_lower": 29.838995006451984,
+      "standard_error": 2.643541376078605
+    },
+    {
+      "year": "1989",
+      "Ideology": "Liberal",
+      "value": 29.61786241102495,
+      "n_actual": 260,
+      "ci_upper": 36.33870716157387,
+      "ci_lower": 22.89701766047603,
+      "standard_error": 3.336891635083051
+    },
+    {
+      "year": "1989",
+      "Ideology": "Moderate",
+      "value": 35.56307846267786,
+      "n_actual": 384,
+      "ci_upper": 40.01053337917895,
+      "ci_lower": 31.115623546176767,
+      "standard_error": 2.214251445081683
+    },
+    {
+      "year": "1990",
+      "Ideology": "Conservative",
+      "value": 37.96685918675192,
+      "n_actual": 316,
+      "ci_upper": 43.65122286291388,
+      "ci_lower": 32.282495510589946,
+      "standard_error": 2.8239734237649845
+    },
+    {
+      "year": "1990",
+      "Ideology": "Liberal",
+      "value": 32.13272614422906,
+      "n_actual": 232,
+      "ci_upper": 39.01193933450131,
+      "ci_lower": 25.253512953956818,
+      "standard_error": 3.403739030848211
+    },
+    {
+      "year": "1990",
+      "Ideology": "Moderate",
+      "value": 33.48891882132066,
+      "n_actual": 297,
+      "ci_upper": 38.518047227011465,
+      "ci_lower": 28.45979041562986,
+      "standard_error": 2.490233414077098
+    },
+    {
+      "year": "1991",
+      "Ideology": "Conservative",
+      "value": 66.29048649836837,
+      "n_actual": 319,
+      "ci_upper": 72.87338876977601,
+      "ci_lower": 59.70758422696073,
+      "standard_error": 3.277425210813214
+    },
+    {
+      "year": "1991",
+      "Ideology": "Liberal",
+      "value": 59.4777330445867,
+      "n_actual": 262,
+      "ci_upper": 66.16633615827577,
+      "ci_lower": 52.78912993089764,
+      "standard_error": 3.3188005992083576
+    },
+    {
+      "year": "1991",
+      "Ideology": "Moderate",
+      "value": 62.69510870843711,
+      "n_actual": 386,
+      "ci_upper": 68.47162313665152,
+      "ci_lower": 56.9185942802227,
+      "standard_error": 2.8799830296053788
+    },
+    {
+      "year": "1993",
+      "Ideology": "Conservative",
+      "value": 50.284493512273166,
+      "n_actual": 376,
+      "ci_upper": 55.76457590759788,
+      "ci_lower": 44.80441111694845,
+      "standard_error": 2.7345109455740335
+    },
+    {
+      "year": "1993",
+      "Ideology": "Liberal",
+      "value": 28.97238981186498,
+      "n_actual": 275,
+      "ci_upper": 34.112453499410236,
+      "ci_lower": 23.83232612431972,
+      "standard_error": 2.555033142925368
+    },
+    {
+      "year": "1993",
+      "Ideology": "Moderate",
+      "value": 45.86977217060645,
+      "n_actual": 354,
+      "ci_upper": 52.183610109418844,
+      "ci_lower": 39.55593423179407,
+      "standard_error": 3.149235954509074
+    },
+    {
+      "year": "1994",
+      "Ideology": "Conservative",
+      "value": 43.81425487630211,
+      "n_actual": 713,
+      "ci_upper": 48.49870721310117,
+      "ci_lower": 39.12980253950305,
+      "standard_error": 2.3543672595890612
+    },
+    {
+      "year": "1994",
+      "Ideology": "Liberal",
+      "value": 31.957994947016903,
+      "n_actual": 481,
+      "ci_upper": 36.56723303353167,
+      "ci_lower": 27.34875686050214,
+      "standard_error": 2.316993459885736
+    },
+    {
+      "year": "1994",
+      "Ideology": "Moderate",
+      "value": 39.90754006701876,
+      "n_actual": 705,
+      "ci_upper": 43.90596478941847,
+      "ci_lower": 35.909115344619046,
+      "standard_error": 2.0116764250967094
+    },
+    {
+      "year": "1996",
+      "Ideology": "Conservative",
+      "value": 45.45249309500819,
+      "n_actual": 647,
+      "ci_upper": 49.40353332521238,
+      "ci_lower": 41.50145286480399,
+      "standard_error": 1.984602580529962
+    },
+    {
+      "year": "1996",
+      "Ideology": "Liberal",
+      "value": 35.60401645394794,
+      "n_actual": 443,
+      "ci_upper": 39.97478559464972,
+      "ci_lower": 31.23324731324616,
+      "standard_error": 2.1914800496367928
+    },
+    {
+      "year": "1996",
+      "Ideology": "Moderate",
+      "value": 39.4434250438638,
+      "n_actual": 690,
+      "ci_upper": 43.20120011361064,
+      "ci_lower": 35.68564997411696,
+      "standard_error": 1.8886268782398008
+    },
+    {
+      "year": "1998",
+      "Ideology": "Conservative",
+      "value": 42.041136647193184,
+      "n_actual": 631,
+      "ci_upper": 46.423598677187535,
+      "ci_lower": 37.658674617198834,
+      "standard_error": 2.198930431491525
+    },
+    {
+      "year": "1998",
+      "Ideology": "Liberal",
+      "value": 32.65750099619801,
+      "n_actual": 474,
+      "ci_upper": 37.330645283851794,
+      "ci_lower": 27.984356708544233,
+      "standard_error": 2.3458356682488293
+    },
+    {
+      "year": "1998",
+      "Ideology": "Moderate",
+      "value": 38.345465185292106,
+      "n_actual": 669,
+      "ci_upper": 42.46423693046613,
+      "ci_lower": 34.226693440118076,
+      "standard_error": 2.0688539113315554
+    },
+    {
+      "year": "2000",
+      "Ideology": "Conservative",
+      "value": 43.401428138074344,
+      "n_actual": 595,
+      "ci_upper": 47.20189534716943,
+      "ci_lower": 39.600960928979255,
+      "standard_error": 1.9069105317440993
+    },
+    {
+      "year": "2000",
+      "Ideology": "Liberal",
+      "value": 35.07686228680739,
+      "n_actual": 457,
+      "ci_upper": 39.47537468685657,
+      "ci_lower": 30.678349886758216,
+      "standard_error": 2.2074862660148726
+    },
+    {
+      "year": "2000",
+      "Ideology": "Moderate",
+      "value": 45.2914365464385,
+      "n_actual": 669,
+      "ci_upper": 49.63007942161245,
+      "ci_lower": 40.952793671264544,
+      "standard_error": 2.179729416428024
+    },
+    {
+      "year": "2002",
+      "Ideology": "Conservative",
+      "value": 68.28487055097415,
+      "n_actual": 295,
+      "ci_upper": 73.60070391568044,
+      "ci_lower": 62.96903718626786,
+      "standard_error": 2.6478762397396727
+    },
+    {
+      "year": "2002",
+      "Ideology": "Liberal",
+      "value": 43.34670023553274,
+      "n_actual": 230,
+      "ci_upper": 49.92743932605002,
+      "ci_lower": 36.76596114501545,
+      "standard_error": 3.2534575724489265
+    },
+    {
+      "year": "2002",
+      "Ideology": "Moderate",
+      "value": 57.61889725938132,
+      "n_actual": 351,
+      "ci_upper": 63.2619104139349,
+      "ci_lower": 51.97588410482774,
+      "standard_error": 2.8190857097714948
+    },
+    {
+      "year": "2004",
+      "Ideology": "Conservative",
+      "value": 68.28597816349821,
+      "n_actual": 326,
+      "ci_upper": 73.63750479661833,
+      "ci_lower": 62.93445153037811,
+      "standard_error": 2.6669001339055227
+    },
+    {
+      "year": "2004",
+      "Ideology": "Liberal",
+      "value": 51.279577980781156,
+      "n_actual": 196,
+      "ci_upper": 58.586189555074995,
+      "ci_lower": 43.972966406487316,
+      "standard_error": 3.5610210081228453
+    },
+    {
+      "year": "2004",
+      "Ideology": "Moderate",
+      "value": 53.12148142707939,
+      "n_actual": 326,
+      "ci_upper": 59.065541361818866,
+      "ci_lower": 47.17742149233991,
+      "standard_error": 2.951218873645977
+    },
+    {
+      "year": "2006",
+      "Ideology": "Conservative",
+      "value": 60.09510049070036,
+      "n_actual": 672,
+      "ci_upper": 65.18969892849488,
+      "ci_lower": 55.000502052905844,
+      "standard_error": 2.5562497665518857
+    },
+    {
+      "year": "2006",
+      "Ideology": "Liberal",
+      "value": 36.55938825060001,
+      "n_actual": 518,
+      "ci_upper": 41.12061574252751,
+      "ci_lower": 31.9981607586725,
+      "standard_error": 2.287541143586101
+    },
+    {
+      "year": "2006",
+      "Ideology": "Moderate",
+      "value": 46.53848232080905,
+      "n_actual": 712,
+      "ci_upper": 50.74340666637145,
+      "ci_lower": 42.33355797524666,
+      "standard_error": 2.1152230955961606
+    },
+    {
+      "year": "2008",
+      "Ideology": "Conservative",
+      "value": 59.44347603426286,
+      "n_actual": 449,
+      "ci_upper": 65.09565808425265,
+      "ci_lower": 53.79129398427306,
+      "standard_error": 2.8226115081111107
+    },
+    {
+      "year": "2008",
+      "Ideology": "Liberal",
+      "value": 40.46303610953889,
+      "n_actual": 346,
+      "ci_upper": 46.13329684360387,
+      "ci_lower": 34.79277537547391,
+      "standard_error": 2.8282304912180387
+    },
+    {
+      "year": "2008",
+      "Ideology": "Moderate",
+      "value": 51.92851202805488,
+      "n_actual": 494,
+      "ci_upper": 56.96715330024794,
+      "ci_lower": 46.88987075586182,
+      "standard_error": 2.5206168418401362
+    },
+    {
+      "year": "2010",
+      "Ideology": "Conservative",
+      "value": 63.31932844079699,
+      "n_actual": 433,
+      "ci_upper": 68.5877775129876,
+      "ci_lower": 58.05087936860637,
+      "standard_error": 2.6329141635619586
+    },
+    {
+      "year": "2010",
+      "Ideology": "Liberal",
+      "value": 45.87089829713137,
+      "n_actual": 393,
+      "ci_upper": 51.969288414262714,
+      "ci_lower": 39.772508180000024,
+      "standard_error": 3.052660355694722
+    },
+    {
+      "year": "2010",
+      "Ideology": "Moderate",
+      "value": 52.56368123008235,
+      "n_actual": 487,
+      "ci_upper": 57.52232502048248,
+      "ci_lower": 47.60503743968222,
+      "standard_error": 2.480597521348938
+    },
+    {
+      "year": "2012",
+      "Ideology": "Conservative",
+      "value": 64.00432109328577,
+      "n_actual": 437,
+      "ci_upper": 70.59946961711235,
+      "ci_lower": 57.40917256945919,
+      "standard_error": 3.294744925826934
+    },
+    {
+      "year": "2012",
+      "Ideology": "Liberal",
+      "value": 48.555827210869154,
+      "n_actual": 351,
+      "ci_upper": 53.42086911190723,
+      "ci_lower": 43.69078530983107,
+      "standard_error": 2.4304338347304437
+    },
+    {
+      "year": "2012",
+      "Ideology": "Moderate",
+      "value": 55.51774561470457,
+      "n_actual": 468,
+      "ci_upper": 59.968947025892724,
+      "ci_lower": 51.066544203516415,
+      "standard_error": 2.2236911284655596
+    },
+    {
+      "year": "2014",
+      "Ideology": "Conservative",
+      "value": 58.64236112591305,
+      "n_actual": 521,
+      "ci_upper": 64.26080674027897,
+      "ci_lower": 53.02391551154712,
+      "standard_error": 2.8097516235187516
+    },
+    {
+      "year": "2014",
+      "Ideology": "Liberal",
+      "value": 40.28705853553575,
+      "n_actual": 419,
+      "ci_upper": 46.62559242724723,
+      "ci_lower": 33.94852464382427,
+      "standard_error": 3.160187733894468
+    },
+    {
+      "year": "2014",
+      "Ideology": "Moderate",
+      "value": 54.61949862534833,
+      "n_actual": 668,
+      "ci_upper": 58.84227068808608,
+      "ci_lower": 50.396726562610574,
+      "standard_error": 2.1117834848644486
+    },
+    {
+      "year": "2016",
+      "Ideology": "Conservative",
+      "value": 62.76174443361528,
+      "n_actual": 624,
+      "ci_upper": 67.73990385223904,
+      "ci_lower": 57.78358501499151,
+      "standard_error": 2.4869440658103237
+    },
+    {
+      "year": "2016",
+      "Ideology": "Liberal",
+      "value": 41.42374156294743,
+      "n_actual": 552,
+      "ci_upper": 46.53813396086355,
+      "ci_lower": 36.3093491650313,
+      "standard_error": 2.5576775730663677
+    },
+    {
+      "year": "2016",
+      "Ideology": "Moderate",
+      "value": 56.70935121729628,
+      "n_actual": 690,
+      "ci_upper": 61.57291241203554,
+      "ci_lower": 51.84579002255701,
+      "standard_error": 2.4287865601743066
+    },
+    {
+      "year": "2018",
+      "Ideology": "Conservative",
+      "value": 70.68802758198744,
+      "n_actual": 486,
+      "ci_upper": 75.88056771944127,
+      "ci_lower": 65.49548744453362,
+      "standard_error": 2.5992206333981125
+    },
+    {
+      "year": "2018",
+      "Ideology": "Liberal",
+      "value": 52.36899491677824,
+      "n_actual": 440,
+      "ci_upper": 58.686318317017616,
+      "ci_lower": 46.051671516538875,
+      "standard_error": 3.165834005600241
+    },
+    {
+      "year": "2018",
+      "Ideology": "Moderate",
+      "value": 60.06574446983633,
+      "n_actual": 554,
+      "ci_upper": 66.30108814604282,
+      "ci_lower": 53.83040079362985,
+      "standard_error": 3.1278944749653954
+    },
+    {
+      "year": "2021",
+      "Ideology": "Conservative",
+      "value": 59.87207290546791,
+      "n_actual": 842,
+      "ci_upper": 63.94745069848646,
+      "ci_lower": 55.796695112449356,
+      "standard_error": 2.076186305183302
+    },
+    {
+      "year": "2021",
+      "Ideology": "Liberal",
+      "value": 32.30323347592104,
+      "n_actual": 863,
+      "ci_upper": 36.3114169320772,
+      "ci_lower": 28.29505001976488,
+      "standard_error": 2.041992122019821
+    },
+    {
+      "year": "2021",
+      "Ideology": "Moderate",
+      "value": 47.63806287380774,
+      "n_actual": 917,
+      "ci_upper": 51.61718794485615,
+      "ci_lower": 43.658937802759326,
+      "standard_error": 2.0273820017791135
+    },
+    {
+      "year": "2022",
+      "Ideology": "Conservative",
+      "value": 53.72077959374726,
+      "n_actual": 752,
+      "ci_upper": 60.089021624191766,
+      "ci_lower": 47.352537563302754,
+      "standard_error": 3.182537101374349
+    },
+    {
+      "year": "2022",
+      "Ideology": "Liberal",
+      "value": 35.46699817499821,
+      "n_actual": 689,
+      "ci_upper": 41.384778735467705,
+      "ci_lower": 29.549217614528718,
+      "standard_error": 2.9622529493314556
+    },
+    {
+      "year": "2022",
+      "Ideology": "Moderate",
+      "value": 47.62083830702338,
+      "n_actual": 832,
+      "ci_upper": 53.32396638076522,
+      "ci_lower": 41.91771023328153,
+      "standard_error": 2.854804733671384
+    },
+    {
+      "year": "2024",
+      "Ideology": "Conservative",
+      "value": 41.58815550422248,
+      "n_actual": 703,
+      "ci_upper": 47.110939054285424,
+      "ci_lower": 36.06537195415953,
+      "standard_error": 2.7636848838068495
+    },
+    {
+      "year": "2024",
+      "Ideology": "Liberal",
+      "value": 40.14877267596015,
+      "n_actual": 617,
+      "ci_upper": 45.87889888388092,
+      "ci_lower": 34.41864646803939,
+      "standard_error": 2.869169016242039
+    },
+    {
+      "year": "2024",
+      "Ideology": "Moderate",
+      "value": 46.18126219045276,
+      "n_actual": 748,
+      "ci_upper": 51.35886702470535,
+      "ci_lower": 41.003657356200186,
+      "standard_error": 2.592512421148389
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "Ideology",
+      "name": "Ideology",
+      "type": "ordinal",
+      "categories": [
+        "Liberal",
+        "Moderate",
+        "Conservative"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "Confidence in the Military",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "conarmy_high",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}

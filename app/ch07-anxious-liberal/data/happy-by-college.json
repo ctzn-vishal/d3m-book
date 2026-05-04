@@ -1,0 +1,742 @@
+{
+  "metadata": {
+    "title": "Prevalence of 'Feeling Happy'",
+    "subtitle": "% of US Population Who Feel Very Happy, by Year and College Education",
+    "years_n": 35,
+    "year_max": 2024,
+    "year_min": 1972,
+    "note": "",
+    "source": {
+      "id": "gss",
+      "name": "General Social Survey, United States, 1972 - 2024; 70693 Observations"
+    },
+    "dataview_type": "timetrend_demo",
+    "original_question": "Taken all together, how would you say things are these days--would you say that you are very happy, pretty happy, or not too happy?",
+    "value_measure": "Percent",
+    "demo_key": [
+      "College"
+    ],
+    "demo_title": "College Education",
+    "dim_key": [
+      "year",
+      "College"
+    ],
+    "dim_title": "Year, College Education",
+    "graph_id": "gss_happy_rec_year_college_percent_timetrend_demo",
+    "data_filepath": "gss/2graph_jsons/timetrend_demo/gss_happy_rec_year_college_percent_timetrend_demo.json"
+  },
+  "dataPoints": [
+    {
+      "year": "1972",
+      "College": "College",
+      "value": 35.96995937517942,
+      "n_actual": 175,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1972",
+      "College": "No College",
+      "value": 29.482767446644527,
+      "n_actual": 1408,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "College": "College",
+      "value": 30.06838959731626,
+      "n_actual": 197,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1973",
+      "College": "No College",
+      "value": 37.074453733164795,
+      "n_actual": 1289,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "College": "College",
+      "value": 36.648462692279985,
+      "n_actual": 211,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1974",
+      "College": "No College",
+      "value": 36.369319184054405,
+      "n_actual": 1268,
+      "ci_upper": null,
+      "ci_lower": null,
+      "standard_error": 0
+    },
+    {
+      "year": "1975",
+      "College": "College",
+      "value": 42.03256482320701,
+      "n_actual": 189,
+      "ci_upper": 48.36317299384299,
+      "ci_lower": 35.70195665257104,
+      "standard_error": 3.0905028797584464
+    },
+    {
+      "year": "1975",
+      "College": "No College",
+      "value": 31.156194483855376,
+      "n_actual": 1295,
+      "ci_upper": 34.119707115927966,
+      "ci_lower": 28.192681851782787,
+      "standard_error": 1.4754420789602958
+    },
+    {
+      "year": "1976",
+      "College": "College",
+      "value": 37.2517062719288,
+      "n_actual": 213,
+      "ci_upper": 44.09745550697382,
+      "ci_lower": 30.405957036883784,
+      "standard_error": 3.37545953576883
+    },
+    {
+      "year": "1976",
+      "College": "No College",
+      "value": 33.99637138677768,
+      "n_actual": 1280,
+      "ci_upper": 37.03590713691746,
+      "ci_lower": 30.956835636637898,
+      "standard_error": 1.5132916585963552
+    },
+    {
+      "year": "1977",
+      "College": "College",
+      "value": 41.519258830511255,
+      "n_actual": 212,
+      "ci_upper": 47.786410849557875,
+      "ci_lower": 35.25210681146464,
+      "standard_error": 3.0687149502065303
+    },
+    {
+      "year": "1977",
+      "College": "No College",
+      "value": 34.66806046564884,
+      "n_actual": 1309,
+      "ci_upper": 37.89316416183899,
+      "ci_lower": 31.442956769458696,
+      "standard_error": 1.6056802494684843
+    },
+    {
+      "year": "1978",
+      "College": "College",
+      "value": 30.42018828587973,
+      "n_actual": 212,
+      "ci_upper": 39.46122202098806,
+      "ci_lower": 21.379154550771393,
+      "standard_error": 4.462080429216584
+    },
+    {
+      "year": "1978",
+      "College": "No College",
+      "value": 34.17991852197089,
+      "n_actual": 1304,
+      "ci_upper": 37.490610385682906,
+      "ci_lower": 30.86922665825887,
+      "standard_error": 1.6482919739660298
+    },
+    {
+      "year": "1980",
+      "College": "College",
+      "value": 40.595139571267325,
+      "n_actual": 227,
+      "ci_upper": 49.448019521554606,
+      "ci_lower": 31.74225962098004,
+      "standard_error": 4.314625345115514
+    },
+    {
+      "year": "1980",
+      "College": "No College",
+      "value": 33.00303449859327,
+      "n_actual": 1231,
+      "ci_upper": 36.596886677569316,
+      "ci_lower": 29.409182319617226,
+      "standard_error": 1.7892688133122545
+    },
+    {
+      "year": "1982",
+      "College": "College",
+      "value": 47.13509868151806,
+      "n_actual": 249,
+      "ci_upper": 54.755593186231074,
+      "ci_lower": 39.514604176805044,
+      "standard_error": 3.7497921484218613
+    },
+    {
+      "year": "1982",
+      "College": "No College",
+      "value": 31.228094917134246,
+      "n_actual": 1598,
+      "ci_upper": 33.935572046217324,
+      "ci_lower": 28.520617788051172,
+      "standard_error": 1.352577049722484
+    },
+    {
+      "year": "1983",
+      "College": "College",
+      "value": 34.72315009606522,
+      "n_actual": 279,
+      "ci_upper": 40.283199000227825,
+      "ci_lower": 29.163101191902612,
+      "standard_error": 2.760557841696545
+    },
+    {
+      "year": "1983",
+      "College": "No College",
+      "value": 30.764352807776696,
+      "n_actual": 1292,
+      "ci_upper": 34.39052092160904,
+      "ci_lower": 27.138184693944357,
+      "standard_error": 1.8217828786649695
+    },
+    {
+      "year": "1984",
+      "College": "College",
+      "value": 47.14377189163827,
+      "n_actual": 248,
+      "ci_upper": 53.31605149768917,
+      "ci_lower": 40.97149228558738,
+      "standard_error": 3.0433893118696695
+    },
+    {
+      "year": "1984",
+      "College": "No College",
+      "value": 32.702976612342056,
+      "n_actual": 1194,
+      "ci_upper": 35.91707352162409,
+      "ci_lower": 29.488879703060018,
+      "standard_error": 1.6078752908155456
+    },
+    {
+      "year": "1985",
+      "College": "College",
+      "value": 30.205216135454886,
+      "n_actual": 265,
+      "ci_upper": 36.44711119309686,
+      "ci_lower": 23.963321077812914,
+      "standard_error": 3.0746616821606993
+    },
+    {
+      "year": "1985",
+      "College": "No College",
+      "value": 28.83617633579948,
+      "n_actual": 1265,
+      "ci_upper": 33.2267971902885,
+      "ci_lower": 24.44555548131046,
+      "standard_error": 2.189967685514432
+    },
+    {
+      "year": "1986",
+      "College": "College",
+      "value": 38.35996236240835,
+      "n_actual": 265,
+      "ci_upper": 45.26086638864697,
+      "ci_lower": 31.459058336169736,
+      "standard_error": 3.4088737012080714
+    },
+    {
+      "year": "1986",
+      "College": "No College",
+      "value": 31.667434129919382,
+      "n_actual": 1183,
+      "ci_upper": 36.116550807235804,
+      "ci_lower": 27.218317452602957,
+      "standard_error": 2.2191444160897014
+    },
+    {
+      "year": "1987",
+      "College": "College",
+      "value": 36.15165109284999,
+      "n_actual": 321,
+      "ci_upper": 43.58905773118135,
+      "ci_lower": 28.714244454518628,
+      "standard_error": 3.6799253872485678
+    },
+    {
+      "year": "1987",
+      "College": "No College",
+      "value": 32.86339319266469,
+      "n_actual": 1451,
+      "ci_upper": 36.48960534624951,
+      "ci_lower": 29.237181039079868,
+      "standard_error": 1.8101729460004063
+    },
+    {
+      "year": "1988",
+      "College": "College",
+      "value": 38.175280186165836,
+      "n_actual": 264,
+      "ci_upper": 41.79777071209089,
+      "ci_lower": 34.55278966024079,
+      "standard_error": 1.7805177137112442
+    },
+    {
+      "year": "1988",
+      "College": "No College",
+      "value": 35.596007023852685,
+      "n_actual": 1201,
+      "ci_upper": 38.712508313150856,
+      "ci_lower": 32.47950573455452,
+      "standard_error": 1.5600215387314664
+    },
+    {
+      "year": "1989",
+      "College": "College",
+      "value": 34.983191841706166,
+      "n_actual": 283,
+      "ci_upper": 41.36147133415034,
+      "ci_lower": 28.60491234926199,
+      "standard_error": 3.155884002663359
+    },
+    {
+      "year": "1989",
+      "College": "No College",
+      "value": 34.09675317422582,
+      "n_actual": 1238,
+      "ci_upper": 37.143160045509994,
+      "ci_lower": 31.050346302941644,
+      "standard_error": 1.52493449987088
+    },
+    {
+      "year": "1990",
+      "College": "College",
+      "value": 44.77782698731139,
+      "n_actual": 279,
+      "ci_upper": 51.53435299549942,
+      "ci_lower": 38.02130097912336,
+      "standard_error": 3.3375545773811273
+    },
+    {
+      "year": "1990",
+      "College": "No College",
+      "value": 33.02458121064457,
+      "n_actual": 1077,
+      "ci_upper": 36.36791085947184,
+      "ci_lower": 29.6812515618173,
+      "standard_error": 1.672524906102224
+    },
+    {
+      "year": "1991",
+      "College": "College",
+      "value": 39.45983091891328,
+      "n_actual": 301,
+      "ci_upper": 44.077512037077824,
+      "ci_lower": 34.84214980074874,
+      "standard_error": 2.2810187860062134
+    },
+    {
+      "year": "1991",
+      "College": "No College",
+      "value": 30.180324924975327,
+      "n_actual": 1195,
+      "ci_upper": 33.20468690291106,
+      "ci_lower": 27.155962947039598,
+      "standard_error": 1.5129590152560577
+    },
+    {
+      "year": "1993",
+      "College": "College",
+      "value": 37.42558798576498,
+      "n_actual": 370,
+      "ci_upper": 42.30349235862225,
+      "ci_lower": 32.547683612907704,
+      "standard_error": 2.427331051225312
+    },
+    {
+      "year": "1993",
+      "College": "No College",
+      "value": 29.69888166050244,
+      "n_actual": 1228,
+      "ci_upper": 32.87437354717539,
+      "ci_lower": 26.523389773829493,
+      "standard_error": 1.5959761341455134
+    },
+    {
+      "year": "1994",
+      "College": "College",
+      "value": 36.75292882391317,
+      "n_actual": 708,
+      "ci_upper": 40.88155588040693,
+      "ci_lower": 32.62430176741942,
+      "standard_error": 2.0757720179390255
+    },
+    {
+      "year": "1994",
+      "College": "No College",
+      "value": 28.246162954350858,
+      "n_actual": 2261,
+      "ci_upper": 30.596869354637324,
+      "ci_lower": 25.89545655406439,
+      "standard_error": 1.1852714660106665
+    },
+    {
+      "year": "1996",
+      "College": "College",
+      "value": 41.32819782031487,
+      "n_actual": 693,
+      "ci_upper": 45.04771538138799,
+      "ci_lower": 37.60868025924176,
+      "standard_error": 1.8686815384561055
+    },
+    {
+      "year": "1996",
+      "College": "No College",
+      "value": 29.682413263105428,
+      "n_actual": 2185,
+      "ci_upper": 31.909894384491537,
+      "ci_lower": 27.45493214171932,
+      "standard_error": 1.1228745823633854
+    },
+    {
+      "year": "1998",
+      "College": "College",
+      "value": 40.222821856099465,
+      "n_actual": 678,
+      "ci_upper": 44.406596679637246,
+      "ci_lower": 36.03904703256169,
+      "standard_error": 2.0992377606514405
+    },
+    {
+      "year": "1998",
+      "College": "No College",
+      "value": 31.373908381999076,
+      "n_actual": 2119,
+      "ci_upper": 33.496409268332485,
+      "ci_lower": 29.25140749566567,
+      "standard_error": 1.0699539822921
+    },
+    {
+      "year": "2000",
+      "College": "College",
+      "value": 42.56403776910142,
+      "n_actual": 644,
+      "ci_upper": 47.434343184149256,
+      "ci_lower": 37.69373235405359,
+      "standard_error": 2.444807062360292
+    },
+    {
+      "year": "2000",
+      "College": "No College",
+      "value": 32.51337570025867,
+      "n_actual": 2115,
+      "ci_upper": 34.78091842562019,
+      "ci_lower": 30.24583297489714,
+      "standard_error": 1.1429310876062821
+    },
+    {
+      "year": "2002",
+      "College": "College",
+      "value": 37.722114710384034,
+      "n_actual": 341,
+      "ci_upper": 41.97995572770793,
+      "ci_lower": 33.46427369306013,
+      "standard_error": 2.1228216470396717
+    },
+    {
+      "year": "2002",
+      "College": "No College",
+      "value": 31.021623775092195,
+      "n_actual": 1027,
+      "ci_upper": 34.686450637006054,
+      "ci_lower": 27.356796913178332,
+      "standard_error": 1.8441330209396534
+    },
+    {
+      "year": "2004",
+      "College": "College",
+      "value": 39.6632756899603,
+      "n_actual": 356,
+      "ci_upper": 44.065079421366995,
+      "ci_lower": 35.26147195855361,
+      "standard_error": 2.184119555769663
+    },
+    {
+      "year": "2004",
+      "College": "No College",
+      "value": 29.906638996386924,
+      "n_actual": 980,
+      "ci_upper": 33.17517826857451,
+      "ci_lower": 26.63809972419934,
+      "standard_error": 1.6441888579257113
+    },
+    {
+      "year": "2006",
+      "College": "College",
+      "value": 42.41787436623331,
+      "n_actual": 794,
+      "ci_upper": 46.118969622244684,
+      "ci_lower": 38.71677911022195,
+      "standard_error": 1.8626748524938925
+    },
+    {
+      "year": "2006",
+      "College": "No College",
+      "value": 28.874644440829588,
+      "n_actual": 2192,
+      "ci_upper": 31.05441473347802,
+      "ci_lower": 26.694874148181157,
+      "standard_error": 1.102251985629905
+    },
+    {
+      "year": "2008",
+      "College": "College",
+      "value": 36.43079603435358,
+      "n_actual": 546,
+      "ci_upper": 40.317097878610525,
+      "ci_lower": 32.544494190096636,
+      "standard_error": 1.9480742755300102
+    },
+    {
+      "year": "2008",
+      "College": "No College",
+      "value": 29.314547420076963,
+      "n_actual": 1468,
+      "ci_upper": 32.18769075660944,
+      "ci_lower": 26.441404083544484,
+      "standard_error": 1.451009300459318
+    },
+    {
+      "year": "2010",
+      "College": "College",
+      "value": 32.77682969429494,
+      "n_actual": 592,
+      "ci_upper": 36.98376464212729,
+      "ci_lower": 28.569894746462587,
+      "standard_error": 2.112705919231285
+    },
+    {
+      "year": "2010",
+      "College": "No College",
+      "value": 25.751569071975418,
+      "n_actual": 1447,
+      "ci_upper": 28.399076876420626,
+      "ci_lower": 23.104061267530206,
+      "standard_error": 1.335934092890036
+    },
+    {
+      "year": "2012",
+      "College": "College",
+      "value": 35.09187701487106,
+      "n_actual": 555,
+      "ci_upper": 40.412157952402985,
+      "ci_lower": 29.771596077339137,
+      "standard_error": 2.659744403548121
+    },
+    {
+      "year": "2012",
+      "College": "No College",
+      "value": 30.72232986933927,
+      "n_actual": 1409,
+      "ci_upper": 34.289313272375345,
+      "ci_lower": 27.1553464663032,
+      "standard_error": 1.7865606384530455
+    },
+    {
+      "year": "2014",
+      "College": "College",
+      "value": 40.11468739767496,
+      "n_actual": 750,
+      "ci_upper": 43.460760987883276,
+      "ci_lower": 36.76861380746665,
+      "standard_error": 1.6733517324545772
+    },
+    {
+      "year": "2014",
+      "College": "No College",
+      "value": 28.574183454056097,
+      "n_actual": 1780,
+      "ci_upper": 31.16429227857289,
+      "ci_lower": 25.9840746295393,
+      "standard_error": 1.2965261935811958
+    },
+    {
+      "year": "2016",
+      "College": "College",
+      "value": 35.31492432287608,
+      "n_actual": 854,
+      "ci_upper": 39.757235631286,
+      "ci_lower": 30.87261301446616,
+      "standard_error": 2.222298452257408
+    },
+    {
+      "year": "2016",
+      "College": "No College",
+      "value": 28.575089900270996,
+      "n_actual": 2000,
+      "ci_upper": 31.46436077855046,
+      "ci_lower": 25.68581902199153,
+      "standard_error": 1.446705741320469
+    },
+    {
+      "year": "2018",
+      "College": "College",
+      "value": 39.89028569424969,
+      "n_actual": 712,
+      "ci_upper": 44.496875229409305,
+      "ci_lower": 35.283696159090084,
+      "standard_error": 2.3102910591371715
+    },
+    {
+      "year": "2018",
+      "College": "No College",
+      "value": 27.998287821835234,
+      "n_actual": 1632,
+      "ci_upper": 31.116689731939157,
+      "ci_lower": 24.87988591173131,
+      "standard_error": 1.5663693906761276
+    },
+    {
+      "year": "2021",
+      "College": "College",
+      "value": 23.459894128591404,
+      "n_actual": 1790,
+      "ci_upper": 25.69433941066354,
+      "ci_lower": 21.225448846519267,
+      "standard_error": 1.1392108078547145
+    },
+    {
+      "year": "2021",
+      "College": "No College",
+      "value": 17.704651866571034,
+      "n_actual": 2201,
+      "ci_upper": 19.516858661455963,
+      "ci_lower": 15.892445071686105,
+      "standard_error": 0.9240470882487337
+    },
+    {
+      "year": "2022",
+      "College": "College",
+      "value": 25.901469290468075,
+      "n_actual": 1205,
+      "ci_upper": 29.802599676165404,
+      "ci_lower": 22.000338904770754,
+      "standard_error": 1.9533605412549213
+    },
+    {
+      "year": "2022",
+      "College": "No College",
+      "value": 23.966979941009235,
+      "n_actual": 2315,
+      "ci_upper": 27.002132824796547,
+      "ci_lower": 20.931827057221923,
+      "standard_error": 1.5201878061014402
+    },
+    {
+      "year": "2024",
+      "College": "College",
+      "value": 26.34738626074617,
+      "n_actual": 1190,
+      "ci_upper": 29.845157267700234,
+      "ci_lower": 22.849615253792106,
+      "standard_error": 1.7523829496505883
+    },
+    {
+      "year": "2024",
+      "College": "No College",
+      "value": 22.24078920245809,
+      "n_actual": 2088,
+      "ci_upper": 24.766252731646286,
+      "ci_lower": 19.71532567326989,
+      "standard_error": 1.265256993586808
+    }
+  ],
+  "dataPointMetadata": [
+    {
+      "id": "year",
+      "name": "Year",
+      "type": "ordinal",
+      "categories": [
+        "1972",
+        "1973",
+        "1974",
+        "1975",
+        "1976",
+        "1977",
+        "1978",
+        "1980",
+        "1982",
+        "1983",
+        "1984",
+        "1985",
+        "1986",
+        "1987",
+        "1988",
+        "1989",
+        "1990",
+        "1991",
+        "1993",
+        "1994",
+        "1996",
+        "1998",
+        "2000",
+        "2002",
+        "2004",
+        "2006",
+        "2008",
+        "2010",
+        "2012",
+        "2014",
+        "2016",
+        "2018",
+        "2021",
+        "2022",
+        "2024"
+      ]
+    },
+    {
+      "id": "College",
+      "name": "College Education",
+      "type": "ordinal",
+      "categories": [
+        "No College",
+        "College"
+      ]
+    },
+    {
+      "id": "value",
+      "name": "General Happiness",
+      "type": "numeric",
+      "units": "Percent",
+      "var_original": "happy_rec",
+      "value_suffix": "%",
+      "value_prefix": ""
+    },
+    {
+      "id": "n_actual",
+      "name": "N Actual",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_upper",
+      "name": "Upper Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "ci_lower",
+      "name": "Lower Confidence Interval",
+      "type": "numeric"
+    },
+    {
+      "id": "standard_error",
+      "name": "Standard Error",
+      "type": "numeric"
+    }
+  ]
+}
