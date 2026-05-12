@@ -32,7 +32,7 @@ export const book: Book = {
           number: 1,
           title: 'What Is a Dataset?',
           articles: [
-            { slug: 'ch01-what-is-a-dataset', number: '1', title: 'What Is a Dataset?', status: 'draft' },
+            { slug: 'ch01-what-is-a-dataset', number: '1', title: 'What Is a Dataset?', status: 'published' },
           ],
         },
         {

@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "title": "Bean & Basket transactions, week of 2024-03-04",
+    "subtitle": "One row per purchase across three stores",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "transaction_id", "name": "Transaction", "type": "ordinal" },
+    { "id": "date", "name": "Date", "type": "ordinal" },
+    { "id": "store_id", "name": "Store", "type": "categorical" },
+    { "id": "customer_id", "name": "Customer", "type": "ordinal" },
+    { "id": "items", "name": "Items", "type": "ordinal" },
+    { "id": "amount", "name": "Amount", "type": "numeric", "value_suffix": "$" }
+  ],
+  "dataPoints": [
+    { "transaction_id": "T001", "date": "2024-03-04", "store_id": "A — Downtown",  "customer_id": "C12", "items": "Latte + Croissant",      "amount": 9.50 },
+    { "transaction_id": "T002", "date": "2024-03-04", "store_id": "A — Downtown",  "customer_id": "C45", "items": "Drip + Muffin",          "amount": 6.25 },
+    { "transaction_id": "T003", "date": "2024-03-05", "store_id": "A — Downtown",  "customer_id": "C12", "items": "Latte",                  "amount": 5.50 },
+    { "transaction_id": "T004", "date": "2024-03-06", "store_id": "A — Downtown",  "customer_id": "C77", "items": "Cold brew + Bagel",      "amount": 8.75 },
+    { "transaction_id": "T005", "date": "2024-03-08", "store_id": "A — Downtown",  "customer_id": "C45", "items": "Cappuccino + Croissant", "amount": 9.00 },
+    { "transaction_id": "T006", "date": "2024-03-04", "store_id": "B — Campus",    "customer_id": "C22", "items": "Drip coffee",            "amount": 3.25 },
+    { "transaction_id": "T007", "date": "2024-03-05", "store_id": "B — Campus",    "customer_id": "C99", "items": "Latte",                  "amount": 5.50 },
+    { "transaction_id": "T008", "date": "2024-03-06", "store_id": "B — Campus",    "customer_id": "C22", "items": "Drip + Pastry",          "amount": 5.75 },
+    { "transaction_id": "T009", "date": "2024-03-07", "store_id": "B — Campus",    "customer_id": "C33", "items": "Mocha",                  "amount": 6.00 },
+    { "transaction_id": "T010", "date": "2024-03-04", "store_id": "C — Suburban",  "customer_id": "C66", "items": "Drip coffee",            "amount": 3.00 },
+    { "transaction_id": "T011", "date": "2024-03-06", "store_id": "C — Suburban",  "customer_id": "C88", "items": "Drip + Cookie",          "amount": 4.50 },
+    { "transaction_id": "T012", "date": "2024-03-09", "store_id": "C — Suburban",  "customer_id": "C66", "items": "Cappuccino",             "amount": 5.50 }
+  ]
+}

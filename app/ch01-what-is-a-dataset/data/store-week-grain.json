@@ -1,0 +1,21 @@
+{
+  "metadata": {
+    "title": "Bean & Basket store-week panel, week of 2024-03-04",
+    "subtitle": "Same week aggregated to one row per store",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "store_id",         "name": "Store",            "type": "categorical" },
+    { "id": "week",             "name": "Week",             "type": "ordinal" },
+    { "id": "transactions",     "name": "Transactions",     "type": "numeric" },
+    { "id": "revenue",          "name": "Revenue",          "type": "numeric", "value_suffix": "$" },
+    { "id": "unique_customers", "name": "Unique customers", "type": "numeric" },
+    { "id": "avg_basket",       "name": "Avg basket",       "type": "numeric", "value_suffix": "$" }
+  ],
+  "dataPoints": [
+    { "store_id": "A — Downtown", "week": "2024-03-04", "transactions": 5, "revenue": 39.00, "unique_customers": 3, "avg_basket": 7.80 },
+    { "store_id": "B — Campus",   "week": "2024-03-04", "transactions": 4, "revenue": 20.50, "unique_customers": 3, "avg_basket": 5.13 },
+    { "store_id": "C — Suburban", "week": "2024-03-04", "transactions": 3, "revenue": 13.00, "unique_customers": 2, "avg_basket": 4.33 }
+  ]
+}
