@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "title": "Bean & Basket campaign exposures, Feb–Mar 2024",
+    "subtitle": "Multiple rows per customer — the join hazard.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "customer_id",  "name": "Customer ID", "type": "ordinal" },
+    { "id": "campaign",     "name": "Campaign",    "type": "ordinal" },
+    { "id": "sent_date",    "name": "Sent",        "type": "ordinal" },
+    { "id": "channel",      "name": "Channel",     "type": "categorical" }
+  ],
+  "dataPoints": [
+    { "customer_id": "C12", "campaign": "Spring Latte Promo", "sent_date": "2024-02-20", "channel": "email" },
+    { "customer_id": "C12", "campaign": "Loyalty Reward",     "sent_date": "2024-03-01", "channel": "email" },
+    { "customer_id": "C12", "campaign": "New Pastry",         "sent_date": "2024-03-10", "channel": "push" },
+    { "customer_id": "C45", "campaign": "Spring Latte Promo", "sent_date": "2024-02-20", "channel": "email" },
+    { "customer_id": "C45", "campaign": "New Pastry",         "sent_date": "2024-03-10", "channel": "push" },
+    { "customer_id": "C77", "campaign": "Loyalty Reward",     "sent_date": "2024-03-01", "channel": "email" },
+    { "customer_id": "C22", "campaign": "Spring Latte Promo", "sent_date": "2024-02-20", "channel": "email" }
+  ]
+}

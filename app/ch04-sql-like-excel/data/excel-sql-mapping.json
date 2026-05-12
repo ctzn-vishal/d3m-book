@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "title": "Excel ↔ SQL ↔ R ↔ Python: the same operation, four syntaxes",
+    "subtitle": "Every spreadsheet action a manager already does has a SQL equivalent.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "excel",  "name": "Excel action",            "type": "ordinal" },
+    { "id": "sql",    "name": "SQL",                     "type": "ordinal" },
+    { "id": "r",      "name": "R (dplyr)",               "type": "ordinal" },
+    { "id": "python", "name": "Python (pandas)",         "type": "ordinal" }
+  ],
+  "dataPoints": [
+    { "excel": "Filter rows",            "sql": "WHERE",          "r": "filter()",       "python": ".query()" },
+    { "excel": "Select columns",         "sql": "SELECT",         "r": "select()",       "python": "df[[…]]" },
+    { "excel": "Sort",                   "sql": "ORDER BY",       "r": "arrange()",      "python": ".sort_values()" },
+    { "excel": "Pivot table (rows)",     "sql": "GROUP BY",       "r": "group_by()",     "python": ".groupby()" },
+    { "excel": "Pivot table (values)",   "sql": "SUM / AVG / …",  "r": "summarize()",    "python": ".agg()" },
+    { "excel": "VLOOKUP / XLOOKUP",      "sql": "JOIN",           "r": "left_join()",    "python": ".merge()" },
+    { "excel": "New calculated column",  "sql": "expression in SELECT", "r": "mutate()", "python": ".assign()" },
+    { "excel": "Pivot wider / longer",   "sql": "PIVOT / UNPIVOT","r": "pivot_wider() / pivot_longer()", "python": ".pivot() / .melt()" },
+    { "excel": "Remove duplicates",      "sql": "SELECT DISTINCT","r": "distinct()",     "python": ".drop_duplicates()" }
+  ]
+}

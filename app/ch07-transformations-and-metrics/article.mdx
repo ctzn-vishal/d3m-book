@@ -1,0 +1,65 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import transformsRaw from './data/transformations.json';
+import metricsRaw from './data/metrics.json';
+
+export const transforms = transformsRaw.dataPoints;
+export const metrics = metricsRaw.dataPoints;
+
+<DropCap>
+
+The CFO at Bean & Basket asks for "customer lifetime value" by region. Three analysts return three different numbers. None of them is wrong. The first used average order value times an annualized purchase frequency over the last twelve months; the second discounted future revenue by a 10% cost of capital and stopped at five years; the third counted only loyalty members. The CFO has not, in any meaningful sense, asked a single question. He has asked three questions wrapped in one phrase, and each analyst answered a different one. This is the chapter where we acknowledge that almost every business metric is a *definition*, not a raw column. The work of writing the definition down — what is a "customer," what is "active," what counts as "revenue" — is the work that determines what the dashboard actually says.
+
+</DropCap>
+
+## The executive question: *which business metric are we actually measuring?*
+
+There are two operations that turn raw transaction columns into the numbers managers actually look at. The first is the **transformation**: a mechanical recipe that converts a raw value into a more interpretable one. Logs flatten skew, ratios normalize for scale, lags carry a previous period's behavior into the current row, rolling averages smooth daily noise. The second is the **metric**: a business definition built out of transformations and aggregations. Churn rate, conversion rate, average order value, gross margin, market share — none of these is a column anyone collects. They are all derived, and the derivation is full of decisions.
+
+Both operations look bureaucratic. Both quietly shape every report downstream. The first time a team agrees, in writing, on what "active customer" means, the next quarter's churn number stops swinging between meetings. The first time someone writes `log(revenue)` instead of `revenue` in a regression, the elasticity coefficient becomes interpretable in percentage terms. These are not statistical gestures. They are managerial judgments. Figure 1 is the catalog of transformations every Bean & Basket analyst should be able to apply on demand; Figure 2 is the catalog of metrics every Bean & Basket dashboard should report.
+
+<DataTable
+  caption="Figure 1. Eight transformations that turn raw columns into managerially useful ones. Each is a small recipe — none requires advanced math — and each encodes a specific business judgment about what comparison is meaningful."
+  columns={[
+    { key: 'transform', label: 'Transformation',         align: 'left' },
+    { key: 'purpose',   label: 'Business purpose',       align: 'left' },
+    { key: 'example',   label: 'Bean & Basket example',  align: 'left' },
+  ]}
+  rows={transforms}
+/>
+
+Figure 1 names eight transformations, but two deserve a sentence of additional attention because they appear in almost every chapter that follows. The **log** transform is the one tool that converts a *multiplicative* business statement into an *additive* statistical one. When a manager says "this region is twice as big as that one," the log of the two revenues differs by `log(2) ≈ 0.69`. That is why log-log regressions appear in pricing (Chapter 21): the coefficient is the percentage change in quantity for a one-percent change in price — elasticity reads directly off the model. The **rolling average** is the small workhorse of executive dashboards. Daily sales are too noisy to interpret; the seven-day rolling mean is the same series with the weekday-cycle smoothed out, and the trend becomes visible.
+
+The transformations in Figure 1 are inputs to the metrics in Figure 2. A churn *rate* is the boolean churn flag aggregated over a customer-month panel. Revenue per customer is revenue (a sum) divided by active customers (a count of customers passing some flag). Lifetime value is AOV times frequency times retention, three numbers each of which is a transformation of raw orders.
+
+<DataTable
+  caption="Figure 2. Nine business metrics every executive dashboard quietly depends on. The 'watch out for' column is the part most worth memorizing — every metric here has a hidden definitional choice, and disagreements between dashboards almost always come from a different choice on the same line."
+  columns={[
+    { key: 'metric',    label: 'Metric',           align: 'left' },
+    { key: 'formula',   label: 'Formula',          align: 'left' },
+    { key: 'meaning',   label: 'What it measures', align: 'left' },
+    { key: 'watch_out', label: 'Watch out for',    align: 'left' },
+  ]}
+  rows={metrics}
+/>
+
+Figure 2 names the metrics that should appear in almost every Bean & Basket review. Look at the right-hand column. Every entry there is a place where two analysts can produce two different numbers from the same raw data — not because anyone made a mistake, but because the metric's definition contains a degree of freedom and the two analysts picked it differently. *"Churn"* needs a behavioral definition. *"Active customer"* needs a window. *"Conversion rate"* needs a notion of qualifying visitor. *"Customer lifetime value"* needs three estimates, each with their own error bars, multiplied together. The single biggest source of disagreement in real analytics meetings is not the data — it is the metric definition, and the disagreement is usually silent because everyone assumes everyone else's number was computed the same way.
+
+The defense is mechanical: every metric used in a recurring report should have a one-paragraph definition in a shared document, and the formula in the dashboard should point back to that paragraph. *"Active customer: any individual with a completed transaction in the last 90 days, regardless of loyalty membership."* That sentence is the difference between three analysts producing three CLV numbers and three analysts producing one.
+
+## What can go wrong
+
+<Callout variant="caveat" title="Transformations are not cosmetic — they encode judgment">
+
+The most insidious error around transformations is to call them "cleaning" and stop thinking about them. **Log-transforming revenue** is not a cleaning step; it changes what the model treats as a one-unit change (from a dollar to a percent). **Standardizing variables** before clustering changes which segments emerge — a customer-level clustering done on raw revenue will group everyone by spend; the same clustering done on standardized revenue can group by behavioral pattern. **Binning a continuous variable** loses information; sometimes that is what you want (interpretable age bands for a marketing report), but if the analysis downstream depends on the continuous variation, binning destroys the signal. Every transformation is a *choice about what to make comparable*. Document the choice; do not bury it inside a notebook.
+
+A related error is **double-counting in a metric**. Reporting "total revenue + total tax + total tip" as a single revenue figure inflates the number. Reporting "completed orders + abandoned carts" as conversions silently rewrites the metric. The defense is the same as for grain (Chapter 1) and joins (Chapter 5): before computing, write down what one unit of the metric represents.
+
+</Callout>
+
+There is a more general failure mode in this chapter worth flagging once. **A metric is a contract.** When a CMO sees "conversion rate: 4.2%" on a slide, she is reading a number that depends on a chain of definitional decisions — what is a visitor, what is a conversion, what is the window, how are bots excluded, are returning visitors deduplicated. Each link in the chain was made by someone, at some point, often without writing it down. The next time the metric is recomputed — by a different analyst, on a different data warehouse, with a slightly different filter — the answer will be different, and the disagreement will be invisible. Treating metric definitions as *governance artifacts*, not as engineering details, is the only way a multi-year dashboard remains comparable to itself.
+
+## Managerial takeaway
+
+Before asking *what is our conversion rate?*, ask *what does conversion rate mean here?* Transformations and metrics are the layer where raw data becomes business language, and the translation is full of editorial choices. The cheapest insurance an analytics team can buy is a **metrics dictionary** — one paragraph per metric, naming the formula, the window, the unit, and the exclusions — versioned alongside the dashboard that uses it. When a metric moves between reports, the paragraph moves with it. When two reports disagree, the paragraphs are the first place to look. The work of writing those paragraphs is the work of governance; the work of running the SQL is the work of engineering. Confuse them and the numbers will quietly diverge across the organization for years before anyone notices.

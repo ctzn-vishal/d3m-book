@@ -1,0 +1,99 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import dirtyRaw from './data/dirty-transactions.json';
+import checksRaw from './data/quality-checks.json';
+
+export const dirty = dirtyRaw.dataPoints;
+export const checks = checksRaw.dataPoints;
+
+<DropCap>
+
+A junior analyst at Bean & Basket exports last week's transactions to investigate why average order value spiked. Eight rows in, he finds the answer: one transaction recorded a $99,999 purchase — almost certainly a typo where the cashier meant $9.99. He nearly deletes the row before stopping. Two rows further down is a transaction for negative $5.75. That one is not an error; it is a return. The reflex to "clean up the bad data" by dropping rows is, half the time, the reflex to delete the most informative parts of the file. Data quality is rarely a technical problem with a technical fix. It is almost always a business process problem visible as bad rows, and the analyst's job is to triage which rows to fix, which to investigate, and which to keep exactly as they are.
+
+</DropCap>
+
+## The executive question: *is this a data problem, a business process problem, or both?*
+
+Most data quality problems fall into one of three categories. Some are **definitional** — the column means something different than the analyst assumed, or the same field is encoded inconsistently across systems. Some are **operational** — the upstream process produces wrong values, missing values, or duplicates; the data faithfully records what the process did. Some are **interpretive** — the row is technically correct but represents a business event (a return, a corporate order, a system test) that doesn't belong in the next sum without a flag. The first kind is fixed in code. The second is fixed in process. The third is fixed in the metric definition. Conflating them is how analytics teams end up writing patches that mask the real problem.
+
+Figure 1 is a small sample of what real Bean & Basket transaction data looks like before triage. Eight rows; six of them have visible quality issues. Read the "Issue" column down the right-hand side — each row is a different kind of problem, and each kind needs a different response.
+
+<Figure caption="Figure 1. Eight transactions, six data-quality issues. The 'Issue' column on the right is what an analyst would flag on a first read. Notice that the responses are not symmetric: the negative amount is probably a return (keep, flag), the impossible amount is probably a typo (reject), the missing store is probably a sync gap (investigate). 'Cleaning' all six with the same rule would erase the differences.">
+  <div className="not-prose">
+    <div className="overflow-x-auto">
+      <table className="w-full text-sm tabular-nums border-collapse">
+        <thead>
+          <tr className="border-b-2 border-border-strong">
+            <th className="py-2 px-3 text-left font-semibold text-body">Transaction</th>
+            <th className="py-2 px-3 text-left font-semibold text-body">Date</th>
+            <th className="py-2 px-3 text-left font-semibold text-body">Customer ID</th>
+            <th className="py-2 px-3 text-left font-semibold text-body">Store</th>
+            <th className="py-2 px-3 text-right font-semibold text-body">Amount</th>
+            <th className="py-2 px-3 text-left font-semibold text-body">Issue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dirty.map((row) => {
+            const flagged = row.issue !== '';
+            return (
+              <tr
+                key={row.transaction_id}
+                className={`border-b border-border ${flagged ? 'text-body' : 'text-subtle'}`}
+              >
+                <td className="py-2 px-3 text-left font-mono text-[12px]">{row.transaction_id}</td>
+                <td className={`py-2 px-3 text-left ${row.date === '2024-13-01' ? 'text-amber-700' : ''}`}>{row.date}</td>
+                <td className="py-2 px-3 text-left font-mono text-[12px]">
+                  {row.customer_id ?? <span className="text-amber-700">— null —</span>}
+                </td>
+                <td className="py-2 px-3 text-left">
+                  {row.store_id ?? <span className="text-amber-700">— null —</span>}
+                </td>
+                <td className={`py-2 px-3 text-right ${row.amount < 0 || row.amount > 1000 ? 'text-amber-700' : ''}`}>
+                  ${row.amount.toFixed(2)}
+                </td>
+                <td className={`py-2 px-3 text-left text-xs ${flagged ? 'text-amber-700' : 'text-muted'}`}>
+                  {row.issue || <span className="text-muted">—</span>}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Figure>
+
+Look at row T05 in Figure 1, the negative amount. The naive cleaning rule — "drop rows where `amount < 0`" — would erase a return event. The naive *correction* rule — "set the amount to its absolute value" — would silently double the revenue at that store for the day, since the return is now indistinguishable from a sale. The right answer is to keep the row, add a `transaction_type` column with values like `sale` and `return`, and let every downstream metric explicitly choose whether to include returns. The work is to make the business event *visible in the schema*, not to make the row *go away*.
+
+The same pattern repeats throughout the table. T04's impossible date (month 13) is an ingestion bug; reject it at the boundary and log the source. T07's $99,999 amount is almost certainly a misplaced decimal; quarantine the row and ask the store. T08's lowercase `a` is a categorical encoding issue; normalize at ingestion and add a uniqueness check on the store dimension. Each row in Figure 1 wants a different response, and Figure 2 organizes those responses into a standing triage list.
+
+<DataTable
+  caption="Figure 2. The standing data-quality triage list — nine checks every Bean & Basket pipeline should run continuously. Severity is about business risk, not about how many rows fail the check. A single impossible amount can do more damage than a thousand minor encoding inconsistencies."
+  columns={[
+    { key: 'check',         label: 'Check',         align: 'left' },
+    { key: 'severity',      label: 'Severity',      align: 'left' },
+    { key: 'business_risk', label: 'Business risk', align: 'left' },
+    { key: 'action',        label: 'Action',        align: 'left' },
+  ]}
+  rows={checks}
+/>
+
+Figure 2 is meant to be a living document, not a one-time audit. The nine checks here are the most common at a retail business of Bean & Basket's shape; a financial services firm or a software company would have its own variants. What stays constant is the structure: every check has a name, a severity that reflects *business* impact (not row count), a description of what the bad rows actually break, and a response. A team that runs Figure 2 weekly and reviews any failed check in the Monday meeting will catch every problem in Figure 1 within twenty-four hours of it arriving in the data.
+
+## What can go wrong
+
+<Callout variant="caveat" title="Two responses that look responsible and are actively harmful">
+
+**Silent imputation.** Filling in missing values with a default — zero for missing revenue, "Unknown" for missing customer — feels tidy and makes downstream code work without error. It is also a way of erasing the signal that something is wrong with the upstream process. The missing customer ID is probably a guest checkout (a fact worth knowing) or a POS sync failure (a fact worth fixing); imputing it as "Unknown" hides both. The defense is to keep nullability visible: let missing be missing, and let downstream metrics either filter explicitly or aggregate around the nulls.
+
+**Survivorship bias.** When a customer churns and is removed from the master file, every retention metric computed afterwards is overstated — the denominator shrinks to "customers who stayed." The same logic applies to stores that closed, products that were discontinued, or campaigns that were retired. The customer master file should be append-only: a churned customer gets a `status = 'churned'` flag and a `churned_date`, never a hard delete. Anything that involves "rate of survival" requires the people who didn't survive to still be in the file.
+
+</Callout>
+
+A third trap worth flagging: **mistaking outliers for errors**. A single $9,500 order at Bean & Basket looks like an obvious typo. It is not — it is a catering order for a corporate client. The naive "remove outliers beyond three standard deviations" rule deletes it; the customer never appears in lifetime-value analyses; the high-value B2B segment becomes invisible at the metric level. The rule is to investigate outliers, not delete them. Most of the time, they are exactly the rows you should be paying attention to.
+
+## Managerial takeaway
+
+Before asking *why is this number weird?*, ask *what does the bad row actually represent?* Data quality is the layer where the technical artifacts of the data pipeline collide with the messy realities of the business — returns, corporate orders, system migrations, deprecated products, churned customers, integration failures. The analyst's tools — flagging, anti-joins, severity-tiered triage — are means to an end; the end is to keep the business meaning of each row legible. The cheapest analytics governance a team can run is the weekly Monday triage on Figure 2: any check that flips from green to red gets a name, an owner, and a date. A team that does this stops producing dashboards whose numbers move for unexplained reasons. A team that doesn't will spend most of its third-year analyst-time explaining why the numbers don't agree across reports.

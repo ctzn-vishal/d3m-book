@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "title": "Bean & Basket transactions, week of 2024-03-04",
+    "subtitle": "Six purchases. One customer_id will not match the customer master.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "transaction_id", "name": "Transaction", "type": "ordinal" },
+    { "id": "date",           "name": "Date",        "type": "ordinal" },
+    { "id": "customer_id",    "name": "Customer ID", "type": "ordinal" },
+    { "id": "store_id",       "name": "Store",       "type": "categorical" },
+    { "id": "amount",         "name": "Amount",      "type": "numeric", "value_suffix": "$" }
+  ],
+  "dataPoints": [
+    { "transaction_id": "T01", "date": "2024-03-04", "customer_id": "C12", "store_id": "A", "amount": 9.50 },
+    { "transaction_id": "T02", "date": "2024-03-04", "customer_id": "C45", "store_id": "A", "amount": 6.25 },
+    { "transaction_id": "T03", "date": "2024-03-05", "customer_id": "C12", "store_id": "A", "amount": 5.50 },
+    { "transaction_id": "T04", "date": "2024-03-06", "customer_id": "C77", "store_id": "A", "amount": 8.75 },
+    { "transaction_id": "T05", "date": "2024-03-06", "customer_id": "C22", "store_id": "B", "amount": 5.75 },
+    { "transaction_id": "T06", "date": "2024-03-07", "customer_id": "C99", "store_id": "C", "amount": 3.00 }
+  ]
+}

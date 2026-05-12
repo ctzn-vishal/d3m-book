@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "title": "Bean & Basket customer master",
+    "subtitle": "Four customers. C99 is missing — a known data-quality gap.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "customer_id",  "name": "Customer ID", "type": "ordinal" },
+    { "id": "name",         "name": "Name",        "type": "ordinal" },
+    { "id": "loyalty_tier", "name": "Loyalty",     "type": "categorical" },
+    { "id": "signup_date",  "name": "Signed up",   "type": "ordinal" }
+  ],
+  "dataPoints": [
+    { "customer_id": "C12", "name": "Maria Reyes", "loyalty_tier": "Gold",   "signup_date": "2022-08" },
+    { "customer_id": "C45", "name": "Jin Park",    "loyalty_tier": "Silver", "signup_date": "2023-11" },
+    { "customer_id": "C77", "name": "Sara Kim",    "loyalty_tier": "Gold",   "signup_date": "2021-03" },
+    { "customer_id": "C22", "name": "Alex Chen",   "loyalty_tier": "None",   "signup_date": "2024-01" }
+  ]
+}

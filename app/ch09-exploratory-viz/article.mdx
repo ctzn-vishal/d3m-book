@@ -1,0 +1,101 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Step } from '@/components/Book/Step';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import questionMapRaw from './data/question-chart-map.json';
+
+export const questionMap = questionMapRaw.dataPoints;
+
+<DropCap>
+
+The CEO opens the new Bean & Basket executive dashboard. Twelve tiles, six charts, three filter dropdowns, two KPI rings, and a heatmap. Each one looks polished. After ninety seconds of scanning, he closes the tab. He could not have answered, from the dashboard, why revenue was flat last quarter — not because the answer wasn't in there, but because nothing on the page told him where to look first. The dashboard had charts. It did not have a question. A good dashboard is the opposite: every panel answers one specific question, and the panels are ordered so that the answer to the first leads naturally to the second, which leads to the third. The CEO's eye should never have to wander. The page should walk him through the analysis.
+
+</DropCap>
+
+## The executive question: *what should a manager notice first?*
+
+A dashboard is a *sequence of business questions*. Not a collection of charts, not a status report, not a data buffet — a sequence. The first panel asks an executive question, the second answers it, the third asks the natural follow-up, and so on until the page ends at a recommended action. When a manager looks at a well-built dashboard, she does not scan; she reads, in the order the page is laid out, and the order makes sense.
+
+The instinct to "show everything" is the most common mistake in dashboard design. Twelve tiles, each showing a different KPI, each presented as if equally important, force the viewer to do the prioritization work that the dashboard was supposed to do for her. The defense is to design the page like an analyst writes a memo: start with the question, state the headline number, show the trend, break it down where the trend gets interesting, and end with what to do about it. The same five-step arc, every page.
+
+Before getting to the arc, the smaller question: *which chart for which question?* Figure 1 is a working table. It is not exhaustive — every analytics team has its own variants — but it is the minimum vocabulary a manager should expect a dashboard designer to know. The right chart is determined by the *question*, not by what the data team happens to have a template for.
+
+<DataTable
+  caption="Figure 1. Ten common executive questions and the chart that answers each. The order on this page does not matter; the order on a real dashboard does. Pick the chart from the question, not the other way around — and resist the urge to add a chart because the template was available."
+  columns={[
+    { key: 'question', label: 'Business question', align: 'left' },
+    { key: 'chart',    label: 'Chart',             align: 'left' },
+    { key: 'use_when', label: 'Use when',          align: 'left' },
+  ]}
+  rows={questionMap}
+/>
+
+Figure 1 names ten question-chart pairs. The pattern across all ten is that the *question shape* determines the *chart shape*: continuous time becomes a line; a fixed sequence becomes a funnel; categorical comparison becomes a sorted bar. There is no chart in Figure 1 whose primary job is decoration. Every entry exists because some specific kind of business question is hard to answer without that visual.
+
+A dashboard is one or more of these charts arranged in an order. The order is the part most teams get wrong. Below is the order that has worked for fifty years and will work for fifty more: the executive question on top, the KPI tile that lands the headline, the trend that puts the headline in context, the breakdowns that explain the trend, and the recommended action at the bottom.
+
+## The dashboard arc, in six steps
+
+<Step number={1} title="The executive question (one sentence at the top)">
+
+Every dashboard starts with a question, written in plain English at the top of the page. Not *"Sales overview."* Not *"Q1 performance."* Something specific: *"Why did revenue flatten in Q1, after eight quarters of growth?"* The question names what the rest of the page is trying to answer, and gives the reader a frame for the numbers that follow.
+
+</Step>
+
+<Step number={2} title="The KPI tile — the headline number">
+
+One number, large, with a comparison. Last quarter's revenue against the quarter before, or against the same quarter last year. The KPI tile is the dashboard's headline. Used well, it gives a viewer the answer to the executive question in about two seconds.
+
+<KeyNumber
+  value="$1.18M"
+  unit="Q1"
+  label="Bean & Basket chain-wide revenue, Q1 2024."
+  change="+0.7% vs Q4 2023"
+/>
+
+</Step>
+
+<Step number={3} title="The trend — put the headline in context">
+
+A line chart of the same metric over the last 8–12 periods. Without the trend, "+0.7%" reads as steady; with the trend, it reads as the first non-growth quarter after a year of 4–6% gains. The chart in this position is almost always a line chart, almost always with the most recent point flagged, and almost always *bare* — no clutter, no second metric, no overlaid bar chart. The trend's whole job is to give context for the KPI above.
+
+</Step>
+
+<Step number={4} title="The breakdown — where is the change coming from?">
+
+Once the trend establishes that something interesting happened, the next panel decomposes it. Revenue by region. Revenue by product category. Revenue by store cohort. The right breakdown is the one whose variance explains the trend — usually two or three breakdowns are tried, and the one where the differences are largest stays on the dashboard. The chart is almost always a sorted bar, sometimes a small-multiples grid if there are too many groups.
+
+</Step>
+
+<Step number={5} title="The drilldown — segment to the actionable level">
+
+The breakdown identifies the *where*; the drilldown finds the *what*. If the regional breakdown surfaces Suburban as the breakout (Chapter 2's lesson made concrete), the drilldown digs into Suburban: customer segments, hour-of-day patterns, product mix. This is where exploratory visualization lives — scatterplots, small multiples, anything that admits *new information* into the analysis. Most viewers do not need this panel every day. Analysts do.
+
+</Step>
+
+<Step number={6} title="The recommended action">
+
+The last panel is the only one that is not a chart. It is a paragraph — sometimes two — that translates the four chart panels into a recommendation. *"Suburban grew on weekday-morning commuter traffic. Recommend doubling weekday-morning staffing and piloting a 7am promo at the Campus store, where commuter foot traffic is comparable but conversion lags by 11 points."* This is the panel most dashboards omit. It is also the only panel that turns the dashboard from a status report into a decision document.
+
+</Step>
+
+The six steps above are not specific to a particular tool. They work in Looker, in Tableau, in a printed PDF, in a one-pager taped to a wall. What makes the dashboard work is not the platform; it is the *sequence*. Without a sequence, the same six panels are a buffet; with a sequence, they are a memo.
+
+## What can go wrong
+
+<Callout variant="caveat" title="Three dashboard pathologies every team produces once">
+
+**The buffet dashboard.** Twelve tiles, no order, no hierarchy. Every chart is the same size; every metric is presented as if equally important. The viewer is forced to do the prioritization the dashboard was supposed to do. Fix: pick one executive question per page; if there are three questions, build three pages.
+
+**Vanity metrics on top.** Total page views, total accounts, total impressions — large, growing, and not connected to a decision. A KPI tile should answer a question the manager would otherwise ask; if the tile is a number nobody would ever act on, it does not belong on the headline row.
+
+**Charts without comparisons.** A single bar showing "Q1 revenue: $1.18M" is not a chart, it is a label. Every chart on a dashboard should make a comparison — to last period, to plan, to target, to a benchmark. *"$1.18M, +0.7% vs Q4"* is informative; *"$1.18M"* alone is not.
+
+</Callout>
+
+The deeper pathology behind all three is the same: building dashboards from the *data the team has* instead of the *questions the manager has*. The fix is to start every dashboard project with the question, written down, before any chart template is opened. A team that does this has dashboards that survive their first review. A team that doesn't builds beautiful tools that get closed after ninety seconds.
+
+## Managerial takeaway
+
+Before asking *which chart should we make?*, ask *which question are we trying to answer?* Then ask, *what is the next question that will naturally come up after this one is answered?* That second question is what determines the second panel. Working through the sequence — question, headline, context, breakdown, drilldown, action — produces dashboards that read top to bottom and end somewhere useful. The discipline is editorial, not technical: the charts are easy; the order is the work. A page that walks an executive through the analysis is a page the executive will open. A page that asks the executive to do their own prioritization is a page that quietly disappears from their bookmarks.

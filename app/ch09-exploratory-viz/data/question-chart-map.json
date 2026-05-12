@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "title": "Business question → chart mapping",
+    "subtitle": "Pick the chart from the question, not the other way around.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "question", "name": "Business question",      "type": "ordinal" },
+    { "id": "chart",    "name": "Chart",                  "type": "ordinal" },
+    { "id": "use_when", "name": "Use when",               "type": "ordinal" }
+  ],
+  "dataPoints": [
+    { "question": "How is one numeric variable distributed?", "chart": "Histogram",                  "use_when": "Spread, skew, multiple modes" },
+    { "question": "Which category is largest?",                "chart": "Bar chart (sorted)",         "use_when": "Comparing values across a small set of categories" },
+    { "question": "How does a metric change over time?",       "chart": "Line chart",                 "use_when": "Continuous time series; >5 points" },
+    { "question": "How do two numeric variables relate?",      "chart": "Scatterplot",                "use_when": "Looking for correlation, clusters, outliers" },
+    { "question": "Where is performance highest?",             "chart": "Choropleth / map",           "use_when": "Geographic differences are part of the story" },
+    { "question": "Where do users drop off?",                  "chart": "Funnel",                     "use_when": "Conversion across a fixed sequence of stages" },
+    { "question": "What changed between two periods?",         "chart": "Slope chart / variance bar", "use_when": "Two snapshots, want to see direction and magnitude of change" },
+    { "question": "Which products drive most revenue?",        "chart": "Pareto (sorted bar + cumulative line)", "use_when": "Long-tail distributions; '80/20'" },
+    { "question": "Two breakdowns of the same metric?",        "chart": "Stacked or 100% bar",        "use_when": "Composition matters more than absolute values" },
+    { "question": "Movement over time, broken by group?",      "chart": "Multi-line or small multiples", "use_when": "3+ series; small multiples if the comparison is the story" }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "title": "Business metrics every dashboard needs",
+    "subtitle": "Each row is a definition, not just a formula.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "metric",      "name": "Metric",              "type": "ordinal" },
+    { "id": "formula",     "name": "Formula",             "type": "ordinal" },
+    { "id": "meaning",     "name": "What it measures",    "type": "ordinal" },
+    { "id": "watch_out",   "name": "Watch out for",       "type": "ordinal" }
+  ],
+  "dataPoints": [
+    {
+      "metric": "Revenue",
+      "formula": "SUM(price × quantity)",
+      "meaning": "Total money received over a period",
+      "watch_out": "Returns and refunds should be netted before reporting."
+    },
+    {
+      "metric": "Average order value (AOV)",
+      "formula": "revenue / orders",
+      "meaning": "Typical purchase size",
+      "watch_out": "Skewed by a few large orders — report median alongside mean."
+    },
+    {
+      "metric": "Gross margin",
+      "formula": "(revenue − cost_of_goods) / revenue",
+      "meaning": "Share of each revenue dollar that survives COGS",
+      "watch_out": "Cost allocation choices change the answer; document them."
+    },
+    {
+      "metric": "Conversion rate",
+      "formula": "conversions / qualifying_visitors",
+      "meaning": "Share of visits that produced a purchase",
+      "watch_out": "Definition of 'qualifying visitor' is everything. Bots are not customers."
+    },
+    {
+      "metric": "Churn rate (monthly)",
+      "formula": "churned_in_month / customers_at_start_of_month",
+      "meaning": "Share of the base that left this month",
+      "watch_out": "'Churn' needs a behavioral definition — 'no purchase for 60 days' is a choice."
+    },
+    {
+      "metric": "Repeat purchase rate",
+      "formula": "customers_with_≥2_orders / total_customers",
+      "meaning": "Share of customers who returned at least once",
+      "watch_out": "The window matters: 30 days, 90 days, or lifetime tell different stories."
+    },
+    {
+      "metric": "Revenue per customer (ARPU)",
+      "formula": "revenue / active_customers",
+      "meaning": "Average value of an active customer in the period",
+      "watch_out": "Defining 'active' as 'any purchase' inflates the denominator with one-time buyers."
+    },
+    {
+      "metric": "Customer lifetime value (simple)",
+      "formula": "AOV × purchase_frequency × expected_retention",
+      "meaning": "Forecast of total revenue from a customer over their tenure",
+      "watch_out": "All three inputs are estimates with their own error — report a range, not a point."
+    },
+    {
+      "metric": "Market share",
+      "formula": "brand_sales / category_sales",
+      "meaning": "Share of category demand captured",
+      "watch_out": "Boundary of 'category' is editorial — be explicit about it."
+    }
+  ]
+}

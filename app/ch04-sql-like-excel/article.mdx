@@ -1,0 +1,112 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { TabSet, Tab } from '@/components/Book/TabSet';
+import mapping from './data/excel-sql-mapping.json';
+
+<DropCap>
+
+The regional manager at Bean & Basket has been writing pivot tables in Excel for fifteen years. When she joins the new analytics review, her first instinct is to apologize: she does not know SQL. Twenty minutes later she has written her first SQL query. It is a `GROUP BY` on `product_category` with a `SUM(revenue)`, and it does exactly what a pivot table does — she just typed the steps instead of dragging columns into a UI. SQL is not a different way of thinking about data; it is the same Excel thinking, written down. The point of this chapter is to make that translation explicit, so the language barrier stops being an excuse not to look at the source data.
+
+</DropCap>
+
+## The executive question: *how do spreadsheet operations translate into reproducible data operations?*
+
+Every familiar Excel action is a data operation with a name. Filtering rows by a date range is `WHERE`. Picking the columns to keep is `SELECT`. Sorting by a column is `ORDER BY`. A pivot table is `GROUP BY` plus an aggregation like `SUM` or `AVG`. A VLOOKUP is a `JOIN`. Adding a calculated column is an expression in the `SELECT` clause. A spreadsheet manager has been doing all of these for years; the only thing that changes is that SQL writes the steps out as a recipe, so the same recipe can be re-run next month, audited by a colleague, or version-controlled like code.
+
+This is more than a syntax conversion. The reason matters: a pivot table is a one-time artifact, often built by hand on a laptop, often slightly different from the one the colleague in the next office built. A SQL query is a stored procedure for producing the same answer the same way every time. The first lets you answer this week's question; the second lets you reliably answer the same question next week, next quarter, and next year. As soon as a managerial question needs to be answered repeatedly — *what is revenue by city by month?* — Excel becomes a fragile place to put it, and SQL becomes the natural place.
+
+The same logic extends to R's `dplyr` and Python's `pandas`. Both express the same operations as a sequence of verbs: filter, then mutate, then group, then summarize. The choice between SQL, R, and Python is largely about *where the data lives* and *what other tools you want to use afterwards* — not about which one can answer the question. All three can answer it, and all three express it in roughly the same shape. Figure 1 lays out the nine most common Excel actions and their direct equivalents in each language.
+
+<DataTable
+  caption="Figure 1. Excel ↔ SQL ↔ R ↔ Python. Each row is the same data operation expressed four ways. The right column always says the same thing the left column says; only the syntax changes."
+  columns={[
+    { key: 'excel',  label: 'Excel action',     align: 'left' },
+    { key: 'sql',    label: 'SQL',              align: 'left' },
+    { key: 'r',      label: 'R (dplyr)',        align: 'left' },
+    { key: 'python', label: 'Python (pandas)',  align: 'left' },
+  ]}
+  rows={mapping.dataPoints}
+/>
+
+Figure 1 is the entire Rosetta stone. Once a manager can read it, the rest of the chapter is a worked example: one business question, four syntaxes, identical answer.
+
+## A worked example: revenue by city and product category
+
+A regional director asks: *"For 2025 so far, what is the total revenue, broken down by city and product category, sorted from highest to lowest?"* This is exactly the kind of question that lands in an inbox on Monday morning and needs an answer by Friday. Below is the question in four languages. The shape of each answer is identical: a small table with one row per city × product-category combination, ordered by revenue. Only the syntax differs.
+
+<Figure caption="Figure 2. The same business question, expressed four ways. Tab through to compare. The underlying logic — filter, then add a column, then group, then summarize, then sort — is identical across all four; the syntax is the only thing that changes.">
+  <TabSet ariaLabel="The same query in four languages">
+    <Tab label="Excel mental model">
+      <ol className="list-decimal list-inside text-sm leading-relaxed space-y-2 text-subtle">
+        <li>Filter the transaction sheet to <code className="text-[12px]">purchase_date &gt;= 2025-01-01</code>.</li>
+        <li>Add a calculated column: <code className="text-[12px]">revenue = price × quantity</code>.</li>
+        <li>Insert a pivot table. Rows: <code className="text-[12px]">city</code>, <code className="text-[12px]">product_category</code>. Values: sum of <code className="text-[12px]">revenue</code>.</li>
+        <li>Sort the pivot table by the sum-of-revenue column, descending.</li>
+      </ol>
+      <p className="text-xs text-muted italic mt-3 leading-snug">
+        Four mouse-and-keyboard steps. Repeatable only if someone writes them down.
+      </p>
+    </Tab>
+    <Tab label="SQL">
+      <pre className="bg-code-bg p-3 rounded text-[12px] leading-relaxed overflow-x-auto"><code>{`SELECT
+  city,
+  product_category,
+  SUM(price * quantity) AS revenue
+FROM transactions
+WHERE purchase_date >= '2025-01-01'
+GROUP BY city, product_category
+ORDER BY revenue DESC;`}</code></pre>
+      <p className="text-xs text-muted italic mt-3 leading-snug">
+        Five clauses, mapping to the four Excel steps. <code className="text-[12px]">SELECT</code> picks the columns and the calculation; <code className="text-[12px]">FROM</code> names the table; <code className="text-[12px]">WHERE</code> filters; <code className="text-[12px]">GROUP BY</code> defines the pivot rows; <code className="text-[12px]">ORDER BY</code> sorts.
+      </p>
+    </Tab>
+    <Tab label="R (dplyr)">
+      <pre className="bg-code-bg p-3 rounded text-[12px] leading-relaxed overflow-x-auto"><code>{`transactions |>
+  filter(purchase_date >= as.Date("2025-01-01")) |>
+  mutate(revenue = price * quantity) |>
+  group_by(city, product_category) |>
+  summarize(revenue = sum(revenue), .groups = "drop") |>
+  arrange(desc(revenue))`}</code></pre>
+      <p className="text-xs text-muted italic mt-3 leading-snug">
+        Reads top-to-bottom as a sequence of verbs. The pipe <code className="text-[12px]">|&gt;</code> passes the table from one verb to the next. Each line maps to one Excel step.
+      </p>
+    </Tab>
+    <Tab label="Python (pandas)">
+      <pre className="bg-code-bg p-3 rounded text-[12px] leading-relaxed overflow-x-auto"><code>{`(
+    transactions
+    .query("purchase_date >= '2025-01-01'")
+    .assign(revenue=lambda d: d["price"] * d["quantity"])
+    .groupby(["city", "product_category"], as_index=False)["revenue"]
+    .sum()
+    .sort_values("revenue", ascending=False)
+)`}</code></pre>
+      <p className="text-xs text-muted italic mt-3 leading-snug">
+        The same chain in Python. <code className="text-[12px]">.query()</code> filters; <code className="text-[12px]">.assign()</code> creates the calculated column; <code className="text-[12px]">.groupby().sum()</code> is the pivot.
+      </p>
+    </Tab>
+  </TabSet>
+</Figure>
+
+Look at Figure 2 in any order. The Excel description and the SQL query describe the same operation at the same level of detail. The R and Python expressions read top-to-bottom as a sequence of verbs — almost word-for-word what an English-speaking analyst would describe. None of these is inherently harder than the others; they are the same recipe written for different audiences. A manager who can sketch the Excel steps can read all four.
+
+The reason this matters for executive practice is not that managers need to write SQL themselves. It is that the analytics team will write SQL, and a manager who reads the four-tab equivalence in Figure 2 can read the team's SQL well enough to ask *the right question*: "Is the filter date correct?", "Are you grouping at the right grain?", "Why is `ORDER BY revenue DESC` showing this product on top — did we exclude returns?" Those questions require no syntax knowledge. They require knowing which operation each clause names.
+
+## What can go wrong
+
+<Callout variant="caveat" title="Three quiet SQL mistakes a manager should catch">
+
+**Filter after group, instead of before.** `WHERE` filters the *raw* rows; `HAVING` filters the *groups* produced by `GROUP BY`. Filtering to "stores with more than $1M revenue" goes in `HAVING`, not `WHERE`. Mixing them up either drops too many rows or quietly ignores the filter. The defense: when reviewing a query, ask whether each filter applies to a transaction or to a group of transactions.
+
+**Group by the wrong grain.** Chapter 1's grain question reappears here. Grouping by `city` answers "revenue by city"; grouping by `city, product_category` answers a different question, and the rows in the result are not interchangeable. The error is silent — the query runs cleanly — and the resulting chart is wrong.
+
+**Forgetting that pivot tables hide the calculation.** Excel's UI invites a manager to drag fields around until the table "looks right." SQL forces the calculation to be named. That visibility is a feature, not a friction: the bugs that hide inside an Excel pivot ("why does this column show counts instead of sums?") cannot hide inside a SQL `SUM(...)`.
+
+</Callout>
+
+A subtler trap is **trusting that an Excel pivot scales**. A spreadsheet with two thousand rows is comfortable; a spreadsheet with two million rows is a crash report. Most operational data crosses that threshold sooner than a manager expects. When a pivot table becomes painfully slow, or refuses to refresh, that is a signal that the question has outgrown the tool, not that the analyst needs a faster laptop. Moving the operation to SQL or to a `pandas` data frame is not an escalation — it is the same operation, run somewhere that can hold the data.
+
+## Managerial takeaway
+
+The point of SQL — or `dplyr`, or `pandas` — is not that it is faster, harder, or more rigorous than Excel. It is that the *steps are written down*. A pivot table built by hand cannot easily be audited, repeated, or modified six months later by someone else; a SQL query can. As soon as a question becomes recurring, or its answer matters enough to be defended, the operations behind it should leave the spreadsheet and become a query. The translation is mechanical. Figure 1 is the dictionary. Figure 2 is the example. Every Excel action a manager already knows has an equivalent in a language that can be saved, versioned, and re-run without redoing the dragging.

@@ -53,49 +53,49 @@ export const book: Book = {
           number: 4,
           title: 'SQL Like Excel: Query Operations for Managers',
           articles: [
-            { slug: 'ch04-sql-like-excel', number: '4', title: 'SQL Like Excel', status: 'planned' },
+            { slug: 'ch04-sql-like-excel', number: '4', title: 'SQL Like Excel', status: 'published' },
           ],
         },
         {
           number: 5,
           title: 'Joining Data: How Business Context Enters a Table',
           articles: [
-            { slug: 'ch05-joining-data', number: '5', title: 'Joining Data', status: 'planned' },
+            { slug: 'ch05-joining-data', number: '5', title: 'Joining Data', status: 'published' },
           ],
         },
         {
           number: 6,
           title: 'Reshaping Data: Wide, Long, and Analysis-Ready',
           articles: [
-            { slug: 'ch06-reshaping-data', number: '6', title: 'Reshaping Data', status: 'planned' },
+            { slug: 'ch06-reshaping-data', number: '6', title: 'Reshaping Data', status: 'published' },
           ],
         },
         {
           number: 7,
           title: 'Transformations and Business Metrics',
           articles: [
-            { slug: 'ch07-transformations-and-metrics', number: '7', title: 'Transformations and Business Metrics', status: 'planned' },
+            { slug: 'ch07-transformations-and-metrics', number: '7', title: 'Transformations and Business Metrics', status: 'published' },
           ],
         },
         {
           number: 8,
           title: 'Data Quality, Missingness, Outliers, and Measurement Bias',
           articles: [
-            { slug: 'ch08-data-quality', number: '8', title: 'Data Quality and Measurement Bias', status: 'planned' },
+            { slug: 'ch08-data-quality', number: '8', title: 'Data Quality and Measurement Bias', status: 'published' },
           ],
         },
         {
           number: 9,
           title: 'Exploratory Visualization and BI Dashboards',
           articles: [
-            { slug: 'ch09-exploratory-viz', number: '9', title: 'Exploratory Visualization and Dashboards', status: 'planned' },
+            { slug: 'ch09-exploratory-viz', number: '9', title: 'Exploratory Visualization and Dashboards', status: 'published' },
           ],
         },
         {
           number: 10,
           title: 'Capstone: Bean & Basket Coffee Growth Diagnostic',
           articles: [
-            { slug: 'ch10-capstone-growth-diagnostic', number: '10', title: 'Capstone: Growth Diagnostic', status: 'planned' },
+            { slug: 'ch10-capstone-growth-diagnostic', number: '10', title: 'Capstone: Growth Diagnostic', status: 'published' },
           ],
         },
       ],

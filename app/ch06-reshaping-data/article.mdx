@@ -1,0 +1,106 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { TabSet, Tab } from '@/components/Book/TabSet';
+import wideRaw from './data/sales-wide.json';
+import longRaw from './data/sales-long.json';
+
+export const wide = wideRaw.dataPoints;
+export const long = longRaw.dataPoints;
+
+<DropCap>
+
+The regional manager has a single spreadsheet on her desk. Across the top, three columns: `sales_2024_01`, `sales_2024_02`, `sales_2024_03`. Down the side, three rows, one per store. Nine numbers in a tidy grid that fits on a slide. When her analyst opens the same data in R to make a trend chart, the first thing he does is reshape it: one row per store-month, three columns instead of nine cells. The numbers are identical. The shape is not. And the shape determines which questions are easy to ask. The spreadsheet shape is friendly to the eye; the reshaped version is friendly to the chart engine. Reshaping is not a transformation — no information is added or lost. It is a rearrangement, and knowing when to rearrange is the difference between a chart that takes ten seconds to make and one that takes an hour.
+
+</DropCap>
+
+## The executive question: *why does the same data need different shapes for spreadsheets, dashboards, and models?*
+
+The same numbers live in two canonical shapes. **Wide** format puts one row per *unit* and spreads time, category, or measurement across the columns. **Long** format puts one row per *unit-period* (or unit-category, or unit-measurement) and uses a small fixed set of columns. Either shape can describe the same business reality. Neither is more correct than the other. They are useful for different things.
+
+Wide is the natural shape for a human reading a spreadsheet. A regional director who opens last quarter's revenue file expects to see store names down the left, months across the top, and a number at each intersection. That arrangement compresses three pieces of information per cell — store, month, revenue — into a position-encoded grid that a reader can scan visually. Adding a fourth month means adding a column, which is fine for a small grid but a schema change for the underlying file: anything downstream that referenced `sales_2024_03` will need to learn about `sales_2024_04`.
+
+Long is the natural shape for almost everything that is not a human reading a spreadsheet. A line chart needs one column for time, one for the value, and (if there are multiple lines) one for the series. A regression needs one row per observation, with the predictors as fixed-name columns. A dashboard filter — *"show me Store A, Q1 only"* — needs the store and month to be values *inside* the table, not column headers. In all three cases, the wide grid has to be unpivoted first. The same nine numbers, the same business reality, two shapes, and the long shape is the one that connects to the rest of the analytical pipeline. Figure 1 shows the same Bean & Basket quarter both ways.
+
+<Figure caption="Figure 1. The same nine numbers in wide and long shape. Tab between them. The wide table reads more easily; the long table connects to everything downstream — charts, regressions, dashboard filters, joins to other long tables.">
+  <TabSet ariaLabel="Wide and long shapes of the same monthly revenue">
+    <Tab label={`Wide format (${wide.length} rows)`}>
+      <p className="text-xs text-muted italic mb-3 leading-snug">
+        One row per store, one column per month. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Store A grew, peaked in February, dipped slightly in March. Store C is the smallest but growing every month."
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm tabular-nums border-collapse">
+          <thead>
+            <tr className="border-b-2 border-border-strong">
+              <th className="py-2 px-3 text-left font-semibold text-body">Store</th>
+              <th className="py-2 px-3 text-right font-semibold text-body">Jan 2024</th>
+              <th className="py-2 px-3 text-right font-semibold text-body">Feb 2024</th>
+              <th className="py-2 px-3 text-right font-semibold text-body">Mar 2024</th>
+            </tr>
+          </thead>
+          <tbody>
+            {wide.map((row) => (
+              <tr key={row.store_id} className="border-b border-border text-subtle">
+                <td className="py-2 px-3 text-left">{row.store_id}</td>
+                <td className="py-2 px-3 text-right">${row.jan.toFixed(0)}</td>
+                <td className="py-2 px-3 text-right">${row.feb.toFixed(0)}</td>
+                <td className="py-2 px-3 text-right">${row.mar.toFixed(0)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-xs text-muted italic mt-3 leading-snug">
+        Adding April means adding a column. Plotting the three stores as three lines is impossible without first unpivoting — a chart engine needs the month to be a value, not a column name.
+      </p>
+    </Tab>
+    <Tab label={`Long format (${long.length} rows)`}>
+      <p className="text-xs text-muted italic mb-3 leading-snug">
+        One row per store-month. <strong className="font-semibold not-italic text-body">Reads as:</strong> Three columns, fixed forever: store, month, revenue. Adding April is one row, not a column. The line chart asks for exactly this shape.
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm tabular-nums border-collapse">
+          <thead>
+            <tr className="border-b-2 border-border-strong">
+              <th className="py-2 px-3 text-left font-semibold text-body">Store</th>
+              <th className="py-2 px-3 text-left font-semibold text-body">Month</th>
+              <th className="py-2 px-3 text-right font-semibold text-body">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            {long.map((row) => (
+              <tr key={`${row.store_id}-${row.month}`} className="border-b border-border text-subtle">
+                <td className="py-2 px-3 text-left">{row.store_id}</td>
+                <td className="py-2 px-3 text-left">{row.month}</td>
+                <td className="py-2 px-3 text-right">${row.revenue.toFixed(0)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-xs text-muted italic mt-3 leading-snug">
+        Adding April is one row per store. Plotting is direct: <code className="text-[12px]">x = month, y = revenue, color = store</code>. Filtering to Q1 is a <code className="text-[12px]">WHERE</code> clause on the month column. Joining to a customer-month table is a clean key match.
+      </p>
+    </Tab>
+  </TabSet>
+</Figure>
+
+Figure 1 makes the trade-off concrete. The wide tab is easy for the eye. The long tab is easy for the machine — by which we mean the chart engine, the statistical model, the dashboard filter, the join to another time-indexed table. In R, the verbs that move between these shapes are `pivot_wider()` and `pivot_longer()`; in Python's pandas they are `.pivot()` and `.melt()`; in SQL they are sometimes `PIVOT` / `UNPIVOT` and more often a `UNION ALL` of one query per column. The mechanics differ; the conceptual move is the same: take information that is encoded as column position and turn it into information encoded as cell value, or vice versa.
+
+The rule of thumb is to **store data in long form, display it in wide form**. The long form is the database-friendly shape: it is extensible (adding a period is a row, not a schema change), it is the natural input to plotting and modeling, and it is the format that joins cleanly to other long-form tables. The wide form is the presentation-friendly shape: at the very end of an analysis, when a manager wants to see a grid on a slide, you pivot the long form wider. The work of analysis happens in long; the work of communication happens in wide.
+
+## What can go wrong
+
+<Callout variant="caveat" title="Storing data wide is a schema trap">
+
+The most common cost of wide-as-storage is not visible until the next period arrives. April's revenue needs an `sales_2024_04` column. Every dashboard that hard-coded `sales_2024_01`, `sales_2024_02`, `sales_2024_03` needs to be updated. Every join that referenced "the revenue column" now needs to know which one. Every regression that used the three months as predictors silently drops April because there is no `april` predictor in the model. None of this is hypothetical — it is the entire reason analytics teams reshape data to long at ingestion. A long table absorbs the new month as a row; a wide table demands a schema change.
+
+A subtler version: **wide storage hides missing periods**. If Store C did not exist in January, the wide row simply has a blank or zero for `sales_2024_01`, which a chart engine will plot as zero — making the store look like it had revenue of $0 in January rather than "the store didn't exist yet." In long form, the missing period is a missing row, and most plotting tools draw that as a gap, which is the correct visual.
+
+</Callout>
+
+The opposite mistake — long when wide is wanted — is much rarer and almost always cheap to fix. A manager who wants to see the three months side by side, with stores down the side, is asking for a wide presentation table. Pivoting nine long rows back to three wide rows is one verb in any modern data tool. The cost of starting from long and pivoting wider when needed is essentially zero. The cost of starting from wide and pivoting longer every time something downstream needs it is paid every analysis.
+
+## Managerial takeaway
+
+The instinct to lay data out in a grid — store down the side, month across the top — is correct for *reading* and wrong for *building*. Store the data long. Pivot wider only at presentation. The discipline is identical to one we have already seen: keep the richer, more flexible shape as the source of truth, derive the simpler shape for display. When a manager reviews an analytics deliverable, the question worth asking is, *"what does the underlying table look like before this chart was made?"* A team that answers "wide, one column per month" is one schema change away from a broken dashboard. A team that answers "long, one row per store-month" can absorb a new month, a new store, or a new metric without rewriting anything. The shape of the source table is a quiet engineering decision that determines how much of the team's future time will be spent reshaping data instead of analyzing it.

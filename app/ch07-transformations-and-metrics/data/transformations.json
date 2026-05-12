@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "title": "Transformations every analyst should know",
+    "subtitle": "Each row turns a raw column into a more interpretable one.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "transform",  "name": "Transformation", "type": "ordinal" },
+    { "id": "purpose",    "name": "Business purpose","type": "ordinal" },
+    { "id": "example",    "name": "Bean & Basket example", "type": "ordinal" }
+  ],
+  "dataPoints": [
+    { "transform": "Binning",          "purpose": "Group noisy continuous values into managerial categories", "example": "age → 18–24 / 25–34 / 35–49 / 50+" },
+    { "transform": "Log",              "purpose": "Make multiplicative changes additive; tame skew",          "example": "log(revenue) so a 10× store reads as 1 unit larger, not 10" },
+    { "transform": "Standardize (z)",  "purpose": "Put variables on a common scale to compare",                "example": "ad spend (std) vs store size (std), both centered, both unit-variance" },
+    { "transform": "Ratio",            "purpose": "Normalize by scale",                                        "example": "revenue per square foot — comparable across store sizes" },
+    { "transform": "Rate",             "purpose": "Turn counts into probabilities",                            "example": "churn rate = churned / customers_at_risk" },
+    { "transform": "Flag (boolean)",   "purpose": "Encode a business condition for filtering or grouping",     "example": "is_loyalty_member = (loyalty_tier ≠ 'None')" },
+    { "transform": "Lag",              "purpose": "Bring previous-period behavior into the current row",       "example": "last_month_revenue, last_visit_days_ago" },
+    { "transform": "Rolling average",  "purpose": "Smooth weekly/daily noise into a trend",                    "example": "7-day moving average of daily sales" }
+  ]
+}

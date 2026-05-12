@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "title": "Data-quality triage board",
+    "subtitle": "Severity reflects business risk, not row count.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "check",         "name": "Check",         "type": "ordinal" },
+    { "id": "severity",      "name": "Severity",      "type": "ordinal" },
+    { "id": "business_risk", "name": "Business risk", "type": "ordinal" },
+    { "id": "action",        "name": "Action",        "type": "ordinal" }
+  ],
+  "dataPoints": [
+    {
+      "check": "Missing customer_id",
+      "severity": "High",
+      "business_risk": "Can't connect transactions to customer history; loyalty, churn, and CLV all blind to these.",
+      "action": "Investigate root cause (guest checkout? POS bug?). Flag the rows; do not drop."
+    },
+    {
+      "check": "Impossible date",
+      "severity": "High",
+      "business_risk": "Will break time-based joins and dashboards silently — rows fall out of every window.",
+      "action": "Reject at ingestion. Add validation rule: month ∈ [01–12], day ∈ [01–31]."
+    },
+    {
+      "check": "Negative revenue",
+      "severity": "Medium",
+      "business_risk": "Probably a return — meaningful business signal, NOT a bug. Auto-deleting hides churn behavior.",
+      "action": "Add a return-flag column. Keep the row; let analyses filter when needed."
+    },
+    {
+      "check": "Impossible amount (e.g. $99,999)",
+      "severity": "High",
+      "business_risk": "One outlier can dominate a mean. A single $99,999 row inflates AOV across the entire week.",
+      "action": "Reject or quarantine. If real (corporate order), tag and analyze separately."
+    },
+    {
+      "check": "Inconsistent category encoding",
+      "severity": "Low",
+      "business_risk": "Groups by store_id will treat 'A' and 'a' as two stores; rankings split into halves.",
+      "action": "Normalize at ingestion (uppercase, trim). Add a uniqueness check on the dimension table."
+    },
+    {
+      "check": "Unknown foreign key",
+      "severity": "Medium",
+      "business_risk": "Anti-join surfaces it — see Chapter 5. Often a sync gap with the loyalty system.",
+      "action": "Daily anti-join report; investigate any sustained increase in unmatched rows."
+    },
+    {
+      "check": "Duplicate row",
+      "severity": "Medium",
+      "business_risk": "Double-counts revenue, conversions, or any aggregated metric.",
+      "action": "Look for a natural-key uniqueness check (transaction_id should be unique). Investigate, do not auto-delete."
+    },
+    {
+      "check": "Survivorship bias",
+      "severity": "High",
+      "business_risk": "If churned customers are dropped from the master file, every retention metric is overstated.",
+      "action": "Keep a soft-delete flag, never hard-delete. Customer master is append-only."
+    },
+    {
+      "check": "Leaking future variables",
+      "severity": "High",
+      "business_risk": "A churn model trained on a 'days_since_last_purchase' field computed today learns nothing about future churn — it learns the definition.",
+      "action": "Snapshot features as of the decision date, not as of today (see Chapter 27)."
+    }
+  ]
+}

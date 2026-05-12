@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "title": "Bean & Basket monthly revenue, long format",
+    "subtitle": "One row per store-month — the analysis shape.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "store_id", "name": "Store",   "type": "categorical" },
+    { "id": "month",    "name": "Month",   "type": "ordinal" },
+    { "id": "revenue",  "name": "Revenue", "type": "numeric", "value_suffix": "$" }
+  ],
+  "dataPoints": [
+    { "store_id": "A — Downtown", "month": "2024-01", "revenue": 580 },
+    { "store_id": "A — Downtown", "month": "2024-02", "revenue": 620 },
+    { "store_id": "A — Downtown", "month": "2024-03", "revenue": 595 },
+    { "store_id": "B — Campus",   "month": "2024-01", "revenue": 310 },
+    { "store_id": "B — Campus",   "month": "2024-02", "revenue": 290 },
+    { "store_id": "B — Campus",   "month": "2024-03", "revenue": 270 },
+    { "store_id": "C — Suburban", "month": "2024-01", "revenue": 165 },
+    { "store_id": "C — Suburban", "month": "2024-02", "revenue": 210 },
+    { "store_id": "C — Suburban", "month": "2024-03", "revenue": 245 }
+  ]
+}
