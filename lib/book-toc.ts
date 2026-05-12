@@ -39,14 +39,14 @@ export const book: Book = {
           number: 2,
           title: 'Data Structures: Cross-Sectional, Time-Series, Panel, Geo, Network',
           articles: [
-            { slug: 'ch02-data-structures', number: '2', title: 'Data Structures', status: 'planned' },
+            { slug: 'ch02-data-structures', number: '2', title: 'Data Structures', status: 'published' },
           ],
         },
         {
           number: 3,
           title: 'Variable Types and Measurement Choices',
           articles: [
-            { slug: 'ch03-variable-types', number: '3', title: 'Variable Types and Measurement', status: 'planned' },
+            { slug: 'ch03-variable-types', number: '3', title: 'Variable Types and Measurement', status: 'published' },
           ],
         },
         {

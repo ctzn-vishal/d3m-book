@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "title": "Bean & Basket cross-section, week of 2024-04-22",
+    "subtitle": "One row per store (3 rows) — a single-week snapshot",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "store_id",     "name": "Store",        "type": "categorical" },
+    { "id": "week",         "name": "Week",         "type": "ordinal" },
+    { "id": "revenue",      "name": "Revenue",      "type": "numeric", "value_suffix": "$" },
+    { "id": "transactions", "name": "Transactions", "type": "numeric" }
+  ],
+  "dataPoints": [
+    { "store_id": "A — Downtown", "week": "2024-04-22", "revenue": 145.00, "transactions": 19 },
+    { "store_id": "B — Campus",   "week": "2024-04-22", "revenue":  60.00, "transactions": 10 },
+    { "store_id": "C — Suburban", "week": "2024-04-22", "revenue":  90.00, "transactions": 15 }
+  ]
+}

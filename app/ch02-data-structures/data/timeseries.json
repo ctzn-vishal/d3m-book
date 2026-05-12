@@ -1,0 +1,24 @@
+{
+  "metadata": {
+    "title": "Bean & Basket chain-wide weekly revenue, 8 weeks",
+    "subtitle": "One row per week (8 rows) — the same panel collapsed across stores",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "week",         "name": "Week",                "type": "ordinal" },
+    { "id": "week_num",     "name": "Week #",              "type": "numeric" },
+    { "id": "revenue",      "name": "Chain-wide revenue",  "type": "numeric", "value_suffix": "$" },
+    { "id": "transactions", "name": "Total transactions",  "type": "numeric" }
+  ],
+  "dataPoints": [
+    { "week": "2024-03-04", "week_num": 1, "revenue": 260.00, "transactions": 40 },
+    { "week": "2024-03-11", "week_num": 2, "revenue": 260.00, "transactions": 40 },
+    { "week": "2024-03-18", "week_num": 3, "revenue": 270.00, "transactions": 42 },
+    { "week": "2024-03-25", "week_num": 4, "revenue": 270.00, "transactions": 40 },
+    { "week": "2024-04-01", "week_num": 5, "revenue": 283.00, "transactions": 42 },
+    { "week": "2024-04-08", "week_num": 6, "revenue": 275.00, "transactions": 41 },
+    { "week": "2024-04-15", "week_num": 7, "revenue": 290.00, "transactions": 44 },
+    { "week": "2024-04-22", "week_num": 8, "revenue": 295.00, "transactions": 44 }
+  ]
+}

@@ -1,0 +1,52 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import dictionary from './data/variable-dictionary.json';
+
+<DropCap>
+
+A manager opens the customer-feedback report and sees "average rating: 4.2 out of 5." A few pages later the same report says "average ZIP code: 11042." The first number is misleading; the second is meaningless. Both errors come from the same root cause: someone treated a column as a number when it was not really a number. Almost every analytic mistake a manager will hear about, once you scratch the surface, is a quiet type confusion of this kind. The defense is to know what kind of column you are looking at *before* deciding what to do with it.
+
+</DropCap>
+
+## The executive question: *is this column a number, a category, a date, a location, a label, or a business definition?*
+
+Variables are not just columns. They are **measurement choices**. When the company decides to track customer ratings on a 1-to-5 scale, that decision implies a set of operations that are sensible (the median, the share of 4-or-5 ratings) and a set that look sensible but are not (the arithmetic mean, the standard deviation). When the company records ZIP codes, the decision implies that the column will be used for maps and territory grouping, not for arithmetic. Type, in the small-t sense an analyst means, is the rule about *what you are allowed to do* with a column.
+
+Seven types cover almost every business column. **Numeric** variables — price, revenue, quantity — support sums, means, ratios, and most of the textbook tools. **Categorical** variables — store, region, product family — support grouping and counting. **Ordered categorical** variables — satisfaction levels, T-shirt sizes, income brackets — support medians and rank comparisons, but not arithmetic, because the gaps between levels are not equal. **Date/time** is a category of its own: it sorts, supports lags and rolling windows, and decomposes into month, day-of-week, and hour. **Geographic** variables look numeric (ZIP, lat/lon) but behave categorically: distance and territory are sensible, sums are not. **Boolean** columns are simple — they support rates and conversions — but managers will sometimes report "average is_member = 0.43" instead of "43% are members," which is the same number stated badly. **Text** is its own world, treated in Part IV; for now, the rule is that it does not belong in a normal table operation.
+
+The trap is that a column's storage type — what the database engine sees — is not the same as its measurement type. A `customer_id` of `12345` is stored as an integer and will gladly average with other integers, but the average customer ID is not a number. A ZIP of `10003` is stored as an integer too. A `rating` of 4 is also an integer but means something quite different. Figure 1 walks through a Bean & Basket variable dictionary, naming the measurement type for each column, the operations that are sensible on it, and the common mistake — the one your team will make if no one writes the dictionary down.
+
+<DataTable
+  caption="Figure 1. What you can do with a column depends on what kind of column it is. Bean & Basket variable dictionary, eleven representative columns. The 'common mistake' column is the one to read carefully — every entry corresponds to a real report someone wrote."
+  columns={[
+    { key: 'variable',   label: 'Variable',            align: 'left' },
+    { key: 'type',       label: 'Type',                align: 'left' },
+    { key: 'example',    label: 'Example',             align: 'left' },
+    { key: 'operations', label: 'Sensible operations', align: 'left' },
+    { key: 'mistake',    label: 'Common mistake',      align: 'left' },
+  ]}
+  rows={dictionary.dataPoints}
+/>
+
+Figure 1 is the single most useful artifact a new analytics team can produce in its first week. The act of writing it down forces every column's type to be decided, named, and shared. Once the dictionary exists, downstream errors are caught at the table-design stage instead of at the slide-review stage. Notice how many of the entries warn against arithmetic on things that look numeric: IDs, ZIPs, ratings, and booleans all live in this looks-like-a-number-but-isn't trap. The trap is so reliable that you can find a version of it in almost every business intelligence stack ever shipped.
+
+## What can go wrong
+
+<Callout variant="caveat" title="The four type confusions every team makes once">
+
+**Averaging an ID.** The "mean customer ID" or "mean transaction ID" appears in dashboards more often than it should. It is always meaningless. The fix is to treat IDs as join keys and distinct-count tokens, never as numbers.
+
+**Averaging a rating.** A 4.2-star average sounds informative, but the gap between a 4 and a 5 is not necessarily the same size, in customer experience, as the gap between a 1 and a 2. Report the *share* of 4-or-5 ratings (top-2-box) or the median, not the mean.
+
+**Averaging a ZIP.** Geographic codes look numeric but are nominal. The defense is the same as for IDs: they sort, they group, they map — they do not average.
+
+**Treating a date as a string.** A string sort of dates puts "2024-13-01" before "2024-2-01," because string comparison reads character by character. Convert to a proper date type at ingestion, and the bug never appears.
+
+</Callout>
+
+A subtler version of the same family of errors involves **ordered categories**. If product size is encoded as Small / Medium / Large, the operations that make sense are rank-based: which size is the median order, which sizes are over-represented in returns. The operations that fail silently are the arithmetic ones — there is no such thing as "the average size," because the intervals are not equal. Worse, if someone has helpfully recoded sizes as `1`, `2`, `3` for "convenience," the spreadsheet will happily compute an average of `2.4`. The number means nothing, but it looks like it does, which is the worst possible failure mode.
+
+## Managerial takeaway
+
+Before asking *what should we compute?*, ask *what is this column?* The variable dictionary in Figure 1 is the cheapest insurance an analytics team can buy: a one-page artifact, written once at the start of a project, that prevents most of the type confusions that downstream reports will surface. When a new column arrives in a table — from a vendor, from an API, from a freshly engineered feature — the dictionary entry is the first thing to write, before any chart, model, or memo. The discipline is small. The errors it prevents are not.

@@ -1,0 +1,41 @@
+{
+  "metadata": {
+    "title": "Bean & Basket store-week panel, 8 weeks",
+    "subtitle": "One row per store-week (3 stores × 8 weeks = 24 rows)",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "store_id",     "name": "Store",        "type": "categorical" },
+    { "id": "week",         "name": "Week",         "type": "ordinal" },
+    { "id": "week_num",     "name": "Week #",       "type": "numeric" },
+    { "id": "revenue",      "name": "Revenue",      "type": "numeric", "value_suffix": "$" },
+    { "id": "transactions", "name": "Transactions", "type": "numeric" }
+  ],
+  "dataPoints": [
+    { "store_id": "A — Downtown", "week": "2024-03-04", "week_num": 1, "revenue": 145.00, "transactions": 19 },
+    { "store_id": "A — Downtown", "week": "2024-03-11", "week_num": 2, "revenue": 140.00, "transactions": 18 },
+    { "store_id": "A — Downtown", "week": "2024-03-18", "week_num": 3, "revenue": 148.00, "transactions": 20 },
+    { "store_id": "A — Downtown", "week": "2024-03-25", "week_num": 4, "revenue": 142.00, "transactions": 18 },
+    { "store_id": "A — Downtown", "week": "2024-04-01", "week_num": 5, "revenue": 150.00, "transactions": 19 },
+    { "store_id": "A — Downtown", "week": "2024-04-08", "week_num": 6, "revenue": 138.00, "transactions": 18 },
+    { "store_id": "A — Downtown", "week": "2024-04-15", "week_num": 7, "revenue": 146.00, "transactions": 19 },
+    { "store_id": "A — Downtown", "week": "2024-04-22", "week_num": 8, "revenue": 145.00, "transactions": 19 },
+    { "store_id": "B — Campus",   "week": "2024-03-04", "week_num": 1, "revenue":  80.00, "transactions": 14 },
+    { "store_id": "B — Campus",   "week": "2024-03-11", "week_num": 2, "revenue":  78.00, "transactions": 14 },
+    { "store_id": "B — Campus",   "week": "2024-03-18", "week_num": 3, "revenue":  72.00, "transactions": 13 },
+    { "store_id": "B — Campus",   "week": "2024-03-25", "week_num": 4, "revenue":  70.00, "transactions": 12 },
+    { "store_id": "B — Campus",   "week": "2024-04-01", "week_num": 5, "revenue":  68.00, "transactions": 12 },
+    { "store_id": "B — Campus",   "week": "2024-04-08", "week_num": 6, "revenue":  65.00, "transactions": 11 },
+    { "store_id": "B — Campus",   "week": "2024-04-15", "week_num": 7, "revenue":  62.00, "transactions": 11 },
+    { "store_id": "B — Campus",   "week": "2024-04-22", "week_num": 8, "revenue":  60.00, "transactions": 10 },
+    { "store_id": "C — Suburban", "week": "2024-03-04", "week_num": 1, "revenue":  35.00, "transactions":  7 },
+    { "store_id": "C — Suburban", "week": "2024-03-11", "week_num": 2, "revenue":  42.00, "transactions":  8 },
+    { "store_id": "C — Suburban", "week": "2024-03-18", "week_num": 3, "revenue":  50.00, "transactions":  9 },
+    { "store_id": "C — Suburban", "week": "2024-03-25", "week_num": 4, "revenue":  58.00, "transactions": 10 },
+    { "store_id": "C — Suburban", "week": "2024-04-01", "week_num": 5, "revenue":  65.00, "transactions": 11 },
+    { "store_id": "C — Suburban", "week": "2024-04-08", "week_num": 6, "revenue":  72.00, "transactions": 12 },
+    { "store_id": "C — Suburban", "week": "2024-04-15", "week_num": 7, "revenue":  82.00, "transactions": 14 },
+    { "store_id": "C — Suburban", "week": "2024-04-22", "week_num": 8, "revenue":  90.00, "transactions": 15 }
+  ]
+}

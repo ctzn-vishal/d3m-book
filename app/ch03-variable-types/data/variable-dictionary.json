@@ -1,0 +1,94 @@
+{
+  "metadata": {
+    "title": "Bean & Basket variable dictionary",
+    "subtitle": "What you can do with a column depends on what kind of column it is.",
+    "demo_key": "[]",
+    "demo_title": ""
+  },
+  "dataPointMetadata": [
+    { "id": "variable",   "name": "Variable",            "type": "ordinal" },
+    { "id": "type",       "name": "Type",                "type": "categorical" },
+    { "id": "example",    "name": "Example value",       "type": "ordinal" },
+    { "id": "operations", "name": "Sensible operations", "type": "ordinal" },
+    { "id": "mistake",    "name": "Common mistake",      "type": "ordinal" }
+  ],
+  "dataPoints": [
+    {
+      "variable": "transaction_id",
+      "type": "ID (categorical)",
+      "example": "\"T001\"",
+      "operations": "Join key, distinct count",
+      "mistake": "Averaging it. Sums and means of IDs are meaningless."
+    },
+    {
+      "variable": "date",
+      "type": "Date / time",
+      "example": "\"2024-03-04\"",
+      "operations": "Sort, extract month, build lags, group by week",
+      "mistake": "Storing as a string. \"2024-13-01\" sorts before \"2024-2-01\"."
+    },
+    {
+      "variable": "store_id",
+      "type": "Categorical (nominal)",
+      "example": "\"A — Downtown\"",
+      "operations": "Group, filter, count distinct",
+      "mistake": "Treating alphabetical order as a ranking."
+    },
+    {
+      "variable": "store_zip",
+      "type": "Geographic / categorical",
+      "example": "\"10003\"",
+      "operations": "Map, compute distance, group by region",
+      "mistake": "Averaging ZIP codes. \"Mean ZIP = 11042\" is a noise sentence."
+    },
+    {
+      "variable": "product_category",
+      "type": "Categorical (nominal)",
+      "example": "\"Coffee\"",
+      "operations": "Group, count, share-of-revenue ratios",
+      "mistake": "Inventing implicit order (Coffee < Tea < Pastry)."
+    },
+    {
+      "variable": "product_size",
+      "type": "Ordered categorical",
+      "example": "\"Medium\"",
+      "operations": "Rank, median, compare adjacent ranks",
+      "mistake": "Treating (Small + Large) / 2 = Medium. The interval is not equal."
+    },
+    {
+      "variable": "price",
+      "type": "Numeric (continuous)",
+      "example": "5.50",
+      "operations": "Sum, mean, ratio, log, elasticity",
+      "mistake": "Comparing across currencies without normalizing."
+    },
+    {
+      "variable": "quantity",
+      "type": "Numeric (count, integer)",
+      "example": "2",
+      "operations": "Sum, mean, distribution by category",
+      "mistake": "Reporting non-integer means without context (\"avg basket = 1.4 items\")."
+    },
+    {
+      "variable": "rating_1_to_5",
+      "type": "Ordered categorical",
+      "example": "4",
+      "operations": "Median, % top-2-box, compare ranks",
+      "mistake": "Reporting \"mean rating = 4.2\" as if the gap from 4 to 5 equals the gap from 1 to 2."
+    },
+    {
+      "variable": "is_loyalty_member",
+      "type": "Boolean",
+      "example": "true",
+      "operations": "Conversion rate (% true), filter, segment",
+      "mistake": "Reporting \"avg member = 0.43\". Say \"43% are members\" instead."
+    },
+    {
+      "variable": "review_text",
+      "type": "Text / unstructured",
+      "example": "\"Great oat-milk latte but slow service.\"",
+      "operations": "Sentiment, topic, embedding, semantic search",
+      "mistake": "Treating it as a structured column. \"COUNT DISTINCT review\" is rarely the question."
+    }
+  ]
+}
