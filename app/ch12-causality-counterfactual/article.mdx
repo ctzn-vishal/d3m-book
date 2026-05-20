@@ -1,0 +1,232 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { CounterfactualWorlds, ZillowSyntheticControl } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+Every strategic decision rests on a causal claim. When a firm spends millions on a loyalty program, it is asserting that the program will *cause* customers to spend more than they would have spent otherwise. The hard truth of data-driven decision making is that this "otherwise" — the counterfactual — is never directly observable. We can see what a customer spent after joining the program. We can never observe what that same customer would have spent, at the same moment, had they not joined.
+
+</DropCap>
+
+This unbridgeable gap is the **Fundamental Problem of Causal Inference**. This chapter introduces the standard mathematical language used to reason about it — the Potential Outcomes Framework — and shows precisely why a naive comparison of treated and untreated units overstates causal effects.
+
+---
+
+## The Executive Question: What Is the True Causal Lift?
+
+Suppose a marketing dashboard reports that customers who received a discount coupon spent more on average than customers who did not. It is tempting to subtract the two averages and call the difference "the coupon's lift." The framing is wrong.
+
+The right question is not *do recipients spend more than non-recipients?* — that is descriptive arithmetic. The right question is *would the recipients have spent less if they had not received the coupon?* Figure 1 illustrates the branching structure of this dilemma: for any single unit at any single moment, we observe one of two possible paths and never both.
+
+<Figure width="body-outset" caption="Figure 1. The potential-outcomes branching model. For each unit we observe one path; causal lift is the gap between the observed path and the unobservable counterfactual path.">
+  <div className="not-prose">
+    <CounterfactualWorlds />
+  </div>
+</Figure>
+
+---
+
+## The Potential Outcomes Framework
+
+Let <M>{String.raw`i`}</M> index a unit (a customer, a store-week, a state-month) and let <M>{String.raw`D_i \in \{0,1\}`}</M> be a binary treatment indicator: <M>{String.raw`D_i = 1`}</M> if unit <M>{String.raw`i`}</M> received the treatment, <M>{String.raw`D_i = 0`}</M> otherwise.
+
+For every unit, define **two potential outcomes**:
+
+- <M>{String.raw`Y_i(1)`}</M> — the outcome unit <M>{String.raw`i`}</M> would experience under treatment.
+- <M>{String.raw`Y_i(0)`}</M> — the outcome unit <M>{String.raw`i`}</M> would experience under no treatment.
+
+The **individual treatment effect** is the difference between these two states:
+
+<Equation
+  label="Individual treatment effect"
+  latex={String.raw`\tau_i = Y_i(1) - Y_i(0)`}
+/>
+
+The Fundamental Problem of Causal Inference is that we only observe the realized outcome, which depends on whether unit <M>{String.raw`i`}</M> was actually treated:
+
+<Equation
+  label="Observed outcome"
+  latex={String.raw`Y_i = D_i \, Y_i(1) + (1 - D_i) \, Y_i(0)`}
+/>
+
+If unit <M>{String.raw`i`}</M> was treated, we see <M>{String.raw`Y_i(1)`}</M> and <M>{String.raw`Y_i(0)`}</M> is missing. If untreated, we see <M>{String.raw`Y_i(0)`}</M> and <M>{String.raw`Y_i(1)`}</M> is missing. The individual effect <M>{String.raw`\tau_i`}</M> is therefore never observable for any single unit.
+
+Because we cannot recover individual effects, decision-makers focus on **averages** over units. The **Average Treatment Effect** is
+
+<Equation
+  label="Average Treatment Effect (ATE)"
+  latex={String.raw`\tau_{\text{ATE}} = \mathbb{E}\!\left[\,Y_i(1) - Y_i(0)\,\right]`}
+/>
+
+and the **Average Treatment Effect on the Treated** narrows the average to units that actually received the treatment:
+
+<Equation
+  label="Average Treatment Effect on the Treated (ATT)"
+  latex={String.raw`\tau_{\text{ATT}} = \mathbb{E}\!\left[\,Y_i(1) - Y_i(0) \,\big|\, D_i = 1\,\right]`}
+/>
+
+ATE and ATT generally differ. If your treatment is opt-in — coupons that loyal customers self-select into, software features that power users enable — the treated population is not a random draw from the full population, and the ATT will reflect the response of the kind of unit that takes the treatment.
+
+---
+
+## Why Naive Comparisons Fail
+
+If we cannot see individual counterfactuals, can we just compare group averages? The naive difference is
+
+<Equation
+  label="Naive group comparison"
+  latex={String.raw`\widehat{\Delta}_{\text{naive}} = \mathbb{E}[\,Y_i \mid D_i = 1\,] - \mathbb{E}[\,Y_i \mid D_i = 0\,]`}
+/>
+
+Substitute the observed outcomes with potential outcomes (using <M>{String.raw`Y_i = Y_i(1)`}</M> when <M>{String.raw`D_i = 1`}</M> and <M>{String.raw`Y_i = Y_i(0)`}</M> when <M>{String.raw`D_i = 0`}</M>) and the difference splits cleanly into two terms:
+
+<Equation
+  label="Selection bias decomposition"
+  latex={String.raw`\widehat{\Delta}_{\text{naive}} \;=\; \underbrace{\mathbb{E}[\,Y_i(1) - Y_i(0) \mid D_i = 1\,]}_{\text{ATT (true causal effect on the treated)}} \;+\; \underbrace{\mathbb{E}[\,Y_i(0) \mid D_i = 1\,] - \mathbb{E}[\,Y_i(0) \mid D_i = 0\,]}_{\text{Selection bias}}`}
+/>
+
+This is one of the most important equations in applied business analytics. It says: the naive treated-minus-untreated difference equals the true ATT *plus* selection bias, where selection bias is the difference in **untreated-state potential outcomes** between the two groups.
+
+Selection bias is zero only when the two groups would have looked identical in the absence of treatment. That is rarely true in observational data, because units choose, or are chosen for, treatment based on factors that also drive the outcome. Loyal customers opt into coupons; high-margin stores adopt new features first; states that legalize a policy differ in unobserved ways from states that do not.
+
+<Callout variant="definition" title="Selection bias">
+  The systematic difference in *untreated-state* potential outcomes between the treated and untreated groups. It exists whether or not treatment occurs. It is exactly the bias term that randomization is designed to eliminate.
+</Callout>
+
+### A numerical illustration
+
+Suppose loyal customers self-select into a coupon program. We observe an average spend of <M>{String.raw`\$15.50`}</M> in the coupon group and <M>{String.raw`\$9.20`}</M> in the non-coupon group, a naive lift of <M>{String.raw`\$6.30`}</M>. The decomposition above warns us that this <M>{String.raw`\$6.30`}</M> is
+
+<Equation
+  latex={String.raw`\$6.30 \;=\; \underbrace{\text{ATT}}_{\text{causal coupon effect}} \;+\; \underbrace{\mathbb{E}[Y_i(0) \mid D_i = 1] - \mathbb{E}[Y_i(0) \mid D_i = 0]}_{\text{Selection bias: loyal customers spend more anyway}}`}
+/>
+
+The bias term is plausibly large and positive: the customers who took the coupon were the kind of customer who would have spent more even without it. Without a design that controls selection, we have no way to split the <M>{String.raw`\$6.30`}</M> into its two components.
+
+---
+
+## The Four Standard Counterfactual Designs
+
+The rest of Part III is, essentially, four families of methods for constructing a credible stand-in for <M>{String.raw`\mathbb{E}[Y_i(0) \mid D_i = 1]`}</M> — the missing untreated potential outcome of the treated group.
+
+<DataTable
+  caption="Table 1. Four standard ways to construct a counterfactual, and the price each one asks in identifying assumptions."
+  columns={[
+    { key: 'method', label: 'Method', align: 'left' },
+    { key: 'counterfactual', label: 'Counterfactual is built from…', align: 'left' },
+    { key: 'assumption', label: 'Key assumption', align: 'left' },
+    { key: 'chapter', label: 'Home in Part III', align: 'left' },
+  ]}
+  rows={[
+    { method: 'Randomization (A/B test)', counterfactual: 'Randomly assigned control group', assumption: 'Random assignment was actually random and held up', chapter: 'Chapter 10' },
+    { method: 'Regression control', counterfactual: 'Treated units adjusted for observed confounders', assumption: 'No unobserved confounders that move with both treatment and outcome', chapter: 'Chapter 11' },
+    { method: 'Difference-in-differences', counterfactual: 'Treated units\' pre-trend extrapolated using control units\' trend', assumption: 'Parallel pre-treatment trends would have continued', chapter: 'Chapter 12' },
+    { method: 'Synthetic control', counterfactual: 'Weighted combination of untreated donor units tracking the treated unit pre-treatment', assumption: 'Good pre-treatment fit and no shocks unique to the treated unit', chapter: 'Chapter 12' },
+  ]}
+/>
+
+Each method buys credibility at the cost of an assumption you can name and defend. The Decision Question Card from the previous article forces you to choose which counterfactual you are willing to defend before you choose a method.
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on counterfactual reasoning. Pick an answer to reveal the explanation."
+  questions={[
+    {
+      prompt: <>The Fundamental Problem of Causal Inference says that…</>,
+      options: [
+        { label: <>Treated and untreated groups must have equal sample sizes for the estimator to be unbiased.</> },
+        { label: <>For any single unit we can never observe both potential outcomes — we only observe the one realized under the unit's actual treatment status.</> },
+        { label: <>Causal effects can only be measured inside a randomized experiment.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The "fundamental problem" is the missing data problem at the unit level: <M>{String.raw`\tau_i = Y_i(1) - Y_i(0)`}</M> is never observable because only one of the two potential outcomes is realized. Causal methods are different strategies for averaging around this gap.</>,
+    },
+    {
+      prompt: <>In the decomposition <M>{String.raw`\widehat{\Delta}_{\text{naive}} = \text{ATT} + \text{Selection bias}`}</M>, "selection bias" is…</>,
+      options: [
+        { label: <>Bias from choosing a regression specification with too many controls.</> },
+        { label: <>The systematic difference in <em>untreated-state</em> potential outcomes between the treated and untreated groups, present even without any treatment.</> },
+        { label: <>Bias from the analyst choosing which observations to drop.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Selection bias is the difference in <M>{String.raw`Y(0)`}</M> outcomes — what each group <em>would have done untreated</em>. It exists because units are not assigned to treatment randomly; it would still exist if no one were ever actually treated.</>,
+    },
+    {
+      prompt: <>When does the ATT meaningfully differ from the ATE?</>,
+      options: [
+        { label: <>Whenever the regression is misspecified.</> },
+        { label: <>When treatment effects vary across units <em>and</em> the treated population is not a random draw from the full population.</> },
+        { label: <>Only when the control group is smaller than the treatment group.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>If every unit had the same individual effect, or if treated units were a random sample, ATE and ATT would coincide. They diverge when treatment effects are heterogeneous and the units that take treatment have a different effect profile than the average unit.</>,
+    },
+    {
+      prompt: <>A naive comparison of opt-in coupon recipients with non-recipients shows recipients spend $6.30 more on average. Which interpretation is most defensible?</>,
+      options: [
+        { label: <>The coupon caused a $6.30 lift in spending.</> },
+        { label: <>The $6.30 is the sum of the true coupon effect on opt-in customers plus selection bias, and it likely overstates the causal lift.</> },
+        { label: <>The $6.30 is the Average Treatment Effect on the Untreated.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Because customers chose to take the coupon, the treated group is not comparable to the non-treated group in untreated potential outcomes. The naive difference picks up both the genuine coupon response and the fact that the kind of customer who took the coupon would have spent more anyway.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: Colorado Housing and the Synthetic Counterfactual
+
+To see counterfactual construction in action with real data, consider Colorado's January 2014 legalization of recreational cannabis. A real-estate investor wants to know whether the policy moved housing values. The unit of analysis is the state-month and the outcome is the Zillow Home Value Index.
+
+The Fundamental Problem applies at the state level: we observe Colorado *after* legalization, but we never observe the Colorado that would have existed had legalization not happened. A naive before-after comparison conflates the policy with the broader US housing recovery that was already underway in 2014.
+
+The **synthetic control** method constructs a credible counterfactual by searching for a weighted combination of donor states — states where the policy did not change — whose weighted housing trajectory closely matches Colorado's pre-treatment path. Figure 2 shows the actual and synthetic paths; Figure 3 shows the donor weights.
+
+<Figure width="screen-inset" caption="Figure 2. Colorado's actual ZHVI (blue) against the optimized synthetic counterfactual (orange). The two paths track tightly before January 2014 and separate cleanly afterwards — the visual signature of a credible synthetic control design.">
+  <div className="not-prose">
+    <ZillowSyntheticControl data={data.zillow} show="paths" />
+  </div>
+</Figure>
+
+<Figure width="page-outset" caption="Figure 3. Donor weights selected by the synthetic control algorithm. The synthetic Colorado is dominated by a small number of states whose pre-treatment housing trajectories closely tracked Colorado's.">
+  <div className="not-prose">
+    <ZillowSyntheticControl data={data.zillow} show="weights" />
+  </div>
+</Figure>
+
+The post-2014 gap between Colorado and the synthetic counterfactual averages roughly twenty percent. That is the design's estimate of the causal effect of legalization on Colorado housing values, *under the assumption* that no other Colorado-specific shock after 2014 could have produced the gap. We will return to this design in Chapter 12 and stress-test that assumption with placebo donor states.
+
+For now, treat this case as a worked example of the framework: an action, a unit, an outcome, and a counterfactual that was built — not assumed — from the data.
+
+---
+
+## What Can Go Wrong
+
+Three reasoning failures recur in counterfactual work:
+
+1.  **Confounding shocks.** Crediting the gap to the named treatment when another shock hit the treated unit at the same time. Colorado in 2014 had cannabis legalization, but it also had a tech-driven population boom; the synthetic control cannot separate the two without additional design.
+2.  **Pre-treatment overfitting.** Weighting donor units to chase short-run noise in the treated unit's pre-trend. A pre-period that "fits perfectly" because the algorithm matched every wiggle is a warning, not a strength.
+3.  **Spillover contamination.** Choosing donor units that were themselves affected by the treatment. If neighbors of the treated unit absorbed migration, employment, or pricing spillovers, their potential outcomes are contaminated and the counterfactual is too.
+
+---
+
+## Managerial Takeaway
+
+Causal reasoning is the discipline of naming what is missing. Whenever a deck claims that an action moved a metric, ask four questions in order:
+
+- *What is the counterfactual?*
+- *How was it constructed?*
+- *Why is it a credible stand-in for the missing potential outcome?*
+- *What simultaneous shocks or selection effects could explain the gap without the action?*
+
+The rest of Part III is a tour of the four standard answers to question two — and how to defend them against question four.

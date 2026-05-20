@@ -1,0 +1,181 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { FrischWaughResidualization } from '@/components/Book/part3/ConceptDiagrams';
+import { SoupRegressionLadder } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+When several business variables move at once, a simple two-variable correlation is rarely the answer to a strategic question. Multiple regression is the workhorse that lets managers ask a sharper question: how does the outcome respond to a *single* lever, holding other observable factors constant? This article explains what that "holding constant" actually does — it is residualization, not real-world control — and why understanding the mechanics changes how you read every regression coefficient you will ever see.
+
+</DropCap>
+
+We will work through the regression model, walk through the Frisch–Waugh–Lovell view of what it computes, and end with a data case that climbs a "regression ladder" on real scanner data — adding controls one at a time and watching the price coefficient settle as confounders are stripped out.
+
+---
+
+## The Executive Question: What Else Was Changing?
+
+A naive correlation says weeks with heavier email-coupon volume see higher revenue. Three things were probably also true of those weeks: they were holiday weeks, a competitor was on the air, and the recipients were the loyal customers most likely to buy anyway. Each one contaminates the coupon-revenue correlation in a predictable direction.
+
+| Confounder | Correlation with coupon volume | Effect on revenue | Direction of naive bias |
+| --- | --- | --- | --- |
+| Holiday season | Positive (more sends in peak weeks) | Positive (holiday demand) | Inflates apparent coupon lift |
+| Competitor ad blitz | Positive (defensive couponing) | Negative (share losses) | Suppresses apparent lift |
+| Loyal customer targeting | Positive (loyalists on the list) | Positive (they buy anyway) | Inflates apparent lift |
+
+The decision-relevant question is not "are coupons correlated with revenue?" but "what does the data look like when we hold those three factors constant?" Multiple regression is the tool that gives a precise answer.
+
+---
+
+## Multiple Regression: Effect Isolation by Math
+
+The standard linear model is
+
+<Equation
+  label="Multiple linear regression"
+  latex={String.raw`Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \cdots + \beta_k X_{ki} + \varepsilon_i`}
+/>
+
+The coefficient <M>{String.raw`\beta_1`}</M> has a very specific managerial interpretation:
+
+> *<M>{String.raw`\beta_1`}</M> is the expected change in the outcome <M>{String.raw`Y`}</M> for a one-unit increase in <M>{String.raw`X_1`}</M>, holding the other included variables fixed.*
+
+That last clause does *not* mean we held anything constant in the real world. It means the regression mathematically removed the part of <M>{String.raw`X_1`}</M>'s variation that the controls could explain, removed the part of <M>{String.raw`Y`}</M>'s variation that the controls could explain, and looked at what was left. That two-step "what was left" view is the Frisch–Waugh–Lovell theorem.
+
+---
+
+## The Frisch–Waugh–Lovell View
+
+FWL says a multiple-regression coefficient is identical to a much simpler two-stage procedure:
+
+1.  **Residualize the treatment.** Regress <M>{String.raw`X_1`}</M> on the controls. Keep the residual <M>{String.raw`\tilde{X}_1`}</M> — the variation in the treatment that the controls cannot explain.
+2.  **Residualize the outcome.** Regress <M>{String.raw`Y`}</M> on the controls. Keep the residual <M>{String.raw`\tilde{Y}`}</M> — the variation in the outcome the controls cannot explain.
+3.  **Slope of residuals on residuals.** The simple slope of <M>{String.raw`\tilde{Y}`}</M> on <M>{String.raw`\tilde{X}_1`}</M> is *exactly* the multiple-regression coefficient <M>{String.raw`\beta_1`}</M>.
+
+<Figure caption="Figure 1. Frisch–Waugh–Lovell as a two-stage residualization. Regression isolates the unique covariance between the parts of Y and D that the controls cannot explain.">
+  <FrischWaughResidualization />
+</Figure>
+
+This is enormously clarifying. A regression coefficient is *never* about all of the variation in <M>{String.raw`X_1`}</M>. It is about the slice of <M>{String.raw`X_1`}</M> that moves independently of whatever controls you included. The implications follow directly:
+
+- **Controls steal variation, by design.** Adding a control absorbs the part of <M>{String.raw`X_1`}</M> that moves with that control. If your treatment varies *mostly* with one of your controls, very little independent variation is left, and the coefficient becomes noisy.
+- **A "bad control" (a post-treatment variable) is a thief, not a friend.** If <M>{String.raw`X_2`}</M> is itself a *consequence* of the treatment, residualizing the treatment on <M>{String.raw`X_2`}</M> removes part of the very causal pathway you are trying to measure.
+- **The model has nothing to say about regions of <M>{String.raw`X_1`}</M> with no data.** The residualized scatter only covers the support of <M>{String.raw`\tilde{X}_1`}</M> you actually observed. Predictions outside it are extrapolation, not estimation.
+
+<Callout variant="definition" title="The Frisch–Waugh–Lovell Theorem">
+  In a multiple regression of <M>{String.raw`Y`}</M> on <M>{String.raw`X_1`}</M> and controls <M>{String.raw`X_2, \dots, X_k`}</M>, the OLS coefficient on <M>{String.raw`X_1`}</M> equals the slope from a univariate regression of the residuals of <M>{String.raw`Y`}</M> (after partialling out the controls) on the residuals of <M>{String.raw`X_1`}</M> (after the same partialling).
+</Callout>
+
+---
+
+## Reading a Coefficient Like a Manager
+
+A defensible report of a regression coefficient always names four things — the outcome, the lever, the scale, and the controls:
+
+> *"Holding store and week fixed effects, competitor pricing, and seasonal dummies constant, a 1% increase in price is associated with a 2.23% decrease in unit volume."*
+
+Notice how much that sentence concedes. It does not claim causation in general — it claims a conditional comparison. The clause "holding X constant" is doing real work, and naming exactly which X's are held constant is what separates a serious estimate from a marketing slide.
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on what multiple regression actually does. Click to reveal."
+  questions={[
+    {
+      prompt: <>The Frisch–Waugh–Lovell view of multiple regression says that the coefficient on <M>{String.raw`X_1`}</M> is the slope of…</>,
+      options: [
+        { label: <>The outcome on the treatment, after dropping all observations where the controls take their median values.</> },
+        { label: <>The residual of the outcome (after regressing it on the controls) on the residual of the treatment (after regressing it on the same controls).</> },
+        { label: <>The outcome on the treatment, weighted by the inverse of the controls' variance.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>FWL turns "multiple regression" into "simple regression of the parts of <M>{String.raw`Y`}</M> and <M>{String.raw`X_1`}</M> that move independently of the controls." This is exactly what "holding constant" means inside the math — it is a residualization, not a selection of rows.</>,
+    },
+    {
+      prompt: <>Adding a control variable that is, in fact, a <em>consequence</em> of the treatment is dangerous because…</>,
+      options: [
+        { label: <>It biases the standard errors upward, making the coefficient look insignificant.</> },
+        { label: <>It residualizes the treatment on a variable that itself reflects the treatment, blocking part of the causal pathway and shrinking the estimate toward zero.</> },
+        { label: <>Post-treatment variables always have zero variance after the experiment.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>This is the "bad control" trap. If <M>{String.raw`X_2`}</M> is downstream of the treatment, partialling it out removes part of the very effect you wanted to isolate. The right rule is: only control for variables determined <em>before</em> the treatment.</>,
+    },
+    {
+      prompt: <>You add a control, and the coefficient on the treatment shifts substantially. What does that shift tell you?</>,
+      options: [
+        { label: <>The new control was a confounder — it was correlated with both the treatment and the outcome, and the original estimate was biased by its omission.</> },
+        { label: <>The model is wrong; coefficients should be stable to control choice.</> },
+        { label: <>Standard errors are too small to interpret.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Sensitivity to controls is informative, not a bug. A coefficient that moves a lot when a control enters is telling you that the original short regression was absorbing part of that control's effect. The regression ladder we use later in this article is exactly this idea, deliberately.</>,
+    },
+    {
+      prompt: <>A historical regression has a price-elasticity coefficient of −0.4, estimated on prices that ranged from $1.80 to $2.20. The model has no data outside that range. Which inference is defensible?</>,
+      options: [
+        { label: <>Around the historical price range, a 1% price increase is associated with a 0.4% volume decrease, conditional on the controls.</> },
+        { label: <>Cutting price to $0.99 would yield roughly a 47% volume increase by linear extrapolation.</> },
+        { label: <>The model proves consumers are price-insensitive at all price points.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>A regression coefficient describes the conditional slope <em>in the region where you have data</em>. Extrapolating well outside the observed price support is a separate, much stronger claim that the same constant-elasticity functional form holds there — usually it does not.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: The Progresso Soup Regression Ladder
+
+A "regression ladder" runs the same outcome–treatment regression with progressively more controls, and watches the coefficient evolve. It is the most useful single artifact in an observational pricing study, because the *shifts* are what tell you which confounders mattered.
+
+For Progresso soup, we regress <M>{String.raw`\log(\text{volume})`}</M> on <M>{String.raw`\log(\text{price})`}</M> across roughly 88,000 store-month observations, building up the control set in five steps:
+
+1.  **Raw correlation** — bivariate log-log regression, no controls.
+2.  **+ Seasonality** — month dummies absorbing winter demand shocks.
+3.  **+ Competitor price** — log price of Campbell's, the nearest substitute.
+4.  **+ Region** — census-region dummies absorbing stable regional preferences.
+5.  **+ Store fixed effects** — one intercept per store, absorbing every stable store-level difference. (We will cover this design formally in the next article.)
+
+<Figure width="screen-inset" caption="Figure 2. The Progresso price-elasticity ladder. The coefficient moves from a naive −3.21 to −2.23 as confounders are added. The shifts (not the final number alone) are the teaching content.">
+  <div className="not-prose">
+    <SoupRegressionLadder data={data.soup} />
+  </div>
+</Figure>
+
+Two patterns are worth naming:
+
+- **The biggest single move comes from adding store fixed effects.** Whatever stable differences across stores were driving the naive bias — neighborhood income, local competition density, store size — they were the largest source of confounding. Census-region dummies absorbed some, but not most, of that variation.
+- **The estimate stabilizes.** Between the demographics step and the store fixed-effects step the coefficient shifts only modestly, and within the noise of the last two specifications it is hard to argue for further controls. Stability across the last rungs is the visual signature of a credible identification, given the controls in hand.
+
+The preferred estimate, <M>{String.raw`\widehat{\beta} \approx -2.23`}</M>, says that within a given store, a 10% price increase is associated with roughly a 22% volume decrease, after stripping out seasonal demand, competitor pricing, and stable store-level differences. That is the number you would use for pricing — and the regression ladder is what earns it the right to be used.
+
+---
+
+## What Can Go Wrong
+
+Multiple regression is precise about what it does and silent about whether what it does is what you wanted. Three traps:
+
+1.  **Bad controls (post-treatment variables).** Controlling for customer satisfaction or shelf stock when regressing sales on price blocks part of the causal pathway. The rule of thumb: only control for variables determined *before* the treatment.
+2.  **Collider bias.** Controlling for a variable that is *jointly caused* by the treatment and the outcome can create a correlation between them where none existed. The classic example: conditioning on "made it through the funnel" creates spurious correlations between earlier funnel features and later outcomes.
+3.  **Extrapolation beyond the support.** A constant slope inside the observed range is not evidence of a constant slope outside it. Always know the support of your treatment and refuse to predict outside it.
+
+---
+
+## Managerial Takeaway
+
+Regression is a *conditional comparison* tool. To use it as a leader:
+
+- Always ask which variables are being held constant — and which should be.
+- Read the coefficient with the controls named explicitly: outcome, lever, scale, control set.
+- Insist on a regression ladder rather than a single specification. The shifts diagnose the identification; the final number is the harvest.
+
+The next chapter takes one step deeper: when a control is not enough, what *design* would actually identify the causal effect?

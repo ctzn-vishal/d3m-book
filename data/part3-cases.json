@@ -1,0 +1,8508 @@
+{
+  "metadata": {
+    "title": "Part III case evidence package",
+    "generated_by": "case-packs/part3-causal-regression/build_part3_data.py"
+  },
+  "articlePlan": [
+    {
+      "number": "9.1",
+      "slug": "ch11-from-metrics-to-decisions",
+      "case": "Milk + soup + Zillow",
+      "artifact": "decision-question card"
+    },
+    {
+      "number": "9.2",
+      "slug": "ch12-causality-counterfactual",
+      "case": "Zillow",
+      "artifact": "counterfactual sketch"
+    },
+    {
+      "number": "10.1",
+      "slug": "ch13-experiments-ab-testing",
+      "case": "Bean & Basket + milk",
+      "artifact": "experiment readout"
+    },
+    {
+      "number": "10.2",
+      "slug": "ch14-why-historical-data-is-hard",
+      "case": "Soup",
+      "artifact": "bias triage"
+    },
+    {
+      "number": "11.1",
+      "slug": "ch15-regression-effect-isolation",
+      "case": "Soup",
+      "artifact": "regression ladder"
+    },
+    {
+      "number": "11.2",
+      "slug": "ch16-identification",
+      "case": "Milk",
+      "artifact": "identification memo"
+    },
+    {
+      "number": "11.3",
+      "slug": "ch17-panel-fixed-effects",
+      "case": "Soup",
+      "artifact": "fixed-effect interpretation"
+    },
+    {
+      "number": "12.1",
+      "slug": "ch18-difference-in-differences",
+      "case": "Zillow",
+      "artifact": "before-after comparison"
+    },
+    {
+      "number": "12.2",
+      "slug": "ch19-synthetic-control",
+      "case": "Zillow",
+      "artifact": "synthetic-control chart"
+    },
+    {
+      "number": "12.3",
+      "slug": "ch20-heterogeneous-effects",
+      "case": "Milk",
+      "artifact": "segment-effect plot"
+    },
+    {
+      "number": "13.1",
+      "slug": "ch21-price-elasticity",
+      "case": "Soup",
+      "artifact": "elasticity coefficient plot"
+    },
+    {
+      "number": "13.2",
+      "slug": "ch22-cross-price-elasticity",
+      "case": "Soup",
+      "artifact": "cross-price heatmap"
+    },
+    {
+      "number": "13.3",
+      "slug": "ch23-elasticity-to-pricing",
+      "case": "Soup",
+      "artifact": "optimal-pricing widget"
+    },
+    {
+      "number": "13.4",
+      "slug": "ch24-capstone-pricing-promotion",
+      "case": "All three",
+      "artifact": "executive decision brief"
+    }
+  ],
+  "milk": {
+    "metadata": {
+      "title": "Milk field-data quasi-experiment",
+      "rows": 1708,
+      "unit": "store",
+      "source": "Milk_Field_Exp.csv",
+      "treatment": "Equal price across milk fat levels",
+      "control": "Whole milk priced above lower-fat milk"
+    },
+    "balance": [
+      {
+        "metric": "ZIP income",
+        "kind": "balance",
+        "estimate": 197.48,
+        "ci_low": -749.7071,
+        "ci_high": 1144.6671,
+        "treatment_mean": 24672.9601,
+        "control_mean": 24475.4801,
+        "treatment_n": 627,
+        "control_n": 1081
+      },
+      {
+        "metric": "Diet soda share",
+        "kind": "placebo",
+        "estimate": 0.0052,
+        "ci_low": -0.005,
+        "ci_high": 0.0154,
+        "treatment_mean": 0.3534,
+        "control_mean": 0.3482,
+        "treatment_n": 627,
+        "control_n": 1081
+      },
+      {
+        "metric": "Whole milk share",
+        "kind": "outcome",
+        "estimate": 0.0815,
+        "ci_low": 0.0661,
+        "ci_high": 0.0969,
+        "treatment_mean": 0.3713,
+        "control_mean": 0.2898,
+        "treatment_n": 627,
+        "control_n": 1081
+      }
+    ],
+    "hte": [
+      {
+        "income_group": "Low Income",
+        "income_group_full": "Low Income Zip Codes",
+        "estimate": 0.1277,
+        "ci_low": 0.0935,
+        "ci_high": 0.162,
+        "treatment_mean": 0.5271,
+        "control_mean": 0.3994,
+        "treatment_n": 112,
+        "control_n": 231
+      },
+      {
+        "income_group": "Quint 2",
+        "income_group_full": "Quint 2",
+        "estimate": 0.1061,
+        "ci_low": 0.0741,
+        "ci_high": 0.1381,
+        "treatment_mean": 0.4157,
+        "control_mean": 0.3096,
+        "treatment_n": 133,
+        "control_n": 207
+      },
+      {
+        "income_group": "Quint 3",
+        "income_group_full": "Quint 3",
+        "estimate": 0.1023,
+        "ci_low": 0.0745,
+        "ci_high": 0.1301,
+        "treatment_mean": 0.3593,
+        "control_mean": 0.257,
+        "treatment_n": 130,
+        "control_n": 212
+      },
+      {
+        "income_group": "Quint 4",
+        "income_group_full": "Quint 4",
+        "estimate": 0.0478,
+        "ci_low": 0.0198,
+        "ci_high": 0.0759,
+        "treatment_mean": 0.3106,
+        "control_mean": 0.2628,
+        "treatment_n": 131,
+        "control_n": 211
+      },
+      {
+        "income_group": "High Income",
+        "income_group_full": "High Income Zip Codes",
+        "estimate": 0.0431,
+        "ci_low": 0.0183,
+        "ci_high": 0.0679,
+        "treatment_mean": 0.2569,
+        "control_mean": 0.2138,
+        "treatment_n": 121,
+        "control_n": 220
+      }
+    ],
+    "incomeDietCorrelation": 0.6266,
+    "summary": {
+      "equal_price_stores": 627,
+      "whole_expensive_stores": 1081,
+      "overall_whole_share_effect_pp": 8.2,
+      "low_income_effect_pp": 12.8,
+      "diet_soda_placebo_pp": 0.5
+    }
+  },
+  "zillow": {
+    "metadata": {
+      "title": "Colorado housing counterfactual",
+      "rows": 296,
+      "unit": "state-month",
+      "source": "Colorado_legalization.csv",
+      "treatment_start": "2014-01-31",
+      "pre_months": 216,
+      "post_months": 80
+    },
+    "series": [
+      {
+        "month": "1996-01",
+        "year": 1996,
+        "period": "Pre",
+        "actual": 139175.0,
+        "synthetic": 142257.0,
+        "gap_pct": -0.0217
+      },
+      {
+        "month": "1996-04",
+        "year": 1996,
+        "period": "Pre",
+        "actual": 140776.0,
+        "synthetic": 143107.0,
+        "gap_pct": -0.0163
+      },
+      {
+        "month": "1996-07",
+        "year": 1996,
+        "period": "Pre",
+        "actual": 142790.0,
+        "synthetic": 144257.0,
+        "gap_pct": -0.0102
+      },
+      {
+        "month": "1996-10",
+        "year": 1996,
+        "period": "Pre",
+        "actual": 144735.0,
+        "synthetic": 145622.0,
+        "gap_pct": -0.0061
+      },
+      {
+        "month": "1997-01",
+        "year": 1997,
+        "period": "Pre",
+        "actual": 146545.0,
+        "synthetic": 147066.0,
+        "gap_pct": -0.0035
+      },
+      {
+        "month": "1997-04",
+        "year": 1997,
+        "period": "Pre",
+        "actual": 148224.0,
+        "synthetic": 148340.0,
+        "gap_pct": -0.0008
+      },
+      {
+        "month": "1997-07",
+        "year": 1997,
+        "period": "Pre",
+        "actual": 150184.0,
+        "synthetic": 150245.0,
+        "gap_pct": -0.0004
+      },
+      {
+        "month": "1997-10",
+        "year": 1997,
+        "period": "Pre",
+        "actual": 152087.0,
+        "synthetic": 152152.0,
+        "gap_pct": -0.0004
+      },
+      {
+        "month": "1998-01",
+        "year": 1998,
+        "period": "Pre",
+        "actual": 154428.0,
+        "synthetic": 154075.0,
+        "gap_pct": 0.0023
+      },
+      {
+        "month": "1998-04",
+        "year": 1998,
+        "period": "Pre",
+        "actual": 156397.0,
+        "synthetic": 156298.0,
+        "gap_pct": 0.0006
+      },
+      {
+        "month": "1998-07",
+        "year": 1998,
+        "period": "Pre",
+        "actual": 158576.0,
+        "synthetic": 158358.0,
+        "gap_pct": 0.0014
+      },
+      {
+        "month": "1998-10",
+        "year": 1998,
+        "period": "Pre",
+        "actual": 161833.0,
+        "synthetic": 160665.0,
+        "gap_pct": 0.0073
+      },
+      {
+        "month": "1999-01",
+        "year": 1999,
+        "period": "Pre",
+        "actual": 164812.0,
+        "synthetic": 163310.0,
+        "gap_pct": 0.0092
+      },
+      {
+        "month": "1999-04",
+        "year": 1999,
+        "period": "Pre",
+        "actual": 169047.0,
+        "synthetic": 166526.0,
+        "gap_pct": 0.0151
+      },
+      {
+        "month": "1999-07",
+        "year": 1999,
+        "period": "Pre",
+        "actual": 174045.0,
+        "synthetic": 169530.0,
+        "gap_pct": 0.0266
+      },
+      {
+        "month": "1999-10",
+        "year": 1999,
+        "period": "Pre",
+        "actual": 177772.0,
+        "synthetic": 172335.0,
+        "gap_pct": 0.0315
+      },
+      {
+        "month": "2000-01",
+        "year": 2000,
+        "period": "Pre",
+        "actual": 182546.0,
+        "synthetic": 175621.0,
+        "gap_pct": 0.0394
+      },
+      {
+        "month": "2000-04",
+        "year": 2000,
+        "period": "Pre",
+        "actual": 187782.0,
+        "synthetic": 178757.0,
+        "gap_pct": 0.0505
+      },
+      {
+        "month": "2000-07",
+        "year": 2000,
+        "period": "Pre",
+        "actual": 193377.0,
+        "synthetic": 182539.0,
+        "gap_pct": 0.0594
+      },
+      {
+        "month": "2000-10",
+        "year": 2000,
+        "period": "Pre",
+        "actual": 200025.0,
+        "synthetic": 186653.0,
+        "gap_pct": 0.0716
+      },
+      {
+        "month": "2001-01",
+        "year": 2001,
+        "period": "Pre",
+        "actual": 206729.0,
+        "synthetic": 190780.0,
+        "gap_pct": 0.0836
+      },
+      {
+        "month": "2001-04",
+        "year": 2001,
+        "period": "Pre",
+        "actual": 212465.0,
+        "synthetic": 195267.0,
+        "gap_pct": 0.0881
+      },
+      {
+        "month": "2001-07",
+        "year": 2001,
+        "period": "Pre",
+        "actual": 217100.0,
+        "synthetic": 199554.0,
+        "gap_pct": 0.0879
+      },
+      {
+        "month": "2001-10",
+        "year": 2001,
+        "period": "Pre",
+        "actual": 221165.0,
+        "synthetic": 203543.0,
+        "gap_pct": 0.0866
+      },
+      {
+        "month": "2002-01",
+        "year": 2002,
+        "period": "Pre",
+        "actual": 223526.0,
+        "synthetic": 206637.0,
+        "gap_pct": 0.0817
+      },
+      {
+        "month": "2002-04",
+        "year": 2002,
+        "period": "Pre",
+        "actual": 225622.0,
+        "synthetic": 209892.0,
+        "gap_pct": 0.0749
+      },
+      {
+        "month": "2002-07",
+        "year": 2002,
+        "period": "Pre",
+        "actual": 227824.0,
+        "synthetic": 212345.0,
+        "gap_pct": 0.0729
+      },
+      {
+        "month": "2002-10",
+        "year": 2002,
+        "period": "Pre",
+        "actual": 229222.0,
+        "synthetic": 215031.0,
+        "gap_pct": 0.066
+      },
+      {
+        "month": "2003-01",
+        "year": 2003,
+        "period": "Pre",
+        "actual": 230197.0,
+        "synthetic": 219460.0,
+        "gap_pct": 0.0489
+      },
+      {
+        "month": "2003-04",
+        "year": 2003,
+        "period": "Pre",
+        "actual": 231114.0,
+        "synthetic": 221876.0,
+        "gap_pct": 0.0416
+      },
+      {
+        "month": "2003-07",
+        "year": 2003,
+        "period": "Pre",
+        "actual": 231253.0,
+        "synthetic": 225360.0,
+        "gap_pct": 0.0262
+      },
+      {
+        "month": "2003-10",
+        "year": 2003,
+        "period": "Pre",
+        "actual": 232126.0,
+        "synthetic": 228608.0,
+        "gap_pct": 0.0154
+      },
+      {
+        "month": "2004-01",
+        "year": 2004,
+        "period": "Pre",
+        "actual": 233583.0,
+        "synthetic": 231105.0,
+        "gap_pct": 0.0107
+      },
+      {
+        "month": "2004-04",
+        "year": 2004,
+        "period": "Pre",
+        "actual": 235006.0,
+        "synthetic": 234919.0,
+        "gap_pct": 0.0004
+      },
+      {
+        "month": "2004-07",
+        "year": 2004,
+        "period": "Pre",
+        "actual": 236731.0,
+        "synthetic": 238750.0,
+        "gap_pct": -0.0085
+      },
+      {
+        "month": "2004-10",
+        "year": 2004,
+        "period": "Pre",
+        "actual": 238107.0,
+        "synthetic": 243447.0,
+        "gap_pct": -0.0219
+      },
+      {
+        "month": "2005-01",
+        "year": 2005,
+        "period": "Pre",
+        "actual": 239901.0,
+        "synthetic": 247384.0,
+        "gap_pct": -0.0302
+      },
+      {
+        "month": "2005-04",
+        "year": 2005,
+        "period": "Pre",
+        "actual": 241713.0,
+        "synthetic": 250971.0,
+        "gap_pct": -0.0369
+      },
+      {
+        "month": "2005-07",
+        "year": 2005,
+        "period": "Pre",
+        "actual": 243453.0,
+        "synthetic": 253256.0,
+        "gap_pct": -0.0387
+      },
+      {
+        "month": "2005-10",
+        "year": 2005,
+        "period": "Pre",
+        "actual": 245507.0,
+        "synthetic": 255062.0,
+        "gap_pct": -0.0375
+      },
+      {
+        "month": "2006-01",
+        "year": 2006,
+        "period": "Pre",
+        "actual": 247527.0,
+        "synthetic": 256733.0,
+        "gap_pct": -0.0359
+      },
+      {
+        "month": "2006-04",
+        "year": 2006,
+        "period": "Pre",
+        "actual": 248556.0,
+        "synthetic": 258022.0,
+        "gap_pct": -0.0367
+      },
+      {
+        "month": "2006-07",
+        "year": 2006,
+        "period": "Pre",
+        "actual": 249186.0,
+        "synthetic": 259196.0,
+        "gap_pct": -0.0386
+      },
+      {
+        "month": "2006-10",
+        "year": 2006,
+        "period": "Pre",
+        "actual": 249283.0,
+        "synthetic": 259710.0,
+        "gap_pct": -0.0402
+      },
+      {
+        "month": "2007-01",
+        "year": 2007,
+        "period": "Pre",
+        "actual": 249239.0,
+        "synthetic": 260334.0,
+        "gap_pct": -0.0426
+      },
+      {
+        "month": "2007-04",
+        "year": 2007,
+        "period": "Pre",
+        "actual": 249354.0,
+        "synthetic": 261288.0,
+        "gap_pct": -0.0457
+      },
+      {
+        "month": "2007-07",
+        "year": 2007,
+        "period": "Pre",
+        "actual": 250129.0,
+        "synthetic": 261507.0,
+        "gap_pct": -0.0435
+      },
+      {
+        "month": "2007-10",
+        "year": 2007,
+        "period": "Pre",
+        "actual": 249096.0,
+        "synthetic": 261159.0,
+        "gap_pct": -0.0462
+      },
+      {
+        "month": "2008-01",
+        "year": 2008,
+        "period": "Pre",
+        "actual": 246327.0,
+        "synthetic": 259749.0,
+        "gap_pct": -0.0517
+      },
+      {
+        "month": "2008-04",
+        "year": 2008,
+        "period": "Pre",
+        "actual": 243253.0,
+        "synthetic": 256616.0,
+        "gap_pct": -0.0521
+      },
+      {
+        "month": "2008-07",
+        "year": 2008,
+        "period": "Pre",
+        "actual": 240184.0,
+        "synthetic": 253158.0,
+        "gap_pct": -0.0512
+      },
+      {
+        "month": "2008-10",
+        "year": 2008,
+        "period": "Pre",
+        "actual": 238259.0,
+        "synthetic": 249477.0,
+        "gap_pct": -0.045
+      },
+      {
+        "month": "2009-01",
+        "year": 2009,
+        "period": "Pre",
+        "actual": 235855.0,
+        "synthetic": 244965.0,
+        "gap_pct": -0.0372
+      },
+      {
+        "month": "2009-04",
+        "year": 2009,
+        "period": "Pre",
+        "actual": 234287.0,
+        "synthetic": 241080.0,
+        "gap_pct": -0.0282
+      },
+      {
+        "month": "2009-07",
+        "year": 2009,
+        "period": "Pre",
+        "actual": 233378.0,
+        "synthetic": 238585.0,
+        "gap_pct": -0.0218
+      },
+      {
+        "month": "2009-10",
+        "year": 2009,
+        "period": "Pre",
+        "actual": 232831.0,
+        "synthetic": 237616.0,
+        "gap_pct": -0.0201
+      },
+      {
+        "month": "2010-01",
+        "year": 2010,
+        "period": "Pre",
+        "actual": 233807.0,
+        "synthetic": 237692.0,
+        "gap_pct": -0.0163
+      },
+      {
+        "month": "2010-04",
+        "year": 2010,
+        "period": "Pre",
+        "actual": 234258.0,
+        "synthetic": 238009.0,
+        "gap_pct": -0.0158
+      },
+      {
+        "month": "2010-07",
+        "year": 2010,
+        "period": "Pre",
+        "actual": 232405.0,
+        "synthetic": 236902.0,
+        "gap_pct": -0.019
+      },
+      {
+        "month": "2010-10",
+        "year": 2010,
+        "period": "Pre",
+        "actual": 229568.0,
+        "synthetic": 233779.0,
+        "gap_pct": -0.018
+      },
+      {
+        "month": "2011-01",
+        "year": 2011,
+        "period": "Pre",
+        "actual": 226836.0,
+        "synthetic": 230972.0,
+        "gap_pct": -0.0179
+      },
+      {
+        "month": "2011-04",
+        "year": 2011,
+        "period": "Pre",
+        "actual": 224230.0,
+        "synthetic": 227465.0,
+        "gap_pct": -0.0142
+      },
+      {
+        "month": "2011-07",
+        "year": 2011,
+        "period": "Pre",
+        "actual": 221945.0,
+        "synthetic": 224878.0,
+        "gap_pct": -0.013
+      },
+      {
+        "month": "2011-10",
+        "year": 2011,
+        "period": "Pre",
+        "actual": 221796.0,
+        "synthetic": 223450.0,
+        "gap_pct": -0.0074
+      },
+      {
+        "month": "2012-01",
+        "year": 2012,
+        "period": "Pre",
+        "actual": 222377.0,
+        "synthetic": 222075.0,
+        "gap_pct": 0.0014
+      },
+      {
+        "month": "2012-04",
+        "year": 2012,
+        "period": "Pre",
+        "actual": 223924.0,
+        "synthetic": 222443.0,
+        "gap_pct": 0.0067
+      },
+      {
+        "month": "2012-07",
+        "year": 2012,
+        "period": "Pre",
+        "actual": 228280.0,
+        "synthetic": 223917.0,
+        "gap_pct": 0.0195
+      },
+      {
+        "month": "2012-10",
+        "year": 2012,
+        "period": "Pre",
+        "actual": 232225.0,
+        "synthetic": 225778.0,
+        "gap_pct": 0.0286
+      },
+      {
+        "month": "2013-01",
+        "year": 2013,
+        "period": "Pre",
+        "actual": 236683.0,
+        "synthetic": 228996.0,
+        "gap_pct": 0.0336
+      },
+      {
+        "month": "2013-04",
+        "year": 2013,
+        "period": "Pre",
+        "actual": 242165.0,
+        "synthetic": 232846.0,
+        "gap_pct": 0.04
+      },
+      {
+        "month": "2013-07",
+        "year": 2013,
+        "period": "Pre",
+        "actual": 247138.0,
+        "synthetic": 236527.0,
+        "gap_pct": 0.0449
+      },
+      {
+        "month": "2013-10",
+        "year": 2013,
+        "period": "Pre",
+        "actual": 252792.0,
+        "synthetic": 240565.0,
+        "gap_pct": 0.0508
+      },
+      {
+        "month": "2014-01",
+        "year": 2014,
+        "period": "Post",
+        "actual": 257334.0,
+        "synthetic": 243369.0,
+        "gap_pct": 0.0574
+      },
+      {
+        "month": "2014-04",
+        "year": 2014,
+        "period": "Post",
+        "actual": 261375.0,
+        "synthetic": 245234.0,
+        "gap_pct": 0.0658
+      },
+      {
+        "month": "2014-07",
+        "year": 2014,
+        "period": "Post",
+        "actual": 266213.0,
+        "synthetic": 247081.0,
+        "gap_pct": 0.0774
+      },
+      {
+        "month": "2014-10",
+        "year": 2014,
+        "period": "Post",
+        "actual": 271221.0,
+        "synthetic": 248765.0,
+        "gap_pct": 0.0903
+      },
+      {
+        "month": "2015-01",
+        "year": 2015,
+        "period": "Post",
+        "actual": 278732.0,
+        "synthetic": 251456.0,
+        "gap_pct": 0.1085
+      },
+      {
+        "month": "2015-04",
+        "year": 2015,
+        "period": "Post",
+        "actual": 287009.0,
+        "synthetic": 254310.0,
+        "gap_pct": 0.1286
+      },
+      {
+        "month": "2015-07",
+        "year": 2015,
+        "period": "Post",
+        "actual": 295725.0,
+        "synthetic": 257291.0,
+        "gap_pct": 0.1494
+      },
+      {
+        "month": "2015-10",
+        "year": 2015,
+        "period": "Post",
+        "actual": 304884.0,
+        "synthetic": 260620.0,
+        "gap_pct": 0.1698
+      },
+      {
+        "month": "2016-01",
+        "year": 2016,
+        "period": "Post",
+        "actual": 312565.0,
+        "synthetic": 263213.0,
+        "gap_pct": 0.1875
+      },
+      {
+        "month": "2016-04",
+        "year": 2016,
+        "period": "Post",
+        "actual": 320051.0,
+        "synthetic": 266672.0,
+        "gap_pct": 0.2002
+      },
+      {
+        "month": "2016-07",
+        "year": 2016,
+        "period": "Post",
+        "actual": 327314.0,
+        "synthetic": 270328.0,
+        "gap_pct": 0.2108
+      },
+      {
+        "month": "2016-10",
+        "year": 2016,
+        "period": "Post",
+        "actual": 334362.0,
+        "synthetic": 274105.0,
+        "gap_pct": 0.2198
+      },
+      {
+        "month": "2017-01",
+        "year": 2017,
+        "period": "Post",
+        "actual": 341869.0,
+        "synthetic": 278278.0,
+        "gap_pct": 0.2285
+      },
+      {
+        "month": "2017-04",
+        "year": 2017,
+        "period": "Post",
+        "actual": 349822.0,
+        "synthetic": 282423.0,
+        "gap_pct": 0.2386
+      },
+      {
+        "month": "2017-07",
+        "year": 2017,
+        "period": "Post",
+        "actual": 356240.0,
+        "synthetic": 286946.0,
+        "gap_pct": 0.2415
+      },
+      {
+        "month": "2017-10",
+        "year": 2017,
+        "period": "Post",
+        "actual": 362402.0,
+        "synthetic": 291312.0,
+        "gap_pct": 0.244
+      },
+      {
+        "month": "2018-01",
+        "year": 2018,
+        "period": "Post",
+        "actual": 369446.0,
+        "synthetic": 296303.0,
+        "gap_pct": 0.2469
+      },
+      {
+        "month": "2018-04",
+        "year": 2018,
+        "period": "Post",
+        "actual": 376213.0,
+        "synthetic": 301226.0,
+        "gap_pct": 0.2489
+      },
+      {
+        "month": "2018-07",
+        "year": 2018,
+        "period": "Post",
+        "actual": 384017.0,
+        "synthetic": 305640.0,
+        "gap_pct": 0.2564
+      },
+      {
+        "month": "2018-10",
+        "year": 2018,
+        "period": "Post",
+        "actual": 389702.0,
+        "synthetic": 308707.0,
+        "gap_pct": 0.2624
+      },
+      {
+        "month": "2019-01",
+        "year": 2019,
+        "period": "Post",
+        "actual": 393821.0,
+        "synthetic": 312135.0,
+        "gap_pct": 0.2617
+      },
+      {
+        "month": "2019-04",
+        "year": 2019,
+        "period": "Post",
+        "actual": 396525.0,
+        "synthetic": 314477.0,
+        "gap_pct": 0.2609
+      },
+      {
+        "month": "2019-07",
+        "year": 2019,
+        "period": "Post",
+        "actual": 398698.0,
+        "synthetic": 317979.0,
+        "gap_pct": 0.2539
+      },
+      {
+        "month": "2019-10",
+        "year": 2019,
+        "period": "Post",
+        "actual": 401095.0,
+        "synthetic": 320114.0,
+        "gap_pct": 0.253
+      },
+      {
+        "month": "2020-01",
+        "year": 2020,
+        "period": "Post",
+        "actual": 404727.0,
+        "synthetic": 323090.0,
+        "gap_pct": 0.2527
+      },
+      {
+        "month": "2020-04",
+        "year": 2020,
+        "period": "Post",
+        "actual": 409832.0,
+        "synthetic": 327772.0,
+        "gap_pct": 0.2504
+      },
+      {
+        "month": "2020-07",
+        "year": 2020,
+        "period": "Post",
+        "actual": 415852.0,
+        "synthetic": 332770.0,
+        "gap_pct": 0.2497
+      },
+      {
+        "month": "2020-08",
+        "year": 2020,
+        "period": "Post",
+        "actual": 418363.0,
+        "synthetic": 335258.0,
+        "gap_pct": 0.2479
+      }
+    ],
+    "annual": [
+      {
+        "year": 2008,
+        "period": "Pre",
+        "actual": 241106.0,
+        "synthetic": 253575.0,
+        "gap_pct": -0.0491
+      },
+      {
+        "year": 2009,
+        "period": "Pre",
+        "actual": 233857.0,
+        "synthetic": 239856.0,
+        "gap_pct": -0.0249
+      },
+      {
+        "year": 2010,
+        "period": "Pre",
+        "actual": 232003.0,
+        "synthetic": 236082.0,
+        "gap_pct": -0.0173
+      },
+      {
+        "year": 2011,
+        "period": "Pre",
+        "actual": 223259.0,
+        "synthetic": 225919.0,
+        "gap_pct": -0.0117
+      },
+      {
+        "year": 2012,
+        "period": "Pre",
+        "actual": 227814.0,
+        "synthetic": 224076.0,
+        "gap_pct": 0.0166
+      },
+      {
+        "year": 2013,
+        "period": "Pre",
+        "actual": 246439.0,
+        "synthetic": 235928.0,
+        "gap_pct": 0.0444
+      },
+      {
+        "year": 2014,
+        "period": "Post",
+        "actual": 265729.0,
+        "synthetic": 246769.0,
+        "gap_pct": 0.0767
+      },
+      {
+        "year": 2015,
+        "period": "Post",
+        "actual": 294456.0,
+        "synthetic": 256900.0,
+        "gap_pct": 0.1459
+      },
+      {
+        "year": 2016,
+        "period": "Post",
+        "actual": 325986.0,
+        "synthetic": 269836.0,
+        "gap_pct": 0.2079
+      },
+      {
+        "year": 2017,
+        "period": "Post",
+        "actual": 354884.0,
+        "synthetic": 286216.0,
+        "gap_pct": 0.2398
+      },
+      {
+        "year": 2018,
+        "period": "Post",
+        "actual": 382005.0,
+        "synthetic": 304327.0,
+        "gap_pct": 0.2552
+      },
+      {
+        "year": 2019,
+        "period": "Post",
+        "actual": 398346.0,
+        "synthetic": 317058.0,
+        "gap_pct": 0.2564
+      },
+      {
+        "year": 2020,
+        "period": "Post",
+        "actual": 411097.0,
+        "synthetic": 328721.0,
+        "gap_pct": 0.2506
+      }
+    ],
+    "weights": [
+      {
+        "state": "Kansas",
+        "weight": 0.4187
+      },
+      {
+        "state": "Massachusetts",
+        "weight": 0.3529
+      },
+      {
+        "state": "Utah",
+        "weight": 0.125
+      },
+      {
+        "state": "Michigan",
+        "weight": 0.1034
+      }
+    ],
+    "summary": {
+      "pre_rmse_log": 0.0396,
+      "avg_post_gap_pct": 0.2023,
+      "last_gap_pct": 0.2479,
+      "top_donor": "Kansas"
+    }
+  },
+  "soup": {
+    "metadata": {
+      "title": "Progresso soup scanner panel",
+      "rows": 88409,
+      "stores": 2042,
+      "start": "2001-06-01",
+      "end": "2006-12-01",
+      "unit": "store-month",
+      "source": "soup_case_data_use.csv"
+    },
+    "regressionLadder": [
+      {
+        "model": "Raw log-log",
+        "estimate": -3.2087,
+        "std_error": 0.0172,
+        "ci_low": -3.2425,
+        "ci_high": -3.175,
+        "r2": 0.2819,
+        "n": 88409
+      },
+      {
+        "model": "+ month seasonality",
+        "estimate": -2.464,
+        "std_error": 0.0187,
+        "ci_low": -2.5006,
+        "ci_high": -2.4274,
+        "r2": 0.3476,
+        "n": 88409
+      },
+      {
+        "model": "+ competitor prices",
+        "estimate": -3.1191,
+        "std_error": 0.0185,
+        "ci_low": -3.1553,
+        "ci_high": -3.0828,
+        "r2": 0.4295,
+        "n": 88409
+      },
+      {
+        "model": "+ region controls",
+        "estimate": -2.6555,
+        "std_error": 0.0168,
+        "ci_low": -2.6884,
+        "ci_high": -2.6225,
+        "r2": 0.5742,
+        "n": 88409
+      },
+      {
+        "model": "+ store fixed effects",
+        "estimate": -2.2268,
+        "std_error": 0.0087,
+        "ci_low": -2.2438,
+        "ci_high": -2.2098,
+        "r2": 0.9046,
+        "n": 88409
+      }
+    ],
+    "crossPrice": [
+      {
+        "region": "East",
+        "own": -2.1972,
+        "campbell": 0.9037,
+        "private_label": 0.4784,
+        "r2": 0.5332,
+        "n": 19479
+      },
+      {
+        "region": "MidWest",
+        "own": -3.2007,
+        "campbell": 0.3822,
+        "private_label": 0.8624,
+        "r2": 0.4511,
+        "n": 16746
+      },
+      {
+        "region": "South",
+        "own": -2.929,
+        "campbell": 2.3013,
+        "private_label": 1.5509,
+        "r2": 0.4324,
+        "n": 30803
+      },
+      {
+        "region": "West",
+        "own": -2.3808,
+        "campbell": 1.319,
+        "private_label": 0.1291,
+        "r2": 0.5018,
+        "n": 21381
+      }
+    ],
+    "seasonElasticity": [
+      {
+        "model": "Non-winter",
+        "estimate": -2.4861,
+        "std_error": 0.0284,
+        "ci_low": -2.5417,
+        "ci_high": -2.4305,
+        "r2": 0.4447,
+        "n": 44731,
+        "season": "Non-winter"
+      },
+      {
+        "model": "Winter",
+        "estimate": -2.8204,
+        "std_error": 0.0207,
+        "ci_low": -2.8611,
+        "ci_high": -2.7798,
+        "r2": 0.533,
+        "n": 43678,
+        "season": "Winter"
+      }
+    ],
+    "scatter": [
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6055,
+        "log_volume": 3.4589
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6585,
+        "log_volume": 3.3444
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4941,
+        "log_volume": 5.5753
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4696,
+        "log_volume": 4.5978
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6144,
+        "log_volume": 3.4984
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.1212,
+        "log_volume": 9.0537
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5649,
+        "log_volume": 6.8532
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7803,
+        "log_volume": 5.4178
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8958,
+        "log_volume": 5.1772
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4881,
+        "log_volume": 6.4151
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4762,
+        "log_volume": 7.1939
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.62,
+        "log_volume": 7.8892
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2379,
+        "log_volume": 5.7071
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3278,
+        "log_volume": 6.9251
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5993,
+        "log_volume": 7.1304
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3452,
+        "log_volume": 7.2317
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.38,
+        "log_volume": 8.1877
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6007,
+        "log_volume": 5.2609
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2201,
+        "log_volume": 5.5737
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.8623,
+        "log_volume": 6.5216
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1197,
+        "log_volume": 6.5524
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4862,
+        "log_volume": 7.4094
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5707,
+        "log_volume": 6.3031
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6665,
+        "log_volume": 5.1735
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3532,
+        "log_volume": 6.3141
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6633,
+        "log_volume": 5.2534
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5418,
+        "log_volume": 5.4981
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6414,
+        "log_volume": 5.6947
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.354,
+        "log_volume": 8.3459
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7154,
+        "log_volume": 6.546
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6428,
+        "log_volume": 4.8089
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.354,
+        "log_volume": 6.8858
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4972,
+        "log_volume": 6.33
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4411,
+        "log_volume": 6.3456
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6462,
+        "log_volume": 6.115
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4643,
+        "log_volume": 7.1245
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3214,
+        "log_volume": 7.5972
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8017,
+        "log_volume": 6.0107
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8182,
+        "log_volume": 5.2544
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4392,
+        "log_volume": 7.692
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3571,
+        "log_volume": 5.7382
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4049,
+        "log_volume": 5.9886
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5257,
+        "log_volume": 4.5932
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6916,
+        "log_volume": 6.3647
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4352,
+        "log_volume": 4.7484
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2589,
+        "log_volume": 7.7819
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6842,
+        "log_volume": 8.5856
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4677,
+        "log_volume": 5.1044
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4116,
+        "log_volume": 5.6749
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3896,
+        "log_volume": 6.1589
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6031,
+        "log_volume": 4.3053
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.1402,
+        "log_volume": 8.4321
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6616,
+        "log_volume": 5.7112
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7266,
+        "log_volume": 5.302
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6143,
+        "log_volume": 3.5523
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4377,
+        "log_volume": 7.2829
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7416,
+        "log_volume": 6.3353
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9146,
+        "log_volume": 6.7769
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.611,
+        "log_volume": 5.6843
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5813,
+        "log_volume": 7.5894
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5675,
+        "log_volume": 6.6259
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7435,
+        "log_volume": 7.9694
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3416,
+        "log_volume": 7.4179
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2426,
+        "log_volume": 6.96
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2552,
+        "log_volume": 6.5801
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2178,
+        "log_volume": 7.2571
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5773,
+        "log_volume": 6.9934
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5897,
+        "log_volume": 6.927
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4799,
+        "log_volume": 4.0949
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.8724,
+        "log_volume": 3.4279
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3332,
+        "log_volume": 6.7457
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4942,
+        "log_volume": 4.4345
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4913,
+        "log_volume": 6.3441
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.472,
+        "log_volume": 5.5802
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5941,
+        "log_volume": 4.0359
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4076,
+        "log_volume": 6.8145
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7017,
+        "log_volume": 6.1876
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3459,
+        "log_volume": 7.7442
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5031,
+        "log_volume": 5.4993
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7442,
+        "log_volume": 6.4033
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3969,
+        "log_volume": 5.2222
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6693,
+        "log_volume": 5.9262
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3507,
+        "log_volume": 7.2711
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": -0.0806,
+        "log_volume": 8.636
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8681,
+        "log_volume": 5.3834
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.348,
+        "log_volume": 7.9492
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4102,
+        "log_volume": 4.7436
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4499,
+        "log_volume": 7.0986
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.7705,
+        "log_volume": 6.364
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4858,
+        "log_volume": 6.1697
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6128,
+        "log_volume": 5.2175
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1958,
+        "log_volume": 8.4968
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2389,
+        "log_volume": 6.3535
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6485,
+        "log_volume": 5.2446
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6544,
+        "log_volume": 5.1105
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.1112,
+        "log_volume": 9.1116
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4031,
+        "log_volume": 6.893
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2912,
+        "log_volume": 6.6581
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3721,
+        "log_volume": 7.7898
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4476,
+        "log_volume": 6.919
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3642,
+        "log_volume": 7.6024
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5778,
+        "log_volume": 4.3607
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.623,
+        "log_volume": 3.922
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5238,
+        "log_volume": 6.4047
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5012,
+        "log_volume": 6.2913
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.9024,
+        "log_volume": 6.7771
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8465,
+        "log_volume": 5.376
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4722,
+        "log_volume": 7.6429
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3218,
+        "log_volume": 7.2355
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7574,
+        "log_volume": 5.9028
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4356,
+        "log_volume": 6.6577
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1539,
+        "log_volume": 7.7126
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5666,
+        "log_volume": 4.5611
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.668,
+        "log_volume": 6.5146
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5903,
+        "log_volume": 4.9288
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4203,
+        "log_volume": 4.2767
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1605,
+        "log_volume": 8.5668
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3252,
+        "log_volume": 7.2755
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6488,
+        "log_volume": 5.9808
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2203,
+        "log_volume": 7.1038
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": -0.0377,
+        "log_volume": 9.2172
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0314,
+        "log_volume": 8.1132
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.1971,
+        "log_volume": 8.0544
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6346,
+        "log_volume": 4.7919
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4358,
+        "log_volume": 7.3304
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6535,
+        "log_volume": 6.4913
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4929,
+        "log_volume": 6.9369
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2946,
+        "log_volume": 6.6888
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4827,
+        "log_volume": 6.7267
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.464,
+        "log_volume": 7.1445
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3449,
+        "log_volume": 6.8445
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1833,
+        "log_volume": 6.8089
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4892,
+        "log_volume": 5.7105
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4879,
+        "log_volume": 6.0138
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6181,
+        "log_volume": 5.5011
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4121,
+        "log_volume": 7.8628
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.2009,
+        "log_volume": 6.0898
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6082,
+        "log_volume": 6.0761
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3893,
+        "log_volume": 7.1415
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.634,
+        "log_volume": 4.2873
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7571,
+        "log_volume": 4.9286
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6147,
+        "log_volume": 8.1132
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5995,
+        "log_volume": 7.3364
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.0082,
+        "log_volume": 8.4324
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0681,
+        "log_volume": 8.1568
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9288,
+        "log_volume": 5.545
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1784,
+        "log_volume": 7.3194
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6923,
+        "log_volume": 6.3705
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.044,
+        "log_volume": 7.6952
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.206,
+        "log_volume": 6.776
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4742,
+        "log_volume": 7.0102
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.618,
+        "log_volume": 4.0371
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4207,
+        "log_volume": 6.489
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4947,
+        "log_volume": 6.9737
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5702,
+        "log_volume": 7.8747
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.0861,
+        "log_volume": 8.2765
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6179,
+        "log_volume": 5.0404
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.052,
+        "log_volume": 7.4421
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.83,
+        "log_volume": 4.9912
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3925,
+        "log_volume": 7.6117
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4348,
+        "log_volume": 6.2213
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4677,
+        "log_volume": 7.6508
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9348,
+        "log_volume": 6.5612
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3779,
+        "log_volume": 6.4118
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.542,
+        "log_volume": 5.7071
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5747,
+        "log_volume": 5.4995
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0735,
+        "log_volume": 7.7481
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5379,
+        "log_volume": 6.0835
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6439,
+        "log_volume": 5.71
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2994,
+        "log_volume": 7.4954
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4658,
+        "log_volume": 5.8684
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6809,
+        "log_volume": 6.2116
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1537,
+        "log_volume": 8.2685
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4375,
+        "log_volume": 5.4672
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8647,
+        "log_volume": 4.6171
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4573,
+        "log_volume": 6.5318
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.777,
+        "log_volume": 6.7146
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5756,
+        "log_volume": 5.4517
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7666,
+        "log_volume": 4.7981
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.8328,
+        "log_volume": 5.807
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4765,
+        "log_volume": 7.3369
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3317,
+        "log_volume": 5.4309
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0327,
+        "log_volume": 8.7079
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.571,
+        "log_volume": 7.305
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6141,
+        "log_volume": 5.8689
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1285,
+        "log_volume": 9.1161
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9003,
+        "log_volume": 5.2968
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.488,
+        "log_volume": 7.3731
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7226,
+        "log_volume": 5.746
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8887,
+        "log_volume": 5.4636
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6625,
+        "log_volume": 6.2322
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.0919,
+        "log_volume": 6.709
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7834,
+        "log_volume": 6.7288
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2299,
+        "log_volume": 7.5698
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.1045,
+        "log_volume": 7.5436
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.8267,
+        "log_volume": 6.4514
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3728,
+        "log_volume": 7.0053
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.547,
+        "log_volume": 6.185
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4874,
+        "log_volume": 6.6354
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6144,
+        "log_volume": 6.0332
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.302,
+        "log_volume": 7.5913
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3664,
+        "log_volume": 7.9054
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.453,
+        "log_volume": 7.3178
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3821,
+        "log_volume": 5.5142
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5763,
+        "log_volume": 6.9568
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1869,
+        "log_volume": 7.7094
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5073,
+        "log_volume": 7.3072
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5249,
+        "log_volume": 3.9506
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5221,
+        "log_volume": 4.8716
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5515,
+        "log_volume": 6.7068
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2035,
+        "log_volume": 7.905
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2845,
+        "log_volume": 6.1681
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6891,
+        "log_volume": 5.6256
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4242,
+        "log_volume": 7.404
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.43,
+        "log_volume": 7.1967
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6674,
+        "log_volume": 4.5951
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6497,
+        "log_volume": 7.619
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.0422,
+        "log_volume": 6.9224
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.714,
+        "log_volume": 5.843
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.633,
+        "log_volume": 6.7127
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.589,
+        "log_volume": 4.0515
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5521,
+        "log_volume": 6.2624
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3546,
+        "log_volume": 4.862
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1445,
+        "log_volume": 8.5505
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.062,
+        "log_volume": 7.2968
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1838,
+        "log_volume": 7.8956
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6976,
+        "log_volume": 5.9787
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2305,
+        "log_volume": 7.6818
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6166,
+        "log_volume": 7.0143
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.445,
+        "log_volume": 4.6241
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3879,
+        "log_volume": 6.0533
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.1589,
+        "log_volume": 7.8682
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1671,
+        "log_volume": 8.9205
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8533,
+        "log_volume": 3.8811
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.345,
+        "log_volume": 6.5605
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2856,
+        "log_volume": 8.2315
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5613,
+        "log_volume": 5.5714
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0137,
+        "log_volume": 5.5579
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6692,
+        "log_volume": 5.3234
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7494,
+        "log_volume": 7.2324
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7412,
+        "log_volume": 5.7533
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3877,
+        "log_volume": 6.5145
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2605,
+        "log_volume": 4.7688
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2349,
+        "log_volume": 6.957
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8947,
+        "log_volume": 5.9682
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7527,
+        "log_volume": 4.9653
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6003,
+        "log_volume": 5.4067
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.7848,
+        "log_volume": 7.224
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3641,
+        "log_volume": 7.1815
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5931,
+        "log_volume": 5.5626
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.675,
+        "log_volume": 6.2533
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7681,
+        "log_volume": 7.308
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4358,
+        "log_volume": 8.4514
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7107,
+        "log_volume": 5.6308
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3259,
+        "log_volume": 7.0606
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3765,
+        "log_volume": 7.5739
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.619,
+        "log_volume": 7.2258
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4229,
+        "log_volume": 7.5828
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2074,
+        "log_volume": 7.1791
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1669,
+        "log_volume": 8.7401
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3268,
+        "log_volume": 7.559
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7994,
+        "log_volume": 6.1796
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.7063,
+        "log_volume": 5.5559
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.583,
+        "log_volume": 6.0281
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6571,
+        "log_volume": 3.2076
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6682,
+        "log_volume": 6.6826
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6489,
+        "log_volume": 6.8669
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3451,
+        "log_volume": 6.1928
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2299,
+        "log_volume": 6.7996
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7863,
+        "log_volume": 6.3961
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3369,
+        "log_volume": 8.5574
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3978,
+        "log_volume": 6.1695
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3777,
+        "log_volume": 6.9016
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.0117,
+        "log_volume": 8.7598
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4912,
+        "log_volume": 6.3603
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3566,
+        "log_volume": 6.9594
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.0642,
+        "log_volume": 9.2888
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4346,
+        "log_volume": 6.2131
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6199,
+        "log_volume": 6.3395
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3308,
+        "log_volume": 7.3744
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3099,
+        "log_volume": 6.0828
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4166,
+        "log_volume": 7.5461
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.86,
+        "log_volume": 5.4474
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6203,
+        "log_volume": 7.2814
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7139,
+        "log_volume": 6.1903
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5318,
+        "log_volume": 7.0693
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2781,
+        "log_volume": 7.0856
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.0843,
+        "log_volume": 8.7751
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8326,
+        "log_volume": 5.9523
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0667,
+        "log_volume": 8.9729
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7066,
+        "log_volume": 5.4682
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6786,
+        "log_volume": 6.7495
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5646,
+        "log_volume": 6.8212
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8589,
+        "log_volume": 5.4463
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6411,
+        "log_volume": 6.5423
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.624,
+        "log_volume": 6.5301
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3529,
+        "log_volume": 8.1451
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4524,
+        "log_volume": 6.84
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3155,
+        "log_volume": 6.13
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5558,
+        "log_volume": 6.4473
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6595,
+        "log_volume": 4.8995
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6204,
+        "log_volume": 6.924
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5856,
+        "log_volume": 5.7894
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2229,
+        "log_volume": 6.9374
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5144,
+        "log_volume": 7.1065
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6,
+        "log_volume": 7.0283
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1975,
+        "log_volume": 7.5063
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5208,
+        "log_volume": 7.7317
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4923,
+        "log_volume": 6.2687
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1988,
+        "log_volume": 7.9708
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5716,
+        "log_volume": 6.3149
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.492,
+        "log_volume": 7.4621
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7029,
+        "log_volume": 5.8985
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5598,
+        "log_volume": 5.5401
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2848,
+        "log_volume": 7.5158
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7979,
+        "log_volume": 5.3084
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5556,
+        "log_volume": 6.5676
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7596,
+        "log_volume": 5.4205
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5929,
+        "log_volume": 5.3325
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3137,
+        "log_volume": 5.8176
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4869,
+        "log_volume": 4.5831
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6439,
+        "log_volume": 6.2054
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.2068,
+        "log_volume": 6.1477
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7849,
+        "log_volume": 6.2789
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7699,
+        "log_volume": 5.4413
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4694,
+        "log_volume": 8.1519
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8253,
+        "log_volume": 6.0307
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6279,
+        "log_volume": 6.3869
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2144,
+        "log_volume": 5.1103
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7248,
+        "log_volume": 4.9489
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5542,
+        "log_volume": 5.503
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7163,
+        "log_volume": 6.1223
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1901,
+        "log_volume": 4.9007
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7143,
+        "log_volume": 6.7099
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3797,
+        "log_volume": 3.1583
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3021,
+        "log_volume": 6.3293
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.7329,
+        "log_volume": 4.5588
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8665,
+        "log_volume": 5.595
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3243,
+        "log_volume": 7.0102
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4889,
+        "log_volume": 7.3721
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0007,
+        "log_volume": 8.6548
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7558,
+        "log_volume": 4.9197
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6495,
+        "log_volume": 7.614
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.1236,
+        "log_volume": 8.5748
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.718,
+        "log_volume": 6.8551
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4096,
+        "log_volume": 5.4223
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": -0.0973,
+        "log_volume": 7.7542
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": -0.0669,
+        "log_volume": 6.7386
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3776,
+        "log_volume": 8.7104
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6643,
+        "log_volume": 5.3339
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7108,
+        "log_volume": 3.0578
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8269,
+        "log_volume": 5.6679
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.2874,
+        "log_volume": 6.0344
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4705,
+        "log_volume": 5.7011
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1613,
+        "log_volume": 7.4149
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2965,
+        "log_volume": 5.1197
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.0037,
+        "log_volume": 9.2141
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.696,
+        "log_volume": 7.6413
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2165,
+        "log_volume": 6.4263
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5959,
+        "log_volume": 5.4258
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3431,
+        "log_volume": 6.8524
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4126,
+        "log_volume": 6.6564
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5794,
+        "log_volume": 4.2232
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5815,
+        "log_volume": 3.4638
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4891,
+        "log_volume": 7.2923
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6639,
+        "log_volume": 4.5824
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6082,
+        "log_volume": 6.7142
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6414,
+        "log_volume": 5.9369
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7412,
+        "log_volume": 4.708
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.822,
+        "log_volume": 5.8812
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.632,
+        "log_volume": 5.6938
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6258,
+        "log_volume": 3.8311
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7728,
+        "log_volume": 4.6985
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4971,
+        "log_volume": 7.9402
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.632,
+        "log_volume": 5.6499
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.8309,
+        "log_volume": 7.0562
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5331,
+        "log_volume": 6.9756
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7668,
+        "log_volume": 7.4679
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2161,
+        "log_volume": 7.6536
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5078,
+        "log_volume": 4.1165
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2295,
+        "log_volume": 7.3675
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.1092,
+        "log_volume": 7.4752
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": -0.0335,
+        "log_volume": 8.7075
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2733,
+        "log_volume": 7.5396
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5439,
+        "log_volume": 6.464
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1069,
+        "log_volume": 9.072
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2995,
+        "log_volume": 8.7417
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5073,
+        "log_volume": 6.037
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.9029,
+        "log_volume": 6.5887
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5315,
+        "log_volume": 8.1805
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.7519,
+        "log_volume": 5.4577
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4714,
+        "log_volume": 6.6653
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2167,
+        "log_volume": 8.7363
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": -0.0304,
+        "log_volume": 7.1723
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6414,
+        "log_volume": 7.2672
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5452,
+        "log_volume": 6.8573
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2095,
+        "log_volume": 8.3547
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6105,
+        "log_volume": 6.2863
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3826,
+        "log_volume": 8.3868
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5489,
+        "log_volume": 5.8752
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6177,
+        "log_volume": 5.5244
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3926,
+        "log_volume": 6.3699
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5832,
+        "log_volume": 3.2567
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5631,
+        "log_volume": 5.9314
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.8787,
+        "log_volume": 5.4451
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.0409,
+        "log_volume": 8.2348
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.377,
+        "log_volume": 7.674
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5805,
+        "log_volume": 6.9887
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4818,
+        "log_volume": 7.3073
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.0795,
+        "log_volume": 6.8564
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6139,
+        "log_volume": 7.1111
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7886,
+        "log_volume": 1.2617
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": -0.0153,
+        "log_volume": 8.2789
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4553,
+        "log_volume": 5.0608
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.1775,
+        "log_volume": 8.4381
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.8625,
+        "log_volume": 4.9405
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.63,
+        "log_volume": 6.6502
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6877,
+        "log_volume": 5.1932
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2596,
+        "log_volume": 7.9936
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2511,
+        "log_volume": 7.7978
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7894,
+        "log_volume": 6.7055
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 1.0041,
+        "log_volume": 6.2835
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.981,
+        "log_volume": 5.7256
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3572,
+        "log_volume": 6.8119
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4322,
+        "log_volume": 6.1736
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6438,
+        "log_volume": 4.0495
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5236,
+        "log_volume": 6.847
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.911,
+        "log_volume": 6.2794
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.365,
+        "log_volume": 6.437
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2756,
+        "log_volume": 6.3362
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.0779,
+        "log_volume": 6.981
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3742,
+        "log_volume": 6.5178
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.573,
+        "log_volume": 6.1441
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3093,
+        "log_volume": 8.1485
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6958,
+        "log_volume": 4.7068
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3965,
+        "log_volume": 4.6451
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6276,
+        "log_volume": 5.4906
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6557,
+        "log_volume": 7.044
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": -0.2128,
+        "log_volume": 9.3805
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6273,
+        "log_volume": 6.3408
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.7763,
+        "log_volume": 6.8634
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3541,
+        "log_volume": 5.1386
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4008,
+        "log_volume": 6.8672
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2608,
+        "log_volume": 8.7168
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4856,
+        "log_volume": 4.4056
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4133,
+        "log_volume": 2.9989
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7831,
+        "log_volume": 6.3711
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5775,
+        "log_volume": 6.1503
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6517,
+        "log_volume": 5.646
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.1362,
+        "log_volume": 9.4258
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2066,
+        "log_volume": 8.7618
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4505,
+        "log_volume": 7.1205
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.8288,
+        "log_volume": 6.5737
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0709,
+        "log_volume": 7.7621
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2886,
+        "log_volume": 7.5489
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4036,
+        "log_volume": 8.1862
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7306,
+        "log_volume": 6.5939
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.693,
+        "log_volume": 3.4299
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5174,
+        "log_volume": 5.9787
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7146,
+        "log_volume": 6.7542
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3883,
+        "log_volume": 5.3303
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3812,
+        "log_volume": 7.6046
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3876,
+        "log_volume": 5.9369
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4583,
+        "log_volume": 5.267
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9947,
+        "log_volume": 5.9126
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4523,
+        "log_volume": 7.2417
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6674,
+        "log_volume": 6.4666
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.345,
+        "log_volume": 4.6714
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1603,
+        "log_volume": 8.0006
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.7385,
+        "log_volume": 6.9998
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1939,
+        "log_volume": 7.9673
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4947,
+        "log_volume": 6.7094
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.53,
+        "log_volume": 7.1352
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2818,
+        "log_volume": 8.2152
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6231,
+        "log_volume": 4.5105
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2044,
+        "log_volume": 7.1228
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9034,
+        "log_volume": 5.0902
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5819,
+        "log_volume": 4.274
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6287,
+        "log_volume": 8.4526
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3535,
+        "log_volume": 7.4908
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6519,
+        "log_volume": 5.8313
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.659,
+        "log_volume": 6.2359
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2719,
+        "log_volume": 6.5953
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5953,
+        "log_volume": 5.2383
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7037,
+        "log_volume": 5.548
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2581,
+        "log_volume": 8.8702
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4518,
+        "log_volume": 6.2559
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1133,
+        "log_volume": 6.4117
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.0974,
+        "log_volume": 8.2319
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.8721,
+        "log_volume": 5.579
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.0231,
+        "log_volume": 5.969
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7857,
+        "log_volume": 5.7381
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3073,
+        "log_volume": 7.6357
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3547,
+        "log_volume": 8.2523
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.457,
+        "log_volume": 6.4666
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4011,
+        "log_volume": 7.5042
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7206,
+        "log_volume": 5.5224
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3009,
+        "log_volume": 6.6441
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6238,
+        "log_volume": 5.2333
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4208,
+        "log_volume": 4.5443
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.019,
+        "log_volume": 8.511
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6296,
+        "log_volume": 6.6753
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4237,
+        "log_volume": 6.4457
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7312,
+        "log_volume": 6.1041
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.778,
+        "log_volume": 6.5823
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3203,
+        "log_volume": 7.4502
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5556,
+        "log_volume": 6.1567
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5751,
+        "log_volume": 6.4878
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4681,
+        "log_volume": 4.4305
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6953,
+        "log_volume": 6.3139
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.569,
+        "log_volume": 6.0127
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3525,
+        "log_volume": 7.989
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2875,
+        "log_volume": 8.3645
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7475,
+        "log_volume": 4.6311
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5661,
+        "log_volume": 5.7538
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4956,
+        "log_volume": 7.6991
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6665,
+        "log_volume": 6.5016
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6658,
+        "log_volume": 4.5211
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7065,
+        "log_volume": 4.6036
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3062,
+        "log_volume": 6.2122
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3869,
+        "log_volume": 6.5074
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3245,
+        "log_volume": 6.3491
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4646,
+        "log_volume": 4.1849
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.0414,
+        "log_volume": 8.4811
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.665,
+        "log_volume": 6.462
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7171,
+        "log_volume": 5.5996
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3375,
+        "log_volume": 5.9728
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3467,
+        "log_volume": 5.875
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3131,
+        "log_volume": 7.4553
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.62,
+        "log_volume": 5.1911
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6137,
+        "log_volume": 6.3784
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.0966,
+        "log_volume": 9.6112
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.195,
+        "log_volume": 6.8386
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2984,
+        "log_volume": 7.4699
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4989,
+        "log_volume": 4.3662
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7584,
+        "log_volume": 5.7528
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7703,
+        "log_volume": 6.2559
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5473,
+        "log_volume": 3.53
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.506,
+        "log_volume": 6.6214
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5361,
+        "log_volume": 6.2265
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4718,
+        "log_volume": 4.4334
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8436,
+        "log_volume": 5.2869
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4152,
+        "log_volume": 6.0346
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7738,
+        "log_volume": 5.7824
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.711,
+        "log_volume": 6.4608
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7338,
+        "log_volume": 5.3118
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4538,
+        "log_volume": 6.238
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5979,
+        "log_volume": 6.1735
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1653,
+        "log_volume": 7.6089
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6691,
+        "log_volume": 6.6384
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9012,
+        "log_volume": 5.9016
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5614,
+        "log_volume": 3.9744
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3488,
+        "log_volume": 5.2435
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1269,
+        "log_volume": 8.8843
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4736,
+        "log_volume": 6.7806
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9109,
+        "log_volume": 6.2574
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6772,
+        "log_volume": 5.7109
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3346,
+        "log_volume": 5.847
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.7174,
+        "log_volume": 5.999
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7568,
+        "log_volume": 6.3914
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6051,
+        "log_volume": 5.2692
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4778,
+        "log_volume": 5.0257
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1053,
+        "log_volume": 8.5217
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4334,
+        "log_volume": 2.1026
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3725,
+        "log_volume": 7.5739
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5246,
+        "log_volume": 5.9341
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4453,
+        "log_volume": 6.3141
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2593,
+        "log_volume": 6.9935
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6976,
+        "log_volume": 4.8417
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.14,
+        "log_volume": 7.4182
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7871,
+        "log_volume": 6.6837
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5842,
+        "log_volume": 4.9767
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.748,
+        "log_volume": 6.4386
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8976,
+        "log_volume": 5.9752
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2362,
+        "log_volume": 6.7519
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.0753,
+        "log_volume": 7.9242
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2091,
+        "log_volume": 7.2415
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3745,
+        "log_volume": 7.4811
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.382,
+        "log_volume": 5.0044
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4718,
+        "log_volume": 6.956
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6764,
+        "log_volume": 7.0051
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.725,
+        "log_volume": 5.6478
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6769,
+        "log_volume": 5.2442
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.908,
+        "log_volume": 4.8317
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.7553,
+        "log_volume": 5.757
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1594,
+        "log_volume": 7.7034
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0297,
+        "log_volume": 8.474
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4402,
+        "log_volume": 5.2168
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0853,
+        "log_volume": 7.3374
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4937,
+        "log_volume": 7.8587
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5875,
+        "log_volume": 6.2581
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6347,
+        "log_volume": 4.257
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3035,
+        "log_volume": 7.2102
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4807,
+        "log_volume": 7.3555
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.8036,
+        "log_volume": 7.1881
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5121,
+        "log_volume": 5.8854
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.404,
+        "log_volume": 7.1793
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5708,
+        "log_volume": 6.4634
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6558,
+        "log_volume": 5.8053
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6367,
+        "log_volume": 7.2518
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.235,
+        "log_volume": 8.1152
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.1341,
+        "log_volume": 7.4479
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4701,
+        "log_volume": 5.1227
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3998,
+        "log_volume": 7.5072
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6707,
+        "log_volume": 6.6706
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3523,
+        "log_volume": 5.1776
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2877,
+        "log_volume": 6.5562
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3258,
+        "log_volume": 5.3078
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6419,
+        "log_volume": 5.5827
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4445,
+        "log_volume": 5.5362
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1705,
+        "log_volume": 7.9706
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": -0.2,
+        "log_volume": 5.6781
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7444,
+        "log_volume": 3.621
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0641,
+        "log_volume": 7.3522
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5042,
+        "log_volume": 4.8486
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0429,
+        "log_volume": 8.2073
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6199,
+        "log_volume": 5.633
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9743,
+        "log_volume": 7.1432
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7993,
+        "log_volume": 6.7869
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1851,
+        "log_volume": 5.7664
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6005,
+        "log_volume": 5.0971
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4757,
+        "log_volume": 7.0895
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5144,
+        "log_volume": 4.9088
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2961,
+        "log_volume": 6.2034
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8457,
+        "log_volume": 5.2073
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.246,
+        "log_volume": 7.1696
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3029,
+        "log_volume": 7.9632
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3651,
+        "log_volume": 6.942
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5458,
+        "log_volume": 7.4882
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0698,
+        "log_volume": 7.5867
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5941,
+        "log_volume": 6.5742
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6021,
+        "log_volume": 5.429
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4871,
+        "log_volume": 7.0735
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6073,
+        "log_volume": 6.5153
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.1182,
+        "log_volume": 8.1657
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6256,
+        "log_volume": 5.7547
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7728,
+        "log_volume": 5.3717
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1156,
+        "log_volume": 7.6004
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1391,
+        "log_volume": 8.5428
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3532,
+        "log_volume": 6.5185
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.773,
+        "log_volume": 7.0582
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.141,
+        "log_volume": 5.3468
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4163,
+        "log_volume": 6.686
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6374,
+        "log_volume": 7.0523
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3008,
+        "log_volume": 7.8479
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5814,
+        "log_volume": 6.8089
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3065,
+        "log_volume": 6.432
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5463,
+        "log_volume": 6.8526
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.571,
+        "log_volume": 6.4846
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3026,
+        "log_volume": 7.1684
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2333,
+        "log_volume": 5.9172
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4182,
+        "log_volume": 7.2405
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5516,
+        "log_volume": 5.8254
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.26,
+        "log_volume": 9.5627
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4956,
+        "log_volume": 3.6889
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8971,
+        "log_volume": 5.5845
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6273,
+        "log_volume": 6.4058
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7593,
+        "log_volume": 4.5892
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6295,
+        "log_volume": 6.2696
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5657,
+        "log_volume": 6.6258
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3101,
+        "log_volume": 8.296
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3983,
+        "log_volume": 5.8544
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.1139,
+        "log_volume": 5.3253
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4921,
+        "log_volume": 5.4702
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6296,
+        "log_volume": 7.7903
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.274,
+        "log_volume": 6.6142
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5969,
+        "log_volume": 5.7594
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7417,
+        "log_volume": 4.8004
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6918,
+        "log_volume": 4.5014
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.1008,
+        "log_volume": 9.4972
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3195,
+        "log_volume": 7.974
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.0063,
+        "log_volume": 9.0496
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.552,
+        "log_volume": 7.2954
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.8348,
+        "log_volume": 4.5191
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0083,
+        "log_volume": 8.8498
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5745,
+        "log_volume": 6.685
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7321,
+        "log_volume": 6.3872
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6527,
+        "log_volume": 5.2545
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4164,
+        "log_volume": 7.1025
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1564,
+        "log_volume": 6.2054
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4074,
+        "log_volume": 4.9742
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3496,
+        "log_volume": 6.2952
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2047,
+        "log_volume": 7.3246
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7597,
+        "log_volume": 5.8955
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5453,
+        "log_volume": 8.0587
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6307,
+        "log_volume": 6.347
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1032,
+        "log_volume": 6.9
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.8776,
+        "log_volume": 5.3849
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.42,
+        "log_volume": 8.0764
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5587,
+        "log_volume": 3.6571
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0663,
+        "log_volume": 8.6499
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6133,
+        "log_volume": 5.2411
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8932,
+        "log_volume": 5.4635
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7959,
+        "log_volume": 5.9394
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6395,
+        "log_volume": 4.1721
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4905,
+        "log_volume": 3.531
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4814,
+        "log_volume": 4.5926
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4341,
+        "log_volume": 6.8517
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2936,
+        "log_volume": 6.6479
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7108,
+        "log_volume": 7.6573
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4382,
+        "log_volume": 6.391
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4985,
+        "log_volume": 5.9603
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1836,
+        "log_volume": 8.6304
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6148,
+        "log_volume": 6.3696
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5179,
+        "log_volume": 6.3723
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3098,
+        "log_volume": 5.8081
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5276,
+        "log_volume": 6.9273
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5952,
+        "log_volume": 6.792
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6121,
+        "log_volume": 1.5581
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1282,
+        "log_volume": 6.343
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7657,
+        "log_volume": 6.0529
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4089,
+        "log_volume": 6.0385
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6988,
+        "log_volume": 5.4997
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6057,
+        "log_volume": 4.426
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5901,
+        "log_volume": 5.1327
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3182,
+        "log_volume": 7.8777
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9772,
+        "log_volume": 6.3941
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4632,
+        "log_volume": 6.7236
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.2475,
+        "log_volume": 6.6161
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6854,
+        "log_volume": 4.076
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2741,
+        "log_volume": 7.6959
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9676,
+        "log_volume": 6.1394
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0024,
+        "log_volume": 7.8505
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.257,
+        "log_volume": 7.6054
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7867,
+        "log_volume": 6.2563
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5279,
+        "log_volume": 5.9813
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5288,
+        "log_volume": 6.2624
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5871,
+        "log_volume": 6.8052
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3524,
+        "log_volume": 6.4923
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.1872,
+        "log_volume": 7.9774
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4648,
+        "log_volume": 4.2871
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7296,
+        "log_volume": 6.1206
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4249,
+        "log_volume": 7.235
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6321,
+        "log_volume": 4.4939
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7936,
+        "log_volume": 6.628
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5703,
+        "log_volume": 5.363
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4338,
+        "log_volume": 6.6975
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4222,
+        "log_volume": 6.7123
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3479,
+        "log_volume": 7.4271
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6091,
+        "log_volume": 5.8958
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3647,
+        "log_volume": 7.4712
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4436,
+        "log_volume": 5.6353
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6976,
+        "log_volume": 5.8725
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7555,
+        "log_volume": 6.147
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4766,
+        "log_volume": 4.2411
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7858,
+        "log_volume": 4.8625
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6241,
+        "log_volume": 6.6898
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2631,
+        "log_volume": 8.4763
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.0117,
+        "log_volume": 8.5814
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1353,
+        "log_volume": 7.053
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5956,
+        "log_volume": 7.22
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3645,
+        "log_volume": 5.8358
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5892,
+        "log_volume": 6.5812
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7791,
+        "log_volume": 5.8207
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5739,
+        "log_volume": 6.8596
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2156,
+        "log_volume": 7.5417
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6283,
+        "log_volume": 5.4797
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3371,
+        "log_volume": 7.9835
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7607,
+        "log_volume": 5.6335
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.335,
+        "log_volume": 7.5083
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4467,
+        "log_volume": 8.0422
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3831,
+        "log_volume": 7.4861
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5446,
+        "log_volume": 5.5457
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6596,
+        "log_volume": 5.4175
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4091,
+        "log_volume": 6.7726
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7655,
+        "log_volume": 4.4963
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4214,
+        "log_volume": 5.6443
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.726,
+        "log_volume": 5.4775
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3646,
+        "log_volume": 7.3912
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.2524,
+        "log_volume": 8.4043
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5981,
+        "log_volume": 6.2159
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.1214,
+        "log_volume": 10.3856
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4131,
+        "log_volume": 6.5845
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6601,
+        "log_volume": 5.776
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2767,
+        "log_volume": 8.2864
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3158,
+        "log_volume": 7.4925
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5727,
+        "log_volume": 4.9367
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7991,
+        "log_volume": 4.9855
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.8401,
+        "log_volume": 6.1295
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6173,
+        "log_volume": 5.9313
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6984,
+        "log_volume": 4.2419
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5877,
+        "log_volume": 5.0847
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3962,
+        "log_volume": 8.5247
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7389,
+        "log_volume": 6.4229
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4526,
+        "log_volume": 5.2222
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9329,
+        "log_volume": 5.2528
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3665,
+        "log_volume": 5.9725
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3502,
+        "log_volume": 5.9764
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4467,
+        "log_volume": 5.8161
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7235,
+        "log_volume": 5.5723
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0822,
+        "log_volume": 7.8527
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7969,
+        "log_volume": 5.57
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3638,
+        "log_volume": 7.8013
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7993,
+        "log_volume": 6.1846
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4215,
+        "log_volume": 6.593
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3407,
+        "log_volume": 8.4216
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6276,
+        "log_volume": 5.2523
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4219,
+        "log_volume": 6.526
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.459,
+        "log_volume": 5.9207
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4744,
+        "log_volume": 7.565
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.2812,
+        "log_volume": 7.9843
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.661,
+        "log_volume": 6.2816
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5353,
+        "log_volume": 3.2485
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4294,
+        "log_volume": 6.296
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.8307,
+        "log_volume": 6.9244
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.8651,
+        "log_volume": 7.2445
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.459,
+        "log_volume": 4.8986
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6613,
+        "log_volume": 7.3742
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3283,
+        "log_volume": 8.1975
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1728,
+        "log_volume": 8.804
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4026,
+        "log_volume": 4.8418
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.9563,
+        "log_volume": 0.1719
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6864,
+        "log_volume": 5.4522
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0846,
+        "log_volume": 7.8054
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.487,
+        "log_volume": 6.615
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6507,
+        "log_volume": 5.6367
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7291,
+        "log_volume": 3.8751
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2652,
+        "log_volume": 5.9716
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1304,
+        "log_volume": 9.1276
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9532,
+        "log_volume": 6.7639
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4219,
+        "log_volume": 3.9744
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3384,
+        "log_volume": 5.6086
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2148,
+        "log_volume": 5.9405
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3183,
+        "log_volume": 7.1103
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4477,
+        "log_volume": 7.2631
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4613,
+        "log_volume": 4.3879
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5438,
+        "log_volume": 4.1116
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5866,
+        "log_volume": 6.3284
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.574,
+        "log_volume": 5.2949
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7175,
+        "log_volume": 5.421
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.439,
+        "log_volume": 6.5282
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.571,
+        "log_volume": 4.8709
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0193,
+        "log_volume": 7.3708
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5349,
+        "log_volume": 5.7258
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3697,
+        "log_volume": 8.0762
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.628,
+        "log_volume": 4.1901
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3824,
+        "log_volume": 7.8657
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.707,
+        "log_volume": 4.6618
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7169,
+        "log_volume": 6.4117
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6422,
+        "log_volume": 5.5101
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4434,
+        "log_volume": 6.6798
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8653,
+        "log_volume": 6.135
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5173,
+        "log_volume": 8.4771
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2218,
+        "log_volume": 8.552
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5412,
+        "log_volume": 8.6164
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4188,
+        "log_volume": 4.093
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5723,
+        "log_volume": 6.0821
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5538,
+        "log_volume": 5.9078
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5779,
+        "log_volume": 5.7753
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6259,
+        "log_volume": 5.5866
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5639,
+        "log_volume": 7.1786
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4881,
+        "log_volume": 5.7082
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.2004,
+        "log_volume": 6.357
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1092,
+        "log_volume": 7.8803
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.467,
+        "log_volume": 6.1694
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.764,
+        "log_volume": 3.7451
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.2163,
+        "log_volume": 5.781
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4813,
+        "log_volume": 5.3177
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4688,
+        "log_volume": 5.8599
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.164,
+        "log_volume": 8.3169
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3941,
+        "log_volume": 7.851
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.631,
+        "log_volume": 5.0153
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5219,
+        "log_volume": 4.7343
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0883,
+        "log_volume": 8.6692
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6579,
+        "log_volume": 7.2914
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2312,
+        "log_volume": 8.9966
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0652,
+        "log_volume": 7.7563
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7767,
+        "log_volume": 6.2658
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3327,
+        "log_volume": 8.0803
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2092,
+        "log_volume": 8.0548
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8832,
+        "log_volume": 6.0651
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2709,
+        "log_volume": 6.0845
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5785,
+        "log_volume": 6.8928
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": -0.1024,
+        "log_volume": 7.0706
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.563,
+        "log_volume": 4.8649
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4992,
+        "log_volume": 7.5172
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.628,
+        "log_volume": 6.0762
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3105,
+        "log_volume": 6.0298
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3254,
+        "log_volume": 8.1615
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6064,
+        "log_volume": 5.8998
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6467,
+        "log_volume": 6.8162
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": -0.0301,
+        "log_volume": 6.9517
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4433,
+        "log_volume": 6.5948
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7972,
+        "log_volume": 5.8059
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6688,
+        "log_volume": 5.4828
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3537,
+        "log_volume": 8.4739
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3009,
+        "log_volume": 7.542
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6014,
+        "log_volume": 6.6037
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6431,
+        "log_volume": 5.2573
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5095,
+        "log_volume": 6.5221
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3362,
+        "log_volume": 5.5955
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3441,
+        "log_volume": 7.8561
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6035,
+        "log_volume": 7.1961
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5677,
+        "log_volume": 5.4548
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.1931,
+        "log_volume": 7.8629
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.705,
+        "log_volume": 5.4838
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5097,
+        "log_volume": 3.6612
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6193,
+        "log_volume": 5.893
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.469,
+        "log_volume": 6.2688
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6104,
+        "log_volume": 6.8622
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3601,
+        "log_volume": 8.2319
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3136,
+        "log_volume": 4.853
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6358,
+        "log_volume": 3.8254
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.225,
+        "log_volume": 6.8825
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6198,
+        "log_volume": 7.0435
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4768,
+        "log_volume": 6.9275
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4445,
+        "log_volume": 5.2636
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": -0.0347,
+        "log_volume": 8.6007
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5771,
+        "log_volume": 7.7346
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6936,
+        "log_volume": 5.7808
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6288,
+        "log_volume": 4.2265
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6662,
+        "log_volume": 5.5047
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5954,
+        "log_volume": 5.724
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1282,
+        "log_volume": 8.2924
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.8334,
+        "log_volume": 5.8339
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8098,
+        "log_volume": 7.1442
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5309,
+        "log_volume": 7.7669
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3109,
+        "log_volume": 7.643
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5312,
+        "log_volume": 5.0545
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2412,
+        "log_volume": 7.1313
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.691,
+        "log_volume": 5.2735
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2353,
+        "log_volume": 6.2051
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5908,
+        "log_volume": 5.4849
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6168,
+        "log_volume": 6.3028
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6514,
+        "log_volume": 6.5267
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6858,
+        "log_volume": 6.9981
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6465,
+        "log_volume": 5.2813
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5108,
+        "log_volume": 5.0555
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4775,
+        "log_volume": 5.6601
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6676,
+        "log_volume": 7.4607
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5205,
+        "log_volume": 4.4018
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6191,
+        "log_volume": 7.0682
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.0355,
+        "log_volume": 8.7417
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": -0.0272,
+        "log_volume": 8.2975
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7791,
+        "log_volume": 6.4482
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4622,
+        "log_volume": 6.5135
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4866,
+        "log_volume": 3.0578
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4715,
+        "log_volume": 4.7398
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5711,
+        "log_volume": 6.108
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5188,
+        "log_volume": 5.8771
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.0763,
+        "log_volume": 7.3224
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7488,
+        "log_volume": 6.3485
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.343,
+        "log_volume": 6.921
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3764,
+        "log_volume": 7.1629
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6677,
+        "log_volume": 7.419
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.24,
+        "log_volume": 5.9431
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7955,
+        "log_volume": 6.2256
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6111,
+        "log_volume": 4.777
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8332,
+        "log_volume": 5.4361
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8442,
+        "log_volume": 6.6581
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5318,
+        "log_volume": 5.9806
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3142,
+        "log_volume": 5.8614
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6367,
+        "log_volume": 6.4758
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7825,
+        "log_volume": 5.7588
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7642,
+        "log_volume": 6.4141
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0396,
+        "log_volume": 7.7349
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4897,
+        "log_volume": 4.8417
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4332,
+        "log_volume": 6.8149
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5523,
+        "log_volume": 6.2482
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4965,
+        "log_volume": 5.567
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3286,
+        "log_volume": 6.9726
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": -0.021,
+        "log_volume": 8.2949
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5392,
+        "log_volume": 7.0694
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5382,
+        "log_volume": 3.8995
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5907,
+        "log_volume": 5.0148
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2785,
+        "log_volume": 7.2954
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0607,
+        "log_volume": 8.8543
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0321,
+        "log_volume": 7.4664
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6852,
+        "log_volume": 7.8634
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.3734,
+        "log_volume": 7.0715
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3005,
+        "log_volume": 5.4902
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6646,
+        "log_volume": 4.7657
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2452,
+        "log_volume": 7.4304
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2929,
+        "log_volume": 7.1617
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6221,
+        "log_volume": 4.9718
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4061,
+        "log_volume": 8.4965
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4394,
+        "log_volume": 5.8388
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.7443,
+        "log_volume": 6.29
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1818,
+        "log_volume": 7.7158
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7526,
+        "log_volume": 4.796
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3543,
+        "log_volume": 7.2447
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5402,
+        "log_volume": 6.3646
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7438,
+        "log_volume": 6.6473
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5041,
+        "log_volume": 7.2679
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6453,
+        "log_volume": 3.7159
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.1635,
+        "log_volume": 10.3739
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5028,
+        "log_volume": 7.1665
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4028,
+        "log_volume": 5.9741
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4919,
+        "log_volume": 7.2094
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6185,
+        "log_volume": 7.2431
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3512,
+        "log_volume": 6.4657
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5249,
+        "log_volume": 2.9932
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6685,
+        "log_volume": 6.3592
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3326,
+        "log_volume": 2.4744
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6952,
+        "log_volume": 6.9754
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8153,
+        "log_volume": 6.4841
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.688,
+        "log_volume": 3.3005
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1387,
+        "log_volume": 8.2474
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7152,
+        "log_volume": 5.6645
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3822,
+        "log_volume": 6.5112
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2354,
+        "log_volume": 8.2421
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2192,
+        "log_volume": 8.5464
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": -0.0182,
+        "log_volume": 8.86
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6738,
+        "log_volume": 3.8217
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": -0.138,
+        "log_volume": 0.8109
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.041,
+        "log_volume": 9.3056
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4522,
+        "log_volume": 6.7534
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5895,
+        "log_volume": 6.95
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6993,
+        "log_volume": 4.5281
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3915,
+        "log_volume": 8.0933
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.191,
+        "log_volume": 7.6712
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8479,
+        "log_volume": 4.3241
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3437,
+        "log_volume": 8.4226
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7503,
+        "log_volume": 5.7022
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0813,
+        "log_volume": 8.0995
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.162,
+        "log_volume": 6.8636
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.1925,
+        "log_volume": 7.8662
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4035,
+        "log_volume": 7.3774
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4796,
+        "log_volume": 5.2608
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5317,
+        "log_volume": 4.8888
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7128,
+        "log_volume": 5.657
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6514,
+        "log_volume": 6.438
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6347,
+        "log_volume": 6.7211
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4391,
+        "log_volume": 8.9309
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3929,
+        "log_volume": 8.25
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0619,
+        "log_volume": 6.7579
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4822,
+        "log_volume": 6.3706
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6031,
+        "log_volume": 5.4178
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4286,
+        "log_volume": 8.184
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7602,
+        "log_volume": 6.4591
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4327,
+        "log_volume": 4.4044
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7213,
+        "log_volume": 4.7852
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3555,
+        "log_volume": 6.5691
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6029,
+        "log_volume": 2.4744
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.504,
+        "log_volume": 6.8695
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5938,
+        "log_volume": 5.4187
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7895,
+        "log_volume": 3.8482
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9422,
+        "log_volume": 6.2094
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4766,
+        "log_volume": 7.1063
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.324,
+        "log_volume": 7.1574
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.846,
+        "log_volume": 5.2047
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4984,
+        "log_volume": 4.3221
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6552,
+        "log_volume": 5.3913
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6028,
+        "log_volume": 6.6637
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3585,
+        "log_volume": 7.6132
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4374,
+        "log_volume": 6.3858
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.6408,
+        "log_volume": 8.3597
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.162,
+        "log_volume": 8.2173
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4379,
+        "log_volume": 6.9702
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.1907,
+        "log_volume": 8.0396
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5713,
+        "log_volume": 7.2631
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4211,
+        "log_volume": 5.4486
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.767,
+        "log_volume": 4.5329
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4874,
+        "log_volume": 6.7521
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.8991,
+        "log_volume": 3.4939
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6222,
+        "log_volume": 6.8639
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5307,
+        "log_volume": 6.3512
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.464,
+        "log_volume": 6.1224
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.2895,
+        "log_volume": 8.1148
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.1917,
+        "log_volume": 6.617
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2518,
+        "log_volume": 7.303
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7523,
+        "log_volume": 5.7197
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6671,
+        "log_volume": 6.0465
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6204,
+        "log_volume": 4.7836
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5812,
+        "log_volume": 7.8293
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.8592,
+        "log_volume": 6.2487
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4254,
+        "log_volume": 5.3124
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6896,
+        "log_volume": 4.1134
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5215,
+        "log_volume": 7.2274
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9357,
+        "log_volume": 4.6637
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5494,
+        "log_volume": 6.9122
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.6745,
+        "log_volume": 4.9891
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.2407,
+        "log_volume": 5.6281
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5062,
+        "log_volume": 4.5533
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.55,
+        "log_volume": 7.0106
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5437,
+        "log_volume": 6.7939
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.4655,
+        "log_volume": 6.0723
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6672,
+        "log_volume": 5.6466
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.0818,
+        "log_volume": 7.7029
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8098,
+        "log_volume": 5.5404
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4981,
+        "log_volume": 4.2268
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4111,
+        "log_volume": 5.7151
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4057,
+        "log_volume": 4.9523
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7264,
+        "log_volume": 4.9693
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5774,
+        "log_volume": 6.4696
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.1489,
+        "log_volume": 6.5237
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.077,
+        "log_volume": 8.5598
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.756,
+        "log_volume": 7.0522
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4299,
+        "log_volume": 7.6784
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6084,
+        "log_volume": 5.0726
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.5982,
+        "log_volume": 4.6261
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2213,
+        "log_volume": 6.5364
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.0588,
+        "log_volume": 6.9007
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2919,
+        "log_volume": 5.3477
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.5871,
+        "log_volume": 5.7677
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8202,
+        "log_volume": 5.2521
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5703,
+        "log_volume": 5.6101
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7066,
+        "log_volume": 5.7167
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.595,
+        "log_volume": 7.6839
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5736,
+        "log_volume": 5.1105
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5741,
+        "log_volume": 4.0975
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6896,
+        "log_volume": 6.0504
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2375,
+        "log_volume": 6.8303
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.8076,
+        "log_volume": 5.6557
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.6066,
+        "log_volume": 5.312
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4064,
+        "log_volume": 7.0696
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3582,
+        "log_volume": 6.1006
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1723,
+        "log_volume": 8.0307
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.8184,
+        "log_volume": 5.9412
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4456,
+        "log_volume": 7.7926
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.326,
+        "log_volume": 7.5787
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3674,
+        "log_volume": 5.9652
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.3168,
+        "log_volume": 6.734
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.46,
+        "log_volume": 6.5899
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4037,
+        "log_volume": 6.7848
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": -0.0451,
+        "log_volume": 9.2061
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6574,
+        "log_volume": 5.8482
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.7641,
+        "log_volume": 7.3091
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9341,
+        "log_volume": 4.3894
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.1666,
+        "log_volume": 8.0799
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.8218,
+        "log_volume": 6.5894
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.2161,
+        "log_volume": 5.9518
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.4898,
+        "log_volume": 4.3074
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5713,
+        "log_volume": 6.0771
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4037,
+        "log_volume": 6.4928
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5098,
+        "log_volume": 5.3252
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5832,
+        "log_volume": 6.282
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3384,
+        "log_volume": 5.6462
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4411,
+        "log_volume": 7.4562
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.3417,
+        "log_volume": 6.8804
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.7479,
+        "log_volume": 6.5781
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4225,
+        "log_volume": 8.038
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5532,
+        "log_volume": 6.4584
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6565,
+        "log_volume": 6.5169
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7406,
+        "log_volume": 6.1016
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6148,
+        "log_volume": 6.1062
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5254,
+        "log_volume": 7.4274
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.757,
+        "log_volume": 7.0956
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.6525,
+        "log_volume": 5.6717
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7706,
+        "log_volume": 3.052
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.3092,
+        "log_volume": 6.2003
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5963,
+        "log_volume": 5.8661
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5716,
+        "log_volume": 8.5972
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7039,
+        "log_volume": 5.9737
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.3247,
+        "log_volume": 7.65
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5826,
+        "log_volume": 3.9976
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5736,
+        "log_volume": 6.6753
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.6361,
+        "log_volume": 6.4911
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.4334,
+        "log_volume": 7.6529
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5461,
+        "log_volume": 5.0866
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.7302,
+        "log_volume": 6.5242
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.4554,
+        "log_volume": 7.615
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3004,
+        "log_volume": 7.4928
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9614,
+        "log_volume": 6.2033
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5205,
+        "log_volume": 8.7956
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.3837,
+        "log_volume": 6.6668
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2949,
+        "log_volume": 7.7733
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6084,
+        "log_volume": 7.3873
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 1.0465,
+        "log_volume": 5.3174
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.7806,
+        "log_volume": 5.7597
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.6329,
+        "log_volume": 5.475
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.2973,
+        "log_volume": 7.283
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3011,
+        "log_volume": 5.474
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.5801,
+        "log_volume": 6.8447
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5707,
+        "log_volume": 6.4298
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.6309,
+        "log_volume": 6.5641
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.4511,
+        "log_volume": 7.4037
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.227,
+        "log_volume": 6.2798
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.7006,
+        "log_volume": 5.0947
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5261,
+        "log_volume": 5.6841
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3981,
+        "log_volume": 6.5977
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.0031,
+        "log_volume": 8.9673
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.6494,
+        "log_volume": 4.9433
+      },
+      {
+        "region": "East",
+        "season": "Winter",
+        "log_price": 0.5409,
+        "log_volume": 8.2373
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4038,
+        "log_volume": 7.9106
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.5614,
+        "log_volume": 7.6665
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2569,
+        "log_volume": 7.6188
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.5101,
+        "log_volume": 6.8749
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.551,
+        "log_volume": 7.1752
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5996,
+        "log_volume": 6.9564
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.2944,
+        "log_volume": 6.8399
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.3856,
+        "log_volume": 7.0997
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.1872,
+        "log_volume": 8.987
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.8069,
+        "log_volume": 6.2257
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.2215,
+        "log_volume": 8.6592
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.663,
+        "log_volume": 3.2111
+      },
+      {
+        "region": "West",
+        "season": "Winter",
+        "log_price": 0.8046,
+        "log_volume": 6.4946
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.8558,
+        "log_volume": 7.0265
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.4673,
+        "log_volume": 6.0278
+      },
+      {
+        "region": "MidWest",
+        "season": "Winter",
+        "log_price": 0.7263,
+        "log_volume": 6.513
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.5268,
+        "log_volume": 1.7707
+      },
+      {
+        "region": "West",
+        "season": "Non-winter",
+        "log_price": 0.9093,
+        "log_volume": 5.8493
+      },
+      {
+        "region": "MidWest",
+        "season": "Non-winter",
+        "log_price": 0.4307,
+        "log_volume": 7.2238
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3466,
+        "log_volume": 5.4364
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.7259,
+        "log_volume": 5.5095
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.2873,
+        "log_volume": 5.9137
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.5766,
+        "log_volume": 6.3942
+      },
+      {
+        "region": "South",
+        "season": "Winter",
+        "log_price": 0.3374,
+        "log_volume": 6.6607
+      },
+      {
+        "region": "East",
+        "season": "Non-winter",
+        "log_price": 0.4684,
+        "log_volume": 5.8046
+      },
+      {
+        "region": "South",
+        "season": "Non-winter",
+        "log_price": 0.645,
+        "log_volume": 4.6102
+      }
+    ],
+    "trendLines": [
+      {
+        "group": "East",
+        "x1": -0.1635,
+        "x2": 0.8401,
+        "y1": 9.1665,
+        "y2": 6.031,
+        "slope": -3.1244
+      },
+      {
+        "group": "MidWest",
+        "x1": -0.2128,
+        "x2": 0.9563,
+        "y1": 8.7653,
+        "y2": 4.9109,
+        "slope": -3.297
+      },
+      {
+        "group": "South",
+        "x1": -0.2,
+        "x2": 0.8776,
+        "y1": 7.7718,
+        "y2": 4.5001,
+        "slope": -3.0363
+      },
+      {
+        "group": "West",
+        "x1": -0.0973,
+        "x2": 1.0465,
+        "y1": 8.2185,
+        "y2": 5.2671,
+        "slope": -2.5804
+      },
+      {
+        "group": "Non-winter",
+        "x1": -0.2128,
+        "x2": 1.0465,
+        "y1": 7.4624,
+        "y2": 4.9216,
+        "slope": -2.0177
+      },
+      {
+        "group": "Winter",
+        "x1": -0.1635,
+        "x2": 0.9029,
+        "y1": 8.5419,
+        "y2": 5.5314,
+        "slope": -2.8231
+      }
+    ],
+    "pricing": {
+      "marginal_cost": 1.0,
+      "baseline_price": 1.6485,
+      "baseline_volume": 1408.2573,
+      "preferred_elasticity": -2.2268,
+      "optimal_price": 1.8151,
+      "raw_elasticity": -3.2087,
+      "raw_optimal_price": 1.4528,
+      "store_fe_optimal_price": 1.8151
+    }
+  }
+}

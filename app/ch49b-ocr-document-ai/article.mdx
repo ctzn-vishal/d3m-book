@@ -1,0 +1,216 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { DocumentAIFlow } from '@/components/Book/part5/RagVisionAgentDiagrams';
+
+<DropCap>
+
+Most of the documents that run a business — invoices, contracts, receipts, claims forms, scanned applications — are *visual and textual at the same time*. They have a layout. They have tables. They have signatures, stamps, and boxes that need to be filled out. A pure OCR system that flattens them into a wall of text loses most of what makes them interpretable. A pure language model that ignores the spatial structure misses the relationships between fields. Modern document AI combines vision, layout understanding, and structured extraction into a single pipeline.
+
+</DropCap>
+
+This article walks through that pipeline and the operational reality of document AI in business — where it ships, where it fails, and what a manager owes the workflow.
+
+---
+
+## The Executive Question
+
+> How do we get from a stack of scanned invoices, contracts, or forms to a row in a database — reliably, at scale, and with a human review path for the cases that matter?
+
+The honest version: document AI is rarely fully automated. The right framing is "lift the easy 80% off the team's plate; route the rest to a human."
+
+---
+
+## The Pipeline
+
+Document AI is the longest pipeline in this part. Six stages, each with its own technique.
+
+<Figure width="screen-inset" caption="Figure 1. The document AI pipeline from scan to downstream system. Most of the engineering is in stage 2 (layout) and stage 5 (knowing what to send to a human). The OCR and LLM stages are commodity now; the workflow design is the differentiator.">
+  <div className="not-prose">
+    <DocumentAIFlow />
+  </div>
+</Figure>
+
+A walk-through:
+
+1.  **Scan / PDF.** The input — usually an image or a PDF. May be born-digital (clean text, structured) or scanned (pixels, possibly rotated, possibly with handwriting). The pipeline branches early based on this.
+2.  **Layout detection.** A vision model identifies regions of the page: headers, paragraphs, tables, line items, signatures. The output is a structured layout that the next stage can attach text to.
+3.  **OCR.** Pixels become text. Modern OCR (Tesseract, AWS Textract, Google Document AI, Azure Document Intelligence) is mostly a solved problem on clean printed documents and a hard problem on handwriting, low-quality scans, and unusual fonts.
+4.  **LLM extraction.** A language model is given the OCR'd text + the layout, and a JSON schema describing what to extract. It returns structured fields. This is the §21.3 pattern applied to documents.
+5.  **Human review.** Low-confidence extractions, edge cases, and flagged document types go to a human reviewer. Their decisions feed back as training data.
+6.  **Downstream system.** Validated JSON flows into the accounting, ERP, CRM, or compliance system that consumes it.
+
+The stages can be implemented separately (best-of-breed vendors for each) or as an integrated platform (the major cloud vendors offer end-to-end). Both architectures ship in production.
+
+---
+
+## What "Layout" Means
+
+The crucial advance in modern document AI is layout-aware models. A pure OCR system reads top-to-bottom, left-to-right, returning a stream of tokens. A layout-aware model knows that "Invoice Date" in the header refers to the date in the box below it, that the numbers in a table column should be parsed as a column, and that the signature line near the bottom is not body text.
+
+Two patterns dominate:
+
+- **Two-stage:** vision model produces layout regions and bounding boxes; OCR fills in text per region; LLM extracts from per-region text + layout.
+- **End-to-end:** a multimodal model (LayoutLMv3, Donut, DocVQA-style models) takes pixels directly and returns structured fields. No separate OCR step.
+
+End-to-end is increasingly the default for clean, predictable document types. Two-stage remains the right choice when documents vary widely or when each stage's failure modes need to be inspected separately.
+
+---
+
+## Where Document AI Ships
+
+A short tour of the most common business deployments:
+
+<DataTable
+  caption="Table 1. Document-AI applications and the standard schemas they produce. Each has a deployment history measured in years now; the question is no longer whether to use document AI, but how to set the human-review threshold."
+  columns={[
+    { key: 'kind', label: 'Document type', align: 'left' },
+    { key: 'fields', label: 'Typical extracted fields', align: 'left' },
+    { key: 'gotcha', label: 'Where humans still review', align: 'left' },
+  ]}
+  rows={[
+    {
+      kind: 'Invoices',
+      fields: 'vendor, invoice number, date, line items (description, qty, unit price, total), tax, total due.',
+      gotcha: 'Non-standard formats, multi-currency, attached purchase order references.',
+    },
+    {
+      kind: 'Receipts',
+      fields: 'merchant, date, line items, total, tax, payment method.',
+      gotcha: 'Crumpled / faded receipts; non-English merchants.',
+    },
+    {
+      kind: 'Contracts',
+      fields: 'parties, effective date, termination date, renewal terms, key clauses (liability, IP, change of control).',
+      gotcha: 'Negotiated redlines; ambiguous clauses; jurisdiction-specific language.',
+    },
+    {
+      kind: 'Insurance claims',
+      fields: 'policy number, claimant, incident date, claim amount, supporting documents.',
+      gotcha: 'Handwriting, attached photos that need vision analysis.',
+    },
+    {
+      kind: 'KYC / onboarding forms',
+      fields: 'name, address, ID document number, date of birth, signature presence.',
+      gotcha: 'Forged or mismatched ID documents; signature verification.',
+    },
+    {
+      kind: 'Scanned surveys',
+      fields: 'response per question, ratings, free-text comments.',
+      gotcha: 'Multi-mark responses; ambiguous handwriting.',
+    },
+  ]}
+/>
+
+The economics: a human processing one invoice takes a few minutes. A document-AI pipeline processes the same invoice in seconds at a fraction of a dollar. The savings compound at scale — a firm processing 100,000 invoices a month saves the equivalent of a department, while routing the genuinely ambiguous 10% to specialists who can give them attention.
+
+---
+
+## The Confidence Score Is the System
+
+Every extracted field comes with a confidence. The single most important design decision in a document AI pipeline is **the confidence threshold**:
+
+- **Above threshold:** auto-process. Field flows to downstream system.
+- **Below threshold:** route to human reviewer. Their decision becomes a label for the next model retrain.
+
+The threshold is set by business cost. A wrong invoice line item that gets paid is a money-losing error. A wrong KYC field that lets a fraudster through is a regulatory problem. The threshold should reflect the cost — high-stakes fields get aggressive thresholds; low-stakes fields get loose ones.
+
+The threshold–profit curve from §15.2 reappears here, with different units. Replacing "false positive cost" with "wrong payment cost" and "false negative cost" with "human review cost" gives the right framing.
+
+<Callout variant="finding" title="The threshold is the architecture">
+  In document AI, the confidence threshold is the system. Tune it, monitor it, and let it migrate as the model improves — never let it become a forgotten constant.
+</Callout>
+
+---
+
+## A Worked Example: Invoice Extraction at Bean &amp; Basket
+
+Bean &amp; Basket receives several thousand supplier invoices a month — coffee beans, dairy, pastries, supplies, services. Different vendors use different formats. Some are PDFs from accounting software; some are scanned faxes; some are emailed photos of paper receipts.
+
+The schema the team wants:
+
+```json
+{
+  "vendor_name": string,
+  "invoice_number": string,
+  "invoice_date": date,
+  "currency": string,
+  "line_items": [
+    { "description": string, "quantity": number, "unit_price": number, "line_total": number }
+  ],
+  "subtotal": number,
+  "tax": number,
+  "total_due": number,
+  "po_reference": string?
+}
+```
+
+The pipeline:
+
+1.  **Intake.** Invoices arrive via email, SFTP, or upload. A small triage step classifies the document type — invoice, receipt, contract, statement — and routes to the right schema.
+2.  **Pre-processing.** Rotation correction, deskew, contrast normalization.
+3.  **Layout + OCR.** A document-AI model extracts text per region.
+4.  **Extraction.** An LLM (or a fine-tuned extraction model) fills the schema.
+5.  **Validation.** Arithmetic checks (line items sum to subtotal; subtotal + tax = total). Vendor lookup against the AP system. Currency consistency.
+6.  **Routing.** High-confidence + validation-passing → auto-post to AP. Otherwise → human review.
+
+The validation step (5) is where domain knowledge pays. The LLM may extract "total_due: 1,200" when the document says "1.200" (European notation for 1.2 or 1,200 depending on locale). A simple arithmetic check catches it.
+
+---
+
+## What Can Go Wrong
+
+- **Hallucinated fields.** The model invents a vendor name or a date that isn't on the document. Schema-strict prompting + arithmetic validation catches most cases.
+- **Confidence inflation.** Modern LLMs are often over-confident. Calibration on a held-out set of human-reviewed documents is essential.
+- **Layout drift.** A vendor changes their invoice template. The extraction silently degrades for that vendor. Per-vendor monitoring is worth the engineering cost.
+- **Privacy.** Documents often contain PII. Redaction policies, encryption-at-rest, and processor-vs-controller agreements matter — particularly for healthcare and financial documents.
+- **Audit trail.** A regulator may ask why a payment of $12,000 was authorized. Without per-extraction logs (model version, confidence, prompt, retrieved chunks if RAG was involved), the audit answer is "we don't know."
+
+---
+
+## Managerial Takeaway
+
+Document AI is a mature commercial pattern. The technology — OCR plus layout plus structured extraction — is commodity at this point. The differentiator is workflow design: where the confidence threshold sits, what fields are validated automatically, who reviews the rest, and how the reviewer's decisions feed back into the model.
+
+> *Define the schema before choosing the vendor. Set the threshold by business cost. Validate against domain rules. Route ambiguity to a human. Log everything for audit.*
+
+The next article — multimodal AI — generalizes the pattern. Documents are one example of inputs that combine text and image. Many other workflows have the same combinatorial structure.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on document AI."
+  questions={[
+    {
+      prompt: <>A team wants to extract invoice line items where the description, quantity, and unit price are in adjacent columns. A pure OCR system that just reads top-to-bottom is likely to:</>,
+      options: [
+        { label: <>Work correctly.</> },
+        { label: <>Mix columns and produce nonsensical line items, because it doesn't preserve the table layout — layout-aware document AI is the standard fix.</> },
+        { label: <>Refuse to process the document.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The whole point of modern document AI is layout awareness. OCR alone is necessary but not sufficient for any document with tabular or multi-column structure.</>,
+    },
+    {
+      prompt: <>The single most important tunable parameter in a production document AI pipeline is:</>,
+      options: [
+        { label: <>The model size.</> },
+        { label: <>The confidence threshold above which extractions auto-process and below which they go to a human reviewer.</> },
+        { label: <>The OCR engine choice.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The threshold is where business cost meets model accuracy. Setting it is a decision; monitoring it is operations.</>,
+    },
+    {
+      prompt: <>A document extraction returns "total_due: 12000" for an invoice that actually shows "$12,000.00". A simple safeguard against unit-of-account errors is:</>,
+      options: [
+        { label: <>Trust the model.</> },
+        { label: <>Validate by recomputing subtotal + tax = total, and flag mismatches for human review.</> },
+        { label: <>Always send to a human.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Domain-rule validation catches a class of extraction errors no general-purpose LLM-eval suite will find. It is the cheapest, highest-leverage piece of document-AI engineering.</>,
+    },
+  ]}
+/>

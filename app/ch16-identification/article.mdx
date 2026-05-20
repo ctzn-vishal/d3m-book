@@ -1,0 +1,191 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { ConfounderDAG } from '@/components/Book/part3/ConceptDiagrams';
+import { IdentificationMemoCard, MilkQuasiExperimentFigure } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+A model can be mathematically elegant, statistically precise, and visually beautiful — and still be wrong about what it claims. Statistical tools are designed for *estimation*: turning a dataset into a number with a standard error. They do not, on their own, tell you whether that number is the causal effect you wanted or a confounded artifact of the way the data were generated. Closing that gap is the job of **identification**.
+
+</DropCap>
+
+This article separates identification from estimation, introduces directed acyclic graphs as the visual language of identification, walks through the three pathway patterns every manager should be able to recognize, and gives you a one-page identification memo to demand before approving any data-driven recommendation.
+
+---
+
+## The Executive Question: Why Should We Believe This Comparison Is Fair?
+
+A team reports that stores with new digital signage outperformed stores without by 25%. The regression is tight, the *p*-value is small, and the deck recommends a rollout.
+
+Then the audit: store managers were allowed to opt in. The signs went disproportionately to high-traffic suburban stores whose managers had budget. The 25% reflects the gap *between two different kinds of stores*, not what installing a sign in a given store would do.
+
+The model estimated something. It just was not what the deck was claiming. The question every executive should ask before reading a coefficient as a lever is:
+
+> *Why should we believe the difference in the outcome between these groups is caused by the treatment, rather than by some other systematic difference between the groups?*
+
+That question is identification.
+
+---
+
+## Identification vs. Estimation
+
+The two phases of any causal analysis are easy to conflate, but separating them is the single most useful habit in evaluating data work.
+
+| Phase | Question it answers | Substance |
+| --- | --- | --- |
+| **Identification** | *In an ideal world with infinite data, does the comparison we want to make actually exist in the design?* | Assumptions, business mechanism, choice of treatment and control group |
+| **Estimation** | *Given the identified design, how do we compute the number and its uncertainty?* | OLS, matching, maximum likelihood, sample size, standard errors |
+
+A pipeline analogy: identification is choosing where the pipe taps the water — a clean source or a polluted one. Estimation is measuring the flow once the pipe is laid. Measuring the flow with great precision tells you nothing useful if the pipe is hooked to a muddy swamp.
+
+Identification is the *binary* property — either your causal effect is identified by the design or it is not. Estimation is the *continuous* one — given identification, more data buys you more precision. The two cannot substitute for each other.
+
+---
+
+## Directed Acyclic Graphs: The Language of Identification
+
+A directed acyclic graph (DAG) is a flowchart of causal assumptions. Nodes are variables; arrows are causal directions you are willing to assert. The graph is the picture of the data-generating process the team believes is operating, and three of its patterns recur constantly.
+
+### The fork: a confounder opens a backdoor
+
+The simplest and most common identification threat: a third variable <M>{String.raw`Z`}</M> drives both the treatment <M>{String.raw`D`}</M> and the outcome <M>{String.raw`Y`}</M>, creating a path <M>{String.raw`D \leftarrow Z \rightarrow Y`}</M> that produces correlation between <M>{String.raw`D`}</M> and <M>{String.raw`Y`}</M> without any causal effect at all.
+
+<Figure caption="Figure 1. The fork. The confounder Z drives both the treatment and the outcome, producing a backdoor path D ← Z → Y that contaminates the simple D–Y correlation. Conditioning on Z (or using a design that breaks the dependence) closes the backdoor.">
+  <ConfounderDAG />
+</Figure>
+
+The fix for a fork is to *control for* (or condition on) <M>{String.raw`Z`}</M>, either by including it in a regression or by selecting comparison units to be balanced on <M>{String.raw`Z`}</M>. The fork is the pattern omitted-variable bias formalizes — it is why we add controls.
+
+### The chain: a mediator should not be controlled for
+
+A chain is <M>{String.raw`D \rightarrow M \rightarrow Y`}</M> — the treatment moves the outcome *through* an intermediate variable <M>{String.raw`M`}</M>. Customer satisfaction is the canonical example: a price cut increases satisfaction which increases retention. <M>{String.raw`M`}</M> is on the causal pathway.
+
+The instinct to "control for everything" goes badly wrong here. Conditioning on <M>{String.raw`M`}</M> closes off the very path you wanted to measure — the regression coefficient on <M>{String.raw`D`}</M> then captures only the part of the effect that does not go through satisfaction, which is usually not the quantity you want.
+
+### The collider: conditioning creates spurious correlation
+
+A collider <M>{String.raw`C`}</M> is a variable that <M>{String.raw`D`}</M> and <M>{String.raw`Y`}</M> both cause: <M>{String.raw`D \rightarrow C \leftarrow Y`}</M>. The trap is counterintuitive. In the raw data, <M>{String.raw`D`}</M> and <M>{String.raw`Y`}</M> might be independent. *Conditioning* on the collider — by including it as a control, or by restricting the sample to a particular value of it — induces a correlation between <M>{String.raw`D`}</M> and <M>{String.raw`Y`}</M> that does not exist in the underlying world.
+
+The classic example: restrict your churn analysis to customers who reached the upgrade screen (a behavior caused by both your treatment and the customer's underlying engagement). Inside that screened sample, treatment and outcome will appear correlated even if they are not.
+
+| Pattern | Diagram | What to do |
+| --- | --- | --- |
+| Fork (confounding) | <M>{String.raw`D \leftarrow Z \rightarrow Y`}</M> | Control for <M>{String.raw`Z`}</M> (or design to break the dependence) |
+| Chain (mediation) | <M>{String.raw`D \rightarrow M \rightarrow Y`}</M> | Do <em>not</em> control for <M>{String.raw`M`}</M> if you want the total effect |
+| Collider (selection) | <M>{String.raw`D \rightarrow C \leftarrow Y`}</M> | Do <em>not</em> condition on <M>{String.raw`C`}</M> |
+
+Drawing the DAG for a proposed analysis takes minutes and forces every team member to commit to a specific causal story. If two team members draw different graphs, that disagreement is the analysis — not a side conversation to be resolved later.
+
+---
+
+## The Identification Memo
+
+The one-page artifact every causal analysis should produce *before* the regression runs. It contracts the design. If your team cannot fill in all seven fields, the analysis is not ready to be a basis for action.
+
+<IdentificationMemoCard
+  title="Worked example — milk pricing structure and whole-milk share"
+  rows={[
+    { label: 'Treatment', value: 'Equal pricing across all milk fat levels vs. a small premium on whole milk.' },
+    { label: 'Outcome', value: 'Store-level share of whole milk in total milk volume (percentage points).' },
+    { label: 'Unit of analysis', value: 'Supermarket store.' },
+    { label: 'Comparison group', value: 'Equal-price stores vs. whole-milk-premium stores within the same retail chain footprint.' },
+    { label: 'Identifying assumption', value: 'The pricing structure was set at the regional corporate level for operational reasons, independent of local store-level demand for whole milk.' },
+    { label: 'Empirical support', value: 'Pre-treatment balance on ZIP-code demographics; quiet placebo on diet-soda share (an outcome the milk pricing structure should not move).' },
+    { label: 'Major threat', value: 'If the corporate pricing rule was itself responsive to regional demand patterns correlated with milk preferences, the assumption fails.' },
+  ]}
+/>
+
+The memo is short on purpose. Long memos hide soft thinking; short memos force commitment.
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on identification. Click an answer to reveal the explanation."
+  questions={[
+    {
+      prompt: <>Which of the following best captures the difference between <em>identification</em> and <em>estimation</em>?</>,
+      options: [
+        { label: <>Identification is what you do with small samples; estimation is what you do with big samples.</> },
+        { label: <>Identification is the design argument that a causal comparison exists in your data; estimation is the statistical procedure that computes the number and its uncertainty given the design.</> },
+        { label: <>Identification and estimation are synonyms for the same set of techniques.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Identification answers "<em>in principle</em>, does our data + design pin down the causal effect we want?" — a logical, assumption-driven question. Estimation answers "given an identified design, what's the number?" — a statistical computation. A precise estimate of an unidentified quantity is precisely wrong.</>,
+    },
+    {
+      prompt: <>You have a regression of churn on a new pricing tier (the treatment). A teammate suggests adding "customer satisfaction score in the next quarter" as a control. Why is this almost certainly a bad idea?</>,
+      options: [
+        { label: <>It would inflate <M>{String.raw`R^2`}</M> too quickly and make standard errors look misleadingly small.</> },
+        { label: <>Next-quarter satisfaction is a <em>mediator</em>: the treatment plausibly affects it, and it affects churn. Controlling for it blocks part of the causal pathway and shrinks the estimated treatment effect toward zero.</> },
+        { label: <>Satisfaction scores are subjective and will introduce measurement error.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Any control that is determined <em>after</em> the treatment risks being a mediator or collider. The bad-control test is mechanical: was the variable measured before the treatment was assigned? If not, do not include it without an explicit reason.</>,
+    },
+    {
+      prompt: <>A churn analysis restricts attention only to customers who reached the upgrade page (a page that was visited because of both the treatment and the customer's underlying engagement). Inside this restricted sample, the treatment and outcome become correlated. Which pattern does this exhibit?</>,
+      options: [
+        { label: <>Fork — the analyst forgot to control for engagement.</> },
+        { label: <>Chain — engagement mediates the treatment effect.</> },
+        { label: <>Collider — conditioning on a variable jointly caused by treatment and outcome creates spurious correlation.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>The upgrade page visit is a downstream consequence of both <M>{String.raw`D`}</M> and <M>{String.raw`Y`}</M>. Selecting only units who reached it conditions on a collider and creates a correlation inside the selected sample even when none exists in the full population. The rule of thumb: never restrict your sample on a variable that the treatment could have moved.</>,
+    },
+    {
+      prompt: <>The strongest single piece of evidence that a quasi-experimental identification is credible is usually…</>,
+      options: [
+        { label: <>A very small standard error on the treatment coefficient.</> },
+        { label: <>A quiet placebo check on an outcome the treatment should not move, combined with balance on observable pre-treatment covariates.</> },
+        { label: <>A large sample size in both the treated and untreated groups.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Precision and sample size buy estimation, not identification. Diagnostic evidence — balance on observables and a quiet placebo — is what raises confidence that the groups were comparable in the unobservables as well. A precise estimate of an unidentified quantity is still wrong.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: Auditing the Milk Pricing Quasi-Experiment
+
+The milk pricing study (Chapter 10) is the canonical worked example of a quasi-experimental identification audit. Two diagnostic checks support — or refute — the identifying assumption that the pricing structure was effectively as-if random across the two groups of stores:
+
+- **Balance.** Are the two groups of stores comparable on observable pre-treatment characteristics (ZIP-code income, household size, baseline volume)? If the groups already differed before the treatment, the identifying assumption is in trouble.
+- **Placebo.** Does the "treatment" move an outcome that, by domain logic, it should not move? Diet-soda share is the placebo here — a milk-pricing rule has no business affecting how much diet soda people buy. A loud placebo signals unobserved differences between the groups.
+
+<Figure width="screen-inset" caption="Figure 2. The two diagnostic checks for the milk pricing identification. The income-balance check (blue) is essentially zero; the diet-soda placebo (orange) is essentially zero. The whole-milk-share outcome (green) is large and cleanly separated. The combination — quiet diagnostics with a loud outcome — is the evidentiary pattern an identification memo wants to see.">
+  <div className="not-prose">
+    <MilkQuasiExperimentFigure data={data.milk} />
+  </div>
+</Figure>
+
+What the figure does, and what it does not do, is worth being explicit about. *Quiet diagnostics support the identifying assumption*: the two store groups look comparable on the observables we can measure, and the placebo outcome moves no more than noise. *The diagnostics do not rule out unobserved confounding*: there could still be a story in which corporate pricing decisions correlated with some unmeasured local taste. The memo lists that as the major threat for a reason. The argument the memo makes is "given the diagnostics behave as a randomized trial would, the eight-point lift is the most defensible reading of the data." That is identification doing the work — not the regression.
+
+---
+
+## What Can Go Wrong
+
+Identification fails in subtle ways. Three to watch:
+
+1.  **Storytelling after the fact.** Writing the identification memo *after* the coefficients are in hand. Managers and analysts are remarkably good at reconstructing causal stories that happen to align with a preferred direction. The memo earns its credibility only if it precedes the regression.
+2.  **Skipping balance and placebo.** A quasi-experiment with no diagnostics is just a regression with extra steps. Both the balance check and the placebo are cheap; refusing to present them is a red flag.
+3.  **Picking a placebo that is actually adjacent.** A milk placebo using bagel sales would not work, because bagels and milk are complements. The right placebo is an outcome the treatment has no plausible mechanism to move.
+
+---
+
+## Managerial Takeaway
+
+Causal credibility outranks statistical precision. Before approving any recommendation framed as a causal claim:
+
+- Demand the identification memo first. If it cannot be filled out, the design is not ready.
+- Demand the diagnostics — balance, placebo, and (where applicable) pre-trend — before reading the coefficient.
+- Draw the DAG. The exercise will surface disagreements that no number can resolve.
+
+The next article applies all of this to one specific and extremely common identification strategy: using *within-unit* variation, via panel fixed effects, to defang stable confounders without ever needing to measure them.

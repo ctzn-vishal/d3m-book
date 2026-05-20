@@ -2,8 +2,13 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { TabSet, Tab } from '@/components/Book/TabSet';
+import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 import transactionsData from './data/transactions-grain.json';
 import storeWeekData from './data/store-week-grain.json';
+
+<div className="not-prose mb-6">
+  <LadderPosition compact current={0} caption="Part I — where on the decision ladder we are." />
+</div>
 
 <DropCap>
 

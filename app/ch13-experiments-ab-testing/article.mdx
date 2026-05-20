@@ -1,0 +1,219 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { RandomAssignmentBalance, LiftWithCI } from '@/components/Book/part3/ConceptDiagrams';
+import { MilkQuasiExperimentFigure, MilkStudySummary } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+The randomized controlled trial — the A/B test — is the gold standard of causal inference for one reason and one reason only: random assignment buys statistical equivalence between the treated and untreated groups *before any treatment occurs*. Any systematic difference in outcomes that appears afterwards can be attributed to the treatment with very few additional assumptions. Every other design in Part III is, in effect, a strategy for recovering that equivalence when randomization is unavailable.
+
+</DropCap>
+
+This article works through what randomization gives you, why the *interval* around the estimate is what should drive a decision, and the operational decisions a manager actually makes when running an experiment in production — stratification, multi-armed bandits, and the gap between statistical significance and a business-relevant lift. The data case at the end uses the Milk quasi-experiment to show how the same diagnostic discipline carries over when randomization is impossible.
+
+---
+
+## The Executive Question: Did the Action Cause Enough Lift?
+
+A product team launches a redesigned mobile loyalty board. Conversion and gross margin both move up in the test arm. Two questions every executive should ask before approving rollout:
+
+- *Is the lift real, or could it be a coincidence?* — a statistical question, answered by the confidence interval.
+- *Is the lift big enough to justify the rollout?* — a decision question, answered by the threshold on the Decision Question Card.
+
+These two questions are independent. A test can be statistically decisive and still fail the threshold; another can pass the threshold but be too imprecise to act on yet. Conflating the two is the single most common failure mode of corporate experimentation.
+
+---
+
+## Why Randomization Works
+
+Let <M>{String.raw`D_i \in \{0,1\}`}</M> be the treatment indicator. Random assignment guarantees that <M>{String.raw`D_i`}</M> is statistically independent of both potential outcomes:
+
+<Equation
+  label="Independence from random assignment"
+  latex={String.raw`\bigl(Y_i(1),\, Y_i(0)\bigr) \;\perp\; D_i`}
+/>
+
+This independence has a concrete consequence: the average outcome we observe in the treated arm is an unbiased estimate of what *everyone* would have looked like under treatment, and the same holds for control:
+
+<Equation
+  latex={String.raw`\mathbb{E}[\,Y_i \mid D_i = 1\,] = \mathbb{E}[\,Y_i(1)\,], \qquad \mathbb{E}[\,Y_i \mid D_i = 0\,] = \mathbb{E}[\,Y_i(0)\,]`}
+/>
+
+The difference in observed means is therefore an unbiased estimate of the ATE — selection bias from the previous chapter is gone by construction:
+
+<Equation
+  label="Experimental lift estimator"
+  latex={String.raw`\widehat{\tau} \;=\; \overline{Y}_{\text{treatment}} - \overline{Y}_{\text{control}}`}
+/>
+
+Figure 1 makes the contrast concrete. With random assignment, the two arms have equivalent distributions of every pre-treatment covariate, observed or unobserved. With self-selection, the two arms differ on the covariate *before any treatment is applied*, and the post-treatment comparison is contaminated by that pre-existing difference.
+
+<Figure caption="Figure 1. Random assignment produces arms that look statistically identical on any baseline covariate (left). Self-selection produces arms that already differ before any treatment (right) — the post-treatment difference is then a mix of treatment effect and selection bias.">
+  <RandomAssignmentBalance />
+</Figure>
+
+---
+
+## The Interval, Not the Point
+
+A single number — "the lift was 1.7 percentage points" — is almost never enough to decide on. What an executive needs is the *uncertainty* around it, and how that uncertainty sits relative to two reference lines: zero (is there any effect?) and the decision threshold (is the effect big enough?).
+
+The standard error of the lift is
+
+<Equation
+  label="Standard error of the lift"
+  latex={String.raw`SE(\widehat{\tau}) \;=\; \sqrt{\frac{s^2_T}{N_T} + \frac{s^2_C}{N_C}}`}
+/>
+
+and a 95% confidence interval is the point estimate plus or minus roughly two standard errors. Three qualitatively different situations are worth recognizing on sight:
+
+<Figure caption="Figure 2. Three readouts with the same conceptual shape but very different decisions. An underpowered test cannot distinguish zero from a real effect; a precise null is a confident 'no'; a decisive lift sits cleanly above both zero and the decision threshold.">
+  <LiftWithCI />
+</Figure>
+
+The leftmost case in Figure 2 is the worst kind of result to act on: a positive point estimate whose interval crosses both zero and the threshold. You learn nothing decision-relevant. The middle case is informative even though "nothing happened" — it lets you stop investing in this lever and move on. The rightmost case is the green light.
+
+<Callout variant="finding" title="The decision-ready readout">
+  Lift, confidence interval, and decision threshold should appear on the same chart. If your experiment dashboard shows the point estimate without the interval, redesign it.
+</Callout>
+
+---
+
+## Stratification: Balancing What You Can Name
+
+Random assignment balances arms *in expectation*. In any single experiment, especially a small one, sheer luck can produce a treatment arm that is, say, mostly high-spend customers. The fix is **stratified randomization**: partition units into homogeneous strata based on observable pre-treatment characteristics (income tier, store size, prior 90-day spend bucket), then randomize *within* each stratum. The strata are perfectly balanced by construction, and the strata-aware estimator has lower variance than the simple difference in means.
+
+Stratify on variables that (a) you can measure before treatment and (b) you believe drive the outcome. Stratifying on something irrelevant adds complexity without buying precision.
+
+---
+
+## Multi-Armed Bandits: When to Use Them, and When Not To
+
+A standard A/B test holds the traffic split fixed (often 50/50) until a pre-registered stopping rule fires. Every customer routed to the inferior arm during the exploration phase is an opportunity cost.
+
+**Multi-armed bandit** algorithms — Thompson sampling, UCB, epsilon-greedy — shift the traffic split dynamically toward whichever arm is currently winning, reducing that opportunity cost. The cost: estimators of the long-run effect become biased, and downstream metrics measured days or weeks after exposure become hard to attribute cleanly.
+
+The decision is not "A/B vs. bandit" in the abstract. It is:
+
+- **Use bandits** when the outcome is fast (clicks, page views, immediate conversion), the lever is reversible, and you care more about cumulative regret than about a clean long-run estimate. Headlines, banner choices, recommendation slates.
+- **Use a stable A/B test** when the outcome is slow (90-day retention, lifetime value, churn), when downstream business metrics matter as much as the immediate one, or when the result will be cited as evidence outside the team that ran it.
+
+<Callout variant="caveat" title="Bandits do not learn long-run behavior">
+  Because allocation shifts as evidence accrues, multi-armed bandits make it hard to recover stable treated and control cohorts over time. They are an optimization tool, not a measurement tool.
+</Callout>
+
+---
+
+## When You Cannot Randomize: Quasi-Experiments
+
+Many of the most important business questions cannot be tested by flipping a coin. You cannot randomize who lives in which ZIP code, which stores get a regional pricing structure, or which states pass a policy. In these settings we look for **quasi-experiments**: naturally occurring assignment mechanisms that mimic random assignment well enough to act on.
+
+A defensible quasi-experiment carries the same diagnostic discipline an A/B test would:
+
+1.  **Balance check.** Are the treated and control groups similar on pre-treatment variables we *can* measure? If not, the comparison is already contaminated.
+2.  **Placebo check.** Does the supposed treatment "move" an outcome that it has no business moving? If so, the two groups differ on more than the treatment.
+3.  **Robustness across specifications.** Does the headline estimate survive sensible alternative definitions of the treated and control groups, time windows, and controls?
+
+These checks are exactly the discipline of the Decision Question Card carried into observational data.
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on experimental thinking. Click an answer to reveal the explanation."
+  questions={[
+    {
+      prompt: <>Why does random assignment produce an unbiased estimate of the average treatment effect?</>,
+      options: [
+        { label: <>Because the treatment and control groups always end up with the same number of units.</> },
+        { label: <>Because the assignment is statistically independent of the potential outcomes, so the observed mean in each arm is an unbiased estimate of the corresponding potential-outcome mean.</> },
+        { label: <>Because random assignment removes measurement error from the outcome.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Equal sample sizes are not required, and randomization does nothing about measurement error. What it buys is <M>{String.raw`(Y(1), Y(0)) \perp D`}</M>, which makes the difference in observed means an unbiased estimator of the ATE.</>,
+    },
+    {
+      prompt: <>An experiment readout shows a point estimate of +3% lift, with a 95% confidence interval of [−1%, +7%]. The team's decision threshold is +2%. What is the most defensible interpretation?</>,
+      options: [
+        { label: <>Roll out: the point estimate is above the threshold.</> },
+        { label: <>Reject: the interval crosses zero, so the effect is not real.</> },
+        { label: <>The test is underpowered. The interval does not let us distinguish "no effect," "below threshold," or "above threshold." Run longer or get a bigger sample before deciding.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Acting on the point estimate ignores uncertainty; rejecting because of <em>p</em> &gt; 0.05 confuses statistical with practical decisions. The interval here is consistent with anything from "no effect" to "well above threshold." The decision is to keep the experiment running, not to ship or kill.</>,
+    },
+    {
+      prompt: <>Stratified randomization improves on simple randomization by…</>,
+      options: [
+        { label: <>Eliminating selection bias from observational data.</> },
+        { label: <>Guaranteeing balance on a small set of named pre-treatment variables, which reduces the variance of the lift estimator.</> },
+        { label: <>Making it possible to run a smaller sample size for any required power.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Stratification randomizes <em>within</em> strata defined by pre-treatment variables, so those variables are balanced by construction. The estimator has lower variance because variation from those stratified covariates is removed. It is a variance-reduction tool inside a randomized design; it does nothing for observational data.</>,
+    },
+    {
+      prompt: <>For which of the following experiments are multi-armed bandits the <em>worst</em> fit?</>,
+      options: [
+        { label: <>Choosing among five headlines for a marketing email opened within minutes of being sent.</> },
+        { label: <>Selecting which of three promotional banners to show on a search result page.</> },
+        { label: <>Measuring whether a new onboarding flow raises 90-day retention and lifetime value.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Bandits shift allocation as the short-run signal accrues, which contaminates any stable long-run cohort comparison. Slow outcomes like retention and lifetime value need a fixed-allocation A/B test so that the treated and control cohorts remain defined for the full measurement window.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: The Milk Pricing Quasi-Experiment
+
+Roughly 1,700 supermarkets price whole milk in one of two structures. In **flat-priced** stores, whole milk costs the same as 2%, 1%, and skim. In **whole-expensive** stores, whole milk carries a small premium — roughly fourteen cents on average. The pricing structure was chosen by regional chains, not assigned by a researcher.
+
+We want to know whether the flat-pricing structure causally shifts share toward whole milk. Before looking at the outcome, we run the two diagnostic checks an A/B test would have made unnecessary: balance and placebo.
+
+<Figure width="screen-inset" caption="Figure 3. Quasi-experimental diagnostics for the milk pricing comparison. The income difference between the two store groups (balance check, blue) sits at zero. The diet-soda placebo (orange) — an outcome the price of milk should not move — is also quiet. The whole-milk share difference (green) is large and clearly separated from zero.">
+  <div className="not-prose">
+    <MilkQuasiExperimentFigure data={data.milk} />
+  </div>
+</Figure>
+
+<Figure width="page-outset" caption="Figure 4. High-level cohort summary. The two store groups are large and demographically comparable; the headline outcome is concentrated in the whole-milk category.">
+  <div className="not-prose">
+    <MilkStudySummary data={data.milk} />
+  </div>
+</Figure>
+
+The diagnostics in Figure 3 are the closest a real field setting comes to behaving like a randomized experiment. Both the balance check and the placebo are quiet — the two groups look comparable on income and on an outcome that the treatment should not affect. The outcome itself moves, by roughly eight percentage points, and is clearly separated from the noise band of the placebo.
+
+That is the most this quasi-experimental design can claim: *given the diagnostics behave like a randomized trial*, the eight-point shift can be read causally. It does not rule out an unobserved confounder that happens to be correlated with the pricing structure; only randomization can do that.
+
+---
+
+## What Can Go Wrong
+
+Three operational failures recur in production experiments:
+
+1.  **Sample ratio mismatch (SRM).** The actual traffic split deviates from the intended split (say, 52/48 instead of 50/50). It is almost always a randomization bug or a selective drop-out — not random noise. Investigate before reading any lift.
+2.  **Early stopping.** Peeking at the results daily and stopping the test the moment it crosses the significance line. Early-stopped tests inflate the apparent lift; the inflation is a mathematical consequence of selecting on a noisy walk, not a sign that the effect is real.
+3.  **Interference and spillovers.** Treated users telling control users about the feature, treated stores cannibalizing demand from neighboring control stores. The control arm is no longer a clean counterfactual when this happens, and the estimated lift attenuates toward zero.
+
+---
+
+## Managerial Takeaway
+
+Use a randomized experiment whenever you control the assignment of the lever. When you do not, do not abandon causal analysis — carry the discipline of an experiment into the observational data:
+
+- Define the treated and untreated cohorts before looking at the outcome.
+- Run balance checks on every pre-treatment variable you have.
+- Run a placebo check on an outcome the treatment should not move.
+- Read lifts as intervals against a stated decision threshold, never as a point against zero.
+
+The next article digs into why those checks so rarely pass for raw historical data — and what to do about it.

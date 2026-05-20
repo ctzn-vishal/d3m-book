@@ -58,7 +58,11 @@ export function Callout({
   title,
   children,
 }: CalloutProps) {
-  const spec = VARIANTS[variant];
+  let spec = VARIANTS[variant];
+  if (!spec) {
+    console.warn(`[Callout] Unrecognized or missing variant "${variant}", falling back to "caveat"`);
+    spec = VARIANTS['caveat'];
+  }
   const resolvedTitle = title === undefined ? spec.defaultTitle : title;
 
   return (

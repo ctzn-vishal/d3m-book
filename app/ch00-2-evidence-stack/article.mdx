@@ -1,0 +1,205 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  EvidenceStackMap,
+  ArtefactFamilyTree,
+  CasePortfolio,
+} from '@/components/Book/part0/Part0Diagrams';
+
+<DropCap>
+
+A modern firm can answer different kinds of questions only by reaching for different kinds of evidence. The number on the dashboard answers a descriptive question. The chart that compares this year to last answers a visual one. The randomized experiment answers a causal one. The supervised model answers a predictive one. The language model reading the support inbox answers a textual one. None of these displaces the others. Each adds to the stack.
+
+</DropCap>
+
+This article lays out the **six evidence languages** the book teaches, the **artefacts** each one produces, the **studios** that capstone each Part, and the **case portfolio** that anchors the methods to real data. It is the map. Read it once now; refer back to it when you need to orient.
+
+---
+
+## The Executive Question
+
+> *Given a business question, which evidence language should we reach for, and what does it cost to climb to the next rung of the ladder?*
+
+The map below pairs each rung of the decision ladder from §0.1 with the evidence language that answers it, the Part of the book that develops it, and the Studio that ships its capstone.
+
+---
+
+## Six Evidence Languages, One per Part
+
+<Figure width="page-outset" caption="Figure 1. Six evidence languages, mapped to the questions they answer, the Part of the book that develops them, and the Studio that ships their capstone artefact.">
+  <div className="not-prose">
+    <EvidenceStackMap />
+  </div>
+</Figure>
+
+A short pass through each:
+
+- **Description (Part I).** Reading data as business evidence — what is a dataset, what is the unit of observation, what business claim does a given table support? The work happens *before* visualization, regression, or prediction. Without it, every later step inherits its mistakes.
+- **Visual evidence (Part II).** Visualization is its own evidence language, not a styling layer on top of analysis. Every later Part begins with the visual version of its question. The interval plot, the event-study chart, the calibration plot, the embedding scatter — Part II teaches them all *before* any method that needs them.
+- **Causal designs (Part III).** Experiments and quasi-experiments that produce credible counterfactuals. The Part where "we observed it" becomes "we caused it."
+- **Prediction (Part IV).** Supervised learning and segmentation on structured data. The Part where "what is likely?" gets a model with an evaluation rubric and a deployment plan.
+- **AI workflows (Part V).** Embeddings, GPT-as-measurement, retrieval-augmented generation, vision, multimodal AI, agents. The Part where text, images, and language models become part of the workflow.
+- **The system view (Part VI).** Running the analytics organization as a learning system rather than a sequence of projects. The Part where the methods become an operating discipline.
+
+The order is deliberate: each Part adds an evidence language to the ones that came before. By Part V, a customer scored by a Part IV model is also a paragraph in a Part V complaint cluster. By Part VI, both feed one memo.
+
+---
+
+## The Artefact Family
+
+The book is structured around five one-page artefacts that survive the work. They form a chain — the discipline of each one extends the one above it.
+
+<Figure width="page-outset" caption="Figure 2. The five artefacts every Part of the book teaches you to write. The Decision Question Card is the parent; the Decision Memo is the synthesis. Each card carries a different question, but they share the same operating discipline.">
+  <div className="not-prose">
+    <ArtefactFamilyTree />
+  </div>
+</Figure>
+
+Where to find each one in the book:
+
+- **Decision Question Card (§9.1).** The parent artefact. Six lines: action, outcome, unit, timing, comparison, threshold.
+- **Predictive Task Contract (§14.2).** The four-decision setup for any supervised model: target, features, unit of prediction, label timing.
+- **Model Card (§15.5).** What a deployed model does, where it fails, who owns it.
+- **AI Workflow Card (§22.1).** What an LLM-driven workflow does, what governs it, who responds when it breaks.
+- **Decision Memo (§24.1).** The synthesis. The one-page document that ties every form of evidence into a recommendation an executive can sign.
+
+A working analytics organization produces all five, every time. A research artefact stops at one or two. The chain is one way to tell the difference.
+
+---
+
+## The Five Studios
+
+Each Part ends with a **Studio** — a capstone article that integrates the Part's methods into a ship-able portfolio piece.
+
+<DataTable
+  caption="Table 1. The five capstone Studios of the book. Each one is a working integration of its Part's methods, sized to be an executive-shareable artefact."
+  columns={[
+    { key: 'studio', label: 'Studio', align: 'left' },
+    { key: 'where', label: 'Where', align: 'left' },
+    { key: 'deliverable', label: 'Deliverable', align: 'left' },
+  ]}
+  rows={[
+    {
+      studio: 'Data Language Studio',
+      where: '§4.1',
+      deliverable: 'A clean metric brief — grain, dictionary, transformation, trust assessment.',
+    },
+    {
+      studio: 'Visual Decision Brief Studio',
+      where: '§8.2',
+      deliverable: 'A soup-case visual sequence ending in an executive pricing brief.',
+    },
+    {
+      studio: 'Pricing & Promotion Strategy Studio',
+      where: '§13.4',
+      deliverable: 'A Bean & Basket pricing recommendation with identification, heterogeneity, and guardrails.',
+    },
+    {
+      studio: 'Customer Intelligence Studio',
+      where: '§17.4',
+      deliverable: 'A score → segment → target → act → monitor loop for Bean & Basket retention.',
+    },
+    {
+      studio: 'Customer Voice Intelligence Studio',
+      where: '§22.2',
+      deliverable: 'A classify → measure → cluster → retrieve → act → monitor loop on customer text.',
+    },
+  ]}
+/>
+
+By the end of the book, the reader has built (or read) five complete Studios. Part VI shows how to operate them as one portfolio.
+
+---
+
+## The Case Portfolio
+
+The methods are anchored to data. One company runs throughout; a handful of standalone cases give the methods a second testing ground.
+
+<Figure width="page-outset" caption="Figure 3. The case portfolio. Bean & Basket Coffee is the through-line that appears in every Part. The standalone cases — Soup, Milk, Zillow, BAV, Airbnb, Yelp, Goose Island, earnings calls, job postings — anchor specific methods to real datasets and live in the appended case packs.">
+  <div className="not-prose">
+    <CasePortfolio />
+  </div>
+</Figure>
+
+The case packs are external to the chapter prose. The chapters develop the *concepts*; the case packs deliver the *exercises*. This separation is deliberate: it lets the chapters stay portable and offline-renderable while letting the empirical work live in its own versioned home.
+
+---
+
+## How the Map Connects
+
+The decision ladder, the evidence languages, the artefacts, the studios, the cases — these are not five separate organizational schemes. They are five views of the same structure:
+
+- **The ladder** is the question hierarchy.
+- **The evidence languages** are the answers at each rung.
+- **The artefacts** are the durable outputs that survive the work.
+- **The studios** are the integrated capstones at the end of each Part.
+- **The cases** are the data the methods get tested against.
+
+Hold all five in mind when you read the book. The next time you face an actual business decision, the right next move is usually to walk down the ladder until you find the rung that matches it — and then read the corresponding Part.
+
+<Callout variant="finding" title="The map is the book">
+  Five Parts, six evidence languages, five artefacts, five studios, one through-line case, nine standalone case packs, one final memo. This article is the longest you will see all of them on one page. Refer back when you need to orient.
+</Callout>
+
+---
+
+## A Brief Foreshadowing of Part VI
+
+The book climbs the decision ladder and then turns to a different kind of question: not *what method should we use*, but *how do we run all of these methods together as one operating system*? That is Part VI's job. It introduces:
+
+- **The Data Product View (§23.1).** Every artefact has a name, an owner, a version, a contract, and a refresh cadence.
+- **The Decision Memo (§24.1).** The synthesis document; the page an executive signs.
+- **Portfolio Monitoring and Learning Loops (§24.2).** How to run §17.4 and §22.2 side by side as one customer-analytics system.
+- **The Final Integrative Case (§25.1).** A Bean &amp; Basket strategic decision that uses every Part's contribution at once.
+
+We end where we started — naming the action, the counterfactual, and the threshold — but now with the full toolkit and the full operating model.
+
+---
+
+## Managerial Takeaway
+
+Six evidence languages, five artefacts, five studios, one through-line, one map. This article is the orientation; the rest of the book is the work.
+
+> *Whichever Part you read next, ask the same question — what action does this method help name, what counterfactual does it construct, what threshold does it support?*
+
+Part I starts on the next page, with the question of what business claims a table is actually capable of supporting.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on the evidence stack."
+  questions={[
+    {
+      prompt: <>A team wants to know whether a recent price change *caused* a margin lift. Which Part of the book is the natural home for this question?</>,
+      options: [
+        { label: <>Part II — visual evidence.</> },
+        { label: <>Part III — causal designs (and Part II for the visual that frames it).</> },
+        { label: <>Part IV — prediction.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>"Cause" is the rung-3 question. Part III develops the methods (DiD, synthetic control, regression with identification) that earn the right to say "caused" rather than "associated with."</>,
+    },
+    {
+      prompt: <>A team has a churn model (§15.1) and a customer-voice complaint cluster (§19.2) for the same customers. The strongest action is most likely to come from:</>,
+      options: [
+        { label: <>The model alone.</> },
+        { label: <>The cluster alone.</> },
+        { label: <>The intersection — customers who score high on both — because they have both <em>risk</em> and <em>articulated reason</em>.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Parts IV and V answer complementary questions: <em>who and how loud</em> vs. <em>what and why</em>. Part VI (§24.2) is largely about the intersection.</>,
+    },
+    {
+      prompt: <>Which of the following is <em>not</em> one of the five artefacts in the family?</>,
+      options: [
+        { label: <>The Decision Memo.</> },
+        { label: <>The Predictive Task Contract.</> },
+        { label: <>A dashboard.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>A dashboard is a monitoring artefact (Part II / Part VI), not a one-page card in the family. The five cards / memos are: Decision Question Card, Predictive Task Contract, Model Card, AI Workflow Card, Decision Memo.</>,
+    },
+  ]}
+/>

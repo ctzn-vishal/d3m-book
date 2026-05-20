@@ -1,0 +1,71 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { SoupBaselineChart } from '@/components/Book/part2/SoupVisualEvidence';
+import soupRaw from './data/soup-baselines.json';
+
+export const soup = soupRaw;
+export const seasonRows = soupRaw.seasonSummary.map((row) => ({
+  season: row.soup_season,
+  avg_price: `$${row.progresso_price.toFixed(2)}`,
+  share: `${(row.progresso_share * 100).toFixed(1)}%`,
+  stores: row.stores.toLocaleString(),
+}));
+
+<DropCap>
+
+The first decision in a chart is not color, size, or software. It is the baseline. A manager looking at soup sales can see a winter surge, a summer trough, a price increase, or a share collapse depending on what the chart asks her to compare. The same data supports all four views. The baseline decides which one becomes visible first.
+
+</DropCap>
+
+## The executive question: *what comparison makes the business pattern visible?*
+
+The Progresso soup data is a useful bridge case because it is seasonal, competitive, geographic, and later useful for pricing. It contains monthly scanner data across more than two thousand stores from June 2001 through December 2006. Progresso, Campbell's, and private label all appear in the same category. Stores also have census region and ZIP latitude/longitude.
+
+The business pattern is countercyclical: Progresso price rises when soup demand weakens. That sentence is easy to say after the fact. The question is how to make it visible without asking the reader to inspect every number.
+
+Figure 1 uses January as the baseline for volume, share, and price. The shared index makes direction legible across different units; the seasonal table that follows returns price to dollars so the decision remains concrete.
+
+<Figure width="page-outset" caption="Figure 1. Progresso demand and share fall into the summer trough while the price index rises. A shared January baseline makes the seasonal direction visible before any model appears.">
+  <div className="not-prose">
+    <SoupBaselineChart data={soup} />
+  </div>
+</Figure>
+
+The useful feature of Figure 1 is not that January is always the right baseline. It is that the baseline is explicit. A January baseline asks: *how far does the year move away from the winter level?* A prior-year baseline asks: *how different is this year from last year?* A competitor baseline asks: *does Progresso move differently from Campbell's?* A region baseline asks: *which markets are behaving unusually?*
+
+Baseline choice is a managerial choice because it names the comparison. The same chart with June as the baseline would emphasize winter recovery. The same chart with Campbell's as the baseline would emphasize competitive pricing behavior. The same chart with active stores as the baseline would expose panel coverage.
+
+## The winter/non-winter split
+
+For soup, the intuitive business season is not the calendar season. Here we define winter as October through February: the months when soup demand is generally strongest. Figure 2 compresses the full month pattern into the seasonal contrast a pricing manager might use in a first-pass review.
+
+<DataTable
+  caption="Figure 2. Winter is the high-demand season for Progresso, while non-winter months have higher average price and lower share."
+  columns={[
+    { key: 'season', label: 'Season', align: 'left' },
+    { key: 'avg_price', label: 'Avg Progresso price', align: 'right' },
+    { key: 'share', label: 'Progresso share', align: 'right' },
+    { key: 'stores', label: 'Stores', align: 'right' },
+  ]}
+  rows={seasonRows}
+/>
+
+Figure 2 is intentionally blunt. It does not prove that price caused lower volume. It creates the next question: why does Progresso price look highest when demand is weakest? A good visualization chapter should stop there. Later pricing chapters can ask whether the pattern is causal, strategic, promotional, inventory-driven, or confounded by unobserved seasonality.
+
+<Callout variant="definition" title="Baseline">
+  A baseline is the comparison point that gives a number meaning. It can be a month, a competitor, a target, a region, a customer segment, or a prior period.
+</Callout>
+
+## What can go wrong
+
+The first failure is choosing a baseline because it makes the story dramatic. Indexing to the lowest month will make every recovery look large. Indexing to the highest month will make every decline look severe. The chart may be technically correct and still editorially manipulative.
+
+The second failure is hiding scale. An index can make a small product and a large product look equally important. If Progresso volume and a niche brand both rise from 100 to 140 on an index chart, the two lines look similar even if one product moves ten times more units.
+
+The third failure is treating the baseline as a causal control. Campbell's is a useful benchmark, but it is not automatically a counterfactual for Progresso. The benchmark clarifies comparison. It does not, by itself, identify cause.
+
+## Managerial takeaway
+
+Before making a chart, write the comparison sentence: *compared with what?* If the answer is unclear, the chart will be unclear. In the soup case, January indexing makes the seasonal pattern visible. A winter/non-winter split makes it actionable. Both choices are visual arguments, not neutral defaults.

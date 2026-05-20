@@ -1,0 +1,75 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { SoupRegionSmallMultiples, SoupElasticityScatter } from '@/components/Book/part2/SoupVisualEvidence';
+import soupRaw from './data/soup-small-multiples.json';
+
+export const soup = soupRaw;
+export const coefficientRows = soupRaw.regionCoefficients.map((row) => ({
+  region: row.group,
+  estimate: row.estimate.toFixed(2),
+  interval: `{"${row.ci_low.toFixed(2)} to $"}{row.ci_high.toFixed(2)}`,
+  r2: row.r2.toFixed(2),
+}));
+
+<DropCap>
+
+A national average is often the first honest summary and the first dangerous shortcut. It tells managers whether a pattern exists somewhere in the business. It does not tell them whether the pattern is broad enough to act on everywhere. Small multiples solve that problem by making the same comparison repeatedly, one market at a time.
+
+</DropCap>
+
+## The executive question: *is the national pattern broad-based or region-specific?*
+
+The soup case has four census regions: East, Midwest, South, and West. A single national chart says Progresso raises price into a seasonal demand trough. The managerial question is whether that pattern is national or whether one region is doing most of the work.
+
+Figure 1 uses small multiples with the same scales across regions. The same-scale choice matters. If every panel had its own y-axis, each region would look equally volatile. A common y-axis makes the differences in level and movement visible.
+
+<Figure width="screen-inset" caption="Figure 1. Progresso price rises into the weak-demand months in every region, but the share story is not equally strong everywhere. Small multiples reveal heterogeneity the national average hides.">
+  <div className="not-prose">
+    <SoupRegionSmallMultiples data={soup} />
+  </div>
+</Figure>
+
+Figure 1 gives managers two lessons at once. First, the price seasonality is not a single-market artifact. Second, the share level differs sharply by region. The East is a much stronger Progresso market than the South or Midwest. A national pricing memo that ignores that fact would turn a visual average into an operational mistake.
+
+## Small multiples as model preparation
+
+Small multiples also prepare students for later regression. A regression with one coefficient asks for one summary relationship. A small-multiple chart asks whether that one summary is likely to be stable across groups.
+
+Figure 2 previews the later pricing chapter by plotting log(Progresso volume) against log(Progresso price), separately by region. The downward trend line is an elasticity-style visual: a one percent increase in price is associated with a percent change in volume. We are not yet claiming a causal elasticity. We are teaching students how to see the slope before they see the equation.
+
+<Figure width="screen-inset" caption="Figure 2. The log price-volume slope is negative in every region, but the slope is steeper in the Midwest than in the East or West. This previews elasticity without yet making a causal claim.">
+  <div className="not-prose">
+    <SoupElasticityScatter data={soup} groupBy="region" />
+  </div>
+</Figure>
+
+Figure 3 turns those visual slopes into coefficient intervals. This is a bridge view: still descriptive, but already moving toward statistical graphics.
+
+<DataTable
+  caption="Figure 3. Region-level log-log slopes differ enough that a national pricing story would be too coarse. These are month-adjusted descriptive previews, not final causal elasticity estimates."
+  columns={[
+    { key: 'region', label: 'Region', align: 'left' },
+    { key: 'estimate', label: 'Slope', align: 'right' },
+    { key: 'interval', label: '95% interval', align: 'right' },
+    { key: 'r2', label: 'R-squared', align: 'right' },
+  ]}
+  rows={coefficientRows}
+/>
+
+Figure 3 should not replace Figure 2. The table makes the slopes precise; the scatterplots show whether the precision comes from a clean pattern or from compressing a messy one. Managers need both views before asking whether a national elasticity estimate is useful.
+
+<Callout variant="caveat" title="Do not overread the slope">
+  The slope in Figure 2 is an association in scanner data. It may reflect pricing strategy, promotions, seasonality, store mix, consumer demand, or omitted variables. Later chapters on pricing and identification will ask what variation makes an elasticity estimate credible.
+</Callout>
+
+## What can go wrong
+
+Small multiples fail when the panels are not truly comparable. Different y-axes can make every region look equally important. Different time windows can make one market look stable and another volatile. Different sorting can make a reader hunt for the pattern instead of seeing it.
+
+They also fail when they are used as decoration. Four small charts are not automatically better than one chart. Small multiples earn their space when the managerial question is about heterogeneity: regions, segments, products, cohorts, stores, or seasons.
+
+## Managerial takeaway
+
+Use a national chart to find the headline. Use small multiples to decide whether the headline survives contact with the business. In the soup case, the countercyclical price pattern is broad, but the market strength differs by region. That is exactly the kind of distinction executives need before a pricing conversation becomes a policy.

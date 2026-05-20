@@ -1,0 +1,65 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { SoupUncertaintyIntervals } from '@/components/Book/part2/SoupVisualEvidence';
+import soupRaw from './data/soup-uncertainty.json';
+
+export const soup = soupRaw;
+export const rules = soupRaw.interpretationRules.map((rule, index) => ({
+  rule: `Rule ${index + 1}`,
+  interpretation: rule,
+}));
+
+<DropCap>
+
+Executives do not need confidence intervals because they enjoy statistical ritual. They need them because decisions happen before certainty arrives. A visual interval is a management tool: it says whether an apparent difference is large enough, precise enough, and stable enough to deserve attention.
+
+</DropCap>
+
+## The executive question: *when should uncertainty change the decision?*
+
+The Progresso soup pattern is visually strong. Share falls in warm months and rises in the soup season. But a manager still needs uncertainty language because the data is a panel of store-months, not a magical census of every possible market condition. Store coverage changes over time. Store-level behavior varies. A chart should show the finding and the limits around the finding.
+
+Figure 1 shows monthly mean Progresso share across store-months with intervals. The intervals are narrow because there are many store-month observations. That is useful, but it is not the same as causal certainty.
+
+<Figure width="page-outset" caption="Figure 1. Progresso share is reliably lower in the summer months, but the intervals describe store-month variation, not the causal effect of price.">
+  <div className="not-prose">
+    <SoupUncertaintyIntervals data={soup} />
+  </div>
+</Figure>
+
+Figure 1 should be read in two passes. First, read the pattern: Progresso share is lower in summer and higher in the broader soup season. Second, read the caveat: the interval is about observed store-month variation. It does not answer what would happen if Progresso changed price tomorrow.
+
+This distinction is central to the rest of the book. Statistical precision does not repair a weak comparison. A very narrow interval around a biased estimate is still a biased estimate.
+
+## Coverage belongs near the chart
+
+The soup panel is unbalanced. Stores enter and exit the observed panel; monthly active store counts vary. That does not make the data unusable. It means the coverage note belongs near the figure, not buried in an appendix.
+
+Good visualization treats coverage as part of the evidence. If a December point is based on many more active stores than a June point, the reader should know that before interpreting the chart as pure seasonality. The same principle will matter later in model monitoring, survey analysis, A/B tests, and AI evaluation.
+
+<DataTable
+  caption="Figure 2. Uncertainty language is useful only when the chart explains what kind of uncertainty the interval represents."
+  columns={[
+    { key: 'rule', label: 'Rule', align: 'left' },
+    { key: 'interpretation', label: 'Interpretation', align: 'left' },
+  ]}
+  rows={rules}
+/>
+
+Figure 2 is deliberately close to the chart rather than hidden in a technical appendix. It teaches the reporting habit: every interval should answer what is varying, what is being averaged, and which decision would change if the interval were wider.
+
+## What can go wrong
+
+<Callout variant="caveat" title="Precision is not identification">
+  A narrow interval means the descriptive estimate is measured precisely under the chosen summary. It does not mean the comparison is causal, fair, complete, or strategically actionable.
+</Callout>
+
+The most common error is to use intervals as a rhetorical shield. A chart with error bars looks scientific, so the recommendation feels stronger. That is backwards. Intervals should make the claim more inspectable, not less challengeable.
+
+The second error is hiding uncertainty because the chart looks cleaner without it. This is tempting in dashboards. But if the decision depends on whether two regions, months, or segments are meaningfully different, hiding intervals makes the chart more attractive and less useful.
+
+## Managerial takeaway
+
+Ask two questions whenever you see an interval: *uncertainty about what?* and *uncertainty for which decision?* In the soup case, the seasonal share pattern is visually reliable. The pricing decision still requires a better causal comparison. That is not a weakness of the chart. It is the chart doing its job.

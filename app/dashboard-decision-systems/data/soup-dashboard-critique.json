@@ -1,0 +1,87 @@
+{
+  "metadata": {
+    "title": "Countercyclical pricing dashboard critique",
+    "source": "Retail scanner data, U.S. supermarkets and drug stores",
+    "rows": 88409,
+    "stores": 2042,
+    "months": 67,
+    "date_range": "2001-06 to 2006-12",
+    "winter_definition": "Winter = October, November, December, January, February for this soup case."
+  },
+  "currentDashboard": [
+    {
+      "panel": "Monthly category volume",
+      "current_job": "Shows the category demand seasonality.",
+      "upgrade": "Add active store count and state the seasonal trough explicitly.",
+      "mode": "Monitor"
+    },
+    {
+      "panel": "Seasonality of pricing",
+      "current_job": "Shows Progresso price rising into the demand trough.",
+      "upgrade": "Add a benchmark line for Campbell and annotate winter/non-winter.",
+      "mode": "Diagnose"
+    },
+    {
+      "panel": "Good and bad markets map",
+      "current_job": "Shows geographic variation in Progresso share.",
+      "upgrade": "Clarify classification rule and avoid relying on external map fetch.",
+      "mode": "Diagnose"
+    },
+    {
+      "panel": "Share of category volume",
+      "current_job": "Shows share collapse when Campbell expands.",
+      "upgrade": "Add next-step question: test whether price policy or seasonality explains the pattern.",
+      "mode": "Decide"
+    }
+  ],
+  "redesignedSequence": [
+    {
+      "step": 1,
+      "title": "Executive question",
+      "question": "Is Progresso pricing against the seasonal demand cycle?",
+      "visual": "One-sentence headline with winter/non-winter comparison.",
+      "decision": "Decide whether the pattern deserves a pricing test."
+    },
+    {
+      "step": 2,
+      "title": "Demand baseline",
+      "question": "When is category demand strongest and weakest?",
+      "visual": "Monthly volume indexed to January plus active store counts.",
+      "decision": "Separate seasonal demand from price action."
+    },
+    {
+      "step": 3,
+      "title": "Price response",
+      "question": "Does price rise when demand weakens?",
+      "visual": "Progresso and Campbell monthly price lines.",
+      "decision": "Identify the countercyclical pricing pattern."
+    },
+    {
+      "step": 4,
+      "title": "Market heterogeneity",
+      "question": "Is the pattern national or regional?",
+      "visual": "Region small multiples for price and share.",
+      "decision": "Avoid one national recommendation if regions differ."
+    },
+    {
+      "step": 5,
+      "title": "Statistical preview",
+      "question": "How steep is the price-volume association?",
+      "visual": "Log price vs log volume scatter with coefficient intervals.",
+      "decision": "Bridge to later elasticity and identification chapters."
+    },
+    {
+      "step": 6,
+      "title": "Next test",
+      "question": "What would we need to know before changing price?",
+      "visual": "Action panel: descriptive pattern, causal limit, recommended experiment or quasi-experimental design.",
+      "decision": "Do not treat the dashboard as causal proof."
+    }
+  ],
+  "dashboardRules": [
+    "Start with the decision question, not the available charts.",
+    "Label panels as monitor, diagnose, or decide.",
+    "Put coverage and caveats near the charts they affect.",
+    "End with the next test or decision, not with another descriptive chart."
+  ]
+}

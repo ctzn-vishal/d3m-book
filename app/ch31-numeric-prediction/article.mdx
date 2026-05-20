@@ -1,0 +1,180 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { ActualVsPredicted } from '@/components/Book/part4/PredictionDiagrams';
+
+<DropCap>
+
+Sometimes the answer the firm needs is a number, not a class. What should this listing rent for? How many units will sell next week? What lifetime value should we expect from this new cohort? The mathematical machinery rhymes with classification — fit a model on past cases, score it on held-out cases, monitor in production — but the evaluation language is different. The headline number is no longer an AUC; it is an error in the units the business cares about.
+
+</DropCap>
+
+This article frames numeric prediction (often called *regression ML*, but distinct from the causal regression of Part III) by way of a single running example: predicting a nightly listing price. The vocabulary developed here travels to demand forecasting, lifetime value, and any other "predict a number" task.
+
+---
+
+## The Executive Question
+
+> How wrong is the model on average, where is it most wrong, and is the magnitude of error tolerable for the action we are taking?
+
+The same model can be good enough to set a listing's starting price and not good enough to drive a fully automated repricing engine. The grading depends on the cost of an off-by-X dollars error in the specific decision flow.
+
+---
+
+## Setup: the Listing-Pricing Example
+
+For the rest of this article, the task is:
+
+> For each new listing on a short-term rental platform, predict the nightly price the host should charge for the first month after listing, using features known at posting time (location, bedrooms, bathrooms, amenities, host status, seasonality).
+
+This is a clean numeric prediction problem. The unit is the listing. The target is dollars per night. The features are static or as-of-listing. The action is a *suggested price* surfaced to the host, who keeps editorial control.
+
+---
+
+## The Standard Error Metrics
+
+Three error summaries are standard. Each answers a slightly different question.
+
+<DataTable
+  caption="Table 1. The standard summaries for numeric prediction error and what each is best suited to communicate. The right choice depends on whether the manager cares about average error, occasional big misses, or the proportion of variance the model explains."
+  columns={[
+    { key: 'metric', label: 'Metric', align: 'left' },
+    { key: 'def', label: 'Definition', align: 'left' },
+    { key: 'use', label: 'Use when', align: 'left' },
+    { key: 'flaw', label: 'Watch out for', align: 'left' },
+  ]}
+  rows={[
+    {
+      metric: 'MAE',
+      def: 'Mean absolute error: average |actual − predicted|',
+      use: 'Dollars-per-night is in the units a manager already reads.',
+      flaw: 'Insensitive to big misses; the average is robust to outliers in ways the business may not be.',
+    },
+    {
+      metric: 'RMSE',
+      def: 'Root mean squared error: square root of mean squared error',
+      use: 'Big misses cost disproportionately (a $200 error is more than twice as bad as a $100 one).',
+      flaw: 'Heavily influenced by outliers; one luxury listing can move the headline.',
+    },
+    {
+      metric: 'R²',
+      def: '1 − (sum of squared residuals / sum of squared deviations from mean)',
+      use: 'Communicating "how much of the variance does the model explain?"',
+      flaw: 'Improves mechanically as features are added; not in dollar units; can hide systematic bias.',
+    },
+  ]}
+/>
+
+The right headline depends on the business. For most operational tasks (pricing, demand), MAE in business units is the cleanest first metric. RMSE is the right second metric when occasional large errors carry asymmetric cost. R² is a useful sanity check, not a deployment criterion.
+
+A subtle point: every metric collapses the error distribution to a single number. Two models with the same RMSE can have very different shapes of error — and very different behaviour in the deployment that consumes them.
+
+---
+
+## Reading the Error Through Pictures
+
+The single chart most worth drawing is **actual vs. predicted** on held-out data. It shows separation between the model's beliefs and the world in the same units the business uses.
+
+<Figure width="page-outset" caption="Figure 1. Actual vs. predicted nightly price on held-out listings. Points close to the dashed 45° line are well-predicted; the spread of points away from the line is the model's error. Colors flag where the prediction fell within $30 (green), $30–60 (amber), and over $60 (red). The luxury tail is where the model breaks.">
+  <div className="not-prose">
+    <ActualVsPredicted />
+  </div>
+</Figure>
+
+Three patterns to look for, each telling a different story:
+
+- **Even scatter around the 45° line.** The model is unbiased; errors are symmetric. The headline metric reflects real performance.
+- **Systematic offset.** Predictions are consistently too high or too low in a region of the input space. The model has a structural bias that no amount of retraining the same architecture will fix — the feature set or the model form is missing something.
+- **Heteroskedasticity.** Errors are small in one region (say, mid-priced listings) and large in another (luxury or budget tails). The headline metric is hiding heterogeneity. The right next move is to disaggregate.
+
+In the diagram, the model has roughly the right average behaviour but blows up at the luxury end. A reasonable response is to add features that distinguish luxury listings, evaluate separately within the high-price tail, or — if the business will let you — exclude it from the automation altogether and route it to a human.
+
+---
+
+## Residuals and Diagnostics
+
+Plotting the **residuals** (actual minus predicted) against features or against fitted values is the modelling equivalent of asking "where is the model wrong, and why?" A few canonical patterns:
+
+- **Funnel-shaped residuals.** Errors grow with the level of the target. Often a log-transform of the target helps.
+- **Slope in the residual plot.** Predictions are systematically too low at one end and too high at the other. The model is missing curvature — a non-linear term, an interaction, or a richer model.
+- **Clusters of large residuals.** A subgroup the model handles badly. Often points to a missing feature (host tier, region, amenity flag).
+
+Residual diagnostics are where engineering insight comes from. A model that ships with no residual analysis is a model whose authors have not asked it where it fails.
+
+---
+
+## When Is the Error Acceptable?
+
+The metric does not answer this on its own. The right test is:
+
+> *Plug the model's distribution of errors into the decision flow. What does the business lose, on average and in the tail?*
+
+For the listing-pricing example: a $20 average error in suggested starting price may be fine if the host can edit, the platform's listing fee is a small percentage, and most listings end up close to the suggestion anyway. The same $20 error in a fully automated dynamic-pricing engine that controls bookings would be catastrophic. Same model, same RMSE, different deployment, different verdict.
+
+This is the place where Part IV reconnects with Part III. The decision that the prediction supports — together with the prediction's distribution of errors — determines whether the model is good enough. Neither half of that statement is optional.
+
+<Callout variant="caveat" title="The error-the-business-tolerates rule">
+  Before signing off on a numeric model, simulate the decision flow under the held-out error distribution. The decision metric is the deployment criterion, not RMSE.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+- **Reporting R² as if it were a deployment metric.** A model with R² of 0.7 can have a wide error distribution in dollars; another with R² of 0.5 might be far better in the tail that matters.
+- **Hiding heteroskedasticity.** A single RMSE across a heterogeneous population can paper over substantial subgroup failures.
+- **Backtesting on the wrong slice.** Pricing models in particular need a time-based held-out set; random splits inflate offline metrics relative to live behaviour.
+- **Mismatched training and inference units.** If training rows are listings-as-of-posting and inference rows are listings-as-of-edit, even a perfect model will mis-score because the unit shifted.
+
+---
+
+## Managerial Takeaway
+
+Numeric prediction is graded in business units, evaluated by pictures, and accepted only against a decision flow. Three habits:
+
+> *Lead with the right error in business units — MAE for symmetric cost, RMSE when big misses hurt.*
+>
+> *Always show actual-vs-predicted on held-out data before discussing improvements.*
+>
+> *Sign off against the decision the error has to survive, not against the headline metric.*
+
+The classification evaluation chapter ended with a threshold–profit curve. The equivalent for numeric prediction is the simulation: what does the firm's decision flow look like when the model's actual error distribution flows through it?
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on numeric prediction."
+  questions={[
+    {
+      prompt: <>A pricing model reports MAE $18 and RMSE $42 on held-out listings. What does the gap suggest?</>,
+      options: [
+        { label: <>The model has no errors above $42.</> },
+        { label: <>Most errors are around $18, but the distribution has a heavy tail of larger misses that disproportionately drive RMSE.</> },
+        { label: <>The model is biased upward.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>MAE is robust to large residuals; RMSE squares them. A large RMSE/MAE ratio is a tail signal — investigate where the big misses are coming from.</>,
+    },
+    {
+      prompt: <>An actual-vs-predicted plot shows scatter that fans outward as the actual price rises. The right interpretation is:</>,
+      options: [
+        { label: <>The model is unbiased and well-calibrated.</> },
+        { label: <>Errors grow with the level of the target — likely heteroskedastic; consider a log transform or a richer model for the tail.</> },
+        { label: <>The dataset is too small.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A widening scatter around the 45° line is the signature of variance that scales with the target. Log-transforming or modelling the tail separately are standard remedies.</>,
+    },
+    {
+      prompt: <>Two models have identical RMSE. Model A's errors are evenly distributed; Model B's errors are tiny on 90% of listings and huge on 10%. Which is preferable for an automated dynamic-pricing engine?</>,
+      options: [
+        { label: <>Model A — exposure to the bad tail is smaller, even though the average is the same.</> },
+        { label: <>Model B — most decisions are nearly perfect.</> },
+        { label: <>They are equivalent.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Automated systems pay the full cost of every tail error with no human review. Evenly-distributed error is safer when there is no editorial layer to catch the misses.</>,
+    },
+  ]}
+/>

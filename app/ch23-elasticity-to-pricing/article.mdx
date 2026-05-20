@@ -1,0 +1,229 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { OptimalMarkupDiagram } from '@/components/Book/part3/ConceptDiagrams';
+import { PricingOptimizer } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+Estimating elasticity is not the goal — *setting a price* is. The bridge from a regression coefficient to a price recommendation is one of the most elegant results in microeconomics: the inverse-elasticity (or Lerner) rule, which says that the profit-maximizing markup over marginal cost is determined entirely by the absolute value of the own-price elasticity. The same rule also makes vivid the danger of acting on a confounded elasticity, because the markup formula amplifies bias in the elasticity estimate directly into the recommended price.
+
+</DropCap>
+
+This article derives the optimal markup rule, shows where the formula breaks down (and why that breakdown is informative), illustrates the markup curve graphically, and works through a data case that quantifies the cost of pricing on a naive elasticity estimate.
+
+---
+
+## The Executive Question: What Price, with What Guardrails?
+
+A pricing analyst announces that the formula recommends cutting price from $3.50 to $2.00 because elasticity is <M>{String.raw`-2.00`}</M>. A senior manager should never accept this on its face. The right executive question is two questions at once:
+
+> *What is the formal economic argument behind the optimal price, and what operational guardrails should bracket how we test it?*
+
+The first half is the math we are about to derive. The second half is what separates a candidate test price from a national price change.
+
+---
+
+## Deriving the Optimal Markup Rule
+
+Start with the standard profit function for a firm choosing a single price <M>{String.raw`P`}</M>, with constant marginal cost <M>{String.raw`MC`}</M> and demand <M>{String.raw`Q(P)`}</M>:
+
+<Equation
+  label="Profit"
+  latex={String.raw`\Pi(P) \;=\; (P - MC) \cdot Q(P)`}
+/>
+
+Take the derivative with respect to price and set to zero (using the product rule):
+
+<Equation
+  latex={String.raw`\frac{d\Pi}{dP} \;=\; Q(P) + (P - MC) \cdot \frac{dQ}{dP} \;=\; 0`}
+/>
+
+Divide both sides by <M>{String.raw`Q(P)`}</M>:
+
+<Equation
+  latex={String.raw`1 + (P - MC) \cdot \frac{1}{Q} \cdot \frac{dQ}{dP} \;=\; 0`}
+/>
+
+Multiply the right-hand fraction by <M>{String.raw`P/P`}</M> so the elasticity <M>{String.raw`\epsilon = (dQ/dP)(P/Q)`}</M> appears explicitly:
+
+<Equation
+  latex={String.raw`1 + \frac{P - MC}{P} \cdot \epsilon \;=\; 0`}
+/>
+
+Rearrange to obtain the **Lerner index**: the profit-maximizing markup as a fraction of price equals the negative inverse of the elasticity:
+
+<Equation
+  label="Lerner index"
+  latex={String.raw`\frac{P^* - MC}{P^*} \;=\; -\frac{1}{\epsilon}`}
+/>
+
+Solving for the optimal price:
+
+<Equation
+  label="Constant-elasticity optimal pricing rule"
+  latex={String.raw`P^* \;=\; \frac{MC}{1 + \dfrac{1}{\epsilon}}, \qquad \text{valid for } \epsilon < -1`}
+/>
+
+Two readings of this formula are immediately useful:
+
+- **As elasticity grows in magnitude** (<M>{String.raw`\epsilon \to -\infty`}</M>), the term <M>{String.raw`1/\epsilon \to 0`}</M> and <M>{String.raw`P^* \to MC`}</M>. In a hyper-competitive market the firm has no pricing power and must price at cost.
+- **When <M>{String.raw`-1 < \epsilon < 0`}</M>** (inelastic zone), the denominator becomes negative or zero and the formula collapses — mathematically recommending infinite price. The right interpretation is that a profit-maximizing firm should never be in the inelastic zone: raising price would simultaneously raise revenue and reduce volume-driven costs. The formula breaking is the formula telling you the regression must be wrong.
+
+---
+
+## The Markup Curve, Visually
+
+The relationship between <M>{String.raw`|\epsilon|`}</M> and the optimal markup is non-linear and steep at low values.
+
+<Figure caption="Figure 1. The optimal markup over marginal cost as a function of the absolute value of own-price elasticity. Highly elastic categories (|ε| > 4) earn thin markups. Moderately elastic categories (|ε| ≈ 2) carry meaningful markups. As |ε| approaches 1, the markup explodes — which is also where the formula stops being trustworthy.">
+  <OptimalMarkupDiagram />
+</Figure>
+
+The curve does two pedagogically useful things. First, it makes vivid how much a small change in elasticity matters for the recommended price. Moving from <M>{String.raw`|\epsilon| = 2.0`}</M> to <M>{String.raw`|\epsilon| = 2.5`}</M> shifts the optimal markup from 100% over MC down to roughly 67%. Second, it shows how dangerous the formula becomes near <M>{String.raw`|\epsilon| = 1`}</M>: the markup goes to infinity in a way that is mathematically defined but operationally meaningless.
+
+---
+
+## Interactive: The Profit Curve
+
+The profit function itself is the right object for executives to see, because it shows not just the optimum but the *penalty* of being off-target. A nearly flat peak means small mis-pricing is forgiven; a sharp peak means precision matters.
+
+<Figure width="screen-inset" caption="Figure 2. Profit as a function of price, with sliders for marginal cost and own-price elasticity. The orange line marks the current price; the green dashed line marks the formula's optimum. Notice how sensitive the peak is to small changes in elasticity, especially when |ε| is close to 1.">
+  <div className="not-prose">
+    <PricingOptimizer data={data.soup} />
+  </div>
+</Figure>
+
+The shape of the curve is itself a piece of evidence. A flat-topped profit curve is forgiving — modest deviations from the optimum cost little, so a conservative price is fine. A sharp peak punishes both over- and under-pricing, and the value of more precise elasticity estimates rises accordingly.
+
+---
+
+## Guardrails: The Formula Is a Generator, Not a Command
+
+The optimal-pricing formula has exactly three inputs: own-price elasticity, marginal cost, and the assumption that the world is static. Each of those deserves a check before the recommendation leaves the spreadsheet.
+
+| Guardrail | What it protects against | What to check |
+| --- | --- | --- |
+| Causal identification of <M>{String.raw`\epsilon`}</M> | Acting on a confounded elasticity that is wrong by a factor of 1.5× | Was the regression run with appropriate fixed effects and controls? Climb the regression ladder. |
+| Stable marginal cost | Optimizing yesterday's cost while procurement costs are rising | Refresh <M>{String.raw`MC`}</M> regularly; recompute the price when inputs move materially. |
+| Competitor reaction | Assuming rivals will hold price after a major move | Cross-reference with cross-price matrix; expect retaliation when cross-elasticities are large. |
+| Customer trust | Short-term profit at the cost of long-term LTV | Run a holdout cohort to measure churn at the new price, not just immediate volume. |
+| Empirical validation | Treating a model number as a real-world certainty | Stagger the rollout regionally; require A/B evidence before national deployment. |
+
+The formula gives you a *candidate* price to test, not a price to set globally. That is the single most important framing to carry out of this chapter.
+
+<Callout variant="caveat" title="Garbage in, garbage out — amplified">
+  The bias in the elasticity estimate is amplified into the recommended price by the formula. A confounded elasticity of <M>{String.raw`-3`}</M> instead of a true <M>{String.raw`-2`}</M> recommends a markup of 50% instead of 100% — a halving of the per-unit margin. Always identify the elasticity carefully <em>before</em> using it in the pricing rule.
+</Callout>
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on the optimal pricing rule. Click to reveal."
+  questions={[
+    {
+      prompt: <>The Lerner index says the profit-maximizing markup over marginal cost is…</>,
+      options: [
+        { label: <>Equal to the absolute value of the own-price elasticity.</> },
+        { label: <>Equal to the negative inverse of the own-price elasticity: <M>{String.raw`(P - MC)/P = -1/\epsilon`}</M>, valid in the elastic zone.</> },
+        { label: <>Independent of elasticity — it only depends on marginal cost.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The first-order condition for profit maximization, after rearranging, gives <M>{String.raw`(P-MC)/P = -1/\epsilon`}</M>. The optimal markup over MC as a fraction of price is exactly the negative inverse of the (negative) elasticity, which is positive in the elastic zone. The formula breaks in the inelastic zone, which is informative — a firm should never be there.</>,
+    },
+    {
+      prompt: <>Marginal cost is $1.00. An unbiased elasticity estimate is <M>{String.raw`-2.23`}</M>. The optimal price implied by the formula is…</>,
+      options: [
+        { label: <>$1.45 — the current observed price.</> },
+        { label: <>$1.82 — calculated as <M>{String.raw`P^* = 1.00 / (1 + 1/(-2.23)) \approx 1.82`}</M>.</> },
+        { label: <>$2.23 — elasticity times marginal cost.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Plug into the formula: <M>{String.raw`P^* = MC / (1 + 1/\epsilon) = 1.00 / (1 + 1/(-2.23)) = 1.00 / 0.5516 \approx 1.82`}</M>. The same MC and elasticity produce different optima depending on the elasticity's exact value — which is why getting the elasticity right matters more than getting the formula right.</>,
+    },
+    {
+      prompt: <>Marginal cost rises from $1.00 to $1.20 due to a supply chain shock. Elasticity stays at <M>{String.raw`-2.23`}</M>. The new optimal price is…</>,
+      options: [
+        { label: <>$1.82 — the optimal price is independent of marginal cost.</> },
+        { label: <>$2.02 — exactly $0.20 above the original optimum.</> },
+        { label: <>$2.18 — calculated as <M>{String.raw`P^* = 1.20 / 0.5516 \approx 2.18`}</M>.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>The formula is <em>multiplicative</em> in <M>{String.raw`MC`}</M>, not additive. A 20% increase in cost translates to a 20% increase in the optimal price (when elasticity is unchanged): <M>{String.raw`1.20 \times 1.82 = 2.18`}</M>. Adding $0.20 directly to the old optimum understates the right markup adjustment.</>,
+    },
+    {
+      prompt: <>Your model returns an own-price elasticity of <M>{String.raw`-0.9`}</M> and the formula recommends an extreme price increase. The right response is…</>,
+      options: [
+        { label: <>Follow the formula and execute the price hike — the inelastic estimate proves customers are insensitive.</> },
+        { label: <>Reject the formula's recommendation and audit the regression. An inelastic estimate almost always signals omitted-variable bias; a profit-maximizing firm would already have raised price out of that zone if the estimate were correct.</> },
+        { label: <>Use the formula but cap the recommended price at twice the current price.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>An inelastic elasticity is more often a sign of confounding (counter-cyclical pricing, omitted seasonality or competitor controls) than evidence of true demand structure. Before acting on it, climb the regression ladder. If even the well-identified model is inelastic, the firm has discovered pricing power and should test cautious increases — but the formula's extreme number is not the right place to start.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: The Cost of Acting on the Naive Estimate
+
+To put a dollar figure on the cost of pricing on a confounded elasticity, compare what the formula recommends under the naive and the well-identified estimates from Chapter 13.1.
+
+A standard Progresso can has <M>{String.raw`MC = \$1.00`}</M>. Two competing elasticity estimates:
+
+- **Naive bivariate OLS:** <M>{String.raw`\widehat{\epsilon} = -3.21`}</M>.
+- **Store fixed effects:** <M>{String.raw`\widehat{\epsilon} = -2.23`}</M>.
+
+Plug each into the formula:
+
+<Equation
+  label="Optimal price under the naive estimate"
+  latex={String.raw`P^*_{\text{naive}} \;=\; \frac{\$1.00}{1 + 1/(-3.21)} \;=\; \frac{\$1.00}{0.6885} \;\approx\; \$1.45`}
+/>
+
+<Equation
+  label="Optimal price under the well-identified estimate"
+  latex={String.raw`P^*_{\text{FE}} \;=\; \frac{\$1.00}{1 + 1/(-2.23)} \;=\; \frac{\$1.00}{0.5516} \;\approx\; \$1.82`}
+/>
+
+The naive recommendation lands exactly at the *current* price — "we are already optimized, do nothing." The well-identified recommendation says current pricing is roughly 25% below optimum. The mechanical source of the bias is the omitted seasonality: retailers cut prices in low-demand months, so the naive regression sees discounts paired with the noise of low-demand weeks and overstates how much volume the discount actually produces.
+
+The financial consequences are direct. At a marginal cost of $1.00:
+
+- The naive model's "optimal" $1.45 gives a per-can margin of $0.45.
+- The well-identified model's optimal $1.82 gives a per-can margin of $0.82 — an **82% increase in unit margin**.
+
+Even after accounting for the volume loss implied by elasticity <M>{String.raw`-2.23`}</M>, the net change in total profit is strongly positive. The data case is the clearest possible illustration of why identification is the gating step in any pricing analysis: the formula is the same; the answer it produces depends entirely on the elasticity you feed it.
+
+<Callout variant="finding" title="The identification step is the most valuable step">
+  The same pricing formula returns wildly different recommended prices depending on whether the input elasticity was identified well or poorly. The technique you spent the most time learning — getting the elasticity right — is the technique that pays off largest in the pricing decision.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+Three traps recur in production pricing optimization work:
+
+1.  **The singularity trap.** As <M>{String.raw`|\epsilon|`}</M> approaches 1 from above, the formula's denominator collapses and the recommended price explodes. Operationally, this signals either the regression is wrong or the firm needs to test small price increases cautiously — not implement the literal formula recommendation.
+2.  **Stale marginal cost.** The formula assumes <M>{String.raw`MC`}</M> is known and current. In inflationary periods or supply disruptions, costs move week-to-week. Re-pricing every quarter on a six-month-old cost number leaves margin on the table.
+3.  **The short-run / long-run gap.** Elasticity estimated from short-run price variation reflects the immediate substitution response. Long-run churn (customers gradually finding alternatives, brand erosion at higher prices) is not in the historical regression and not in the formula. Always pair the pricing recommendation with a customer-retention monitoring plan.
+
+---
+
+## Managerial Takeaway
+
+The Lerner rule is short and decisive — and exactly that brevity makes its inputs important:
+
+- Never plug a naive elasticity into the formula. The amplification of bias from elasticity to recommended price is direct and large.
+- Treat the formula's output as a candidate test price, not a price to deploy nationally. Stage a regional pilot before rollout.
+- Update marginal cost regularly. The recommended price scales linearly with <M>{String.raw`MC`}</M>; stale cost equals stale price.
+
+The next article ties together all of Part III's evidence — elasticity, fixed effects, quasi-experiments, synthetic control, heterogeneity — into the format an executive committee actually consumes: a strategic pricing and promotion memo.

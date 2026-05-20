@@ -1,0 +1,171 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  ConfusionMatrixDiagram,
+  CalibrationLiftPlots,
+  ThresholdProfitChart,
+} from '@/components/Book/part4/PredictionDiagrams';
+
+<DropCap>
+
+A classifier that returns probabilities has been graded long before anyone speaks of accuracy. The choice of evaluation language is itself a decision: about whose mistakes count, which units they count in, and whether the manager cares about getting the order right, the magnitudes right, or both. This article assembles the standard toolkit — confusion matrix, ROC and PR curves, calibration, lift — and ends with the only chart most managers should read first: the threshold–profit curve.
+
+</DropCap>
+
+The teaching arc is short. Each evaluation view is the answer to a different question. The questions stack on top of each other, and the threshold–profit curve is the place where the modeller's answers meet the business's costs.
+
+---
+
+## The Executive Question
+
+> Given a probability score for every customer, what is the action threshold that maximizes expected business value, and how confident are we in that choice?
+
+The question already mixes two ideas: a model property (how well the scores rank and calibrate) and a business property (what we pay or earn when we get a unit right or wrong). The evaluations below isolate the first; the threshold–profit curve combines both.
+
+---
+
+## The Confusion Matrix and Its Costs
+
+Every classifier produces four kinds of outcomes once a threshold has been fixed. Naming them is half the work of evaluation.
+
+<Figure caption="Figure 1. The four outcomes of a thresholded classifier, with the business cost a manager has to attach to each cell.">
+  <div className="not-prose">
+    <ConfusionMatrixDiagram />
+  </div>
+</Figure>
+
+From the matrix, the standard summary metrics fall out:
+
+- **Accuracy** = correct / total. Useful when the classes are balanced; misleading when they are not.
+- **Precision** = TP / (TP + FP). Of those we acted on, how many were right?
+- **Recall** (sensitivity) = TP / (TP + FN). Of those who needed action, how many did we reach?
+- **F1** = harmonic mean of precision and recall. A single number for when the costs of FP and FN are similar.
+
+In most business settings, accuracy alone is the wrong headline. A churn rate of 3% means a "predict everyone stays" model is 97% accurate and useless. Precision-recall trade-offs are where the analytics actually live.
+
+---
+
+## ROC vs Precision-Recall
+
+Two ranked-list summaries dominate practical evaluation:
+
+- The **ROC curve** plots true-positive rate against false-positive rate as the threshold sweeps from 0 to 1. The **AUC** is the area under this curve and equals the probability that a randomly chosen positive ranks above a randomly chosen negative. ROC is invariant to class balance and is the default summary for ranking quality.
+- The **PR curve** plots precision against recall as the threshold sweeps. **PR-AUC** is more revealing than ROC-AUC when the positive class is rare — which is the norm in churn, fraud, and conversion.
+
+A useful intuition: a model can have ROC-AUC of 0.85 and still be unusable if 99% of the units are negatives. ROC tells you the model ranks well; PR tells you the top of the ranked list is profitable.
+
+---
+
+## Calibration and Lift: Two Practical Charts
+
+The two views below are the ones most non-technical reviewers should learn to read. Calibration answers "is the probability the model reports the rate I should expect?" Lift answers "if I target the top X%, what share of the positive class do I capture?"
+
+<Figure width="page-outset" caption="Figure 2. Two views every model review should include. Calibration (left) compares predicted probability with observed rate by decile of score. Lift (right) shows the share of churners captured by targeting the top-X% by score; the dashed diagonal is the random baseline.">
+  <div className="not-prose">
+    <CalibrationLiftPlots />
+  </div>
+</Figure>
+
+Calibration matters when the score has to enter a downstream decision unchanged — for example, when an expected-value computation multiplies probability by an offer cost. If a model says "0.4" but the empirical rate at that bin is 0.25, expected-value calculations using the raw score will systematically over-spend.
+
+Lift matters when the action is "target the top of the list." It reads directly off the curve: at 10% targeted, what share of churners do we reach? That number, paired with the cost of an offer and the value of a saved customer, is the headline number for retention programs.
+
+---
+
+## The Threshold–Profit Curve
+
+The chart most managers should see first is none of the above. It is a curve that puts the business's own cost matrix on the y-axis and the action threshold on the x-axis.
+
+<Figure width="page-outset" caption="Figure 3. Threshold–profit curve. Net profit per customer rises from a 'treat everyone' default, peaks at a sensible threshold (here roughly 0.42), and falls as the threshold rises further and the model misses real churners. The peak is the threshold a deployed model should use.">
+  <div className="not-prose">
+    <ThresholdProfitChart />
+  </div>
+</Figure>
+
+The construction is mechanical. For each threshold <em>t</em>:
+
+1. Compute predicted-positive and predicted-negative sets on the held-out data.
+2. Apply the cost matrix: every TP earns the saved-customer value minus the offer cost; every FP costs the offer; every FN costs the churn; every TN is free.
+3. Sum the cell-level dollars and divide by population size to get net profit per customer.
+
+The shape — typically an inverted U — has a clear interpretation. The left side is "treat everyone": every customer gets an offer regardless of risk, and FP cost dominates. The right side is "treat almost no one": the model misses real churners, and FN cost dominates. The peak is where these are best balanced *for the model the firm has*.
+
+A few practical notes:
+
+- The peak shifts as costs change. If the offer becomes cheaper, the peak moves left; if customer value drops, the peak moves right.
+- The peak is a property of the model + the costs, not the model alone. Two firms with the same model can rationally use different thresholds.
+- The peak depends on a held-out set that reflects production. If the held-out set is stale or non-representative, the chosen threshold is wrong before any drift sets in.
+
+<Callout variant="finding" title="The deployment artifact">
+  Every classifier that drives action in production should ship with a threshold–profit curve, the cost assumptions used to build it, and the chosen threshold marked. Without the curve, the threshold is a number with no justification.
+</Callout>
+
+---
+
+## Putting the Views Together
+
+A short workflow that combines the views:
+
+1.  **ROC and PR-AUC** confirm the model ranks reasonably and that the top of the list is meaningfully better than random.
+2.  **Calibration** confirms the probabilities can be used in expected-value math without recalibration. If miscalibrated, fit a one-parameter post-hoc calibration (e.g., Platt scaling or isotonic regression) and re-check.
+3.  **Lift** translates the model's ranking quality into operational language: at X% of the book targeted, what is captured?
+4.  **Threshold–profit** combines all of the above with the firm's cost matrix and chooses the threshold to deploy.
+
+If any of the first three views look wrong, do not proceed to the fourth. The threshold–profit curve will silently still draw, and silently still mislead.
+
+---
+
+## What Can Go Wrong
+
+- **Optimising AUC.** A model with the best AUC may not have the best threshold-profit, especially when the cost matrix is asymmetric. AUC is a rank-quality summary; it does not know your business.
+- **Threshold from a non-representative slice.** A threshold tuned on last quarter's data is right for last quarter's data. If the customer mix has shifted, refit threshold-relevant statistics, not just the model.
+- **Class imbalance without lift framing.** Reporting precision and recall without lift on a rare-positive problem leaves the manager without a sense of *how much better than random* the model actually is.
+- **Hidden recalibration after deployment.** Some production systems recalibrate scores against rolling rates. If the calibration step is invisible to the threshold–profit calculation, the deployed system is operating at a threshold no one signed off on.
+
+---
+
+## Managerial Takeaway
+
+The right way to grade a classifier is not by a single number; it is by a sequence of complementary views. The chart that lands the decision is the threshold–profit curve. The charts that earn the right to draw it are ROC/PR, calibration, and lift.
+
+> If the model review ends without a threshold–profit curve and a marked operating point, the model has not been evaluated. It has only been described.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on classification evaluation."
+  questions={[
+    {
+      prompt: <>A retention model has AUC 0.88 on a customer base where churn rate is 3%. Which additional view is most informative before committing to a threshold?</>,
+      options: [
+        { label: <>The accuracy at threshold 0.5.</> },
+        { label: <>The PR curve and lift at the top deciles, since accuracy is dominated by the rare-positive base rate.</> },
+        { label: <>The mean predicted probability across the dataset.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>With a 3% positive rate, ROC-AUC and accuracy can both be high while the model is still poor at the head of the ranked list. PR and lift focus on the part that matters for action.</>,
+    },
+    {
+      prompt: <>A model is "miscalibrated" — bins where it says 0.4 churn at 0.25 in reality. The retention team multiplies score × offer cost to budget. Most likely consequence?</>,
+      options: [
+        { label: <>Over-budgeting on offers, because expected churn is overstated where the model is overconfident.</> },
+        { label: <>The model's ranking is wrong.</> },
+        { label: <>The model's accuracy is wrong.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Calibration affects the magnitude of the score, not its ranking. Decisions that use the magnitude directly (like budgeting) are sensitive to miscalibration; pure rank-based decisions are not.</>,
+    },
+    {
+      prompt: <>The threshold–profit curve has a clear peak at 0.38. Six months later, the offer cost falls by half. The right next step is:</>,
+      options: [
+        { label: <>Lower the threshold below 0.38 — cheaper offers justify treating less-confident risks.</> },
+        { label: <>Raise the threshold above 0.38.</> },
+        { label: <>Keep the threshold at 0.38; thresholds are model properties, not cost properties.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>The threshold is a property of the model <em>and</em> the cost matrix. Falling offer cost shrinks the penalty on false positives, shifting the optimum left.</>,
+    },
+  ]}
+/>

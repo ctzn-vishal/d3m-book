@@ -1,0 +1,162 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { SupervisedTaskTaxonomy } from '@/components/Book/part4/PredictionDiagrams';
+
+<DropCap>
+
+Supervised learning is the kind of pattern recognition where the answer is in the training data. We have a stack of past cases — customers who churned or stayed, listings that sold at one price or another, claims that were paid or denied — and we want a function that, for each new case, guesses the answer the world will produce next. The "supervision" is the labelled history. Without it, a model is still possible, but the task is different and lives in Chapter 16.
+
+</DropCap>
+
+This article fixes the vocabulary every supervised model in the next chapter rests on: **target**, **features**, **unit of prediction**, and **label timing**. Get these four right and the modelling choices fall out almost mechanically. Get them wrong — most often, in the third or fourth — and even an excellent algorithm produces a useless score.
+
+The four-decision setup that follows is, in effect, the predictive-shaped descendant of the Decision Question Card from [§9.1](/ch11-from-metrics-to-decisions). Same discipline; different question. The card asked *what action are we taking?* The Task Contract asks *what target are we predicting?* Both end with a one-sentence contract a team can review in fifteen minutes.
+
+---
+
+## The Executive Question
+
+> What, exactly, are we trying to predict, for whom, and at what moment?
+
+The wording matters. "Predict churn" is a topic. "For each weekly active customer, the probability of churn over the next 60 days, scored every Monday from features known by Sunday night" is a task. The second sentence specifies the **target**, the **unit**, the **horizon**, and the **label-timing rule**, and the difference between the two is the difference between a project that ships and one that quietly stalls.
+
+---
+
+## The Four Decisions That Define the Task
+
+### 1. The target Y
+
+The target is the thing the model is supposed to guess. It comes in two flavours: a class label (yes/no, fraud/not, segment-A/B/C) or a number (price, demand, lifetime value). Almost every algorithmic choice in Chapter 15 follows from this choice.
+
+<Figure caption="Figure 1. The same modelling machinery powers both classification and regression — what changes is the shape of the target and the evaluation language.">
+  <div className="not-prose">
+    <SupervisedTaskTaxonomy />
+  </div>
+</Figure>
+
+A subtle rule: define the target so that it is **knowable at evaluation time**. If "churn within 60 days" is the target, then at any given Monday, only cohorts from at least 60 days ago can be used to score the model honestly. This single discipline removes most of the bad surprises a churn model produces in its first month live.
+
+### 2. The features X
+
+Features are the columns the model will use to guess the target. The art is less in choosing fancy transformations than in being honest about *what is known at decision time*. If "number of refunds last month" can only be computed in the second week of the next month, it is not a real-time feature for a model that scores customers each Monday morning.
+
+A simple test: would a human in the loop, with access to your data warehouse but no clairvoyance, be able to look the value up at the moment a prediction needs to be made? If not, the feature is information from the future.
+
+### 3. The unit of analysis
+
+The unit names what one row of the dataset represents. Common units in this book:
+
+- a **customer**, scored periodically;
+- a **listing**, scored once at posting time;
+- a **transaction**, scored at the moment of authorization;
+- a **store-week**, scored before each week begins.
+
+The unit determines the count, the variance, and the meaning of every score. A model that predicts "transactions that are fraudulent" learns different patterns than one that predicts "customers who will, at some point this quarter, have a fraudulent transaction." Both can be useful — but they cannot be evaluated against each other.
+
+### 4. Label timing
+
+Label timing is the rule that connects features and outcome along the time axis. It looks innocuous and is the source of most leakage incidents:
+
+<DataTable
+  caption="Table 1. Three churn models with the same target name but very different label-timing rules. The choice fixes which features are admissible and what 'good performance' even means."
+  columns={[
+    { key: 'name', label: 'Variant', align: 'left' },
+    { key: 'label', label: 'Label rule', align: 'left' },
+    { key: 'window', label: 'Feature window', align: 'left' },
+    { key: 'use', label: 'Used for', align: 'left' },
+  ]}
+  rows={[
+    {
+      name: 'Forward-looking',
+      label: 'Did the customer churn in the next 60 days?',
+      window: 'Features cut off as of the score date.',
+      use: 'Weekly retention scoring.',
+    },
+    {
+      name: 'Retrospective',
+      label: 'Did the customer churn within the dataset?',
+      window: 'All features ever observed.',
+      use: 'Post-hoc segmentation only — not safe for scoring.',
+    },
+    {
+      name: 'Calendar-anchored',
+      label: 'Did the customer churn between July and September?',
+      window: 'Features as of June 30.',
+      use: 'Annual planning and offer design.',
+    },
+  ]}
+/>
+
+The retrospective variant looks brilliant in cross-validation and collapses in production: every feature has, in effect, been allowed to "look ahead" at the label. We will return to this in [§14.3](/ch27-train-test-generalization).
+
+---
+
+## Why "Same Algorithm" Does Not Mean "Same Task"
+
+Two teams may both report they are running a gradient-boosted classifier on customer features to predict churn, and yet be solving entirely different problems. One scores active customers; the other scores everyone who ever transacted. One uses a 60-day horizon; the other uses 12 months. One uses features known at decision time; the other has leakage.
+
+When two churn models disagree about whom to target, the discrepancy is almost never about the algorithm. It is about the task as defined by the four decisions above.
+
+<Callout variant="finding" title="Decision rule">
+  Before discussing model architecture, write the task on one line: <em>"For unit <strong>U</strong>, predict <strong>Y</strong> over horizon <strong>H</strong>, using features known by time <strong>T</strong>."</em> If three teammates cannot finish that sentence the same way, the modelling argument is premature.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+Three failure modes deserve flagging now, even though their remedies appear in later articles:
+
+1.  **Target drift across the project.** The original question was "predict churn next quarter," but the data pipeline only computes churn at year-end, so the model learns a different target than the one it is later asked about.
+2.  **Unit mismatch with the action.** The action lives at the customer level (send retention offer), but the data was modelled at the transaction level (score each receipt). Scores aggregate poorly across receipts; the manager has to glue them together with an opaque heuristic.
+3.  **Subtle horizon leakage.** A feature defined as "average spend in the last 30 days" computed for a churned customer ends on the day they churned, while for a retained customer it ends on the score date. Same name, different semantics, fatal in production.
+
+The next article — Train/Test Splits, Generalization, and Leakage — is essentially a longer treatment of failure mode #3 and its cousins.
+
+---
+
+## Managerial Takeaway
+
+A supervised model is not first a piece of code and second a business problem. It is first a one-sentence task contract — *unit, target, horizon, feature cut-off* — and then a piece of code. If the contract is incomplete, no amount of model tuning will rescue the score.
+
+> Write the task as one sentence, and demand that every dashboard, evaluation, and deployment trace back to it.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on framing supervised tasks."
+  questions={[
+    {
+      prompt: <>A retail team wants to predict whether customers will buy a coffee subscription. Two analysts each describe the task. Which description is decision-ready?</>,
+      options: [
+        { label: <>"Predict subscription buyers from our CRM."</> },
+        { label: <>"For each active customer scored on the first of the month, predict the probability of purchasing a subscription in the next 30 days using only features known as of midnight on the day before."</> },
+        { label: <>"Use machine learning to predict subscription revenue."</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The strong version names the unit, the target, the horizon, and the feature cut-off. The other two are topics, not tasks.</>,
+    },
+    {
+      prompt: <>A churn model uses the feature <code>refund_count_last_month</code> computed from invoice records that close two weeks after month-end. When the model goes live and scores customers on the first of each month, what is the likely problem?</>,
+      options: [
+        { label: <>The feature is missing for one third of customers, hurting accuracy.</> },
+        { label: <>The feature value at score time is not what the model trained on — it was computed retrospectively in training but is unavailable now.</> },
+        { label: <>The feature has too high a variance.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Label timing applies to features too: any feature must be reconstructible <em>as of</em> the score date with no information from the future.</>,
+    },
+    {
+      prompt: <>Two churn models report different lift on the same customer base. The first scores customers; the second scores transactions and aggregates to customers. What is the most likely source of disagreement?</>,
+      options: [
+        { label: <>One uses random forest, the other gradient boosting.</> },
+        { label: <>The unit of analysis is different, so the two models are answering different questions and cannot be directly compared.</> },
+        { label: <>The dataset is too small.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A different unit is a different task, even if the target name and the algorithm are identical.</>,
+    },
+  ]}
+/>

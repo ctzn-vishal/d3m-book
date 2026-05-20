@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "title": "Data language brief builder",
+    "subtitle": "The closing artifact for Part I.",
+    "kicker": "Part I studio"
+  },
+  "workflow": [
+    {
+      "id": "question",
+      "label": "Decision question",
+      "question": "What business claim is the table supposed to support?",
+      "artifact": "One sentence naming the decision, unit, outcome, and time window.",
+      "red_flag": "The analysis starts with a chart or model before the claim is clear."
+    },
+    {
+      "id": "grain",
+      "label": "Row contract",
+      "question": "What does one row mean, and what questions does that grain rule out?",
+      "artifact": "A row-grain note for every source table and derived table.",
+      "red_flag": "A table is joined, averaged, or reshaped before its row grain is named."
+    },
+    {
+      "id": "metrics",
+      "label": "Metric contract",
+      "question": "Which metrics carry the decision, and how are they defined?",
+      "artifact": "Numerator, denominator, unit, window, exclusions, owner, and decision use.",
+      "red_flag": "A dashboard metric appears without a denominator or time window."
+    },
+    {
+      "id": "joins",
+      "label": "Context joins",
+      "question": "Which tables must be attached, and what row count should the join produce?",
+      "artifact": "Join map, key fields, expected grain, row-count check, and anti-join check.",
+      "red_flag": "The joined table has more rows than the left table and no one can explain why."
+    },
+    {
+      "id": "quality",
+      "label": "Quality triage",
+      "question": "Which missing values, outliers, duplicates, and coverage gaps can change the claim?",
+      "artifact": "Severity-ranked quality checks with owner and response.",
+      "red_flag": "Bad rows are deleted or imputed silently to make the report run."
+    },
+    {
+      "id": "memo",
+      "label": "Data brief",
+      "question": "What should remain reusable after this analysis?",
+      "artifact": "A one-page data language brief plus metric dictionary.",
+      "red_flag": "The deliverable is only a chart deck, with no reusable table or metric definition."
+    }
+  ],
+  "sections": [
+    {
+      "id": "question",
+      "label": "Decision question",
+      "memo_text": "This brief asks what claim the data can support before visualization or modeling begins. The claim must name the decision, the outcome, the business unit, and the time window.",
+      "evidence_standard": "A reader can tell whether the claim is descriptive, diagnostic, causal, predictive, or operational.",
+      "limit": "A broad topic such as growth, churn, or pricing is not yet an evidence question."
+    },
+    {
+      "id": "grain",
+      "label": "Row contract",
+      "memo_text": "Each source table gets a row contract: one transaction, one store-month, one county, one state with monthly columns, or one customer-campaign send. Derived tables state their new grain.",
+      "evidence_standard": "The brief names what the grain permits and what it cannot support.",
+      "limit": "Most double-counting and wrong averages begin as grain confusion."
+    },
+    {
+      "id": "metrics",
+      "label": "Metric contract",
+      "memo_text": "The brief defines recurring metrics as contracts. Revenue, share, churn, conversion, margin, and average order value each get formula, unit, window, exclusions, owner, and decision use.",
+      "evidence_standard": "Two analysts using the brief would compute the same number from the same source rows.",
+      "limit": "A metric name without a denominator or window is not a definition."
+    },
+    {
+      "id": "joins",
+      "label": "Context joins",
+      "memo_text": "The brief lists which context tables are attached, which keys are used, and what row count the result should have. Anti-joins become quality checks, not afterthoughts.",
+      "evidence_standard": "The result grain is known before anyone sums a column after the join.",
+      "limit": "Technically valid joins can still create conceptually wrong rows."
+    },
+    {
+      "id": "quality",
+      "label": "Quality triage",
+      "memo_text": "The brief separates fix, flag, investigate, and keep. Returns, store coverage changes, long-tail volumes, missing keys, and impossible values are not treated with one cleaning rule.",
+      "evidence_standard": "Quality issues are ranked by business risk and have an owner or response.",
+      "limit": "Silent cleaning makes the dashboard smoother and the evidence weaker."
+    },
+    {
+      "id": "memo",
+      "label": "Data brief",
+      "memo_text": "The final artifact is a reusable data language brief: business question, row contracts, variable dictionary, join map, metric dictionary, quality triage, and limits. It hands cleanly to Part II visualization.",
+      "evidence_standard": "A new analyst can reuse the definitions without asking the original author.",
+      "limit": "The brief prepares evidence; it does not yet prove causality or prescribe action."
+    }
+  ],
+  "rubric": [
+    {
+      "criterion": "Question named",
+      "why_it_matters": "The data work has a decision target."
+    },
+    {
+      "criterion": "Grain explicit",
+      "why_it_matters": "Rows can be joined, averaged, and reshaped safely."
+    },
+    {
+      "criterion": "Metrics governed",
+      "why_it_matters": "Recurring numbers have stable definitions."
+    },
+    {
+      "criterion": "Quality triaged",
+      "why_it_matters": "Bad rows become business signals, not silent deletions."
+    }
+  ]
+}

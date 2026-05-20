@@ -1,0 +1,205 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { MultimodalArchitecture } from '@/components/Book/part5/RagVisionAgentDiagrams';
+
+<DropCap>
+
+A customer support team has the call recording, the transcript, the CRM notes, and the photo of the broken espresso machine the customer sent. A merchandising team has the shelf photo, the planogram document, the SKU list, and the regional sales numbers. A creative team has the ad video, the campaign brief, the music track, and the platform analytics. Every one of these workflows mixes modalities — text, images, audio, video, structured data — and every one of them is a candidate for multimodal AI.
+
+</DropCap>
+
+The unifying idea is the same one that powered embeddings in §19.1: place different kinds of inputs into a *shared meaning space* so that a single nearest-neighbour query or a single language model can act across all of them. This article surveys what that enables in business, and where the rough edges still are.
+
+---
+
+## The Executive Question
+
+> When the evidence a decision needs comes from multiple modalities — text, image, audio, video — can we use one system to reason across all of them?
+
+The answer is increasingly yes. The architecture is the *shared embedding space* introduced by models like CLIP, extended to audio (CLAP, Whisper) and video (V-JEPA, VideoCLIP).
+
+---
+
+## The Shared-Space Architecture
+
+A multimodal model trains an encoder per modality, with a contrastive objective that pulls semantically related items together in the embedding space. The result: the vector for the text "labrador puppy" sits near the vector for an actual photo of a labrador puppy.
+
+<Figure width="page-outset" caption="Figure 1. A multimodal model takes four different input types and places them in a shared embedding space. The same nearest-neighbour primitive from §19.1 now works across modalities — search by text, find an image; search by audio, find a similar clip; search by image, find related video.">
+  <div className="not-prose">
+    <MultimodalArchitecture />
+  </div>
+</Figure>
+
+Three properties make the architecture useful:
+
+- **Cross-modal search.** A text query retrieves images, or an image retrieves related text. The standard "show me dark espresso mugs" → product image search.
+- **Cross-modal generation.** Text-to-image (Midjourney, DALL-E, Imagen), image-to-text (captioning, alt-text), audio-to-text (Whisper). Each is the model translating between modalities.
+- **Joint reasoning.** Modern frontier models (GPT-4o, Gemini, Claude with vision) can take a prompt that includes text *and* images *and* audio and produce a single response that reasons across all of them.
+
+The third property is the most operationally important. A support agent can hand the model an image of a defective product, the customer's message, and ask "what should I tell them?" — and get a single answer that integrates both.
+
+---
+
+## Business Use Cases
+
+A non-exhaustive tour of what's shipping in 2026.
+
+<DataTable
+  caption="Table 1. Multimodal AI use cases by industry. Each row combines at least two modalities; the business value is usually in the integration, not in any single modality alone."
+  columns={[
+    { key: 'use', label: 'Use case', align: 'left' },
+    { key: 'mod', label: 'Modalities', align: 'left' },
+    { key: 'ex', label: 'Example', align: 'left' },
+  ]}
+  rows={[
+    {
+      use: 'Visual product search',
+      mod: 'image → text → catalog',
+      ex: 'User uploads a photo of a shoe; system finds similar SKUs.',
+    },
+    {
+      use: 'Automated product descriptions',
+      mod: 'image → text',
+      ex: 'E-commerce platform generates alt-text and listing copy from product photos.',
+    },
+    {
+      use: 'Sales-call coaching',
+      mod: 'audio → text → summary',
+      ex: 'Whisper transcribes; LLM extracts objections, commitments, next steps.',
+    },
+    {
+      use: 'Meeting summarization',
+      mod: 'audio + video + text',
+      ex: 'Notetaker captures speakers, slides shown, action items.',
+    },
+    {
+      use: 'Retail shelf monitoring',
+      mod: 'video + structured planogram',
+      ex: 'In-store cameras check planogram compliance and out-of-stock in real time.',
+    },
+    {
+      use: 'Visual social-media monitoring',
+      mod: 'image + text',
+      ex: 'Surface posts where the brand logo appears, even when the brand isn\'t named in caption.',
+    },
+    {
+      use: 'Compliance review of marketing creative',
+      mod: 'image + video + text',
+      ex: 'Flag ads that violate brand guidelines or regulatory restrictions before launch.',
+    },
+    {
+      use: 'Support ticket triage with media',
+      mod: 'image + text',
+      ex: 'Customer attaches a photo of a defect; ticket is automatically routed and product replacement triggered.',
+    },
+    {
+      use: 'Audio brand listening',
+      mod: 'audio → embedding',
+      ex: 'Identify podcast and video mentions of the brand without explicit keyword matching.',
+    },
+  ]}
+/>
+
+A pattern: most of these were previously possible but expensive — they required custom integration of separate models. Multimodal foundation models collapse the integration step into a single API call.
+
+---
+
+## Three Practical Modalities Beyond Text-and-Image
+
+Brief notes on the three less-discussed modalities:
+
+**Audio.** OpenAI's Whisper made high-quality transcription a commodity. Beyond transcription, audio embeddings (CLAP and successors) let you do similarity search and classification on raw audio — useful for podcast monitoring, ad-spot tracking, and acoustic scene analysis. Speaker diarization ("who said what") is the next layer; still imperfect but production-viable.
+
+**Video.** Treated as either a stack of images or as a separate modality. Two patterns dominate: extract keyframes and run image analysis (cheap, works well for static scenes), or use a video-aware model that reasons about motion (more expensive, necessary for action recognition). In-store analytics, content moderation at scale, and ad-creative analysis all run on this.
+
+**Structured data alongside text.** Less glamorous, increasingly important: an LLM that can read a CSV or query a database alongside its prose context. Tools like Code Interpreter, function calling, and "computer use" agents (§21.4) make this routine. The boundary between "text + structured" and "agentic" is blurring fast.
+
+---
+
+## A Worked Example: Visual Product Search
+
+The use case: Bean &amp; Basket runs an online store with several hundred SKUs (coffee mugs, brewing equipment, branded merchandise). A customer uploads a photo of a mug they saw in a café and asks "do you sell something like this?"
+
+The pipeline:
+
+1.  **At index time.** Embed every product image in the catalog with a multimodal model (CLIP-style image encoder). Store the vectors.
+2.  **At query time.** Embed the user-uploaded photo with the same model.
+3.  **Retrieve.** Top-k nearest catalog items by cosine similarity.
+4.  **Display.** Return the matches with prices and links.
+
+That's it — a few hundred lines of code, no labelled training data, leverages a pretrained multimodal model. The same pattern works for "find this on our site" features across retail and content platforms.
+
+A variant: combine the image embedding with a text query ("show me mugs like this, but in white"). The user's text adjusts the query vector before retrieval; the system returns visually similar items filtered by the text constraint. This is the design pattern behind every modern visual search engine.
+
+---
+
+## The Quiet Revolution: Vision-Language Models in the Browser
+
+Frontier multimodal models running in the cloud (GPT-4o, Gemini, Claude) have gotten the headlines. The quieter shift is that **smaller, capable multimodal models now run locally** — in browsers, on phones, on edge devices. A merchandiser walking a store can take a photo, ask an on-device model "is this planogram-compliant?", and get an answer without sending the image anywhere.
+
+The implication for governance: privacy-sensitive multimodal workflows that previously required sending media to a cloud API can increasingly run on-device. The privacy story changes; the cost story changes; the latency story changes. Worth tracking.
+
+<Callout variant="finding" title="The unification">
+  Text-only, vision-only, audio-only architectures are giving way to multimodal foundation models. The same shared-space pattern that made embeddings useful is now the default for AI systems that have to read more than one kind of input.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+- **Modality bias.** A multimodal model trained on web-scale image-text pairs may have very different coverage across modalities. Audio coverage is often weaker than image coverage. Audit before deploying.
+- **Misleading cross-modal grounding.** A model captioning an image may invent details that aren't in the image. The same hallucination patterns from text apply.
+- **Performance gap from headline benchmarks.** Frontier multimodal models score well on standard benchmarks and fail in surprising ways on real business documents and noisy media. Test on your data.
+- **Cost at scale.** A single multimodal API call is cheap; running it across millions of media items can become expensive fast. Batch and cache aggressively.
+- **Latency on rich media.** A model that processes a 30-second video can take seconds to respond. Architecture choices (keyframe extraction, on-device pre-processing) matter.
+- **Privacy and copyright.** Customer photos, ad creative, audio from calls — all of this carries IP and privacy obligations. Bake in redaction, retention, and consent from the start.
+
+---
+
+## Managerial Takeaway
+
+Multimodal AI is the architectural endgame of everything in Part V. Text became vectors. Images became vectors. Audio became vectors. They all share a space now, and a single language model can reason across all of them.
+
+> *Identify the workflows that mix modalities. Use multimodal models where the integration was previously the hard part. Watch the costs. Govern the privacy.*
+
+The next chapter pivots from "what AI can do" to "how to put it to work" — language models as workflow components, the prompts that direct them, the structured outputs that integrate them, and the agents that act through them.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on multimodal AI."
+  questions={[
+    {
+      prompt: <>A user uploads a photo of a coffee mug and asks "do you sell something like this?" Which architecture is the natural choice?</>,
+      options: [
+        { label: <>Train a custom classifier on coffee mugs.</> },
+        { label: <>Embed the user image and the catalog with the same multimodal model; return nearest neighbours by cosine similarity.</> },
+        { label: <>OCR the image.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Visual product search is a textbook multimodal use case. The shared-space embedding pattern makes it a few-hundred-line system with no task-specific training.</>,
+    },
+    {
+      prompt: <>A team wants to summarize sales calls with action items. The right modality pipeline is:</>,
+      options: [
+        { label: <>Audio → transcription → LLM summarization → structured output.</> },
+        { label: <>Video → captioning.</> },
+        { label: <>Image → OCR.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Sales calls are audio; transcription (Whisper or similar) brings them into text, where the same LLM patterns from §21.3 apply.</>,
+    },
+    {
+      prompt: <>The defining property of a multimodal foundation model (CLIP and successors) is:</>,
+      options: [
+        { label: <>It can process images and text separately.</> },
+        { label: <>It places images and text into a <em>shared</em> embedding space, so similarity searches and language reasoning can span both modalities.</> },
+        { label: <>It runs faster than text-only models.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The shared space is the architectural advance. Without it, multimodal queries require custom plumbing per modality pair.</>,
+    },
+  ]}
+/>

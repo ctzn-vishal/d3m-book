@@ -11,7 +11,7 @@ export interface BookHomeProps {
   attribution?: React.ReactNode | null;
 }
 
-const DEFAULT_KICKER = 'A data-driven analysis using the General Social Survey';
+const DEFAULT_KICKER = 'An executive MBA book on evidence, decisions, and AI workflows';
 
 /**
  * Format an article number for display.
@@ -24,11 +24,7 @@ function formatArticleNumber(num: string): string {
 
 const DEFAULT_ATTRIBUTION: React.ReactNode = (
   <>
-    Generated with{' '}
-    <code className="rounded bg-surface px-1 py-0.5 text-[11px]">gss-article</code>,{' '}
-    <code className="rounded bg-surface px-1 py-0.5 text-[11px]">gss-charts</code>
-    , and{' '}
-    <code className="rounded bg-surface px-1 py-0.5 text-[11px]">gss-literature</code>.
+    Built with the D3M book template, MDX articles, and reusable evidence components.
   </>
 );
 
@@ -51,6 +47,7 @@ export function BookHome({ book, kicker = DEFAULT_KICKER, attribution = DEFAULT_
   const totalCount = book.parts
     .flatMap(p => p.chapters)
     .flatMap(c => c.articles).length;
+  const broadChapterCount = book.parts.flatMap(p => p.chapters).length;
 
   return (
     <div className="bg-surface text-body">
@@ -91,7 +88,7 @@ export function BookHome({ book, kicker = DEFAULT_KICKER, attribution = DEFAULT_
                 <span className="text-muted"> articles published</span>
               </div>
               <div className="text-xs text-muted max-w-xs lg:text-right">
-                Six parts. Fifteen chapters. Five decades of survey data.
+                {book.parts.length} parts. {broadChapterCount} broad chapters. {totalCount} articles.
               </div>
             </div>
           </motion.div>

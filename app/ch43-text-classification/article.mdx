@@ -1,0 +1,159 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  TextConfusionMatrix,
+  SentimentOverTime,
+  AspectHeatmap,
+} from '@/components/Book/part5/TextDiagrams';
+
+<DropCap>
+
+Text classification is supervised learning, with the features built from language. Everything from Chapter 15 — train/test splits, calibration, the threshold–profit curve — applies. What changes is the feature engineering. The features are no longer "days since last purchase"; they are "presence of the word *crashed*", "TF-IDF weight of *refund*", "the average BERT embedding of the document". The decision logic is the same. The representations are richer and the failure modes are different.
+
+</DropCap>
+
+This article walks through the two text classification tasks every customer-voice system needs — **routing** (which bucket?) and **sentiment** (positive, negative, neutral) — and then adds the move that actually moves the needle for managers: **aspect-based sentiment**, where the model says what specifically the customer liked or disliked.
+
+---
+
+## The Executive Question
+
+> Of the text the firm is receiving, what should be routed where, what should be flagged urgent, and which aspects of the product or service are driving the negative cases?
+
+The same setup as §15.1, applied to a different input space. The answer is a probability for each class and a managerial threshold for action.
+
+---
+
+## Routing: Many Classes, Operational Pay-off
+
+A support team that handles a thousand tickets a day cannot read each one to decide whether it's a billing question, a delivery problem, an app bug, or a quality complaint. A classifier that assigns a bucket and a confidence is the standard fix.
+
+<Figure width="page-outset" caption="Figure 1. Confusion matrix from a held-out evaluation of a four-class ticket router. The diagonal is the model getting tickets right; the brightest off-diagonal cell — quality tickets misrouted to billing — is where the next round of feature work or labelled examples will pay off.">
+  <div className="not-prose">
+    <TextConfusionMatrix />
+  </div>
+</Figure>
+
+Three reading habits for multi-class confusion matrices:
+
+- **The diagonal is the win.** Sum the diagonal and divide by the total for an overall accuracy.
+- **The brightest off-diagonal cell is the next investment.** That confusion costs the team the most.
+- **The asymmetry is informative.** Billing predicted as quality is a different problem than quality predicted as billing.
+
+The standard recipe stays the same as Chapter 15: start with TF-IDF + logistic regression as the baseline, add features (n-grams, domain dictionary, metadata), move to a tree ensemble or a fine-tuned transformer only if the baseline's bias is the binding constraint.
+
+---
+
+## Sentiment: A Number for the Tone of a Document
+
+Sentiment classification is a special case of text classification with two or three target classes (positive / negative / neutral) and a heavy industry of off-the-shelf models. Two camps:
+
+- **Dictionary-based** (VADER, Loughran-McDonald). Predefined lists of words with polarity scores. Fast, transparent, easy to deploy. Fails on sarcasm, negation, and domain-specific language. Often the right tool for monitoring on standard English text.
+- **Transformer-based** (BERT, FinBERT, RoBERTa). Models fine-tuned on labelled sentiment data. Handle context, negation, and longer documents better. Slower, opaque, often more accurate.
+
+The honest position: neither dominates. Dictionary models are excellent baselines and surprisingly hard to beat when the corpus is clean. Transformer models are necessary when domain-specific or sarcastic language is common. The next section — aspect-based sentiment — usually beats both for managerial use.
+
+A standard view is sentiment over time, with event annotations:
+
+<Figure width="page-outset" caption="Figure 2. Weekly average sentiment on Bean & Basket reviews. The dip in weeks 12–15 corresponds to the app outage on May 12 — sentiment recovers but takes about three weeks to return to baseline.">
+  <div className="not-prose">
+    <SentimentOverTime />
+  </div>
+</Figure>
+
+The chart is more useful than a single overall sentiment number for one reason: it puts the *context* on the screen. The dip without the outage annotation is a curiosity; the dip with the annotation is a story.
+
+---
+
+## Aspect-Based Sentiment: The Move That Matters
+
+Overall sentiment hides the picture. A 3-star review that says "food was incredible but the wait was awful" looks the same to a sentiment classifier as one that says "totally fine, nothing memorable." Both score around 0. They encode different information for an operator.
+
+**Aspect-based sentiment** scores the document against named aspects of the product or service. For Bean &amp; Basket the natural aspects are coffee, pastry, staff, wait time, app, value. The output is a grid of (aspect × document) sentiment scores.
+
+<Figure width="page-outset" caption="Figure 3. Aspect-based sentiment for Bean & Basket, by store region. Coffee and staff are loved everywhere; the app is hurting everywhere; the South-East has a wait-time problem the other regions do not. None of this is visible from overall sentiment.">
+  <div className="not-prose">
+    <AspectHeatmap />
+  </div>
+</Figure>
+
+Two things to notice:
+
+- **The aspects are a managerial choice.** They reflect the levers the firm can pull. "Wait time" appears because there is an operations team that can fix it; "app" appears because there is a product team that owns it.
+- **Geographic variation is the action.** The headline number ("overall sentiment is +0.18 this week") doesn't tell anyone what to do on Monday. The heatmap tells the South-East operations lead exactly where to look.
+
+This is also the cleanest setup for the GPT-as-measurement move in §19.3. Once you can name aspects, you can also name constructs: "intent to return", "severity of complaint", "anger vs. disappointment". The aspect-based heatmap is the warm-up for the construct-based heatmap.
+
+<Callout variant="finding" title="Why aspect sentiment wins">
+  Aspect-based sentiment moves the conversation from "is the brand healthy?" to "where, and for whom, is which part of the brand under stress?" The first question is hard to act on. The second is what an operator needs.
+</Callout>
+
+---
+
+## Two Variants Worth Knowing
+
+**Entity-based sentiment.** Same idea, but the units are named entities (people, products, competitors) rather than aspects. The classical use case: a tweet that says "Goose Island used to be great, AB InBev ruined it" is negative on AB InBev and positive-but-nostalgic on Goose Island. Standard sentiment models return a single negative score and miss the asymmetry.
+
+**Emotion detection.** Instead of three sentiment classes, fine-grained emotions: joy, anger, sadness, fear, disappointment, surprise, etc. Useful when the difference between "sad" and "angry" implies a different action — disappointment from a brand acquisition is *not* the same as anger about a defective product. The Goose Island brewery acquisition case in §19.3 leans heavily on this distinction.
+
+Both are special cases of the same idea: aggregating sentiment to a unit smaller than the document gives operators the leverage to act.
+
+---
+
+## What Can Go Wrong
+
+- **Sarcasm and negation.** Standard sentiment classifiers fail on "I just love waiting forty minutes for cold coffee" — both VADER and many fine-tuned models miss the inversion.
+- **Domain shift.** A FinBERT model trained on 10-K filings will mishandle Twitter complaints. Always validate on a sample of the target domain.
+- **Mistaking overall sentiment for actionable signal.** A team that monitors only the headline sentiment number will miss the underlying aspect movements.
+- **Class imbalance.** Most customer text is mildly positive. Models trained on 80% positive corpora can default to "positive" everywhere and look 80% accurate while being useless.
+- **Bilingual or multilingual text.** A model trained on English data scoring Spanish-language reviews returns confident nonsense. Either filter to one language or use a multilingual model.
+
+---
+
+## Managerial Takeaway
+
+Text classification is supervised learning under a different feature pipeline. The two operationally important variants are routing (where should this go?) and aspect-based sentiment (which part of the experience is under stress?). The headline sentiment number is rarely the right output for action.
+
+> *Route the text into managerial buckets. Score sentiment by aspect, not just overall. Watch the change, not the level.*
+
+The next article moves from supervised text — where the labels exist — to unsupervised text: topic models that discover themes without anyone naming them in advance.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on text classification."
+  questions={[
+    {
+      prompt: <>A confusion matrix for a four-class ticket router shows the strongest off-diagonal cell is "quality tickets predicted as billing". The most cost-effective improvement is to:</>,
+      options: [
+        { label: <>Switch to a fine-tuned BERT model.</> },
+        { label: <>Add labelled examples that distinguish quality from billing language — that confusion is where the model's confusion is concentrated.</> },
+        { label: <>Lower the decision threshold.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Multi-class confusion matrices point directly at the boundary where the model is weakest. Targeted data collection on that boundary usually beats a more elaborate model.</>,
+    },
+    {
+      prompt: <>A team reports "overall sentiment is +0.18 this week, holding steady." A regional operations lead asks where to focus. Which view is most informative?</>,
+      options: [
+        { label: <>Overall sentiment by week.</> },
+        { label: <>Aspect-based sentiment by region — coffee, pastry, staff, wait time, app, value.</> },
+        { label: <>Number of reviews per week.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>"Where to focus" is an aspect-by-region question. Aggregating to a single number defeats the purpose.</>,
+    },
+    {
+      prompt: <>A team uses VADER (a dictionary sentiment library) on financial earnings call transcripts and reports the results as evidence of management mood. What is the most credible objection?</>,
+      options: [
+        { label: <>VADER is too slow.</> },
+        { label: <>Domain shift — VADER is trained on general English, not finance-speak. A finance-tuned model (e.g. FinBERT) is the safer baseline.</> },
+        { label: <>The transcripts are too short.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Sentiment classifiers carry their training domain with them. Apply on the wrong domain and the scores are confidently miscalibrated.</>,
+    },
+  ]}
+/>

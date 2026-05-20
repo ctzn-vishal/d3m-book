@@ -1,0 +1,114 @@
+{
+  "metadata": {
+    "title": "Soup visual decision brief builder",
+    "subtitle": "A reusable sequence for turning the Part II soup visuals into an executive pricing note.",
+    "kicker": "Part II visual studio",
+    "case": "Countercyclical Pricing - Progresso Soup"
+  },
+  "workflow": [
+    {
+      "id": "question",
+      "label": "Decision question",
+      "question": "Should Progresso investigate whether its soup prices are countercyclical?",
+      "artifact": "One sentence naming lever, outcome, unit, and time.",
+      "red_flag": "The brief starts with a dashboard screenshot instead of a pricing question."
+    },
+    {
+      "id": "grain",
+      "label": "Evidence grain",
+      "question": "What does one row mean in the soup evidence?",
+      "artifact": "Store-month panel contract plus brand, region, and season fields.",
+      "red_flag": "A seasonal pattern is discussed without saying whether rows are stores, months, or store-months."
+    },
+    {
+      "id": "metrics",
+      "label": "Visual metrics",
+      "question": "Which metrics carry the visual argument?",
+      "artifact": "Volume, share, price, log volume, log price, and active-store coverage.",
+      "red_flag": "The brief mixes price, share, and volume without units or baselines."
+    },
+    {
+      "id": "joins",
+      "label": "Comparisons",
+      "question": "Which comparisons make the pattern visible?",
+      "artifact": "Winter versus non-winter, Progresso versus Campbell, region facets, and January index.",
+      "red_flag": "The dashboard uses a national average when the decision might differ by region."
+    },
+    {
+      "id": "quality",
+      "label": "Uncertainty and limits",
+      "question": "Which caveats should sit next to the charts?",
+      "artifact": "Store coverage, interval plots, descriptive trend labels, and causal limit statement.",
+      "red_flag": "A smooth trend line is interpreted as a causal elasticity estimate."
+    },
+    {
+      "id": "memo",
+      "label": "Executive brief",
+      "question": "What should the manager do after seeing the visuals?",
+      "artifact": "One-page brief: pattern, evidence, limits, and next pricing test.",
+      "red_flag": "The page ends with another chart instead of a decision or next analysis."
+    }
+  ],
+  "sections": [
+    {
+      "id": "question",
+      "label": "Decision question",
+      "memo_text": "This brief asks whether Progresso should investigate a pricing policy that appears to raise price when seasonal soup demand is weak. The decision is not an immediate price cut; it is whether the pattern deserves a pricing test or deeper causal analysis.",
+      "evidence_standard": "Names the lever as price, the outcome as volume/share, the unit as store-month, and the season window as winter versus non-winter.",
+      "limit": "A broad statement about seasonality is not enough; the brief must name the possible managerial action."
+    },
+    {
+      "id": "grain",
+      "label": "Evidence grain",
+      "memo_text": "The core evidence is a monthly store panel with brand-level volume and price. Each row is a store-month observation, enriched with region and season labels. Aggregated visuals are summaries of that panel, not separate datasets.",
+      "evidence_standard": "The brief states the row contract before presenting aggregate seasonal charts.",
+      "limit": "If row grain is hidden, store coverage changes can masquerade as demand changes."
+    },
+    {
+      "id": "metrics",
+      "label": "Visual metrics",
+      "memo_text": "The main descriptive metrics are Progresso volume, Progresso share of category volume, average price, log volume, log price, and active-store count. Indexed views use January as the baseline so price and demand can be read on one comparison scale.",
+      "evidence_standard": "Each chart labels units, baseline, and whether values are raw, shares, logs, or indexes.",
+      "limit": "A price index and a volume index should not be read as dollars or cases sold."
+    },
+    {
+      "id": "joins",
+      "label": "Comparisons",
+      "memo_text": "The visual sequence compares winter with non-winter, Progresso with Campbell, national patterns with regions, and raw distributions with log-transformed distributions. These comparisons convert the dashboard from inventory into an argument.",
+      "evidence_standard": "Every figure answers one named comparison and leads to the next comparison.",
+      "limit": "A single national average can hide a regional pricing problem or a regional opportunity."
+    },
+    {
+      "id": "quality",
+      "label": "Uncertainty and limits",
+      "memo_text": "The interval plots show that some seasonal share comparisons are precise enough to guide attention, but precision is not causality. The log-price/log-volume slopes preview elasticity and must be labeled as descriptive.",
+      "evidence_standard": "The brief keeps coverage, uncertainty, and causal limits near the visuals they qualify.",
+      "limit": "A descriptive slope can be visually persuasive and still be confounded by seasonality, promotions, assortment, or competitor action."
+    },
+    {
+      "id": "memo",
+      "label": "Executive brief",
+      "memo_text": "The proposed brief says: Progresso volume and share fall sharply outside winter while price rises; the pattern varies by region; descriptive slopes suggest a strong price-volume association; the next step is a pricing test or quasi-experimental design before changing national policy.",
+      "evidence_standard": "The recommendation separates observed facts, managerial concern, and the next credible test.",
+      "limit": "The visual brief can justify investigation. It cannot by itself estimate the profit-maximizing price."
+    }
+  ],
+  "rubric": [
+    {
+      "criterion": "Soup case anchored",
+      "why_it_matters": "Students reuse one business setting while learning multiple chart forms."
+    },
+    {
+      "criterion": "Comparison visible",
+      "why_it_matters": "The eye can see season, region, brand, and price-volume contrasts."
+    },
+    {
+      "criterion": "Limits named",
+      "why_it_matters": "The dashboard does not turn descriptive evidence into causal proof."
+    },
+    {
+      "criterion": "Next test clear",
+      "why_it_matters": "The brief hands off naturally to pricing, regression, and causal chapters."
+    }
+  ]
+}

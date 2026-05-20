@@ -17,8 +17,8 @@ export interface StaticChartV1Props {
   svgUrl: string;
   /**
    * Required for accessibility. Describe what the chart shows in
-   * one sentence ("Republican confidence in science from 2010 to
-   * 2024").
+   * one sentence ("Weekend revenue is more volatile in suburban
+   * stores than downtown stores").
    */
   alt: string;
   /**
@@ -46,8 +46,7 @@ export interface StaticChartV1Props {
  * subtitle, source row).
  *
  * Use this when:
- *   1. The variable's `svg_url` (from `gss-charts` Step 2 metadata) is
- *      non-null, AND
+ *   1. A generated SVG or external chart asset is available, AND
  *   2. The article author has explicitly chosen the static version
  *      (planner output sets `static_preferred: true`).
  *
@@ -58,9 +57,8 @@ export interface StaticChartV1Props {
  * point: an institutionally-published chart, a frozen reference
  * snapshot, or a paragraph where interactive controls would distract.
  *
- * No fetch. The caller resolves the URL — either from a manifest
- * the article-side fetch script wrote during data fetch, or directly
- * from `graph_metadata.svg_url`.
+ * No fetch. The caller resolves the URL from imported article data,
+ * a manifest written during data fetch, or a public/static asset path.
  */
 export function StaticChartV1({ svgUrl, alt, source, title, subtitle }: StaticChartV1Props) {
   return (

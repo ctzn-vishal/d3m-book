@@ -1,0 +1,91 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Callout } from '@/components/Book/Callout';
+
+<DropCap>
+
+This book grew out of an observation that has bothered me for years. Managers are taught more analytics every decade. Decisions don't seem to get noticeably better. The methods get fancier; the dashboards multiply; the AI announcements pile up. Yet the same companies make the same kinds of mistakes — running campaigns that look like they worked, shipping prediction models with no action attached, mistaking polished dashboards for evidence, declaring a model "good enough" without knowing what it was supposed to be good *enough for*.
+
+</DropCap>
+
+The book's wager is that the missing skill isn't a new method. It's a discipline that connects the question to the evidence to the decision — and that holds together across the increasingly different kinds of evidence a modern firm has access to. Structured tables, charts, causal designs, predictive models, text and images, language-model workflows. All of these are tools. None of them is the work.
+
+---
+
+## What this book is
+
+A textbook for **MBA-level managers and analysts** who want to be fluent in the methods of modern data work — not to write them from scratch, but to commission them, evaluate them, deploy them, and govern them. The reader should leave able to:
+
+- Frame a business decision so that data work has a clear job.
+- Choose the evidence language that fits the question.
+- Read the standard visualizations of each method without getting lost in the math.
+- Recognize the standard failures of each method without having to relearn them every quarter.
+- Ship the one-page artefacts — cards, memos, studios — that turn analysis into infrastructure.
+
+It is **not** a textbook for an aspiring data scientist who needs to derive the algorithms. The mathematics appears only when it earns its place; the code lives in the appended case packs, not in the chapter prose.
+
+---
+
+## What this book is not
+
+A few things to set expectations:
+
+- It is not a survey of every method. The methods chosen are the ones that survive a managerial review.
+- It is not a tools tutorial. Vendor names appear briefly when they're useful for orientation; the rest of the book stays platform-agnostic.
+- It is not a forecast of the AI frontier. Some chapters touch capabilities that are still moving fast — those chapters are organized so the *principle* outlives the *example*.
+- It is not a moralizing book about AI ethics. Ethics shows up where it shapes the architecture (privacy, bias, governance), and we treat it as part of design, not an addendum.
+
+---
+
+## How to read it
+
+Three honest options:
+
+**Cover to cover.** The arc is deliberate. Each Part adds a new evidence language to the one before; the artefacts compound. This is the recommended path for a class or a self-study reader.
+
+**Question-first.** Each Part is keyed to a question — *what happened?* (I), *what should we see?* (II), *what caused it?* (III), *what's likely next?* (IV), *what does the text say?* (V), *how do we operate this?* (VI). If you arrive with a question, jump straight to its Part. §0.2 lays out the map.
+
+**Method reference.** Each chapter is short enough to be re-read on its own. Use the table of contents as an index when you need to look something up.
+
+<Callout variant="finding" title="The shared discipline">
+  Whichever path you take, the book's spine is the same: <em>name the decision, name the counterfactual, name the threshold for acting</em>. Every Part teaches a method; every method earns its place by serving that spine.
+</Callout>
+
+---
+
+## A note on cases
+
+The book leans on one continuous fictional company — **Bean &amp; Basket Coffee**, a multi-store specialty coffee chain — and a handful of standalone data cases that get appended outside the chapter prose. The reasons are practical:
+
+- A continuous through-line lets methods *accumulate*. By Part V, the same Bean &amp; Basket customer that was a row in a churn model in Part IV is also a paragraph in a complaint cluster, a face in a shelf photo, and a voice in a sales call.
+- Standalone data cases give methods a second testing ground beyond the through-line. The Progresso soup panel, the Zillow Colorado study, the BAV brand survey, the Goose Island Twitter dataset, the earnings call transcripts, the job postings, the Yelp reviews — each one anchors a specific method to a real dataset.
+
+The chapter prose stays conceptual. The data exercises live in the case packs.
+
+---
+
+## A note on the AI chapters
+
+The chapters that touch language models, embeddings, agents, and multimodal AI are the most exposed to the speed of the field. The book's response is to organize those chapters around *patterns that have stabilized* — RAG, structured outputs, the agent loop, the eval rubric — and to keep specific model names out of the prose. The patterns will outlast the brand names.
+
+The two-paragraph rule for those chapters: a manager who reads them in 2028 should find the principles still apply. A manager who looks for which model to use next quarter should look elsewhere — to provider documentation, to current benchmarks, to a vendor pitch — and come back to this book for the *frame* they use to evaluate what they find.
+
+---
+
+## What you will have at the end
+
+By the time you finish Part VI, you should hold five things you didn't have at the start:
+
+1.  A **vocabulary** for naming any business question's evidence language.
+2.  A **toolkit** of standard methods and the standard visuals that interpret them.
+3.  A **portfolio of artefacts** — one-page cards, memos, and studios — that turn loose analysis into something the firm can audit, reproduce, and refresh.
+4.  A **case library** the book has worked across, that you can revisit for any specific method.
+5.  A **stance** — methods serve decisions, evidence comes before equations, monitoring closes the loop, and the discipline outlives the technology.
+
+The first two are common to any analytics textbook. The last three are what this book is actually for.
+
+---
+
+The next two short articles — §0.1 and §0.2 — make the frame concrete: what we mean by data-driven decision making, and the evidence stack the book climbs. After that, Part I begins.
+
+— *Vishal Singh*<br />
+*Stern School of Business, NYU*

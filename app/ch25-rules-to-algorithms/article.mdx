@@ -1,0 +1,149 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { AlgorithmicLifecycle } from '@/components/Book/part4/PredictionDiagrams';
+import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
+
+<div className="not-prose mb-6">
+  <LadderPosition compact current={4} caption="Part IV — predicting who or what will do what next." />
+</div>
+
+<DropCap>
+
+A manager already classifies, scores, and ranks dozens of times a day. Which leads should sales call first? Which customers look like they are about to leave? Which transactions deserve a second look? These decisions get made — quickly, often well, often inconsistently — by combining experience with rough rules of thumb. An algorithm does not replace that judgment. It writes the rule down, applies it to every case at once, and remembers what it did.
+
+</DropCap>
+
+Part IV is about that translation. Across the next four chapters we walk from a business question to a model that can score new units the firm has never seen before — and back to a manager who has to decide whether the score is worth acting on. This first article sets up the basic move: from informal rule, to data-driven rule, to a decision that monitors itself.
+
+---
+
+## The Executive Question
+
+> What pattern in our history is reliable enough to act on automatically, and where does a manager still need to be in the loop?
+
+Two changes happen when a rule becomes algorithmic. First, the rule is no longer carried in one head; it can be applied consistently to every customer, claim, or click in the firm. Second, the rule becomes auditable — its inputs, its breakpoints, and its mistakes can be inspected. That second change is what makes the move from rules to algorithms a managerial topic, not a technical one.
+
+---
+
+## Rules, Scores, and Decisions
+
+Every algorithmic decision sits somewhere on a short ladder:
+
+<DataTable
+  caption="Table 1. The same business question, viewed at four levels of formalization. As the rule moves down the ladder, consistency improves and the auditing surface grows, but interpretability and the manager's local knowledge can erode."
+  columns={[
+    { key: 'level', label: 'Level', align: 'left' },
+    { key: 'churn', label: 'Churn example', align: 'left' },
+    { key: 'lead', label: 'Lead-scoring example', align: 'left' },
+    { key: 'pros', label: 'What it gains', align: 'left' },
+  ]}
+  rows={[
+    { level: 'Manager intuition', churn: '"This customer feels at risk."', lead: '"That account looks promising."', pros: 'Local context, cheap to start.' },
+    { level: 'Hand-coded rule', churn: 'If no purchase in 60 days AND >2 tickets, flag.', lead: 'If pricing page visited AND company >500, hot lead.', pros: 'Explicit and reviewable.' },
+    { level: 'Statistical score', churn: 'Logistic regression on RFM features.', lead: 'Logistic score on firmographic + behavior.', pros: 'Ranks the whole book, not just edge cases.' },
+    { level: 'Machine-learned model', churn: 'Gradient boosting over 30 features.', lead: 'Ensemble + interaction features.', pros: 'Captures non-linear patterns and interactions.' },
+  ]}
+/>
+
+The right level depends on the **decision frequency** and the **cost of a single mistake**. A pricing committee that meets monthly will tolerate — and may want — manager intuition layered on a coarse rule. A retention engine that has to act on every weekly active customer cannot scale without a score.
+
+---
+
+## What an Algorithm Actually Is
+
+Strip away the implementation, and an algorithm in this book is just three things:
+
+1. A **dataset** of past cases, each with features and (usually) a known outcome.
+2. A **fitting procedure** that finds a function mapping features to outcome.
+3. A **deployment loop** that applies the function to new cases and feeds the results back.
+
+The loop is the part most managerial conversations skip and most production failures hide in.
+
+<Figure width="page-outset" caption="Figure 1. The predictive-modeling lifecycle. Preparation and modeling are where most teaching time gets spent; evaluation and operations are where most business value is lost.">
+  <div className="not-prose">
+    <AlgorithmicLifecycle />
+  </div>
+</Figure>
+
+Three observations about the lifecycle that managers should hold onto:
+
+- **The first stage and the last stage are the same conversation.** Monitoring failures almost always trace back to a fuzzy problem statement. *Whom* are we scoring, for *what* action, on *what* horizon? If those answers drift, the model drifts whether the data shifts or not.
+- **The dashed feedback arrow is not optional.** A churn model that gets retention offers also changes who churns next quarter. The model's outputs reshape the data its successor will see.
+- **The boxes are not equally hard.** With AutoML and modern tooling, model training and selection are increasingly cheap. *Defining the target*, *engineering features*, and *interpreting evaluations* are where managerial work concentrates.
+
+---
+
+## When To Algorithmize, and When Not To
+
+Not every decision wants to be an algorithm. A useful test is to ask three questions in sequence:
+
+1.  **Is the decision repeated often enough that consistency pays?** A one-time policy choice will not benefit from a model; a weekly retention decision applied to a million customers will.
+2.  **Is there enough labelled history to learn the pattern?** "Enough" is fuzzy, but if no past case looks anything like the case you are scoring, the model is extrapolating, not predicting.
+3.  **Can the firm act on the output?** A model that predicts customers will churn is useless if no team owns retention offers. The decision-readiness of the *action* matters as much as the accuracy of the *score*.
+
+If the answer to any of these is no, do not start with a model. Start by writing the rule down and watching what it does for a month.
+
+<Callout variant="caveat" title="The most expensive failure mode">
+  Teams routinely sink quarters into building a high-AUC churn model only to discover the marketing organization has no retention offer to deploy. The model is fine. The decision is missing. Establish the action first.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+Three pitfalls recur whenever a manager is handed a model for the first time.
+
+1.  **Treating the score as a verdict.** A 0.84 probability of churn is not a churn; it is the model's bet, made under the assumptions of the training data. The next chapter is about deciding what to do with that bet.
+2.  **Confusing the model with the cause.** Models are very good at *ranking* and very bad at *explaining*. A feature can be the most important predictor of churn without being a place where intervention will reduce churn. This will become a recurring theme — and is why Part IV deliberately repeats the distinction from Part III between *what is likely to happen* and *what would change if we acted*.
+3.  **Forgetting that the model changes the world.** Once a retention model starts firing offers at high-risk customers, the firm stops observing what those customers would have done without an offer. The decisions made by the model become part of the data its replacement will train on.
+
+---
+
+## Managerial Takeaway
+
+The shift from rules to algorithms is less about technology than about commitment. To take it seriously, a leader has to:
+
+> Name the **decision**, name the **action**, name the **owner**, and name the **monitoring metric** — before naming the model.
+
+The rest of Part IV is the toolkit that makes that commitment operationally tractable: how to set up the prediction task (Chapter 14), how to evaluate the model on its business cost (Chapter 15), how to find structure when no label exists (Chapter 16), and how to turn the score into a repeatable customer decision that survives contact with production (Chapter 17).
+
+<QuizBlock
+  title="Concept check"
+  intro="Three quick questions on framing algorithmic decisions. Click an answer to reveal the explanation."
+  questions={[
+    {
+      prompt: <>A team has built a churn model with AUC 0.86. The marketing organization has no retention offer in market. Which is the most useful next step?</>,
+      options: [
+        { label: <>Deploy the model and report top-decile risk to executives.</> },
+        { label: <>Pause deployment and design the retention action the score will trigger.</> },
+        { label: <>Increase the model's depth to push AUC above 0.90.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A score without a corresponding action does nothing for the business. The standard sequence is action → score → threshold → monitoring.</>,
+    },
+    {
+      prompt: <>Which of these is <em>not</em> a reason to algorithmize a manager's rule of thumb?</>,
+      options: [
+        { label: <>The decision is repeated often.</> },
+        { label: <>There is enough labelled history.</> },
+        { label: <>The model's coefficients can be used as causal effects of features on outcomes.</> },
+        { label: <>The firm has an owner who can act on the output.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Predictive coefficients and feature importances are not causal effects. Use Part III methods when the question is "what would change if we intervened?" — and Part IV methods when it is "who is likely to do what next?"</>,
+    },
+    {
+      prompt: <>Why does the lifecycle diagram show a dashed feedback arrow from monitoring back to the problem statement?</>,
+      options: [
+        { label: <>To remind teams to update the model's hyperparameters.</> },
+        { label: <>Because once the model changes who gets contacted, the data-generating process changes, and the original problem statement may no longer describe the world the next model will face.</> },
+        { label: <>To indicate that the cycle ends with deployment.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Models that change behavior change the data their replacements will be trained on. The feedback arrow is the most easily ignored — and most consequential — part of the diagram.</>,
+    },
+  ]}
+/>

@@ -1,0 +1,57 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { SoupDashboardCritique } from '@/components/Book/part2/SoupVisualEvidence';
+import critiqueRaw from './data/soup-dashboard-critique.json';
+
+export const critique = critiqueRaw;
+
+<DropCap>
+
+A dashboard is not successful because every chart is attractive. It is successful when the reader knows what to monitor, what to diagnose, and what decision or next test follows. The Progresso soup dashboard already has a strong visual story. The teaching opportunity is to turn that story into a decision system.
+
+</DropCap>
+
+## The executive question: *how should a dashboard move from monitoring to diagnosis to action?*
+
+The existing soup dashboard has four strong ingredients: monthly category volume, seasonal pricing, a store map, and category share. It also has an intuitive headline: demand weakens in summer while Progresso price rises. That is a good dashboard seed because the pattern is visual, memorable, and strategically uncomfortable. The redesign challenge is to keep the strong case evidence while making the decision path explicit.
+
+The redesign question is not whether the dashboard looks polished. It does. The question is whether the dashboard ends in a better managerial decision question. A visual system that stops at "interesting" is unfinished.
+
+Figure 1 treats the current dashboard as a critique object. Each panel gets a job. Each job gets an upgrade. The point is to teach a reusable design discipline: monitor, diagnose, decide.
+
+<Figure width="screen-inset" caption="Figure 1. The soup dashboard becomes a decision system when each panel has a job and the final panel names the next test.">
+  <div className="not-prose">
+    <SoupDashboardCritique data={critique} />
+  </div>
+</Figure>
+
+The strongest dashboard move in Figure 1 is the final step. A descriptive dashboard should not end by declaring that Progresso should lower price. It should end by naming what must be learned next: whether price changes caused lower volume, whether promotions or inventory explain the pattern, and which regions deserve separate pricing tests.
+
+## Monitor, diagnose, decide
+
+A dashboard sequence has three modes.
+
+**Monitor** asks whether something important changed. In the soup case, monthly category volume monitors the seasonal demand cycle.
+
+**Diagnose** asks where the change came from. Seasonal price, share, region, and store maps diagnose whether the Progresso pattern is broad, regional, or competitive.
+
+**Decide** asks what action or test follows. The decision panel should distinguish what the dashboard shows from what it cannot prove.
+
+This distinction keeps the dashboard honest. A monitor panel should not pretend to identify causes. A diagnostic panel should not skip the next question. A decision panel should not hide uncertainty.
+
+<Callout variant="caveat" title="The dashboard should hand off to causal analysis">
+  The soup dashboard can show countercyclical pricing. It cannot prove the causal effect of price on volume. Its best decision is to recommend the next credible pricing test or quasi-experimental design.
+</Callout>
+
+## What can go wrong
+
+The first failure is the attractive dead end. The dashboard makes the pattern obvious, but the viewer does not know what to do next. The page gets praise and then disappears.
+
+The second failure is the overclaiming caption. A chart shows volume falling as price rises, and the caption says price caused the decline. That sentence belongs only after the identification work has been done.
+
+The third failure is missing operational context. Store coverage, region definitions, winter definitions, product definitions, and map approximations all affect interpretation. A dashboard does not need to display every caveat at once, but it must put the relevant caveat near the relevant chart.
+
+## Managerial takeaway
+
+A dashboard should have an ending. In the soup case, the ending is not "Progresso should cut price." The ending is sharper: "Progresso appears to price countercyclically; the pattern varies by region; before changing policy, estimate elasticity with a design that separates price from seasonality." That is what a visual evidence dashboard should do: make the next decision question unavoidable.

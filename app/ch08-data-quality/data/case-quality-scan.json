@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "title": "Case data quality scan",
+    "source": "case/soup, case/zillow, case/county"
+  },
+  "checks": [
+    {
+      "check": "Panel coverage",
+      "case": "Soup",
+      "finding": "Active stores range from 1,112 in 2001-06 to 1,388 in 2003-05.",
+      "risk": "A seasonal chart can confuse changing coverage with changing demand.",
+      "response": "Show coverage near the figure or model store coverage explicitly."
+    },
+    {
+      "check": "Wide time columns",
+      "case": "Zillow",
+      "finding": "The state file has 316 monthly value columns from 2000-01 to 2026-04.",
+      "risk": "New months arrive as new columns, which breaks hard-coded dashboards.",
+      "response": "Reshape to state-month rows at ingestion."
+    },
+    {
+      "check": "Geographic keys",
+      "case": "County",
+      "finding": "FIPS codes must stay five-character identifiers, including leading zeroes.",
+      "risk": "Converting IDs to numbers can break map joins.",
+      "response": "Store geographic keys as strings and validate length."
+    },
+    {
+      "check": "Long-tail volume",
+      "case": "Soup",
+      "finding": "Progresso store-month volume median is 659, while the 99th percentile is 9,871.",
+      "risk": "Means and unscaled charts can be dominated by a few very large stores.",
+      "response": "Show distributions and consider logs or robust summaries."
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  TargetingTaxonomy,
+  ReachSimilarityCurve,
+  RetargetingFunnel,
+} from '@/components/Book/part4/SegmentationDiagrams';
+
+<DropCap>
+
+A clustered segmentation lives in an analyst's notebook. A targetable audience lives on an ad platform. The bridge between the two is the topic of this article — and it is where most of the algorithmic ideas of the previous chapters become operational. Targeting is segmentation that has been wired into an action: a campaign, a budget, a creative, an auction.
+
+</DropCap>
+
+We work through the bridge in four parts. First, the taxonomy of targeting that every major ad platform exposes — location, demographic, interest, behavior, custom, lookalike. Second, the under-the-hood explanation of what a *lookalike* audience really is (nearest-neighbour scoring at platform scale). Third, the reach-vs-similarity dial that every campaign has to set. Fourth, the funnel that retargeting is designed to nudge.
+
+The chapter draws on the digital-marketing case material in `case/part4/Facebook_AD_Platform.Rmd`. We deliberately keep the discussion platform-agnostic. The names and surface details rotate; the underlying ideas don't.
+
+---
+
+## The Executive Question
+
+> Now that we know who looks like our best customers, how do we put that knowledge in front of media buying — and how broadly should we cast the net?
+
+The second clause is the hard one. A perfectly targeted audience that contains 800 people will not move revenue. A broad audience that contains everyone is just untargeted advertising. The dial between the two is the central decision.
+
+---
+
+## The Targeting Taxonomy
+
+Every major ad platform exposes a similar set of targeting families. The vocabulary varies; the structure does not.
+
+<Figure width="page-outset" caption="Figure 1. Six families of targeting that combine to define an audience. The first four are inferences platforms make about users; the last two are bridges from the firm's own data (custom audiences) and from the algorithm's similarity model (lookalike audiences).">
+  <div className="not-prose">
+    <TargetingTaxonomy />
+  </div>
+</Figure>
+
+Two practical notes on how the families combine:
+
+- **Layering tightens.** Each additional filter (women, in Brooklyn, who like espresso, who shop online) shrinks the audience multiplicatively. Two or three filters are usually enough; five is usually too many.
+- **The families have different freshness profiles.** Demographic data updates rarely; behavioural data updates by the hour. A campaign that depends heavily on behavioural targeting needs the platform to keep its signals fresh — which is a quiet dependency on the platform itself.
+
+The two families that map most directly to ideas from Part IV are *custom audiences* and *lookalike audiences*.
+
+---
+
+## Custom Audiences: Bring Your Own Segment
+
+A **custom audience** is what you get when the firm hands the platform a list of its own customers (or website visitors, app users, CRM records) and asks to show ads only to those people. It is the operational form of the segmentations from [§16.1](/ch36-unsupervised-segmentation).
+
+The most common variants:
+
+- **Customer list upload.** Hashed email addresses or phone numbers from the firm's CRM, matched on the platform's side.
+- **Website visitors.** Built from pixel-based tracking on the firm's site, often segmented by which pages they visited.
+- **App users.** Built from SDK-based tracking inside the firm's app.
+- **Engagement audiences.** People who have interacted with the firm's content on the platform itself.
+
+Custom audiences are the right tool for **retention** and **retargeting**. They are not a growth tool, because they cap out at the size of the firm's existing relationships.
+
+---
+
+## Lookalike Audiences: Nearest Neighbours at Platform Scale
+
+A **lookalike audience** asks the platform to find users who *resemble* a seed audience the firm uploaded. The seed is usually a custom audience of high-value customers — converters, repeat buyers, premium tier, whatever the firm wants more of.
+
+Stripped of platform-specific language, the recipe is exactly what Chapter 16 prepared us to expect:
+
+1.  The platform represents every user as a vector of attributes — demographics, interests, behaviours.
+2.  It computes an *aggregate representation* of the seed audience (e.g., the centroid, or a learned classifier).
+3.  It scores every user on the platform for similarity to that representation.
+4.  It returns the top-X% of users by similarity as the lookalike audience.
+
+In other words: lookalikes are k-nearest-neighbour (or learned classifier) inference applied at platform scale, against features the firm cannot see. That last point is the crucial one. The advertiser has no access to the features used to compute similarity, no ability to audit them, and limited recourse if the model is unfair, drifty, or simply wrong.
+
+<Callout variant="caveat" title="The opaque-model rule">
+  Lookalike audiences are a third-party model the firm cannot inspect. They work well in many cases, but the firm should not pretend it is doing its own analytics when it is, in fact, outsourcing the modelling to a platform whose interests are imperfectly aligned.
+</Callout>
+
+---
+
+## The Reach–Similarity Dial
+
+Lookalike audiences come with a percentage knob: how broadly should the platform cast its net?
+
+<Figure width="page-outset" caption="Figure 2. The reach–similarity curve for a lookalike audience. A 1% audience is closely matched to the seed but small; a 10% audience reaches an order of magnitude more people, at much lower average similarity. The right setting depends on what you want the campaign to do.">
+  <div className="not-prose">
+    <ReachSimilarityCurve />
+  </div>
+</Figure>
+
+A useful way to think about the trade-off:
+
+- **A 1% audience** is the right default for **conversion campaigns** — when each impression has a high cost and the firm wants the best chance of a paid action. Closely matched users convert better; the small audience size means the campaign has to be paired with sufficient creative variation or run for long enough to learn.
+- **A 5–10% audience** is the right default for **awareness or top-of-funnel campaigns** — when the goal is to expand reach into adjacent segments, and a lower conversion rate is acceptable in exchange for a much larger audience.
+- **A blended approach** — running the 1% as a conversion campaign and the 5–10% as an awareness campaign in parallel — is the standard way to use the dial in production.
+
+The shape of the curve is a property of the platform and the seed. A high-quality, large, distinctive seed pushes the curve up — there is more "lookalike signal" to spend. A small or generic seed flattens the curve quickly.
+
+---
+
+## Retargeting and the Funnel
+
+Custom audiences become especially powerful when paired with the **funnel** customers move through. Retargeting is the practice of showing different ads to users at different stages.
+
+<Figure width="page-outset" caption="Figure 3. A simplified ad funnel. Retargeting layers each have a job: re-engage users who clicked but didn't visit; bring back visitors who didn't add to cart; rescue carts that didn't convert. The right creative differs at each step.">
+  <div className="not-prose">
+    <RetargetingFunnel />
+  </div>
+</Figure>
+
+The natural retargeting strategy is to define a custom audience per stage and serve a campaign whose creative is tuned to the next step. A cart-abandonment campaign can show the specific product left behind, with a time-bound incentive. A site-visit retargeting campaign can show a creative about the value proposition, not about closing.
+
+A common failure mode is treating retargeting as a single audience with a single creative. It is more useful to think of it as a small portfolio of mini-campaigns, each addressed to a different stage of the funnel.
+
+---
+
+## AI-Powered Optimization
+
+Modern ad platforms have introduced AI-assisted layers — variously called Advantage+, Performance Max, Smart Bidding, depending on the platform — that automatically:
+
+- Generate creative variations and serve the best performers.
+- Choose placements (feed, story, search, display) on the fly.
+- Expand the targeting beyond the advertiser's explicit selections when it predicts performance will improve.
+- Bid in real time against an auction.
+
+Two managerial implications follow:
+
+1.  **The targeting decision becomes a constraint, not a recipe.** The advertiser sets the *seed* (audiences), the *budget* (constraint), and the *objective* (conversion, sale, click). The platform fills in the operational details.
+2.  **The evaluation language changes.** With auto-creative and auto-placement, the experiment is no longer "does ad A beat ad B?" It is "does my budget plus my seed plus the platform's automation beat what I had before?" The unit of evaluation is the campaign-quarter, not the creative pair.
+
+This is the place where digital advertising and the machine-learning lifecycle from [§14.1](/ch25-rules-to-algorithms) meet. The platform is running a continuous-learning loop over the advertiser's behalf. The advertiser's job is to define the loop's objective and to monitor whether the loop is doing what was asked.
+
+<Callout variant="caveat" title="Counterfactual check">
+  A high-converting lookalike audience proves the platform found users who convert; it does not prove the *ad* caused the conversion. The §9.2 question — what would have happened without the ad — returns here as an *incrementality test*: hold out a comparable audience that sees a public-service ad or no ad, and measure the lift over the holdout. Selection looks like effect until you construct the counterfactual.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+- **Confusing targeting with treatment effect.** A lookalike campaign that drives high conversion has not proved that the ad caused the conversion — it has proved that the platform found users who would have converted anyway. The Part III chapters on incrementality and lift apply.
+- **Audience contamination.** Showing the same user a conversion campaign and a retention campaign at the same time muddles attribution and wastes spend. Mutually exclusive audiences should be enforced at the campaign level.
+- **Seed contamination.** If the seed audience used to build a lookalike contains both real high-value customers and noisy edge cases (employees, bots, accidental signups), the lookalike will be diluted. The seed is the input feature; clean it like one.
+- **Over-trusting the platform's reporting.** Platforms grade their own homework. Where independent measurement is feasible (uplift studies, hold-out audiences), use it.
+
+---
+
+## Managerial Takeaway
+
+Targeting on a modern ad platform is the operational form of everything in Chapter 16. Custom audiences are bring-your-own segments; lookalike audiences are nearest-neighbour scoring at scale, performed against features the platform sees and the firm does not.
+
+> *Bring a clean seed. Pick the reach–similarity dial that matches the campaign's goal. Define mutually exclusive audiences across the funnel. Hold the platform accountable with measurement the platform doesn't own.*
+
+The next article moves from broad audiences to per-customer ranking — how the same logic powers the recommendation lists that have become the user interface for so much commerce.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on targeting and lookalikes."
+  questions={[
+    {
+      prompt: <>A team uses a 1% lookalike from their top-100 high-value customers and reports excellent conversion. They infer that the platform's targeting works well. What additional evidence would actually support that inference?</>,
+      options: [
+        { label: <>An incrementality test or holdout that compares the lookalike audience to a comparable untargeted population — measuring lift, not absolute conversion.</> },
+        { label: <>Higher click-through rate.</> },
+        { label: <>A larger seed audience.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>High conversion in a lookalike audience may reflect targeting that found users who would have converted anyway. Incrementality measurement is the only way to separate true lift from selection.</>,
+    },
+    {
+      prompt: <>For a brand-awareness campaign with broad goals, which lookalike size is the natural default?</>,
+      options: [
+        { label: <>1% — highest similarity is always best.</> },
+        { label: <>5–10% — broader reach with somewhat lower similarity is the right trade-off for awareness.</> },
+        { label: <>0.5% — the smaller the better.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Awareness campaigns benefit from reach; conversion campaigns benefit from similarity. The dial should match the campaign's purpose.</>,
+    },
+    {
+      prompt: <>A seed audience of "high-value customers" was built from any customer who has ever made a purchase, including a wave of one-time discount buyers who never returned. The resulting lookalike is likely to:</>,
+      options: [
+        { label: <>Be a clean amplification of the firm's best customers.</> },
+        { label: <>Be diluted by the discount-buyer signal — the platform will match users who resemble bargain seekers as well as users who resemble the genuine high-value cohort.</> },
+        { label: <>Reach exactly the same population as the seed.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The seed is the model's training data. A noisy seed yields a noisy model; defining "high-value" carefully is upstream of every targeting decision.</>,
+    },
+  ]}
+/>

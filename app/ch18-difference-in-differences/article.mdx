@@ -1,0 +1,205 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { DiDTwoByTwo } from '@/components/Book/part3/ConceptDiagrams';
+import { DiDParallelTrendsVisual } from '@/components/Book/part3/CausalRegressionVisuals';
+
+<DropCap>
+
+When a firm rolls out a new feature, a price change, or a regional policy, it rarely has the luxury of randomly assigning treatment. Rollouts are regional, gradual, and tangled up with macro trends. Difference-in-differences (DiD) is the workhorse design for these settings. It bypasses the two naive comparisons every executive deck reaches for first — *before vs. after* in the treated group, and *treated vs. untreated* after the rollout — and replaces them with a comparison that nets out both confounders at once.
+
+</DropCap>
+
+This article works through the DiD logic visually and algebraically, derives the regression specification that recovers the DiD estimate as an interaction coefficient, and ends with the identifying assumption — parallel trends — that everything else hinges on.
+
+---
+
+## The Executive Question: Did We Grow Faster Than the Tide?
+
+A regional team launches a new mobile checkout feature in the West Coast stores. Weekly transactions in West Coast stores rise from 100,000 to 130,000 — a thirty-thousand-transaction gain. The team prepares to recommend a national rollout.
+
+Before approving, the executive question:
+
+> *How much of the 30,000-transaction increase was actually caused by the feature, and how much would have happened anyway?*
+
+Over the same period, untreated East Coast stores rose from 90,000 to 100,000. Ten thousand of the West Coast's gain was the tide rising for everyone. The remaining twenty thousand is the part the feature can plausibly claim.
+
+That subtraction-of-subtractions is the DiD estimator. The 2×2 below shows where it sits relative to the two naive comparisons.
+
+<DataTable
+  caption="Table 1. Why naive comparisons overstate the effect of a regional rollout. The DiD estimate (third row) nets out both the common tide and the stable baseline gap between regions."
+  columns={[
+    { key: 'comparison', label: 'Comparison', align: 'left' },
+    { key: 'calc', label: 'Calculation', align: 'left' },
+    { key: 'result', label: 'Implied effect', align: 'left' },
+    { key: 'bias', label: 'What it confounds with the effect', align: 'left' },
+  ]}
+  rows={[
+    { comparison: 'Naive before/after (West only)', calc: 'West Post − West Pre = 130k − 100k', result: '+30k', bias: 'Common seasonal/macro tide affecting both regions' },
+    { comparison: 'Naive cross-section (Post only)', calc: 'West Post − East Post = 130k − 100k', result: '+30k', bias: 'Stable baseline difference between the two regions' },
+    { comparison: 'Difference-in-differences', calc: '(130k − 100k) − (100k − 90k)', result: '+20k', bias: 'Neither (under parallel trends)' },
+  ]}
+  highlightRow={2}
+/>
+
+---
+
+## The 2×2 Picture
+
+The cleanest way to understand DiD is to memorize the 2×2.
+
+<Figure caption="Figure 1. The four cells of a difference-in-differences design. The DiD estimate is the difference between the two row-wise differences: how much the treated group changed minus how much the control group changed.">
+  <DiDTwoByTwo />
+</Figure>
+
+Both row-wise differences absorb the *stable* baseline gap between the two groups (the column means cancel within each row). Their difference also absorbs the *common time shock* (the row means cancel within each column). What remains is exactly the part of the post-treatment change in the treated group that the control group did *not* experience.
+
+---
+
+## Visualizing DiD: Three Stories, One Picture
+
+The pedagogical power of DiD is best seen by toggling between the three comparison frames in Figure 2. The same four numbers support three very different decisions depending on which comparison you make.
+
+<Figure width="screen-inset" caption="Figure 2. Difference-in-differences with parallel trends. Toggle through the three views. The first two are the naive comparisons that overstate the effect; the third constructs the counterfactual path the treated group would have followed without treatment — the dashed line that the control group's slope projects forward — and the gap between that and the observed post-treatment value is the DiD estimate.">
+  <div className="not-prose">
+    <DiDParallelTrendsVisual />
+  </div>
+</Figure>
+
+The dashed projected line is the heart of the design: it is the *counterfactual* for the treated group, built from the control group's trend. DiD's identifying assumption is that this projection is credible.
+
+---
+
+## DiD as a Regression
+
+The 2×2 view is intuitive, but most production estimates of DiD use a regression, because regressions extend gracefully to many regions, many time periods, and additional controls.
+
+The two-way regression is
+
+<Equation
+  label="Difference-in-differences regression"
+  latex={String.raw`Y_{it} \;=\; \beta_0 + \beta_1 \,\text{Treated}_i + \beta_2 \,\text{Post}_t + \beta_3 \,(\text{Treated}_i \times \text{Post}_t) + \varepsilon_{it}`}
+/>
+
+where
+
+- <M>{String.raw`\text{Treated}_i = 1`}</M> if unit <M>{String.raw`i`}</M> is in the treated group,
+- <M>{String.raw`\text{Post}_t = 1`}</M> if period <M>{String.raw`t`}</M> is after the treatment date,
+- <M>{String.raw`\beta_3`}</M> is the coefficient on the interaction — and the DiD estimate.
+
+To see why <M>{String.raw`\beta_3`}</M> *is* the DiD, write out the expected outcome in each of the four cells and subtract differences of differences:
+
+| Cell | Expected outcome |
+| --- | --- |
+| Control · Pre | <M>{String.raw`\beta_0`}</M> |
+| Control · Post | <M>{String.raw`\beta_0 + \beta_2`}</M> |
+| Treated · Pre | <M>{String.raw`\beta_0 + \beta_1`}</M> |
+| Treated · Post | <M>{String.raw`\beta_0 + \beta_1 + \beta_2 + \beta_3`}</M> |
+
+The change for the control group is <M>{String.raw`\beta_2`}</M>. The change for the treated group is <M>{String.raw`\beta_2 + \beta_3`}</M>. The difference of differences is
+
+<Equation
+  latex={String.raw`\text{DiD} \;=\; (\beta_2 + \beta_3) - \beta_2 \;=\; \beta_3`}
+/>
+
+The interaction coefficient absorbs both the row difference (treated minus control) and the column difference (post minus pre), leaving only the part that lives in the treated-post cell alone.
+
+---
+
+## The Identifying Assumption: Parallel Trends
+
+DiD works because the treated and control groups would have followed *parallel trends* in the absence of treatment. The two pre-treatment levels are allowed to differ; the two pre-treatment *slopes* are not.
+
+<Callout variant="definition" title="Parallel trends">
+  Without treatment, the average outcome path for the treated group would have followed the same shape over time as the average outcome path for the control group:
+  <Equation latex={String.raw`\mathbb{E}\!\left[\,Y_{i,\text{post}}(0) - Y_{i,\text{pre}}(0)\,\big|\,\text{Treated}=1\,\right] \;=\; \mathbb{E}\!\left[\,Y_{i,\text{post}}(0) - Y_{i,\text{pre}}(0)\,\big|\,\text{Treated}=0\,\right]`} />
+  This does <em>not</em> require equal levels — only equal slopes in the absence of treatment.
+</Callout>
+
+The visual test is plotting both groups' pre-treatment trajectories on the same chart. If they look parallel for several periods before the treatment date, the assumption is credible. If the treated group was already accelerating relative to the control group before the treatment hit, the design is in trouble — that pre-existing momentum will be mistaken for treatment effect.
+
+The most useful pre-treatment plot is the **event study**: align all units to event time (treatment date = 0), plot the average treated–control gap in each pre and post period, and check whether the pre-period gaps are flat. We will see event-study plots throughout the next chapters; for now, the principle is just: *if your pre-trends are not parallel, you do not have a DiD design — you have a story.*
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on the difference-in-differences design. Click to reveal."
+  questions={[
+    {
+      prompt: <>The DiD estimator works by netting out two specific confounders. Which pair?</>,
+      options: [
+        { label: <>Measurement error in the treatment, and measurement error in the outcome.</> },
+        { label: <>The stable baseline level difference between the treated and control groups, and any common time shock that affects both groups equally.</> },
+        { label: <>Sampling noise in the pre period and sampling noise in the post period.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>DiD's two subtractions are exactly designed to remove (a) the time-invariant level gap between groups (treated vs. control), and (b) the time shock that hits both groups (post vs. pre). What is left is the part of the treated group's post change that the control group did not experience.</>,
+    },
+    {
+      prompt: <>In the regression <M>{String.raw`Y_{it} = \beta_0 + \beta_1 \text{Treated}_i + \beta_2 \text{Post}_t + \beta_3 (\text{Treated}_i \times \text{Post}_t) + \varepsilon_{it}`}</M>, which coefficient is the DiD estimate, and what does <M>{String.raw`\beta_1`}</M> represent?</>,
+      options: [
+        { label: <>The DiD estimate is <M>{String.raw`\beta_1 + \beta_2`}</M>; <M>{String.raw`\beta_1`}</M> is the average treatment effect.</> },
+        { label: <>The DiD estimate is <M>{String.raw`\beta_3`}</M>; <M>{String.raw`\beta_1`}</M> is the stable, pre-period baseline difference between the treated and control groups.</> },
+        { label: <>The DiD estimate is <M>{String.raw`\beta_2`}</M>; <M>{String.raw`\beta_1`}</M> is the common time shock.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The interaction term <M>{String.raw`\beta_3`}</M> captures the additional change in the treated group, beyond the common time shock. <M>{String.raw`\beta_1`}</M> captures the permanent baseline gap between the two groups; <M>{String.raw`\beta_2`}</M> captures the common time shock.</>,
+    },
+    {
+      prompt: <>You plot the pre-treatment average outcome for the treated group and the control group over the eight months leading up to the rollout. The treated group is slightly higher in every period, but is rising more steeply than the control group. What does this tell you about a DiD estimate using these data?</>,
+      options: [
+        { label: <>The design is fine: parallel trends only requires that the two groups have similar baseline levels.</> },
+        { label: <>Parallel trends is in trouble. The treated group was already accelerating before treatment, and DiD will attribute that pre-existing momentum to the treatment, overstating the effect.</> },
+        { label: <>The design is fine: the level difference is the baseline coefficient <M>{String.raw`\beta_1`}</M>, which DiD already absorbs.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Parallel trends is about pre-treatment <em>slopes</em>, not levels. Diverging slopes mean the control group's projected trajectory is no longer a credible counterfactual for the treated group. DiD will mistake the pre-existing acceleration for treatment effect.</>,
+    },
+    {
+      prompt: <>The marketing team ran a TV ad campaign in the West Coast (the treated region) at exactly the same time as the loyalty feature was launched. The DiD design is now…</>,
+      options: [
+        { label: <>Strengthened — the ad campaign adds variation that DiD can exploit.</> },
+        { label: <>Compromised — the design cannot separate the loyalty feature's effect from the ad campaign's effect. The estimate captures their combined impact.</> },
+        { label: <>Unaffected, because DiD's parallel-trends assumption only concerns the pre-period.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A simultaneous, treated-only shock violates the assumption that the post-treatment trajectories would have moved together absent the rollout. DiD will attribute the combined effect of feature + ads to the feature alone. The fix is either a design that breaks the bundle (e.g., the ads ran in a different region) or an explicit acknowledgement that the estimate is the joint effect.</>,
+    },
+  ]}
+/>
+
+---
+
+## When DiD Is Not Enough: Looking Ahead
+
+DiD assumes you have a *group* of control units whose averaged trajectory is a credible counterfactual. Two things stretch that assumption in real settings:
+
+- **There is only one treated unit.** A state passes a unique policy; a firm pilots in a single city. The classical DiD does not naturally pick a "best" comparison — and ad-hoc matching is fragile. Synthetic control (Chapter 12.2) addresses this by building a custom weighted counterfactual.
+- **Treatment effects vary across units.** The same rollout helps low-income customers a lot and loyal customers not at all. The average effect understates the targeting opportunity. Heterogeneous treatment effects (Chapter 12.3) tackle this directly.
+
+DiD remains the right starting point for most multi-unit rollouts. The next two articles handle the cases where it isn't enough.
+
+---
+
+## What Can Go Wrong
+
+Three failure modes account for almost every DiD critique in the wild:
+
+1.  **Pre-trends are not parallel.** If the treated group was already on a different trajectory before the treatment hit, DiD will absorb that pre-existing momentum as treatment effect. Always inspect the event-study plot before reading the headline.
+2.  **Spillovers from treated to control.** If treated units influence control outcomes — customers messaging non-customers, treated stores cannibalizing control-store demand — the control group is no longer a clean counterfactual, and the estimate attenuates toward zero.
+3.  **Staggered adoption with heterogeneous effects (the TWFE pitfall).** When different units adopt the treatment at different times *and* the treatment effect varies by adoption cohort, two-way fixed effects regression can recover a weighted average where some weights are negative. Modern estimators (Callaway–Sant'Anna, de Chaisemartin–D'Haultfœuille, Sun–Abraham) are designed to fix this. If your design has staggered timing, use one of them.
+
+---
+
+## Managerial Takeaway
+
+Difference-in-differences is the default identification strategy for regional rollouts. To lead with it:
+
+- Always demand the pre-trend plot. If the pre-period lines are not parallel, refuse to read the headline coefficient.
+- Ensure no other shock hit only the treated group at the rollout date. Cross-reference competitor moves, marketing campaigns, and macro events before trusting the estimate.
+- For multi-region staggered rollouts, ask which estimator the team is using. Plain TWFE on staggered data is fragile; modern HTE-robust estimators are the new baseline.
+
+The next chapter handles the single-treated-unit case that ordinary DiD cannot.

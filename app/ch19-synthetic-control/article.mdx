@@ -1,0 +1,204 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { SyntheticControlBuilder } from '@/components/Book/part3/ConceptDiagrams';
+import { ZillowSyntheticControl } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+The most strategically important decisions a firm makes are often executed in a single market: a new store format in one city, an algorithmic rollout in one country, a regulatory change in one state. Standard difference-in-differences breaks down here. There is no natural pool of treated units to average; picking one comparison unit is subjective and easy to manipulate. Synthetic control was designed for exactly this case: it builds the counterfactual by combining several donor units into a weighted twin that tracks the treated unit before the intervention, and uses that twin to estimate what would have happened afterwards.
+
+</DropCap>
+
+This chapter develops the synthetic control idea visually, derives the optimization that fits the donor weights, names the assumption that makes the estimate causal, and walks through a worked case on state-level housing data.
+
+---
+
+## The Executive Question: Can We Build a Credible Twin?
+
+A team launches a new store format in Denver and reports that the Denver store's transactions are now 15% above their pre-launch average. The next question, the right question, is:
+
+> *How much of the 15% gain would have happened in Denver anyway, given national coffee trends, regional population growth, and local economic conditions?*
+
+The obvious moves are all bad. *Use the rest of the country as a control:* Denver is too small a slice. *Pick one comparison city:* the choice is subjective and can be manipulated. Pick Portland and the gap looks huge; pick Chicago and it looks tiny. Pick a "natural twin" by hand and the audience will ask, reasonably, why that one.
+
+Synthetic control turns the choice of comparison into an optimization. Instead of one city, it builds a *weighted combination* of several untreated cities — Denver is some specific blend, say, of Portland, Austin, Seattle, and Salt Lake City — chosen so the synthetic Denver tracks the real Denver as closely as possible *before* the new format launched. After the launch, the gap between the actual Denver and synthetic Denver is the design's estimate of the effect.
+
+---
+
+## The Method, in Pictures
+
+The idea fits on one diagram.
+
+<Figure caption="Figure 1. Synthetic control as a three-step pipeline. A pool of untreated donor units feeds an optimizer that picks non-negative weights summing to one. The weighted combination of donors becomes a synthetic counterfactual that should track the treated unit's pre-treatment path.">
+  <SyntheticControlBuilder />
+</Figure>
+
+A few features of the diagram are intentional and worth naming:
+
+- **The weights are non-negative and sum to one.** The synthetic counterfactual is a *convex combination* of donor units. It can never be more extreme than the most extreme donor, which protects against the algorithm finding a spurious match by extrapolating wildly.
+- **Most donor weights are zero.** Synthetic control is naturally sparse. Out of dozens of candidate donors, the algorithm typically picks four to six with meaningful weights. The rest get nothing.
+- **The matching happens in the pre-treatment period only.** No information from the post-treatment period enters the weight selection. That separation is what makes the post-treatment gap interpretable as a causal effect.
+
+---
+
+## The Method, in Math
+
+Let the treated unit be indexed <M>{String.raw`j = 1`}</M> and let <M>{String.raw`j = 2, \dots, J+1`}</M> index the donor pool. Observe outcomes <M>{String.raw`Y_{jt}`}</M> for periods <M>{String.raw`t = 1, \dots, T`}</M>, with the treatment occurring at time <M>{String.raw`T_0`}</M>. Let <M>{String.raw`W = (w_2, \dots, w_{J+1})`}</M> be the weight vector with constraints
+
+<Equation
+  label="Weight constraints"
+  latex={String.raw`w_j \;\ge\; 0 \quad \text{and} \quad \sum_{j=2}^{J+1} w_j \;=\; 1`}
+/>
+
+The optimizer picks <M>{String.raw`W`}</M> to minimize the pre-treatment fit error between the treated unit and the weighted donor combination:
+
+<Equation
+  label="Synthetic control objective"
+  latex={String.raw`\min_{W} \; \sqrt{\frac{1}{T_0} \sum_{t=1}^{T_0} \left(\, Y_{1t} - \sum_{j=2}^{J+1} w_j Y_{jt} \,\right)^2}`}
+/>
+
+Once the optimal weights <M>{String.raw`W^*`}</M> are in hand, the synthetic counterfactual for any post-treatment period is
+
+<Equation
+  latex={String.raw`\widehat{Y}^{0}_{1t} \;=\; \sum_{j=2}^{J+1} w_j^* \, Y_{jt}`}
+/>
+
+and the estimated treatment effect at time <M>{String.raw`t > T_0`}</M> is the gap
+
+<Equation
+  label="Synthetic control effect"
+  latex={String.raw`\widehat{\tau}_{1t} \;=\; Y_{1t} - \widehat{Y}^{0}_{1t}`}
+/>
+
+Two design choices in the objective are worth highlighting. The constraints prevent extrapolation: synthetic Denver cannot be 5 × Portland minus 2 × Boise, even if that combination would have fit pre-trends perfectly. And the optimization runs only on pre-treatment data: nothing about the post period is allowed to influence the weights.
+
+<Callout variant="definition" title="Why the constraints matter">
+  Non-negative, sum-to-one weights confine the counterfactual to the <em>convex hull</em> of the donor pool. Synthetic Denver can be a blend of Portland, Austin, and Seattle — but not Portland minus Boise. This keeps the comparison <em>interpolative</em> (always within the support of observed donors) rather than <em>extrapolative</em> (potentially constructing impossible combinations).
+</Callout>
+
+---
+
+## Reading a Synthetic Control Plot
+
+A credible synthetic control study presents three figures, in this order:
+
+1.  **The path comparison.** Actual treated unit and synthetic counterfactual on the same chart over the full window. The visual check is whether the two paths overlap in the pre-period; that is the *only* evidence that the weights produced a reasonable twin.
+2.  **The donor weights.** A bar chart showing which donor units received non-zero weights. The audience needs to be able to ask, "do these donors make business sense?"
+3.  **The gap.** The path difference (or percent gap) between actual and synthetic over time. The pre-period should hover near zero; the post-period should show the effect.
+
+Any synthetic control deck that skips one of these three is hiding something the other two would reveal.
+
+<QuizBlock
+  title="Concept check"
+  intro="Four conceptual questions on synthetic control. Click to reveal."
+  questions={[
+    {
+      prompt: <>Why is the non-negativity constraint (<M>{String.raw`w_j \ge 0`}</M>) on donor weights so important for synthetic control?</>,
+      options: [
+        { label: <>Because negative weights cannot be computed efficiently.</> },
+        { label: <>Because allowing negative weights would let the optimizer construct counterfactuals outside the convex hull of the donor pool — combinations that no real unit comes close to — and produce spurious pre-treatment fits by extrapolation.</> },
+        { label: <>Because negative weights violate the parallel-trends assumption.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Without the constraint, the optimizer could "short" a donor to chase a tighter pre-trend fit and produce a synthetic unit that is more extreme than any real one. The non-negative, sum-to-one constraints keep the counterfactual a convex combination of observed donor trajectories.</>,
+    },
+    {
+      prompt: <>A synthetic control study reports a 20% post-treatment gap, but the pre-treatment paths visibly diverge by 5% in several periods. Which interpretation is most defensible?</>,
+      options: [
+        { label: <>The 20% gap is solid evidence of a treatment effect.</> },
+        { label: <>The poor pre-treatment fit undermines the design. Without a tight pre-period overlap, we have no reason to believe the synthetic unit would have tracked the treated unit in the post period — the 20% gap is not credibly causal.</> },
+        { label: <>The pre-treatment divergence cancels out in the post period.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The pre-treatment fit is the design's only evidence that the synthetic counterfactual is a credible twin. A poor fit means the donors did not capture the treated unit's dynamics even when both were untreated — so there is no reason to trust the post-period extrapolation.</>,
+    },
+    {
+      prompt: <>The synthetic Denver is built from positive weights on Portland, Austin, and Seattle. After the launch, Portland residents — drawn by the new Denver format's publicity — start frequently visiting Denver and buying coffee there. How does this affect the synthetic control estimate?</>,
+      options: [
+        { label: <>It strengthens the design because Portland is now more representative of Denver.</> },
+        { label: <>It contaminates the donor pool. The donor Portland is now indirectly affected by the treatment, biasing the synthetic counterfactual and attenuating the estimated effect toward zero.</> },
+        { label: <>It violates the non-negativity constraint.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Donor units must remain <em>untreated</em>. Spillovers that affect donor outcomes cause the synthetic counterfactual to absorb part of the treatment's effect, shrinking the estimated gap. In practice, exclude donor units that could plausibly be affected by the treatment.</>,
+    },
+    {
+      prompt: <>To assess statistical significance of a synthetic control estimate, a common technique is a <em>placebo permutation test</em>. What does this test do?</>,
+      options: [
+        { label: <>It applies the synthetic control algorithm to each donor unit in turn, treating it as if it were the "treated" unit, and asks whether the actual treated unit's gap is unusually large relative to the placebo gaps.</> },
+        { label: <>It re-runs the regression with random subsets of donor weights.</> },
+        { label: <>It uses bootstrap resampling to estimate a confidence interval around the gap.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>The placebo permutation test treats each donor as a "fake treated" unit and constructs its own synthetic counterfactual from the remaining donors. If the placebo gaps are similar in size to the actual treated unit's gap, the estimate is not unusual and the design cannot claim significance. If the actual gap stands out clearly above the cloud of placebos, the effect is credibly distinguishable from chance.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: Colorado Housing
+
+To see the method on real data, we apply it to Colorado's January 2014 cannabis legalization. The unit is the state-month; the outcome is the Zillow Home Value Index (ZHVI); the donor pool is the set of US states that did not change cannabis policy in this window. The pre-treatment period is twelve years (2002–2013); the post-treatment period is the six years following.
+
+### Step 1 — the pre-treatment fit
+
+<Figure width="screen-inset" caption="Figure 2. Actual Colorado ZHVI (blue) vs. the optimized synthetic counterfactual (orange). The two paths overlap tightly from 2002 through 2013, demonstrating that the donor mix successfully reproduced Colorado's pre-treatment housing dynamics. After January 2014, the two paths separate.">
+  <div className="not-prose">
+    <ZillowSyntheticControl data={data.zillow} show="paths" />
+  </div>
+</Figure>
+
+The tightness of the pre-2014 overlay is the design's foundation. If those lines diverged before the treatment, we would have no basis for trusting that they would have continued to track after it.
+
+### Step 2 — the donor weights
+
+<Figure width="body-outset" caption="Figure 3. Donor weights selected to build the synthetic Colorado. A handful of states absorb almost all the weight; most candidate donors are assigned zero. Audit this list for business plausibility before reading the gap.">
+  <div className="not-prose">
+    <ZillowSyntheticControl data={data.zillow} show="weights" />
+  </div>
+</Figure>
+
+The synthetic Colorado is built primarily from four states. Each of them contributed because the optimizer found that, in combination, they tracked Colorado's pre-2014 dynamics. The audit question is whether each one is a defensible part of that counterfactual — and whether any one of them might have been affected by Colorado's policy itself (a spillover threat we cannot rule out without further work).
+
+### Step 3 — the post-treatment gap
+
+<Figure width="screen-inset" caption="Figure 4. Percent gap between actual Colorado ZHVI and the synthetic counterfactual. The pre-treatment gap hovers around zero; the post-treatment gap opens after January 2014 and averages roughly 20% over the following six years.">
+  <div className="not-prose">
+    <ZillowSyntheticControl data={data.zillow} show="gap" />
+  </div>
+</Figure>
+
+The estimated effect — about a 20% lift in housing values over six years — is the design's headline. The defense of that number is the three figures together, not the number alone. A 20% gap is credible because (a) the pre-period fit is tight, (b) the donor weights are plausible and transparent, and (c) the post-period gap opens cleanly at the treatment date rather than gradually before it.
+
+What the design *cannot* defend against is an unobserved post-2014 Colorado-specific shock that happened to coincide with legalization — a tech boom, a migration wave, a policy bundle adopted alongside cannabis. The identifying assumption is exactly that no such confounding shock occurred, and the only honest answer is to list candidates and let the reader judge their plausibility.
+
+---
+
+## What Can Go Wrong
+
+Three failures account for most synthetic control disputes:
+
+1.  **Poor pre-treatment fit.** If the treated unit's scale or dynamics are outside the support of the donor pool — a New York City format compared against rural towns — the optimizer cannot find a good fit. The post-period gap is then not interpretable. **Reject the design if the pre-treatment RMSE is large relative to the typical post-treatment movement.**
+2.  **Donor contamination.** If donor units are themselves affected by the treatment (through migration, marketing spillovers, or policy diffusion), the synthetic counterfactual absorbs part of the treatment, attenuating the estimate toward zero. Define the donor pool to exclude likely-contaminated units before running the optimization.
+3.  **Cherry-picking the donor pool.** An analyst can manipulate the estimated effect by adding or removing specific donors until the result looks the way they want. The protection is to fix the donor pool transparently *before* fitting weights — and to present sensitivity to alternative donor pools as part of the standard report.
+
+---
+
+## Managerial Takeaway
+
+Synthetic control is the right design when a single market, store, or region is treated. To lead with it:
+
+- Always insist on seeing all three figures: path comparison, donor weights, gap. Any one alone is incomplete; the three together are the audit.
+- Reject the design if the pre-treatment fit is loose. There is no recovery from a bad pre-period.
+- Demand a placebo permutation test before treating the gap as statistically distinguishable from noise.
+
+The next article tackles the other direction in which a single average effect can mislead: when the effect varies across customer segments, the average understates the targeting opportunity.

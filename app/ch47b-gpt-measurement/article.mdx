@@ -1,0 +1,225 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  ConstructVsSurfaceTable,
+  GabrielPrimitives,
+  MeasurementCostChart,
+} from '@/components/Book/part5/MeasurementDiagrams';
+
+<DropCap>
+
+The methods of Chapter 18 measure surface features of text — which words appear, how often, in what combinations. The methods of §19.1–§19.2 measure semantic similarity — which documents are near which others in a learned meaning space. Both are useful. Both stop short of the question a manager usually wants to ask: *given this document, how high is the customer's intent to return, the executive's evasiveness, the candidate's authentic enthusiasm?* These are not vocabulary properties or similarity properties. They are **constructs** — the things a human analyst would extract after reading.
+
+</DropCap>
+
+The shift this article describes is the conceptual heart of Part V. With a capable language model, the firm can stop choosing between proxies for the construct and start measuring the construct directly. Classical NLP measured *features*. Embeddings measure *similarity*. Language models measure *meaning that a manager can name*.
+
+---
+
+## The Executive Question
+
+> What if, instead of asking "how negative is this review?", we could ask "how high is this customer's intent to return, given their complaints?" — and get an answer back at a price low enough to do it for every review?
+
+That is the move. The rest of this article is about why it works, when it doesn't, and how to use it responsibly.
+
+---
+
+## The Same Tweet, Two Evidence Languages
+
+Take a single tweet posted on the day a beloved local brewery was acquired by a global conglomerate:
+
+> *"Goose Island used to belong to us. Now it just belongs to the shelf."*
+
+A classical sentiment pipeline reports a number. A construct-level measurement reports a story.
+
+<Figure width="page-outset" caption="Figure 1. One tweet, two evidence languages. VADER tells you the message is moderately negative. The construct view tells you the customer feels <em>betrayed</em>, mourns the brand's <em>independence</em>, and is questioning loyalty. Those are different conversations — and they imply different actions on Monday morning.">
+  <div className="not-prose">
+    <ConstructVsSurfaceTable />
+  </div>
+</Figure>
+
+Both columns are real and useful. The right question isn't which is better in the abstract; it's which one supports the decision the team has to make. The Goose Island social-media manager on the morning after the acquisition cannot act on "-0.42 sentiment." They can act on "this segment of customers expresses a strong sense of betrayal; the right response addresses the broken-promise narrative rather than the product quality."
+
+The teaching example is from the brewery acquisition case in the GABRIEL guide. The pattern recurs across every customer-voice setting once you start looking for it.
+
+---
+
+## What Changed
+
+What changed is that a language model can now be used as a **measurement instrument**. Give it a document and a definition of an attribute ("sense of betrayal: language of broken promise, abandonment, expectation violation"), and it returns a score — repeatable, comparable across documents, cheap.
+
+The paradigm comes with a vocabulary, summarized in five primitives that map to the verbs an analyst already uses:
+
+<Figure width="page-outset" caption="Figure 2. The five measurement primitives. Not a Python library so much as a vocabulary for the operations a thoughtful analyst would perform on a stack of documents.">
+  <div className="not-prose">
+    <GabrielPrimitives />
+  </div>
+</Figure>
+
+A walk-through:
+
+- **rate.** Score each document on a named attribute, 0–100. *"How savory is this dish?"* *"How direct was this executive's answer?"* *"How likely does this review express intent to return?"*
+- **classify.** Assign one or more labels per document. *"Billing / delivery / app / quality."* *"Compliant / non-compliant."*
+- **extract.** Pull structured fields. *"Renewal date, parties, dollar amount, intent to switch."*
+- **discover.** Given two groups, surface the features that distinguish them. *"What separates 1-star and 5-star reviews of this product?"*
+- **debias.** Remove shortcut inference by re-measuring on text with the target signal stripped, and reporting the difference. The technical detail of the method matters less than the principle: *measure the construct, not its correlates*.
+
+These five verbs cover the vast majority of measurement work. The implementation can be a library (GABRIEL is the canonical example from Asirvatham, Mokski &amp; Shleifer (2026)), a custom prompt, or an internal tool. The pattern is what matters.
+
+---
+
+## Why This Wasn't Possible Before
+
+Three things make the construct-measurement paradigm operationally feasible only now:
+
+1.  **The model is capable enough.** Frontier LLMs can apply a definition consistently across thousands of documents with the kind of internal coherence that used to require trained human raters.
+2.  **The price has collapsed.** What once cost thousands of dollars in human annotation now costs a few dollars in API spend.
+3.  **The interface is stable.** Structured outputs (§21.3) let the measurement return JSON that flows into the rest of the pipeline without manual cleanup.
+
+<Figure width="page-outset" caption="Figure 3. Cost of rating 240 documents on 10 attributes, log scale, from the GABRIEL paper. Frontier LLM measurement is 700×–17,000× cheaper than human annotation. The implication is not just savings — it's that research questions that were previously infeasible become routine.">
+  <div className="not-prose">
+    <MeasurementCostChart />
+  </div>
+</Figure>
+
+The price difference reshapes what's measurable. A study that needed 240 documents to be researchable at human-annotator scale can now span 240,000 documents. A construct that wasn't worth measuring because it would require six months of coding can now be measured in an afternoon.
+
+---
+
+## Worked Contrasts From the Cases
+
+The pattern is the same across very different domains. Three short examples drawn from the GABRIEL guide:
+
+**Yelp restaurant reviews.** A 3-star review that says "food is incredible but the wait was two hours and the host was rude" and a 4-star review that says "totally fine, nothing memorable" both score near 0 on VADER. Both produce similar LDA topic distributions. They encode totally different signals for a restaurant operator. Construct measurement on attributes like "gap between food quality and service quality", "forgiveness expressed despite complaints", "intent to return despite negative elements", and "word-of-mouth recommendation likelihood" separates them cleanly — and the constructs are *what the operator needs to know*.
+
+**Earnings call transcripts.** A FinBERT sentiment model run on the Q&amp;A section of an earnings call returns a positive score; the company restates earnings two quarters later. The sentiment was correct on the surface — the executives chose positive-sounding words. The construct measurement on "directness of answer to the question asked", "pivot to unrelated topic", and "quantitative specificity" picks up the evasiveness the sentiment score missed. Sentiment is about word valence; evasiveness is about the *relationship between the question and the answer*.
+
+**Job postings over time.** Two postings can have identical keyword profiles ("Python, SQL, 3+ years experience, growth opportunity") and feel completely different to a candidate. The constructs — "emphasis on credentials vs. demonstrated skills", "urgency of hire language", "authenticity of growth-opportunity claims" — operationalize that intuition for analysis at scale.
+
+In each case the move is the same. The classical method measures a proxy. The construct method measures the thing.
+
+---
+
+## The Surprising Robustness Finding
+
+A specific empirical finding from the GABRIEL paper is worth lifting out because it changes how managers should think about prompting:
+
+> When the construct is clearly defined, the exact wording of the prompt matters very little. The authors tested 100 dramatically different phrasings — from 32-word telegrams to 563-word Shakespearean prose — and found 0.76–0.98 correlation with the baseline prompt across attributes.
+
+The implication: **stop optimising prompt prose; start optimising construct definitions.** What a manager *means* by "intent to return" is what the model needs to know. The exact syntax of the request is mostly noise. This is good news — it shifts the difficult work to the part of measurement design where managerial judgment is highest-value (defining what to measure) and away from the part where it adds least (prompt phrasing).
+
+<Callout variant="finding" title="The construct rule">
+  Be clear about <em>what</em> you want to measure. Don't stress about <em>how</em> you phrase it.
+</Callout>
+
+---
+
+## When This Replaces Classical Methods, and When It Doesn't
+
+A short matrix to keep the use cases straight.
+
+<DataTable
+  caption="Table 1. When to reach for each tool. The dividing line is whether the question is about features the corpus already exposes (classical) or about constructs the firm has to define (LLM measurement)."
+  columns={[
+    { key: 'q', label: 'Question shape', align: 'left' },
+    { key: 'tool', label: 'Right tool', align: 'left' },
+    { key: 'why', label: 'Why', align: 'left' },
+  ]}
+  rows={[
+    {
+      q: 'What words separate positive from negative reviews?',
+      tool: 'TF-IDF (§18.3)',
+      why: 'Surface-feature question; classical answers it directly and transparently.',
+    },
+    {
+      q: 'What themes recur in the corpus?',
+      tool: 'Topic model (§18.5) or embedding clustering (§19.2)',
+      why: 'Discovery question; both methods produce candidate themes the analyst names.',
+    },
+    {
+      q: 'Find me documents about delivery problems even when the word "delivery" isn\'t used.',
+      tool: 'Semantic search (§19.2)',
+      why: 'Meaning-similarity question; embeddings handle vocabulary mismatch structurally.',
+    },
+    {
+      q: 'How high is this customer\'s intent to return?',
+      tool: 'LLM measurement (this article)',
+      why: 'Construct question; the firm defines the construct, the model applies the definition.',
+    },
+    {
+      q: 'How direct was this executive\'s answer?',
+      tool: 'LLM measurement (this article)',
+      why: 'Construct about the relationship between question and answer — classical sentiment cannot reach it.',
+    },
+    {
+      q: 'Pull renewal dates and dollar amounts from these contracts.',
+      tool: 'LLM extraction (§21.3)',
+      why: 'Structured extraction; the schema is the contract.',
+    },
+  ]}
+/>
+
+The honest position: classical NLP and LLM measurement *complement* each other. A real customer voice system runs TF-IDF baselines, embedding-based search, and LLM measurement side by side. Each catches different patterns. Each has different failure modes.
+
+---
+
+## What Can Go Wrong
+
+The new paradigm has its own gallery.
+
+- **Construct ambiguity.** If three teammates can't agree on what the construct means, the model's outputs will be unstable. The definition is the artefact; spend time on it.
+- **Shortcut inference.** The model can pick up on a cue that correlates with the construct rather than the construct itself ("pro-environment" inferred from "wind farm" mentions rather than from substantive environmental language). The debias primitive — measure on the original text, measure on text with the cue stripped, take the difference — is the principled fix.
+- **Hallucination on rare cases.** Constructs poorly represented in the training data may get confidently wrong scores. Validation against human spot-checks is essential.
+- **Cost creep at scale.** Per-document the cost is tiny. Per-corpus on a streaming source the cost is real. Budget and monitor.
+- **Construct validity, not just accuracy.** A model can be accurate on a held-out validation set and still be measuring the wrong thing. Construct validity asks: "does what we're calling 'intent to return' actually predict returning?" That is a downstream business question, not a model evaluation.
+- **Privacy and IP.** Customer text sent to a third-party LLM is leaving the perimeter. Redact PII; consider self-hosted models for sensitive data; document the policy.
+
+---
+
+## Managerial Takeaway
+
+Classical NLP made *vocabulary-level analysis* democratically available — anyone could run VADER. The construct-measurement paradigm makes *construct-level analysis* democratically available — anyone can now measure the thing they actually care about. The bottleneck shifts from "can I run the analysis" to "can I clearly define what I want to measure." That is the more interesting intellectual challenge, and it favours managerial training: thinking clearly about business problems is now the rate-limiting skill.
+
+> *Name the construct. Define it crisply. Measure it across the corpus. Spot-check the results. Compare with the classical baseline. Decide.*
+
+The next chapter takes this measurement layer and bolts it to retrieval, vision, and the rest of the modern AI workflow.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on construct measurement."
+  questions={[
+    {
+      prompt: <>A team has a polished VADER pipeline that reports a sentiment score on every customer review. The retention strategist wants to know "intent to return given complaints expressed." The cleanest next step is:</>,
+      options: [
+        { label: <>Lower the sentiment threshold.</> },
+        { label: <>Define the construct ("intent to return given complaints") and use an LLM to measure it; the sentiment score is a proxy, not the construct itself.</> },
+        { label: <>Switch to a fine-tuned BERT sentiment model.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Intent-to-return-given-complaints is a construct, not a sentiment level. Off-the-shelf sentiment classifiers cannot measure it because they were not built for it.</>,
+    },
+    {
+      prompt: <>A research team finds that 100 dramatically different prompt phrasings produce highly correlated measurements once the construct is defined. The implication for prompt engineering is:</>,
+      options: [
+        { label: <>Prompts don't matter at all.</> },
+        { label: <>The hard work is in the construct definition; once that is clear, exact phrasing matters less than people fear.</> },
+        { label: <>Always use the longest prompt.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>This is the surprising-but-robust finding from the GABRIEL paper. Effort is better spent clarifying what to measure than fine-tuning prompt prose.</>,
+    },
+    {
+      prompt: <>"GPT measurement replaces classical NLP" is best characterized as:</>,
+      options: [
+        { label: <>True — the new method dominates.</> },
+        { label: <>False — they answer different questions. Classical NLP is fast, transparent, and excellent for surface-feature questions; LLM measurement is for constructs. A serious system uses both.</> },
+        { label: <>Depends only on the dataset size.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The two paradigms are complementary. Replacing TF-IDF with LLM measurement for every analytics task is both expensive and unnecessary; reserving LLM measurement for construct questions is the right division of labour.</>,
+    },
+  ]}
+/>

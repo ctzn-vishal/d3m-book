@@ -3,9 +3,14 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Step } from '@/components/Book/Step';
 import { KeyNumber } from '@/components/Book/KeyNumber';
+import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 import questionMapRaw from './data/question-chart-map.json';
 
 export const questionMap = questionMapRaw.dataPoints;
+
+<div className="not-prose mb-6">
+  <LadderPosition compact current={1} caption="Part II — visual evidence makes patterns visible before any method is named." />
+</div>
 
 <DropCap>
 

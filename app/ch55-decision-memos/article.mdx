@@ -1,0 +1,199 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { DecisionMemoTemplate } from '@/components/Book/part6/Part6Diagrams';
+
+<DropCap>
+
+The decision memo is what ships. The model card is part of it. The dashboard supports it. The RAG system feeds it. The Studios produce its inputs. But none of those reach the executive who has to commit a budget, change a price, run a campaign, sign a contract, or hold a line. The memo does. It is the page that ties every evidence language together into a recommendation a sponsor can sign. If the book has been training for a single deliverable, this is the deliverable.
+
+</DropCap>
+
+This article is short on theory and long on the artefact. We define what the memo is and isn't, walk through the eleven sections of the template, and end with a full Bean &amp; Basket sample memo that pulls evidence from every prior Part.
+
+---
+
+## The Executive Question
+
+> *What is the one-page document that turns analysis into action — and what does it look like when it's ready to sign?*
+
+The memo is the synthesis. Every other artefact feeds it; nothing replaces it.
+
+---
+
+## What the Memo Is
+
+A one-page document that names:
+
+- The **decision** being recommended.
+- The **context** that prompted it.
+- The **evidence** supporting it, drawn from every relevant evidence language.
+- The **counterfactual** — what happens if we don't act.
+- The **uncertainty** — what could be wrong.
+- The **recommendation** — the action, the threshold, the owner.
+- The **next test** — what we will measure to know whether the action worked.
+- The **open questions** — what this memo did not answer.
+
+That's it. Eleven sections in the template below; one page when each section is a short paragraph. The discipline is brutal: brevity forces clarity.
+
+---
+
+## What the Memo Isn't
+
+A memo is not:
+
+- A research report. (That's a different document; it can be appended.)
+- A model card. (That's an artefact; the memo references it.)
+- A slide deck. (That's a presentation; the memo is the source.)
+- A status update. (That's a recurring email; the memo is the artefact you sign.)
+- A justification. (The memo precedes the decision; a justification follows it.)
+
+The memo is the page the sponsor reads before approving the action. Everything else lives downstream or upstream of it.
+
+---
+
+## The Template
+
+<Figure width="page-outset" caption="Figure 1. The decision memo template — eleven sections, one page. Each section pulls from an artefact produced earlier in the book; the memo is where those artefacts converge.">
+  <div className="not-prose">
+    <DecisionMemoTemplate mode="template" />
+  </div>
+</Figure>
+
+Three sections deserve a second look:
+
+**The counterfactual section.** This is the §9.2 question made operational. *What happens if we don't act?* If the team cannot answer this in a paragraph, the memo isn't ready. Naming the counterfactual is what separates a real decision from a one-sided pitch.
+
+**The uncertainty section.** This is where assumptions live. Sensitivity to costs, to model accuracy, to the holdout, to the unknown unknowns. The temptation is to skip it because it complicates the recommendation. The discipline is to write it because it forces the team to know what could be wrong.
+
+**The next test.** Every action should produce learning. A memo without a follow-up test commits the firm to a one-way decision; a memo with one converts the action into the next iteration of the learning loop. Section §24.2 builds on this.
+
+---
+
+## A Worked Memo: Bean &amp; Basket Retention
+
+The strongest way to show the memo is to write one. Below is a full Bean &amp; Basket memo from July 2026 that pulls evidence from every Part of the book — descriptive, visual, causal, predictive, AI, and operational.
+
+<Figure width="page-outset" caption="Figure 2. A complete Bean & Basket decision memo. Every section ties to an artefact from earlier in the book. The action is named; the counterfactual is constructed; the threshold for declaring success is explicit.">
+  <div className="not-prose">
+    <DecisionMemoTemplate mode="sample" />
+  </div>
+</Figure>
+
+A short tour of where each section pulls its evidence:
+
+- **Descriptive evidence** comes from the Part I/II monitoring layer — the weekly sentiment chart from §18.4 and the churn-rate metric from §3.1.
+- **Causal evidence** comes from §12.1's difference-in-differences logic applied to the 2025 pilot.
+- **Predictive evidence** comes from §15.1's churn model and §15.2's threshold–profit curve.
+- **AI / unstructured evidence** comes from §19.2's embedding clustering and §19.3's construct measurement.
+- **Counterfactual construction** uses the §9.2 framing and the §10.1 holdout design.
+- **Next test and monitoring** are the §22.1 governance card applied to this specific action.
+
+Every claim in the memo traces to an artefact. Every artefact traces to a chapter. The memo is the apex of the artefact family from §0.2.
+
+---
+
+## How the Memo Gets Written
+
+The honest version of the writing process:
+
+1.  **Start with the decision.** The recommendation goes at the top. If the team can't write it as a single sentence, they aren't ready to write the memo.
+2.  **Work backwards to the evidence.** What would a sponsor need to know to believe the recommendation? Each section answers one of those needs.
+3.  **Run the counterfactual gauntlet.** Ask explicitly: what if we do nothing? What if we do the next-best alternative? What if the assumptions are wrong?
+4.  **Pull the artefacts.** Each evidence section references a card, a chart, a model, or a dashboard the team has already produced. The memo is the cover sheet, not new analysis.
+5.  **Trim.** A two-page memo is rarely better than a one-page memo. The cuts are usually in the evidence sections (which want to be exhaustive) and in the recommendation (which wants to hedge).
+6.  **Read it aloud.** If a sentence sounds like a hedge, it is. Rewrite or delete.
+
+A memo that survives this process is one the sponsor can sign in a five-minute read.
+
+---
+
+## Communication Patterns
+
+Five habits that separate memos that get read from memos that get filed:
+
+- **Lead with the recommendation.** Not with the methodology. Not with the data. The sponsor's first question is "what should we do?"; the memo answers it in the first paragraph.
+- **One chart, not three.** Pick the single chart that does the most work. If a second chart is essential, the memo is doing two things; split it.
+- **Name the threshold for changing the recommendation.** Under what evidence would we reverse course? This is the inverse of the threshold for acting and equally important.
+- **Use the word "we" sparingly.** "We recommend" is fine. "We feel that we believe that we should consider" is six words too long.
+- **Date everything.** A memo without a date is a memo nobody will trust in six months.
+
+---
+
+## What Separates an Executive Memo From a Research Write-Up
+
+Three differences worth naming explicitly:
+
+| | Research write-up | Decision memo |
+| --- | --- | --- |
+| Audience | Other analysts, reviewers | Sponsor, executive |
+| Goal | Document what was done | Drive a specific action |
+| Length | As long as needed | One page |
+| Counterfactual | Implicit, in methods | Explicit, named section |
+| Threshold | Statistical significance | Business decision threshold |
+| Lifetime | Reference document | Action-triggering artefact |
+
+Both documents have a place. A team that ships only research write-ups will be respected and ignored. A team that ships only memos will move fast and lose the audit trail. A working organization ships both, with the memo on top and the research write-up linked from it.
+
+<Callout variant="finding" title="The memo test">
+  If a sponsor can read the memo in five minutes and either sign or send it back with a specific objection, the memo is doing its job. Anything else is a draft.
+</Callout>
+
+---
+
+## What Can Go Wrong
+
+- **Memo without counterfactual.** "Sales went up after the campaign" is a description, not a memo. The §9.2 logic — what would have happened without the action — is non-optional.
+- **Memo without threshold.** A recommendation without a "we would reverse this if..." condition is a one-way decision, which is rarely warranted in business.
+- **Memo without owner.** "We recommend retention offers" with no named owner produces no action. Every memo names a person (or a role) who owns the next step.
+- **Memo as advocacy.** Memos that argue for one side and omit the alternative are pitches in costume. The uncertainty section is what makes the memo honest.
+- **Memo that grows.** The page expands to two pages, then four, then a deck. The discipline is to keep the memo at one page and let the appendices carry the detail.
+
+---
+
+## Managerial Takeaway
+
+The memo is the artefact the book has been building toward. Every model card, every dashboard, every studio, every monitoring loop — all of them feed a one-page document that drives a specific business action. The memo is what ships.
+
+> *Name the decision. Name the counterfactual. Name the threshold. Name the owner. One page.*
+
+The next article — §24.2 — moves from the single memo to the portfolio of memos and the operating cadence that runs across them.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on decision memos."
+  questions={[
+    {
+      prompt: <>A memo opens with "Background: customer retention is a critical KPI for the firm." The most likely diagnosis is:</>,
+      options: [
+        { label: <>Strong opening.</> },
+        { label: <>The memo leads with context instead of the recommendation; the sponsor will reach the end without knowing what's being asked of them.</> },
+        { label: <>Acceptable for the genre.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Decision memos lead with the recommendation. Context lives in section two, after the action is named.</>,
+    },
+    {
+      prompt: <>A memo recommends a $42k retention budget but does not name what would cause the team to reverse the decision. The structural gap is:</>,
+      options: [
+        { label: <>The budget is too small.</> },
+        { label: <>The threshold for change isn't named — a recommendation without a reversal condition is a one-way decision, which is rarely warranted.</> },
+        { label: <>The memo needs more charts.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The memo should name both the threshold for acting and the threshold for reversing. Together they make the decision recoverable.</>,
+    },
+    {
+      prompt: <>The decision memo and a research write-up are related but distinct artefacts. The cleanest description of the difference is:</>,
+      options: [
+        { label: <>The memo is shorter.</> },
+        { label: <>The memo is the action-triggering artefact, sized for a sponsor's five-minute read; the research write-up is the audit-trail artefact, sized for an analyst to reproduce the work. Both ship.</> },
+        { label: <>They're the same document at different formality levels.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Both artefacts have a role. The memo drives action; the write-up provides reproducibility. Most working organisations ship both.</>,
+    },
+  ]}
+/>

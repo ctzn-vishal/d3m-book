@@ -1,0 +1,222 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { EmbeddingScatter } from '@/components/Book/part5/TextDiagrams';
+
+<DropCap>
+
+If a document is a sparse vector of word counts, "refund" and "money back" are orthogonal — they share no words and the bag-of-words model sees no relationship. To a customer service team they are obviously the same thing. The representational gap is the entire reason embeddings exist. An embedding is a dense vector — a few hundred or a few thousand numbers — placed in a learned coordinate system where similar meanings sit near each other, even when they share no vocabulary.
+
+</DropCap>
+
+This article introduces embeddings as a *coordinate system for meaning*. The math is light; the consequences are large. Most of the modern toolkit — semantic search, RAG, multimodal AI, embedding-based recommenders — rests on the idea that meaning has coordinates and those coordinates can be computed.
+
+---
+
+## The Executive Question
+
+> When we have text, images, audio, or documents, can we represent each one as a vector such that *similar things are close together* — even when they share nothing on the surface?
+
+The answer is yes, and the rest of Part V is what that yes lets us build.
+
+---
+
+## The Coordinate System Analogy
+
+The most useful intuition is geographic. A city in a coordinate system has a latitude and longitude. Two cities close on the map are close in the world. The map is a *representation* — a few numbers per city — that preserves something about the relationships of the underlying cities.
+
+An embedding does the same thing for documents (or words, or images). Each document gets a vector. Documents whose meanings are close sit near each other in the vector space. The "map" is now hundreds or thousands of dimensions instead of two, so we can't draw it directly — but the property that matters (close meanings → close vectors) is the same.
+
+A small worked example. Suppose the corpus has these phrases:
+
+- *refund*
+- *return*
+- *money back*
+- *cancel order*
+- *delivery delay*
+- *order arrived late*
+- *driver was slow*
+- *app crashed*
+- *cannot sign in*
+
+Bag-of-words puts them in nine orthogonal directions — each phrase shares no words with any other. An embedding places them in roughly three clusters:
+
+- A "refund/return" cluster.
+- A "delivery delay" cluster.
+- An "app technical" cluster.
+
+That clustering wasn't programmed in. It was *learned* from the training corpus the embedding model saw. The model observed that "refund" and "money back" co-occur with similar surrounding language and therefore mean similar things — and represented them with nearby vectors.
+
+---
+
+## A Picture of the Space
+
+A scatter plot of the embeddings (after reducing to 2D for the page) makes the structure visible.
+
+<Figure width="page-outset" caption="Figure 1. A 2D projection of phrase embeddings from Bean &amp; Basket customer messages. Phrases cluster by meaning — refund vocabulary on the upper left, delivery delays on the upper right, app technical issues on the lower left, product praise on the lower right. The query 'unhappy with refund process' lands in the refund cluster, even though that phrase doesn't appear verbatim in the corpus.">
+  <div className="not-prose">
+    <EmbeddingScatter />
+  </div>
+</Figure>
+
+Two important reading habits that carry forward from §16.3:
+
+- **Trust neighbourhoods.** The clusters and which phrases sit near each other are real.
+- **Distrust geometry.** The exact distances between clusters depend on the projection. The axes have no business meaning. UMAP/t-SNE caveats apply.
+
+The neighbour panel on the right of the figure is what most embedding applications use. Given a query, return the top-k items by vector distance. That single primitive — "find me documents that mean approximately the same thing as this one" — underwrites semantic search (§19.2), RAG (§20.1), embedding-based segmentation, recommendation, and anomaly detection.
+
+---
+
+## Distance and Similarity
+
+Two vectors in the embedding space have a **distance**. The two standard choices:
+
+- **Euclidean distance** — straight-line distance.
+- **Cosine similarity** — the cosine of the angle between vectors. Higher is more similar; ranges from -1 to 1.
+
+For text embeddings, cosine similarity is the default. The reason is that text vectors often differ in magnitude (longer documents tend to have larger vectors), and cosine similarity ignores magnitude — it asks only about *direction* in meaning space.
+
+<Equation
+  label="Cosine similarity"
+  latex={String.raw`\text{cos}(u, v) = \frac{u \cdot v}{\|u\| \|v\|}`}
+/>
+
+Practical note: most embedding APIs return vectors already normalized to unit length, in which case Euclidean distance and cosine similarity give the same ranking.
+
+---
+
+## What Gets Embedded
+
+The same idea works across modalities:
+
+<DataTable
+  caption="Table 1. The modalities embedding models cover, and what the resulting vectors are good for. Multimodal embeddings — text and images in one shared space — are the foundation of §20.4."
+  columns={[
+    { key: 'kind', label: 'What gets embedded', align: 'left' },
+    { key: 'model', label: 'Representative model family', align: 'left' },
+    { key: 'use', label: 'What the vector is good for', align: 'left' },
+  ]}
+  rows={[
+    {
+      kind: 'Words',
+      model: 'word2vec, GloVe (classical); contextual: BERT subwords.',
+      use: 'Synonym detection, analogies, classical NLP features.',
+    },
+    {
+      kind: 'Sentences / documents',
+      model: 'Sentence-Transformers (open), text-embedding-3 (OpenAI), Cohere embed.',
+      use: 'Semantic search, clustering, RAG retrieval.',
+    },
+    {
+      kind: 'Images',
+      model: 'CLIP, DINO, SigLIP image encoders.',
+      use: 'Visual similarity, image search, content moderation.',
+    },
+    {
+      kind: 'Images + text in one space',
+      model: 'CLIP and successors.',
+      use: 'Text-query → image search and vice versa (§20.4).',
+    },
+    {
+      kind: 'Audio',
+      model: 'Whisper encoder, audio CLIP variants.',
+      use: 'Acoustic similarity, transcript-free search.',
+    },
+    {
+      kind: 'Products / users / structured entities',
+      model: 'Recommender embeddings (matrix factorization, two-tower nets).',
+      use: 'Collaborative recommenders (§17.2).',
+    },
+  ]}
+/>
+
+The unifying idea: anything that has a notion of "similar" can in principle be embedded. The space, the model, and the training data change. The "find nearby items" primitive does not.
+
+---
+
+## Two Things to Hold Onto
+
+**Embeddings are learned, not declared.** Nobody told the model that "refund" and "money back" are similar. The model learned it from the contexts in which those words appear. That means the embedding inherits the biases, gaps, and assumptions of its training data. A clinical-domain embedding may not recognize coffee jargon; an English embedding may garble Mandarin.
+
+**The embedding is downstream of a choice of model.** "OpenAI text-embedding-3-small" and "Sentence-Transformers all-MiniLM-L6-v2" produce different vectors for the same input. The downstream system has to commit to one model. Mixing embeddings from different models is meaningless — the vectors live in different spaces.
+
+<Callout variant="finding" title="The embedding contract">
+  An embedding is one model's opinion about meaning, made into coordinates. Useful, learnable, and not neutral. The model choice is part of the system architecture, not a detail.
+</Callout>
+
+---
+
+## How Embeddings Are Used
+
+The same primitive — "nearest neighbour in vector space" — powers a family of applications:
+
+- **Semantic search.** Given a query, return documents whose vectors are nearest. (§19.2)
+- **Clustering.** Group documents into segments by proximity in vector space; the dual of §16.1 on text data.
+- **Recommendation.** Embed users and items, recommend items whose vectors are nearest to the user's.
+- **Anomaly detection.** Documents far from any cluster are candidates for human review.
+- **Retrieval for LLMs (RAG).** Pre-fetch context for a language model based on vector similarity. (§20.1)
+- **Brand positioning.** Embed reviews of brands; the resulting map reads like a perceptual map (§16.2). (§19.2)
+
+Almost every modern AI workflow that pulls relevant content into a context window starts with this primitive.
+
+---
+
+## What Can Go Wrong
+
+- **Wrong embedding model for the domain.** A general-purpose embedding on a niche corpus (medical, legal, code) may miss most of the structure. Domain-tuned models exist for many verticals.
+- **Stale embeddings.** A change in the embedding model invalidates every previously computed vector. Embeddings are versioned artefacts; the version is part of the system.
+- **Treating dimensions as features.** The components of an embedding vector have no individual meaning. Asking "what does dimension 47 represent?" is a category error.
+- **Confusing similarity with relevance.** Two documents can be similar in language but irrelevant to the user's actual question. Semantic search needs evaluation, just like classification.
+- **Bias inherited from training data.** If the training corpus over-represents certain groups, the embedding will rank those groups' phrasings as more central. Audit before high-stakes use.
+
+---
+
+## Managerial Takeaway
+
+Embeddings make *meaning* computable. The cost is opacity (no per-dimension interpretation), versioning (model upgrades break things), and dependency (the firm is leaning on someone else's notion of similarity). The benefit is that every classical NLP failure from §18.6 — sarcasm modulo training data, synonyms, idiom, polysemy — gets a structural answer rather than a tactical patch.
+
+> *Treat embeddings as a coordinate system for meaning. Commit to a model. Trust the neighbourhoods, not the axes.*
+
+The next article puts the coordinate system to work — semantic search, embedding-based clustering, and the bridge from §16.2's survey perceptual maps to the same idea on text.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three short questions on embeddings."
+  questions={[
+    {
+      prompt: <>A search for "unhappy with refund process" returns documents that include "return", "money back", and "cancel order" — none of which contain the word "refund". The mechanism is:</>,
+      options: [
+        { label: <>Keyword search expansion.</> },
+        { label: <>The query and the documents are embedded into the same vector space; documents close to the query in that space are returned, regardless of shared words.</> },
+        { label: <>The model is hallucinating.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>That is exactly the property embeddings provide — meaning-based retrieval that doesn't depend on lexical overlap.</>,
+    },
+    {
+      prompt: <>A team has stored a million document embeddings produced by an older model. The team upgrades to a newer embedding model. What's the right next step?</>,
+      options: [
+        { label: <>Use the new model for queries and the old vectors for the corpus.</> },
+        { label: <>Re-embed the entire corpus with the new model — old and new vectors live in incompatible spaces.</> },
+        { label: <>Mix the two and average.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Embeddings from different models are in different coordinate systems. Any nearest-neighbour search across mixed models is meaningless.</>,
+    },
+    {
+      prompt: <>The third dimension of an OpenAI text embedding represents:</>,
+      options: [
+        { label: <>Sentiment.</> },
+        { label: <>Nothing humans should try to interpret directly — embedding dimensions are not feature-engineered, they are learned latent coordinates.</> },
+        { label: <>Topic.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Individual dimensions of a learned embedding have no nameable interpretation. The information lives in the geometry of the space, not the axes.</>,
+    },
+  ]}
+/>
