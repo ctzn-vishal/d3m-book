@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Industry Ad Spend Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+:root {
+  --bg: #f5f3ee;
+  --panel: #fffdf8;
+  --panel-2: #ebe7de;
+  --ink: #20242a;
+  --muted: #626b76;
+  --soft: #8b929b;
+  --rule: #d9d3c8;
+  --rule-strong: #aaa194;
+  --navy: #25466f;
+  --teal: #2f8f7b;
+  --violet: #7b5aa6;
+  --amber: #c9852b;
+  --rose: #bd4a5a;
+  --green: #2e7d4f;
+  --shadow: 0 16px 36px rgba(34, 31, 27, 0.08);
+  --tv: #2f5f99;
+  --digital: #2f8f7b;
+  --magazines: #8b6bb3;
+  --radio: #d18a30;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    linear-gradient(180deg, rgba(255, 253, 248, 0.84), rgba(245, 243, 238, 0.96)),
+    linear-gradient(90deg, rgba(47, 143, 123, 0.08), transparent 42%, rgba(189, 74, 90, 0.07));
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+.page {
+  width: min(1480px, 100%);
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: end;
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.kicker,
+.eyebrow,
+.small-label,
+.stat-label {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.kicker {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: Fraunces, Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  max-width: 820px;
+  font-size: clamp(36px, 5vw, 66px);
+  line-height: 0.96;
+}
+
+.subtitle {
+  max-width: 760px;
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.source-pill {
+  display: grid;
+  gap: 5px;
+  justify-items: end;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: right;
+}
+
+.source-pill strong {
+  color: var(--ink);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: minmax(280px, 460px) 1fr;
+  gap: 16px;
+  align-items: end;
+  padding: 18px 0 22px;
+}
+
+.select-card,
+.context-card {
+  min-height: 78px;
+  border: 1px solid var(--rule);
+  background: rgba(255, 253, 248, 0.84);
+  box-shadow: var(--shadow);
+}
+
+.select-card {
+  padding: 14px;
+}
+
+.context-card {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+label {
+  display: block;
+}
+
+.select-card label {
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+select {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  padding: 0 12px;
+  outline: none;
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(37, 70, 111, 0.12);
+}
+
+.stat {
+  padding: 14px 16px;
+  border-left: 1px solid var(--rule);
+}
+
+.stat:first-child {
+  border-left: 0;
+}
+
+.stat-label {
+  margin-bottom: 7px;
+  color: var(--soft);
+  font-size: 10px;
+}
+
+.stat-value {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(24px, 2.4vw, 34px);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-value.positive {
+  color: var(--green);
+}
+
+.stat-value.negative {
+  color: var(--rose);
+}
+
+.stat-sub {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
+  gap: 18px;
+}
+
+.panel {
+  border: 1px solid var(--rule);
+  background: var(--panel);
+  box-shadow: var(--shadow);
+}
+
+.panel-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: end;
+  padding: 16px 18px 13px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.panel-title {
+  font-size: 23px;
+  line-height: 1.05;
+}
+
+.panel-subtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.panel-body {
+  padding: 16px 18px 18px;
+}
+
+.eyebrow {
+  margin: 0 0 5px;
+  color: var(--soft);
+  font-size: 10px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.chart-frame {
+  min-height: 380px;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.axis path,
+.axis line {
+  stroke: var(--rule);
+}
+
+.axis text {
+  fill: var(--muted);
+  font-size: 11px;
+}
+
+.grid-line {
+  stroke: #ebe5da;
+  stroke-dasharray: 3 5;
+}
+
+.covid-band {
+  fill: rgba(189, 74, 90, 0.08);
+}
+
+.covid-label,
+.chart-note {
+  fill: var(--muted);
+  font-size: 11px;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: 0.04em;
+}
+
+.summary-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.insight-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.insight-list li {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.insight-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.insight-value {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.insight-value.positive {
+  color: var(--green);
+}
+
+.insight-value.negative {
+  color: var(--rose);
+}
+
+.insight-label {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.subgrid {
+  display: grid;
+  gap: 18px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 680px;
+}
+
+th,
+td {
+  padding: 9px 8px;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+th {
+  color: var(--soft);
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+td {
+  color: var(--ink);
+  font-size: 12.5px;
+}
+
+tr.clickable {
+  cursor: pointer;
+}
+
+tr.clickable:hover {
+  background: #f4efe7;
+}
+
+tr.selected-row {
+  background: rgba(47, 143, 123, 0.12);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.delta-pos {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.delta-neg {
+  color: var(--rose);
+  font-weight: 700;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--panel-2);
+}
+
+.tab-button {
+  height: 28px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 0 10px;
+}
+
+.tab-button:hover {
+  color: var(--ink);
+}
+
+.tab-button.active {
+  background: var(--ink);
+  color: var(--panel);
+}
+
+.footer-note {
+  margin-top: 18px;
+  padding: 15px 18px;
+  border: 1px solid var(--rule);
+  background: rgba(255, 253, 248, 0.75);
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.footer-note strong {
+  color: var(--ink);
+}
+
+.tooltip {
+  position: fixed;
+  z-index: 20;
+  max-width: 280px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule-strong);
+  background: rgba(255, 253, 248, 0.98);
+  box-shadow: 0 12px 26px rgba(34, 31, 27, 0.18);
+  color: var(--ink);
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 110ms ease, transform 110ms ease;
+}
+
+.tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip h4 {
+  margin: 0 0 5px;
+  font-size: 13px;
+}
+
+.tooltip p {
+  margin: 3px 0;
+  color: var(--muted);
+}
+
+.bar-label {
+  fill: var(--ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.bar-note {
+  fill: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 1120px) {
+  .dashboard-grid,
+  .section-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .context-card {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 20px 16px 34px;
+  }
+
+  .masthead,
+  .controls,
+  .panel-header {
+    grid-template-columns: 1fr;
+  }
+
+  .source-pill {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .context-card {
+    grid-template-columns: 1fr;
+  }
+
+  .stat {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .stat:first-child {
+    border-top: 0;
+  }
+
+  .legend {
+    justify-content: flex-start;
+  }
+
+  table {
+    min-width: 620px;
+  }
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="masthead">
+    <div>
+      <p class="kicker">Advertising market dashboard</p>
+      <h1>Industry Ad Spend Explorer</h1>
+      <p class="subtitle">A 2018-2022 view of monthly advertising spend by industry, advertiser, and media group. The page is built to ask what changed through the Covid shock and how budgets reallocated afterward.</p>
+    </div>
+    <div class="source-pill">
+      <strong>Source-backed</strong>
+      <span id="sourceSummary">DuckDB over Tigris parquet</span>
+      <span id="generatedStamp"></span>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="Dashboard controls">
+    <div class="select-card">
+      <label class="small-label" for="industrySelect">Industry group</label>
+      <select id="industrySelect"></select>
+    </div>
+    <div class="context-card" id="kpiStrip"></div>
+  </section>
+
+  <section class="dashboard-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Monitor</p>
+          <h2 class="panel-title">Monthly spend by media group</h2>
+          <p class="panel-subtitle" id="trendSubtitle"></p>
+        </div>
+        <div class="legend" id="mediaLegend"></div>
+      </div>
+      <div class="panel-body chart-frame" id="monthlyTrend"></div>
+    </article>
+
+    <aside class="summary-stack">
+      <article class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Diagnose</p>
+            <h2 class="panel-title">What changed?</h2>
+          </div>
+        </div>
+        <div class="panel-body">
+          <ul class="insight-list" id="insightList"></ul>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Mix</p>
+            <h2 class="panel-title">Media allocation by year</h2>
+          </div>
+        </div>
+        <div class="panel-body" id="mediaMix"></div>
+      </article>
+    </aside>
+  </section>
+
+  <section class="section-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Players</p>
+          <h2 class="panel-title">Top advertisers</h2>
+          <p class="panel-subtitle">Click a row to update the advertiser trend.</p>
+        </div>
+      </div>
+      <div class="panel-body" id="advertiserBars"></div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Advertiser detail</p>
+          <h2 class="panel-title" id="advertiserTitle">Advertiser trend</h2>
+          <p class="panel-subtitle" id="advertiserSubtitle"></p>
+        </div>
+        <div class="legend" id="advertiserLegend"></div>
+      </div>
+      <div class="panel-body chart-frame" id="advertiserTrend"></div>
+    </article>
+  </section>
+
+  <section class="section-grid">
+    <article class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Covid lens</p>
+          <h2 class="panel-title">Advertiser movers</h2>
+          <p class="panel-subtitle">Dollar change from 2019 to 2020; advertisers with at least $1M in one compared year.</p>
+        </div>
+        <div class="tabs" aria-label="Mover type">
+          <button class="tab-button active" type="button" data-mover="2020 decliner">Decliners</button>
+          <button class="tab-button" type="button" data-mover="2020 riser">Risers</button>
+        </div>
+      </div>
+      <div class="panel-body" id="moverChart"></div>
+    </article>
+
+    <article class="panel">
+      <div class="panel-header">
+        <div>
+          <p class="eyebrow">Lookup</p>
+          <h2 class="panel-title">Advertiser table</h2>
+          <p class="panel-subtitle">Aggregated across product rows. Brand examples show the largest brands for the selected advertiser.</p>
+        </div>
+      </div>
+      <div class="panel-body table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Advertiser</th>
+              <th>Spend</th>
+              <th>Share</th>
+              <th>2020 vs 2019</th>
+              <th>Digital</th>
+              <th>Brands</th>
+            </tr>
+          </thead>
+          <tbody id="advertiserTable"></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
+
+  <section class="footer-note">
+    <strong>Source and caveat.</strong> Data is read from <code>https://vishal.t3.tigrisfiles.io/sqlroom/Ad_data.parquet</code> and aggregated with DuckDB. The dashboard excludes Jan-Jun 2023 so the default comparison ends at the last complete calendar year, Dec 2022. Rows are closer to month + product + media group than month + advertiser + media group, so advertiser views sum across product-level rows.
+  </section>
+</main>
+<div class="tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+<script>
+const MEDIA = ["Television", "Digital", "Magazines", "Radio"];
+const MEDIA_COLORS = {
+  Television: "#2f5f99",
+  Digital: "#2f8f7b",
+  Magazines: "#8b6bb3",
+  Radio: "#d18a30"
+};
+
+let data;
+let industry = "Travel and Tourism";
+let selectedAdvertiser = null;
+let moverType = "2020 decliner";
+
+const fmtMoney = value => {
+  const abs = Math.abs(value || 0);
+  if (abs >= 1e9) return `$${(value / 1e9).toFixed(abs >= 10e9 ? 1 : 2)}B`;
+  if (abs >= 1e6) return `$${(value / 1e6).toFixed(abs >= 10e6 ? 1 : 2)}M`;
+  return `$${d3.format(",.0f")(value || 0)}`;
+};
+const fmtPct = value => value == null || !Number.isFinite(value) ? "n/a" : `${value >= 0 ? "+" : ""}${(value * 100).toFixed(1)}%`;
+const fmtShare = value => value == null || !Number.isFinite(value) ? "n/a" : `${(value * 100).toFixed(1)}%`;
+const parseMonth = d3.timeParse("%Y-%m");
+const monthLabel = d3.timeFormat("%b %Y");
+const yearLabel = d3.timeFormat("%Y");
+
+const tooltip = d3.select("#tooltip");
+
+function showTooltip(event, html) {
+  tooltip.html(html).classed("visible", true);
+  moveTooltip(event);
+}
+
+function moveTooltip(event) {
+  const pad = 14;
+  const width = 280;
+  const x = Math.min(event.clientX + pad, window.innerWidth - width - pad);
+  const y = Math.min(event.clientY + pad, window.innerHeight - 150);
+  tooltip.style("left", `${x}px`).style("top", `${Math.max(10, y)}px`);
+}
+
+function hideTooltip() {
+  tooltip.classed("visible", false);
+}
+
+function currentIndustry() {
+  return data.industries.find(d => d.industry === industry) || data.industries[0];
+}
+
+function industryAdvertisers() {
+  return data.advertisers.filter(d => d.industry === industry).sort((a, b) => a.rank - b.rank);
+}
+
+function initialize() {
+  const select = d3.select("#industrySelect");
+  select.selectAll("option")
+    .data(data.industries)
+    .join("option")
+    .attr("value", d => d.industry)
+    .text(d => `${d.industry} (${fmtMoney(d.spend)})`);
+
+  if (!data.industries.some(d => d.industry === industry)) industry = data.industries[0].industry;
+  select.property("value", industry);
+  select.on("change", event => {
+    industry = event.target.value;
+    selectedAdvertiser = null;
+    render();
+  });
+
+  d3.selectAll(".tab-button").on("click", event => {
+    moverType = event.currentTarget.dataset.mover;
+    d3.selectAll(".tab-button").classed("active", function() {
+      return this.dataset.mover === moverType;
+    });
+    renderMoverChart();
+  });
+
+  d3.select("#mediaLegend").html(MEDIA.map(media => `<span class="legend-item"><span class="swatch" style="background:${MEDIA_COLORS[media]}"></span>${media}</span>`).join(""));
+  d3.select("#advertiserLegend").html(MEDIA.map(media => `<span class="legend-item"><span class="swatch" style="background:${MEDIA_COLORS[media]}"></span>${media}</span>`).join(""));
+  d3.select("#generatedStamp").text(`Generated ${new Date(data.meta.generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`);
+  render();
+}
+
+function render() {
+  const advertisers = industryAdvertisers();
+  if (!selectedAdvertiser && advertisers.length) selectedAdvertiser = advertisers[0].advertiser;
+  renderKpis();
+  renderInsights();
+  renderMonthlyTrend();
+  renderMediaMix();
+  renderAdvertiserBars();
+  renderAdvertiserTrend();
+  renderMoverChart();
+  renderAdvertiserTable();
+}
+
+function renderKpis() {
+  const d = currentIndustry();
+  const stats = [
+    { label: "2018-2022 spend", value: fmtMoney(d.spend), sub: `${d3.format(",")(d.advertisers)} advertisers`, tone: "" },
+    { label: "Covid shock", value: fmtPct(d.pct_change_2019_2020), sub: "2020 vs 2019", tone: d.pct_change_2019_2020 >= 0 ? "positive" : "negative" },
+    { label: "Recovery check", value: fmtPct(d.pct_change_2019_2022), sub: "2022 vs 2019", tone: d.pct_change_2019_2022 >= 0 ? "positive" : "negative" },
+    { label: "Top 5 share", value: fmtShare(d.top5_share), sub: `Leader: ${d.top_advertiser}`, tone: "" },
+  ];
+
+  d3.select("#kpiStrip")
+    .selectAll(".stat")
+    .data(stats)
+    .join("div")
+    .attr("class", "stat")
+    .html(s => `
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value ${s.tone}">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+    `);
+}
+
+function renderInsights() {
+  const d = currentIndustry();
+  const items = [
+    {
+      value: fmtPct(d.pct_change_2019_2020),
+      tone: d.pct_change_2019_2020 >= 0 ? "positive" : "negative",
+      label: `${industry} ${d.pct_change_2019_2020 >= 0 ? "grew" : "fell"} from 2019 to 2020, compared with the Covid-era market baseline.`
+    },
+    {
+      value: fmtPct(d.digital_share_delta),
+      tone: d.digital_share_delta >= 0 ? "positive" : "negative",
+      label: `Digital share moved from ${fmtShare(d.digital_share_2019)} in 2019 to ${fmtShare(d.digital_share_2022)} in 2022.`
+    },
+    {
+      value: fmtShare(d.top_advertiser_share),
+      tone: "",
+      label: `${d.top_advertiser} is the top advertiser by total spend in this industry.`
+    }
+  ];
+
+  d3.select("#insightList")
+    .selectAll("li")
+    .data(items)
+    .join("li")
+    .html(item => `
+      <div class="insight-value ${item.tone}">${item.value}</div>
+      <div class="insight-label">${item.label}</div>
+    `);
+}
+
+function monthlyRowsForIndustry() {
+  const grouped = d3.rollups(
+    data.monthlyMedia.filter(d => d.industry === industry),
+    rows => Object.fromEntries(MEDIA.map(media => [media, d3.sum(rows.filter(r => r.media === media), r => r.spend)])),
+    d => d.month
+  );
+  return grouped.map(([month, values]) => ({ month, date: parseMonth(month), ...values, total: d3.sum(MEDIA, media => values[media] || 0) }))
+    .sort((a, b) => a.date - b.date);
+}
+
+function renderMonthlyTrend() {
+  const rows = monthlyRowsForIndustry();
+  d3.select("#trendSubtitle").text(`${industry}: ${fmtMoney(d3.sum(rows, d => d.total))} across ${rows.length} months, split by media group.`);
+
+  const width = 850;
+  const height = 390;
+  const margin = { top: 12, right: 18, bottom: 38, left: 62 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+  const stack = d3.stack().keys(MEDIA)(rows);
+  const yMax = d3.max(stack, series => d3.max(series, d => d[1])) || 1;
+  const x = d3.scaleTime().domain(d3.extent(rows, d => d.date)).range([0, innerW]);
+  const y = d3.scaleLinear().domain([0, yMax]).nice().range([innerH, 0]);
+  const area = d3.area()
+    .x(d => x(d.data.date))
+    .y0(d => y(d[0]))
+    .y1(d => y(d[1]))
+    .curve(d3.curveMonotoneX);
+
+  const svg = d3.select("#monthlyTrend").html("").append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("role", "img").attr("aria-label", `Monthly ad spend by media group for ${industry}`);
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  const covidStart = new Date(2020, 2, 1);
+  const covidEnd = new Date(2020, 11, 1);
+
+  g.append("rect")
+    .attr("class", "covid-band")
+    .attr("x", x(covidStart))
+    .attr("y", 0)
+    .attr("width", Math.max(0, x(covidEnd) - x(covidStart)))
+    .attr("height", innerH);
+
+  g.append("g")
+    .selectAll("line")
+    .data(y.ticks(5))
+    .join("line")
+    .attr("class", "grid-line")
+    .attr("x1", 0)
+    .attr("x2", innerW)
+    .attr("y1", d => y(d))
+    .attr("y2", d => y(d));
+
+  g.selectAll(".area")
+    .data(stack)
+    .join("path")
+    .attr("fill", d => MEDIA_COLORS[d.key])
+    .attr("opacity", 0.92)
+    .attr("d", area)
+    .on("mouseenter", (event, d) => showTooltip(event, `<h4>${d.key}</h4><p>${industry}</p>`))
+    .on("mousemove", moveTooltip)
+    .on("mouseleave", hideTooltip);
+
+  g.append("g")
+    .attr("class", "axis")
+    .attr("transform", `translate(0,${innerH})`)
+    .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)).tickFormat(yearLabel));
+  g.append("g")
+    .attr("class", "axis")
+    .call(d3.axisLeft(y).ticks(5).tickFormat(fmtMoney));
+
+  g.append("text")
+    .attr("class", "covid-label")
+    .attr("x", x(new Date(2020, 6, 1)))
+    .attr("y", 17)
+    .attr("text-anchor", "middle")
+    .text("2020 shock window");
+
+  const focus = g.append("g").style("display", "none");
+  focus.append("line").attr("y1", 0).attr("y2", innerH).attr("stroke", "#20242a").attr("stroke-dasharray", "4 4");
+  const focusText = focus.append("text").attr("class", "chart-note").attr("x", 8).attr("y", 14);
+
+  g.append("rect")
+    .attr("fill", "transparent")
+    .attr("width", innerW)
+    .attr("height", innerH)
+    .on("mouseenter", () => focus.style("display", null))
+    .on("mousemove", event => {
+      const [mx] = d3.pointer(event);
+      const bisect = d3.bisector(d => d.date).left;
+      const idx = Math.min(rows.length - 1, Math.max(0, bisect(rows, x.invert(mx))));
+      const row = rows[idx];
+      focus.attr("transform", `translate(${x(row.date)},0)`);
+      focusText.text(`${monthLabel(row.date)}: ${fmtMoney(row.total)}`);
+      showTooltip(event, `<h4>${monthLabel(row.date)}</h4>${MEDIA.map(media => `<p>${media}: <strong>${fmtMoney(row[media] || 0)}</strong></p>`).join("")}<p>Total: <strong>${fmtMoney(row.total)}</strong></p>`);
+    })
+    .on("mouseleave", () => {
+      focus.style("display", "none");
+      hideTooltip();
+    });
+}
+
+function renderMediaMix() {
+  const rows = data.industryAnnualMedia.filter(d => d.industry === industry);
+  const years = d3.groups(rows, d => d.year).map(([year, values]) => {
+    const obj = { year };
+    MEDIA.forEach(media => obj[media] = d3.sum(values.filter(d => d.media === media), d => d.share));
+    return obj;
+  }).sort((a, b) => a.year - b.year);
+  const width = 420;
+  const height = 260;
+  const margin = { top: 8, right: 14, bottom: 28, left: 44 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+  const x = d3.scaleBand().domain(years.map(d => d.year)).range([0, innerW]).padding(0.22);
+  const y = d3.scaleLinear().domain([0, 1]).range([innerH, 0]);
+  const stack = d3.stack().keys(MEDIA)(years);
+
+  const svg = d3.select("#mediaMix").html("").append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("role", "img").attr("aria-label", `Annual media allocation for ${industry}`);
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  g.selectAll("g.layer")
+    .data(stack)
+    .join("g")
+    .attr("class", "layer")
+    .attr("fill", d => MEDIA_COLORS[d.key])
+    .selectAll("rect")
+    .data(d => d.map(v => ({ ...v, key: d.key })))
+    .join("rect")
+    .attr("x", d => x(d.data.year))
+    .attr("y", d => y(d[1]))
+    .attr("width", x.bandwidth())
+    .attr("height", d => Math.max(0, y(d[0]) - y(d[1])))
+    .on("mouseenter", (event, d) => showTooltip(event, `<h4>${d.data.year} ${d.key}</h4><p>Share: <strong>${fmtShare(d.data[d.key])}</strong></p>`))
+    .on("mousemove", moveTooltip)
+    .on("mouseleave", hideTooltip);
+
+  g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerH})`).call(d3.axisBottom(x).tickSizeOuter(0));
+  g.append("g").attr("class", "axis").call(d3.axisLeft(y).ticks(4).tickFormat(d => `${d * 100}%`));
+}
+
+function renderAdvertiserBars() {
+  const rows = industryAdvertisers().slice(0, 10);
+  const width = 500;
+  const height = Math.max(310, rows.length * 27 + 48);
+  const margin = { top: 8, right: 54, bottom: 22, left: 154 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+  const x = d3.scaleLinear().domain([0, d3.max(rows, d => d.spend) || 1]).range([0, innerW]);
+  const y = d3.scaleBand().domain(rows.map(d => d.advertiser)).range([0, innerH]).padding(0.22);
+
+  const svg = d3.select("#advertiserBars").html("").append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("role", "img").attr("aria-label", `Top advertisers for ${industry}`);
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  g.selectAll("rect")
+    .data(rows)
+    .join("rect")
+    .attr("x", 0)
+    .attr("y", d => y(d.advertiser))
+    .attr("width", d => x(d.spend))
+    .attr("height", y.bandwidth())
+    .attr("fill", d => d.advertiser === selectedAdvertiser ? "var(--teal)" : "var(--navy)")
+    .attr("opacity", d => d.advertiser === selectedAdvertiser ? 1 : 0.82)
+    .style("cursor", "pointer")
+    .on("click", (_, d) => {
+      selectedAdvertiser = d.advertiser;
+      renderAdvertiserBars();
+      renderAdvertiserTrend();
+      renderAdvertiserTable();
+    })
+    .on("mouseenter", (event, d) => showTooltip(event, `<h4>${d.advertiser}</h4><p>Total spend: <strong>${fmtMoney(d.spend)}</strong></p><p>Industry share: <strong>${fmtShare(d.share)}</strong></p>`))
+    .on("mousemove", moveTooltip)
+    .on("mouseleave", hideTooltip);
+
+  g.selectAll("text.name")
+    .data(rows)
+    .join("text")
+    .attr("class", "bar-label")
+    .attr("x", -8)
+    .attr("y", d => y(d.advertiser) + y.bandwidth() / 2 + 4)
+    .attr("text-anchor", "end")
+    .text(d => d.advertiser.length > 22 ? `${d.advertiser.slice(0, 22)}...` : d.advertiser);
+
+  g.selectAll("text.value")
+    .data(rows)
+    .join("text")
+    .attr("class", "bar-note")
+    .attr("x", d => x(d.spend) + 6)
+    .attr("y", d => y(d.advertiser) + y.bandwidth() / 2 + 4)
+    .text(d => fmtMoney(d.spend));
+
+  g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(4).tickFormat(fmtMoney));
+}
+
+function selectedAdvertiserRows() {
+  return data.advertiserMonthly
+    .filter(d => d.industry === industry && d.advertiser === selectedAdvertiser);
+}
+
+function renderAdvertiserTrend() {
+  const rowsRaw = selectedAdvertiserRows();
+  const adv = industryAdvertisers().find(d => d.advertiser === selectedAdvertiser);
+  d3.select("#advertiserTitle").text(selectedAdvertiser || "Advertiser trend");
+  d3.select("#advertiserSubtitle").text(adv ? `${fmtMoney(adv.spend)} total spend, ${fmtShare(adv.share)} of ${industry}.` : "Select a top advertiser.");
+  if (!rowsRaw.length) {
+    d3.select("#advertiserTrend").html("<p class='muted'>This advertiser is outside the top-10 monthly detail extract.</p>");
+    return;
+  }
+  const grouped = d3.rollups(
+    rowsRaw,
+    rows => Object.fromEntries(MEDIA.map(media => [media, d3.sum(rows.filter(r => r.media === media), r => r.spend)])),
+    d => d.month
+  );
+  const rows = grouped.map(([month, values]) => ({ month, date: parseMonth(month), ...values, total: d3.sum(MEDIA, media => values[media] || 0) }))
+    .sort((a, b) => a.date - b.date);
+  const width = 760;
+  const height = 360;
+  const margin = { top: 12, right: 16, bottom: 36, left: 60 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+  const stack = d3.stack().keys(MEDIA)(rows);
+  const yMax = d3.max(stack, series => d3.max(series, d => d[1])) || 1;
+  const x = d3.scaleTime().domain(d3.extent(rows, d => d.date)).range([0, innerW]);
+  const y = d3.scaleLinear().domain([0, yMax]).nice().range([innerH, 0]);
+  const area = d3.area().x(d => x(d.data.date)).y0(d => y(d[0])).y1(d => y(d[1])).curve(d3.curveMonotoneX);
+  const svg = d3.select("#advertiserTrend").html("").append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("role", "img").attr("aria-label", `Monthly media spend for ${selectedAdvertiser}`);
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  g.append("g").selectAll("line").data(y.ticks(4)).join("line").attr("class", "grid-line").attr("x1", 0).attr("x2", innerW).attr("y1", d => y(d)).attr("y2", d => y(d));
+  g.selectAll(".area").data(stack).join("path").attr("fill", d => MEDIA_COLORS[d.key]).attr("opacity", 0.9).attr("d", area);
+  g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(d3.timeYear.every(1)).tickFormat(yearLabel));
+  g.append("g").attr("class", "axis").call(d3.axisLeft(y).ticks(4).tickFormat(fmtMoney));
+}
+
+function renderMoverChart() {
+  const rows = data.movers
+    .filter(d => d.industry === industry && d.mover_type === moverType)
+    .sort((a, b) => Math.abs(b.delta_2019_2020) - Math.abs(a.delta_2019_2020))
+    .slice(0, 8);
+  const width = 560;
+  const height = Math.max(270, rows.length * 31 + 52);
+  const margin = { top: 8, right: 72, bottom: 28, left: 164 };
+  const innerW = width - margin.left - margin.right;
+  const innerH = height - margin.top - margin.bottom;
+  const min = d3.min(rows, d => d.delta_2019_2020) || 0;
+  const max = d3.max(rows, d => d.delta_2019_2020) || 0;
+  const x = d3.scaleLinear().domain([Math.min(0, min), Math.max(0, max)]).nice().range([0, innerW]);
+  const y = d3.scaleBand().domain(rows.map(d => d.advertiser)).range([0, innerH]).padding(0.22);
+  const svg = d3.select("#moverChart").html("").append("svg").attr("viewBox", `0 0 ${width} ${height}`).attr("role", "img").attr("aria-label", `${moverType} advertisers for ${industry}`);
+  const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  g.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", 0).attr("y2", innerH).attr("stroke", "var(--rule-strong)");
+  g.selectAll("rect")
+    .data(rows)
+    .join("rect")
+    .attr("x", d => Math.min(x(0), x(d.delta_2019_2020)))
+    .attr("y", d => y(d.advertiser))
+    .attr("width", d => Math.abs(x(d.delta_2019_2020) - x(0)))
+    .attr("height", y.bandwidth())
+    .attr("fill", d => d.delta_2019_2020 >= 0 ? "var(--green)" : "var(--rose)");
+  g.selectAll("text.name")
+    .data(rows)
+    .join("text")
+    .attr("class", "bar-label")
+    .attr("x", -8)
+    .attr("y", d => y(d.advertiser) + y.bandwidth() / 2 + 4)
+    .attr("text-anchor", "end")
+    .text(d => d.advertiser.length > 23 ? `${d.advertiser.slice(0, 23)}...` : d.advertiser);
+  g.selectAll("text.value")
+    .data(rows)
+    .join("text")
+    .attr("class", "bar-note")
+    .attr("x", d => d.delta_2019_2020 >= 0 ? x(d.delta_2019_2020) + 6 : x(d.delta_2019_2020) - 6)
+    .attr("y", d => y(d.advertiser) + y.bandwidth() / 2 + 4)
+    .attr("text-anchor", d => d.delta_2019_2020 >= 0 ? "start" : "end")
+    .text(d => fmtMoney(d.delta_2019_2020));
+  g.append("g").attr("class", "axis").attr("transform", `translate(0,${innerH})`).call(d3.axisBottom(x).ticks(4).tickFormat(fmtMoney));
+}
+
+function renderAdvertiserTable() {
+  const rows = industryAdvertisers().slice(0, 10);
+  const brandMap = d3.group(data.brandExamples.filter(d => d.industry === industry), d => d.advertiser);
+  d3.select("#advertiserTable")
+    .selectAll("tr")
+    .data(rows)
+    .join("tr")
+    .attr("class", d => `clickable ${d.advertiser === selectedAdvertiser ? "selected-row" : ""}`)
+    .on("click", (_, d) => {
+      selectedAdvertiser = d.advertiser;
+      renderAdvertiserBars();
+      renderAdvertiserTrend();
+      renderAdvertiserTable();
+    })
+    .html(d => {
+      const brands = (brandMap.get(d.advertiser) || []).slice(0, 3).map(b => b.brand).join(", ");
+      return `
+        <td><strong>${d.advertiser}</strong><br><span class="muted">${brands || "No brand detail"}</span></td>
+        <td>${fmtMoney(d.spend)}</td>
+        <td>${fmtShare(d.share)}</td>
+        <td class="${d.pct_change_2019_2020 >= 0 ? "delta-pos" : "delta-neg"}">${fmtPct(d.pct_change_2019_2020)}</td>
+        <td>${fmtShare(d.digital_share)}</td>
+        <td>${d3.format(",")(d.brands)}</td>
+      `;
+    });
+}
+
+d3.json("data/ad_spend_dashboard.json").then(payload => {
+  data = payload;
+  initialize();
+}).catch(error => {
+  document.body.innerHTML = `<main class="page"><h1>Could not load dashboard data</h1><p>${error.message}</p></main>`;
+});
+</script>
+</body>
+</html>

@@ -41,6 +41,17 @@ export const studios: Studio[] = [
     accent: '#287D67',
   },
   {
+    slug: 'ad-spend-explorer',
+    title: 'Industry Ad Spend Explorer',
+    blurb:
+      'Explore 2018-2022 advertising spend by industry group, advertiser, and media type, with a Covid-era lens on budget shocks, recovery, and media mix shifts.',
+    domain: 'Advertising',
+    methods: ['Dashboard sequencing', 'Media mix', 'Shock analysis'],
+    relatedSlug: 'dashboard-decision-systems',
+    kind: 'dashboard',
+    accent: '#2F8F7B',
+  },
+  {
     slug: 'nyc-airbnb-atlas',
     title: 'NYC Airbnb: A Listings Atlas',
     blurb:
