@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Southwest Effect — A Regression Exercise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,800;1,9..144,400&family=Spline+Sans+Mono:wght@400;500;600&family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1b1714;
+  --paper:#f4ece0;
+  --paper-2:#ece1d1;
+  --card:#fbf6ee;
+  --amber:#d9711e;
+  --amber-2:#b8560f;
+  --teal:#0e6b66;
+  --teal-soft:#caddd9;
+  --sky:#2f6fb0;
+  --line:#d8cab4;
+  --line-strong:#c2ad8e;
+  --muted:#6f6354;
+  --good:#1f7a4d;
+  --bad:#b23b2e;
+  --shadow:0 1px 0 #fff inset, 0 18px 40px -24px rgba(40,28,12,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:
+    radial-gradient(120% 80% at 80% -10%, #fbf4e8 0%, transparent 55%),
+    radial-gradient(100% 60% at 0% 100%, #efe4d2 0%, transparent 50%),
+    var(--paper);
+  color:var(--ink);
+  font-family:"Inter Tight",-apple-system,system-ui,sans-serif;
+  font-size:17px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+.mono{font-family:"Spline Sans Mono",ui-monospace,monospace}
+
+/* ---- masthead ---- */
+header.mast{
+  position:relative;overflow:hidden;
+  border-bottom:2px solid var(--ink);
+  background:
+    repeating-linear-gradient(90deg, transparent 0 38px, rgba(27,23,20,.035) 38px 39px),
+    linear-gradient(180deg,#1b1714 0%, #24201b 100%);
+  color:var(--paper);
+}
+.mast .wrap{padding:42px 22px 38px}
+.kicker{
+  font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--amber);margin:0 0 14px;font-weight:600
+}
+.mast h1{
+  font-family:"Fraunces",serif;font-weight:800;font-size:clamp(38px,7vw,76px);
+  line-height:.96;margin:0;letter-spacing:-.015em
+}
+.mast h1 em{font-style:italic;color:var(--amber);font-weight:600}
+.dek{max-width:640px;margin:20px 0 0;color:#d8cdbd;font-size:18px}
+.byline{
+  margin-top:26px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;
+  font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.06em;color:#9c9082;
+  border-top:1px solid rgba(255,255,255,.12);padding-top:16px
+}
+.byline b{color:var(--paper);font-weight:500}
+.planepath{position:absolute;right:-40px;top:30px;font-size:120px;opacity:.06;transform:rotate(-18deg)}
+
+/* ---- section scaffolding ---- */
+section{padding:54px 0;border-bottom:1px solid var(--line)}
+.snum{
+  font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.28em;
+  text-transform:uppercase;color:var(--amber-2);font-weight:600;margin:0 0 10px;
+  display:flex;align-items:center;gap:12px
+}
+.snum::before{content:"";width:34px;height:2px;background:var(--amber)}
+h2{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(28px,4.4vw,42px);
+  line-height:1.05;margin:0 0 18px;letter-spacing:-.01em}
+h3{font-family:"Fraunces",serif;font-weight:600;font-size:23px;margin:34px 0 10px}
+p{margin:0 0 16px;max-width:70ch}
+.lead{font-size:19px;color:#3a322a}
+a{color:var(--teal)}
+.exec{
+  background:var(--teal-soft);border-left:4px solid var(--teal);
+  padding:16px 20px;border-radius:0 10px 10px 0;margin:22px 0;
+  font-family:"Fraunces",serif;font-style:italic;font-size:20px;color:#0c4e4a;max-width:none
+}
+.note{font-size:14.5px;color:var(--muted)}
+
+/* ---- card ---- */
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:26px;box-shadow:var(--shadow);margin:26px 0
+}
+.card-h{display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.18em;
+  text-transform:uppercase;color:#fff;background:var(--ink);padding:4px 10px;border-radius:20px}
+.tag.amber{background:var(--amber-2)}
+.tag.teal{background:var(--teal)}
+
+/* ---- module 1: confounding bars ---- */
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:18px}
+.barbox{text-align:center}
+.barbox .lab{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.bartrack{height:230px;display:flex;align-items:flex-end;justify-content:center;
+  border-bottom:2px solid var(--ink);position:relative}
+.bar{width:90px;border-radius:8px 8px 0 0;transition:height .9s cubic-bezier(.2,.8,.2,1);
+  position:relative;display:flex;align-items:flex-start;justify-content:center}
+.bar .val{position:absolute;top:-30px;font-family:"Fraunces",serif;font-weight:600;font-size:22px;white-space:nowrap}
+.bar.no{background:linear-gradient(180deg,#2f6fb0,#234f7e)}
+.bar.yes{background:linear-gradient(180deg,var(--amber),var(--amber-2))}
+.gap-callout{text-align:center;margin-top:18px;font-size:16px}
+.gap-callout b{font-family:"Fraunces",serif;font-size:26px;color:var(--amber-2)}
+
+/* ---- controls / sliders ---- */
+.controls{display:grid;gap:18px;margin-top:6px}
+.ctl{display:grid;grid-template-columns:160px 1fr 92px;align-items:center;gap:16px}
+.ctl label{font-family:"Spline Sans Mono",monospace;font-size:13px;font-weight:500}
+.ctl .sub{display:block;font-size:11px;color:var(--muted);letter-spacing:0;font-weight:400}
+input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:6px;
+  background:var(--line-strong);outline:none;width:100%}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:22px;height:22px;border-radius:50%;background:var(--amber);cursor:pointer;
+  border:3px solid var(--card);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--amber);
+  cursor:pointer;border:3px solid var(--card);box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.ctl .cur{font-family:"Spline Sans Mono",monospace;font-weight:600;font-size:16px;text-align:right;
+  background:var(--paper-2);padding:6px 8px;border-radius:7px}
+
+/* ---- SSE meter ---- */
+.meter-row{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;
+  margin-top:24px;padding-top:20px;border-top:1px dashed var(--line-strong)}
+.meter-label{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted)}
+.sse-val{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1}
+.sse-bar-track{height:14px;background:var(--paper-2);border-radius:10px;overflow:hidden;margin-top:8px;border:1px solid var(--line)}
+.sse-bar-fill{height:100%;width:100%;border-radius:10px;transition:width .35s ease, background .35s ease}
+.btn{font-family:"Spline Sans Mono",monospace;font-size:13px;font-weight:600;letter-spacing:.04em;
+  border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);padding:11px 18px;
+  border-radius:9px;cursor:pointer;transition:transform .12s ease, background .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn.amber{background:var(--amber-2);border-color:var(--amber-2);color:#fff}
+.btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+.win{margin-top:16px;padding:14px 18px;border-radius:10px;background:#e7f3ec;border:1px solid #b9dcc6;
+  color:#175c39;font-weight:500;display:none}
+.win.show{display:block}
+
+/* ---- scatter ---- */
+.chartwrap{position:relative;margin-top:14px}
+svg.chart{width:100%;height:auto;display:block;background:var(--card);border-radius:12px;border:1px solid var(--line)}
+.axislab{font-family:"Spline Sans Mono",monospace;font-size:11px;fill:var(--muted)}
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:13px;font-family:"Spline Sans Mono",monospace}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+
+/* ---- regression results table ---- */
+.coeftable{width:100%;border-collapse:collapse;margin-top:10px;font-size:15.5px}
+.coeftable th{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;text-align:left;color:var(--muted);border-bottom:2px solid var(--ink);padding:8px 10px}
+.coeftable td{padding:11px 10px;border-bottom:1px solid var(--line)}
+.coeftable td:first-child{font-weight:600}
+.coeftable .num{font-family:"Spline Sans Mono",monospace;text-align:right}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+.toggle{display:inline-flex;border:1.5px solid var(--ink);border-radius:9px;overflow:hidden;margin:8px 0 4px}
+.toggle button{font-family:"Spline Sans Mono",monospace;font-size:13px;font-weight:600;
+  border:0;background:transparent;padding:9px 16px;cursor:pointer;color:var(--ink)}
+.toggle button.on{background:var(--ink);color:var(--paper)}
+
+/* ---- quiz ---- */
+.q{margin:18px 0;padding:20px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.q .stem{font-family:"Fraunces",serif;font-size:19px;margin-bottom:14px}
+.opt{display:block;width:100%;text-align:left;border:1.5px solid var(--line-strong);background:var(--paper);
+  padding:12px 15px;border-radius:9px;margin-bottom:9px;cursor:pointer;font:inherit;font-size:15px;transition:.15s}
+.opt:hover{border-color:var(--ink)}
+.opt.correct{background:#e7f3ec;border-color:var(--good);color:#175c39;font-weight:600}
+.opt.wrong{background:#fbe7e4;border-color:var(--bad);color:#7d251c}
+.feedback{margin-top:10px;font-size:15px;color:var(--muted);display:none}
+.feedback.show{display:block}
+
+/* ---- callout grid ---- */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.minicard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.minicard h4{margin:0 0 6px;font-family:"Fraunces",serif;font-size:18px}
+.minicard p{font-size:14.5px;color:#463e34;margin:0}
+
+footer{padding:40px 0 60px;color:var(--muted);font-size:13.5px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+.eq{font-family:"Spline Sans Mono",monospace;background:var(--ink);color:var(--paper);
+  padding:14px 18px;border-radius:10px;font-size:15px;overflow-x:auto;margin:14px 0;letter-spacing:.02em}
+.eq .v0{color:#9cd6d0}.eq .v1{color:var(--amber)}.eq .v2{color:#8fc2f0}.eq .v3{color:#e6b8a8}
+
+@media(max-width:760px){
+  .bars{grid-template-columns:1fr 1fr;gap:14px}
+  .bar{width:64px}
+  .ctl{grid-template-columns:1fr;gap:6px}
+  .ctl .cur{text-align:left;justify-self:start}
+  .grid2{grid-template-columns:1fr}
+  .meter-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="planepath">✈</div>
+  <div class="wrap">
+    <p class="kicker">Topic 2 · Quantifying Metrics · Interactive Exercise</p>
+    <h1>The <em>Southwest</em><br>Effect</h1>
+    <p class="dek">Southwest enters a route and fares fall. But by <em>how much</em> — and is it really Southwest, or just that Southwest flies the cheap routes? Use regression to hold everything else constant and isolate one airline's footprint on price.</p>
+    <div class="byline">
+      <span><b>Decision question:</b> What is the marginal impact of Southwest's presence on airfare?</span>
+      <span><b>Data:</b> 598 U.S. city-pair routes</span>
+    </div>
+  </div>
+</header>
+
+<!-- ========== 1 · THE NAIVE COMPARISON ========== -->
+<section id="naive">
+  <div class="wrap">
+    <p class="snum">01 — The tempting answer</p>
+    <h2>Start with the simple difference</h2>
+    <p class="lead">Before any modeling, do what any manager would do first: split the routes into those Southwest flies and those it doesn't, and compare the average fare.</p>
+
+    <div class="card">
+      <div class="card-h">
+        <h3 style="margin:0">Average fare, by Southwest presence</h3>
+        <span class="tag">Diagnostic BI</span>
+      </div>
+      <div class="bars">
+        <div class="barbox">
+          <div class="lab">No Southwest</div>
+          <div class="bartrack"><div class="bar no" id="barNo"><span class="val" id="valNo">$0</span></div></div>
+        </div>
+        <div class="barbox">
+          <div class="lab">Southwest present</div>
+          <div class="bartrack"><div class="bar yes" id="barYes"><span class="val" id="valYes">$0</span></div></div>
+        </div>
+      </div>
+      <div class="gap-callout">Raw gap: <b id="rawGap">–$0</b> lower when Southwest flies the route</div>
+    </div>
+
+    <p>So we are done — Southwest knocks roughly <b id="rawGap2">$142</b> off the fare? Not so fast. Southwest doesn't fly routes at random. It historically favored <em>shorter, denser, more competitive</em> markets. Short routes are cheaper anyway. So part of that gap isn't the "Southwest effect" at all — it's the kind of route Southwest chooses to enter.</p>
+
+    <div class="exec">"Sales fell after the campaign" is not "the campaign caused sales to fall." A difference in averages mixes the effect we want with the differences we forgot to account for.</div>
+    <p class="note">This contamination has a name: <b>confounding</b>. Distance and competition both affect fare <em>and</em> correlate with where Southwest flies. To recover the real Southwest effect, we have to compare like routes with like routes.</p>
+  </div>
+</section>
+
+<!-- ========== 2 · LEAST SQUARES BY HAND ========== -->
+<section id="ssq">
+  <div class="wrap">
+    <p class="snum">02 — Build the model yourself</p>
+    <h2>What "best fit" actually means</h2>
+    <p class="lead">A regression doesn't do magic. It picks the four numbers — one intercept and three slopes — that make the model's predicted fares come closest to the real fares across all 598 routes. "Closest" means the smallest <b>sum of squared errors (SSE)</b>.</p>
+
+    <div class="eq">predicted_fare = <span class="v0">b₀</span> + <span class="v1">b₁</span>·SouthWest + <span class="v2">b₂</span>·Distance + <span class="v3">b₃</span>·OtherAirlines</div>
+
+    <p>Drag the four sliders to <em>hand-tune</em> your own model. Each route's error is (actual − predicted); we square it (so over- and under-shooting both count, and big misses hurt more) and add them all up. Try to drive the SSE as low as you can — then hit <b>Solve</b> to see the mathematically optimal answer.</p>
+
+    <div class="card">
+      <div class="card-h">
+        <span class="tag amber">Interactive · least squares</span>
+        <span class="note mono" id="r2live">R² = 0.00</span>
+      </div>
+      <div class="controls">
+        <div class="ctl">
+          <label>b₀ · Intercept<span class="sub">base fare, $</span></label>
+          <input type="range" id="s0" min="-50" max="450" step="1" value="120">
+          <span class="cur" id="c0">120</span>
+        </div>
+        <div class="ctl">
+          <label>b₁ · SouthWest<span class="sub">$ shift if SW present</span></label>
+          <input type="range" id="s1" min="-200" max="100" step="1" value="0">
+          <span class="cur" id="c1">0</span>
+        </div>
+        <div class="ctl">
+          <label>b₂ · Distance<span class="sub">$ per mile</span></label>
+          <input type="range" id="s2" min="-0.2" max="0.6" step="0.005" value="0.1">
+          <span class="cur" id="c2">0.100</span>
+        </div>
+        <div class="ctl">
+          <label>b₃ · Other Airlines<span class="sub">$ per competitor</span></label>
+          <input type="range" id="s3" min="-120" max="60" step="1" value="0">
+          <span class="cur" id="c3">0</span>
+        </div>
+      </div>
+
+      <div class="meter-row">
+        <div>
+          <div class="meter-label">Sum of squared errors (lower is better)</div>
+          <div class="sse-bar-track"><div class="sse-bar-fill" id="sseFill"></div></div>
+        </div>
+        <div style="text-align:right">
+          <div class="sse-val" id="sseVal">—</div>
+          <div class="meter-label" id="sseDelta">vs. best: —</div>
+        </div>
+      </div>
+
+      <div class="btnrow">
+        <button class="btn amber" id="solveBtn">⚙ Solve for me (least squares)</button>
+        <button class="btn ghost" id="resetBtn">Reset sliders</button>
+      </div>
+      <div class="win" id="winMsg"></div>
+    </div>
+
+    <p class="note">The "Solve" button runs the exact same normal-equations math that <span class="mono">lm()</span> in R or the <span class="mono">LINEST</span> function in Excel uses — there is nothing you can type that beats it on SSE. That single best-fit line <em>is</em> the regression.</p>
+  </div>
+</section>
+
+<!-- ========== 3 · READING THE COEFFICIENTS ========== -->
+<section id="results">
+  <div class="wrap">
+    <p class="snum">03 — Read the estimate</p>
+    <h2>From four numbers to a business answer</h2>
+    <p class="lead">Here is the fitted model. Toggle between the dollar model and the log-log (elasticity) model and watch how the interpretation changes.</p>
+
+    <div class="toggle" role="tablist">
+      <button id="tabLinear" class="on">Dollar model</button>
+      <button id="tabLog">Log–log (elasticity)</button>
+    </div>
+
+    <div class="card">
+      <div class="card-h">
+        <h3 style="margin:0" id="modelTitle">Fare = b₀ + b₁·SW + b₂·Distance + b₃·OtherAirlines</h3>
+        <span class="tag teal" id="r2tag">R² = —</span>
+      </div>
+      <table class="coeftable">
+        <thead><tr><th>Term</th><th class="num">Estimate</th><th>What it says</th></tr></thead>
+        <tbody id="coefBody"></tbody>
+      </table>
+    </div>
+
+    <div class="exec" id="headline"></div>
+
+    <div class="grid2">
+      <div class="minicard">
+        <h4>Why the number shrank</h4>
+        <p>The naive gap was about <b>$142</b>. After holding distance and competition constant, the Southwest effect is about <b>$49</b>. The missing ~$93 was confounding: Southwest's short, competitive routes were already cheaper.</p>
+      </div>
+      <div class="minicard">
+        <h4>Association, not yet proof</h4>
+        <p>This is observational data — Southwest <em>chose</em> its routes. Regression controls for what we measured (distance, competition), but unmeasured factors could remain. It's a strong argument, not a clean experiment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4 · SCATTER + FIT ========== -->
+<section id="scatter">
+  <div class="wrap">
+    <p class="snum">04 — See it on one slice</p>
+    <h2>Distance is the biggest confounder</h2>
+    <p class="lead">Longer flights cost more — that's the upward trend. Southwest routes (amber) cluster among shorter, cheaper flights. The dollar model and the log–log model fit that pattern differently.</p>
+    <div class="card">
+      <div class="card-h">
+        <span class="tag">Fare vs. distance · 598 routes</span>
+        <span class="note">drag the toggle in §03 — this chart follows it</span>
+      </div>
+      <div class="chartwrap">
+        <svg class="chart" id="scatterSvg" viewBox="0 0 720 440" preserveAspectRatio="xMidYMid meet" aria-label="Scatter plot of fare versus distance"></svg>
+      </div>
+      <div class="legend">
+        <span><i class="dot" style="background:#2f6fb0"></i> No Southwest</span>
+        <span><i class="dot" style="background:#d9711e"></i> Southwest present</span>
+        <span><i class="dot" style="background:#1b1714;border-radius:2px;width:20px;height:4px"></i> fitted fare (avg. 1 competitor)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5 · CHECK UNDERSTANDING ========== -->
+<section id="quiz">
+  <div class="wrap">
+    <p class="snum">05 — Check your understanding</p>
+    <h2>Make the manager's call</h2>
+    <div id="quizHost"></div>
+  </div>
+</section>
+
+<!-- ========== 6 · DECISION MEMO ========== -->
+<section id="memo" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum">06 — The decision memo</p>
+    <h2>What a manager does with this</h2>
+    <div class="grid2">
+      <div class="minicard">
+        <h4>Finding</h4>
+        <p>Holding distance and competition constant, a Southwest presence is associated with roughly <b>$49 lower</b> fares — about a <b>24% reduction</b> in the log model. Adding one more competing airline is worth about <b>$41</b> off on its own.</p>
+      </div>
+      <div class="minicard">
+        <h4>Implication</h4>
+        <p>For an incumbent on a Southwest-threatened route, the pricing pressure is real and large. For a regulator, it's evidence that low-cost entry — not just "more airlines" — drives consumer prices down.</p>
+      </div>
+      <div class="minicard">
+        <h4>Limitation</h4>
+        <p>Route entry isn't random. The estimate is an association after measured controls; a cleaner answer would track fares on the <em>same</em> routes before and after Southwest entered (a difference-in-differences design — Topic 2, later).</p>
+      </div>
+      <div class="minicard">
+        <h4>Better next test</h4>
+        <p>Collect a panel of routes over time with entry dates, add route and year fixed effects, and check whether fares fell <em>after</em> entry relative to comparable routes Southwest never touched.</p>
+      </div>
+    </div>
+    <div class="exec" style="margin-top:24px">A dashboard tells you where to look. Regression tells you how much one lever is worth once you stop comparing apples to airports.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Data Driven Decision Making · Topic 2 — Quantifying Metrics</span>
+    <span class="mono">n = 598 routes · least-squares fit computed in-browser</span>
+  </div>
+</footer>
+
+<script>
+/* ===== DATA: [sw, dist, air, fare, origin, dest] ===== */
+const DATA = [[0,569,1,220.0,"ABQ","DFW"],[0,1118,3,309.67,"ABQ","ORD"],[1,328,3,91.0,"ABQ","PHX"],[0,143,1,789.0,"AGS","ATL"],[0,576,2,184.0,"ATL","BWI"],[0,1199,6,240.67,"ATL","DEN"],[0,732,4,194.0,"ATL","DFW"],[0,745,4,192.0,"ATL","EWR"],[0,4502,1,1919.0,"ATL","HNL"],[0,1946,2,274.0,"ATL","LAX"],[0,906,4,197.25,"ATL","MSP"],[0,425,2,184.0,"ATL","MSY"],[0,545,2,162.0,"ATL","PBI"],[0,247,1,298.0,"ATL","PFN"],[0,1587,4,616.0,"ATL","PHX"],[1,526,2,184.0,"ATL","PIT"],[0,272,2,143.0,"ATL","PNS"],[1,1891,1,991.0,"ATL","SAN"],[1,2116,1,409.0,"ATL","SJC"],[0,1919,1,334.0,"ATL","SNA"],[0,445,2,174.0,"ATL","SRQ"],[0,793,1,869.0,"ATL","SYR"],[0,1541,1,929.0,"ATL","TUS"],[1,148,3,118.0,"AUS","HOU"],[1,1090,3,236.0,"AUS","LAS"],[0,1241,3,272.0,"AUS","LAX"],[0,978,4,204.0,"AUS","ORD"],[1,872,3,224.0,"AUS","PHX"],[1,872,3,315.0,"AUS","PHX"],[1,1504,1,773.0,"AUS","SFO"],[0,597,1,339.0,"BHM","DFW"],[0,631,1,405.0,"BNA","DFW"],[1,670,1,218.0,"BNA","HOU"],[1,670,1,218.0,"BNA","HOU"],[1,1797,1,242.0,"BNA","LAX"],[1,616,1,196.0,"BNA","MCO"],[1,675,2,246.5,"BNA","PHL"],[0,632,1,698.0,"BOS","DTW"],[0,1237,2,209.0,"BOS","FLL"],[1,2381,3,264.0,"BOS","LAS"],[0,1121,2,162.0,"BOS","MCO"],[0,861,1,182.0,"BOS","MDW"],[0,867,4,271.75,"BOS","ORD"],[0,1197,1,242.0,"BOS","PBI"],[0,2704,5,406.4,"BOS","SFO"],[0,1231,1,244.0,"BUR","DFW"],[1,223,3,169.0,"BUR","LAS"],[1,223,3,169.0,"BUR","LAS"],[1,369,3,93.0,"BUR","PHX"],[1,369,3,93.0,"BUR","PHX"],[1,369,3,113.0,"BUR","PHX"],[1,369,3,113.0,"BUR","PHX"],[1,369,3,113.0,"BUR","PHX"],[0,937,3,284.33,"BUR","SEA"],[0,576,2,184.0,"BWI","ATL"],[0,1217,2,214.0,"BWI","DFW"],[1,408,1,579.0,"BWI","DTW"],[1,925,1,123.0,"BWI","FLL"],[1,1246,1,199.0,"BWI","HOU"],[1,1246,1,219.0,"BWI","HOU"],[1,2106,3,224.0,"BWI","LAS"],[1,2106,3,224.0,"BWI","LAS"],[1,787,1,121.0,"BWI","MCO"],[0,621,4,150.75,"BWI","ORD"],[1,1998,3,224.0,"BWI","PHX"],[1,1998,3,224.0,"BWI","PHX"],[1,1998,3,224.0,"BWI","PHX"],[1,737,1,214.0,"BWI","STL"],[1,842,1,123.0,"BWI","TPA"],[1,842,1,123.0,"BWI","TPA"],[1,448,1,158.0,"CLE","BNA"],[1,307,1,121.0,"CLE","MDW"],[0,168,3,859.67,"CLT","CHS"],[0,1917,4,292.0,"CLT","LAS"],[0,590,2,251.0,"CLT","PBI"],[1,1774,3,1083.0,"CLT","PHX"],[0,592,1,303.0,"COS","DFW"],[0,1678,1,871.0,"CVG","LAS"],[0,2036,1,821.0,"CVG","SFO"],[1,239,1,94.0,"DAL","HOU"],[1,239,1,114.0,"DAL","HOU"],[1,239,1,114.0,"DAL","HOU"],[0,432,2,164.0,"DAY","ATL"],[1,313,1,545.0,"DCA","BDL"],[0,759,3,182.0,"DCA","MCO"],[0,601,1,162.0,"DCA","MDW"],[0,814,1,184.0,"DCA","TPA"],[0,1619,3,303.0,"DEN","LGA"],[0,1619,4,282.75,"DEN","LGA"],[0,1545,4,375.0,"DEN","MCO"],[0,1062,3,517.0,"DEN","MSY"],[0,804,4,307.25,"DEN","RNO"],[0,1506,4,348.0,"DEN","TPA"],[1,732,4,194.0,"DFW","ATL"],[0,190,1,123.0,"DFW","AUS"],[0,1562,1,244.0,"DFW","BOS"],[0,1231,1,244.0,"DFW","BUR"],[0,1217,2,214.0,"DFW","BWI"],[0,927,1,409.0,"DFW","CMH"],[0,592,1,303.0,"DFW","COS"],[0,3784,1,2350.0,"DFW","HNL"],[0,247,3,116.67,"DFW","HOU"],[0,1172,2,249.5,"DFW","IAD"],[0,919,1,224.0,"DFW","JAX"],[0,1055,5,215.0,"DFW","LAS"],[1,1235,4,234.0,"DFW","LAX"],[0,1389,1,260.0,"DFW","LGA"],[0,1220,1,242.0,"DFW","LGB"],[0,797,2,247.0,"DFW","MDW"],[0,468,1,268.0,"DFW","MFE"],[0,1121,1,244.0,"DFW","MIA"],[1,852,3,255.67,"DFW","MSP"],[0,175,1,121.0,"DFW","OKC"],[0,583,1,362.0,"DFW","OMA"],[0,1616,2,396.0,"DFW","PDX"],[0,1302,3,280.67,"DFW","PHL"],[0,1068,1,234.0,"DFW","PIT"],[0,1062,1,234.0,"DFW","RDU"],[0,1345,1,335.0,"DFW","RNO"],[0,1171,1,360.0,"DFW","SAN"],[0,1660,4,345.0,"DFW","SEA"],[0,1464,3,349.0,"DFW","SFO"],[0,2165,1,555.0,"DFW","SJU"],[0,988,2,345.0,"DFW","SLC"],[0,1431,1,351.0,"DFW","SMF"],[0,1205,3,239.0,"DFW","SNA"],[0,1205,3,239.0,"DFW","SNA"],[0,929,1,244.0,"DFW","TPA"],[0,813,1,347.0,"DFW","TUS"],[0,987,3,552.0,"DTW","DFW"],[0,1127,2,310.0,"DTW","FLL"],[1,1979,2,469.5,"DTW","LAX"],[0,957,3,315.67,"DTW","MCO"],[0,229,1,110.0,"DTW","MDW"],[0,229,1,110.0,"DTW","MDW"],[1,1145,3,276.67,"DTW","MIA"],[0,528,1,706.0,"DTW","MSP"],[0,235,5,125.8,"DTW","ORD"],[0,1927,2,1184.5,"DTW","SEA"],[0,2079,1,1120.0,"DTW","SFO"],[1,347,3,91.0,"ELP","PHX"],[0,1086,3,172.0,"EWR","MIA"],[0,2133,4,315.25,"EWR","PHX"],[0,977,1,355.0,"FLL","ACY"],[1,925,1,123.0,"FLL","BWI"],[0,1127,2,310.0,"FLL","DTW"],[1,318,1,133.0,"FLL","JAX"],[0,1076,4,177.25,"FLL","LGA"],[1,178,4,123.25,"FLL","MCO"],[1,197,5,127.8,"FLL","TPA"],[1,197,5,127.8,"FLL","TPA"],[0,644,2,174.0,"FNT","ATL"],[1,279,1,128.0,"GEG","PDX"],[1,1020,3,224.0,"GEG","PHX"],[0,4502,1,2179.0,"HNL","ATL"],[1,4433,2,1639.5,"HNL","CVG"],[0,3784,1,2350.0,"HNL","DFW"],[0,3904,1,2118.0,"HNL","IAH"],[0,3972,1,1404.0,"HNL","MSP"],[0,2677,4,806.25,"HNL","SEA"],[1,759,1,198.0,"HOU","ABQ"],[0,696,4,189.0,"HOU","ATL"],[1,148,3,118.0,"HOU","AUS"],[1,239,1,114.0,"HOU","DAL"],[1,239,1,114.0,"HOU","DAL"],[0,247,3,116.67,"HOU","DFW"],[1,276,1,117.0,"HOU","HRL"],[1,359,1,118.0,"HOU","JAN"],[1,1235,4,199.0,"HOU","LAS"],[1,1235,4,199.0,"HOU","LAS"],[1,1390,2,199.0,"HOU","LAX"],[1,666,1,219.0,"HOU","MCI"],[1,848,1,178.0,"HOU","MCO"],[1,848,1,198.0,"HOU","MCO"],[1,303,1,136.0,"HOU","MSY"],[1,303,1,136.0,"HOU","MSY"],[1,1642,1,199.0,"HOU","OAK"],[1,1642,1,199.0,"HOU","OAK"],[1,1020,4,199.0,"HOU","PHX"],[1,1020,4,199.0,"HOU","PHX"],[1,1020,4,199.0,"HOU","PHX"],[1,1312,1,620.0,"HOU","SAN"],[1,192,1,117.0,"HOU","SAT"],[1,687,3,219.0,"HOU","STL"],[1,453,1,188.0,"HOU","TUL"],[1,276,1,117.0,"HRL","HOU"],[0,228,4,378.5,"IAD","JFK"],[1,2066,5,224.0,"IAD","LAS"],[0,229,4,235.75,"IAD","LGA"],[0,810,2,123.0,"IAD","TPA"],[0,201,1,118.0,"IAH","CRP"],[1,224,3,96.67,"IAH","DFW"],[0,964,3,229.0,"IAH","MIA"],[0,925,5,199.0,"IAH","ORD"],[0,925,5,199.0,"IAH","ORD"],[0,1825,1,620.0,"IAH","PDX"],[0,1303,1,620.0,"IAH","SAN"],[0,1347,1,332.0,"IAH","SNA"],[0,341,1,439.0,"JAN","ATL"],[1,359,1,118.0,"JAN","HOU"],[0,270,2,143.0,"JAX","ATL"],[0,329,2,212.0,"JAX","CLT"],[0,919,1,224.0,"JAX","DFW"],[0,1391,1,260.0,"JFK","DFW"],[0,228,4,378.5,"JFK","IAD"],[0,2248,3,302.67,"JFK","LAS"],[0,944,1,201.0,"JFK","MCO"],[0,1028,1,161.0,"JFK","PBI"],[0,2153,3,323.0,"JFK","PHX"],[0,2446,1,262.0,"JFK","SAN"],[0,163,2,422.5,"KOA","HNL"],[1,487,3,179.0,"LAS","ABQ"],[1,1090,3,236.0,"LAS","AUS"],[1,223,3,169.0,"LAS","BUR"],[1,2106,3,224.0,"LAS","BWI"],[1,2106,3,224.0,"LAS","BWI"],[1,2106,3,224.0,"LAS","BWI"],[1,2106,3,224.0,"LAS","BWI"],[1,1825,4,189.0,"LAS","CLE"],[0,1917,4,292.0,"LAS","CLT"],[0,1678,1,871.0,"LAS","CVG"],[1,584,3,181.67,"LAS","ELP"],[1,2174,3,224.0,"LAS","FLL"],[0,2762,2,480.5,"LAS","HNL"],[0,2762,2,516.0,"LAS","HNL"],[1,1235,4,199.0,"LAS","HOU"],[1,1235,4,223.0,"LAS","HOU"],[0,2248,3,302.67,"LAS","JFK"],[1,2039,3,222.0,"LAS","MCO"],[1,2039,3,222.0,"LAS","MCO"],[0,2175,4,284.0,"LAS","MIA"],[1,407,3,180.0,"LAS","OAK"],[1,407,3,180.0,"LAS","OAK"],[1,197,3,121.0,"LAS","ONT"],[0,1515,5,215.2,"LAS","ORD"],[1,762,4,224.0,"LAS","PDX"],[1,256,2,281.0,"LAS","PHX"],[1,256,2,286.0,"LAS","PHX"],[1,256,2,286.0,"LAS","PHX"],[1,345,3,123.0,"LAS","RNO"],[1,345,3,123.0,"LAS","RNO"],[1,258,3,103.0,"LAS","SAN"],[1,258,3,123.0,"LAS","SAN"],[1,258,3,123.0,"LAS","SAN"],[1,866,3,214.67,"LAS","SEA"],[1,866,3,214.67,"LAS","SEA"],[0,414,4,198.0,"LAS","SFO"],[1,386,4,180.0,"LAS","SJC"],[1,368,4,158.25,"LAS","SLC"],[1,397,3,182.0,"LAS","SMF"],[1,397,3,182.0,"LAS","SMF"],[1,226,4,128.0,"LAS","SNA"],[1,226,4,128.0,"LAS","SNA"],[1,365,3,121.0,"LAS","TUS"],[1,1241,3,262.0,"LAX","AUS"],[1,1797,1,242.0,"LAX","BNA"],[1,1390,1,199.0,"LAX","HOU"],[1,1363,1,321.0,"LAX","MCI"],[0,2217,5,256.6,"LAX","MCO"],[0,2217,5,265.0,"LAX","MCO"],[0,2217,5,273.8,"LAX","MCO"],[1,337,1,164.0,"LAX","OAK"],[1,337,1,164.0,"LAX","OAK"],[1,337,1,180.0,"LAX","OAK"],[1,337,1,180.0,"LAX","OAK"],[1,47,1,591.0,"LAX","ONT"],[1,370,4,110.5,"LAX","PHX"],[1,370,4,110.5,"LAX","PHX"],[1,370,4,123.0,"LAX","PHX"],[1,370,4,123.0,"LAX","PHX"],[1,390,3,202.0,"LAX","RNO"],[1,390,3,202.0,"LAX","RNO"],[0,308,3,164.67,"LAX","SJC"],[0,308,3,164.67,"LAX","SJC"],[0,308,3,164.67,"LAX","SJC"],[1,373,1,164.0,"LAX","SMF"],[1,373,1,164.0,"LAX","SMF"],[1,36,1,366.0,"LAX","SNA"],[0,1593,3,282.33,"LAX","STL"],[1,451,1,121.0,"LAX","TUS"],[0,1619,3,303.0,"LGA","DEN"],[0,1389,1,260.0,"LGA","DFW"],[0,725,1,229.0,"LGA","MDW"],[0,887,1,339.0,"LGA","STL"],[0,1220,1,242.0,"LGB","DFW"],[0,2447,2,1493.0,"LIH","SFO"],[0,436,1,386.0,"MCI","MKE"],[1,1044,3,244.0,"MCI","PHX"],[1,1048,1,204.0,"MCI","TPA"],[1,787,1,121.0,"MCO","BWI"],[1,787,1,121.0,"MCO","BWI"],[0,759,3,182.0,"MCO","DCA"],[0,957,3,319.0,"MCO","DTW"],[1,848,1,178.0,"MCO","HOU"],[0,944,1,140.0,"MCO","JFK"],[0,944,1,161.0,"MCO","JFK"],[0,2217,5,265.6,"MCO","LAX"],[1,989,2,186.0,"MCO","MDW"],[1,989,2,191.0,"MCO","MDW"],[1,550,1,147.0,"MCO","MSY"],[1,861,3,158.33,"MCO","PHL"],[1,1848,3,212.0,"MCO","PHX"],[1,880,1,141.0,"MCO","STL"],[0,590,2,182.0,"MDW","ATL"],[0,861,1,182.0,"MDW","BOS"],[1,307,1,121.0,"MDW","CLE"],[0,601,1,162.0,"MDW","DCA"],[0,895,3,182.0,"MDW","DEN"],[0,797,2,247.0,"MDW","DFW"],[1,229,1,110.0,"MDW","DTW"],[0,711,1,231.0,"MDW","EWR"],[0,725,1,229.0,"MDW","LGA"],[1,989,2,186.0,"MDW","MCO"],[1,989,2,186.0,"MDW","MCO"],[1,989,2,191.0,"MDW","MCO"],[0,349,2,168.5,"MDW","MSP"],[1,290,3,151.33,"MHT","PHL"],[1,595,4,164.0,"MIA","ATL"],[1,1258,1,204.0,"MIA","BOS"],[0,920,1,184.0,"MIA","DCA"],[0,1121,1,244.0,"MIA","DFW"],[1,1145,3,276.67,"MIA","DTW"],[0,1086,3,172.0,"MIA","EWR"],[0,964,3,229.0,"MIA","IAH"],[0,674,1,210.0,"MIA","MSY"],[0,1197,4,214.0,"MIA","ORD"],[0,700,1,210.0,"MIA","RDU"],[0,2585,3,337.67,"MIA","SFO"],[1,853,2,274.5,"MKE","DFW"],[1,984,1,238.0,"MKE","IAH"],[0,1524,1,313.0,"MKE","LAS"],[0,67,4,337.5,"MKE","ORD"],[1,906,4,197.25,"MSP","ATL"],[1,930,3,849.0,"MSP","CLT"],[0,680,6,223.67,"MSP","DEN"],[0,680,6,240.17,"MSP","DEN"],[0,528,1,706.0,"MSP","DTW"],[0,3972,1,1404.0,"MSP","HNL"],[0,349,2,168.5,"MSP","MDW"],[0,297,3,465.67,"MSP","MKE"],[0,1426,2,919.5,"MSP","PDX"],[0,1518,1,876.0,"MSP","SMF"],[0,425,2,184.0,"MSY","ATL"],[1,303,1,136.0,"MSY","HOU"],[1,303,1,146.0,"MSY","HOU"],[1,550,1,147.0,"MSY","MCO"],[0,674,1,210.0,"MSY","MIA"],[1,1642,1,199.0,"OAK","HOU"],[0,2408,3,639.33,"OAK","IAD"],[1,407,3,180.0,"OAK","LAS"],[1,407,3,180.0,"OAK","LAS"],[1,337,1,164.0,"OAK","LAX"],[1,337,1,164.0,"OAK","LAX"],[1,337,1,180.0,"OAK","LAX"],[1,337,1,180.0,"OAK","LAX"],[1,337,1,180.0,"OAK","LAX"],[1,337,1,180.0,"OAK","LAX"],[1,543,3,184.0,"OAK","PDX"],[1,543,3,194.0,"OAK","PDX"],[1,646,3,224.0,"OAK","PHX"],[1,671,3,225.67,"OAK","SEA"],[1,588,1,204.0,"OAK","SLC"],[1,371,3,161.67,"OAK","SNA"],[0,583,1,362.0,"OMA","DFW"],[0,819,2,415.5,"ONT","DEN"],[1,197,3,121.0,"ONT","LAS"],[1,197,3,121.0,"ONT","LAS"],[1,47,1,591.0,"ONT","LAX"],[1,325,3,111.0,"ONT","PHX"],[1,325,3,121.0,"ONT","PHX"],[1,325,3,121.0,"ONT","PHX"],[1,956,3,291.33,"ONT","SEA"],[0,888,4,235.25,"ORD","DEN"],[1,802,3,423.67,"ORD","DFW"],[0,1182,5,184.4,"ORD","FLL"],[1,1515,5,204.0,"ORD","LAS"],[0,1723,4,218.0,"ORD","SAN"],[0,1721,4,290.5,"ORD","SEA"],[0,1829,3,275.67,"ORD","SJC"],[0,2072,4,365.0,"ORD","SJU"],[0,1012,4,148.25,"ORD","TPA"],[0,585,4,254.5,"ORD","TUL"],[0,1437,1,202.0,"ORD","TUS"],[0,1437,1,202.0,"ORD","TUS"],[0,1213,1,242.0,"ORF","DFW"],[1,717,3,423.0,"ORF","ORD"],[0,545,2,162.0,"PBI","ATL"],[0,1197,1,252.0,"PBI","BOS"],[0,590,2,251.0,"PBI","CLT"],[0,1028,1,161.0,"PBI","JFK"],[0,1035,2,161.0,"PBI","LGA"],[0,951,3,148.0,"PBI","PHL"],[0,1616,2,396.0,"PDX","DFW"],[1,279,1,123.0,"PDX","GEG"],[1,1730,1,620.0,"PDX","HOU"],[0,1426,2,769.0,"PDX","MSP"],[1,543,3,184.0,"PDX","OAK"],[1,569,3,174.0,"PDX","SJC"],[1,479,3,119.67,"PDX","SMF"],[0,247,1,298.0,"PFN","ATL"],[0,280,4,128.0,"PHL","BOS"],[0,1302,3,280.67,"PHL","DFW"],[1,2401,3,256.33,"PHL","LAX"],[1,290,3,151.33,"PHL","MHT"],[1,2075,4,224.0,"PHL","PHX"],[1,267,3,133.0,"PHL","PIT"],[1,238,3,151.33,"PHL","PVD"],[1,336,3,133.0,"PHL","RDU"],[1,2369,2,248.0,"PHL","SAN"],[0,328,3,91.0,"PHX","ABQ"],[0,328,3,91.0,"PHX","ABQ"],[0,1587,4,616.0,"PHX","ATL"],[1,369,3,93.0,"PHX","BUR"],[1,369,3,93.0,"PHX","BUR"],[1,369,3,113.0,"PHX","BUR"],[1,1998,3,224.0,"PHX","BWI"],[1,1998,3,224.0,"PHX","BWI"],[0,602,5,141.0,"PHX","DEN"],[0,1671,4,206.25,"PHX","DTW"],[1,347,3,91.0,"PHX","ELP"],[0,2153,3,323.0,"PHX","JFK"],[1,256,2,113.0,"PHX","LAS"],[1,256,2,113.0,"PHX","LAS"],[1,256,3,123.0,"PHX","LAS"],[1,256,3,123.0,"PHX","LAS"],[1,370,4,123.0,"PHX","LAX"],[1,370,4,123.0,"PHX","LAX"],[1,1848,3,212.0,"PHX","MCO"],[1,646,3,224.0,"PHX","OAK"],[1,646,3,224.0,"PHX","OAK"],[1,646,3,224.0,"PHX","OAK"],[1,325,3,121.0,"PHX","ONT"],[1,325,3,121.0,"PHX","ONT"],[0,1440,5,204.0,"PHX","ORD"],[0,1009,5,263.4,"PHX","PDX"],[0,1009,5,263.4,"PHX","PDX"],[1,2075,4,224.0,"PHX","PHL"],[1,304,2,113.0,"PHX","SAN"],[1,304,3,113.0,"PHX","SAN"],[1,304,3,123.0,"PHX","SAN"],[1,304,3,123.0,"PHX","SAN"],[1,1107,5,267.4,"PHX","SEA"],[1,651,4,260.0,"PHX","SFO"],[1,621,3,224.0,"PHX","SJC"],[1,621,3,224.0,"PHX","SJC"],[1,507,4,203.0,"PHX","SLC"],[1,507,4,220.0,"PHX","SLC"],[1,647,3,224.0,"PHX","SMF"],[1,647,3,224.0,"PHX","SMF"],[1,647,3,224.0,"PHX","SMF"],[1,647,3,224.0,"PHX","SMF"],[1,647,3,224.0,"PHX","SMF"],[0,338,3,128.0,"PHX","SNA"],[0,338,3,128.0,"PHX","SNA"],[0,1262,3,224.0,"PHX","STL"],[0,1262,3,244.0,"PHX","STL"],[0,1262,3,244.0,"PHX","STL"],[0,1910,4,218.25,"PIT","LAS"],[1,773,1,214.0,"PIT","MCI"],[1,431,1,357.0,"PIT","MKE"],[1,267,3,133.0,"PIT","PHL"],[0,272,2,143.0,"PNS","ATL"],[0,1062,1,234.0,"RDU","DFW"],[1,379,1,620.0,"RDU","HOU"],[0,700,1,210.0,"RDU","MIA"],[1,336,3,133.0,"RDU","PHL"],[1,1891,3,224.0,"RDU","PHX"],[0,804,4,307.25,"RNO","DEN"],[1,345,3,103.0,"RNO","LAS"],[1,345,3,103.0,"RNO","LAS"],[1,345,3,123.0,"RNO","LAS"],[1,345,3,123.0,"RNO","LAS"],[1,390,3,194.0,"RNO","LAX"],[1,564,1,174.0,"RNO","SEA"],[0,1171,1,360.0,"SAN","DFW"],[1,1312,1,620.0,"SAN","HOU"],[0,1303,1,620.0,"SAN","IAH"],[0,2446,1,222.0,"SAN","JFK"],[0,2446,1,262.0,"SAN","JFK"],[1,258,3,103.0,"SAN","LAS"],[1,258,3,123.0,"SAN","LAS"],[0,109,3,359.0,"SAN","LAX"],[0,109,3,359.0,"SAN","LAX"],[0,109,3,359.0,"SAN","LAX"],[0,109,3,359.0,"SAN","LAX"],[0,109,3,359.0,"SAN","LAX"],[1,304,3,123.0,"SAN","PHX"],[1,304,3,123.0,"SAN","PHX"],[0,417,1,184.0,"SAN","SJC"],[0,417,1,184.0,"SAN","SJC"],[0,417,1,184.0,"SAN","SJC"],[0,417,1,204.0,"SAN","SJC"],[1,192,1,117.0,"SAT","HOU"],[1,1069,3,222.0,"SAT","LAS"],[0,937,3,284.33,"SEA","BUR"],[0,1660,4,345.0,"SEA","DFW"],[0,1927,2,1184.5,"SEA","DTW"],[1,224,2,123.0,"SEA","GEG"],[0,2677,4,755.75,"SEA","HNL"],[1,954,6,253.67,"SEA","LAX"],[1,671,3,225.67,"SEA","OAK"],[1,129,3,238.0,"SEA","PDX"],[1,1107,5,267.4,"SEA","PHX"],[1,564,1,174.0,"SEA","RNO"],[1,697,3,227.33,"SEA","SJC"],[1,605,2,244.0,"SEA","SMF"],[1,605,3,244.0,"SEA","SMF"],[0,2704,5,380.2,"SFO","BOS"],[0,2704,5,406.4,"SFO","BOS"],[0,2036,1,821.0,"SFO","CVG"],[0,2079,1,1120.0,"SFO","DTW"],[0,451,2,390.0,"SFO","EUG"],[0,414,4,198.0,"SFO","LAS"],[0,414,4,198.0,"SFO","LAS"],[1,337,4,177.75,"SFO","LAX"],[0,1854,1,302.0,"SFO","MDW"],[0,1854,1,302.0,"SFO","MDW"],[0,2585,3,337.67,"SFO","MIA"],[0,1589,2,280.5,"SFO","MSP"],[0,1846,4,419.0,"SFO","ORD"],[1,2300,1,620.0,"SJC","HOU"],[1,386,4,180.0,"SJC","LAS"],[1,386,4,180.0,"SJC","LAS"],[1,386,4,201.0,"SJC","LAS"],[1,386,4,201.0,"SJC","LAS"],[0,308,3,167.33,"SJC","LAX"],[0,308,3,167.33,"SJC","LAX"],[0,308,3,167.33,"SJC","LAX"],[1,1576,1,1098.0,"SJC","MSP"],[0,1829,3,275.67,"SJC","ORD"],[1,569,3,174.0,"SJC","PDX"],[1,569,3,180.0,"SJC","PDX"],[1,621,3,224.0,"SJC","PHX"],[1,621,3,224.0,"SJC","PHX"],[1,621,3,224.0,"SJC","PHX"],[0,417,1,184.0,"SJC","SAN"],[0,417,1,184.0,"SJC","SAN"],[1,585,1,192.0,"SJC","SLC"],[1,342,1,163.0,"SJC","SNA"],[0,1674,3,413.33,"SJU","BOS"],[0,2165,1,555.0,"SJU","DFW"],[0,1046,2,304.0,"SJU","FLL"],[0,988,2,345.0,"SLC","DFW"],[1,1213,2,229.0,"SLC","HOU"],[1,507,4,203.0,"SLC","PHX"],[1,689,2,264.0,"SLC","SEA"],[0,599,3,418.33,"SLC","SFO"],[1,910,3,390.0,"SMF","DEN"],[0,1431,1,351.0,"SMF","DFW"],[0,397,3,182.0,"SMF","LAS"],[0,397,3,182.0,"SMF","LAS"],[1,373,1,164.0,"SMF","LAX"],[1,373,1,164.0,"SMF","LAX"],[0,1518,1,876.0,"SMF","MSP"],[1,479,3,119.67,"SMF","PDX"],[1,647,3,224.0,"SMF","PHX"],[1,647,3,224.0,"SMF","PHX"],[1,605,3,244.0,"SMF","SEA"],[0,86,2,328.0,"SMF","SFO"],[0,1919,1,334.0,"SNA","ATL"],[0,846,4,390.25,"SNA","DEN"],[0,1205,3,239.0,"SNA","DFW"],[0,1205,3,239.0,"SNA","DFW"],[1,226,4,128.0,"SNA","LAS"],[1,226,4,128.0,"SNA","LAS"],[1,36,1,366.0,"SNA","LAX"],[1,36,1,366.0,"SNA","LAX"],[1,371,3,161.67,"SNA","OAK"],[0,1726,3,374.0,"SNA","ORD"],[0,338,3,128.0,"SNA","PHX"],[0,338,3,128.0,"SNA","PHX"],[1,342,1,163.0,"SNA","SJC"],[0,445,2,174.0,"SRQ","ATL"],[0,483,2,479.0,"STL","ATL"],[1,880,1,141.0,"STL","MCO"],[1,1068,1,184.0,"STL","MIA"],[0,1262,3,244.0,"STL","PHX"],[0,1262,3,244.0,"STL","PHX"],[1,1156,1,224.0,"STL","SLC"],[0,793,1,869.0,"SYR","ATL"],[0,1111,1,123.0,"TPA","BDL"],[0,1185,1,164.0,"TPA","BOS"],[1,842,1,123.0,"TPA","BWI"],[0,1506,4,348.0,"TPA","DEN"],[0,929,1,244.0,"TPA","DFW"],[1,197,5,123.8,"TPA","FLL"],[0,810,2,123.0,"TPA","IAD"],[0,1005,1,162.0,"TPA","JFK"],[0,2158,1,224.0,"TPA","LAX"],[0,2158,1,264.0,"TPA","LAX"],[0,1011,3,282.0,"TPA","LGA"],[0,1012,4,148.25,"TPA","ORD"],[0,585,4,254.5,"TUL","ORD"],[0,1541,1,929.0,"TUS","ATL"],[0,813,1,347.0,"TUS","DFW"],[1,879,1,391.0,"TUS","HOU"],[1,365,3,121.0,"TUS","LAS"],[1,451,1,121.0,"TUS","LAX"]];
+</script>
+<script>
+/* ============ helpers ============ */
+const $ = id => document.getElementById(id);
+const fmt$ = n => (n<0?'-$':'$') + Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:0});
+
+const SW=DATA.map(d=>d[0]), DIST=DATA.map(d=>d[1]), AIR=DATA.map(d=>d[2]), FARE=DATA.map(d=>d[3]);
+const N=DATA.length;
+const meanFare = FARE.reduce((a,b)=>a+b,0)/N;
+const ssTot = FARE.reduce((a,f)=>a+(f-meanFare)**2,0);
+
+/* ---- naive averages ---- */
+let sumYes=0,nYes=0,sumNo=0,nNo=0;
+for(let i=0;i<N;i++){ if(SW[i]===1){sumYes+=FARE[i];nYes++;} else {sumNo+=FARE[i];nNo++;} }
+const avgYes=sumYes/nYes, avgNo=sumNo/nNo, rawGap=avgNo-avgYes;
+
+/* ============ least-squares solver (normal equations, 4 params) ============ */
+function solveOLS(cols){ // cols = array of feature arrays (no intercept), returns [b0,...]
+  const k=cols.length+1;
+  // design rows: [1, col1_i, col2_i, ...]
+  const XtX=Array.from({length:k},()=>new Array(k).fill(0));
+  const Xty=new Array(k).fill(0);
+  for(let i=0;i<N;i++){
+    const row=[1]; for(const c of cols) row.push(c[i]);
+    for(let a=0;a<k;a++){ Xty[a]+=row[a]*FARE_TARGET[i];
+      for(let b=0;b<k;b++) XtX[a][b]+=row[a]*row[b]; }
+  }
+  return gauss(XtX,Xty);
+}
+let FARE_TARGET=FARE; // swapped for log model
+function gauss(A,b){
+  const n=b.length, M=A.map((r,i)=>[...r,b[i]]);
+  for(let c=0;c<n;c++){
+    let p=c; for(let r=c+1;r<n;r++) if(Math.abs(M[r][c])>Math.abs(M[p][c])) p=r;
+    [M[c],M[p]]=[M[p],M[c]];
+    const pv=M[c][c];
+    for(let j=c;j<=n;j++) M[c][j]/=pv;
+    for(let r=0;r<n;r++){ if(r===c) continue; const f=M[r][c];
+      for(let j=c;j<=n;j++) M[r][j]-=f*M[c][j]; }
+  }
+  return M.map(r=>r[n]);
+}
+
+/* ---- linear model: Fare ~ SW + DIST + AIR ---- */
+FARE_TARGET=FARE;
+const BETA = solveOLS([SW,DIST,AIR]);   // [b0,bSW,bDist,bAir]
+function sseFor(b0,b1,b2,b3){ let s=0; for(let i=0;i<N;i++){const e=FARE[i]-(b0+b1*SW[i]+b2*DIST[i]+b3*AIR[i]); s+=e*e;} return s; }
+const SSE_BEST = sseFor(...BETA);
+const R2_LIN = 1 - SSE_BEST/ssTot;
+
+/* ---- log-log model: log(Fare) ~ SW + log(DIST) + AIR ---- */
+const LFARE=FARE.map(Math.log), LDIST=DIST.map(Math.log);
+const lMean=LFARE.reduce((a,b)=>a+b,0)/N, lTot=LFARE.reduce((a,f)=>a+(f-lMean)**2,0);
+FARE_TARGET=LFARE;
+const BETA_LOG = solveOLS([SW,LDIST,AIR]);
+let lres=0; for(let i=0;i<N;i++){const e=LFARE[i]-(BETA_LOG[0]+BETA_LOG[1]*SW[i]+BETA_LOG[2]*LDIST[i]+BETA_LOG[3]*AIR[i]); lres+=e*e;}
+const R2_LOG = 1 - lres/lTot;
+FARE_TARGET=FARE;
+
+/* ============ MODULE 1: naive bars ============ */
+function drawBars(){
+  const maxV=Math.max(avgYes,avgNo), h=v=>Math.round((v/maxV)*200);
+  $('valNo').textContent=fmt$(avgNo); $('valYes').textContent=fmt$(avgYes);
+  $('rawGap').textContent='–'+fmt$(rawGap); $('rawGap2').textContent=fmt$(rawGap);
+  requestAnimationFrame(()=>{ $('barNo').style.height=h(avgNo)+'px'; $('barYes').style.height=h(avgYes)+'px'; });
+}
+const barObs=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){drawBars();barObs.disconnect();}})},{threshold:.3});
+barObs.observe($('naive'));
+
+/* ============ MODULE 2: hand-tuned least squares ============ */
+const sl=['s0','s1','s2','s3'].map($), cu=['c0','c1','c2','c3'].map($);
+function curVals(){ return [ +sl[0].value, +sl[1].value, +sl[2].value, +sl[3].value ]; }
+function updateSSE(){
+  const [b0,b1,b2,b3]=curVals();
+  cu[0].textContent=Math.round(b0); cu[1].textContent=Math.round(b1);
+  cu[2].textContent=(+b2).toFixed(3); cu[3].textContent=Math.round(b3);
+  const sse=sseFor(b0,b1,b2,b3);
+  $('sseVal').textContent=(sse/1e6).toFixed(2)+'M';
+  const r2=Math.max(0,1-sse/ssTot);
+  $('r2live').textContent='R² = '+r2.toFixed(2);
+  // bar: map SSE between best and a bad baseline (intercept-only ~ ssTot*2.2)
+  const worst=ssTot*1.8, frac=Math.min(1,Math.max(0,(sse-SSE_BEST)/(worst-SSE_BEST)));
+  const fill=$('sseFill'); fill.style.width=(8+frac*92)+'%';
+  // green when close to optimum
+  const closeness=SSE_BEST/sse; // ->1 at best
+  fill.style.background= closeness>0.985 ? 'linear-gradient(90deg,#1f7a4d,#2fa86a)'
+                       : closeness>0.9  ? 'linear-gradient(90deg,#d9711e,#e9a04e)'
+                       : 'linear-gradient(90deg,#b23b2e,#d56a5e)';
+  const over=((sse-SSE_BEST)/SSE_BEST*100);
+  $('sseDelta').textContent = over<0.5 ? 'optimal! 🎯' : '+'+over.toFixed(0)+'% above best';
+  $('winMsg').classList.toggle('show', over<0.5 && !solvedFlag);
+  if(over<0.5) $('winMsg').textContent='Nailed it — you found the least-squares fit by hand. SSE = '+(SSE_BEST/1e6).toFixed(2)+'M.';
+}
+let solvedFlag=false;
+sl.forEach(s=>s.addEventListener('input',()=>{solvedFlag=false;updateSSE();}));
+$('solveBtn').addEventListener('click',()=>{
+  solvedFlag=true;
+  // animate sliders toward BETA
+  const start=curVals(), end=BETA, t0=performance.now(), dur=900;
+  (function step(t){
+    const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3);
+    sl[0].value=start[0]+(end[0]-start[0])*e;
+    sl[1].value=start[1]+(end[1]-start[1])*e;
+    sl[2].value=start[2]+(end[2]-start[2])*e;
+    sl[3].value=start[3]+(end[3]-start[3])*e;
+    updateSSE();
+    if(k<1) requestAnimationFrame(step);
+    else { $('winMsg').classList.add('show');
+      $('winMsg').textContent='This is the optimal fit: b₀='+BETA[0].toFixed(0)+', b₁='+BETA[1].toFixed(1)+' (SouthWest), b₂='+BETA[2].toFixed(3)+' (distance), b₃='+BETA[3].toFixed(1)+' (competitors). No other numbers give a lower SSE.'; }
+  })(t0);
+});
+$('resetBtn').addEventListener('click',()=>{
+  solvedFlag=false;
+  sl[0].value=120; sl[1].value=0; sl[2].value=0.1; sl[3].value=0;
+  $('winMsg').classList.remove('show'); updateSSE();
+});
+updateSSE();
+
+/* ============ MODULE 3: coefficient table + toggle ============ */
+let mode='linear';
+function renderCoef(){
+  const body=$('coefBody');
+  if(mode==='linear'){
+    $('modelTitle').textContent='Fare = b₀ + b₁·SW + b₂·Distance + b₃·OtherAirlines';
+    $('r2tag').textContent='R² = '+R2_LIN.toFixed(2);
+    const [b0,b1,b2,b3]=BETA;
+    body.innerHTML=`
+      <tr><td>Intercept</td><td class="num">${fmt$(b0)}</td><td>Baseline fare for a hypothetical 0-mile route with no Southwest and no competitors.</td></tr>
+      <tr><td>SouthWest</td><td class="num neg">${b1.toFixed(2)}</td><td><b>The answer:</b> Southwest's presence is linked to about <b>${fmt$(-b1)} lower</b> fares, holding distance &amp; competition fixed.</td></tr>
+      <tr><td>Distance</td><td class="num pos">${b2.toFixed(3)}</td><td>Each extra mile adds about <b>${(b2*100).toFixed(0)}¢</b> to the fare. A 1,000-mile-longer route costs ~${fmt$(b2*1000)} more.</td></tr>
+      <tr><td>Other Airlines</td><td class="num neg">${b3.toFixed(2)}</td><td>Each additional competitor knocks off about <b>${fmt$(-b3)}</b> — competition itself lowers price.</td></tr>`;
+    $('headline').innerHTML=`After leveling the playing field on distance and competition, a Southwest route runs about <b>${fmt$(-b1)} cheaper</b> — roughly a third of the size of the naive $142 gap.`;
+  } else {
+    $('modelTitle').textContent='log(Fare) = b₀ + b₁·SW + b₂·log(Distance) + b₃·OtherAirlines';
+    $('r2tag').textContent='R² = '+R2_LOG.toFixed(2);
+    const [b0,b1,b2,b3]=BETA_LOG;
+    const pct = (Math.exp(b1)-1)*100;
+    body.innerHTML=`
+      <tr><td>Intercept</td><td class="num">${b0.toFixed(3)}</td><td>Log of baseline fare; not meaningful on its own.</td></tr>
+      <tr><td>SouthWest</td><td class="num neg">${b1.toFixed(3)}</td><td><b>Percentage effect:</b> fares are about <b>${Math.abs(pct).toFixed(0)}% lower</b> where Southwest flies (e^${b1.toFixed(2)}−1).</td></tr>
+      <tr><td>log(Distance)</td><td class="num pos">${b2.toFixed(3)}</td><td><b>Elasticity:</b> a 1% longer route raises fare by about <b>${b2.toFixed(2)}%</b>. Far below 1 — fares rise much slower than distance.</td></tr>
+      <tr><td>Other Airlines</td><td class="num neg">${b3.toFixed(3)}</td><td>Each extra competitor lowers fare by about <b>${(Math.abs(b3)*100).toFixed(0)}%</b>.</td></tr>`;
+    $('headline').innerHTML=`In percentage terms, Southwest's presence is associated with roughly <b>${Math.abs(pct).toFixed(0)}% lower</b> fares — and distance has an elasticity of only <b>${b2.toFixed(2)}</b>, so doubling distance is far from doubling price.`;
+  }
+  drawScatter();
+}
+$('tabLinear').addEventListener('click',()=>{mode='linear';$('tabLinear').classList.add('on');$('tabLog').classList.remove('on');renderCoef();});
+$('tabLog').addEventListener('click',()=>{mode='log';$('tabLog').classList.add('on');$('tabLinear').classList.remove('on');renderCoef();});
+
+/* ============ MODULE 4: scatter ============ */
+function drawScatter(){
+  const svg=$('scatterSvg'); const W=720,H=440, m={l:64,r:18,t:18,b:48};
+  const pw=W-m.l-m.r, ph=H-m.t-m.b;
+  const maxD=Math.max(...DIST), maxF=Math.max(...FARE);
+  const x=d=>m.l+(d/maxD)*pw, y=f=>m.t+ph-(f/maxF)*ph;
+  let s='';
+  // gridlines
+  for(let g=0;g<=4;g++){ const fy=m.t+ph*g/4, fv=maxF*(1-g/4);
+    s+=`<line x1="${m.l}" y1="${fy.toFixed(1)}" x2="${W-m.r}" y2="${fy.toFixed(1)}" stroke="#e6dac6" stroke-width="1"/>`;
+    s+=`<text x="${m.l-8}" y="${(fy+4).toFixed(1)}" text-anchor="end" class="axislab">$${Math.round(fv)}</text>`; }
+  for(let g=0;g<=4;g++){ const fx=m.l+pw*g/4, dv=maxD*g/4;
+    s+=`<text x="${fx.toFixed(1)}" y="${H-22}" text-anchor="middle" class="axislab">${Math.round(dv)}</text>`; }
+  s+=`<text x="${m.l+pw/2}" y="${H-4}" text-anchor="middle" class="axislab" style="font-size:12px">Distance (miles)</text>`;
+  s+=`<text transform="translate(16 ${m.t+ph/2}) rotate(-90)" text-anchor="middle" class="axislab" style="font-size:12px">Fare ($)</text>`;
+  // points (cap markers, subsample handled by all 598 - fine)
+  for(let i=0;i<N;i++){
+    const c = SW[i]===1 ? '#d9711e' : '#2f6fb0';
+    s+=`<circle cx="${x(DIST[i]).toFixed(1)}" cy="${y(FARE[i]).toFixed(1)}" r="3" fill="${c}" fill-opacity="0.42"/>`;
+  }
+  // fitted lines at average competitor count, separate SW=0 / SW=1
+  const avgAir=AIR.reduce((a,b)=>a+b,0)/N;
+  function fitFare(d,sw){
+    if(mode==='linear'){ const[b0,b1,b2,b3]=BETA; return b0+b1*sw+b2*d+b3*avgAir; }
+    const[b0,b1,b2,b3]=BETA_LOG; return Math.exp(b0+b1*sw+b2*Math.log(d)+b3*avgAir);
+  }
+  for(const sw of [0,1]){
+    let path=''; const col= sw? '#b8560f':'#234f7e';
+    for(let d=40; d<=maxD; d+=Math.max(20,maxD/120)){
+      const px=x(d), py=y(Math.min(maxF,Math.max(0,fitFare(d,sw))));
+      path+=(path?'L':'M')+px.toFixed(1)+' '+py.toFixed(1)+' ';
+    }
+    s+=`<path d="${path}" fill="none" stroke="${col}" stroke-width="3" stroke-linecap="round" opacity="0.95"/>`;
+  }
+  svg.innerHTML=s;
+}
+
+/* ============ MODULE 5: quiz ============ */
+const QUIZ=[
+  { stem:"The raw average gap is about $142, but the regression coefficient on Southwest is about –$49. Why is the regression number smaller?",
+    opts:[
+      {t:"The regression is wrong — averages are more reliable.",ok:false,fb:"Averages are simpler, not more reliable. They can't separate Southwest's effect from the routes it chooses."},
+      {t:"Southwest flies shorter, more competitive routes that were already cheaper, so the raw gap double-counts those factors.",ok:true,fb:"Exactly. Regression strips out the distance and competition advantages, leaving the part attributable to Southwest itself."},
+      {t:"Squaring the errors shrinks the coefficient.",ok:false,fb:"Squaring defines 'best fit'; it doesn't bias the coefficient toward zero."}
+    ]},
+  { stem:"In the log–log model, the coefficient on log(Distance) is about 0.30. The best plain-English reading is:",
+    opts:[
+      {t:"A 1-mile increase in distance raises fare by 30%.",ok:false,fb:"That confuses a unit change with a percentage change. In a log–log model the coefficient is an elasticity."},
+      {t:"A 1% increase in distance is associated with about a 0.30% increase in fare.",ok:true,fb:"Right — that's an elasticity. Fares rise far more slowly than distance."},
+      {t:"Distance explains 30% of the variation in fare.",ok:false,fb:"That would be an R²-style statement, not what a single coefficient tells you."}
+    ]},
+  { stem:"A manager says: 'This proves that if we force Southwest onto a route, fares will drop $49.' What's the right pushback?",
+    opts:[
+      {t:"Nothing — the regression proves causation.",ok:false,fb:"Observational regression shows association after controls, not a guaranteed causal effect."},
+      {t:"Southwest chose its routes; unmeasured differences may remain, so this is a strong association, not a clean causal estimate.",ok:true,fb:"Correct. To claim causation you'd want before/after entry on the same routes vs. comparable controls (difference-in-differences)."},
+      {t:"The effect is too small to matter.",ok:false,fb:"$49 on a ~$300 fare is large; the issue is identification, not size."}
+    ]}
+];
+const host=$('quizHost');
+QUIZ.forEach((q,qi)=>{
+  const div=document.createElement('div'); div.className='q';
+  div.innerHTML=`<div class="stem">${qi+1}. ${q.stem}</div>`;
+  const fb=document.createElement('div'); fb.className='feedback';
+  q.opts.forEach(o=>{
+    const b=document.createElement('button'); b.className='opt'; b.textContent=o.t;
+    b.onclick=()=>{
+      if(div.dataset.done) return; div.dataset.done=1;
+      b.classList.add(o.ok?'correct':'wrong');
+      if(!o.ok){ [...div.querySelectorAll('.opt')].forEach((el,i)=>{ if(q.opts[i].ok) el.classList.add('correct'); }); }
+      fb.textContent=o.fb; fb.classList.add('show');
+    };
+    div.appendChild(b);
+  });
+  div.appendChild(fb); host.appendChild(div);
+});
+
+/* ============ init ============ */
+renderCoef();
+
+</script>
+</body>
+</html>

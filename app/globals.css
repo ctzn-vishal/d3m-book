@@ -6,6 +6,12 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Headings carry ids (rehype-slug). Offset their scroll target so deep
+   links and the "On this page" rail don't tuck them under the sticky bar. */
+article :is(h1, h2, h3, h4) {
+  scroll-margin-top: 6rem;
+}
+
 /* One-time soft pulse on the floating Contents pill to draw the eye on
    first article load. After 2 cycles it stops, so it doesn't become
    visual noise during reading. */

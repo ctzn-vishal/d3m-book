@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
 // task lists, strikethrough, autolinks. Required for the comparison tables
 // across Part 3.
 //
+// rehype-slug stamps a stable `id` on every heading so the in-page
+// "On this page" rail (components/Book/OnThisPage.tsx) can scroll-spy and
+// deep-link to sections. Passed in string form (not an imported function)
+// so Turbopack can serialize the loader options — see Next 16 MDX + Turbopack.
+//
 // Note: remark-math/rehype-katex were evaluated but conflict with prose currency
 // like "$3.50" across Part 3. Inline and display math are handled by the custom
 // $...$ / $$...$$ parser in mdx-components.tsx plus the <Equation> and <M>
@@ -18,6 +23,7 @@ const nextConfig: NextConfig = {
 const withMDX = createMDX({
   options: {
     remarkPlugins: [['remark-gfm', {}]],
+    rehypePlugins: [['rehype-slug', {}]],
   },
 });
 

@@ -102,6 +102,14 @@ export function ChapterTocDrawer({ book, currentSlug }: ChapterTocDrawerProps) {
               </div>
 
               <nav className="px-6 py-6">
+                <Link
+                  href="/studios"
+                  onClick={() => setOpen(false)}
+                  className="mb-6 flex items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-body hover:border-border-strong hover:text-link transition-colors"
+                >
+                  <span>Case Study &amp; Dashboard Gallery</span>
+                  <span aria-hidden="true" className="text-link">→</span>
+                </Link>
                 <ol className="space-y-8">
                   {book.parts.map(part => (
                     <li key={part.numeral}>
