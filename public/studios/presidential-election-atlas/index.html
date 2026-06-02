@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <style>
 :root {
   --bg: #f6f3ec;
@@ -391,12 +392,14 @@ svg {
   transition: opacity 120ms ease, stroke-width 120ms ease;
 }
 
-.hex:hover {
+.hex:hover,
+.state-shape:hover {
   opacity: 0.88;
 }
 
 .hex-label,
-.hex-ev {
+.hex-ev,
+.state-label {
   pointer-events: none;
   text-anchor: middle;
   font-weight: 700;
@@ -409,6 +412,56 @@ svg {
 .hex-ev {
   font-size: 9px;
   opacity: 0.88;
+}
+
+.state-shape {
+  cursor: pointer;
+  transition: opacity 120ms ease, stroke-width 120ms ease;
+}
+
+.state-label {
+  font-size: 9px;
+  paint-order: stroke;
+  stroke: rgba(255, 253, 248, 0.82);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+}
+
+.map-header-tools {
+  display: grid;
+  justify-items: end;
+  gap: 9px;
+  min-width: 260px;
+}
+
+.map-mode-tabs {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  background: var(--panel-2);
+}
+
+.map-mode-button {
+  height: 28px;
+  min-width: 74px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.map-mode-button:hover {
+  color: var(--ink);
+}
+
+.map-mode-button.active {
+  background: var(--ink);
+  color: var(--panel);
 }
 
 .legend-row {
@@ -629,6 +682,19 @@ svg {
     flex-direction: column;
   }
 
+  .map-header-tools {
+    justify-items: stretch;
+    min-width: 100%;
+  }
+
+  .map-mode-tabs {
+    width: 100%;
+  }
+
+  .map-mode-button {
+    flex: 1;
+  }
+
   .portrait-row {
     align-items: flex-start;
   }
@@ -689,6 +755,27 @@ const SPLIT_EV = {
   2024: { ME: { DEMOCRAT: 3, REPUBLICAN: 1 }, NE: { DEMOCRAT: 1, REPUBLICAN: 4 } }
 };
 
+const FIPS_TO_STATE = {
+  "01": "AL", "02": "AK", "04": "AZ", "05": "AR", "06": "CA", "08": "CO", "09": "CT", "10": "DE", "11": "DC", "12": "FL",
+  "13": "GA", "15": "HI", "16": "ID", "17": "IL", "18": "IN", "19": "IA", "20": "KS", "21": "KY", "22": "LA", "23": "ME",
+  "24": "MD", "25": "MA", "26": "MI", "27": "MN", "28": "MS", "29": "MO", "30": "MT", "31": "NE", "32": "NV", "33": "NH",
+  "34": "NJ", "35": "NM", "36": "NY", "37": "NC", "38": "ND", "39": "OH", "40": "OK", "41": "OR", "42": "PA", "44": "RI",
+  "45": "SC", "46": "SD", "47": "TN", "48": "TX", "49": "UT", "50": "VT", "51": "VA", "53": "WA", "54": "WV", "55": "WI",
+  "56": "WY"
+};
+
+const LABEL_OFFSETS = {
+  CT: [10, 8],
+  DC: [18, 14],
+  DE: [12, 10],
+  MD: [16, 9],
+  MA: [12, -5],
+  NH: [8, -9],
+  NJ: [11, 8],
+  RI: [16, 6],
+  VT: [-5, -9]
+};
+
 const HEX_LAYOUT = [
   ["AK", 0, 7], ["HI", 0, 9],
   ["WA", 2, 3], ["OR", 2, 4], ["CA", 2, 5],
@@ -719,16 +806,19 @@ let rows = [];
 let years = [];
 let selectedYear = 2024;
 let selectedState = null;
+let selectedMapMode = "state";
 let candidateById = new Map();
 let stateRowsByYear = new Map();
 let resultCache = new Map();
+let usStateFeatures = [];
 
 Promise.all([
   d3.json("data/elections.json"),
   d3.json("data/candidates.json"),
   d3.csv("data/president_state_results_by_candidate.csv", d3.autoType),
-  d3.json("data/sources.json")
-]).then(([electionData, candidateData, stateData, sources]) => {
+  d3.json("data/sources.json"),
+  d3.json("data/us-states-10m.json")
+]).then(([electionData, candidateData, stateData, sources, usTopology]) => {
   elections = electionData;
   candidates = candidateData;
   rows = stateData;
@@ -736,6 +826,12 @@ Promise.all([
   selectedYear = years.includes(2024) ? 2024 : d3.max(years);
   candidateById = new Map(candidates.map(d => [d.candidateId, d]));
   stateRowsByYear = d3.group(rows, d => d.year, d => d.state_po);
+  usStateFeatures = topojson.feature(usTopology, usTopology.objects.states).features
+    .map(feature => {
+      const code = FIPS_TO_STATE[String(feature.id).padStart(2, "0")];
+      return code ? { ...feature, properties: { ...feature.properties, code } } : null;
+    })
+    .filter(Boolean);
   document.getElementById("sourceStamp").textContent = `Generated ${new Date(sources.generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
   buildShell();
   buildYearControls();
@@ -761,8 +857,14 @@ function buildShell() {
             <p class="eyebrow">State map</p>
             <h2 class="panel-title">Where did the two-party margin land?</h2>
           </div>
-          <div class="legend-row" aria-label="Map color scale">
-            <span>R +50</span><span class="legend-gradient"></span><span>D +50</span>
+          <div class="map-header-tools">
+            <div class="legend-row" aria-label="Map color scale">
+              <span>R +50</span><span class="legend-gradient"></span><span>D +50</span>
+            </div>
+            <div class="map-mode-tabs" aria-label="Map style">
+              <button class="map-mode-button active" type="button" data-map-mode="state">State map</button>
+              <button class="map-mode-button" type="button" data-map-mode="hex">Hex map</button>
+            </div>
           </div>
         </div>
         <div id="mapWrap" class="map-wrap"></div>
@@ -806,9 +908,13 @@ function buildShell() {
     </section>
 
     <section class="panel source-panel">
-      <p><strong>Sources and caveat.</strong> Data comes from the local <code>case/state/dashboard_assets</code> bundle generated from <code>1976-2024-president.csv</code>: state-level presidential returns, candidate metadata, and Wikimedia/Wikidata portrait metadata. The map displays statewide margins. Electoral-vote totals use standard state allocations and hard-coded Maine/Nebraska district splits for 2008, 2016, 2020, and 2024; the source vote table itself is state-level.</p>
+      <p><strong>Sources and caveat.</strong> Data comes from the local <code>case/state/dashboard_assets</code> bundle generated from <code>1976-2024-president.csv</code>: state-level presidential returns, candidate metadata, and Wikimedia/Wikidata portrait metadata. State boundaries use the local <code>us-atlas</code> state TopoJSON asset. The maps display statewide margins. Electoral-vote totals use standard state allocations and hard-coded Maine/Nebraska district splits for 2008, 2016, 2020, and 2024; the source vote table itself is state-level.</p>
     </section>
   `);
+  d3.selectAll(".map-mode-button").on("click", event => {
+    selectedMapMode = event.currentTarget.dataset.mapMode;
+    drawMap(getStateResults(selectedYear), getNationalSummary(selectedYear).evMap);
+  });
 }
 
 function buildYearControls() {
@@ -926,6 +1032,75 @@ function renderResultCard(election, national) {
 }
 
 function drawMap(results, evMap) {
+  updateMapModeControls();
+  if (selectedMapMode === "hex" || !usStateFeatures.length) {
+    drawHexMap(results, evMap);
+  } else {
+    drawStateMap(results, evMap);
+  }
+}
+
+function drawStateMap(results, evMap) {
+  const byState = new Map(results.map(d => [d.state_po, d]));
+  const width = 720;
+  const height = 455;
+  const color = d3.scaleSequential(d3.interpolateRdBu).domain([-0.55, 0.55]).clamp(true);
+  const features = usStateFeatures.map(feature => {
+    const code = feature.properties.code;
+    const result = byState.get(code);
+    return {
+      ...feature,
+      code,
+      ...result,
+      ev: evMap[code] || 0
+    };
+  });
+  const collection = { type: "FeatureCollection", features };
+  const projection = d3.geoAlbersUsa().fitExtent([[8, 12], [width - 8, height - 14]], collection);
+  const path = d3.geoPath(projection);
+  const svg = d3.select("#mapWrap")
+    .html("")
+    .append("svg")
+    .attr("viewBox", `0 0 ${width} ${height}`)
+    .attr("role", "img")
+    .attr("aria-label", `Geographic state map for the ${selectedYear} presidential election`);
+
+  svg.append("g")
+    .selectAll("path")
+    .data(features)
+    .join("path")
+    .attr("class", "state-shape")
+    .attr("d", path)
+    .attr("fill", d => d.dMargin == null ? "#d7d0c3" : color(d.dMargin))
+    .attr("stroke", d => d.code === selectedState ? "#20242a" : "#fffdf8")
+    .attr("stroke-width", d => d.code === selectedState ? 2.4 : 1)
+    .attr("stroke-linejoin", "round")
+    .on("click", (_, d) => {
+      selectedState = d.code;
+      render();
+    })
+    .on("mouseenter", (event, d) => showTooltip(event, stateTooltip(d)))
+    .on("mousemove", event => moveTooltip(event))
+    .on("mouseleave", hideTooltip);
+
+  svg.append("g")
+    .selectAll("text")
+    .data(features.filter(d => Number.isFinite(path.centroid(d)[0]) && Number.isFinite(path.centroid(d)[1])))
+    .join("text")
+    .attr("class", "state-label")
+    .attr("x", d => {
+      const [x] = path.centroid(d);
+      return x + (LABEL_OFFSETS[d.code]?.[0] || 0);
+    })
+    .attr("y", d => {
+      const [, y] = path.centroid(d);
+      return y + (LABEL_OFFSETS[d.code]?.[1] || 0);
+    })
+    .attr("fill", d => textColor(d.dMargin))
+    .text(d => d.code);
+}
+
+function drawHexMap(results, evMap) {
   const byState = new Map(results.map(d => [d.state_po, d]));
   const width = 720;
   const height = 440;
@@ -983,6 +1158,13 @@ function drawMap(results, evMap) {
     .attr("y", 12)
     .attr("fill", d => textColor(d.dMargin))
     .text(d => d.ev);
+}
+
+function updateMapModeControls() {
+  d3.selectAll(".map-mode-button")
+    .classed("active", function() {
+      return this.dataset.mapMode === selectedMapMode;
+    });
 }
 
 function renderStatePanel(state) {
