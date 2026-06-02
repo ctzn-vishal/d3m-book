@@ -1,0 +1,1611 @@
+[
+  {
+    "candidateId": "al-gore",
+    "displayName": "Al Gore",
+    "ballotNames": [
+      "GORE, AL"
+    ],
+    "wikipediaTitle": "Al Gore",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2000,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 50996062,
+        "nationalVoteShare": 0.4829447761521106
+      }
+    ],
+    "wikidataId": "Q19673",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q19673",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Al_Gore",
+    "image": {
+      "path": "images/candidates/al-gore.jpg",
+      "byteCount": 207165,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Al Gore, Vice President of the United States, official portrait 1994.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Al_Gore,_Vice_President_of_the_United_States,_official_portrait_1994.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Al_Gore%2C_Vice_President_of_the_United_States%2C_official_portrait_1994.jpg/960px-Al_Gore%2C_Vice_President_of_the_United_States%2C_official_portrait_1994.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Unknown photographerUnknown photographer",
+        "credit": "https://web.archive.org/web/20080325171935/http://www.dodmedia.osd.mil/DVIC_View/Still_Details.cfm?SDAN=DNSC9401202&JPGPath=/Assets/Still/1994/Navy/DN-SC-94-01202.JPG"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "barack-obama",
+    "displayName": "Barack Obama",
+    "ballotNames": [
+      "OBAMA, BARACK H."
+    ],
+    "wikipediaTitle": "Barack Obama",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2008,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 69498459,
+        "nationalVoteShare": 0.52883011745623
+      },
+      {
+        "year": 2012,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 65899660,
+        "nationalVoteShare": 0.5102962794710302
+      }
+    ],
+    "wikidataId": "Q76",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q76",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Barack_Obama",
+    "image": {
+      "path": "images/candidates/barack-obama.jpg",
+      "byteCount": 205817,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "President Barack Obama.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:President_Barack_Obama.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Official White House Photo by Pete Souza",
+        "credit": "P120612PS-0463 (direct link)https://web.archive.org/web/20160227060205/https://www.whitehouse.gov/administration/president-obama (Official White House page - direct link)"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "bill-clinton",
+    "displayName": "Bill Clinton",
+    "ballotNames": [
+      "CLINTON, BILL"
+    ],
+    "wikipediaTitle": "Bill Clinton",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1992,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 44954303,
+        "nationalVoteShare": 0.42977435516594775
+      },
+      {
+        "year": 1996,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 47401898,
+        "nationalVoteShare": 0.491772875844625
+      }
+    ],
+    "wikidataId": "Q1124",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q1124",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Bill_Clinton",
+    "image": {
+      "path": "images/candidates/bill-clinton.jpg",
+      "byteCount": 282900,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Bill Clinton.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Bill_Clinton.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Bill_Clinton.jpg/960px-Bill_Clinton.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Bob McNeely, The White House[1]",
+        "credit": "This image was released by the United States Armed Forces with the ID DD-SC-93-04622 (next).\nThis tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.\n\n\nالعربية ∙ বাংলা ∙ \nBahaso Jambi ∙ \nDeutsch ∙ Deutsch (Sie-Form) ∙ English ∙ español ∙ euskara ∙ فارسی ∙ français ∙ italiano ∙ 日本語 ∙ 한국어 ∙ македонски ∙ മലയാളം ∙ Plattdüütsch ∙ Nederlands ∙ polski ∙ پښتو ∙ português ∙ русский ∙ slovenščina ∙ svenska ∙ Türkçe ∙ українська ∙ 简体中文 ∙ 繁體中文 ∙ +/−"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "bob-barr",
+    "displayName": "Bob Barr",
+    "ballotNames": [
+      "BARR, BOB"
+    ],
+    "wikipediaTitle": "Bob Barr",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2008,
+        "partySimplified": "LIBERTARIAN",
+        "party": {
+          "label": "Libertarian",
+          "shortLabel": "Lib.",
+          "color": "#d4a017"
+        },
+        "nationalVotes": 502821,
+        "nationalVoteShare": 0.003826083229981531
+      }
+    ],
+    "wikidataId": "Q540544",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q540544",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Bob_Barr",
+    "image": {
+      "path": "images/candidates/bob-barr.jpg",
+      "byteCount": 145059,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Bob Barr-2008 cropped.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Bob_Barr-2008_cropped.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Bob_Barr-2008_cropped.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY 3.0",
+        "url": "https://creativecommons.org/licenses/by/3.0",
+        "usageTerms": "Creative Commons Attribution 3.0"
+      },
+      "attribution": {
+        "artist": "derivative work: Noca2plus (talk)\nBob_Barr-2008.jpg: Bob Barr",
+        "credit": "Bob_Barr-2008.jpg"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "bob-dole",
+    "displayName": "Bob Dole",
+    "ballotNames": [
+      "DOLE, ROBERT"
+    ],
+    "wikipediaTitle": "Bob Dole",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1996,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 39198482,
+        "nationalVoteShare": 0.4066662103252441
+      }
+    ],
+    "wikidataId": "Q319079",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q319079",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Bob_Dole",
+    "image": {
+      "path": "images/candidates/bob-dole.jpg",
+      "byteCount": 208723,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Bob Dole, PCCWW photo portrait.JPG",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Bob_Dole,_PCCWW_photo_portrait.JPG",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Bob_Dole%2C_PCCWW_photo_portrait.JPG",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "President's Commission on Care for American's Returning Wounded Warriors (PCCWW)",
+        "credit": "https://web.archive.org/web/20070807220635/http://www.pccww.gov/images/Dole-BobColor.JPG"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "chase-oliver",
+    "displayName": "Chase Oliver",
+    "ballotNames": [
+      "CHASE OLIVER",
+      "OLIVER, CHASE"
+    ],
+    "wikipediaTitle": "Chase Oliver",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2024,
+        "partySimplified": "LIBERTARIAN",
+        "party": {
+          "label": "Libertarian",
+          "shortLabel": "Lib.",
+          "color": "#d4a017"
+        },
+        "nationalVotes": 641278,
+        "nationalVoteShare": 0.004126357108443149
+      }
+    ],
+    "wikidataId": "Q116179225",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q116179225",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Chase_Oliver",
+    "image": {
+      "path": "images/candidates/chase-oliver.jpg",
+      "byteCount": 200154,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Chase Oliver by Gage Skidmore.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Chase_Oliver_by_Gage_Skidmore.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Chase_Oliver_by_Gage_Skidmore.jpg/960px-Chase_Oliver_by_Gage_Skidmore.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY-SA 3.0",
+        "url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "usageTerms": "Creative Commons Attribution-Share Alike 3.0"
+      },
+      "attribution": {
+        "artist": "Gage Skidmore",
+        "credit": "Own work"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "donald-trump",
+    "displayName": "Donald Trump",
+    "ballotNames": [
+      "TRUMP, DONALD J."
+    ],
+    "wikipediaTitle": "Donald Trump",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2016,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 62985062,
+        "nationalVoteShare": 0.46046024764000737
+      },
+      {
+        "year": 2020,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 74216146,
+        "nationalVoteShare": 0.4681564803523061
+      },
+      {
+        "year": 2024,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 77302580,
+        "nationalVoteShare": 0.49740993841047915
+      }
+    ],
+    "wikidataId": "Q22686",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q22686",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Donald_Trump",
+    "image": {
+      "path": "images/candidates/donald-trump.jpg",
+      "byteCount": 167846,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Official Presidential Portrait of President Donald J. Trump (2025) (cropped)(2).jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Official_Presidential_Portrait_of_President_Donald_J._Trump_(2025)_(cropped)(2).jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Official_Presidential_Portrait_of_President_Donald_J._Trump_%282025%29_%28cropped%29%282%29.jpg/960px-Official_Presidential_Portrait_of_President_Donald_J._Trump_%282025%29_%28cropped%29%282%29.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Daniel Torok",
+        "credit": "White HouseFacebook"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "ed-clark",
+    "displayName": "Ed Clark",
+    "ballotNames": [
+      "CLARK, EDWARD \"ED\""
+    ],
+    "wikipediaTitle": "Ed Clark",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1980,
+        "partySimplified": "LIBERTARIAN",
+        "party": {
+          "label": "Libertarian",
+          "shortLabel": "Lib.",
+          "color": "#d4a017"
+        },
+        "nationalVotes": 920049,
+        "nationalVoteShare": 0.010636791852688371
+      }
+    ],
+    "wikidataId": "Q3624294",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q3624294",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Ed_Clark",
+    "image": {
+      "path": "images/candidates/ed-clark.jpg",
+      "byteCount": 90045,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Ed Clark (cropped).jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Ed_Clark_(cropped).jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Ed_Clark_%28cropped%29.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "UPI/Bettmann Archive",
+        "credit": "https://www.gettyimages.com/detail/news-photo/the-libertarian-partys-presidential-candidate-ed-clark-news-photo/2204854715"
+      }
+    }
+  },
+  {
+    "candidateId": "eugene-mccarthy",
+    "displayName": "Eugene McCarthy",
+    "ballotNames": [
+      "MCCARTHY, EUGENE \"GENE\""
+    ],
+    "wikipediaTitle": "Eugene McCarthy",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1976,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 676701,
+        "nationalVoteShare": 0.00829276782500053
+      },
+      {
+        "year": 1988,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 28015,
+        "nationalVoteShare": 0.00030588460731114986
+      }
+    ],
+    "wikidataId": "Q380550",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q380550",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Eugene_McCarthy",
+    "image": {
+      "path": "images/candidates/eugene-mccarthy.jpg",
+      "byteCount": 293116,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "EugeneMcCarthy.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:EugeneMcCarthy.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/EugeneMcCarthy.jpg/960px-EugeneMcCarthy.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Unknown authorUnknown author",
+        "credit": "U.S. Senate Historical Office via PBS"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "gary-johnson",
+    "displayName": "Gary Johnson",
+    "ballotNames": [
+      "JOHNSON, GARY"
+    ],
+    "wikipediaTitle": "Gary Johnson",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2012,
+        "partySimplified": "LIBERTARIAN",
+        "party": {
+          "label": "Libertarian",
+          "shortLabel": "Lib.",
+          "color": "#d4a017"
+        },
+        "nationalVotes": 1216400,
+        "nationalVoteShare": 0.009419235157640588
+      },
+      {
+        "year": 2016,
+        "partySimplified": "LIBERTARIAN",
+        "party": {
+          "label": "Libertarian",
+          "shortLabel": "Lib.",
+          "color": "#d4a017"
+        },
+        "nationalVotes": 4244326,
+        "nationalVoteShare": 0.031028681070837432
+      }
+    ],
+    "wikidataId": "Q352123",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q352123",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Gary_Johnson",
+    "image": {
+      "path": "images/candidates/gary-johnson.png",
+      "byteCount": 1387743,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Johnson Transparent.png",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Johnson_Transparent.png",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Johnson_Transparent.png/960px-Johnson_Transparent.png",
+      "mime": "image/png",
+      "license": {
+        "shortName": "CC BY 2.0",
+        "url": "https://creativecommons.org/licenses/by/2.0",
+        "usageTerms": "Creative Commons Attribution 2.0"
+      },
+      "attribution": {
+        "artist": "Gary Johnson",
+        "credit": "https://www.flickr.com/photos/govgaryjohnson/27807588416/"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "george-h-w-bush",
+    "displayName": "George H. W. Bush",
+    "ballotNames": [
+      "BUSH, GEORGE H.W."
+    ],
+    "wikipediaTitle": "George H. W. Bush",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1988,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 48886097,
+        "nationalVoteShare": 0.5337677881070776
+      },
+      {
+        "year": 1992,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 39103872,
+        "nationalVoteShare": 0.3738427748127195
+      }
+    ],
+    "wikidataId": "Q23505",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q23505",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/George_H._W._Bush",
+    "image": {
+      "path": "images/candidates/george-h-w-bush.jpg",
+      "byteCount": 317195,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "George H. W. Bush presidential portrait (cropped).jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:George_H._W._Bush_presidential_portrait_(cropped).jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/George_H._W._Bush_presidential_portrait_%28cropped%29.jpg/960px-George_H._W._Bush_presidential_portrait_%28cropped%29.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "David Valdez",
+        "credit": "https://www.archstl.org/obituary-president-george-hw-bush-3413 (archive)"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "george-w-bush",
+    "displayName": "George W. Bush",
+    "ballotNames": [
+      "BUSH, GEORGE W."
+    ],
+    "wikipediaTitle": "George W. Bush",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2000,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 50456169,
+        "nationalVoteShare": 0.4778318616680257
+      },
+      {
+        "year": 2004,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 62028285,
+        "nationalVoteShare": 0.5069764106009467
+      }
+    ],
+    "wikidataId": "Q207",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q207",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/George_W._Bush",
+    "image": {
+      "path": "images/candidates/george-w-bush.jpg",
+      "byteCount": 257078,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "George-W-Bush.jpeg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:George-W-Bush.jpeg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/George-W-Bush.jpeg/960px-George-W-Bush.jpeg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Eric Draper",
+        "credit": "This image was released by the United States Department of Defense with the ID 030114-O-0000D-001_screen (next).\nThis tag does not indicate the copyright status of the attached work. A normal copyright tag is still required. See Commons:Licensing.\n\n\nالعربية ∙ বাংলা ∙ \nBahaso Jambi ∙ \nDeutsch ∙ Deutsch (Sie-Form) ∙ English ∙ español ∙ euskara ∙ فارسی ∙ français ∙ italiano ∙ 日本語 ∙ 한국어 ∙ македонски ∙ മലയാളം ∙ Plattdüütsch ∙ Nederlands ∙ polski ∙ پښتو ∙ português ∙ русский ∙ slovenščina ∙ svenska ∙ Türkçe ∙ українська ∙ 简体中文 ∙ 繁體中文 ∙ +/−"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "gerald-ford",
+    "displayName": "Gerald Ford",
+    "ballotNames": [
+      "FORD, GERALD"
+    ],
+    "wikipediaTitle": "Gerald Ford",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1976,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 39145771,
+        "nationalVoteShare": 0.47971968451892166
+      }
+    ],
+    "wikidataId": "Q9582",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q9582",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Gerald_Ford",
+    "image": {
+      "path": "images/candidates/gerald-ford.jpg",
+      "byteCount": 286388,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Gerald Ford presidential portrait (cropped).jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Gerald_Ford_presidential_portrait_(cropped).jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Gerald_Ford_presidential_portrait_%28cropped%29.jpg/960px-Gerald_Ford_presidential_portrait_%28cropped%29.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "David Hume Kennerly",
+        "credit": "This file was derived from:  Gerald Ford - NARA - 530680.jpg:"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "hillary-clinton",
+    "displayName": "Hillary Clinton",
+    "ballotNames": [
+      "CLINTON, HILLARY"
+    ],
+    "wikipediaTitle": "Hillary Clinton",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2016,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 65853581,
+        "nationalVoteShare": 0.48143091794116655
+      }
+    ],
+    "wikidataId": "Q6294",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q6294",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Hillary_Clinton",
+    "image": {
+      "path": "images/candidates/hillary-clinton.jpg",
+      "byteCount": 250823,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Hillary Clinton official Secretary of State portrait crop.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Hillary_Clinton_official_Secretary_of_State_portrait_crop.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Hillary_Clinton_official_Secretary_of_State_portrait_crop.jpg/960px-Hillary_Clinton_official_Secretary_of_State_portrait_crop.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "United States Department of State",
+        "credit": "Official Photo at Department of State page"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "jill-stein",
+    "displayName": "Jill Stein",
+    "ballotNames": [
+      "JILL STEIN",
+      "STEIN, JILL"
+    ],
+    "wikipediaTitle": "Jill Stein",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2012,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 449401,
+        "nationalVoteShare": 0.0034799520709296594
+      },
+      {
+        "year": 2016,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 1393155,
+        "nationalVoteShare": 0.01018483551387017
+      },
+      {
+        "year": 2024,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 782521,
+        "nationalVoteShare": 0.005035197045362607
+      }
+    ],
+    "wikidataId": "Q235321",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q235321",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Jill_Stein",
+    "image": {
+      "path": "images/candidates/jill-stein.jpg",
+      "byteCount": 208745,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Jill Stein by Gage Skidmore.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Jill_Stein_by_Gage_Skidmore.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Jill_Stein_by_Gage_Skidmore.jpg/960px-Jill_Stein_by_Gage_Skidmore.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY-SA 3.0",
+        "url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "usageTerms": "Creative Commons Attribution-Share Alike 3.0"
+      },
+      "attribution": {
+        "artist": "Gage Skidmore",
+        "credit": "Own work"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "jimmy-carter",
+    "displayName": "Jimmy Carter",
+    "ballotNames": [
+      "CARTER, JIMMY"
+    ],
+    "wikipediaTitle": "Jimmy Carter",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1976,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 40825839,
+        "nationalVoteShare": 0.5003084140378864
+      },
+      {
+        "year": 1980,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 35480948,
+        "nationalVoteShare": 0.41019930309370456
+      }
+    ],
+    "wikidataId": "Q23685",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q23685",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Jimmy_Carter",
+    "image": {
+      "path": "images/candidates/jimmy-carter.jpg",
+      "byteCount": 218444,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "JimmyCarterPortrait2.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:JimmyCarterPortrait2.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/JimmyCarterPortrait2.jpg/960px-JimmyCarterPortrait2.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Department of Defense. Department of the Navy. Naval Photographic Center",
+        "credit": "File:James Earl \"Jimmy\" Carter - NARA - 558522.jpg"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "jo-jorgensen",
+    "displayName": "Jo Jorgensen",
+    "ballotNames": [
+      "JORGENSEN, JO"
+    ],
+    "wikipediaTitle": "Jo Jorgensen",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2020,
+        "partySimplified": "LIBERTARIAN",
+        "party": {
+          "label": "Libertarian",
+          "shortLabel": "Lib.",
+          "color": "#d4a017"
+        },
+        "nationalVotes": 1865723,
+        "nationalVoteShare": 0.011769006612016011
+      }
+    ],
+    "wikidataId": "Q6204319",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q6204319",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Jo_Jorgensen",
+    "image": {
+      "path": "images/candidates/jo-jorgensen.jpg",
+      "byteCount": 213543,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Jo Jorgensen portrait 3.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Jo_Jorgensen_portrait_3.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Jo_Jorgensen_portrait_3.jpg/960px-Jo_Jorgensen_portrait_3.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY 4.0",
+        "url": "https://creativecommons.org/licenses/by/4.0",
+        "usageTerms": "Creative Commons Attribution 4.0"
+      },
+      "attribution": {
+        "artist": "Jo Jorgensen for President",
+        "credit": "Press Photos - Jo20.com"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "joe-biden",
+    "displayName": "Joe Biden",
+    "ballotNames": [
+      "BIDEN, JOSEPH R. JR"
+    ],
+    "wikipediaTitle": "Joe Biden",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2020,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 81268908,
+        "nationalVoteShare": 0.5126454010607796
+      }
+    ],
+    "wikidataId": "Q6279",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q6279",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Joe_Biden",
+    "image": {
+      "path": "images/candidates/joe-biden.jpg",
+      "byteCount": 164534,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Joe Biden presidential portrait.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Joe_Biden_presidential_portrait.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Joe_Biden_presidential_portrait.jpg/960px-Joe_Biden_presidential_portrait.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Adam Schultz",
+        "credit": "https://www.whitehouse.gov/administration/president-biden/ (archive)"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "john-b-anderson",
+    "displayName": "John B. Anderson",
+    "ballotNames": [
+      "ANDERSON, JOHN B."
+    ],
+    "wikipediaTitle": "John B. Anderson",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1980,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 5719222,
+        "nationalVoteShare": 0.06612058050529493
+      },
+      {
+        "year": 1984,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 1479,
+        "nationalVoteShare": 1.5962465261266756e-05
+      }
+    ],
+    "wikidataId": "Q936548",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q936548",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/John_B._Anderson",
+    "image": {
+      "path": "images/candidates/john-b-anderson.jpg",
+      "byteCount": 382648,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "John Bayard Anderson.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:John_Bayard_Anderson.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/John_Bayard_Anderson.jpg/960px-John_Bayard_Anderson.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Leffler, Warren K., photographer.",
+        "credit": "Library of Congress Prints and Photographs Division, U.S. News & World Report Magazine Photograph Collection. Call number: LC-U9- 39431-32 [P&P] Digital id:ppmsca 19608"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "john-kerry",
+    "displayName": "John Kerry",
+    "ballotNames": [
+      "KERRY, JOHN"
+    ],
+    "wikipediaTitle": "John Kerry",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2004,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 59028079,
+        "nationalVoteShare": 0.48245479648662093
+      }
+    ],
+    "wikidataId": "Q22316",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q22316",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/John_Kerry",
+    "image": {
+      "path": "images/candidates/john-kerry.jpg",
+      "byteCount": 288292,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "John F. Kerry.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:John_F._Kerry.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/John_F._Kerry.jpg/960px-John_F._Kerry.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "United States Congress",
+        "credit": "http://kerry.senate.gov/v3/images/press/JK_headshot.jpg"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "john-mccain",
+    "displayName": "John McCain",
+    "ballotNames": [
+      "MCCAIN, JOHN"
+    ],
+    "wikipediaTitle": "John McCain",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2008,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 59948283,
+        "nationalVoteShare": 0.45616058249851715
+      }
+    ],
+    "wikidataId": "Q10390",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q10390",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/John_McCain",
+    "image": {
+      "path": "images/candidates/john-mccain.jpg",
+      "byteCount": 166931,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "John McCain official portrait 2009.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:John_McCain_official_portrait_2009.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/John_McCain_official_portrait_2009.jpg/960px-John_McCain_official_portrait_2009.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "United States Congress",
+        "credit": "United States Senator John McCain Facebook page"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "kamala-harris",
+    "displayName": "Kamala Harris",
+    "ballotNames": [
+      "HARRIS, KAMALA D."
+    ],
+    "wikipediaTitle": "Kamala Harris",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2024,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 75017613,
+        "nationalVoteShare": 0.48270712648958364
+      }
+    ],
+    "wikidataId": "Q10853588",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q10853588",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Kamala_Harris",
+    "image": {
+      "path": "images/candidates/kamala-harris.jpg",
+      "byteCount": 155014,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Kamala Harris Vice Presidential Portrait.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Kamala_Harris_Vice_Presidential_Portrait.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Kamala_Harris_Vice_Presidential_Portrait.jpg/960px-Kamala_Harris_Vice_Presidential_Portrait.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Lawrence Jackson",
+        "credit": "https://x.com/saulgoodmac6xr/status/2036265539572482357?s=46"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "michael-dukakis",
+    "displayName": "Michael Dukakis",
+    "ballotNames": [
+      "DUKAKIS, MICHAEL"
+    ],
+    "wikipediaTitle": "Michael Dukakis",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1988,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 41809074,
+        "nationalVoteShare": 0.4564965976274426
+      }
+    ],
+    "wikidataId": "Q319099",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q319099",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Michael_Dukakis",
+    "image": {
+      "path": "images/candidates/michael-dukakis.jpg",
+      "byteCount": 210110,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Michael Dukakis 1988 DNC (3).jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Michael_Dukakis_1988_DNC_(3).jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Michael_Dukakis_1988_DNC_%283%29.jpg/960px-Michael_Dukakis_1988_DNC_%283%29.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Unknown author",
+        "credit": "Bettman Archive"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "mitt-romney",
+    "displayName": "Mitt Romney",
+    "ballotNames": [
+      "ROMNEY, MITT"
+    ],
+    "wikipediaTitle": "Mitt Romney",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2012,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 60932152,
+        "nationalVoteShare": 0.4718302107440811
+      },
+      {
+        "year": 2020,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 170,
+        "nationalVoteShare": 1.0723623624957842e-06
+      }
+    ],
+    "wikidataId": "Q4496",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q4496",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Mitt_Romney",
+    "image": {
+      "path": "images/candidates/mitt-romney.jpg",
+      "byteCount": 262498,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Mitt Romney by Gage Skidmore 7.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Mitt_Romney_by_Gage_Skidmore_7.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Mitt_Romney_by_Gage_Skidmore_7.jpg/960px-Mitt_Romney_by_Gage_Skidmore_7.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY-SA 3.0",
+        "url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "usageTerms": "Creative Commons Attribution-Share Alike 3.0"
+      },
+      "attribution": {
+        "artist": "Gage Skidmore",
+        "credit": "Own work"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "ralph-nader",
+    "displayName": "Ralph Nader",
+    "ballotNames": [
+      "NADER, RALPH"
+    ],
+    "wikipediaTitle": "Ralph Nader",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1996,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 526794,
+        "nationalVoteShare": 0.005465245302154217
+      },
+      {
+        "year": 2000,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 2542163,
+        "nationalVoteShare": 0.024074885252456907
+      },
+      {
+        "year": 2004,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 370961,
+        "nationalVoteShare": 0.003031979301909408
+      },
+      {
+        "year": 2008,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 721039,
+        "nationalVoteShare": 0.005486555307082745
+      }
+    ],
+    "wikidataId": "Q193156",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q193156",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Ralph_Nader",
+    "image": {
+      "path": "images/candidates/ralph-nader.jpg",
+      "byteCount": 386467,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Ralph nader portrait.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Ralph_nader_portrait.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Ralph_nader_portrait.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY-SA 2.0",
+        "url": "https://creativecommons.org/licenses/by-sa/2.0",
+        "usageTerms": "Creative Commons Attribution-Share Alike 2.0"
+      },
+      "attribution": {
+        "artist": "https://www.flickr.com/photos/wickenden/ Don LaVange",
+        "credit": "Don LaVange (https://www.flickr.com/photos/wickenden. cropped from Image:Ralphnaderspeech.jpg.\n\nhttps://www.flickr.com/photos/wickenden/474602694/"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "robert-f-kennedy-jr",
+    "displayName": "Robert F. Kennedy Jr.",
+    "ballotNames": [
+      "KENNEDY, ROBERT F. JR"
+    ],
+    "wikipediaTitle": "Robert F. Kennedy Jr.",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 2024,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 756393,
+        "nationalVoteShare": 0.004867074236644075
+      }
+    ],
+    "wikidataId": "Q1352872",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q1352872",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Robert_F._Kennedy_Jr.",
+    "image": {
+      "path": "images/candidates/robert-f-kennedy-jr.jpg",
+      "byteCount": 284301,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Robert F. Kennedy Jr., official portrait (2025) (cropped 3-4).jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Robert_F._Kennedy_Jr.,_official_portrait_(2025)_(cropped_3-4).jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Robert_F._Kennedy_Jr.%2C_official_portrait_%282025%29_%28cropped_3-4%29.jpg/960px-Robert_F._Kennedy_Jr.%2C_official_portrait_%282025%29_%28cropped_3-4%29.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "U.S. Department of Health and Human Services",
+        "credit": "https://www.hhs.gov/about/leadership/robert-kennedy.html"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "ronald-reagan",
+    "displayName": "Ronald Reagan",
+    "ballotNames": [
+      "REAGAN, RONALD"
+    ],
+    "wikipediaTitle": "Ronald Reagan",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1980,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 43898770,
+        "nationalVoteShare": 0.5075187072417238
+      },
+      {
+        "year": 1984,
+        "partySimplified": "REPUBLICAN",
+        "party": {
+          "label": "Republican",
+          "shortLabel": "Rep.",
+          "color": "#d73027"
+        },
+        "nationalVotes": 54455073,
+        "nationalVoteShare": 0.5877195477094289
+      }
+    ],
+    "wikidataId": "Q9960",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q9960",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Ronald_Reagan",
+    "image": {
+      "path": "images/candidates/ronald-reagan.jpg",
+      "byteCount": 238616,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Ronald Reagan 1981 presidential portrait.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Ronald_Reagan_1981_presidential_portrait.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Ronald_Reagan_1981_presidential_portrait.jpg/960px-Ronald_Reagan_1981_presidential_portrait.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": "Michael Evans",
+        "credit": "This file was derived from:  Official Portrait of President Reagan 1981.jpg:"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "ross-perot",
+    "displayName": "Ross Perot",
+    "ballotNames": [
+      "PEROT, ROSS"
+    ],
+    "wikipediaTitle": "Ross Perot",
+    "assetReasons": [
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1992,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 19722042,
+        "nationalVoteShare": 0.18854764321684042
+      },
+      {
+        "year": 1996,
+        "partySimplified": "OTHER",
+        "party": {
+          "label": "Other",
+          "shortLabel": "Other",
+          "color": "#8a8f98"
+        },
+        "nationalVotes": 7541700,
+        "nationalVoteShare": 0.07824166656274836
+      }
+    ],
+    "wikidataId": "Q313697",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q313697",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Ross_Perot",
+    "image": {
+      "path": "images/candidates/ross-perot.jpg",
+      "byteCount": 153104,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "RossPerotColor.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:RossPerotColor.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/RossPerotColor.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "CC BY-SA 3.0",
+        "url": "https://creativecommons.org/licenses/by-sa/3.0",
+        "usageTerms": "Creative Commons Attribution-Share Alike 3.0"
+      },
+      "attribution": {
+        "artist": "Allan Warren",
+        "credit": "File:Ross Perot (CP) Allan Warren.jpg"
+      }
+    },
+    "imageReused": true
+  },
+  {
+    "candidateId": "walter-mondale",
+    "displayName": "Walter Mondale",
+    "ballotNames": [
+      "MONDALE, WALTER"
+    ],
+    "wikipediaTitle": "Walter Mondale",
+    "assetReasons": [
+      "major_party_nominee",
+      "national_votes_at_least_500000"
+    ],
+    "partyHistory": [
+      {
+        "year": 1984,
+        "partySimplified": "DEMOCRAT",
+        "party": {
+          "label": "Democratic",
+          "shortLabel": "Dem.",
+          "color": "#2f7ebc"
+        },
+        "nationalVotes": 37568137,
+        "nationalVoteShare": 0.4054632060804667
+      }
+    ],
+    "wikidataId": "Q49216",
+    "wikidataUrl": "https://www.wikidata.org/wiki/Q49216",
+    "wikipediaUrl": "https://en.wikipedia.org/wiki/Walter_Mondale",
+    "image": {
+      "path": "images/candidates/walter-mondale.jpg",
+      "byteCount": 242756,
+      "width": 512,
+      "source": "Wikidata P18 / Wikimedia Commons",
+      "wikidataProperty": "P18",
+      "commonsFile": "Waltermondaleasdiplomat.jpg",
+      "commonsUrl": "https://commons.wikimedia.org/wiki/File:Waltermondaleasdiplomat.jpg",
+      "downloadUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Waltermondaleasdiplomat.jpg/960px-Waltermondaleasdiplomat.jpg",
+      "mime": "image/jpeg",
+      "license": {
+        "shortName": "Public domain",
+        "url": null,
+        "usageTerms": "Public domain"
+      },
+      "attribution": {
+        "artist": null,
+        "credit": null
+      }
+    },
+    "imageReused": true
+  }
+]

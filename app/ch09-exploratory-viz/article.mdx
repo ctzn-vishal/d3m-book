@@ -3,6 +3,7 @@ import { QuizBlock } from '@/components/Book/QuizBlock';
 import { DataTable } from '@/components/Book/DataTable';
 import { Step } from '@/components/Book/Step';
 import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Callout } from '@/components/Book/Callout';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
@@ -88,6 +89,10 @@ The last panel is the only one that is not a chart. It is a paragraph — someti
 </Step>
 
 The six steps above are not specific to a particular tool. They work in Looker, in Tableau, in a printed PDF, in a one-pager taped to a wall. What makes the dashboard work is not the platform; it is the *sequence*. Without a sequence, the same six panels are a buffet; with a sequence, they are a memo.
+
+<Callout variant="finding" title="Live dashboard example">
+The [Presidential Election Atlas](/studios/presidential-election-atlas) is a compact politics example of this arc. The page starts with the election result, puts the state map in the diagnostic position, then uses state swings and battleground margins to decide what a reader should inspect next.
+</Callout>
 
 <Pitfall title="The buffet dashboard">
 Twelve tiles, no order, no hierarchy — every chart the same size, every metric presented as if equally important — forces the viewer to do the prioritization the dashboard was supposed to do. **Pick one executive question per page; if there are three questions, build three pages.**

@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-05-31T03:47:23+00:00",
+  "sourceElectionReturns": {
+    "path": "../1976-2024-president.csv",
+    "codebookPath": "../codebook-us-president-1976-2020.md",
+    "rowCount": 4822,
+    "years": [
+      1976,
+      1980,
+      1984,
+      1988,
+      1992,
+      1996,
+      2000,
+      2004,
+      2008,
+      2012,
+      2016,
+      2020,
+      2024
+    ]
+  },
+  "candidateImageSource": {
+    "wikidataProperty": "P18",
+    "wikidata": "https://www.wikidata.org/",
+    "wikimediaCommons": "https://commons.wikimedia.org/",
+    "wikipediaApi": "https://en.wikipedia.org/w/api.php"
+  },
+  "candidateSelection": {
+    "majorPartyNominees": [
+      "DEMOCRAT",
+      "REPUBLICAN"
+    ],
+    "notableNationalVoteThreshold": 500000
+  },
+  "generatedFiles": [
+    "data/candidates.json",
+    "data/elections.json",
+    "data/president_state_results_by_candidate.csv",
+    "data/sources.json",
+    "images/candidates/"
+  ]
+}

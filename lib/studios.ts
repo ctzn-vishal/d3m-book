@@ -30,6 +30,17 @@ export type Studio = {
  */
 export const studios: Studio[] = [
   {
+    slug: 'presidential-election-atlas',
+    title: 'Presidential Election Atlas: 1976-2024',
+    blurb:
+      'A state-by-state presidential election dashboard: move across 1976-2024, compare national outcomes, read the hex map, and inspect which states shifted most from the prior election.',
+    domain: 'Politics',
+    methods: ['Dashboard sequencing', 'Geospatial comparison', 'State shifts'],
+    relatedSlug: 'ch09-exploratory-viz',
+    kind: 'dashboard',
+    accent: '#287D67',
+  },
+  {
     slug: 'nyc-airbnb-atlas',
     title: 'NYC Airbnb: A Listings Atlas',
     blurb:
