@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ActualVsPredicted } from '@/components/Book/part4/PredictionDiagrams';
 
 <DropCap>
@@ -121,60 +122,28 @@ This is the place where Part IV reconnects with Part III. The decision that the 
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="R² as a deployment metric">
+A model with R² of 0.7 can have a wide error distribution in dollars; another with R² of 0.5 might be far better in the tail that matters. **Lead with error in business units, and treat R² as a sanity check, not a sign-off criterion.**
+</Pitfall>
 
-- **Reporting R² as if it were a deployment metric.** A model with R² of 0.7 can have a wide error distribution in dollars; another with R² of 0.5 might be far better in the tail that matters.
-- **Hiding heteroskedasticity.** A single RMSE across a heterogeneous population can paper over substantial subgroup failures.
-- **Backtesting on the wrong slice.** Pricing models in particular need a time-based held-out set; random splits inflate offline metrics relative to live behaviour.
-- **Mismatched training and inference units.** If training rows are listings-as-of-posting and inference rows are listings-as-of-edit, even a perfect model will mis-score because the unit shifted.
+<Pitfall title="Hiding heteroskedasticity">
+A single RMSE across a heterogeneous population can paper over substantial subgroup failures. **Disaggregate the error by region of the input space before trusting the headline number.**
+</Pitfall>
+
+<Pitfall title="Backtesting on the wrong slice">
+Pricing models in particular need a time-based held-out set; random splits inflate offline metrics relative to live behaviour. **Match the split to the deployment story — evaluate on the future, not on shuffled rows.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What to ship">
 
 Numeric prediction is graded in business units, evaluated by pictures, and accepted only against a decision flow. Three habits:
 
-> *Lead with the right error in business units — MAE for symmetric cost, RMSE when big misses hurt.*
->
-> *Always show actual-vs-predicted on held-out data before discussing improvements.*
->
-> *Sign off against the decision the error has to survive, not against the headline metric.*
+- *Lead with the right error in business units — MAE for symmetric cost, RMSE when big misses hurt.*
+- *Always show actual-vs-predicted on held-out data before discussing improvements.*
+- *Sign off against the decision the error has to survive, not against the headline metric.*
 
 The classification evaluation chapter ended with a threshold–profit curve. The equivalent for numeric prediction is the simulation: what does the firm's decision flow look like when the model's actual error distribution flows through it?
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on numeric prediction."
-  questions={[
-    {
-      prompt: <>A pricing model reports MAE $18 and RMSE $42 on held-out listings. What does the gap suggest?</>,
-      options: [
-        { label: <>The model has no errors above $42.</> },
-        { label: <>Most errors are around $18, but the distribution has a heavy tail of larger misses that disproportionately drive RMSE.</> },
-        { label: <>The model is biased upward.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>MAE is robust to large residuals; RMSE squares them. A large RMSE/MAE ratio is a tail signal — investigate where the big misses are coming from.</>,
-    },
-    {
-      prompt: <>An actual-vs-predicted plot shows scatter that fans outward as the actual price rises. The right interpretation is:</>,
-      options: [
-        { label: <>The model is unbiased and well-calibrated.</> },
-        { label: <>Errors grow with the level of the target — likely heteroskedastic; consider a log transform or a richer model for the tail.</> },
-        { label: <>The dataset is too small.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A widening scatter around the 45° line is the signature of variance that scales with the target. Log-transforming or modelling the tail separately are standard remedies.</>,
-    },
-    {
-      prompt: <>Two models have identical RMSE. Model A's errors are evenly distributed; Model B's errors are tiny on 90% of listings and huge on 10%. Which is preferable for an automated dynamic-pricing engine?</>,
-      options: [
-        { label: <>Model A — exposure to the bad tail is smaller, even though the average is the same.</> },
-        { label: <>Model B — most decisions are nearly perfect.</> },
-        { label: <>They are equivalent.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Automated systems pay the full cost of every tail error with no human review. Evenly-distributed error is safer when there is no editorial layer to catch the misses.</>,
-    },
-  ]}
-/>
+</Takeaway>

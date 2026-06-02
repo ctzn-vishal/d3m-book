@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 import transactionsData from './data/transactions-grain.json';
@@ -95,18 +96,20 @@ The per-transaction view tells you, immediately and concretely, that customer C1
 
 Each grain is right for a different question. Per-transaction is right for *"who buys what, how often, in what baskets?"* — questions where the unit of analysis is a customer or a purchase. Per-store-week is right for *"which store is growing, which is flat, which is shrinking?"* — questions where the unit of analysis is a store across time. Trying to answer the first question from the per-store-week view is impossible. Trying to answer the second from the per-transaction view is possible but laborious, and easy to do wrong if you forget to group correctly.
 
-## What can go wrong
+<Pitfall title="The mean of a mean">
+A manager averages "Avg basket" across the three rows of the per-store-week table and reports $5.75 as the chain-wide average basket. That number is wrong: the true chain-wide average is total revenue over total transactions ($72.50 ÷ 12 = $6.04). The per-store-week table already took a mean, and averaging those means weights every store equally even though Downtown had nearly twice the transactions of Suburban. **Never take the mean of a mean unless every group is the same size — keep the finer grain available and aggregate up only at the end.**
+</Pitfall>
 
-<Callout variant="caveat" title="When grains get mixed">
+The other classic mistake is joining tables of different grains without aggregating first.
 
-A manager averages "Avg basket" across the three rows of the per-store-week table and reports $5.75 as the chain-wide average basket. That number is wrong. The true chain-wide average is total revenue divided by total transactions — $72.50 ÷ 12 = $6.04. The error is small here, but the mechanism is general: the per-store-week table has already taken a mean (basket size per store), and the second mean weights all three stores equally, ignoring that Downtown had nearly twice the transactions of Suburban. The rule: never take the mean of a mean unless every group is the same size. The safer move is to keep the finer grain available and aggregate up only at the end.
+<Pitfall title="Duplicate explosion across grains">
+If a campaign attribution table records *one row per email send* and you join it to the per-store-week table on store and week, every store-week that received more than one send gets its row multiplied, and every revenue figure downstream is inflated. The join executes cleanly; the numbers are wrong in a way no error message warns about. **Before joining two tables, write down what one row means in each, and check that the join key actually matches that grain.**
+</Pitfall>
 
-</Callout>
+<Takeaway label="For the manager">
 
-The other classic mistake is joining tables of different grains without aggregating first. If a campaign attribution table records *one row per email send* and you join it to the per-store-week table on store and week, every store-week that received more than one send gets its row multiplied — a "duplicate explosion" — and every revenue figure downstream is inflated. The join executes cleanly. The numbers it produces are wrong, and they are wrong in a way that no error message ever warned about. The defense is the same: before joining two tables, write down what one row means in each, and check that the join key actually matches that grain.
-
-## Managerial takeaway
-
-Before asking *what model should I use?*, ask *what does one row mean?* The grain of a dataset is the first decision an analyst makes — usually implicitly, often before opening the file — and it sets the ceiling on what the rest of the analysis can do. The finest grain is not always the right one; it is just the most flexible, because it can be aggregated upward to anything coarser. Per-store-week is a natural reporting grain because each row is already a comparable unit. The art is keeping both available and knowing which one any given question wants.
+Before asking *what model should I use?*, ask *what does one row mean?* The grain of a dataset is the first decision an analyst makes — usually implicitly, often before opening the file — and it **sets the ceiling on what the rest of the analysis can do**. The finest grain is not always the right one; it is just the most flexible, because it can be aggregated upward to anything coarser. Per-store-week is a natural reporting grain because each row is already a comparable unit. The art is keeping both available and knowing which one any given question wants.
 
 A practical habit: when a new file arrives, the first paragraph of any analysis memo should describe what one row is. *"transactions.csv: one row per completed purchase. Twelve rows for the week of 2024-03-04 across three stores. Each row has a transaction ID, a date, a store, a customer ID, an item list, and an amount in dollars."* If you cannot write that paragraph, you do not yet know what you have.
+
+</Takeaway>

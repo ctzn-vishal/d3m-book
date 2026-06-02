@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import panelData from './data/panel.json';
 import crossSectionData from './data/cross-section.json';
@@ -114,19 +115,18 @@ The cross-section in Figure 1 looks decisive. Downtown earned $145 last week; Su
 
 The panel makes the gap visible. Downtown's eight-week revenue line is flat — it is large, but it is not growing. Campus is bleeding out, slowly, every single week. Suburban started at $35 and ended at $90, nearly tripling. A manager who saw only the cross-section would invest in the wrong store; one who saw only the time-series would feel good about a chain-wide trend that is, in reality, the sum of one collapsing store, one stagnant store, and one breakout. The panel is the only structure of the three that lets you ask *and answer* the right question: *where is the growth coming from?* Once that question is on the table, the decision is no longer "give Downtown more marketing money" — it is "figure out what's happening at Suburban, and what's going wrong at Campus."
 
-## What can go wrong
+<Pitfall title="Confusing a snapshot for a trend">
+The most common version in real dashboards is the *quarterly ranking*: a manager sorts stores by last quarter's revenue and treats the top as "stars" and the bottom as "underperformers." That ranking is a cross-section. It cannot tell a one-time spike from steady growth, or a stable leader from one that peaked last quarter and is fading. Treating cross-sectional rankings as panel evidence is how organizations reward stagnation and punish momentum. **Read the panel before ranking — a store's trajectory, not its latest level, is what the decision usually needs.**
+</Pitfall>
 
-<Callout variant="caveat" title="Confusing a snapshot for a trend">
+<Pitfall title="Collapsing a panel too early">
+If the chain-wide weekly total is the only thing in the warehouse, the divergence between Downtown, Campus, and Suburban is permanently lost: you can recover a time-series from a panel, never a panel from a time-series. **Store data at the finest grain you can sustain and aggregate up only at presentation time** — time-series and cross-section are derived views, and the panel is the source.
 
-The most common version of this mistake in real dashboards is the *quarterly ranking*. A manager opens the system, sorts stores by last quarter's revenue, and treats the top of the list as "stars" and the bottom as "underperformers." That ranking is a cross-section. It cannot distinguish a store that just had a one-time spike from a store that has been growing steadily, and it cannot distinguish a stable top performer from one that peaked last quarter and is fading. Treating cross-sectional rankings as if they were panel evidence is how organizations end up rewarding stagnation and punishing momentum.
-
-</Callout>
-
-There is a second mistake worth flagging: collapsing a panel to a time-series too early. If the chain-wide weekly total is the only thing in the warehouse, the divergence between Downtown, Campus, and Suburban is permanently lost. You cannot recover the panel from the time-series; you can only recover the time-series from the panel. The general rule, which we will come back to in Chapter 6 on reshaping, is to *store data at the finest grain you can sustain and aggregate up only at presentation time*. Time-series and cross-section are derived views. Panel is the source.
+</Pitfall>
 
 Geographic and network data follow the same logic. A geo-spatial table that records each store's latitude and longitude lets you ask whether the Suburban breakout has anything to do with proximity to a new university campus three miles away — a question the panel alone cannot answer. A network table that records which customers introduced which other customers lets you ask whether the Suburban growth is driven by a single high-influence customer who brings friends — again, invisible at the store-week level. The deeper rule is that **adding structure unlocks questions**: each new layer (time, place, relationship) lets the same business evidence be asked something new.
 
-## Managerial takeaway
+<Takeaway label="The operating posture">
 
 Before asking *what chart should I make?*, ask *what is the shape of my data?* The five structures map onto five families of business questions:
 
@@ -136,4 +136,6 @@ Before asking *what chart should I make?*, ask *what is the shape of my data?* T
 - **Geo-spatial** answers *where is this happening?*
 - **Network** answers *who is connected to whom?*
 
-The dangerous structures are the first two, because they look more decisive than they are. A single-week ranking and a single chain-wide trend each fit on one slide; the panel takes more room and looks less clean. The slide-friendly structures are the ones a manager is most likely to over-trust. The discipline is to design the underlying table in the richest shape the business can sustain — almost always a panel — and to derive the cross-sectional or time-series views from it only when the simpler view is *enough* to answer the question being asked. The panel is the source of truth; the simpler views are convenience.
+The dangerous structures are the first two, because they look more decisive than they are. A single-week ranking and a single chain-wide trend each fit on one slide; the panel takes more room and looks less clean. *The slide-friendly structures are the ones a manager is most likely to over-trust.* The discipline is to design the underlying table in the richest shape the business can sustain — almost always a panel — and to derive the cross-sectional or time-series views from it only when the simpler view is *enough* to answer the question being asked. The panel is the source of truth; the simpler views are convenience.
+
+</Takeaway>

@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import wideRaw from './data/sales-wide.json';
 import longRaw from './data/sales-long.json';
@@ -89,18 +90,18 @@ Figure 1 makes the trade-off concrete. The wide tab is easy for the eye. The lon
 
 The rule of thumb is to **store data in long form, display it in wide form**. The long form is the database-friendly shape: it is extensible (adding a period is a row, not a schema change), it is the natural input to plotting and modeling, and it is the format that joins cleanly to other long-form tables. The wide form is the presentation-friendly shape: at the very end of an analysis, when a manager wants to see a grid on a slide, you pivot the long form wider. The work of analysis happens in long; the work of communication happens in wide.
 
-## What can go wrong
+<Pitfall title="Wide storage is a schema trap">
+The cost of wide-as-storage is invisible until the next period arrives. April's revenue needs a new `sales_2024_04` column: every dashboard that hard-coded the three month columns must be updated, every join that referenced "the revenue column" now needs to know which one, and every regression that used the three months as predictors silently drops April because there is no `april` predictor. **Reshape to long at ingestion — a long table absorbs the new month as a row, while a wide table demands a schema change.**
+</Pitfall>
 
-<Callout variant="caveat" title="Storing data wide is a schema trap">
-
-The most common cost of wide-as-storage is not visible until the next period arrives. April's revenue needs an `sales_2024_04` column. Every dashboard that hard-coded `sales_2024_01`, `sales_2024_02`, `sales_2024_03` needs to be updated. Every join that referenced "the revenue column" now needs to know which one. Every regression that used the three months as predictors silently drops April because there is no `april` predictor in the model. None of this is hypothetical — it is the entire reason analytics teams reshape data to long at ingestion. A long table absorbs the new month as a row; a wide table demands a schema change.
-
-A subtler version: **wide storage hides missing periods**. If Store C did not exist in January, the wide row simply has a blank or zero for `sales_2024_01`, which a chart engine will plot as zero — making the store look like it had revenue of $0 in January rather than "the store didn't exist yet." In long form, the missing period is a missing row, and most plotting tools draw that as a gap, which is the correct visual.
-
-</Callout>
+<Pitfall title="Wide storage hides missing periods">
+If Store C did not exist in January, its wide row carries a blank or zero for `sales_2024_01`, which a chart engine plots as $0 — making the store look like it earned nothing rather than "didn't exist yet." **Store the data long, where a missing period is simply a missing row that most plotting tools draw as a gap — the correct visual.**
+</Pitfall>
 
 The opposite mistake — long when wide is wanted — is much rarer and almost always cheap to fix. A manager who wants to see the three months side by side, with stores down the side, is asking for a wide presentation table. Pivoting nine long rows back to three wide rows is one verb in any modern data tool. The cost of starting from long and pivoting wider when needed is essentially zero. The cost of starting from wide and pivoting longer every time something downstream needs it is paid every analysis.
 
-## Managerial takeaway
+<Takeaway label="Bottom line for the business">
 
 The instinct to lay data out in a grid — store down the side, month across the top — is correct for *reading* and wrong for *building*. Store the data long. Pivot wider only at presentation. The discipline is identical to one we have already seen: keep the richer, more flexible shape as the source of truth, derive the simpler shape for display. When a manager reviews an analytics deliverable, the question worth asking is, *"what does the underlying table look like before this chart was made?"* A team that answers "wide, one column per month" is one schema change away from a broken dashboard. A team that answers "long, one row per store-month" can absorb a new month, a new store, or a new metric without rewriting anything. The shape of the source table is a quiet engineering decision that determines how much of the team's future time will be spent reshaping data instead of analyzing it.
+
+</Takeaway>

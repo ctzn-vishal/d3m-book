@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Step } from '@/components/Book/Step';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import datasetsRaw from './data/case-datasets.json';
 
 export const datasets = datasetsRaw.dataPoints;
@@ -83,20 +84,20 @@ This is the most important task and the one most often skipped. Everything you h
 
 The deliverable is a one-page memo plus the dashboard. The memo names the question, summarizes the three descriptive insights from task 7, and closes with task 8's limits paragraph. The dashboard is the evidence the memo points to. Both should be readable in under three minutes by someone who has not seen the data. The temptation in a capstone is to demonstrate everything you have learned; the discipline is to use only what the question requires.
 
-## What can go wrong
+<Pitfall title="Skipping task 1, the grain">
+The grain is the most boring and the most consequential part. **A student who skips writing it down spends task 3 fighting joins and task 5 fighting reshapes** that should have been a single keystroke each.
+</Pitfall>
 
-<Callout variant="caveat" title="The four capstone mistakes every cohort makes">
+<Pitfall title="Treating tasks 4–5 as engineering">
+The metric definitions in task 4 and the panel reshape in task 5 are *managerial* decisions, not engineering ones: the window for "active customer" is a choice, and so is the split between growth in new customers and growth in baskets. **Document each choice in the memo, in plain English, where the decision was made.**
+</Pitfall>
 
-**Skipping task 1.** The grain is the most boring and the most consequential part. A student who skips writing it down spends task 3 fighting joins and task 5 fighting reshapes that should have been a single keystroke each.
+<Pitfall title="Conflating descriptive with causal">
+"Store C is growing because of the Spring Latte campaign" is a causal claim that nothing in Figure 1 supports; "Store C is growing, and the customers driving that growth disproportionately received the Spring Latte campaign" is descriptive and is supported. The two sentences sound alike and are not. **Reserve causal language for task 8, where the limits are stated explicitly.**
+</Pitfall>
 
-**Treating tasks 4–5 as engineering.** The metric definitions in task 4 and the panel reshape in task 5 are *managerial* decisions, not engineering ones. The window for "active customer" is a choice. The split between "growth in new customers" and "growth in baskets" is a choice. Document each one in the memo, in plain English, where the decision was made.
-
-**Building the dashboard before knowing what it should say.** The dashboard's structure follows the executive question, not the other way around. Students who pick chart templates first end up with twelve unconnected tiles. Students who pick the question first end up with the six-step sequence from Chapter 9.
-
-**Conflating "descriptive" with "causal" in task 7.** *"Store C is growing because of the Spring Latte campaign"* is a causal claim and is not supported by anything in Figure 1. *"Store C is growing, and the customers driving that growth disproportionately received the Spring Latte campaign"* is descriptive and is supported. The two sentences sound similar. They are not. Task 8 exists to prevent students from confusing them.
-
-</Callout>
-
-## Managerial takeaway
+<Takeaway label="The bottom line">
 
 Part I has taught a way of reading business data: grain first, structure second, types third, then operations, then quality, then visualization. The capstone is the moment where the sequence stops being theory and becomes a memo. Every chapter you have read shows up here as a task, and every task corresponds to a real decision the regional manager will defend on Monday morning. The chain is growing 2%. *Why* the chain is growing 2% is a question Part I lets you answer carefully, descriptively, with limits — and *which lever to pull next* is a question Part II is built to answer, by adding to the toolkit the one thing Part I deliberately withholds: a credible causal argument.
+
+</Takeaway>

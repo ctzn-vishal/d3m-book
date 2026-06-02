@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import {
   DecisionTreeDiagram,
   EnsembleCommittee,
@@ -97,56 +97,24 @@ Ensembles partially work around the trade-off by averaging many high-variance mo
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Deep single trees in production">
+A tree grown to depth 20 ranks training data perfectly and live data poorly. **Prune it, or move to an averaged ensemble, before shipping.**
+</Pitfall>
 
-- **Treating tree splits as causal.** Trees split on features that *separate* the classes, not on features that *cause* class membership. A split on "discount_share" can rank well even when discount is downstream of churn intent.
-- **Deep single trees in production.** A tree grown to depth 20 will rank training data perfectly and live data poorly. Either prune, or move to an ensemble.
-- **Importance from one ensemble compared with another.** Feature importance from a random forest and a gradient boost on the same data can rank features differently. Use importance for inspection within a model, not for comparison across models.
-- **Hidden hyperparameters.** Boosting in particular has many tuning knobs (learning rate, max depth, regularization terms). If the team's default training config is unwritten, the model is only reproducible to the person who trained it.
+<Pitfall title="Importance compared across ensembles">
+Feature importance from a random forest and a gradient boost on the same data can rank features differently. **Use importance for inspection within a single model, never for comparison across models.**
+</Pitfall>
+
+<Pitfall title="Hidden hyperparameters">
+Boosting has many tuning knobs — learning rate, max depth, regularization terms — and an unwritten training config makes the model reproducible only to the person who trained it. **Version the full training configuration alongside the model.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The bottom line">
 
-Trees are the bridge from "rules a manager could write" to "patterns the data can find." Ensembles are how the prediction becomes stable without losing that flexibility. The managerial frame:
-
-> *Add complexity when the bias of a simpler model is the binding constraint, not when a more sophisticated method is available.*
+Trees are the bridge from "rules a manager could write" to "patterns the data can find." Ensembles are how the prediction becomes stable without losing that flexibility. The frame: *add complexity when the bias of a simpler model is the binding constraint, not when a more sophisticated method is available.*
 
 A small lift from a more elaborate model rarely pays for the maintenance and interpretability cost. A clearly bias-bound problem — where the simpler model leaves obvious structure on the table — is exactly where an ensemble earns its keep.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on trees and ensembles."
-  questions={[
-    {
-      prompt: <>A single decision tree is grown to depth 18 on a 5,000-row dataset. Training accuracy is 0.99; held-out accuracy is 0.66. What is the most likely fix?</>,
-      options: [
-        { label: <>Make the tree deeper.</> },
-        { label: <>Reduce maximum depth or move to a random forest of many shallower trees.</> },
-        { label: <>Add more features.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A 33-point train/test gap is the signature of high variance. Pruning the tree, or replacing it with an averaged ensemble, reduces variance with little bias cost.</>,
-    },
-    {
-      prompt: <>A random forest and a gradient-boosted model both achieve AUC 0.86 on the same task. The team has limited maintenance capacity. Which should they deploy?</>,
-      options: [
-        { label: <>The random forest — equivalent performance, fewer hyperparameters to monitor, less brittle to retraining.</> },
-        { label: <>The gradient boost — modern best practice.</> },
-        { label: <>Average the two predictions.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>When performance is equivalent, choose the model with lower operational cost. Random forests are notably easier to maintain than boosting in production.</>,
-    },
-    {
-      prompt: <>A bias–variance plot shows training error 0.05 and validation error 0.30 at the best validation point. The most accurate description is:</>,
-      options: [
-        { label: <>The model is at the sweet spot of the trade-off, with a residual generalization gap of 0.25.</> },
-        { label: <>The model is underfit.</> },
-        { label: <>The model is perfectly calibrated.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Some training-validation gap is normal; the sweet spot is the validation minimum, not the absence of a gap. A 0.25 gap may still be the best this feature set and architecture can do.</>,
-    },
-  ]}
-/>
+</Takeaway>

@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ClusterSmallMultiples } from '@/components/Book/part4/SegmentationDiagrams';
 
 <DropCap>
@@ -102,56 +102,24 @@ A short list of failures that recur:
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Clusters read as causal types">
+A segment is a description of similarity, not an explanation of behaviour. A "discount-sensitive" segment is one whose discount-share is high — not one where lowering discount-share would change behaviour. **Take any "intervene on this segment" claim to Part III or an experiment first.**
+</Pitfall>
 
-- **Treating clusters as causal types.** A segment is a description of similarity, not an explanation of behaviour. A "discount-sensitive" segment is one whose discount-share is high — not one where lowering discount-share would change behaviour.
-- **Re-fitting per quarter without anchoring.** If the segmentation drifts every refit, segment-level strategies cannot persist. Either pin segment definitions to fixed rules once they stabilize, or schedule a deliberate refresh cadence with a migration plan.
-- **Over-targeting tiny segments.** A segment of 800 customers may have a memorable story and a vanishing budget impact. Size segments before strategizing them.
-- **Forgetting the static features.** Including only behavioural features can produce segments that are stable to behavioural noise but unstable to demographic shifts. Always check static features against the clusters as a sanity test.
+<Pitfall title="Re-fitting without anchoring">
+If the segmentation drifts every refit, segment-level strategies cannot persist. **Pin segment definitions to fixed rules once they stabilize, or commit to a refresh cadence with a migration plan.**
+</Pitfall>
+
+<Pitfall title="Over-targeting tiny segments">
+A segment of 800 customers may have a memorable story and a vanishing budget impact. **Size segments before strategizing them.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Net-net">
 
-Unsupervised methods do not give the business answers. They give it ways of looking. The strongest segmentation is the one that:
-
-> *Has names a manager can repeat from memory, strategies that differ from segment to segment, and definitions that hold across two reasonable algorithm choices.*
+Unsupervised methods do not give the business answers. They give it ways of looking. The strongest segmentation is the one that *has names a manager can repeat from memory, strategies that differ from segment to segment, and definitions that hold across two reasonable algorithm choices.*
 
 If the segmentation cannot pass that test, the algorithm has produced clusters but not yet a segmentation.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on clustering for segmentation."
-  questions={[
-    {
-      prompt: <>A team runs K-means with k=4 and k=5 on the same standardized features. The five-cluster solution splits one of the four clusters in two; the other four are unchanged. The honest reading is:</>,
-      options: [
-        { label: <>The two clusters that didn't change are stable across this choice; the split cluster is where the choice of k matters.</> },
-        { label: <>K=5 is correct.</> },
-        { label: <>K=4 is correct.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Stability across reasonable choices is the strongest evidence that a cluster is real. Where solutions disagree, the right move is to investigate, not to pick a side and move on.</>,
-    },
-    {
-      prompt: <>A churn-prone "Price-Sensitive Switchers" segment has high discount share. Management proposes to "reduce discount share to lower churn." Which best describes this proposal?</>,
-      options: [
-        { label: <>A correct application of the segmentation.</> },
-        { label: <>A causal claim about an intervention that the segmentation cannot, by itself, support. The segment describes who they are; what they would do under intervention is a Part III question.</> },
-        { label: <>A retargeting strategy.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Clusters describe similarity. Changes that follow from intervention need the identification logic of Part III, or an experiment.</>,
-    },
-    {
-      prompt: <>K-means returns one cluster containing 60% of customers and four small clusters covering the rest. The team should consider:</>,
-      options: [
-        { label: <>Trying hierarchical clustering or DBSCAN — K-means assumes roughly equal-sized clusters and may have produced a "leftover" mass.</> },
-        { label: <>Reducing the feature space.</> },
-        { label: <>Doubling k.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>K-means handles balanced clusters well and dominant-mass distributions poorly. The shape of the cluster sizes is a signal about the algorithm choice.</>,
-    },
-  ]}
-/>
+</Takeaway>

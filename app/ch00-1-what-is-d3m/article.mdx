@@ -1,8 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 
 <DropCap>
@@ -146,47 +145,12 @@ These are not stylistic preferences. They are how the book intends to be useful 
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Decision rule">
 
 The line between data-decorated and data-driven is narrow and consequential. Three rules — name the action, name the counterfactual, name the threshold — separate them. Everything in the book is downstream of that distinction.
 
-> *If the analysis cannot finish three sentences — "we propose this action, compared to this alternative, and we will act if the effect exceeds this threshold" — it is not yet a decision.*
+*If the analysis cannot finish three sentences — "we propose this action, compared to this alternative, and we will act if the effect exceeds this threshold" — it is not yet a decision.*
+
+</Takeaway>
 
 The next article — §0.2 — lays out the evidence languages that climb the ladder, the artefacts they produce, and how to read the book around them.
-
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on the decision-driven stance."
-  questions={[
-    {
-      prompt: <>A dashboard shows that customers who received a marketing email spent more than customers who did not. The team rolls out the email. The most charitable description of this work is:</>,
-      options: [
-        { label: <>A successful data-driven decision.</> },
-        { label: <>Data-decorated — the action was named but the counterfactual ("what those customers would have spent without the email") was not constructed.</> },
-        { label: <>A causal inference.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Recipients of marketing email are a self-selected group; their higher spend is the average of two effects (the email's effect and the selection). Naming the counterfactual is what turns the action into a decision.</>,
-    },
-    {
-      prompt: <>Which of the following questions sits on the highest rung of the decision ladder?</>,
-      options: [
-        { label: <>"What were last quarter's sales by region?"</> },
-        { label: <>"Which customers are most likely to churn in the next 60 days?"</> },
-        { label: <>"How do we keep this churn model performing well in production over the next year, governed and monitored?"</> },
-      ],
-      correctIndex: 2,
-      explanation: <>The system / operating question is rung 7 and the subject of Part VI. The prediction question (rung 5) is Part IV. The descriptive question (rung 1) is Part I.</>,
-    },
-    {
-      prompt: <>What is the simplest test for whether a piece of analytics work is ready for decision-makers?</>,
-      options: [
-        { label: <>The AUC is above 0.8.</> },
-        { label: <>It can finish the sentence: "We propose <em>this action</em>, compared to <em>this counterfactual</em>, and will act if the effect exceeds <em>this threshold</em>."</> },
-        { label: <>It has been peer-reviewed.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The three-clause sentence is the operating definition of decision-readiness used throughout the book.</>,
-    },
-  ]}
-/>

@@ -1,10 +1,9 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ElasticityZones } from '@/components/Book/part3/ConceptDiagrams';
 import { SoupRegressionLadder, SoupSeasonScatter } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -81,53 +80,6 @@ The zones translate into three different strategic responses:
 
 One important asymmetry: a firm that finds itself in the inelastic zone of its own demand curve is almost always under-pricing, because raising price would simultaneously increase revenue and reduce the costs that scale with units sold. In practice, well-run firms almost always operate in the elastic zone. Estimating an inelastic value should immediately raise suspicion about the regression specification, not encourage immediate price hikes.
 
-<QuizBlock
-  title="Concept check"
-  intro="Four conceptual questions on own-price elasticity. Click to reveal."
-  questions={[
-    {
-      prompt: <>The log-log demand model <M>{String.raw`\ln Q = \beta_0 + \beta_1 \ln P + \cdots`}</M> is preferred over a linear model for pricing because…</>,
-      options: [
-        { label: <>It produces tighter standard errors than the linear model.</> },
-        { label: <>It implies a <em>constant</em> elasticity: <M>{String.raw`\beta_1`}</M> is the percentage response of volume to a percentage change in price, the same at every price level inside the observed range.</> },
-        { label: <>It guarantees the coefficient will be negative, eliminating the need for sign checks.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The mathematical identity <M>{String.raw`d\ln Q/d\ln P = (dQ/Q)/(dP/P) = \epsilon`}</M> makes the log-log slope <em>exactly</em> the elasticity. In linear demand, elasticity changes at every point on the curve and there is no single transportable number to plug into a pricing formula.</>,
-    },
-    {
-      prompt: <>Your log-log regression returns an own-price elasticity of <M>{String.raw`-2.23`}</M>. A 5% promotional price cut implies an expected volume change of…</>,
-      options: [
-        { label: <>+2.23% (just the magnitude of the coefficient).</> },
-        { label: <>+11.15% (calculated as <M>{String.raw`-2.23 \times -5\% = +11.15\%`}</M>).</> },
-        { label: <>+22.3% (the elasticity times the percent cut, ignoring the sign).</> },
-      ],
-      correctIndex: 1,
-      explanation: <>An elasticity of <M>{String.raw`-2.23`}</M> says a 1% price change produces a <M>{String.raw`-2.23\%`}</M> volume change. For a 5% price <em>cut</em>, the percent change in price is <M>{String.raw`-5\%`}</M>, so the expected volume response is <M>{String.raw`-2.23 \times -5\% = +11.15\%`}</M>.</>,
-    },
-    {
-      prompt: <>"Constant elasticity" in the log-log model means…</>,
-      options: [
-        { label: <>The absolute number of units sold drops by the same amount for every dollar of price increase.</> },
-        { label: <>The <em>percentage</em> change in quantity is constant for any <em>percentage</em> change in price, so a 1% price hike produces the same percentage volume drop whether the baseline price is $1.00 or $2.00.</> },
-        { label: <>Competitor prices do not affect own-price volume.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Constant elasticity refers to percentage-on-percentage stability. It does not say anything about absolute unit changes (which depend on the baseline volume) or about competitor effects (which require cross-price elasticities, covered in the next article).</>,
-    },
-    {
-      prompt: <>A regression returns an own-price elasticity of <M>{String.raw`-0.4`}</M> for a category. The first thing a senior pricing manager should do is…</>,
-      options: [
-        { label: <>Immediately raise prices, because the inelastic value means revenue will rise.</> },
-        { label: <>Suspect the regression specification. Well-run firms rarely operate in the inelastic zone because they would have raised price already; an inelastic estimate is most often a signal of omitted-variable bias (countercyclical pricing, omitted competitor or seasonality controls).</> },
-        { label: <>Use it directly in the optimal pricing formula.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>An inelastic estimate is almost always the signature of confounding — most often, prices were raised during high-demand periods, pulling the apparent slope toward zero. Before acting on an inelastic value, climb the regression ladder, add seasonality and competitor controls, and check whether the estimate becomes elastic under more careful identification.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Data Case: Estimating Progresso's Own-Price Elasticity
@@ -158,17 +110,21 @@ The difference matters operationally. A pricing recommendation built on <M>{Stri
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Confusing percentage with absolute changes">
+An elasticity of <M>{String.raw`-2.23`}</M> says a 1% price *change* produces a 2.23% *volume change* — not that a $1 increase reduces volume by 2.23 units. **Translate to absolute terms only after checking that the price move is small relative to the baseline.**
+</Pitfall>
 
-Three traps trip up own-price elasticity work specifically:
+<Pitfall title="Extrapolating beyond the support">
+A constant elasticity estimated on prices that ranged from $1.80 to $2.20 says nothing about $0.99 or $4.00. Consumer psychology is highly non-linear at thresholds (the famous $2.99 → $3.00 effect), and log-log models do not capture those breakpoints. **Hold the recommendation inside the price range the data actually covers.**
+</Pitfall>
 
-1.  **Confusing percentage with absolute changes.** An elasticity of <M>{String.raw`-2.23`}</M> says a 1% price *change* produces a 2.23% *volume change* — not that a $1 increase reduces volume by 2.23 units. Translate to absolute terms only after checking that the price move is small relative to the baseline.
-2.  **Extrapolating beyond the support.** A constant elasticity estimated on prices that ranged from $1.80 to $2.20 says nothing about $0.99 or $4.00. Consumer psychology is highly non-linear at thresholds (the famous $2.99 → $3.00 effect), and log-log models do not capture those breakpoints.
-3.  **Endogeneity from promotion bundling.** Discounts are usually accompanied by in-store displays and flyer ads. A regression that does not control for those features attributes all of the volume lift to the price cut and overstates own-price sensitivity. Always include promotional flags when available.
+<Pitfall title="Endogeneity from promotion bundling">
+Discounts are usually accompanied by in-store displays and flyer ads. A regression that does not control for those features attributes all of the volume lift to the price cut and overstates own-price sensitivity. **Always include promotional flags when available.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Bottom line for the business">
 
 Elasticity is the bridge from a regression to a pricing decision. Three rules:
 
@@ -177,3 +133,5 @@ Elasticity is the bridge from a regression to a pricing decision. Three rules:
 - An inelastic estimate (<M>{String.raw`|\epsilon| < 1`}</M>) is almost always a signal that confounders remain, not a green light for price hikes.
 
 The next chapter takes the story to interactions between products: substitution, cannibalization, and complement effects — the cross-price world.
+
+</Takeaway>

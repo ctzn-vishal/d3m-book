@@ -1,10 +1,10 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { SyntheticControlBuilder } from '@/components/Book/part3/ConceptDiagrams';
 import { ZillowSyntheticControl } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -96,53 +96,6 @@ A credible synthetic control study presents three figures, in this order:
 
 Any synthetic control deck that skips one of these three is hiding something the other two would reveal.
 
-<QuizBlock
-  title="Concept check"
-  intro="Four conceptual questions on synthetic control. Click to reveal."
-  questions={[
-    {
-      prompt: <>Why is the non-negativity constraint (<M>{String.raw`w_j \ge 0`}</M>) on donor weights so important for synthetic control?</>,
-      options: [
-        { label: <>Because negative weights cannot be computed efficiently.</> },
-        { label: <>Because allowing negative weights would let the optimizer construct counterfactuals outside the convex hull of the donor pool — combinations that no real unit comes close to — and produce spurious pre-treatment fits by extrapolation.</> },
-        { label: <>Because negative weights violate the parallel-trends assumption.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Without the constraint, the optimizer could "short" a donor to chase a tighter pre-trend fit and produce a synthetic unit that is more extreme than any real one. The non-negative, sum-to-one constraints keep the counterfactual a convex combination of observed donor trajectories.</>,
-    },
-    {
-      prompt: <>A synthetic control study reports a 20% post-treatment gap, but the pre-treatment paths visibly diverge by 5% in several periods. Which interpretation is most defensible?</>,
-      options: [
-        { label: <>The 20% gap is solid evidence of a treatment effect.</> },
-        { label: <>The poor pre-treatment fit undermines the design. Without a tight pre-period overlap, we have no reason to believe the synthetic unit would have tracked the treated unit in the post period — the 20% gap is not credibly causal.</> },
-        { label: <>The pre-treatment divergence cancels out in the post period.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The pre-treatment fit is the design's only evidence that the synthetic counterfactual is a credible twin. A poor fit means the donors did not capture the treated unit's dynamics even when both were untreated — so there is no reason to trust the post-period extrapolation.</>,
-    },
-    {
-      prompt: <>The synthetic Denver is built from positive weights on Portland, Austin, and Seattle. After the launch, Portland residents — drawn by the new Denver format's publicity — start frequently visiting Denver and buying coffee there. How does this affect the synthetic control estimate?</>,
-      options: [
-        { label: <>It strengthens the design because Portland is now more representative of Denver.</> },
-        { label: <>It contaminates the donor pool. The donor Portland is now indirectly affected by the treatment, biasing the synthetic counterfactual and attenuating the estimated effect toward zero.</> },
-        { label: <>It violates the non-negativity constraint.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Donor units must remain <em>untreated</em>. Spillovers that affect donor outcomes cause the synthetic counterfactual to absorb part of the treatment's effect, shrinking the estimated gap. In practice, exclude donor units that could plausibly be affected by the treatment.</>,
-    },
-    {
-      prompt: <>To assess statistical significance of a synthetic control estimate, a common technique is a <em>placebo permutation test</em>. What does this test do?</>,
-      options: [
-        { label: <>It applies the synthetic control algorithm to each donor unit in turn, treating it as if it were the "treated" unit, and asks whether the actual treated unit's gap is unusually large relative to the placebo gaps.</> },
-        { label: <>It re-runs the regression with random subsets of donor weights.</> },
-        { label: <>It uses bootstrap resampling to estimate a confidence interval around the gap.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>The placebo permutation test treats each donor as a "fake treated" unit and constructs its own synthetic counterfactual from the remaining donors. If the placebo gaps are similar in size to the actual treated unit's gap, the estimate is not unusual and the design cannot claim significance. If the actual gap stands out clearly above the cloud of placebos, the effect is credibly distinguishable from chance.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Data Case: Colorado Housing
@@ -183,17 +136,19 @@ What the design *cannot* defend against is an unobserved post-2014 Colorado-spec
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Poor pre-treatment fit">
+If the treated unit's scale or dynamics sit outside the support of the donor pool — a New York City format against rural towns — the optimizer cannot find a good fit and the post-period gap is uninterpretable. **Reject the design if the pre-treatment RMSE is large relative to the typical post-treatment movement.**
+</Pitfall>
 
-Three failures account for most synthetic control disputes:
+<Pitfall title="Donor contamination">
+If donor units are themselves affected by the treatment through migration, marketing spillovers, or policy diffusion, the synthetic counterfactual absorbs part of the treatment and attenuates the estimate toward zero. **Define the donor pool to exclude likely-contaminated units before running the optimization.**
+</Pitfall>
 
-1.  **Poor pre-treatment fit.** If the treated unit's scale or dynamics are outside the support of the donor pool — a New York City format compared against rural towns — the optimizer cannot find a good fit. The post-period gap is then not interpretable. **Reject the design if the pre-treatment RMSE is large relative to the typical post-treatment movement.**
-2.  **Donor contamination.** If donor units are themselves affected by the treatment (through migration, marketing spillovers, or policy diffusion), the synthetic counterfactual absorbs part of the treatment, attenuating the estimate toward zero. Define the donor pool to exclude likely-contaminated units before running the optimization.
-3.  **Cherry-picking the donor pool.** An analyst can manipulate the estimated effect by adding or removing specific donors until the result looks the way they want. The protection is to fix the donor pool transparently *before* fitting weights — and to present sensitivity to alternative donor pools as part of the standard report.
+<Pitfall title="Cherry-picking the donor pool">
+An analyst can manipulate the estimated effect by adding or removing donors until the result looks the way they want. **Fix the donor pool transparently before fitting weights, and report sensitivity to alternative pools as standard.**
+</Pitfall>
 
----
-
-## Managerial Takeaway
+<Takeaway label="What to ship">
 
 Synthetic control is the right design when a single market, store, or region is treated. To lead with it:
 
@@ -202,3 +157,5 @@ Synthetic control is the right design when a single market, store, or region is 
 - Demand a placebo permutation test before treating the gap as statistically distinguishable from noise.
 
 The next article tackles the other direction in which a single average effect can mislead: when the effect varies across customer segments, the average understates the targeting opportunity.
+
+</Takeaway>

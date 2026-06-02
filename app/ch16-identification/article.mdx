@@ -1,9 +1,9 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ConfounderDAG } from '@/components/Book/part3/ConceptDiagrams';
 import { IdentificationMemoCard, MilkQuasiExperimentFigure } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -104,53 +104,6 @@ The one-page artifact every causal analysis should produce *before* the regressi
 
 The memo is short on purpose. Long memos hide soft thinking; short memos force commitment.
 
-<QuizBlock
-  title="Concept check"
-  intro="Four conceptual questions on identification. Click an answer to reveal the explanation."
-  questions={[
-    {
-      prompt: <>Which of the following best captures the difference between <em>identification</em> and <em>estimation</em>?</>,
-      options: [
-        { label: <>Identification is what you do with small samples; estimation is what you do with big samples.</> },
-        { label: <>Identification is the design argument that a causal comparison exists in your data; estimation is the statistical procedure that computes the number and its uncertainty given the design.</> },
-        { label: <>Identification and estimation are synonyms for the same set of techniques.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Identification answers "<em>in principle</em>, does our data + design pin down the causal effect we want?" — a logical, assumption-driven question. Estimation answers "given an identified design, what's the number?" — a statistical computation. A precise estimate of an unidentified quantity is precisely wrong.</>,
-    },
-    {
-      prompt: <>You have a regression of churn on a new pricing tier (the treatment). A teammate suggests adding "customer satisfaction score in the next quarter" as a control. Why is this almost certainly a bad idea?</>,
-      options: [
-        { label: <>It would inflate <M>{String.raw`R^2`}</M> too quickly and make standard errors look misleadingly small.</> },
-        { label: <>Next-quarter satisfaction is a <em>mediator</em>: the treatment plausibly affects it, and it affects churn. Controlling for it blocks part of the causal pathway and shrinks the estimated treatment effect toward zero.</> },
-        { label: <>Satisfaction scores are subjective and will introduce measurement error.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Any control that is determined <em>after</em> the treatment risks being a mediator or collider. The bad-control test is mechanical: was the variable measured before the treatment was assigned? If not, do not include it without an explicit reason.</>,
-    },
-    {
-      prompt: <>A churn analysis restricts attention only to customers who reached the upgrade page (a page that was visited because of both the treatment and the customer's underlying engagement). Inside this restricted sample, the treatment and outcome become correlated. Which pattern does this exhibit?</>,
-      options: [
-        { label: <>Fork — the analyst forgot to control for engagement.</> },
-        { label: <>Chain — engagement mediates the treatment effect.</> },
-        { label: <>Collider — conditioning on a variable jointly caused by treatment and outcome creates spurious correlation.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>The upgrade page visit is a downstream consequence of both <M>{String.raw`D`}</M> and <M>{String.raw`Y`}</M>. Selecting only units who reached it conditions on a collider and creates a correlation inside the selected sample even when none exists in the full population. The rule of thumb: never restrict your sample on a variable that the treatment could have moved.</>,
-    },
-    {
-      prompt: <>The strongest single piece of evidence that a quasi-experimental identification is credible is usually…</>,
-      options: [
-        { label: <>A very small standard error on the treatment coefficient.</> },
-        { label: <>A quiet placebo check on an outcome the treatment should not move, combined with balance on observable pre-treatment covariates.</> },
-        { label: <>A large sample size in both the treated and untreated groups.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Precision and sample size buy estimation, not identification. Diagnostic evidence — balance on observables and a quiet placebo — is what raises confidence that the groups were comparable in the unobservables as well. A precise estimate of an unidentified quantity is still wrong.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Data Case: Auditing the Milk Pricing Quasi-Experiment
@@ -170,17 +123,19 @@ What the figure does, and what it does not do, is worth being explicit about. *Q
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Storytelling after the fact">
+An identification memo written *after* the coefficients are in hand is worthless — analysts are remarkably good at reconstructing causal stories that align with a preferred direction. **Write and circulate the memo before the regression runs; that ordering is what earns it credibility.**
+</Pitfall>
 
-Identification fails in subtle ways. Three to watch:
+<Pitfall title="Skipping balance and placebo">
+A quasi-experiment with no diagnostics is just a regression with extra steps. **Present the balance check and the placebo every time — both are cheap, and refusing to show them is a red flag.**
+</Pitfall>
 
-1.  **Storytelling after the fact.** Writing the identification memo *after* the coefficients are in hand. Managers and analysts are remarkably good at reconstructing causal stories that happen to align with a preferred direction. The memo earns its credibility only if it precedes the regression.
-2.  **Skipping balance and placebo.** A quasi-experiment with no diagnostics is just a regression with extra steps. Both the balance check and the placebo are cheap; refusing to present them is a red flag.
-3.  **Picking a placebo that is actually adjacent.** A milk placebo using bagel sales would not work, because bagels and milk are complements. The right placebo is an outcome the treatment has no plausible mechanism to move.
+<Pitfall title="Picking a placebo that is actually adjacent">
+A milk placebo using bagel sales fails, because bagels and milk are complements and the treatment genuinely could move both. **Choose a placebo outcome the treatment has no plausible mechanism to move.**
+</Pitfall>
 
----
-
-## Managerial Takeaway
+<Takeaway label="The call">
 
 Causal credibility outranks statistical precision. Before approving any recommendation framed as a causal claim:
 
@@ -189,3 +144,5 @@ Causal credibility outranks statistical precision. Before approving any recommen
 - Draw the DAG. The exercise will surface disagreements that no number can resolve.
 
 The next article applies all of this to one specific and extremely common identification strategy: using *within-unit* variation, via panel fixed effects, to defang stable confounders without ever needing to measure them.
+
+</Takeaway>

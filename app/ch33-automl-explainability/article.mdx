@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { FeatureImportanceBars, ModelCard } from '@/components/Book/part4/PredictionDiagrams';
 
@@ -125,36 +126,51 @@ That recipe is conservative on purpose. The chapters that follow — segmentatio
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Shipping the AutoML winner without rereading the task">
+If the task definition was flawed, the leaderboard winner is just the model that exploited the flaw best. **Re-audit the target and feature cut-offs before trusting any ranking.**
+</Pitfall>
 
-- **Shipping the AutoML winner without rereading the task.** If the task definition was flawed, the winner is the model that exploited the flaw best.
-- **Calling importance "the reason."** Predictive feature importance and causal effect are different objects. Confusing the two leads to retention programs that intervene on the wrong lever.
-- **Skipping the model card.** A model card costs an afternoon. Reconstructing it six months later, after the author has rotated, costs a quarter.
-- **Treating partial dependence as a policy curve.** A partial dependence plot tells you what the *model* believes, not what the *world* will do under intervention.
+<Pitfall title="Skipping the model card">
+A model card costs an afternoon; reconstructing it six months later, after the author has rotated, costs a quarter. **Write the card before the model ships, not after the first incident.**
+</Pitfall>
+
+<Pitfall title="Partial dependence read as a policy curve">
+A partial dependence plot tells you what the *model* believes, not what the *world* will do under intervention. **Treat it as inspection, and reach for Part III before acting on its shape.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Decision rule">
 
-AutoML did not eliminate the need for managers in machine learning. It promoted them. The work that was once spread across modelling, tuning, and evaluation has compressed into:
-
-> *Define the task. Audit the features. Set the threshold. Inspect the model. Own the card.*
+AutoML did not eliminate the need for managers in machine learning. It promoted them. The work that was once spread across modelling, tuning, and evaluation has compressed into a short list: *define the task, audit the features, set the threshold, inspect the model, own the card.*
 
 A model that ships with those five steps documented is operational. A model that ships without them is a liability the next person to read the codebase will inherit.
 
+</Takeaway>
+
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on AutoML, importance, and model cards."
+  intro="Three questions spanning Chapter 15 — thresholds, model choice, and the line between importance and cause."
   questions={[
     {
-      prompt: <>An AutoML leaderboard's top model has AUC 0.93. The team realizes the target was computed using a column that includes post-churn refund data. What is the right next step?</>,
+      prompt: <>The threshold–profit curve has a clear peak at 0.38. Six months later, the offer cost falls by half. The right next step is:</>,
       options: [
-        { label: <>Ship the model — high AUC is the proof.</> },
-        { label: <>Pause deployment, fix the target definition, and rerun the leaderboard on the corrected task.</> },
-        { label: <>Lower the threshold to compensate.</> },
+        { label: <>Lower the threshold below 0.38 — cheaper offers justify treating less-confident risks.</> },
+        { label: <>Raise the threshold above 0.38.</> },
+        { label: <>Keep the threshold at 0.38; thresholds are model properties, not cost properties.</> },
       ],
-      correctIndex: 1,
-      explanation: <>AutoML optimises whatever target you hand it. A wrong target produces a high-AUC model that is wrong about the world.</>,
+      correctIndex: 0,
+      explanation: <>The threshold is a property of the model <em>and</em> the cost matrix. Falling offer cost shrinks the penalty on false positives, shifting the optimum left.</>,
+    },
+    {
+      prompt: <>A random forest and a gradient-boosted model both achieve AUC 0.86 on the same task. The team has limited maintenance capacity. Which should they deploy?</>,
+      options: [
+        { label: <>The random forest — equivalent performance, fewer hyperparameters to monitor, less brittle to retraining.</> },
+        { label: <>The gradient boost — modern best practice.</> },
+        { label: <>Average the two predictions.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>When performance is equivalent, choose the model with lower operational cost. Random forests are notably easier to maintain than boosting in production.</>,
     },
     {
       prompt: <><code>days_since_last_purchase</code> has the highest permutation importance in a churn model. A manager proposes a "recency campaign" that contacts customers as soon as they cross 14 days. Which statement is supported?</>,
@@ -165,16 +181,6 @@ A model that ships with those five steps documented is operational. A model that
       ],
       correctIndex: 1,
       explanation: <>Importance is a property of the model. Effects of intervention are properties of the world. They can agree, disagree, or have opposite signs. The campaign needs a test, not a permutation chart.</>,
-    },
-    {
-      prompt: <>A model card lists "no known failure modes." The honest interpretation is:</>,
-      options: [
-        { label: <>The model is unusually robust.</> },
-        { label: <>The team has not done the work to find failure modes. Every real model has subgroups it scores badly.</> },
-        { label: <>The model is regulatory-compliant by default.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>An empty "known failure modes" row is a missing audit, not a clean bill of health. The card should at least name the subpopulations the model was not validated on.</>,
     },
   ]}
 />

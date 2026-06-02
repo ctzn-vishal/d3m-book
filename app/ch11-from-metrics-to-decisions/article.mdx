@@ -4,7 +4,8 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { Part3EvidencePlan } from '@/components/Book/part3/CausalRegressionVisuals';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 import part3 from '@/data/part3-cases.json';
@@ -94,43 +95,6 @@ Each method makes the counterfactual more credible at the cost of stronger assum
   Never accept a deck that shows a metric rising after an action as evidence the action worked. Your first question should always be: *how did you construct the counterfactual, and what are the plausible threats to its validity?*
 </Callout>
 
-<QuizBlock
-  title="Concept check"
-  intro="Three quick questions on framing causal decisions. Click an answer to reveal the explanation."
-  questions={[
-    {
-      prompt: <>Which of the following is a <em>decision-ready</em> question rather than a <em>metric-focused</em> question?</>,
-      options: [
-        { label: <>"How is our pastry attach rate trending this quarter?"</> },
-        { label: <>"If we offer coffee-only weekday users a $1 morning pastry discount, will gross margin per user beat our 15¢ threshold over two weeks compared with a randomized holdout?"</> },
-        { label: <>"Which stores have the highest pastry conversion?"</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The strong version names a lever, a segment, an outcome, a horizon, a counterfactual, and a threshold. The other two describe interesting patterns but do not commit to any action a specific manager could take.</>,
-    },
-    {
-      prompt: <>A dashboard shows that customers who received a marketing email spent more than customers who did not. Without further design choices, which claim can the dashboard support?</>,
-      options: [
-        { label: <>That recipients spent more on average than non-recipients.</> },
-        { label: <>That sending the email caused the higher spending.</> },
-        { label: <>That sending more emails will linearly increase spending.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Only the descriptive claim is supported. The causal claim requires a comparison to the counterfactual outcome <em>for the same recipients</em> had they not received the email — typically built via randomization or a quasi-experimental design.</>,
-    },
-    {
-      prompt: <>Why does the choice of <em>unit of analysis</em> matter for a Decision Question Card?</>,
-      options: [
-        { label: <>Larger units always reduce variance, so the largest available unit is preferred.</> },
-        { label: <>The unit determines what comparisons are feasible and how uncertainty is quantified. Analyzing transaction rows when the lever moves at the store-week level produces overconfident estimates because the rows are not independent.</> },
-        { label: <>Statistical software requires the unit to match a database row.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The unit ties the action, the outcome, and the variance calculation together. Choose the unit at which the lever actually moves; otherwise standard errors are wrong even when the point estimate is right.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Looking Ahead: The Part III Case Spine
@@ -149,23 +113,21 @@ Part III returns repeatedly to three case families so that students develop dept
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Let the pipeline pick the unit">
+When transactions are the rows but the lever moves at the store-week level, every receipt is silently treated as an independent observation and the analysis is overconfident even when the point estimate is correct. **Choose the unit at which the lever actually moves before you write the query, not whatever the warehouse happens to store.**
+</Pitfall>
 
-Translating a metric into a decision is harder than it looks. Three failure modes recur:
+<Pitfall title="Optimizing an intermediate metric">
+Heavy discounting can lift clicks, sends, and volume while quietly destroying category profit. **Name the downstream financial outcome — margin, profit, lifetime value — on the Decision Question Card so the intermediate metric cannot be optimized in isolation.**
+</Pitfall>
 
-1.  **Losing the unit of analysis.** Letting the data pipeline define the rows. If transactions are the rows but the lever moves at the store-week level, the analysis will be overconfident even when the point estimate is correct.
-2.  **Optimizing an intermediate metric.** Optimizing for clicks, sends, or volume while ignoring margin. Heavy discounting can lift every intermediate indicator and still destroy category profit.
-3.  **Assuming the dashboard is causal.** A high-quality dashboard is descriptive unless it was populated by a design that constructed a credible counterfactual. Polish is not identification.
+<Takeaway label="Decision rule">
 
----
-
-## Managerial Takeaway
-
-Before any model is fit, write the decision question. A robust analytical plan fits in one sentence:
-
-> *For **this action**, applied to **this unit**, measured over **this horizon**, compared with **this counterfactual**, the outcome changed by **this amount**, and we will act if the effect exceeds **this threshold**.*
+Before any model is fit, write the decision question. A robust analytical plan fits in one sentence: *for **this action**, applied to **this unit**, measured over **this horizon**, compared with **this counterfactual**, the outcome changed by **this amount**, and we will act if the effect exceeds **this threshold**.*
 
 The rest of Part III is about earning the credibility of the comparison.
+
+</Takeaway>
 
 ---
 

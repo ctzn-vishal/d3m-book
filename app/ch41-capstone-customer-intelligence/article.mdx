@@ -2,7 +2,7 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ModelCard } from '@/components/Book/part4/PredictionDiagrams';
 import { CustomerIntelligenceFlow } from '@/components/Book/part4/SegmentationDiagrams';
 
@@ -166,47 +166,12 @@ The frame to keep is the same one the whole book has used. Decisions before mode
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The operating posture">
 
 A deployed customer intelligence loop is the sum of the parts the rest of Part IV built — and an additional discipline that turns those parts into a system.
 
-> *The model is the cheap part. The cadence, the artefacts, the roles, and the hand-offs are the expensive part. A team that treats the expensive part as overhead is building a project; a team that treats it as the work is building a system.*
+*The model is the cheap part. The cadence, the artefacts, the roles, and the hand-offs are the expensive part. A team that treats the expensive part as overhead is building a project; a team that treats it as the work is building a system.*
 
 The case packs that accompany this part provide the empirical exercises. The work in this chapter is to hold the whole loop in view at once — to see the connections rather than the components.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on the integrated loop."
-  questions={[
-    {
-      prompt: <>A team has a high-AUC churn model and a clean segmentation, but no holdout in the retention campaign that uses them. Which conclusion can they support?</>,
-      options: [
-        { label: <>The campaign caused the observed retention change.</> },
-        { label: <>The model ranks customers well; whether the campaign produced incremental retention requires a holdout or a quasi-experimental design from Part III.</> },
-        { label: <>The model and the campaign are equally well evaluated.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Score quality and campaign incrementality are different evaluations. A high-AUC model does not imply the action it triggers produces lift.</>,
-    },
-    {
-      prompt: <>A new team member joins three months after launch. The fastest test of whether the loop is operating well is:</>,
-      options: [
-        { label: <>Whether they can reproduce the AUC.</> },
-        { label: <>Whether they can read the brief, the model card, the segment profiles, and the monitoring dashboard, and explain the system within an hour.</> },
-        { label: <>Whether they can retrain the model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The loop's durability is measured by how well its artefacts communicate to new readers. Reproducibility of the model is necessary but not sufficient.</>,
-    },
-    {
-      prompt: <>The monitoring dashboard shows steadily declining lift over four weeks. The cleanest first response is:</>,
-      options: [
-        { label: <>Retrain immediately.</> },
-        { label: <>Investigate which feature distributions and which segments are shifting, then choose between recalibration, retraining, and revising the audience plan.</> },
-        { label: <>Pause the campaign.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A retrain is one of three remedies, not the default. The right diagnosis points to the right action; the loop's strength is in connecting monitoring to revision.</>,
-    },
-  ]}
-/>
+</Takeaway>

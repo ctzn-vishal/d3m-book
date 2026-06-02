@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ChartAtlas } from '@/components/Book/part2/ChartAtlas';
 import atlasRaw from './data/chart-atlas.json';
 
@@ -74,20 +75,22 @@ Later chapters should refer back to this page instead of re-teaching chart basic
 
 The atlas also gives students a vocabulary for saying no. A map is useful only when location changes the decision. A density curve is useful when shape matters more than counts. A correlation matrix is useful for scanning many relationships, but it is a poor executive answer when the decision requires one ranked comparison. Simple charts are not inferior; mismatched charts are.
 
-## What can go wrong
+<Pitfall title="Starting from the tool">
+"Make a map" or "make a dashboard" is not a business question. **Write the comparison first**, then let it select the chart.
+</Pitfall>
 
-<Callout variant="caveat" title="The chart type is not the decision">
+<Pitfall title="The right chart at the wrong grain">
+A county scatterplot cannot answer a household-level question, and a store-month histogram cannot by itself recommend a national price policy. **Match the grain of the chart to the grain of the decision.**
+</Pitfall>
 
-**Starting from the tool.** "Make a map" or "make a dashboard" is not a business question. Write the comparison first.
-
-**Using the right chart at the wrong grain.** A county scatterplot cannot answer a household-level question. A store-month histogram cannot by itself recommend a national price policy.
-
-**Letting analytical-looking charts overclaim.** Trend lines, coefficient plots, heatmaps, and intervals look authoritative. They still need units, denominators, definitions, uncertainty, and causal limits.
-
-</Callout>
+<Pitfall title="Analytical-looking charts overclaim">
+Trend lines, coefficient plots, heatmaps, and intervals look authoritative on sight. **They still need units, denominators, definitions, uncertainty, and causal limits** before the manager can act on them.
+</Pitfall>
 
 The deeper failure is treating the atlas as a menu. It is better to treat it as a decision aid. The business question determines the comparison. The comparison determines the visual form. The visual form determines what the manager can see quickly and what must be stated as a limitation.
 
-## Managerial takeaway
+<Takeaway label="Decision rule">
 
-When a manager asks for a chart, translate the request into a comparison before opening the visualization tool. Ask whether the problem is about distribution, comparison, time, relationship, geography, many variables, uncertainty, or a business bridge. Then choose the simplest chart that makes that comparison visible and state what the chart cannot prove.
+When a manager asks for a chart, *translate the request into a comparison before opening the visualization tool*. Ask whether the problem is about distribution, comparison, time, relationship, geography, many variables, uncertainty, or a business bridge. Then choose the simplest chart that makes that comparison visible — and state what the chart cannot prove.
+
+</Takeaway>

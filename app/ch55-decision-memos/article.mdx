@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DecisionMemoTemplate } from '@/components/Book/part6/Part6Diagrams';
 
 <DropCap>
@@ -143,57 +143,26 @@ Both documents have a place. A team that ships only research write-ups will be r
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Memo without a counterfactual">
+"Sales went up after the campaign" is a description, not a memo. **Make the §9.2 logic — what would have happened without the action — a non-optional section.**
+</Pitfall>
 
-- **Memo without counterfactual.** "Sales went up after the campaign" is a description, not a memo. The §9.2 logic — what would have happened without the action — is non-optional.
-- **Memo without threshold.** A recommendation without a "we would reverse this if..." condition is a one-way decision, which is rarely warranted in business.
-- **Memo without owner.** "We recommend retention offers" with no named owner produces no action. Every memo names a person (or a role) who owns the next step.
-- **Memo as advocacy.** Memos that argue for one side and omit the alternative are pitches in costume. The uncertainty section is what makes the memo honest.
-- **Memo that grows.** The page expands to two pages, then four, then a deck. The discipline is to keep the memo at one page and let the appendices carry the detail.
+<Pitfall title="Memo without a reversal threshold">
+A recommendation with no "we would reverse this if..." condition is a one-way decision, which is rarely warranted in business. **Name the threshold for reversing alongside the threshold for acting.**
+</Pitfall>
+
+<Pitfall title="Memo without an owner">
+"We recommend retention offers" with no named owner produces no action. **Name a person — or a role — who owns the next step.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What to ship">
 
 The memo is the artefact the book has been building toward. Every model card, every dashboard, every studio, every monitoring loop — all of them feed a one-page document that drives a specific business action. The memo is what ships.
 
-> *Name the decision. Name the counterfactual. Name the threshold. Name the owner. One page.*
+*Name the decision. Name the counterfactual. Name the threshold. Name the owner. One page.*
 
 The next article — §24.2 — moves from the single memo to the portfolio of memos and the operating cadence that runs across them.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on decision memos."
-  questions={[
-    {
-      prompt: <>A memo opens with "Background: customer retention is a critical KPI for the firm." The most likely diagnosis is:</>,
-      options: [
-        { label: <>Strong opening.</> },
-        { label: <>The memo leads with context instead of the recommendation; the sponsor will reach the end without knowing what's being asked of them.</> },
-        { label: <>Acceptable for the genre.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Decision memos lead with the recommendation. Context lives in section two, after the action is named.</>,
-    },
-    {
-      prompt: <>A memo recommends a $42k retention budget but does not name what would cause the team to reverse the decision. The structural gap is:</>,
-      options: [
-        { label: <>The budget is too small.</> },
-        { label: <>The threshold for change isn't named — a recommendation without a reversal condition is a one-way decision, which is rarely warranted.</> },
-        { label: <>The memo needs more charts.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The memo should name both the threshold for acting and the threshold for reversing. Together they make the decision recoverable.</>,
-    },
-    {
-      prompt: <>The decision memo and a research write-up are related but distinct artefacts. The cleanest description of the difference is:</>,
-      options: [
-        { label: <>The memo is shorter.</> },
-        { label: <>The memo is the action-triggering artefact, sized for a sponsor's five-minute read; the research write-up is the audit-trail artefact, sized for an analyst to reproduce the work. Both ship.</> },
-        { label: <>They're the same document at different formality levels.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Both artefacts have a role. The memo drives action; the write-up provides reproducibility. Most working organisations ship both.</>,
-    },
-  ]}
-/>
+</Takeaway>

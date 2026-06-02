@@ -1,10 +1,10 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { SubstitutesComplements } from '@/components/Book/part3/ConceptDiagrams';
 import { SoupCrossPriceHeatmap } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -81,53 +81,6 @@ The fix is the same as in Chapter 11: control for the confounder. Most productio
   Cross-price relationships are generally <em>not</em> symmetric. A premium brand cutting price can pull a lot of volume from a budget brand; the budget brand cutting price often pulls less from the premium brand. Never assume <M>{String.raw`\epsilon_{A,B} = \epsilon_{B,A}`}</M> — estimate both directions and let the data tell you the asymmetry.
 </Callout>
 
-<QuizBlock
-  title="Concept check"
-  intro="Four conceptual questions on cross-price elasticity. Click to reveal."
-  questions={[
-    {
-      prompt: <>The estimated cross-price elasticity of pastry sales with respect to coffee price is <M>{String.raw`-0.35`}</M>. The strategic interpretation is…</>,
-      options: [
-        { label: <>Pastries and coffee are substitutes; promoting them together cannibalizes the basket.</> },
-        { label: <>Pastries and coffee are complements: raising coffee price reduces pastry volume. Promoting coffee can be a way to pull traffic that drives high-margin pastry attachment.</> },
-        { label: <>The two products are independent; pricing should be set per SKU.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A negative cross-price elasticity is the signature of complements. Raising one product's price reduces the other's volume — and the converse holds: lowering the traffic-driver's price can lift attached high-margin items. This is why grocery stores discount staples and earn margin on the rest of the basket.</>,
-    },
-    {
-      prompt: <>A category manager has Campbell's cross-price coefficient of <M>{String.raw`+1.56`}</M> on Progresso volume in the South. If Campbell's raises its price by 8%, what is the implied effect on Progresso volume?</>,
-      options: [
-        { label: <>Progresso volume falls by 12.48% — Campbell's took customers.</> },
-        { label: <>Progresso volume rises by 12.48% — customers move to Progresso as Campbell's becomes more expensive.</> },
-        { label: <>Progresso volume rises by 6.4% — the cross-effect is roughly half the price move.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A positive cross-price elasticity means the two products are substitutes. Multiplying the elasticity by the percentage price change in the other product gives the expected volume change: <M>{String.raw`+1.56 \times +8\% = +12.48\%`}</M>. A Campbell's price hike helps Progresso.</>,
-    },
-    {
-      prompt: <>A team finds that Progresso's volume jumps by 15% in the week Campbell's runs a feature promotion. They report a cross-price elasticity of about <M>{String.raw`+3`}</M>. What is the most likely problem with this estimate?</>,
-      options: [
-        { label: <>Campbell's price change was too small to draw a credible elasticity from.</> },
-        { label: <>The team did not control for Campbell's <em>display and feature</em> activity, which moves alongside price. The 15% Progresso jump reflects the combined effect of competitor price cuts <em>and</em> the absence of competitor displays, inflating the cross-price coefficient.</> },
-        { label: <>Cross-price elasticities cannot exceed 1 in absolute value.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The most common source of inflated cross-price estimates is omitting the competitor's promotional activity. Price, display, and feature move together in promotion weeks; if the regression only includes price, that single coefficient absorbs the combined effect of all three. Control for promotion flags explicitly to recover an interpretable cross-price elasticity.</>,
-    },
-    {
-      prompt: <>An analyst proposes that "since Progresso's cross-elasticity with respect to Campbell's is <M>{String.raw`+1.0`}</M>, Campbell's cross-elasticity with respect to Progresso must also be <M>{String.raw`+1.0`}</M>." This is…</>,
-      options: [
-        { label: <>Correct: cross-price elasticities are symmetric by definition.</> },
-        { label: <>Incorrect: cross-price elasticities are generally asymmetric. Premium brands often pull more from budget brands than the reverse, and the two directions must be estimated separately.</> },
-        { label: <>Correct, but only when the two products have the same baseline price.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Cross-price elasticity is a property of the demand system, not a single number. Asymmetry is the rule: customers who would buy a premium brand at $4 may not downgrade to a budget brand at $3, but budget-brand buyers may eagerly upgrade when the premium goes on sale. Always estimate both directions; never assume one tells you the other.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Data Case: The Progresso Regional Cross-Price Matrix
@@ -150,17 +103,21 @@ A category manager who reads only the national average — a single own-price nu
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Ignoring competitor retaliation">
+Cross-price elasticities assume competitor prices stay where they are. In real markets, a discount that triggers a 15% volume gain at the rival's expense often produces a matched discount within a week. **Read the estimated cross-price effect as a one-period thought experiment, not the long-run equilibrium of a price war.**
+</Pitfall>
 
-Three structural traps are worth naming explicitly:
+<Pitfall title="Assuming symmetry">
+The premium-to-budget cross-price is usually larger in magnitude than the budget-to-premium cross-price. **Estimate both directions separately; treating them as equal mis-prices both products.**
+</Pitfall>
 
-1.  **Ignoring competitor retaliation.** Cross-price elasticities assume competitor prices stay where they are. In real markets, a discount that triggers a 15% volume gain at the rival's expense often produces a matched discount within a week. The estimated cross-price effect describes a one-period thought experiment, not the long-run equilibrium of a price war.
-2.  **Assuming symmetry.** The premium-to-budget cross-price is usually larger in magnitude than the budget-to-premium cross-price. Treating them as equal mis-prices both products.
-3.  **Optimizing at the SKU level.** Raising the price of a traffic-driver because *its own* demand is inelastic can collapse the rest of the basket through complement effects. The right optimization is at the *category contribution margin*, not the SKU revenue line.
+<Pitfall title="Optimizing at the SKU level">
+Raising the price of a traffic-driver because *its own* demand is inelastic can collapse the rest of the basket through complement effects. **Optimize at the category contribution margin, not the SKU revenue line.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What this buys the pricing team">
 
 Cross-price elasticity is the language of pricing an ecosystem rather than a SKU:
 
@@ -169,3 +126,5 @@ Cross-price elasticity is the language of pricing an ecosystem rather than a SKU
 - Audit regional matrices, not national averages. Pricing power varies dramatically across markets in ways the average hides.
 
 The next chapter takes both elasticities — own and cross — into the optimal pricing formula that turns them into a candidate price.
+
+</Takeaway>

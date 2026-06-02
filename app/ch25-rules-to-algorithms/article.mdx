@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { AlgorithmicLifecycle } from '@/components/Book/part4/PredictionDiagrams';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 
@@ -92,58 +93,24 @@ If the answer to any of these is no, do not start with a model. Start by writing
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="The score as a verdict">
+A 0.84 probability of churn is not a churn; it is the model's bet, made under the assumptions of the training data. **Treat the score as a ranking to act on, not a fact about the customer** — the next chapter is about deciding what to do with the bet.
+</Pitfall>
 
-Three pitfalls recur whenever a manager is handed a model for the first time.
+<Pitfall title="The model is not the cause">
+Models are very good at *ranking* and very bad at *explaining*. A feature can be the most important predictor of churn without being a place where intervention will reduce churn. **Reach for Part III's identification logic, not feature importance, the moment the question becomes "what would change if we acted?"**
+</Pitfall>
 
-1.  **Treating the score as a verdict.** A 0.84 probability of churn is not a churn; it is the model's bet, made under the assumptions of the training data. The next chapter is about deciding what to do with that bet.
-2.  **Confusing the model with the cause.** Models are very good at *ranking* and very bad at *explaining*. A feature can be the most important predictor of churn without being a place where intervention will reduce churn. This will become a recurring theme — and is why Part IV deliberately repeats the distinction from Part III between *what is likely to happen* and *what would change if we acted*.
-3.  **Forgetting that the model changes the world.** Once a retention model starts firing offers at high-risk customers, the firm stops observing what those customers would have done without an offer. The decisions made by the model become part of the data its replacement will train on.
+<Pitfall title="The model changes the world">
+Once a retention model starts firing offers at high-risk customers, the firm stops observing what those customers would have done without an offer, and the model's own decisions become the data its replacement trains on. **Reserve a holdout so the next model can still see an unmanaged baseline.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The call">
 
-The shift from rules to algorithms is less about technology than about commitment. To take it seriously, a leader has to:
-
-> Name the **decision**, name the **action**, name the **owner**, and name the **monitoring metric** — before naming the model.
+The shift from rules to algorithms is less about technology than about commitment. To take it seriously, a leader has to name the **decision**, name the **action**, name the **owner**, and name the **monitoring metric** — *before naming the model*.
 
 The rest of Part IV is the toolkit that makes that commitment operationally tractable: how to set up the prediction task (Chapter 14), how to evaluate the model on its business cost (Chapter 15), how to find structure when no label exists (Chapter 16), and how to turn the score into a repeatable customer decision that survives contact with production (Chapter 17).
 
-<QuizBlock
-  title="Concept check"
-  intro="Three quick questions on framing algorithmic decisions. Click an answer to reveal the explanation."
-  questions={[
-    {
-      prompt: <>A team has built a churn model with AUC 0.86. The marketing organization has no retention offer in market. Which is the most useful next step?</>,
-      options: [
-        { label: <>Deploy the model and report top-decile risk to executives.</> },
-        { label: <>Pause deployment and design the retention action the score will trigger.</> },
-        { label: <>Increase the model's depth to push AUC above 0.90.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A score without a corresponding action does nothing for the business. The standard sequence is action → score → threshold → monitoring.</>,
-    },
-    {
-      prompt: <>Which of these is <em>not</em> a reason to algorithmize a manager's rule of thumb?</>,
-      options: [
-        { label: <>The decision is repeated often.</> },
-        { label: <>There is enough labelled history.</> },
-        { label: <>The model's coefficients can be used as causal effects of features on outcomes.</> },
-        { label: <>The firm has an owner who can act on the output.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>Predictive coefficients and feature importances are not causal effects. Use Part III methods when the question is "what would change if we intervened?" — and Part IV methods when it is "who is likely to do what next?"</>,
-    },
-    {
-      prompt: <>Why does the lifecycle diagram show a dashed feedback arrow from monitoring back to the problem statement?</>,
-      options: [
-        { label: <>To remind teams to update the model's hyperparameters.</> },
-        { label: <>Because once the model changes who gets contacted, the data-generating process changes, and the original problem statement may no longer describe the world the next model will face.</> },
-        { label: <>To indicate that the cycle ends with deployment.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Models that change behavior change the data their replacements will be trained on. The feedback arrow is the most easily ignored — and most consequential — part of the diagram.</>,
-    },
-  ]}
-/>
+</Takeaway>

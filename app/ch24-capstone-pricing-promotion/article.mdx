@@ -1,10 +1,9 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { Part3CapstoneBrief } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
 
@@ -182,67 +181,23 @@ Each section is exactly one screen. A section that requires more space usually m
 
 The memo is one page. Every claim is supported by exactly one piece of evidence from Part III: identification from Chapter 11, elasticity from Chapter 13.1, cross-effects from 13.2, pricing rule from 13.3, rollout discipline from 10.
 
-<QuizBlock
-  title="Concept check"
-  intro="Four integration questions that combine the Part III toolkit. Click to reveal."
-  questions={[
-    {
-      prompt: <>A team analyzes the impact of a competitor's regional price cut by comparing your post-period sales in that region to your pre-period sales. The analyst concludes the competitor's move had no effect. Which design would change the conclusion?</>,
-      options: [
-        { label: <>A bigger sample size in the same before-after design.</> },
-        { label: <>A synthetic control built from other regions where the competitor did not discount, which would isolate the true competitive defection by subtracting the macro time trend that the simple before-after comparison confounds with the treatment.</> },
-        { label: <>A multi-armed bandit, which would adaptively shift attention to the affected region.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The simple before-after design confounds the competitor's effect with any other shock that hit the period — including seasonality. Synthetic control builds the counterfactual from comparable unaffected regions and isolates the gap actually attributable to the competitor's move.</>,
-    },
-    {
-      prompt: <>A panel fixed-effects model estimates two seasonal elasticities for fresh croissants (MC = $1): winter <M>{String.raw`\epsilon = -1.95`}</M>, summer <M>{String.raw`\epsilon = -2.65`}</M>. The optimal winter and summer prices are…</>,
-      options: [
-        { label: <>$1.82 and $1.45 (matching the national soup baseline).</> },
-        { label: <>$2.05 winter (from <M>{String.raw`P^* = 1.00/(1 + 1/(-1.95))`}</M>) and $1.61 summer (from <M>{String.raw`P^* = 1.00/(1 + 1/(-2.65))`}</M>). The less elastic season carries the higher markup.</> },
-        { label: <>$1.95 winter and $2.65 summer (using the elasticity values directly as prices).</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The Lerner rule says the optimal markup is the negative inverse of elasticity. Less elastic (smaller <M>{String.raw`|\epsilon|`}</M>) → larger markup → higher optimal price. Winter croissant demand is less elastic, so the optimal winter price is higher than summer.</>,
-    },
-    {
-      prompt: <>The Southern Progresso cross-price elasticity with respect to Campbell's is <M>{String.raw`+1.56`}</M>. If you cut your price by 10% to take share from Campbell's, what is the dominant strategic risk?</>,
-      options: [
-        { label: <>Campbell's will gain share through complement effects.</> },
-        { label: <>Campbell's loses meaningful volume and matches your discount within weeks. The relative price advantage is neutralized and both brands settle into a permanently lower-margin equilibrium — the price war trap.</> },
-        { label: <>Southern stores will refuse to stock both brands.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>High positive cross-price elasticity means your move costs the rival meaningful volume; the rival has a strong incentive to retaliate. The static formula recommends the discount; the strategic audit asks whether the post-retaliation equilibrium is better than the pre-discount one. Usually it is not.</>,
-    },
-    {
-      prompt: <>A pricing analyst concludes from an unconfounded elasticity of <M>{String.raw`-1.25`}</M> that a 20% national price hike is justified by the Lerner formula. The most important objection is…</>,
-      options: [
-        { label: <>The elasticity is too close to <M>{String.raw`-1`}</M> for the formula to be numerically stable, and a 20% jump is far outside the price support the elasticity was estimated on. Test a small increase regionally before considering a national move.</> },
-        { label: <>The Lerner formula does not apply to coffee.</> },
-        { label: <>The elasticity is negative, so the formula is invalid.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Two issues compound. First, near <M>{String.raw`|\epsilon| = 1`}</M> the formula's denominator is small and the recommended markup is highly sensitive to small changes in the elasticity estimate. Second, a constant-elasticity estimate cannot be extrapolated to a 20% price move far outside the observed range. The right response is a staged regional pilot with a holdout cohort.</>,
-    },
-  ]}
-/>
+---
+
+<Pitfall title="Overclaiming causality from a fitted model">
+A regression with fixed effects is not a randomized experiment. It controls for stable confounders, not time-varying ones. **The memo's identification section must name the threats it does not address.**
+</Pitfall>
+
+<Pitfall title="The price war trap">
+Cross-price models assume rivals stand still. They never do. **Pair every aggressive pricing move with an explicit competitor-reaction scenario.**
+</Pitfall>
+
+<Pitfall title="Short-run elasticity for long-run decisions">
+Regressions on weekly variation capture short-run response. Long-run customer churn from sustained price hikes is in neither the data nor the formula. **A retention holdout is the only way to learn it.**
+</Pitfall>
 
 ---
 
-## What Can Go Wrong
-
-Four behaviors recur in real production pricing work, and each one undoes the Part III toolkit:
-
-1.  **Overclaiming causality from a fitted model.** A regression with fixed effects is not a randomized experiment. It controls for stable confounders, not time-varying ones. The memo's identification section must name the threats it does not address.
-2.  **The price war trap.** Cross-price models assume rivals stand still. They never do. Always pair an aggressive pricing move with an explicit competitor-reaction scenario.
-3.  **SKU-level optimization, category-level loss.** Complement effects make individual-SKU optimization a category-level mistake. The right optimization is total contribution margin.
-4.  **Short-run elasticity for long-run decisions.** Regressions on weekly variation capture short-run response. Long-run customer churn from sustained price hikes is not in the data and not in the formula. A retention holdout is the only way to learn it.
-
----
-
-## Managerial Takeaway
+<Takeaway label="The Part III discipline">
 
 Part III is a discipline, not a tool set:
 
@@ -250,6 +205,8 @@ Part III is a discipline, not a tool set:
 - Reconcile multiple evidence languages: heterogeneity tells you who; synthetic control tells you the baseline; fixed-effects elasticity gives you the magnitude.
 - Treat formulas as generators of candidate test prices, not as commands.
 - Always end with a staggered rollout and a learning plan. Field data is the final arbiter of every regression coefficient you have learned to estimate.
+
+</Takeaway>
 
 ---
 

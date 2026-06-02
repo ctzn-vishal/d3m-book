@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { SoupUncertaintyIntervals } from '@/components/Book/part2/SoupVisualEvidence';
 import soupRaw from './data/soup-uncertainty.json';
 
@@ -50,16 +51,20 @@ Good visualization treats coverage as part of the evidence. If a December point 
 
 Figure 2 is deliberately close to the chart rather than hidden in a technical appendix. It teaches the reporting habit: every interval should answer what is varying, what is being averaged, and which decision would change if the interval were wider.
 
-## What can go wrong
+<Pitfall title="Precision mistaken for identification">
+A narrow interval means the descriptive estimate is measured precisely under the chosen summary. **It does not mean the comparison is causal, fair, complete, or strategically actionable** — a tight band around a biased estimate is still biased.
+</Pitfall>
 
-<Callout variant="caveat" title="Precision is not identification">
-  A narrow interval means the descriptive estimate is measured precisely under the chosen summary. It does not mean the comparison is causal, fair, complete, or strategically actionable.
-</Callout>
+<Pitfall title="Intervals as a rhetorical shield">
+A chart with error bars looks scientific, so the recommendation feels stronger — which is backwards. **Intervals should make the claim more inspectable, not less challengeable.**
+</Pitfall>
 
-The most common error is to use intervals as a rhetorical shield. A chart with error bars looks scientific, so the recommendation feels stronger. That is backwards. Intervals should make the claim more inspectable, not less challengeable.
+<Pitfall title="Hiding uncertainty for a cleaner chart">
+Dropping intervals makes a dashboard tile prettier and less useful at once. **When the decision turns on whether two regions, months, or segments differ meaningfully, the interval is the part the decision depends on** — keep it.
+</Pitfall>
 
-The second error is hiding uncertainty because the chart looks cleaner without it. This is tempting in dashboards. But if the decision depends on whether two regions, months, or segments are meaningfully different, hiding intervals makes the chart more attractive and less useful.
-
-## Managerial takeaway
+<Takeaway label="What this buys you">
 
 Ask two questions whenever you see an interval: *uncertainty about what?* and *uncertainty for which decision?* In the soup case, the seasonal share pattern is visually reliable. The pricing decision still requires a better causal comparison. That is not a weakness of the chart. It is the chart doing its job.
+
+</Takeaway>

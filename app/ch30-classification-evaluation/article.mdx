@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import {
   ConfusionMatrixDiagram,
   CalibrationLiftPlots,
@@ -118,54 +118,24 @@ If any of the first three views look wrong, do not proceed to the fourth. The th
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Optimising AUC">
+A model with the best AUC may not have the best threshold-profit, especially when the cost matrix is asymmetric. AUC is a rank-quality summary; it does not know your business. **Choose the model whose threshold–profit curve peaks highest, not the one with the top AUC.**
+</Pitfall>
 
-- **Optimising AUC.** A model with the best AUC may not have the best threshold-profit, especially when the cost matrix is asymmetric. AUC is a rank-quality summary; it does not know your business.
-- **Threshold from a non-representative slice.** A threshold tuned on last quarter's data is right for last quarter's data. If the customer mix has shifted, refit threshold-relevant statistics, not just the model.
-- **Class imbalance without lift framing.** Reporting precision and recall without lift on a rare-positive problem leaves the manager without a sense of *how much better than random* the model actually is.
-- **Hidden recalibration after deployment.** Some production systems recalibrate scores against rolling rates. If the calibration step is invisible to the threshold–profit calculation, the deployed system is operating at a threshold no one signed off on.
+<Pitfall title="Threshold from a non-representative slice">
+A threshold tuned on last quarter's data is right only for last quarter's data. **When the customer mix shifts, refit the threshold-relevant statistics, not just the model.**
+</Pitfall>
+
+<Pitfall title="Hidden recalibration after deployment">
+Some production systems quietly recalibrate scores against rolling rates. If that step is invisible to the threshold–profit calculation, the system is operating at a threshold no one signed off on. **Make every recalibration step explicit and feed it back into the threshold choice.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Bottom line for the business">
 
 The right way to grade a classifier is not by a single number; it is by a sequence of complementary views. The chart that lands the decision is the threshold–profit curve. The charts that earn the right to draw it are ROC/PR, calibration, and lift.
 
-> If the model review ends without a threshold–profit curve and a marked operating point, the model has not been evaluated. It has only been described.
+*If the model review ends without a threshold–profit curve and a marked operating point, the model has not been evaluated. It has only been described.*
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on classification evaluation."
-  questions={[
-    {
-      prompt: <>A retention model has AUC 0.88 on a customer base where churn rate is 3%. Which additional view is most informative before committing to a threshold?</>,
-      options: [
-        { label: <>The accuracy at threshold 0.5.</> },
-        { label: <>The PR curve and lift at the top deciles, since accuracy is dominated by the rare-positive base rate.</> },
-        { label: <>The mean predicted probability across the dataset.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>With a 3% positive rate, ROC-AUC and accuracy can both be high while the model is still poor at the head of the ranked list. PR and lift focus on the part that matters for action.</>,
-    },
-    {
-      prompt: <>A model is "miscalibrated" — bins where it says 0.4 churn at 0.25 in reality. The retention team multiplies score × offer cost to budget. Most likely consequence?</>,
-      options: [
-        { label: <>Over-budgeting on offers, because expected churn is overstated where the model is overconfident.</> },
-        { label: <>The model's ranking is wrong.</> },
-        { label: <>The model's accuracy is wrong.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Calibration affects the magnitude of the score, not its ranking. Decisions that use the magnitude directly (like budgeting) are sensitive to miscalibration; pure rank-based decisions are not.</>,
-    },
-    {
-      prompt: <>The threshold–profit curve has a clear peak at 0.38. Six months later, the offer cost falls by half. The right next step is:</>,
-      options: [
-        { label: <>Lower the threshold below 0.38 — cheaper offers justify treating less-confident risks.</> },
-        { label: <>Raise the threshold above 0.38.</> },
-        { label: <>Keep the threshold at 0.38; thresholds are model properties, not cost properties.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>The threshold is a property of the model <em>and</em> the cost matrix. Falling offer cost shrinks the penalty on false positives, shifting the optimum left.</>,
-    },
-  ]}
-/>
+</Takeaway>

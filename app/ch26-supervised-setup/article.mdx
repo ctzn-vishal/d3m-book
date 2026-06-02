@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { SupervisedTaskTaxonomy } from '@/components/Book/part4/PredictionDiagrams';
 
 <DropCap>
@@ -106,57 +107,24 @@ When two churn models disagree about whom to target, the discrepancy is almost n
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Target drift across the project">
+The original question was "predict churn next quarter," but the data pipeline only computes churn at year-end, so the model quietly learns a different target than the one it is later asked about. **Pin the target's exact definition in the task contract and check that the pipeline computes that one.**
+</Pitfall>
 
-Three failure modes deserve flagging now, even though their remedies appear in later articles:
+<Pitfall title="Unit mismatch with the action">
+The action lives at the customer level (send a retention offer), but the data was modelled at the transaction level (score each receipt). Scores aggregate poorly across receipts and the manager has to glue them together with an opaque heuristic. **Set the unit of prediction to match the unit the action operates on.**
+</Pitfall>
 
-1.  **Target drift across the project.** The original question was "predict churn next quarter," but the data pipeline only computes churn at year-end, so the model learns a different target than the one it is later asked about.
-2.  **Unit mismatch with the action.** The action lives at the customer level (send retention offer), but the data was modelled at the transaction level (score each receipt). Scores aggregate poorly across receipts; the manager has to glue them together with an opaque heuristic.
-3.  **Subtle horizon leakage.** A feature defined as "average spend in the last 30 days" computed for a churned customer ends on the day they churned, while for a retained customer it ends on the score date. Same name, different semantics, fatal in production.
-
-The next article — Train/Test Splits, Generalization, and Leakage — is essentially a longer treatment of failure mode #3 and its cousins.
+<Pitfall title="Subtle horizon leakage">
+A feature defined as "average spend in the last 30 days" ends on the day of churn for a churned customer but on the score date for a retained one — same name, different semantics, fatal in production. **Define every feature window relative to the score date, never relative to the outcome.** The next article is essentially a longer treatment of this failure and its cousins.
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Net-net">
 
 A supervised model is not first a piece of code and second a business problem. It is first a one-sentence task contract — *unit, target, horizon, feature cut-off* — and then a piece of code. If the contract is incomplete, no amount of model tuning will rescue the score.
 
-> Write the task as one sentence, and demand that every dashboard, evaluation, and deployment trace back to it.
+*Write the task as one sentence, and demand that every dashboard, evaluation, and deployment trace back to it.*
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on framing supervised tasks."
-  questions={[
-    {
-      prompt: <>A retail team wants to predict whether customers will buy a coffee subscription. Two analysts each describe the task. Which description is decision-ready?</>,
-      options: [
-        { label: <>"Predict subscription buyers from our CRM."</> },
-        { label: <>"For each active customer scored on the first of the month, predict the probability of purchasing a subscription in the next 30 days using only features known as of midnight on the day before."</> },
-        { label: <>"Use machine learning to predict subscription revenue."</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The strong version names the unit, the target, the horizon, and the feature cut-off. The other two are topics, not tasks.</>,
-    },
-    {
-      prompt: <>A churn model uses the feature <code>refund_count_last_month</code> computed from invoice records that close two weeks after month-end. When the model goes live and scores customers on the first of each month, what is the likely problem?</>,
-      options: [
-        { label: <>The feature is missing for one third of customers, hurting accuracy.</> },
-        { label: <>The feature value at score time is not what the model trained on — it was computed retrospectively in training but is unavailable now.</> },
-        { label: <>The feature has too high a variance.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Label timing applies to features too: any feature must be reconstructible <em>as of</em> the score date with no information from the future.</>,
-    },
-    {
-      prompt: <>Two churn models report different lift on the same customer base. The first scores customers; the second scores transactions and aggregates to customers. What is the most likely source of disagreement?</>,
-      options: [
-        { label: <>One uses random forest, the other gradient boosting.</> },
-        { label: <>The unit of analysis is different, so the two models are answering different questions and cannot be directly compared.</> },
-        { label: <>The dataset is too small.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A different unit is a different task, even if the target name and the algorithm are identical.</>,
-    },
-  ]}
-/>
+</Takeaway>

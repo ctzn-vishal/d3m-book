@@ -1,8 +1,9 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Step } from '@/components/Book/Step';
 import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 import questionMapRaw from './data/question-chart-map.json';
 
@@ -87,20 +88,22 @@ The last panel is the only one that is not a chart. It is a paragraph — someti
 
 The six steps above are not specific to a particular tool. They work in Looker, in Tableau, in a printed PDF, in a one-pager taped to a wall. What makes the dashboard work is not the platform; it is the *sequence*. Without a sequence, the same six panels are a buffet; with a sequence, they are a memo.
 
-## What can go wrong
+<Pitfall title="The buffet dashboard">
+Twelve tiles, no order, no hierarchy — every chart the same size, every metric presented as if equally important — forces the viewer to do the prioritization the dashboard was supposed to do. **Pick one executive question per page; if there are three questions, build three pages.**
+</Pitfall>
 
-<Callout variant="caveat" title="Three dashboard pathologies every team produces once">
+<Pitfall title="Vanity metrics on top">
+Total page views, total accounts, total impressions — large, growing, and connected to no decision. **A KPI tile should answer a question the manager would otherwise ask; a number nobody would ever act on does not belong on the headline row.**
+</Pitfall>
 
-**The buffet dashboard.** Twelve tiles, no order, no hierarchy. Every chart is the same size; every metric is presented as if equally important. The viewer is forced to do the prioritization the dashboard was supposed to do. Fix: pick one executive question per page; if there are three questions, build three pages.
-
-**Vanity metrics on top.** Total page views, total accounts, total impressions — large, growing, and not connected to a decision. A KPI tile should answer a question the manager would otherwise ask; if the tile is a number nobody would ever act on, it does not belong on the headline row.
-
-**Charts without comparisons.** A single bar showing "Q1 revenue: $1.18M" is not a chart, it is a label. Every chart on a dashboard should make a comparison — to last period, to plan, to target, to a benchmark. *"$1.18M, +0.7% vs Q4"* is informative; *"$1.18M"* alone is not.
-
-</Callout>
+<Pitfall title="Charts without comparisons">
+A single bar showing "Q1 revenue: $1.18M" is not a chart, it is a label. **Every chart on a dashboard should make a comparison** — to last period, to plan, to target, to a benchmark. "$1.18M, +0.7% vs Q4" is informative; "$1.18M" alone is not.
+</Pitfall>
 
 The deeper pathology behind all three is the same: building dashboards from the *data the team has* instead of the *questions the manager has*. The fix is to start every dashboard project with the question, written down, before any chart template is opened. A team that does this has dashboards that survive their first review. A team that doesn't builds beautiful tools that get closed after ninety seconds.
 
-## Managerial takeaway
+<Takeaway label="The operating posture">
 
-Before asking *which chart should we make?*, ask *which question are we trying to answer?* Then ask, *what is the next question that will naturally come up after this one is answered?* That second question is what determines the second panel. Working through the sequence — question, headline, context, breakdown, drilldown, action — produces dashboards that read top to bottom and end somewhere useful. The discipline is editorial, not technical: the charts are easy; the order is the work. A page that walks an executive through the analysis is a page the executive will open. A page that asks the executive to do their own prioritization is a page that quietly disappears from their bookmarks.
+Before asking *which chart should we make?*, ask *which question are we trying to answer?* Then ask, *what is the next question that will naturally come up after this one is answered?* That second question is what determines the second panel. Working through the sequence — question, headline, context, breakdown, drilldown, action — produces dashboards that read top to bottom and end somewhere useful. *The discipline is editorial, not technical: the charts are easy; the order is the work.* A page that walks an executive through the analysis is a page the executive will open. A page that asks the executive to do their own prioritization is a page that quietly disappears from their bookmarks.
+
+</Takeaway>

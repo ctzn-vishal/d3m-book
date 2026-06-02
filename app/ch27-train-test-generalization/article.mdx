@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TrainTestSplitDiagram, LeakageMap } from '@/components/Book/part4/PredictionDiagrams';
 
 <DropCap>
@@ -88,59 +88,27 @@ The diagnostic is always the same. If training error is much lower than test err
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Peeking at the test set">
+Choosing hyperparameters or features by looking at test-set performance turns the test set into a (very noisy) training set. **Use a third validation slice — or cross-validation — for every choice, and keep the test set inviolate until final reporting.**
+</Pitfall>
 
-Beyond leakage proper, three procedural traps quietly defeat the test-set discipline:
+<Pitfall title="Repeated submissions">
+Iterating a model many times against the same held-out set selects, over many tries, for a model that happens to do well on that one slice — the "leaderboard chasing" failure of Kaggle-style work. **Confirm any gain on a fresh held-out set before believing it.**
+</Pitfall>
 
-1.  **Peeking.** Choosing hyperparameters or features by looking at test-set performance. The test set has, in effect, been turned into a (very noisy) training set. The remedy is a third **validation** slice — or cross-validation — used for choices, with the test set held inviolate until the final reporting.
-2.  **Repeated submissions.** Iterating the model many times against the same held-out set selects, over many tries, for a model that happens to do well on that particular slice. This is the "leaderboard chasing" failure mode of Kaggle-style work.
-3.  **Stale splits.** A split was made six months ago and the team has been iterating against it ever since. The world has moved; the test set hasn't. Refresh periodically with new held-out cohorts.
+<Pitfall title="Stale splits">
+A split made six months ago and iterated against ever since grades the model on a world that has moved on. **Refresh the held-out set periodically with new cohorts.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The operating posture">
 
 The test set is a managerial artifact, not a technical one. Its job is to give the firm a credible estimate of how a model will behave on cases it has not yet seen. Two questions belong in every model review:
 
-> *How was the held-out set constructed?* (Random / time / group.)
->
-> *Could any feature in the model have been observed only after the outcome?*
+- *How was the held-out set constructed?* (Random / time / group.)
+- *Could any feature in the model have been observed only after the outcome?*
 
 A "no" to the second question, paired with a deployment-shaped answer to the first, buys most of the confidence a managerial sponsor should require before signing off.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on splits and leakage."
-  questions={[
-    {
-      prompt: <>A churn model trained with a random 80/20 split shows AUC 0.92 on the test set. When deployed to score next month's customers, AUC drops to 0.71. What is the most likely diagnosis?</>,
-      options: [
-        { label: <>The model has overfit hyperparameters.</> },
-        { label: <>The random split allowed customers to appear in both training and test slices with different timestamps; a time-based split would have caught the inflated estimate.</> },
-        { label: <>The dataset is too small.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Most churn data has within-customer correlation across time. A random row-level split lets the model effectively memorize each customer; a time-based split is the production-shaped evaluation.</>,
-    },
-    {
-      prompt: <>Which of the following features is <em>most likely</em> to leak in a model that scores customers each Monday?</>,
-      options: [
-        { label: <>days_since_last_purchase, computed as of Sunday night.</> },
-        { label: <>support_tickets_last_30d, computed over the past 30 days.</> },
-        { label: <>refund_count_finalized, computed from invoice records that close 14 days after month-end.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>The third feature's value at Monday-morning score time is not yet available — it is computed only after invoices close. In production the column will be empty or stale; in training it was reconstructed retrospectively, so the model learned a relationship it cannot use.</>,
-    },
-    {
-      prompt: <>A team has been tuning a model against the same held-out test set for six months. The model now shows AUC 0.04 higher than the original prototype. The honest interpretation is:</>,
-      options: [
-        { label: <>The improvement is real and the model is ready to ship.</> },
-        { label: <>Some of the improvement may be the team having implicitly trained on the test set through repeated comparisons. A fresh held-out set should confirm the gain before deployment.</> },
-        { label: <>Cross-validation would have produced the same result without the risk of peeking.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Each comparison against the test set leaks a tiny amount of information into the choices the team makes. Over six months, that drift can mimic real improvement.</>,
-    },
-  ]}
-/>
+</Takeaway>

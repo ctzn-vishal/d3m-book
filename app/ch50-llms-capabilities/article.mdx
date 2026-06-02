@@ -4,7 +4,6 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
-import { QuizBlock } from '@/components/Book/QuizBlock';
 import { LlmCapabilityMap, PromptStructureCard } from '@/components/Book/part5/RagVisionAgentDiagrams';
 
 <DropCap>
@@ -305,40 +304,3 @@ An LLM is a language interface for workflows: its capabilities are the language-
 From here the chapter gets mechanical: **constrain the output** so it flows into the next system without cleanup (§21.2), **give the model tools** so it can act rather than just answer (§21.3), and **govern** the whole thing (Chapter 22).
 
 </Takeaway>
-
-<QuizBlock
-  title="Concept check"
-  intro="Three questions spanning what LLMs do and how to brief them."
-  questions={[
-    {
-      prompt: <>A team wants an LLM to answer employee policy questions accurately. The internal HR handbook is not in the model's training data. The right architecture is:</>,
-      options: [
-        { label: <>Fine-tune the model on the handbook.</> },
-        { label: <>RAG — index the handbook, retrieve at query time, ground the answer in retrieved chunks.</> },
-        { label: <>Just ask the model and hope.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The handbook changes; the model shouldn't be fine-tuned every time it does. RAG separates the firm's facts from the model's language ability.</>,
-    },
-    {
-      prompt: <>A team is iterating on a prompt and finds that ten different phrasings produce nearly identical outputs. The takeaway is:</>,
-      options: [
-        { label: <>The model is broken.</> },
-        { label: <>The construct is well-defined; further phrasing iteration is unlikely to help. Time is better spent on constraints, examples, or evaluation.</> },
-        { label: <>The model is not capable enough.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>This is the GABRIEL paper's finding. Robustness to phrasing is evidence the task is well-specified — and a signal to stop polishing the prompt.</>,
-    },
-    {
-      prompt: <>The single most under-appreciated capability of LLMs in business is:</>,
-      options: [
-        { label: <>Chatbot conversation.</> },
-        { label: <>Translation between formats — free text to structured JSON, prose to bullet points, legalese to plain English.</> },
-        { label: <>Image generation.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Format translation appears in dozens of workflows that don't look like "AI tasks" at first glance. It's where the biggest aggregate productivity gains live.</>,
-    },
-  ]}
-/>

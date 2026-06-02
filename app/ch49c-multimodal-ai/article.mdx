@@ -2,6 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { MultimodalArchitecture } from '@/components/Book/part5/RagVisionAgentDiagrams';
 
@@ -148,48 +150,51 @@ The implication for governance: privacy-sensitive multimodal workflows that prev
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Uneven modality coverage">
+A model trained on web-scale image-text pairs can have very different coverage across modalities — audio coverage is often weaker than image coverage. **Audit the model on each modality you depend on before deploying, rather than assuming parity.**
+</Pitfall>
 
-- **Modality bias.** A multimodal model trained on web-scale image-text pairs may have very different coverage across modalities. Audio coverage is often weaker than image coverage. Audit before deploying.
-- **Misleading cross-modal grounding.** A model captioning an image may invent details that aren't in the image. The same hallucination patterns from text apply.
-- **Performance gap from headline benchmarks.** Frontier multimodal models score well on standard benchmarks and fail in surprising ways on real business documents and noisy media. Test on your data.
-- **Cost at scale.** A single multimodal API call is cheap; running it across millions of media items can become expensive fast. Batch and cache aggressively.
-- **Latency on rich media.** A model that processes a 30-second video can take seconds to respond. Architecture choices (keyframe extraction, on-device pre-processing) matter.
-- **Privacy and copyright.** Customer photos, ad creative, audio from calls — all of this carries IP and privacy obligations. Bake in redaction, retention, and consent from the start.
+<Pitfall title="Misleading cross-modal grounding">
+A model captioning an image may invent details that aren't in the image; the same hallucination patterns from text carry over. **Treat generated captions and descriptions as claims to verify, not facts, for any high-stakes use.**
+</Pitfall>
+
+<Pitfall title="Benchmark-to-production gap">
+Frontier multimodal models score well on standard benchmarks and fail in surprising ways on real business documents and noisy media. **Evaluate on your own data before trusting a leaderboard number.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Bottom line for the business">
 
-Multimodal AI is the architectural endgame of everything in Part V. Text became vectors. Images became vectors. Audio became vectors. They all share a space now, and a single language model can reason across all of them.
-
-> *Identify the workflows that mix modalities. Use multimodal models where the integration was previously the hard part. Watch the costs. Govern the privacy.*
+Multimodal AI is the architectural endgame of everything in Part V: text became vectors, images became vectors, audio became vectors, and they all share a space now, so a single language model can reason across all of them. Identify the workflows that mix modalities, use multimodal models where the integration was previously the hard part, watch the costs, and govern the privacy.
 
 The next chapter pivots from "what AI can do" to "how to put it to work" — language models as workflow components, the prompts that direct them, the structured outputs that integrate them, and the agents that act through them.
 
+</Takeaway>
+
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on multimodal AI."
+  intro="Three questions spanning the chapter — RAG, document AI, and the shared-space idea behind multimodal models."
   questions={[
     {
-      prompt: <>A user uploads a photo of a coffee mug and asks "do you sell something like this?" Which architecture is the natural choice?</>,
+      prompt: <>A team is choosing between fine-tuning a model on company documents vs. building a RAG system. The documents change weekly. Which is more operationally sustainable?</>,
       options: [
-        { label: <>Train a custom classifier on coffee mugs.</> },
-        { label: <>Embed the user image and the catalog with the same multimodal model; return nearest neighbours by cosine similarity.</> },
-        { label: <>OCR the image.</> },
+        { label: <>Fine-tuning, because the model "knows" the documents.</> },
+        { label: <>RAG, because updating the knowledge base is a re-indexing job, not a re-training job.</> },
+        { label: <>Both equally.</> },
       ],
       correctIndex: 1,
-      explanation: <>Visual product search is a textbook multimodal use case. The shared-space embedding pattern makes it a few-hundred-line system with no task-specific training.</>,
+      explanation: <>Fine-tuning bakes a snapshot of the documents into the model. RAG separates facts from model weights and lets the firm update one without disturbing the other.</>,
     },
     {
-      prompt: <>A team wants to summarize sales calls with action items. The right modality pipeline is:</>,
+      prompt: <>The single most important tunable parameter in a production document AI pipeline is:</>,
       options: [
-        { label: <>Audio → transcription → LLM summarization → structured output.</> },
-        { label: <>Video → captioning.</> },
-        { label: <>Image → OCR.</> },
+        { label: <>The model size.</> },
+        { label: <>The confidence threshold above which extractions auto-process and below which they go to a human reviewer.</> },
+        { label: <>The OCR engine choice.</> },
       ],
-      correctIndex: 0,
-      explanation: <>Sales calls are audio; transcription (Whisper or similar) brings them into text, where the same LLM patterns from §21.2 apply.</>,
+      correctIndex: 1,
+      explanation: <>The threshold is where business cost meets model accuracy. Setting it is a decision; monitoring it is operations.</>,
     },
     {
       prompt: <>The defining property of a multimodal foundation model (CLIP and successors) is:</>,

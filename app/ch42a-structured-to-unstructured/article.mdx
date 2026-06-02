@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { StructuredVsUnstructured } from '@/components/Book/part5/TextDiagrams';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
 
@@ -109,57 +110,24 @@ The capstone (§22.2) integrates all of this into a single customer-voice loop t
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Classification is not measurement">
+A text classifier returns a label ("complaint", "praise"); a measurement returns a degree on a defined construct ("intent to return", "sense of betrayal"). They are different operations, and §19.3 is about not collapsing them. **Decide whether you need a category or a degree before you pick the method.**
+</Pitfall>
 
-Three failures recur whenever a team first tries to add text or images to their models.
+<Pitfall title="Representation is never neutral">
+Every preprocessing choice — lowercasing, stop-word removal, lemmatization, chunking — encodes a hypothesis about what the text "is." A model that processes "cold brew" the same way it processes "cold coffee" has made an assumption, not a measurement. **Treat each representation choice as a modelling decision and inspect what it throws away.**
+</Pitfall>
 
-1.  **Confusing classification with measurement.** A text classifier returns a label ("complaint", "praise"); a measurement returns a degree on a defined construct ("intent to return", "sense of betrayal"). They are different operations. Section 19.3 is about not collapsing them.
-2.  **Treating representation as neutral.** Every preprocessing choice — lowercasing, stop-word removal, lemmatization, chunking — encodes a hypothesis about what the text "is." A model that processes "cold brew" the same way it processes "cold coffee" has made an assumption, not a measurement.
-3.  **Outsourcing the construct.** Off-the-shelf sentiment classifiers measure *general-domain sentiment*. Whether that is the right construct for the firm's question depends on the business, not the model. The recurring rule: name what you want to measure first, then choose the method.
+<Pitfall title="Outsourcing the construct">
+Off-the-shelf sentiment classifiers measure *general-domain sentiment*; whether that is the right construct for the firm's question depends on the business, not the model. **Name what you want to measure first, then choose the method.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="For the manager">
 
-The shortest summary of this part: **Part IV scored customers. Part V reads them.** A managerial frame to hold throughout:
-
-> *Name the unstructured source. Choose the representation. State the construct. Pick the method. Inspect failures. Govern the output.*
+The shortest summary of this part: **Part IV scored customers. Part V reads them.** A managerial frame to hold throughout: *name the unstructured source, choose the representation, state the construct, pick the method, inspect failures, govern the output.*
 
 The next five articles work through that frame on text. Chapter 19 swaps the representation for embeddings. Chapters 20–22 extend it across documents, images, multimodal inputs, and language model–driven workflows.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on framing unstructured-data work."
-  questions={[
-    {
-      prompt: <>A team has a clean churn model from Part IV. Customer A and Customer B score nearly identically. A's recent reviews are full of frustration about a recent outage; B's reviews are short and bland. What is the cleanest framing for the next step?</>,
-      options: [
-        { label: <>Ship the churn model — additional data won't help.</> },
-        { label: <>Add a text-based feature or measurement that captures the difference between A and B — the warehouse columns weren't designed to see it.</> },
-        { label: <>Switch to a bigger model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The numeric features can't see the language signal. Text is precisely where this kind of customer differentiation lives.</>,
-    },
-    {
-      prompt: <>"Unstructured data" is best described as:</>,
-      options: [
-        { label: <>Data that algorithms can't use.</> },
-        { label: <>Data that requires an explicit representation step before algorithms can use it.</> },
-        { label: <>Data without timestamps.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>"Unstructured" names the lack of a built-in schema, not the impossibility of analysis. The representation step is the topic of this whole part.</>,
-    },
-    {
-      prompt: <>Which of these is <em>not</em> a representation choice for text?</>,
-      options: [
-        { label: <>Bag-of-words / TF-IDF.</> },
-        { label: <>Embeddings.</> },
-        { label: <>A churn AUC of 0.84.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>AUC is an evaluation metric, not a representation. Bag-of-words and embeddings are two different ways to turn a document into a vector.</>,
-    },
-  ]}
-/>
+</Takeaway>

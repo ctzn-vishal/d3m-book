@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { TsneVsPca } from '@/components/Book/part4/SegmentationDiagrams';
 
@@ -75,27 +76,54 @@ A short list of situations where they should *not* be used:
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Picking hyperparameters to taste">
+t-SNE perplexity and UMAP n_neighbours change the look of the plot substantially, and choosing the "prettiest" run is not a methodology. **Fix the hyperparameters by a stated rule, and confirm structure across several settings.**
+</Pitfall>
 
-- **Picking hyperparameters to taste.** t-SNE perplexity and UMAP n_neighbours change the look of the plot substantially. Choosing the "prettiest" run is not a methodology.
-- **Interpreting cluster centroids.** Two cluster centroids in a UMAP plot do not represent anything mathematically — there is no embedding of "the average" point.
-- **Comparing across runs.** A UMAP plot from last quarter and one from this quarter can look very different without anything having changed in the data. Compare on quantitative metrics (cluster purity, silhouette in the original space), not on visual impressions of the plot.
-- **Treating the plot as the analysis.** A UMAP plot is a *first look*. Conclusions need to be re-checked in the original feature space.
+<Pitfall title="Interpreting cluster centroids">
+Two cluster centroids in a UMAP plot represent nothing mathematically — there is no embedding of "the average" point. **Read membership, never the location of a centroid.**
+</Pitfall>
+
+<Pitfall title="Comparing plots across runs">
+A UMAP plot from last quarter and one from this quarter can look very different with nothing changed in the data. **Compare on quantitative metrics — cluster purity, silhouette in the original space — not on visual impressions.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What to ship">
 
 t-SNE and UMAP are the right tools when neighbourhoods matter more than coordinates, and especially when the input is itself a learned embedding. They are the wrong tools when the manager needs to explain *why* points sit where they do, or when downstream decisions need to be reproducible.
 
-> *Use these maps to find groups; use other tools to explain them.*
+*Use these maps to find groups; use other tools to explain them.*
 
 The next part introduces text and image embeddings, where this kind of plot becomes the standard way to see what an embedding has learned. By the time we get there, the discipline of reading neighbourhoods rather than geometry will already be habit.
 
+</Takeaway>
+
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on nonlinear maps."
+  intro="Three questions spanning Chapter 16 — clustering, PCA, and nonlinear maps."
   questions={[
+    {
+      prompt: <>A team runs K-means with k=4 and k=5 on the same standardized features. The five-cluster solution splits one of the four clusters in two; the other four are unchanged. The honest reading is:</>,
+      options: [
+        { label: <>The two clusters that didn't change are stable across this choice; the split cluster is where the choice of k matters.</> },
+        { label: <>K=5 is correct.</> },
+        { label: <>K=4 is correct.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Stability across reasonable choices is the strongest evidence that a cluster is real. Where solutions disagree, the right move is to investigate, not to pick a side and move on.</>,
+    },
+    {
+      prompt: <>On a biplot, "affordability" loads at (-0.85, 0.05) and "premium" at (0.85, 0.45). The first component is reasonably interpreted as:</>,
+      options: [
+        { label: <>An axis from value to premium positioning.</> },
+        { label: <>A measure of convenience.</> },
+        { label: <>A noise component.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Loadings of opposite sign on a single axis indicate a polarity. "Affordable" on the negative side and "premium" on the positive side is the textbook value-to-premium dimension.</>,
+    },
     {
       prompt: <>A UMAP plot shows five tight clusters. Re-running with a different random seed produces five tight clusters with similar membership but visibly different positions and shapes. The right interpretation is:</>,
       options: [
@@ -105,26 +133,6 @@ The next part introduces text and image embeddings, where this kind of plot beco
       ],
       correctIndex: 1,
       explanation: <>Neighbourhoods are what UMAP optimizes; everything else is decorative. Re-running with a new seed should preserve memberships but can rotate and reshape the picture.</>,
-    },
-    {
-      prompt: <>Two clusters in a t-SNE map are visibly far apart. A teammate concludes the underlying populations are also very different. The correct caution is:</>,
-      options: [
-        { label: <>The visual distance between two clusters in a t-SNE map is not a reliable measure of their distance in the original feature space.</> },
-        { label: <>The distance is fine because the cluster sizes look balanced.</> },
-        { label: <>The conclusion is correct because t-SNE preserves global structure.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>t-SNE preserves local neighbourhoods, not global distances. The space between clusters is essentially uninterpretable as distance.</>,
-    },
-    {
-      prompt: <>A team wants to communicate brand positioning to an executive audience. Which method should they use?</>,
-      options: [
-        { label: <>UMAP — it produces tighter clusters.</> },
-        { label: <>PCA / Factor Analysis — the axes carry interpretable meaning, which executives can act on.</> },
-        { label: <>K-means alone.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>For executive communication of positioning, the value of named axes outweighs the visual neatness of nonlinear methods. Use UMAP for exploration; use PCA for the boardroom.</>,
     },
   ]}
 />

@@ -1,8 +1,6 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
 import { LadderPosition, ArtefactFamilyTree } from '@/components/Book/part0/Part0Diagrams';
 import { DecisionMemoTemplate } from '@/components/Book/part6/Part6Diagrams';
 
@@ -218,40 +216,3 @@ That is what the book has been training. The methods are the language of the mom
 </Callout>
 
 The case packs that accompany this article — the Bean &amp; Basket expansion datasets, the worked partial solutions, the teaching notes — give the reader the chance to run this case themselves. The framework is now the reader's to use.
-
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on the integrative case."
-  questions={[
-    {
-      prompt: <>The expansion decision touches every Part of the book. The most honest characterization of how the Parts combine is:</>,
-      options: [
-        { label: <>One Part dominates; the others are nice-to-have.</> },
-        { label: <>Each Part contributes a piece of evidence the others cannot produce — descriptive, visual, causal, predictive, AI, operational — and the memo synthesizes them.</> },
-        { label: <>The Parts are interchangeable.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>This is the book's central claim: different evidence languages answer different questions, and a hard decision usually needs more than one.</>,
-    },
-    {
-      prompt: <>The team's Part IV model has wide confidence intervals on a particular candidate market segment because the training data in that segment is thin. The right next step is:</>,
-      options: [
-        { label: <>Ignore the confidence intervals.</> },
-        { label: <>Phase the rollout so the thin-data segments are deferred until wave-1 outcomes generate training data to narrow the intervals.</> },
-        { label: <>Build a bigger model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Phased rollouts are how a learning organization handles uncertainty: act where the model is confident, defer where it isn't, and use the action's outcomes to update.</>,
-    },
-    {
-      prompt: <>The book's strongest claim about its own durability is:</>,
-      options: [
-        { label: <>The methods will be valid forever.</> },
-        { label: <>The methods will rotate; the discipline — naming the decision, the counterfactual, the threshold; shipping the artefacts; monitoring the portfolio — will outlast the technology.</> },
-        { label: <>The current AI tools are the endpoint.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The closing rule. The frame is meant to survive multiple generations of methods.</>,
-    },
-  ]}
-/>

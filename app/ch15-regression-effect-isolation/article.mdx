@@ -1,10 +1,10 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { FrischWaughResidualization } from '@/components/Book/part3/ConceptDiagrams';
 import { SoupRegressionLadder } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -84,53 +84,6 @@ A defensible report of a regression coefficient always names four things — the
 
 Notice how much that sentence concedes. It does not claim causation in general — it claims a conditional comparison. The clause "holding X constant" is doing real work, and naming exactly which X's are held constant is what separates a serious estimate from a marketing slide.
 
-<QuizBlock
-  title="Concept check"
-  intro="Four conceptual questions on what multiple regression actually does. Click to reveal."
-  questions={[
-    {
-      prompt: <>The Frisch–Waugh–Lovell view of multiple regression says that the coefficient on <M>{String.raw`X_1`}</M> is the slope of…</>,
-      options: [
-        { label: <>The outcome on the treatment, after dropping all observations where the controls take their median values.</> },
-        { label: <>The residual of the outcome (after regressing it on the controls) on the residual of the treatment (after regressing it on the same controls).</> },
-        { label: <>The outcome on the treatment, weighted by the inverse of the controls' variance.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>FWL turns "multiple regression" into "simple regression of the parts of <M>{String.raw`Y`}</M> and <M>{String.raw`X_1`}</M> that move independently of the controls." This is exactly what "holding constant" means inside the math — it is a residualization, not a selection of rows.</>,
-    },
-    {
-      prompt: <>Adding a control variable that is, in fact, a <em>consequence</em> of the treatment is dangerous because…</>,
-      options: [
-        { label: <>It biases the standard errors upward, making the coefficient look insignificant.</> },
-        { label: <>It residualizes the treatment on a variable that itself reflects the treatment, blocking part of the causal pathway and shrinking the estimate toward zero.</> },
-        { label: <>Post-treatment variables always have zero variance after the experiment.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>This is the "bad control" trap. If <M>{String.raw`X_2`}</M> is downstream of the treatment, partialling it out removes part of the very effect you wanted to isolate. The right rule is: only control for variables determined <em>before</em> the treatment.</>,
-    },
-    {
-      prompt: <>You add a control, and the coefficient on the treatment shifts substantially. What does that shift tell you?</>,
-      options: [
-        { label: <>The new control was a confounder — it was correlated with both the treatment and the outcome, and the original estimate was biased by its omission.</> },
-        { label: <>The model is wrong; coefficients should be stable to control choice.</> },
-        { label: <>Standard errors are too small to interpret.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Sensitivity to controls is informative, not a bug. A coefficient that moves a lot when a control enters is telling you that the original short regression was absorbing part of that control's effect. The regression ladder we use later in this article is exactly this idea, deliberately.</>,
-    },
-    {
-      prompt: <>A historical regression has a price-elasticity coefficient of −0.4, estimated on prices that ranged from $1.80 to $2.20. The model has no data outside that range. Which inference is defensible?</>,
-      options: [
-        { label: <>Around the historical price range, a 1% price increase is associated with a 0.4% volume decrease, conditional on the controls.</> },
-        { label: <>Cutting price to $0.99 would yield roughly a 47% volume increase by linear extrapolation.</> },
-        { label: <>The model proves consumers are price-insensitive at all price points.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>A regression coefficient describes the conditional slope <em>in the region where you have data</em>. Extrapolating well outside the observed price support is a separate, much stronger claim that the same constant-elasticity functional form holds there — usually it does not.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Data Case: The Progresso Soup Regression Ladder
@@ -160,17 +113,19 @@ The preferred estimate, <M>{String.raw`\widehat{\beta} \approx -2.23`}</M>, says
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Bad controls (post-treatment variables)">
+Controlling for customer satisfaction or shelf stock when regressing sales on price residualizes the treatment on a variable that itself reflects the treatment, blocking part of the causal pathway. **Only control for variables determined before the treatment.**
+</Pitfall>
 
-Multiple regression is precise about what it does and silent about whether what it does is what you wanted. Three traps:
+<Pitfall title="Collider bias">
+Controlling for a variable that is *jointly caused* by the treatment and the outcome — "made it through the funnel," for example — manufactures a correlation between them where none existed. **Never condition on a variable the treatment could itself have moved.**
+</Pitfall>
 
-1.  **Bad controls (post-treatment variables).** Controlling for customer satisfaction or shelf stock when regressing sales on price blocks part of the causal pathway. The rule of thumb: only control for variables determined *before* the treatment.
-2.  **Collider bias.** Controlling for a variable that is *jointly caused* by the treatment and the outcome can create a correlation between them where none existed. The classic example: conditioning on "made it through the funnel" creates spurious correlations between earlier funnel features and later outcomes.
-3.  **Extrapolation beyond the support.** A constant slope inside the observed range is not evidence of a constant slope outside it. Always know the support of your treatment and refuse to predict outside it.
+<Pitfall title="Extrapolation beyond the support">
+A constant slope inside the observed range is not evidence of a constant slope outside it; the residualized scatter only covers the support you actually observed. **Know the support of your treatment and refuse to predict outside it.**
+</Pitfall>
 
----
-
-## Managerial Takeaway
+<Takeaway label="What this buys you">
 
 Regression is a *conditional comparison* tool. To use it as a leader:
 
@@ -179,3 +134,5 @@ Regression is a *conditional comparison* tool. To use it as a leader:
 - Insist on a regression ladder rather than a single specification. The shifts diagnose the identification; the final number is the harvest.
 
 The next chapter takes one step deeper: when a control is not enough, what *design* would actually identify the causal effect?
+
+</Takeaway>

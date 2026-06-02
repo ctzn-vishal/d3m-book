@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import transactionsRaw from './data/transactions.json';
 import customersRaw from './data/customers.json';
@@ -166,20 +167,22 @@ Read Figure 1 from left to right. The first tab is the join most managers actual
 
 The fix on the third tab is to **aggregate before joining**. Roll the campaigns table down to one row per customer first — for example, a single flag `was_exposed_to_any_campaign` — and then join. The resulting table has six rows, the revenue total is right, and the campaign-exposure information is preserved. The general rule is to match grains before joining: if you want a result with one row per transaction, every table you join in must contribute exactly one row per transaction's join key.
 
-## What can go wrong
+<Pitfall title="Duplicate explosion">
+The most expensive failure mode: the query runs, the dashboard renders, the number is wrong. If the result has more rows than the left table, the right table is contributing multiple rows per key, and a downstream `SUM` inflates. **Check the row count before and after every join, and summarize the right table to the grain of the left table before joining.**
+</Pitfall>
 
-<Callout variant="caveat" title="The three silent failure modes of a join">
+<Pitfall title="Silently dropped matches">
+A `LEFT JOIN` keeps unmatched rows with blanks; an `INNER JOIN` drops them silently. A dashboard built on an inner join can quietly omit 5–15% of transactions every week, and no one notices until someone reconciles to a different source. **Run the anti-join as a sanity check to see exactly what fell out.**
+</Pitfall>
 
-**Duplicate explosion.** The most expensive failure mode: the query runs, the dashboard renders, the number is wrong. Always check the row count before and after a join. If the result has more rows than the left table, the right table is contributing multiple rows per key, and a downstream `SUM` will inflate. The defense is to summarize the right table to the grain of the left table *before* the join.
-
-**Missing matches.** The default `LEFT JOIN` keeps unmatched rows with blanks. The default `INNER JOIN` silently drops them. A dashboard built on an inner join can quietly omit 5–15% of transactions every week, and no one will notice until someone reconciles to a different source. Always run the anti-join as a sanity check.
-
-**Wrong-grain joins.** A customer-level table joined to a transaction-level table on `customer_id` produces transaction-level rows with the customer attributes duplicated across every transaction by that customer. That is correct and useful. A store-week-level table joined to a transaction-level table on `store_id` alone — without `week` — produces every store-week's attributes duplicated across every transaction at that store. That is almost never what was intended.
-
-</Callout>
+<Pitfall title="Wrong-grain join keys">
+Joining a customer-level table to transactions on `customer_id` correctly duplicates customer attributes across that customer's transactions. But joining a store-week table on `store_id` *alone* — without `week` — duplicates every store-week's attributes across every transaction at that store, which is almost never intended. **Match on the full key the grain requires, not just the part that happens to align.**
+</Pitfall>
 
 A subtler version, worth flagging once: **joining future information into a historical row**. If the customer master file has been updated to reflect today's loyalty tier, and you join it to a transaction from six months ago, the resulting row attributes the *current* loyalty tier to a *past* purchase. For descriptive reports this is usually harmless. For causal analysis — Chapter 17 onward — it is fatal: the model will learn that "Gold tier" predicts purchase behavior, but the Gold tier was assigned *because* of subsequent purchase behavior. We will come back to this trap several times; the name for it is **leakage**, and the defense is to use the customer attributes *as they were at the time of the transaction*, not as they are now.
 
-## Managerial takeaway
+<Takeaway label="The call">
 
 A join is not a technical operation. It is a *change in what one row means*. Before approving any query that joins more than one table, the manager's question is simple: *what is the grain of the result, and is that the grain we want?* Run the anti-join afterwards to surface what fell out. If the row count grew, find out which side of the join contributed multiple rows per key. Most production data errors that ever reach a board deck started as a join that was technically correct and conceptually wrong; Figure 1's third tab is the cartoon version of that error, and once you have seen it, the reflex to *count rows before and after* becomes permanent. The grain question is the one that catches it every time.
+
+</Takeaway>

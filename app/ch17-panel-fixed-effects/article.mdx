@@ -1,9 +1,10 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { WithinUnitVariation } from '@/components/Book/part3/ConceptDiagrams';
 import { SoupRegressionLadder, PanelFixedEffectsVisual } from '@/components/Book/part3/CausalRegressionVisuals';
@@ -112,8 +113,28 @@ The centered view is what the fixed-effects regression "sees." That visual lens 
 
 <QuizBlock
   title="Concept check"
-  intro="Four conceptual questions on fixed effects and within-unit variation. Click to reveal."
+  intro="Three questions spanning what regression isolates, what identification adds, and what fixed effects buy."
   questions={[
+    {
+      prompt: <>The Frisch–Waugh–Lovell view of multiple regression says that the coefficient on <M>{String.raw`X_1`}</M> is the slope of…</>,
+      options: [
+        { label: <>The outcome on the treatment, after dropping all observations where the controls take their median values.</> },
+        { label: <>The residual of the outcome (after regressing it on the controls) on the residual of the treatment (after regressing it on the same controls).</> },
+        { label: <>The outcome on the treatment, weighted by the inverse of the controls' variance.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>FWL turns "multiple regression" into "simple regression of the parts of <M>{String.raw`Y`}</M> and <M>{String.raw`X_1`}</M> that move independently of the controls." This is exactly what "holding constant" means inside the math — it is a residualization, not a selection of rows.</>,
+    },
+    {
+      prompt: <>Which of the following best captures the difference between <em>identification</em> and <em>estimation</em>?</>,
+      options: [
+        { label: <>Identification is what you do with small samples; estimation is what you do with big samples.</> },
+        { label: <>Identification is the design argument that a causal comparison exists in your data; estimation is the statistical procedure that computes the number and its uncertainty given the design.</> },
+        { label: <>Identification and estimation are synonyms for the same set of techniques.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Identification answers "<em>in principle</em>, does our data + design pin down the causal effect we want?" — a logical, assumption-driven question. Estimation answers "given an identified design, what's the number?" — a statistical computation. A precise estimate of an unidentified quantity is precisely wrong.</>,
+    },
     {
       prompt: <>A pooled regression of volume on price returns a positive slope. The same regression with store fixed effects returns a negative slope. Which interpretation is most defensible?</>,
       options: [
@@ -123,36 +144,6 @@ The centered view is what the fixed-effects regression "sees." That visual lens 
       ],
       correctIndex: 1,
       explanation: <>This is the canonical sign-flip story. The across-store comparison was contaminated by demographic confounding (high-end stores both charge more and sell more). Within stores, the demand response to a price change is negative — that is the slope the firm actually faces when it changes price.</>,
-    },
-    {
-      prompt: <>Fixed effects automatically absorb which of the following?</>,
-      options: [
-        { label: <>Any unobserved factor that drives the outcome, whether or not it varies over time within a unit.</> },
-        { label: <>Any unit-level factor that is constant over time, whether or not it was ever measured.</> },
-        { label: <>Any factor that has a small variance.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Unit fixed effects vanish under within-unit demeaning, taking with them every unit-level characteristic that does not move over time — measured or not. They do <em>not</em> control for things that vary inside the unit over time (local promotions, construction, weather). For those, you need time fixed effects or explicit time-varying controls.</>,
-    },
-    {
-      prompt: <>A store never changed its price during the 24-week panel. In a store-fixed-effects regression of volume on price, this store…</>,
-      options: [
-        { label: <>Has a strong influence on the price coefficient because it has a large sample.</> },
-        { label: <>Effectively contributes nothing to the price coefficient, because its within-store price variation is zero.</> },
-        { label: <>Biases the price coefficient toward positive because of its constant pricing.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>FE identifies <M>{String.raw`\beta_1`}</M> from within-unit variation. A unit with no within-unit variation in the treatment carries no information about the treatment's effect — it is washed out by the demeaning. This is why FE estimates need adequate within-unit variation; a panel where most units never change the treatment will produce very imprecise estimates.</>,
-    },
-    {
-      prompt: <>Which of the following is <em>not</em> absorbed by two-way (store + week) fixed effects?</>,
-      options: [
-        { label: <>Permanent neighborhood income differences across stores.</> },
-        { label: <>A national holiday-week demand spike that hits every store the same way.</> },
-        { label: <>A construction project in a single store's neighborhood that depresses traffic for three weeks.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>Store FE absorb stable store-level differences; week FE absorb shocks that hit all stores the same way. The construction project is <em>store-specific</em> and <em>time-varying</em> — exactly the gap TWFE leaves behind. If the timing of the price cut correlates with that construction, the FE design is biased. You would need a time-varying store control or an instrument.</>,
     },
   ]}
 />
@@ -177,17 +168,19 @@ A pricing recommendation built on the naive −3.21 would have overstated price 
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Insufficient within-unit variation">
+If most units never change the treatment, demeaning leaves almost no signal, standard errors blow up, and the estimate is dominated by the few units that moved. **Check the distribution of within-unit treatment variation before reading the coefficient.**
+</Pitfall>
 
-Fixed effects are powerful, not magical. Three traps:
+<Pitfall title="Time-varying confounders">
+Fixed effects absorb stable confounders only. A store that cut prices the week a construction project blocked its parking lot has a confounded within-store estimate, because the treatment timing tracks a shock the FE cannot absorb. **After absorbing unit and time effects, name the time-varying, unit-specific shocks that could still move with the treatment.**
+</Pitfall>
 
-1.  **Insufficient within-unit variation.** If most units never change the treatment, the demeaning leaves almost no signal, standard errors blow up, and the estimate is dominated by the few units that did. Always check the distribution of *within-unit* treatment variation before reading the coefficient.
-2.  **Time-varying confounders.** Fixed effects absorb stable confounders only. A store that cut prices the week a local construction project blocked its parking lot will have a confounded within-store estimate, because the treatment timing tracks a time-varying shock the FE cannot absorb.
-3.  **Lagged dependent variables in short panels (Nickell bias).** Including <M>{String.raw`Y_{i,t-1}`}</M> on the right-hand side violates strict exogeneity and creates a small-T bias that can be severe in panels under roughly ten periods. There are remedies (Arellano–Bond GMM and friends), but the default rule is: do not include a lagged dependent variable in a short FE panel without explicit treatment.
+<Pitfall title="Lagged dependent variables in short panels">
+Putting <M>{String.raw`Y_{i,t-1}`}</M> on the right-hand side violates strict exogeneity and creates a small-T (Nickell) bias that can be severe under roughly ten periods. **Do not include a lagged dependent variable in a short FE panel without an explicit remedy such as Arellano–Bond GMM.**
+</Pitfall>
 
----
-
-## Managerial Takeaway
+<Takeaway label="Net-net">
 
 Fixed effects are the cheapest, highest-value identification step a corporate analytics team has access to. Three rules:
 
@@ -196,3 +189,5 @@ Fixed effects are the cheapest, highest-value identification step a corporate an
 - After absorbing stable unit and time effects, name the time-varying, unit-specific shocks that could still confound the treatment. That residual list is the heart of a professional identification memo for a panel design.
 
 The next chapter takes one further step: when fixed effects are not enough — when there is a specific event we want to evaluate — we move to designs that build the counterfactual from the comparison group's trajectory.
+
+</Takeaway>

@@ -4,6 +4,8 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { ConfounderDAG, ReverseCausalityDiagram } from '@/components/Book/part3/ConceptDiagrams';
 import { SoupSeasonScatter } from '@/components/Book/part3/CausalRegressionVisuals';
@@ -129,8 +131,18 @@ Simultaneity is the most general case: two variables move together because each 
 
 <QuizBlock
   title="Concept check"
-  intro="Four conceptual questions on endogeneity. Click an answer to reveal the explanation."
+  intro="Three questions spanning what randomization buys and why raw historical data resists causal reading."
   questions={[
+    {
+      prompt: <>Why does random assignment produce an unbiased estimate of the average treatment effect?</>,
+      options: [
+        { label: <>Because the treatment and control groups always end up with the same number of units.</> },
+        { label: <>Because the assignment is statistically independent of the potential outcomes, so the observed mean in each arm is an unbiased estimate of the corresponding potential-outcome mean.</> },
+        { label: <>Because random assignment removes measurement error from the outcome.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Equal sample sizes are not required, and randomization does nothing about measurement error. What it buys is <M>{String.raw`(Y(1), Y(0)) \perp D`}</M>, which makes the difference in observed means an unbiased estimator of the ATE.</>,
+    },
     {
       prompt: <>Which of the following is the cleanest definition of an <em>endogenous</em> treatment variable?</>,
       options: [
@@ -150,26 +162,6 @@ Simultaneity is the most general case: two variables move together because each 
       ],
       correctIndex: 1,
       explanation: <>Both <M>{String.raw`\beta_2 > 0`}</M> (holidays raise sales) and <M>{String.raw`\operatorname{Cov}(X_1, X_2) > 0`}</M> (ad spend rises in holidays). Their product is positive, so the short-regression coefficient on ad spend overstates the true ad-spend effect.</>,
-    },
-    {
-      prompt: <>A team finds that stores running aggressive afternoon discounts have <em>lower</em> sales than stores that do not. Before concluding "discounts hurt sales," which alternative explanation is most likely?</>,
-      options: [
-        { label: <>Reverse causality: managers triggered the discount <em>because</em> expected sales were already weak. The negative correlation is the demand shock, not the discount.</> },
-        { label: <>Random measurement error in sales has pulled the coefficient negative.</> },
-        { label: <>The standard error of the discount coefficient is too large to interpret.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>This is the canonical reverse-causality story. The action and the unobserved demand environment are linked because the action was <em>chosen in response to</em> the demand environment. The regression has no way to tell those apart from the discount's own causal effect.</>,
-    },
-    {
-      prompt: <>Which of the following is <em>not</em> a defensible response to a suspected endogenous regressor?</>,
-      options: [
-        { label: <>Find a design (experiment, natural experiment, instrumental variable) that breaks the dependence between the regressor and the unobservables.</> },
-        { label: <>Add controls for the specific omitted variable you suspect, and check that the coefficient of interest is stable across controls.</> },
-        { label: <>Drop observations where the treatment looks unusual until the regression returns the sign you expected.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>The last option is selecting on the outcome of the model and will produce arbitrary, non-reproducible coefficients. The first two are the legitimate responses: change the design or name and adjust for the omitted variable.</>,
     },
   ]}
 />
@@ -194,17 +186,19 @@ We will return to this case across Chapter 11 (regression) and Chapter 13 (prici
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Controlling for everything in sight">
+Adding controls is not free: a control that is itself a *consequence* of the treatment (a post-treatment variable) closes off part of the causal path you are trying to measure. **Choose the control set on substantive grounds — only variables determined before the treatment — before you fit.**
+</Pitfall>
 
-Three errors trip up the cleanup work itself:
+<Pitfall title="Pretending a time control fixes simultaneity">
+Time controls absorb shared shocks, but they do not undo the fact that our price and a competitor's price are jointly determined in equilibrium. **When two variables are simultaneously determined, reach for an instrument or a design that breaks the loop — no amount of seasonality dummies will.**
+</Pitfall>
 
-1.  **Controlling for everything in sight.** Adding controls is not free. Controls that are *consequences* of the treatment (post-treatment variables) close off part of the causal path you are trying to measure. The price of a careful regression is choosing which variables to include and which to leave out, on substantive grounds, before fitting.
-2.  **Pretending season fixes simultaneity.** Time controls absorb shared shocks. They do not undo the fact that our price and a competitor's price are jointly determined. For that you need an instrument or a design that breaks the loop.
-3.  **Aggregating across regions with different baselines.** Pooling stores across regions hides large unmodeled level differences. A regional fixed effect (or, equivalently, a store fixed effect) is usually a cheap and decisive fix; we will build it explicitly in the next chapter.
+<Pitfall title="Pooling regions with different baselines">
+Pooling stores across regions hides large unmodeled level differences and drags the slope toward the high-volume corner. **Add a regional (or store) fixed effect — usually a cheap and decisive fix, built explicitly in the next chapter.**
+</Pitfall>
 
----
-
-## Managerial Takeaway
+<Takeaway label="For the manager">
 
 Historical correlations are not causal facts. Before reading a historical coefficient as a lever:
 
@@ -214,3 +208,5 @@ Historical correlations are not causal facts. Before reading a historical coeffi
 - Choose a design or a control set that breaks the dependence between the treatment and those unobservables.
 
 The next chapter takes that program seriously: regression as a tool for *isolating* an effect once the identification story is named.
+
+</Takeaway>

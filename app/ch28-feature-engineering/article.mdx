@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { FeatureCatalogDiagram } from '@/components/Book/part4/PredictionDiagrams';
 
@@ -101,28 +102,52 @@ Feature stores are an architecture topic, not a Part IV topic — but the manage
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="The leaky aggregate">
+A feature that summarizes "the customer's behavior" without specifying the window of summarization trains on whatever the warehouse query returned and silently changes meaning in production. **Stamp every aggregate with an explicit, score-date-relative window.**
+</Pitfall>
 
-Three failure modes recur in feature engineering specifically:
+<Pitfall title="The collinear cluster">
+Twelve features that all measure roughly the same thing (recency in days, weeks, months; last-visit flags at 7, 14, 30 days) are harmless for trees but make linear-model coefficients unstable and importance estimates noisy. **Prune near-duplicate features before reading coefficients or importances off a linear model.**
+</Pitfall>
 
-1.  **The leaky aggregate.** A feature that summarizes "the customer's behavior" without specifying the window of summarization. The model trains on whatever the warehouse query returned and silently changes meaning in production.
-2.  **The collinear cluster.** Twelve features that all measure roughly the same thing (recency in days, weeks, months; flag for last visit > 7 days, > 14 days, > 30 days). For tree models this is harmless. For linear models it makes coefficients unstable and importance estimates noisy.
-3.  **The static fact that wasn't.** "Loyalty tier" looks static but actually changes. If the tier value used during training was today's tier rather than the tier as of the score date, the feature has leaked.
+<Pitfall title="The static fact that wasn't">
+"Loyalty tier" looks static but actually changes; if training used today's tier rather than the tier as of the score date, the feature has leaked. **Reconstruct even "static" attributes as of the score date.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What this buys you">
 
 Feature engineering is the place where the manager's domain knowledge enters the model. AutoML can tune the boosting; AutoML cannot tell you that *discount-share among bronze customers in the morning* is the feature that separates the price-sensitive from the routine.
 
-> Spend a week sharpening five features, not an afternoon trying five algorithms.
+*Spend a week sharpening five features, not an afternoon trying five algorithms.* A model with the right ten features almost always beats a model with three hundred wrong ones.
 
-A model with the right ten features almost always beats a model with three hundred wrong ones.
+</Takeaway>
 
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on feature engineering."
+  intro="Three questions spanning the supervised setup — task definition, generalization, and features — across Chapter 14."
   questions={[
+    {
+      prompt: <>Two churn models report different lift on the same customer base. The first scores customers; the second scores transactions and aggregates to customers. What is the most likely source of disagreement?</>,
+      options: [
+        { label: <>One uses random forest, the other gradient boosting.</> },
+        { label: <>The unit of analysis is different, so the two models are answering different questions and cannot be directly compared.</> },
+        { label: <>The dataset is too small.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A different unit is a different task, even if the target name and the algorithm are identical.</>,
+    },
+    {
+      prompt: <>A churn model trained with a random 80/20 split shows AUC 0.92 on the test set. When deployed to score next month's customers, AUC drops to 0.71. What is the most likely diagnosis?</>,
+      options: [
+        { label: <>The model has overfit hyperparameters.</> },
+        { label: <>The random split allowed customers to appear in both training and test slices with different timestamps; a time-based split would have caught the inflated estimate.</> },
+        { label: <>The dataset is too small.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Most churn data has within-customer correlation across time. A random row-level split lets the model effectively memorize each customer; a time-based split is the production-shaped evaluation.</>,
+    },
     {
       prompt: <>A team adds a new feature, <code>refund_total_lifetime</code>, to their churn model and AUC jumps from 0.82 to 0.93. Most likely explanation?</>,
       options: [
@@ -132,26 +157,6 @@ A model with the right ten features almost always beats a model with three hundr
       ],
       correctIndex: 1,
       explanation: <>"Lifetime" is a red flag for window-leakage. If a customer's refund total grows after they leave, training rows for churners carry post-outcome information and inflate the score.</>,
-    },
-    {
-      prompt: <>Which encoding choice for a high-cardinality SKU column carries the greatest leakage risk if done carelessly?</>,
-      options: [
-        { label: <>One-hot encoding (one column per SKU).</> },
-        { label: <>Target encoding (each SKU replaced by mean of the target).</> },
-        { label: <>Dropping the column.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Target encoding computed over the whole dataset lets each row "see" labels from other rows that the model is being graded against. It must be computed within each training fold only.</>,
-    },
-    {
-      prompt: <>Two churn models, A and B, are otherwise identical. Model A uses ten well-defined RFM and engagement features; Model B uses three hundred raw warehouse columns. Most likely outcome?</>,
-      options: [
-        { label: <>Model B wins decisively because it has more data.</> },
-        { label: <>Model A is competitive in accuracy, more stable in production, and far easier to maintain.</> },
-        { label: <>They are equivalent.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Predictive value plateaus quickly with thoughtful features. Maintenance, interpretability, and resilience to drift improve substantially with a smaller, business-aligned catalog.</>,
     },
   ]}
 />

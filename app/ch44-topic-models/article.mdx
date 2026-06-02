@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TopicWordBars, TopicTrendsChart } from '@/components/Book/part5/TextDiagrams';
 
 <DropCap>
@@ -114,56 +114,24 @@ For most production text systems, the right pairing is *supervised classificatio
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="K chosen badly">
+Too few topics and themes get crammed together; too many and topics fragment into near-duplicates. There is no automatic answer. **Choose the K that produces topics the team can actually name, not the one an information criterion prefers.**
+</Pitfall>
 
-- **K chosen badly.** Too few topics and themes get crammed together; too many and topics fragment into near-duplicates. There is no automatic answer; the right K is the one that produces topics the team can name.
-- **Junk topics shipped as themes.** Without the inspection step, topic models routinely include incoherent topics that get a label by default.
-- **Names overclaim.** Naming a topic "App issues" when the words are mostly "login" and "password" misleads downstream users. The name should reflect the words, not the team's preferred narrative.
-- **Re-fits without anchoring.** A topic structure that changes every quarter is hard to track over time. Either re-fit only on a deliberate cadence with a re-naming exercise, or use embedding-based clustering (§19.1) which can be more stable.
+<Pitfall title="Junk topics shipped as themes">
+Without the inspection step, topic models routinely include incoherent topics that get a label by default and then drive decisions. **Read the top words and example documents for every topic, and flag the ones you can't name rather than shipping them.**
+</Pitfall>
+
+<Pitfall title="Names that overclaim">
+Naming a topic "App issues" when the words are mostly "login" and "password" misleads everyone downstream. **Make the name reflect the words, not the team's preferred narrative.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The call">
 
-Topic models are the unsupervised counterpart of text classification. They discover themes; humans name them; dashboards use them to inform operating decisions. The strongest use is the trend chart — what is rising, what is falling, what is brand new.
-
-> *Discover with topic models. Name with humans. Decide with dashboards. Refit periodically.*
+Topic models are the unsupervised counterpart of text classification: they discover themes, humans name them, and dashboards use them to inform operating decisions. The strongest use is the *trend chart* — what is rising, what is falling, what is brand new. Discover with topic models, name with humans, decide with dashboards, and refit periodically.
 
 The next article closes the classical NLP chapter by mapping the gallery of cases where bag-of-words and topic models quietly fail — the bridge into embeddings and modern measurement in Chapter 19.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on topic models."
-  questions={[
-    {
-      prompt: <>A topic model returns the words "app, login, password, crash, update, screen". What is the best characterization of the next step?</>,
-      options: [
-        { label: <>The model has labelled this topic "App issues" automatically.</> },
-        { label: <>A human reviews the words and a sample of documents that loaded heavily on this topic, then assigns a name.</> },
-        { label: <>The model has failed and should be retrained.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Topic models produce word distributions. Names come from the analyst, after inspecting both the words and example documents.</>,
-    },
-    {
-      prompt: <>A topic share chart shows the "Mobile app issues" topic rising from 10% to 30% over 8 months. The right operational response is to:</>,
-      options: [
-        { label: <>Ignore the chart — topic shares sum to 1, so something else is just shrinking.</> },
-        { label: <>Investigate whether app reliability or app-related complaints are an actionable signal, paired with the supervised classification system from §18.4.</> },
-        { label: <>Increase K.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Topic shares do sum to 1, but a tripling of one topic's share is real and actionable. The next step is to triangulate with supervised classification and metadata.</>,
-    },
-    {
-      prompt: <>An organisation already has a stable, well-labelled set of ticket categories. What is the cleanest role for topic modelling going forward?</>,
-      options: [
-        { label: <>Replace the supervised classifier entirely.</> },
-        { label: <>Quarterly refit on the corpus to catch new themes that the supervised buckets don't yet cover.</> },
-        { label: <>Stop using topic models — they aren't needed.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Supervised classification dominates on known buckets; topic modelling is a useful drift detector for emerging themes. The two work together.</>,
-    },
-  ]}
-/>
+</Takeaway>

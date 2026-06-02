@@ -82,6 +82,7 @@ components/Book/            Editorial component library.
   BookShell.tsx, BookHome.tsx, ChapterTocDrawer.tsx
   Figure.tsx, DropCap.tsx, Callout.tsx, KeyNumber.tsx
   SideNote.tsx, PullQuote.tsx, DataTable.tsx, QuizBlock.tsx
+  Pitfall.tsx, Takeaway.tsx
   Equation.tsx, M.tsx, SmallMultiples.tsx, TabSet.tsx, ...
 
 components/Book/part0/      Decision ladder, artefact family tree,
@@ -134,10 +135,15 @@ across the book:
 - **Wrap every chart in `<div className="not-prose">`** inside the
   `<Figure>` so prose styling doesn't leak into the chart.
 
-Each article ends with:
+Each article ends with a **`<Takeaway>`** block stating the managerial
+rule (the label varies per article so the close doesn't feel stamped).
+Genuine failure modes are flagged inline with **`<Pitfall>`** blocks — up
+to three per article, each naming the failure and bolding the fix; filler
+"what can go wrong" sections were removed rather than converted.
 
-- A **Managerial Takeaway** block stating the rule in one sentence.
-- A **`<QuizBlock>`** with three short concept-check questions.
+Concept-check quizzes are **consolidated to one `<QuizBlock>` per broad
+chapter** (three questions), living in that chapter's designated article —
+not one quiz per article.
 
 ## Authoring a new article
 

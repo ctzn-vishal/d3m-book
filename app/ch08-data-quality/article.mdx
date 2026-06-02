@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
 import dirtyRaw from './data/dirty-transactions.json';
 import checksRaw from './data/quality-checks.json';
@@ -82,18 +83,20 @@ The same pattern repeats throughout the table. T04's impossible date (month 13) 
 
 Figure 2 is meant to be a living document, not a one-time audit. The nine checks here are the most common at a retail business of Bean & Basket's shape; a financial services firm or a software company would have its own variants. What stays constant is the structure: every check has a name, a severity that reflects *business* impact (not row count), a description of what the bad rows actually break, and a response. A team that runs Figure 2 weekly and reviews any failed check in the Monday meeting will catch every problem in Figure 1 within twenty-four hours of it arriving in the data.
 
-## What can go wrong
+<Pitfall title="Silent imputation">
+Filling missing values with a default — zero for missing revenue, "Unknown" for missing customer — feels tidy and lets downstream code run without error, but it erases the signal that the upstream process is broken. A missing customer ID is probably a guest checkout (worth knowing) or a POS sync failure (worth fixing); imputing "Unknown" hides both. **Keep nullability visible: let missing be missing, and make downstream metrics filter explicitly or aggregate around the nulls.**
+</Pitfall>
 
-<Callout variant="caveat" title="Two responses that look responsible and are actively harmful">
+<Pitfall title="Survivorship bias from hard deletes">
+When a churned customer is removed from the master file, every retention metric afterward is overstated — the denominator shrinks to "customers who stayed." The same applies to closed stores, discontinued products, and retired campaigns. **Keep the master file append-only: a churned customer gets a `status = 'churned'` flag and a `churned_date`, never a hard delete, because any "rate of survival" needs the people who didn't survive still in the file.**
+</Pitfall>
 
-**Silent imputation.** Filling in missing values with a default — zero for missing revenue, "Unknown" for missing customer — feels tidy and makes downstream code work without error. It is also a way of erasing the signal that something is wrong with the upstream process. The missing customer ID is probably a guest checkout (a fact worth knowing) or a POS sync failure (a fact worth fixing); imputing it as "Unknown" hides both. The defense is to keep nullability visible: let missing be missing, and let downstream metrics either filter explicitly or aggregate around the nulls.
+<Pitfall title="Mistaking outliers for errors">
+A single $9,500 order looks like an obvious typo but is a catering order for a corporate client. The naive "remove outliers beyond three standard deviations" rule deletes it, the customer vanishes from lifetime-value analyses, and the high-value B2B segment becomes invisible. **Investigate outliers, do not delete them — most of the time they are exactly the rows worth paying attention to.**
+</Pitfall>
 
-**Survivorship bias.** When a customer churns and is removed from the master file, every retention metric computed afterwards is overstated — the denominator shrinks to "customers who stayed." The same logic applies to stores that closed, products that were discontinued, or campaigns that were retired. The customer master file should be append-only: a churned customer gets a `status = 'churned'` flag and a `churned_date`, never a hard delete. Anything that involves "rate of survival" requires the people who didn't survive to still be in the file.
+<Takeaway label="For the manager">
 
-</Callout>
+Before asking *why is this number weird?*, ask *what does the bad row actually represent?* Data quality is the layer where the technical artifacts of the data pipeline collide with the messy realities of the business — returns, corporate orders, system migrations, deprecated products, churned customers, integration failures. The analyst's tools — flagging, anti-joins, severity-tiered triage — are means to an end; *the end is to keep the business meaning of each row legible*. The cheapest analytics governance a team can run is the weekly Monday triage on Figure 2: any check that flips from green to red gets a name, an owner, and a date. A team that does this stops producing dashboards whose numbers move for unexplained reasons. A team that doesn't will spend most of its third-year analyst-time explaining why the numbers don't agree across reports.
 
-A third trap worth flagging: **mistaking outliers for errors**. A single $9,500 order at Bean & Basket looks like an obvious typo. It is not — it is a catering order for a corporate client. The naive "remove outliers beyond three standard deviations" rule deletes it; the customer never appears in lifetime-value analyses; the high-value B2B segment becomes invisible at the metric level. The rule is to investigate outliers, not delete them. Most of the time, they are exactly the rows you should be paying attention to.
-
-## Managerial takeaway
-
-Before asking *why is this number weird?*, ask *what does the bad row actually represent?* Data quality is the layer where the technical artifacts of the data pipeline collide with the messy realities of the business — returns, corporate orders, system migrations, deprecated products, churned customers, integration failures. The analyst's tools — flagging, anti-joins, severity-tiered triage — are means to an end; the end is to keep the business meaning of each row legible. The cheapest analytics governance a team can run is the weekly Monday triage on Figure 2: any check that flips from green to red gets a name, an owner, and a date. A team that does this stops producing dashboards whose numbers move for unexplained reasons. A team that doesn't will spend most of its third-year analyst-time explaining why the numbers don't agree across reports.
+</Takeaway>

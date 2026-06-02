@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { ArtefactCatalog } from '@/components/Book/part6/Part6Diagrams';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
@@ -115,22 +116,29 @@ These three practices — versioning, role-based ownership, explicit deprecation
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Catalogue rot">
+The index is built once, never updated, and within six months it's missing half the active artefacts. **Make a catalog entry a precondition for ship, and remove artefacts the moment they're deprecated.**
+</Pitfall>
 
-- **Catalogue rot.** The index is built once, never updated, and within six months it's missing half the active artefacts. The fix is making catalog entries a precondition for ship (and removing artefacts when they're deprecated).
-- **Owner-of-record vs. owner-of-fact mismatch.** The catalog lists Priya as owner; Priya rotated to a new team three months ago and nobody updated the index. The fix is role-based ownership and a quarterly catalog audit.
-- **Versioning by laptop.** Three slightly different versions of "the retention model" sit on three laptops. The fix is a single canonical location for every artefact, with clear pointers from the catalog.
-- **Case packs that drift from chapters.** A case pack's data is updated; the chapter that references it still cites the older numbers. The fix is anchoring chapters to *case-pack version IDs* rather than current values.
+<Pitfall title="Owner-of-record vs. owner-of-fact">
+The catalog lists Priya as owner; Priya rotated to a new team three months ago and nobody updated the index. **Tie ownership to a role, not a person, and run a quarterly catalog audit.**
+</Pitfall>
+
+<Pitfall title="Versioning by laptop">
+Three slightly different versions of "the retention model" sit on three laptops. **Establish a single canonical location for every artefact, with clear pointers from the catalog.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The operating posture">
 
 Every analytics artefact is a candidate product. The work of giving it a name, an owner, a version, a contract, and a refresh cadence is what turns it from a deliverable into infrastructure. The artefact catalog is the firm's running ledger of what's in production and who is responsible.
 
-> *Name it. Own it. Version it. Contract it. Refresh it on a cadence. Deprecate it deliberately.*
+*Name it. Own it. Version it. Contract it. Refresh it on a cadence. Deprecate it deliberately.*
 
 The next article — §24.1 — focuses on the artefact that integrates all of the others: the decision memo.
+
+</Takeaway>
 
 <QuizBlock
   title="Concept check"

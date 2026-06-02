@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import mapping from './data/excel-sql-mapping.json';
@@ -93,20 +94,20 @@ Look at Figure 2 in any order. The Excel description and the SQL query describe 
 
 The reason this matters for executive practice is not that managers need to write SQL themselves. It is that the analytics team will write SQL, and a manager who reads the four-tab equivalence in Figure 2 can read the team's SQL well enough to ask *the right question*: "Is the filter date correct?", "Are you grouping at the right grain?", "Why is `ORDER BY revenue DESC` showing this product on top — did we exclude returns?" Those questions require no syntax knowledge. They require knowing which operation each clause names.
 
-## What can go wrong
+<Pitfall title="Filtering groups with WHERE">
+`WHERE` filters the *raw* rows; `HAVING` filters the *groups* produced by `GROUP BY`. "Stores with more than $1M revenue" is a filter on groups, so it belongs in `HAVING` — put it in `WHERE` and the query either errors or quietly ignores the threshold. **When reviewing a query, ask whether each filter applies to a single transaction or to a group of transactions, and place it accordingly.**
+</Pitfall>
 
-<Callout variant="caveat" title="Three quiet SQL mistakes a manager should catch">
+<Pitfall title="Grouping at the wrong grain">
+Chapter 1's grain question reappears: grouping by `city` answers "revenue by city," while grouping by `city, product_category` answers a different question, and the resulting rows are not interchangeable. The error is silent — the query runs cleanly and the chart is simply wrong. **Confirm the `GROUP BY` columns match the grain the question actually asks for before trusting the output.**
+</Pitfall>
 
-**Filter after group, instead of before.** `WHERE` filters the *raw* rows; `HAVING` filters the *groups* produced by `GROUP BY`. Filtering to "stores with more than $1M revenue" goes in `HAVING`, not `WHERE`. Mixing them up either drops too many rows or quietly ignores the filter. The defense: when reviewing a query, ask whether each filter applies to a transaction or to a group of transactions.
+<Pitfall title="Trusting that an Excel pivot scales">
+A spreadsheet with two thousand rows is comfortable; one with two million is a crash report, and most operational data crosses that threshold sooner than a manager expects. A pivot that is painfully slow or refuses to refresh is a signal that the question has outgrown the tool, not that the analyst needs a faster laptop. **Move the operation to SQL or a pandas data frame — it is the same operation, run somewhere that can hold the data.**
+</Pitfall>
 
-**Group by the wrong grain.** Chapter 1's grain question reappears here. Grouping by `city` answers "revenue by city"; grouping by `city, product_category` answers a different question, and the rows in the result are not interchangeable. The error is silent — the query runs cleanly — and the resulting chart is wrong.
+<Takeaway label="Net-net">
 
-**Forgetting that pivot tables hide the calculation.** Excel's UI invites a manager to drag fields around until the table "looks right." SQL forces the calculation to be named. That visibility is a feature, not a friction: the bugs that hide inside an Excel pivot ("why does this column show counts instead of sums?") cannot hide inside a SQL `SUM(...)`.
+The point of SQL — or `dplyr`, or `pandas` — is not that it is faster, harder, or more rigorous than Excel. It is that *the steps are written down*. A pivot table built by hand cannot easily be audited, repeated, or modified six months later by someone else; a SQL query can. As soon as a question becomes recurring, or its answer matters enough to be defended, the operations behind it should leave the spreadsheet and become a query. The translation is mechanical. Figure 1 is the dictionary. Figure 2 is the example. Every Excel action a manager already knows has an equivalent in a language that can be saved, versioned, and re-run without redoing the dragging.
 
-</Callout>
-
-A subtler trap is **trusting that an Excel pivot scales**. A spreadsheet with two thousand rows is comfortable; a spreadsheet with two million rows is a crash report. Most operational data crosses that threshold sooner than a manager expects. When a pivot table becomes painfully slow, or refuses to refresh, that is a signal that the question has outgrown the tool, not that the analyst needs a faster laptop. Moving the operation to SQL or to a `pandas` data frame is not an escalation — it is the same operation, run somewhere that can hold the data.
-
-## Managerial takeaway
-
-The point of SQL — or `dplyr`, or `pandas` — is not that it is faster, harder, or more rigorous than Excel. It is that the *steps are written down*. A pivot table built by hand cannot easily be audited, repeated, or modified six months later by someone else; a SQL query can. As soon as a question becomes recurring, or its answer matters enough to be defended, the operations behind it should leave the spreadsheet and become a query. The translation is mechanical. Figure 1 is the dictionary. Figure 2 is the example. Every Excel action a manager already knows has an equivalent in a language that can be saved, versioned, and re-run without redoing the dragging.
+</Takeaway>

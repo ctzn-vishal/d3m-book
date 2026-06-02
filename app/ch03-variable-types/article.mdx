@@ -1,5 +1,6 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
 import dictionary from './data/variable-dictionary.json';
 
@@ -31,22 +32,20 @@ The trap is that a column's storage type — what the database engine sees — i
 
 Figure 1 is the single most useful artifact a new analytics team can produce in its first week. The act of writing it down forces every column's type to be decided, named, and shared. Once the dictionary exists, downstream errors are caught at the table-design stage instead of at the slide-review stage. Notice how many of the entries warn against arithmetic on things that look numeric: IDs, ZIPs, ratings, and booleans all live in this looks-like-a-number-but-isn't trap. The trap is so reliable that you can find a version of it in almost every business intelligence stack ever shipped.
 
-## What can go wrong
+<Pitfall title="Averaging what only looks like a number">
+IDs, ZIP codes, and ratings are all stored as integers and will all average without complaint — and the average is meaningless every time. A mean customer ID is nonsense; a mean ZIP is nonsense; even a 4.2-star average misleads, because the gap between a 4 and a 5 need not equal the gap between a 1 and a 2. **Treat IDs and geo codes as keys to group, count, and map — never to average — and report ratings as a top-2-box share or a median, not a mean.**
+</Pitfall>
 
-<Callout variant="caveat" title="The four type confusions every team makes once">
+<Pitfall title="Dates stored as strings">
+A string sort of dates puts "2024-13-01" before "2024-2-01," because string comparison reads character by character rather than chronologically. **Convert to a proper date type at ingestion, and the bug never appears.**
+</Pitfall>
 
-**Averaging an ID.** The "mean customer ID" or "mean transaction ID" appears in dashboards more often than it should. It is always meaningless. The fix is to treat IDs as join keys and distinct-count tokens, never as numbers.
+<Pitfall title="Arithmetic on ordered categories">
+With sizes encoded Small / Medium / Large, rank-based operations make sense (the median order, which sizes are over-represented in returns) but arithmetic does not — there is no "average size" because the intervals are not equal. Worse, if someone recodes sizes as `1`, `2`, `3` "for convenience," the spreadsheet will happily return an average of `2.4` that means nothing but looks like it does. **Keep ordered categories as labels, not numbers, so the arithmetic that fails silently is never offered.**
+</Pitfall>
 
-**Averaging a rating.** A 4.2-star average sounds informative, but the gap between a 4 and a 5 is not necessarily the same size, in customer experience, as the gap between a 1 and a 2. Report the *share* of 4-or-5 ratings (top-2-box) or the median, not the mean.
+<Takeaway label="What this buys you">
 
-**Averaging a ZIP.** Geographic codes look numeric but are nominal. The defense is the same as for IDs: they sort, they group, they map — they do not average.
+Before asking *what should we compute?*, ask *what is this column?* The variable dictionary in Figure 1 is the *cheapest insurance an analytics team can buy*: a one-page artifact, written once at the start of a project, that prevents most of the type confusions downstream reports will surface. When a new column arrives — from a vendor, from an API, from a freshly engineered feature — the dictionary entry is the first thing to write, before any chart, model, or memo. The discipline is small. The errors it prevents are not.
 
-**Treating a date as a string.** A string sort of dates puts "2024-13-01" before "2024-2-01," because string comparison reads character by character. Convert to a proper date type at ingestion, and the bug never appears.
-
-</Callout>
-
-A subtler version of the same family of errors involves **ordered categories**. If product size is encoded as Small / Medium / Large, the operations that make sense are rank-based: which size is the median order, which sizes are over-represented in returns. The operations that fail silently are the arithmetic ones — there is no such thing as "the average size," because the intervals are not equal. Worse, if someone has helpfully recoded sizes as `1`, `2`, `3` for "convenience," the spreadsheet will happily compute an average of `2.4`. The number means nothing, but it looks like it does, which is the worst possible failure mode.
-
-## Managerial takeaway
-
-Before asking *what should we compute?*, ask *what is this column?* The variable dictionary in Figure 1 is the cheapest insurance an analytics team can buy: a one-page artifact, written once at the start of a project, that prevents most of the type confusions that downstream reports will surface. When a new column arrives in a table — from a vendor, from an API, from a freshly engineered feature — the dictionary entry is the first thing to write, before any chart, model, or memo. The discipline is small. The errors it prevents are not.
+</Takeaway>

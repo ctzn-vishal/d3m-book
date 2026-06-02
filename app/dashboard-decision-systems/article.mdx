@@ -1,6 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { SoupDashboardCritique } from '@/components/Book/part2/SoupVisualEvidence';
 import critiqueRaw from './data/soup-dashboard-critique.json';
 
@@ -44,14 +46,20 @@ This distinction keeps the dashboard honest. A monitor panel should not pretend 
   The soup dashboard can show countercyclical pricing. It cannot prove the causal effect of price on volume. Its best decision is to recommend the next credible pricing test or quasi-experimental design.
 </Callout>
 
-## What can go wrong
+<Pitfall title="The attractive dead end">
+The dashboard makes the pattern obvious, the viewer does not know what to do next, and the page gets praise and then disappears. **End the page with the next decision or test, not with the pattern itself.**
+</Pitfall>
 
-The first failure is the attractive dead end. The dashboard makes the pattern obvious, but the viewer does not know what to do next. The page gets praise and then disappears.
+<Pitfall title="The overclaiming caption">
+A chart shows volume falling as price rises and the caption says price caused the decline. **That sentence belongs only after the identification work has been done** — until then, describe the association and name what it cannot prove.
+</Pitfall>
 
-The second failure is the overclaiming caption. A chart shows volume falling as price rises, and the caption says price caused the decline. That sentence belongs only after the identification work has been done.
+<Pitfall title="Missing operational context">
+Store coverage, region definitions, winter definitions, product definitions, and map approximations all change interpretation. A dashboard need not display every caveat at once, **but it must put the relevant caveat next to the relevant chart.**
+</Pitfall>
 
-The third failure is missing operational context. Store coverage, region definitions, winter definitions, product definitions, and map approximations all affect interpretation. A dashboard does not need to display every caveat at once, but it must put the relevant caveat near the relevant chart.
+<Takeaway label="What to ship">
 
-## Managerial takeaway
+A dashboard should have an ending. In the soup case, the ending is not "Progresso should cut price." The ending is sharper: *"Progresso appears to price countercyclically; the pattern varies by region; before changing policy, estimate elasticity with a design that separates price from seasonality."* That is what a visual evidence dashboard should do: make the next decision question unavoidable.
 
-A dashboard should have an ending. In the soup case, the ending is not "Progresso should cut price." The ending is sharper: "Progresso appears to price countercyclically; the pattern varies by region; before changing policy, estimate elasticity with a design that separates price from seasonality." That is what a visual evidence dashboard should do: make the next decision question unavoidable.
+</Takeaway>

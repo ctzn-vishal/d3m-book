@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { StructuredOutputFlow } from '@/components/Book/part5/RagVisionAgentDiagrams';
 
 <DropCap>
@@ -178,58 +179,24 @@ This is the §15.2 threshold–profit logic applied to extraction. The right con
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Schema too loose">
+A field typed as `category: string` lets the model invent "miscellaneous", "weird-stuff", and a dozen other values across runs. **Use enums for any field with a known set of valid values, so non-conforming outputs fail validation automatically.**
+</Pitfall>
 
-- **Schema too loose.** "category: string" lets the model invent values. Use enums.
-- **Schema too rigid.** Forcing a value when the document doesn't contain one makes the model hallucinate. Make fields nullable.
-- **No validation step.** The schema-conforming output still contains domain-rule violations. Validate before propagating.
-- **Confidence inflation.** Modern LLMs are often over-confident on their own confidence scores. Calibrate against a held-out human-reviewed set before trusting the threshold.
-- **Prompt injection in the input.** A user-supplied input contains "extra fields" that the model adds to the JSON. Defend by treating user inputs as data, not instructions, and rejecting unexpected fields.
-- **Schema drift.** Downstream systems evolve; the schema needs to evolve with them. Version the schema; tie the model version to the schema version.
+<Pitfall title="Schema too rigid">
+Forcing a value when the document doesn't contain one makes the model fabricate a plausible-looking answer. **Make fields nullable and give the model an explicit channel to say "not present."**
+</Pitfall>
+
+<Pitfall title="No validation step">
+A schema-conforming output can still violate domain rules — line items that don't sum, a vendor that doesn't exist. **Validate against domain rules before propagating, because schema conformance checks types, not truth.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The bottom line">
 
-Structured outputs are the difference between an LLM demo and a production workflow. The schema is the contract; validation is the enforcement; confidence is the routing signal that decides what a human reviews.
-
-> *Design the schema first. Force the model to fill it. Validate beyond the schema. Threshold confidence by business cost. Send the rest to a human.*
+Structured outputs are the difference between an LLM demo and a production workflow: the *schema is the contract*, validation is the enforcement, and confidence is the routing signal that decides what a human reviews. Design the schema first, force the model to fill it, validate beyond the schema, threshold confidence by business cost, and send the rest to a human.
 
 The next article — the last of Chapter 21 — wraps everything together. Once a model can use tools (RAG retrieval, structured outputs, calculators, APIs) it becomes an agent. The article is about how to design that loop so it survives contact with production.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on structured outputs."
-  questions={[
-    {
-      prompt: <>A schema specifies <code>category: string</code> with no enum constraint. The model returns "miscellaneous", "weird-stuff", and "other_stuff" across runs. The cleanest fix is:</>,
-      options: [
-        { label: <>Tell the model to be more consistent.</> },
-        { label: <>Replace the string with an enum: <code>"billing" | "delivery" | "app" | "quality" | "other"</code>.</> },
-        { label: <>Use a bigger model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Schema constraints do the enforcement automatically; relying on prompt instructions alone is much less reliable.</>,
-    },
-    {
-      prompt: <>An extraction system returns "invoice_total: 12000" when the document showed "$12,000.00". The most cost-effective safeguard is:</>,
-      options: [
-        { label: <>A bigger model.</> },
-        { label: <>A domain-rule validation step: recompute subtotal + tax = total and flag mismatches for human review.</> },
-        { label: <>Trust the model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Schema validation catches type errors; domain validation catches semantic errors. Both are needed.</>,
-    },
-    {
-      prompt: <>A schema has no slot for "I don't know". The model is being asked to extract a renewal date that isn't always present in contracts. Most likely consequence?</>,
-      options: [
-        { label: <>The model leaves the field empty.</> },
-        { label: <>The model fabricates plausible-looking dates when they aren't in the document, because the schema gives it no way to refuse.</> },
-        { label: <>The model errors out.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Without a refusal slot, the model invents. The fix is explicit nullability or a per-field confidence/refusal channel.</>,
-    },
-  ]}
-/>
+</Takeaway>

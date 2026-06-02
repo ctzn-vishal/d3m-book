@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TextPipeline } from '@/components/Book/part5/TextDiagrams';
 
 <DropCap>
@@ -141,57 +142,24 @@ A few patterns:
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Wrong document boundary">
+Analyzing whole reviews when the decision lives at the aspect level (food vs. service vs. price) — or vice versa — lets the aggregation collapse the signal. **Set the document boundary at the level where the decision is actually made.**
+</Pitfall>
 
-Three failures recur at this stage of the pipeline:
+<Pitfall title="Vocabulary drift">
+The training corpus uses "iced latte"; the production corpus uses "ice latte." The model never sees the new spelling and silently misses it. **Monitor the live vocabulary against the training vocabulary and refit when the gap grows.**
+</Pitfall>
 
-1.  **Wrong document boundary.** Analyzing whole reviews when the decision lives at the aspect level (food vs. service vs. price), or vice versa. The aggregation collapses signal.
-2.  **Vocabulary drift.** The training corpus uses "iced latte"; the production corpus uses "ice latte." The model never sees the new spelling and silently misses it.
-3.  **Treating language as universal.** A model trained on English app reviews scored on Spanish reviews returns confident nonsense. Either filter to one language, or use a multilingual model — and audit the result.
+<Pitfall title="Treating language as universal">
+A model trained on English app reviews and scored on Spanish reviews returns confident nonsense. **Either filter to one language or use a multilingual model — and audit the result either way.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The operating posture">
 
-Most of the rigour in text analysis lives in choices that look small. The document boundary, the vocabulary, the stop-word list, the n-gram window — these are the levers that decide what the rest of the pipeline can see.
-
-> *Name the document. Name the corpus. Name the metadata. Then choose the method.*
+Most of the rigour in text analysis lives in choices that look small. The document boundary, the vocabulary, the stop-word list, the n-gram window — these are the levers that decide *what the rest of the pipeline can see*. Name the document, name the corpus, name the metadata, then choose the method.
 
 The next article begins the work: cleaning text into tokens, building TF-IDF, and reading the results without overclaiming.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on text vocabulary."
-  questions={[
-    {
-      prompt: <>A team wants to know which aspects of the coffee experience drive complaints — food, service, app, price. Which document boundary is most natural?</>,
-      options: [
-        { label: <>One whole review per document.</> },
-        { label: <>One sentence per document, so each sentence can be tagged with the aspect it discusses.</> },
-        { label: <>One customer per document.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Aspect-level questions need sentence-level (or clause-level) units. Whole-review units mix aspects and collapse the signal the team is trying to measure.</>,
-    },
-    {
-      prompt: <>Which of these is <em>metadata</em>, not text?</>,
-      options: [
-        { label: <>The text of a customer review.</> },
-        { label: <>The star rating attached to the review.</> },
-        { label: <>The n-grams extracted from the review.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Metadata are the structured fields that accompany the text. Star ratings are the most common metadata for reviews; they often double as free labels for supervised models.</>,
-    },
-    {
-      prompt: <>A team treats "cold brew" as two separate tokens ("cold", "brew"). What signal is at risk?</>,
-      options: [
-        { label: <>None — tokens are tokens.</> },
-        { label: <>The bigram "cold brew" carries product-name meaning; splitting it leaks "cold" into the negative-sentiment vocabulary even when reviews are positive.</> },
-        { label: <>The document boundary changes.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Domain-specific bigrams are routinely the difference between a model that "gets" the category and one that misreads it. The fix is to either keep n-grams or use a representation (§19) that handles context.</>,
-    },
-  ]}
-/>
+</Takeaway>

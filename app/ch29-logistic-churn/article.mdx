@@ -1,10 +1,10 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { ProbabilityScoreToAction } from '@/components/Book/part4/PredictionDiagrams';
 
 <DropCap>
@@ -98,59 +98,28 @@ Where it falls short: when interactions and non-linearities dominate, a linear-o
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Coefficients read as causal effects">
+A logistic coefficient's sign can disagree with the causal effect estimated under Part III's identification logic. **Use coefficients for inspection and debugging; use Part III for any claim about what an intervention would change.**
+</Pitfall>
 
-- **Treating coefficients as causal effects.** They are not. The same coefficient sign can disagree with the causal effect estimated under Part III's identification logic. Use coefficients for inspection and debugging; use Part III for action.
-- **Forgetting class imbalance.** If 3% of customers churn, a model that always predicts "stay" is 97% accurate and useless. Logistic regression handles imbalance gracefully through probabilities, but the evaluation must look at PR-AUC or lift, not raw accuracy.
-- **Reading "feature importance" off the absolute values of coefficients.** Coefficients are on the scale of each feature. A coefficient of 0.001 on a feature ranging 0–10,000 may matter much more than a coefficient of 2 on a feature ranging 0–1. Always standardize, or convert to odds ratios on a comparable scale, before ranking by importance.
+<Pitfall title="Class imbalance hidden by accuracy">
+If 3% of customers churn, a model that always predicts "stay" is 97% accurate and useless. Logistic regression handles imbalance gracefully through probabilities, but **grade it on PR-AUC or lift, not raw accuracy.**
+</Pitfall>
+
+<Pitfall title="Importance off raw coefficient size">
+Coefficients live on the scale of each feature, so a 0.001 coefficient on a 0–10,000 feature can matter more than a 2 on a 0–1 feature. **Standardize, or convert to odds ratios on a comparable scale, before ranking features by importance.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="For the manager">
 
-Logistic regression is the workhorse of customer scoring. It produces a probability, not a verdict; it ranks reliably; it explains itself to anyone willing to read odds ratios. The right way for a manager to engage with a logistic model is to ask three questions:
+Logistic regression is the workhorse of customer scoring. It produces a probability, not a verdict; it ranks reliably; it explains itself to anyone willing to read odds ratios. The right way to engage with a logistic model is to ask three questions:
 
-> *How separated are the score distributions on held-out data?*
->
-> *Which features are doing the work, and do those features tell a story I recognize?*
->
-> *At what threshold do we act, and what is the cost of being wrong on either side?*
+- *How separated are the score distributions on held-out data?*
+- *Which features are doing the work, and do those features tell a story I recognize?*
+- *At what threshold do we act, and what is the cost of being wrong on either side?*
 
 The next article gives the language for that third question.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on reading a logistic model."
-  questions={[
-    {
-      prompt: <>A logistic regression assigns a churn probability of 0.82 to customer A and 0.19 to customer B. What is the most defensible interpretation?</>,
-      options: [
-        { label: <>Customer A will churn; customer B will not.</> },
-        { label: <>A's churn odds are roughly <M>{String.raw`82/18`}</M> and B's are roughly <M>{String.raw`19/81`}</M>; the model ranks A as more likely to churn.</> },
-        { label: <>A will spend 82% more than B over the next year.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The model's output is a probability under its training distribution. It supports a ranking, not a categorical claim.</>,
-    },
-    {
-      prompt: <>A coefficient on <code>tickets_last_30d</code> in a logistic churn model is 0.4. Which statement is justified?</>,
-      options: [
-        { label: <>Reducing ticket counts by one will lower churn odds by 40%.</> },
-        { label: <>Customers with one more ticket in the trailing 30 days have churn odds about 1.49× as high as otherwise-comparable customers, under the model's assumptions.</> },
-        { label: <>Tickets cause churn.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The coefficient is a predictive marginal in log-odds. Causal claims require the identification language of Part III; multiplying odds by <M>{String.raw`e^{0.4}`}</M> is the correct probabilistic statement.</>,
-    },
-    {
-      prompt: <>A held-out plot shows the churner and non-churner score distributions almost completely overlapping. What is the right next step?</>,
-      options: [
-        { label: <>Lower the threshold to capture more churners.</> },
-        { label: <>Improve features or modelling — the score has not separated the classes, and no threshold will fix that.</> },
-        { label: <>Switch immediately to an ensemble model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Threshold choice is downstream of separation. If there is no separation, the bottleneck is feature design or task definition, not algorithm.</>,
-    },
-  ]}
-/>
+</Takeaway>

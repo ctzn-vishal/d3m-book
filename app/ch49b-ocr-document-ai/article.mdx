@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DocumentAIFlow } from '@/components/Book/part5/RagVisionAgentDiagrams';
 
 <DropCap>
@@ -160,57 +161,24 @@ The validation step (5) is where domain knowledge pays. The LLM may extract "tot
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Hallucinated fields">
+The model invents a vendor name or a date that isn't on the document. **Combine schema-strict prompting with arithmetic validation — line items summing to the total — to catch most fabrications before they post.**
+</Pitfall>
 
-- **Hallucinated fields.** The model invents a vendor name or a date that isn't on the document. Schema-strict prompting + arithmetic validation catches most cases.
-- **Confidence inflation.** Modern LLMs are often over-confident. Calibration on a held-out set of human-reviewed documents is essential.
-- **Layout drift.** A vendor changes their invoice template. The extraction silently degrades for that vendor. Per-vendor monitoring is worth the engineering cost.
-- **Privacy.** Documents often contain PII. Redaction policies, encryption-at-rest, and processor-vs-controller agreements matter — particularly for healthcare and financial documents.
-- **Audit trail.** A regulator may ask why a payment of $12,000 was authorized. Without per-extraction logs (model version, confidence, prompt, retrieved chunks if RAG was involved), the audit answer is "we don't know."
+<Pitfall title="Confidence inflation">
+Modern LLMs are often over-confident, so a raw confidence score is not a calibrated probability. **Calibrate confidence against a held-out set of human-reviewed documents before using it to set the auto-process threshold.**
+</Pitfall>
+
+<Pitfall title="Layout drift">
+A vendor changes their invoice template and extraction silently degrades for that vendor alone. **Monitor extraction quality per vendor, not just in aggregate, so a single template change doesn't hide in the average.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The call">
 
-Document AI is a mature commercial pattern. The technology — OCR plus layout plus structured extraction — is commodity at this point. The differentiator is workflow design: where the confidence threshold sits, what fields are validated automatically, who reviews the rest, and how the reviewer's decisions feed back into the model.
-
-> *Define the schema before choosing the vendor. Set the threshold by business cost. Validate against domain rules. Route ambiguity to a human. Log everything for audit.*
+Document AI is a mature commercial pattern; the technology — OCR plus layout plus structured extraction — is commodity at this point. The differentiator is *workflow design*: where the confidence threshold sits, what fields are validated automatically, who reviews the rest, and how the reviewer's decisions feed back into the model. Define the schema before choosing the vendor, set the threshold by business cost, validate against domain rules, route ambiguity to a human, and log everything for audit.
 
 The next article — multimodal AI — generalizes the pattern. Documents are one example of inputs that combine text and image. Many other workflows have the same combinatorial structure.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on document AI."
-  questions={[
-    {
-      prompt: <>A team wants to extract invoice line items where the description, quantity, and unit price are in adjacent columns. A pure OCR system that just reads top-to-bottom is likely to:</>,
-      options: [
-        { label: <>Work correctly.</> },
-        { label: <>Mix columns and produce nonsensical line items, because it doesn't preserve the table layout — layout-aware document AI is the standard fix.</> },
-        { label: <>Refuse to process the document.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The whole point of modern document AI is layout awareness. OCR alone is necessary but not sufficient for any document with tabular or multi-column structure.</>,
-    },
-    {
-      prompt: <>The single most important tunable parameter in a production document AI pipeline is:</>,
-      options: [
-        { label: <>The model size.</> },
-        { label: <>The confidence threshold above which extractions auto-process and below which they go to a human reviewer.</> },
-        { label: <>The OCR engine choice.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The threshold is where business cost meets model accuracy. Setting it is a decision; monitoring it is operations.</>,
-    },
-    {
-      prompt: <>A document extraction returns "total_due: 12000" for an invoice that actually shows "$12,000.00". A simple safeguard against unit-of-account errors is:</>,
-      options: [
-        { label: <>Trust the model.</> },
-        { label: <>Validate by recomputing subtotal + tax = total, and flag mismatches for human review.</> },
-        { label: <>Always send to a human.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Domain-rule validation catches a class of extraction errors no general-purpose LLM-eval suite will find. It is the cheapest, highest-leverage piece of document-AI engineering.</>,
-    },
-  ]}
-/>
+</Takeaway>

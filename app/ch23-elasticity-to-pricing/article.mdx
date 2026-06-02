@@ -1,10 +1,11 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
 import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { OptimalMarkupDiagram } from '@/components/Book/part3/ConceptDiagrams';
 import { PricingOptimizer } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -125,8 +126,28 @@ The formula gives you a *candidate* price to test, not a price to set globally. 
 
 <QuizBlock
   title="Concept check"
-  intro="Four conceptual questions on the optimal pricing rule. Click to reveal."
+  intro="Three questions spanning own-price elasticity, the sign of a cross-price coefficient, and the optimal markup rule."
   questions={[
+    {
+      prompt: <>The log-log demand model <M>{String.raw`\ln Q = \beta_0 + \beta_1 \ln P + \cdots`}</M> is preferred over a linear model for pricing because…</>,
+      options: [
+        { label: <>It produces tighter standard errors than the linear model.</> },
+        { label: <>It implies a <em>constant</em> elasticity: <M>{String.raw`\beta_1`}</M> is the percentage response of volume to a percentage change in price, the same at every price level inside the observed range.</> },
+        { label: <>It guarantees the coefficient will be negative, eliminating the need for sign checks.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The mathematical identity <M>{String.raw`d\ln Q/d\ln P = (dQ/Q)/(dP/P) = \epsilon`}</M> makes the log-log slope <em>exactly</em> the elasticity. In linear demand, elasticity changes at every point on the curve and there is no single transportable number to plug into a pricing formula.</>,
+    },
+    {
+      prompt: <>The estimated cross-price elasticity of pastry sales with respect to coffee price is <M>{String.raw`-0.35`}</M>. The strategic interpretation is…</>,
+      options: [
+        { label: <>Pastries and coffee are substitutes; promoting them together cannibalizes the basket.</> },
+        { label: <>Pastries and coffee are complements: raising coffee price reduces pastry volume. Promoting coffee can be a way to pull traffic that drives high-margin pastry attachment.</> },
+        { label: <>The two products are independent; pricing should be set per SKU.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A negative cross-price elasticity is the signature of complements. Raising one product's price reduces the other's volume — and the converse holds: lowering the traffic-driver's price can lift attached high-margin items. This is why grocery stores discount staples and earn margin on the rest of the basket.</>,
+    },
     {
       prompt: <>The Lerner index says the profit-maximizing markup over marginal cost is…</>,
       options: [
@@ -136,36 +157,6 @@ The formula gives you a *candidate* price to test, not a price to set globally. 
       ],
       correctIndex: 1,
       explanation: <>The first-order condition for profit maximization, after rearranging, gives <M>{String.raw`(P-MC)/P = -1/\epsilon`}</M>. The optimal markup over MC as a fraction of price is exactly the negative inverse of the (negative) elasticity, which is positive in the elastic zone. The formula breaks in the inelastic zone, which is informative — a firm should never be there.</>,
-    },
-    {
-      prompt: <>Marginal cost is $1.00. An unbiased elasticity estimate is <M>{String.raw`-2.23`}</M>. The optimal price implied by the formula is…</>,
-      options: [
-        { label: <>$1.45 — the current observed price.</> },
-        { label: <>$1.82 — calculated as <M>{String.raw`P^* = 1.00 / (1 + 1/(-2.23)) \approx 1.82`}</M>.</> },
-        { label: <>$2.23 — elasticity times marginal cost.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Plug into the formula: <M>{String.raw`P^* = MC / (1 + 1/\epsilon) = 1.00 / (1 + 1/(-2.23)) = 1.00 / 0.5516 \approx 1.82`}</M>. The same MC and elasticity produce different optima depending on the elasticity's exact value — which is why getting the elasticity right matters more than getting the formula right.</>,
-    },
-    {
-      prompt: <>Marginal cost rises from $1.00 to $1.20 due to a supply chain shock. Elasticity stays at <M>{String.raw`-2.23`}</M>. The new optimal price is…</>,
-      options: [
-        { label: <>$1.82 — the optimal price is independent of marginal cost.</> },
-        { label: <>$2.02 — exactly $0.20 above the original optimum.</> },
-        { label: <>$2.18 — calculated as <M>{String.raw`P^* = 1.20 / 0.5516 \approx 2.18`}</M>.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>The formula is <em>multiplicative</em> in <M>{String.raw`MC`}</M>, not additive. A 20% increase in cost translates to a 20% increase in the optimal price (when elasticity is unchanged): <M>{String.raw`1.20 \times 1.82 = 2.18`}</M>. Adding $0.20 directly to the old optimum understates the right markup adjustment.</>,
-    },
-    {
-      prompt: <>Your model returns an own-price elasticity of <M>{String.raw`-0.9`}</M> and the formula recommends an extreme price increase. The right response is…</>,
-      options: [
-        { label: <>Follow the formula and execute the price hike — the inelastic estimate proves customers are insensitive.</> },
-        { label: <>Reject the formula's recommendation and audit the regression. An inelastic estimate almost always signals omitted-variable bias; a profit-maximizing firm would already have raised price out of that zone if the estimate were correct.</> },
-        { label: <>Use the formula but cap the recommended price at twice the current price.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>An inelastic elasticity is more often a sign of confounding (counter-cyclical pricing, omitted seasonality or competitor controls) than evidence of true demand structure. Before acting on it, climb the regression ladder. If even the well-identified model is inelastic, the firm has discovered pricing power and should test cautious increases — but the formula's extreme number is not the right place to start.</>,
     },
   ]}
 />
@@ -208,17 +199,21 @@ Even after accounting for the volume loss implied by elasticity <M>{String.raw`-
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="The singularity trap">
+As <M>{String.raw`|\epsilon|`}</M> approaches 1 from above, the formula's denominator collapses and the recommended price explodes. **Read this as a signal that the regression is wrong or that the firm should test small increases cautiously — not as a literal price to implement.**
+</Pitfall>
 
-Three traps recur in production pricing optimization work:
+<Pitfall title="Stale marginal cost">
+The formula assumes <M>{String.raw`MC`}</M> is known and current. In inflationary periods or supply disruptions, costs move week-to-week. **Refresh the cost input and recompute the price every quarter; re-pricing on a six-month-old cost leaves margin on the table.**
+</Pitfall>
 
-1.  **The singularity trap.** As <M>{String.raw`|\epsilon|`}</M> approaches 1 from above, the formula's denominator collapses and the recommended price explodes. Operationally, this signals either the regression is wrong or the firm needs to test small price increases cautiously — not implement the literal formula recommendation.
-2.  **Stale marginal cost.** The formula assumes <M>{String.raw`MC`}</M> is known and current. In inflationary periods or supply disruptions, costs move week-to-week. Re-pricing every quarter on a six-month-old cost number leaves margin on the table.
-3.  **The short-run / long-run gap.** Elasticity estimated from short-run price variation reflects the immediate substitution response. Long-run churn (customers gradually finding alternatives, brand erosion at higher prices) is not in the historical regression and not in the formula. Always pair the pricing recommendation with a customer-retention monitoring plan.
+<Pitfall title="The short-run / long-run gap">
+Elasticity estimated from short-run price variation reflects the immediate substitution response. Long-run churn (customers gradually finding alternatives, brand erosion at higher prices) is in neither the historical regression nor the formula. **Always pair the pricing recommendation with a customer-retention monitoring plan.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The pricing call">
 
 The Lerner rule is short and decisive — and exactly that brevity makes its inputs important:
 
@@ -227,3 +222,5 @@ The Lerner rule is short and decisive — and exactly that brevity makes its inp
 - Update marginal cost regularly. The recommended price scales linearly with <M>{String.raw`MC`}</M>; stale cost equals stale price.
 
 The next article ties together all of Part III's evidence — elasticity, fixed effects, quasi-experiments, synthetic control, heterogeneity — into the format an executive committee actually consumes: a strategic pricing and promotion memo.
+
+</Takeaway>

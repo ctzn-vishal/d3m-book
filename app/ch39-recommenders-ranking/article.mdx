@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import {
   CoPurchaseNetwork,
   RankedListMock,
@@ -119,56 +119,26 @@ The mitigations are largely policy, not algorithm:
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Offline AUC for a recommender">
+AUC summarizes how the model orders pairs of items, but customers see a list. **Grade ranked lists with precision@k and NDCG, not AUC.**
+</Pitfall>
 
-- **Reporting offline AUC for a recommender.** AUC summarizes how the model orders pairs of items. Customers see a list; precision@k and NDCG are the right grades.
-- **No diversity term.** Lists collapse to single-category recommendations that feel dull.
-- **Cold-start denial.** Pretending a learned model handles new users when it actually defaults to a popularity baseline. Be honest in the model card about which population the model actually serves.
-- **A/B test on the wrong objective.** Optimizing CTR can erode downstream metrics (margin per session, return rate). The recommender's grade should be the business KPI it ultimately moves.
+<Pitfall title="Cold-start denial">
+Pretending a learned model handles new users when it actually falls back to a popularity baseline misleads everyone downstream. **State in the model card which population the model truly serves.**
+</Pitfall>
+
+<Pitfall title="A/B test on the wrong objective">
+Optimizing click-through can erode downstream metrics like margin per session and return rate. **Grade the recommender on the business KPI it ultimately moves, not on clicks.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The call">
 
 A recommender is a ranked-list interface attached to a scoring engine. The scoring engine is a Chapter 14 / 15 model with extra evaluation language. The interface is a Chapter 16 / 17 product decision about cut-offs, diversity, and position effects.
 
-> *Pick the cut-off deliberately. Reserve some impressions for exploration. Grade the system on the business metric, not on its own ranking accuracy.*
+*Pick the cut-off deliberately. Reserve some impressions for exploration. Grade the system on the business metric, not on its own ranking accuracy.*
 
 The next article moves from "the model works at design time" to "the model still works six months in" — deployment, monitoring, and drift.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on recommenders."
-  questions={[
-    {
-      prompt: <>Market basket analysis returns a high-confidence rule "if latte then croissant." The same rule has lift = 0.9. The honest interpretation is:</>,
-      options: [
-        { label: <>Customers who buy a latte are very likely to buy a croissant.</> },
-        { label: <>Customers who buy a latte buy a croissant about as often as random customers do — the high confidence reflects the croissant's overall popularity, not a meaningful association.</> },
-        { label: <>The rule is broken.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Lift below 1 means the co-occurrence is less than chance; lift near 1 means the pairing is uninformative. Confidence is misleading when the consequent is popular regardless of the antecedent.</>,
-    },
-    {
-      prompt: <>A recommender's offline AUC has been flat for six months, but the team has observed customers' clicks concentrating in fewer categories over time. The most likely diagnosis is:</>,
-      options: [
-        { label: <>The dataset is too small.</> },
-        { label: <>A feedback loop: the recommender shapes what customers see, narrowing the data the model trains on; AUC stays flat because the model's preferences and the customer's actions are co-evolving.</> },
-        { label: <>The AUC metric is wrong for recommenders.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Filter-bubble dynamics are a property of the deployed system, not the offline evaluation. Both diagnoses (AUC is the wrong metric, and feedback loops are operating) are partially true; the more important one is the feedback loop.</>,
-    },
-    {
-      prompt: <>A new product is launched. A pure collaborative-filtering recommender cannot recommend it. The cleanest remedy is:</>,
-      options: [
-        { label: <>Wait until enough customers have bought it.</> },
-        { label: <>Add a content-based fallback that recommends new items based on their attributes until they accumulate interaction history.</> },
-        { label: <>Skip the new product.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Cold-start is a known limit of collaborative filtering. Content-based features bootstrap recommendations for new items; hybrid systems combine both strategies routinely.</>,
-    },
-  ]}
-/>
+</Takeaway>

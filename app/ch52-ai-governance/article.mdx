@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import {
   ValidationLabSchematic,
@@ -164,27 +165,31 @@ None of this is unique to AI. All of it gets sharper attention because AI workfl
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Single-metric evaluation">
+A workflow that ships on accuracy alone misses the other seven dimensions — grounding, relevance, consistency, safety, bias, privacy, business value. **Review every workflow against the full eight-dimension rubric, not just the headline number.**
+</Pitfall>
 
-- **Single-metric evaluation.** A workflow that ships on accuracy alone misses seven other dimensions.
-- **Stale golden sets.** Evaluation data ages out. Refresh quarterly with new examples reflecting current traffic.
-- **Drift unnoticed.** Without monitoring, a workflow's quality erodes silently. The first symptom is usually a customer complaint, not a dashboard alert.
-- **Risk register that nobody reads.** Risks logged once and forgotten. Treat the register as a living document; review with the same cadence as the workflow card.
-- **The owner has rotated.** The on-call list is six months out of date; nobody knows who responds. Treat ownership as part of the operating model, not a paperwork item.
+<Pitfall title="Stale golden sets">
+Evaluation data ages out as customer language and traffic shift, and the eval quietly stops representing production. **Refresh the golden set quarterly with new examples drawn from current traffic.**
+</Pitfall>
+
+<Pitfall title="Drift unnoticed">
+Without monitoring, a workflow's quality erodes silently and the first symptom is a customer complaint, not a dashboard alert. **Stand up monitoring — rolling eval scores, refusal rate, grounding rate, cost per query — before the workflow ships, not after the first incident.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The bottom line">
 
-AI evaluation and governance is the operating system for the methods in Part V. Eight evaluation dimensions, a risk-control map, an AI workflow card, monitoring, and a named owner. Each lives in concrete artefacts the firm can produce on demand.
-
-> *Define the rubric. Map the risks. Ship the card. Monitor weekly. Re-audit quarterly. Name the owner.*
+AI evaluation and governance is the operating system for the methods in Part V: *eight evaluation dimensions, a risk-control map, an AI workflow card, monitoring, and a named owner*, each living in concrete artefacts the firm can produce on demand. Define the rubric, map the risks, ship the card, monitor weekly, re-audit quarterly, and name the owner.
 
 The capstone — §22.2 — applies all of this to a final integrated workflow that combines every method in Part V into a single Bean &amp; Basket Customer Voice Intelligence Studio.
 
+</Takeaway>
+
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on AI evaluation and governance."
+  intro="Three questions on evaluating and governing an AI workflow."
   questions={[
     {
       prompt: <>A RAG system scores 0.92 accuracy on a golden set. The ungrounded-answer rate is 18%. The right interpretation is:</>,

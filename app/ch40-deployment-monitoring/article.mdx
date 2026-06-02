@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import {
   MonitoringDashboardMock,
@@ -119,12 +120,17 @@ Governance is mostly a process problem, not a math problem. The math problems sh
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Silent drift">
+The most common production failure is not a catastrophic break but a slow erosion of lift over months, with no single alert firing. **Run rolling monitoring and be willing to retrain even when no specific metric is red.**
+</Pitfall>
 
-- **Silent drift.** The most common production failure is not a catastrophic break but a slow erosion of lift over months, with no single alert firing. The cure is rolling monitoring and a willingness to retrain even when no specific metric is red.
-- **Dashboard fatigue.** A wall of metrics no one reads is no better than no metrics. Compress to a few KPIs with named owners.
-- **Feedback loops the team doesn't see.** A retention model triggers offers; the offers change churn behaviour; the next model trains on churn rates that already reflect the previous model. Without an exploration arm, the team is now in a closed loop.
-- **Retraining without baseline comparison.** Replacing a deployed model with a new one without a head-to-head evaluation is how regressions enter production.
+<Pitfall title="Dashboard fatigue">
+A wall of metrics no one reads is no better than no metrics. **Compress to a few KPIs, each with a named owner.**
+</Pitfall>
+
+<Pitfall title="Retraining without baseline comparison">
+Replacing a deployed model with a new one without a head-to-head evaluation is how regressions enter production. **Compare the candidate against the current model on the same fresh held-out set before rollout.**
+</Pitfall>
 
 <Callout variant="caveat" title="Counterfactual check">
   Once a model starts changing the world it observes, the §9.2 counterfactual question becomes operational: <em>what would have happened without this model?</em> Maintain an exploration arm (a small fraction of decisions made outside the model's recommendation) and a held-out audience that lets the firm continue to measure incrementality. Without them, the dashboard's "lift" number measures what the team already decided to do.
@@ -132,18 +138,38 @@ Governance is mostly a process problem, not a math problem. The math problems sh
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What this buys you">
 
-Deployment is where Part IV stops being about models and starts being about systems. A managerial frame:
-
-> *Define the model card before the launch. Define the four monitoring KPIs and the one alert before the launch. Define the retraining cadence before the launch. Decide where the human-in-the-loop sits before the launch.*
+Deployment is where Part IV stops being about models and starts being about systems. The frame: *define the model card before the launch; define the four monitoring KPIs and the one alert before the launch; define the retraining cadence before the launch; decide where the human-in-the-loop sits before the launch.*
 
 Models that launch without these definitions tend to acquire them under stress, after something has gone wrong. The cheaper sequence is to commit to them up front and treat the model as a piece of infrastructure from day one.
 
+</Takeaway>
+
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on deployment and monitoring."
+  intro="Three questions spanning Chapter 17 — measuring targeting lift, grading recommenders, and catching drift."
   questions={[
+    {
+      prompt: <>A team uses a 1% lookalike from their top-100 high-value customers and reports excellent conversion. They infer that the platform's targeting works well. What additional evidence would actually support that inference?</>,
+      options: [
+        { label: <>An incrementality test or holdout that compares the lookalike audience to a comparable untargeted population — measuring lift, not absolute conversion.</> },
+        { label: <>Higher click-through rate.</> },
+        { label: <>A larger seed audience.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>High conversion in a lookalike audience may reflect targeting that found users who would have converted anyway. Incrementality measurement is the only way to separate true lift from selection.</>,
+    },
+    {
+      prompt: <>Market basket analysis returns a high-confidence rule "if latte then croissant." The same rule has lift = 0.9. The honest interpretation is:</>,
+      options: [
+        { label: <>Customers who buy a latte are very likely to buy a croissant.</> },
+        { label: <>Customers who buy a latte buy a croissant about as often as random customers do — the high confidence reflects the croissant's overall popularity, not a meaningful association.</> },
+        { label: <>The rule is broken.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Lift below 1 means the co-occurrence is less than chance; lift near 1 means the pairing is uninformative. Confidence is misleading when the consequent is popular regardless of the antecedent.</>,
+    },
     {
       prompt: <>A churn model's input distribution has not changed materially, but its rolling AUC has dropped from 0.82 to 0.71. The most likely diagnosis is:</>,
       options: [
@@ -153,26 +179,6 @@ Models that launch without these definitions tend to acquire them under stress, 
       ],
       correctIndex: 1,
       explanation: <>Stable inputs with declining performance is the signature of concept drift. Retraining (rather than recalibration) is usually the right remedy.</>,
-    },
-    {
-      prompt: <>A team retrains the churn model quarterly. The new model has AUC 0.84 on the latest held-out set; the deployed model has AUC 0.83 on the same set. The right next step is:</>,
-      options: [
-        { label: <>Ship immediately — newer is better.</> },
-        { label: <>Stage the rollout — direct a small percentage of traffic to the new model and monitor business KPIs before full deployment.</> },
-        { label: <>Wait until next quarter.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>A 1-point AUC gain is within noise. Staged rollouts let the team confirm the improvement is real and that no business KPI quietly regresses.</>,
-    },
-    {
-      prompt: <>The monitoring dashboard shows green on AUC, lift, and coverage; KS is yellow on one feature. The team should:</>,
-      options: [
-        { label: <>Ignore the yellow because the headline metrics are healthy.</> },
-        { label: <>Investigate the drifting feature — input drift often precedes performance degradation by weeks.</> },
-        { label: <>Retrain immediately.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Drift in inputs is a leading indicator. Performance metrics are lagging — they go red only after the model has been delivering bad scores for a while.</>,
     },
   ]}
 />

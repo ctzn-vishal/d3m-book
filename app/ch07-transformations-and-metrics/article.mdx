@@ -1,5 +1,6 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
 import transformsRaw from './data/transformations.json';
 import metricsRaw from './data/metrics.json';
@@ -48,18 +49,18 @@ Figure 2 names the metrics that should appear in almost every Bean & Basket revi
 
 The defense is mechanical: every metric used in a recurring report should have a one-paragraph definition in a shared document, and the formula in the dashboard should point back to that paragraph. *"Active customer: any individual with a completed transaction in the last 90 days, regardless of loyalty membership."* That sentence is the difference between three analysts producing three CLV numbers and three analysts producing one.
 
-## What can go wrong
+<Pitfall title="Transformations called 'cleaning'">
+The most insidious error is to call a transformation "cleaning" and stop thinking about it. Log-transforming revenue changes what the model treats as a one-unit change (a dollar becomes a percent); standardizing before clustering changes which segments emerge; binning a continuous variable discards the very variation a downstream model may depend on. Every transformation is a *choice about what to make comparable*. **Document the choice in the open; do not bury it inside a notebook.**
+</Pitfall>
 
-<Callout variant="caveat" title="Transformations are not cosmetic — they encode judgment">
-
-The most insidious error around transformations is to call them "cleaning" and stop thinking about them. **Log-transforming revenue** is not a cleaning step; it changes what the model treats as a one-unit change (from a dollar to a percent). **Standardizing variables** before clustering changes which segments emerge — a customer-level clustering done on raw revenue will group everyone by spend; the same clustering done on standardized revenue can group by behavioral pattern. **Binning a continuous variable** loses information; sometimes that is what you want (interpretable age bands for a marketing report), but if the analysis downstream depends on the continuous variation, binning destroys the signal. Every transformation is a *choice about what to make comparable*. Document the choice; do not bury it inside a notebook.
-
-A related error is **double-counting in a metric**. Reporting "total revenue + total tax + total tip" as a single revenue figure inflates the number. Reporting "completed orders + abandoned carts" as conversions silently rewrites the metric. The defense is the same as for grain (Chapter 1) and joins (Chapter 5): before computing, write down what one unit of the metric represents.
-
-</Callout>
+<Pitfall title="Double-counting in a metric">
+Reporting "total revenue + total tax + total tip" as one revenue figure inflates the number; reporting "completed orders + abandoned carts" as conversions silently rewrites the metric. The defense is the same as for grain (Chapter 1) and joins (Chapter 5): **before computing, write down what one unit of the metric represents.**
+</Pitfall>
 
 There is a more general failure mode in this chapter worth flagging once. **A metric is a contract.** When a CMO sees "conversion rate: 4.2%" on a slide, she is reading a number that depends on a chain of definitional decisions — what is a visitor, what is a conversion, what is the window, how are bots excluded, are returning visitors deduplicated. Each link in the chain was made by someone, at some point, often without writing it down. The next time the metric is recomputed — by a different analyst, on a different data warehouse, with a slightly different filter — the answer will be different, and the disagreement will be invisible. Treating metric definitions as *governance artifacts*, not as engineering details, is the only way a multi-year dashboard remains comparable to itself.
 
-## Managerial takeaway
+<Takeaway label="What to ship">
 
 Before asking *what is our conversion rate?*, ask *what does conversion rate mean here?* Transformations and metrics are the layer where raw data becomes business language, and the translation is full of editorial choices. The cheapest insurance an analytics team can buy is a **metrics dictionary** — one paragraph per metric, naming the formula, the window, the unit, and the exclusions — versioned alongside the dashboard that uses it. When a metric moves between reports, the paragraph moves with it. When two reports disagree, the paragraphs are the first place to look. The work of writing those paragraphs is the work of governance; the work of running the SQL is the work of engineering. Confuse them and the numbers will quietly diverge across the organization for years before anyone notices.
+
+</Takeaway>

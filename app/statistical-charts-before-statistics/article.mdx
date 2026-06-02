@@ -2,6 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { SoupDistributionAndCoefficients, SoupElasticityScatter } from '@/components/Book/part2/SoupVisualEvidence';
 import soupRaw from './data/soup-statistical-charts.json';
 
@@ -55,14 +57,20 @@ Figure 2 is useful precisely because it is not enough. It gives students the vis
   In a log-log price-volume chart, the slope is an elasticity-style number. A slope of -2 says that a 1% higher price is associated with about 2% lower volume. Association is not causation; the chart previews the idea before later chapters estimate it carefully.
 </Callout>
 
-## What can go wrong
+<Pitfall title="Treating the log transform as a trick">
+The log is not a cosmetic move. **It changes the question from differences in units to differences in percentages** — which is often exactly what a pricing manager needs. Use it because the question is multiplicative, not to make a chart look tidier.
+</Pitfall>
 
-The first error is treating the log transform as a trick. It is not a trick; it changes the question from differences in units to differences in percentages. That is often exactly what a pricing manager needs.
+<Pitfall title="Believing a smooth trend line">
+A line through confounded historical data can be precise, visually compelling, and wrong for decision-making. **The line summarizes the data it sees; it does not know whether the comparison behind it is credible.**
+</Pitfall>
 
-The second error is believing a trend line because it is smooth. A line through confounded historical data can be precise, visually compelling, and wrong for decision-making. The line summarizes the data it sees. It does not know whether the comparison is credible.
+<Pitfall title="Hiding the interval">
+A coefficient without an interval is a point pretending to be a fact. **Show the interval** so the reader sees a range of plausible values under the model rather than a command.
+</Pitfall>
 
-The third error is hiding the interval. A coefficient without an interval is a point pretending to be a fact. The interval reminds the reader that the estimate is a range of plausible values under the model, not a command.
+<Takeaway label="Net-net">
 
-## Managerial takeaway
+Statistical charts are not decoration for technical chapters. They are *the bridge from visual evidence to formal estimation*. The soup case lets students see the entire bridge: skewed sales lead to logs, log price-volume scatter leads to elasticity intuition, and seasonality leads to the question every pricing chapter must answer: what comparison makes the slope credible?
 
-Statistical charts are not decoration for technical chapters. They are the bridge from visual evidence to formal estimation. The soup case lets students see the entire bridge: skewed sales lead to logs, log price-volume scatter leads to elasticity intuition, and seasonality leads to the question every pricing chapter must answer: what comparison makes the slope credible?
+</Takeaway>

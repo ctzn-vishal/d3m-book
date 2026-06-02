@@ -1,7 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
 import { QuizBlock } from '@/components/Book/QuizBlock';
@@ -109,17 +110,27 @@ A useful summary chart: the segment effect as a horizontal interval plot, sorted
 
 <QuizBlock
   title="Concept check"
-  intro="Four conceptual questions on heterogeneous treatment effects. Click to reveal."
+  intro="Three questions spanning the two-group counterfactual, single-unit synthetic controls, and segment-level effects."
   questions={[
     {
-      prompt: <>An interaction regression returns <M>{String.raw`\widehat{\beta}_1 = 0.024`}</M> for the treatment in the baseline group, and <M>{String.raw`\widehat{\beta}_3 = 0.104`}</M> for the treatment-segment interaction. The estimated treatment effect for the segment is…</>,
+      prompt: <>The DiD estimator works by netting out two specific confounders. Which pair?</>,
       options: [
-        { label: <>+10.4 percentage points (the interaction coefficient).</> },
-        { label: <>+12.8 percentage points (<M>{String.raw`\beta_1 + \beta_3`}</M>).</> },
-        { label: <>+2.4 percentage points (the baseline coefficient).</> },
+        { label: <>Measurement error in the treatment, and measurement error in the outcome.</> },
+        { label: <>The stable baseline level difference between the treated and control groups, and any common time shock that affects both groups equally.</> },
+        { label: <>Sampling noise in the pre period and sampling noise in the post period.</> },
       ],
       correctIndex: 1,
-      explanation: <><M>{String.raw`\beta_3`}</M> is the <em>difference</em> in treatment effect between the segment and the baseline group, not the segment's total effect. The segment's effect is the baseline effect plus the interaction: <M>{String.raw`\beta_1 + \beta_3 = 0.024 + 0.104 = 0.128`}</M>.</>,
+      explanation: <>DiD's two subtractions are exactly designed to remove (a) the time-invariant level gap between groups (treated vs. control), and (b) the time shock that hits both groups (post vs. pre). What is left is the part of the treated group's post change that the control group did not experience.</>,
+    },
+    {
+      prompt: <>Why is the non-negativity constraint (<M>{String.raw`w_j \ge 0`}</M>) on donor weights so important for synthetic control?</>,
+      options: [
+        { label: <>Because negative weights cannot be computed efficiently.</> },
+        { label: <>Because allowing negative weights would let the optimizer construct counterfactuals outside the convex hull of the donor pool — combinations that no real unit comes close to — and produce spurious pre-treatment fits by extrapolation.</> },
+        { label: <>Because negative weights violate the parallel-trends assumption.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Without the constraint, the optimizer could "short" a donor to chase a tighter pre-trend fit and produce a synthetic unit that is more extreme than any real one. The non-negative, sum-to-one constraints keep the counterfactual a convex combination of observed donor trajectories.</>,
     },
     {
       prompt: <>You estimate the treatment effect of an email campaign separately among "customers who opened the email" and "customers who did not open the email." Why is this analysis broken?</>,
@@ -130,26 +141,6 @@ A useful summary chart: the segment effect as a horizontal interval plot, sorted
       ],
       correctIndex: 1,
       explanation: <>The first rule of HTE is that segments must be defined on variables determined <em>before</em> treatment was assigned. Conditioning on a post-treatment behavior is a special case of collider bias and is not rescued by sample size.</>,
-    },
-    {
-      prompt: <>An analytics tool lets a stakeholder slice the campaign's lift by any combination of 30 customer features. The stakeholder reports back: "Stores with green awnings show a significant +15 pp lift!" How should this be interpreted?</>,
-      options: [
-        { label: <>As a meaningful targeting insight to act on.</> },
-        { label: <>As likely false positive driven by multiple testing. With 30 features sliced at <em>p</em> = 0.05, at least one apparent "effect" is expected by chance alone. Pre-register the segments of interest, or apply a multiple-testing correction.</> },
-        { label: <>As confirming the well-known impact of green-awning architecture on customer mood.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>This is the canonical p-hacking trap. The fix is procedural: pre-specify the segments before looking at the data; correct for the number of tests when reporting significance; and treat any post-hoc discovery as a hypothesis for the next experiment, not a conclusion from this one.</>,
-    },
-    {
-      prompt: <>Aggregate ATE for a coupon push is +3 pp. Per-segment analysis shows +12 pp for occasional shoppers (60% of the audience), +8 pp for deal-hunters (20%), and 0 pp for loyalists (20%). Which decision is most defensible?</>,
-      options: [
-        { label: <>Send to everyone — the average is positive.</> },
-        { label: <>Suppress loyalists, send to the other two segments. The aggregate +3 pp wastes the coupon cost on loyalists who do not respond, and the per-segment numbers identify the targeted population that actually responds.</> },
-        { label: <>Send only to deal-hunters because they had the second-highest lift.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The targeting decision is per-segment: send where the per-segment expected profit is positive, suppress where it isn't. Loyalists in this example are a pure cost (zero lift, real coupon redemption). Sending to occasional shoppers and deal-hunters captures the responders; suppressing loyalists protects margin.</>,
     },
   ]}
 />
@@ -172,17 +163,19 @@ For decision purposes, the figure does the targeting work directly. A policy aim
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="P-hacking the segments">
+Slicing by many segments without pre-specification or correction inflates false-positive rates dramatically — with 20 slices at the 5% level, one "significant" segment is expected by chance alone. **Pre-register the segments of interest, or apply a multiple-testing correction once the dashboard lets stakeholders slice freely.**
+</Pitfall>
 
-Three failure modes recur in production HTE work:
+<Pitfall title="Post-treatment segmentation">
+Segments defined on variables caused by the treatment — "customers who clicked," "users who reached the upgrade page" — are not segments; they are colliders, and conditioning on them destroys the causal interpretation. **Check that every segmenting variable was fixed before treatment was assigned.**
+</Pitfall>
 
-1.  **P-hacking.** Slicing by many segments without pre-specification or correction inflates false-positive rates dramatically. Once the dashboard lets a stakeholder slice 20 different ways, the discipline has to be procedural.
-2.  **Post-treatment segmentation.** Segments defined on variables caused by the treatment are not segments; they are colliders. Always check that the segmenting variable was fixed before treatment was assigned.
-3.  **Cherry-picked aggregation.** Reporting only the segments with statistically significant lifts and suppressing the others is selection on the outcome. Always show the full segment chart, including the segments with null or negative findings.
+<Pitfall title="Cherry-picked aggregation">
+Reporting only the segments with significant lifts and suppressing the rest is selection on the outcome. **Always show the full segment chart, including the null and negative findings.**
+</Pitfall>
 
----
-
-## Managerial Takeaway
+<Takeaway label="For the manager">
 
 Heterogeneity is the bridge from causal inference to operational targeting. Three rules:
 
@@ -191,3 +184,5 @@ Heterogeneity is the bridge from causal inference to operational targeting. Thre
 - Use the per-segment lift to compute per-segment expected profit, and let the suppression of unprofitable segments do as much economic work as the targeting of profitable ones.
 
 The next chapter takes the targeting logic into the specific domain that depends on it most heavily: pricing.
+
+</Takeaway>

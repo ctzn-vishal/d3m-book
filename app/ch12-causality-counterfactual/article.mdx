@@ -4,6 +4,8 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { CounterfactualWorlds, ZillowSyntheticControl } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -137,8 +139,18 @@ Each method buys credibility at the cost of an assumption you can name and defen
 
 <QuizBlock
   title="Concept check"
-  intro="Four conceptual questions on counterfactual reasoning. Pick an answer to reveal the explanation."
+  intro="Three questions on framing a decision and reasoning about the missing counterfactual."
   questions={[
+    {
+      prompt: <>Which of the following is a <em>decision-ready</em> question rather than a <em>metric-focused</em> question?</>,
+      options: [
+        { label: <>"How is our pastry attach rate trending this quarter?"</> },
+        { label: <>"If we offer coffee-only weekday users a $1 morning pastry discount, will gross margin per user beat our 15¢ threshold over two weeks compared with a randomized holdout?"</> },
+        { label: <>"Which stores have the highest pastry conversion?"</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The strong version names a lever, a segment, an outcome, a horizon, a counterfactual, and a threshold. The other two describe interesting patterns but do not commit to any action a specific manager could take.</>,
+    },
     {
       prompt: <>The Fundamental Problem of Causal Inference says that…</>,
       options: [
@@ -158,26 +170,6 @@ Each method buys credibility at the cost of an assumption you can name and defen
       ],
       correctIndex: 1,
       explanation: <>Selection bias is the difference in <M>{String.raw`Y(0)`}</M> outcomes — what each group <em>would have done untreated</em>. It exists because units are not assigned to treatment randomly; it would still exist if no one were ever actually treated.</>,
-    },
-    {
-      prompt: <>When does the ATT meaningfully differ from the ATE?</>,
-      options: [
-        { label: <>Whenever the regression is misspecified.</> },
-        { label: <>When treatment effects vary across units <em>and</em> the treated population is not a random draw from the full population.</> },
-        { label: <>Only when the control group is smaller than the treatment group.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>If every unit had the same individual effect, or if treated units were a random sample, ATE and ATT would coincide. They diverge when treatment effects are heterogeneous and the units that take treatment have a different effect profile than the average unit.</>,
-    },
-    {
-      prompt: <>A naive comparison of opt-in coupon recipients with non-recipients shows recipients spend $6.30 more on average. Which interpretation is most defensible?</>,
-      options: [
-        { label: <>The coupon caused a $6.30 lift in spending.</> },
-        { label: <>The $6.30 is the sum of the true coupon effect on opt-in customers plus selection bias, and it likely overstates the causal lift.</> },
-        { label: <>The $6.30 is the Average Treatment Effect on the Untreated.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Because customers chose to take the coupon, the treated group is not comparable to the non-treated group in untreated potential outcomes. The naive difference picks up both the genuine coupon response and the fact that the kind of customer who took the coupon would have spent more anyway.</>,
     },
   ]}
 />
@@ -210,23 +202,22 @@ For now, treat this case as a worked example of the framework: an action, a unit
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Confounding shocks">
+A second shock that hits the treated unit at the treatment date is indistinguishable from the treatment itself. Colorado legalized cannabis in 2014 but also had a tech-driven population boom, and the synthetic control cannot separate the two on its own. **List every simultaneous shock to the treated unit and judge each one's plausibility before reading the gap as causal.**
+</Pitfall>
 
-Three reasoning failures recur in counterfactual work:
+<Pitfall title="Pre-treatment overfitting">
+A counterfactual that "fits perfectly" because the algorithm chased every wiggle in the pre-trend is a warning, not a strength — it has matched noise it will not reproduce afterwards. **Judge the pre-period fit on its shape over several periods, not on a single tight RMSE.**
+</Pitfall>
 
-1.  **Confounding shocks.** Crediting the gap to the named treatment when another shock hit the treated unit at the same time. Colorado in 2014 had cannabis legalization, but it also had a tech-driven population boom; the synthetic control cannot separate the two without additional design.
-2.  **Pre-treatment overfitting.** Weighting donor units to chase short-run noise in the treated unit's pre-trend. A pre-period that "fits perfectly" because the algorithm matched every wiggle is a warning, not a strength.
-3.  **Spillover contamination.** Choosing donor units that were themselves affected by the treatment. If neighbors of the treated unit absorbed migration, employment, or pricing spillovers, their potential outcomes are contaminated and the counterfactual is too.
+<Pitfall title="Spillover contamination">
+If donor or control units were themselves touched by the treatment — through migration, employment, or pricing spillovers — their potential outcomes are contaminated and the counterfactual is too. **Exclude any comparison unit that could plausibly have absorbed a spillover before fitting.**
+</Pitfall>
 
----
+<Takeaway label="The bottom line">
 
-## Managerial Takeaway
-
-Causal reasoning is the discipline of naming what is missing. Whenever a deck claims that an action moved a metric, ask four questions in order:
-
-- *What is the counterfactual?*
-- *How was it constructed?*
-- *Why is it a credible stand-in for the missing potential outcome?*
-- *What simultaneous shocks or selection effects could explain the gap without the action?*
+Causal reasoning is the discipline of naming what is missing. Whenever a deck claims that an action moved a metric, ask four questions in order: *what is the counterfactual? how was it constructed? why is it a credible stand-in for the missing potential outcome? what simultaneous shocks or selection effects could explain the gap without the action?*
 
 The rest of Part III is a tour of the four standard answers to question two — and how to defend them against question four.
+
+</Takeaway>

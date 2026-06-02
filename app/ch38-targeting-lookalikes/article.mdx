@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import {
   TargetingTaxonomy,
   ReachSimilarityCurve,
@@ -140,56 +140,26 @@ This is the place where digital advertising and the machine-learning lifecycle f
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Audience contamination">
+Showing the same user a conversion campaign and a retention campaign at once muddles attribution and wastes spend. **Enforce mutually exclusive audiences at the campaign level.**
+</Pitfall>
 
-- **Confusing targeting with treatment effect.** A lookalike campaign that drives high conversion has not proved that the ad caused the conversion — it has proved that the platform found users who would have converted anyway. The Part III chapters on incrementality and lift apply.
-- **Audience contamination.** Showing the same user a conversion campaign and a retention campaign at the same time muddles attribution and wastes spend. Mutually exclusive audiences should be enforced at the campaign level.
-- **Seed contamination.** If the seed audience used to build a lookalike contains both real high-value customers and noisy edge cases (employees, bots, accidental signups), the lookalike will be diluted. The seed is the input feature; clean it like one.
-- **Over-trusting the platform's reporting.** Platforms grade their own homework. Where independent measurement is feasible (uplift studies, hold-out audiences), use it.
+<Pitfall title="Seed contamination">
+If the seed for a lookalike mixes real high-value customers with noisy edge cases (employees, bots, accidental signups), the lookalike is diluted. The seed is the input feature; **clean it like one before building the audience.**
+</Pitfall>
+
+<Pitfall title="Over-trusting the platform's reporting">
+Platforms grade their own homework. **Where independent measurement is feasible — uplift studies, hold-out audiences — use it.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="For the manager">
 
 Targeting on a modern ad platform is the operational form of everything in Chapter 16. Custom audiences are bring-your-own segments; lookalike audiences are nearest-neighbour scoring at scale, performed against features the platform sees and the firm does not.
 
-> *Bring a clean seed. Pick the reach–similarity dial that matches the campaign's goal. Define mutually exclusive audiences across the funnel. Hold the platform accountable with measurement the platform doesn't own.*
+*Bring a clean seed. Pick the reach–similarity dial that matches the campaign's goal. Define mutually exclusive audiences across the funnel. Hold the platform accountable with measurement the platform doesn't own.*
 
 The next article moves from broad audiences to per-customer ranking — how the same logic powers the recommendation lists that have become the user interface for so much commerce.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on targeting and lookalikes."
-  questions={[
-    {
-      prompt: <>A team uses a 1% lookalike from their top-100 high-value customers and reports excellent conversion. They infer that the platform's targeting works well. What additional evidence would actually support that inference?</>,
-      options: [
-        { label: <>An incrementality test or holdout that compares the lookalike audience to a comparable untargeted population — measuring lift, not absolute conversion.</> },
-        { label: <>Higher click-through rate.</> },
-        { label: <>A larger seed audience.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>High conversion in a lookalike audience may reflect targeting that found users who would have converted anyway. Incrementality measurement is the only way to separate true lift from selection.</>,
-    },
-    {
-      prompt: <>For a brand-awareness campaign with broad goals, which lookalike size is the natural default?</>,
-      options: [
-        { label: <>1% — highest similarity is always best.</> },
-        { label: <>5–10% — broader reach with somewhat lower similarity is the right trade-off for awareness.</> },
-        { label: <>0.5% — the smaller the better.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Awareness campaigns benefit from reach; conversion campaigns benefit from similarity. The dial should match the campaign's purpose.</>,
-    },
-    {
-      prompt: <>A seed audience of "high-value customers" was built from any customer who has ever made a purchase, including a wave of one-time discount buyers who never returned. The resulting lookalike is likely to:</>,
-      options: [
-        { label: <>Be a clean amplification of the firm's best customers.</> },
-        { label: <>Be diluted by the discount-buyer signal — the platform will match users who resemble bargain seekers as well as users who resemble the genuine high-value cohort.</> },
-        { label: <>Reach exactly the same population as the seed.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The seed is the model's training data. A noisy seed yields a noisy model; defining "high-value" carefully is upstream of every targeting decision.</>,
-    },
-  ]}
-/>
+</Takeaway>

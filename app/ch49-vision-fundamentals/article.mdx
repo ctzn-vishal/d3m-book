@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import {
   CnnFeatureHierarchy,
   VisionPipeline,
@@ -146,57 +147,24 @@ For business deployments, the right governance posture is the same as in §22: n
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Train/test distribution mismatch">
+The model performs well in evaluation and badly in production because the production images don't look like the training images. **Mitigate with domain randomization, broader data collection, and periodic re-evaluation — not a bigger model.**
+</Pitfall>
 
-- **Train/test distribution mismatch.** The model performs well in evaluation and badly in production because the production images don't look like the training images. Domain randomization, broader data collection, and periodic re-evaluation are the standard mitigations.
-- **Overfitting to incidental cues.** A defect detector learns the timestamp watermark instead of the defect. Carefully sample training data to break confounds.
-- **Cost of labelling.** Bounding boxes and especially segmentation are expensive. Plan the labelling budget before committing to the output shape.
-- **Latency and edge constraints.** A model that runs in a research notebook may not run on a shop-floor camera. Production vision systems often use smaller, distilled models or run on dedicated hardware.
-- **Privacy in image data.** Customer-facing surveillance and analytics raise privacy obligations the rest of the analytics stack doesn't. Bake the governance in from day one.
+<Pitfall title="Overfitting to incidental cues">
+A defect detector learns the timestamp watermark instead of the defect, and scores beautifully for the wrong reason. **Sample training data carefully to break confounds between the label and incidental artefacts.**
+</Pitfall>
+
+<Pitfall title="Labelling cost surprises">
+Bounding boxes and especially segmentation masks are expensive to annotate, and the bill arrives after the output shape is committed. **Plan the labelling budget before choosing the output shape, not after.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The operating posture">
 
-Vision AI works because models learn a *feature hierarchy* — edges to textures to parts to objects — that transfers across domains. CNNs and ViTs share that property; the differences are mostly engineering choices about how filters are applied. The output shape the model produces is the contract with the rest of the system: label, boxes, mask, or embedding.
-
-> *Pick the output shape that matches the action. Use pretrained backbones to save labelling cost. Audit for subgroup bias before deploying anything customer-facing.*
+Vision AI works because models learn a *feature hierarchy* — edges to textures to parts to objects — that transfers across domains; CNNs and ViTs share that property, and the differences are mostly engineering choices about how filters are applied. The output shape the model produces is the contract with the rest of the system: label, boxes, mask, or embedding. Pick the output shape that matches the action, use pretrained backbones to save labelling cost, and audit for subgroup bias before deploying anything customer-facing.
 
 The next article goes one level deeper into a specific vision use case — documents — where OCR and layout understanding combine to extract structured fields from invoices, contracts, and forms.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on vision fundamentals."
-  questions={[
-    {
-      prompt: <>A team wants to count SKUs on shop-floor shelf images. Which output shape is the natural choice?</>,
-      options: [
-        { label: <>Class label.</> },
-        { label: <>Bounding boxes — one per SKU detected.</> },
-        { label: <>Segmentation mask.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Counting and localizing objects is the textbook use case for object detection (bounding boxes). Segmentation would work but is overkill given the labelling cost.</>,
-    },
-    {
-      prompt: <>A defect detector trained in one factory works well; deployed in a second factory it performs poorly. The most likely diagnosis is:</>,
-      options: [
-        { label: <>The model is too small.</> },
-        { label: <>Distribution shift — lighting, camera angle, or background differs between the two factories; data diversity, not model size, is usually the fix.</> },
-        { label: <>The defect is different.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>This is the canonical production-vision failure. The solution is to train on data from both factories, not to make the model larger.</>,
-    },
-    {
-      prompt: <>"Self-supervised pretraining" is most accurately described as:</>,
-      options: [
-        { label: <>Training without any data.</> },
-        { label: <>Training a model on a task derived from unlabelled data (e.g. predicting masked patches), so that downstream fine-tuning needs only a small labelled set.</> },
-        { label: <>The same as supervised learning.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>SSL extracts learning signal from the input data itself, not from labels. It shifts the labelling cost from "huge" to "small", making vision feasible in specialized domains.</>,
-    },
-  ]}
-/>
+</Takeaway>

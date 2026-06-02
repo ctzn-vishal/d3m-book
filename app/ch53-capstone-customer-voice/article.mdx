@@ -2,7 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { AIWorkflowCard } from '@/components/Book/part5/MeasurementDiagrams';
 import { CustomerVoiceStudioFlow } from '@/components/Book/part5/RagVisionAgentDiagrams';
 
@@ -170,59 +171,26 @@ That's the operating-system view of decisions. The methods are the language. The
 
 ---
 
-## What Can Go Wrong
+The studio inherits every failure mode of every method it uses. Some get more dangerous in integration:
 
-The studio inherits every failure mode of every method it uses. Some are worth restating because they get more dangerous in integration:
+<Pitfall title="Construct definitions propagate">
+When §19.2 measurements feed §19.1 clusters that feed §21.3 agent actions, an ambiguous construct definition propagates all the way to a customer email. **Pin down each construct definition before wiring the stages together, because every downstream stage inherits its ambiguity.**
+</Pitfall>
 
-- **Confused construct definitions.** When §19.2 measurements feed §19.1 clusters that feed §21.3 agent actions, an ambiguous construct definition propagates all the way to a customer email.
-- **Stale evaluation set.** The golden set was good a year ago. Customer language has shifted; the evaluation no longer represents production. Refresh quarterly.
-- **Drift in the agent's tool surface.** A tool the agent depends on changes behavior (an API update, a schema change). The agent silently misuses it until someone reads the logs.
-- **Lost ownership.** The team that built the studio rotated out. The card is six months stale. New team members can't reconstruct the design intent. Tie ownership to roles, not individuals.
-- **Privacy creep.** The workflow that started as "look at app store reviews" gradually expanded to "look at app store reviews plus emails plus chat transcripts." Each addition needs a privacy review.
+<Pitfall title="Drift in the agent's tool surface">
+A tool the agent depends on changes behaviour — an API update, a schema change — and the agent silently misuses it. **Version and monitor each tool the agent calls, so a contract change surfaces in the logs before it reaches a customer.**
+</Pitfall>
+
+<Pitfall title="Privacy creep">
+A workflow that started as "look at app store reviews" gradually expands to "reviews plus emails plus chat transcripts," each addition slipping in unreviewed. **Require a privacy review for every new data source added to the loop, not just at launch.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Where this leaves you">
 
-The Customer Voice Intelligence Studio is the operational form of every method in Part V running in one loop, on one firm's customer evidence, under one governance card. The technology is no longer the bottleneck. The discipline of integration, evaluation, and governance is.
-
-> *Wire the six stages. Ship the card. Run the eval. Approve through humans. Monitor weekly. Re-audit quarterly. Pair with the Part IV studio.*
+The Customer Voice Intelligence Studio is the operational form of *every method in Part V running in one loop*, on one firm's customer evidence, under one governance card. The technology is no longer the bottleneck — the discipline of integration, evaluation, and governance is. Wire the six stages, ship the card, run the eval, approve through humans, monitor weekly, re-audit quarterly, and pair it with the Part IV studio.
 
 The methods of Parts IV and V give the firm two new senses — *who* and *what*. Part VI is about turning those senses into a system that learns over time.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on the Customer Voice Intelligence Studio."
-  questions={[
-    {
-      prompt: <>The Part IV Customer Intelligence Studio and the Part V Customer Voice Intelligence Studio together are best characterized as:</>,
-      options: [
-        { label: <>Redundant — pick one.</> },
-        { label: <>Complementary — the structured studio answers "who and how loud", the unstructured studio answers "what and why"; the intersection is where the strongest customer actions live.</> },
-        { label: <>The same workflow at different scales.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Different evidence languages, different questions, complementary outputs. Mature customer-analytics organizations run both.</>,
-    },
-    {
-      prompt: <>The dashed feedback arrow on the studio loop diagram represents:</>,
-      options: [
-        { label: <>An optional component.</> },
-        { label: <>The monitoring step's outputs reshaping the classifier labels, construct definitions, cluster boundaries, and agent prompts on the next iteration — without it, the workflow ages out within a quarter.</> },
-        { label: <>A retry mechanism.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The feedback loop is what turns the workflow into a system rather than a one-shot deployment.</>,
-    },
-    {
-      prompt: <>A new team member arrives three months after the studio ships. The fastest test of whether the workflow is operating well is:</>,
-      options: [
-        { label: <>Whether they can reproduce the model's accuracy.</> },
-        { label: <>Whether they can read the workflow card and the executive brief, follow the artefacts to each stage, and explain the system to an outsider within an hour.</> },
-        { label: <>Whether they can retrain the model.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The system's durability is measured by how well its artefacts communicate to new readers. That's the studio test.</>,
-    },
-  ]}
-/>
+</Takeaway>

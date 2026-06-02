@@ -2,6 +2,8 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import {
   PortfolioMonitoring,
@@ -139,28 +141,44 @@ None of these is a methods topic. All of them shape whether the methods of Parts
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Cadence creep">
+"We'll refresh quarterly" becomes "we haven't refreshed in nine months." **Treat cadence misses as visible incidents, not soft commitments.**
+</Pitfall>
 
-- **Dashboard sprawl.** Twenty dashboards, none of which anyone reads. The fix is consolidation, deprecation, and a portfolio-level summary.
-- **Cadence creep.** "We'll refresh quarterly" becomes "we haven't refreshed in nine months." The fix is treating cadence misses as visible incidents, not soft commitments.
-- **Retrospectives that turn into blame.** A memo recommendation didn't work; the team treats the retrospective as accountability theatre. The fix is to focus retrospectives on *what we now know*, not *who was wrong*.
-- **Studios that don't talk.** The Customer Intelligence Studio and the Customer Voice Studio run in parallel without ever joining their outputs. The fix is the intersection from Figure 2 — make joint outputs a first-class deliverable.
-- **Kill switches that don't work in practice.** Tested once at deploy time, never exercised. The fix is periodic drills.
+<Pitfall title="Retrospectives that turn into blame">
+A memo recommendation didn't work, and the team treats the retrospective as accountability theatre. **Focus retrospectives on *what we now know*, not *who was wrong*.**
+</Pitfall>
+
+<Pitfall title="Kill switches that don't work in practice">
+A deactivation path tested once at deploy time and never exercised will fail when it is finally needed. **Run periodic kill-switch drills so the path stays live.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="Net-net">
 
 Monitoring is not the last item on the project plan. It is the operating posture that turns a stack of analytics into a learning system. Portfolio monitoring, deliberate re-investment cadences, the two-studio intersection, retrospectives, exploration budgets, governance committees, kill switches — these are the practices that separate one-quarter wonders from a system that compounds.
 
-> *Monitor the portfolio. Refresh on cadence. Route by the intersection. Hold retrospectives. Budget for exploration. Drill the kill switch.*
+*Monitor the portfolio. Refresh on cadence. Route by the intersection. Hold retrospectives. Budget for exploration. Drill the kill switch.*
 
 The last article — §25.1 — pulls everything together. A Bean &amp; Basket strategic decision that uses every Part of the book at once.
 
+</Takeaway>
+
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on portfolio monitoring and learning loops."
+  intro="Three questions spanning the decision memo and the monitoring loops that run across a portfolio of them."
   questions={[
+    {
+      prompt: <>The decision memo and a research write-up are related but distinct artefacts. The cleanest description of the difference is:</>,
+      options: [
+        { label: <>The memo is shorter.</> },
+        { label: <>The memo is the action-triggering artefact, sized for a sponsor's five-minute read; the research write-up is the audit-trail artefact, sized for an analyst to reproduce the work. Both ship.</> },
+        { label: <>They're the same document at different formality levels.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Both artefacts have a role. The memo drives action; the write-up provides reproducibility. Most working organisations ship both.</>,
+    },
     {
       prompt: <>A sales-lead scoring model has been live for a year. The team notices that the model's lift over random has fallen from 3.5× to 1.8×. The most likely structural cause is:</>,
       options: [
@@ -180,16 +198,6 @@ The last article — §25.1 — pulls everything together. A Bean &amp; Basket s
       ],
       correctIndex: 1,
       explanation: <>The two-studio intersection is the central operational pattern of Part VI. Where the structured and unstructured evidence agree, the action is unusually well-grounded.</>,
-    },
-    {
-      prompt: <>A team has not held a decision retrospective in twelve months. The most likely consequence is:</>,
-      options: [
-        { label: <>The team is operating efficiently.</> },
-        { label: <>The team is making the same kinds of mistakes again; without retrospectives, learning is incidental rather than systematic.</> },
-        { label: <>The team's memos are unusually accurate.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Retrospectives are how an analytics organization converts decisions into learning. Without them, every team relearns last year's lessons.</>,
     },
   ]}
 />

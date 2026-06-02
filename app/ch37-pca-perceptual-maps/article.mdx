@@ -1,8 +1,8 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { PCABiplotScree, PerceptualMap } from '@/components/Book/part4/SegmentationDiagrams';
 
 <DropCap>
@@ -109,56 +109,24 @@ The first use is the most common. The third is where PCA bridges into operationa
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Over-reading individual loadings">
+A small loading is noise. **Rest the story on the half-dozen variables that load strongly on each axis, not the next twenty that load weakly.**
+</Pitfall>
 
-- **Over-reading individual loadings.** A small loading is noise. The story should rest on the half-dozen variables that load strongly on each axis, not on the next twenty that load weakly.
-- **Forgetting standardization.** PCA on un-standardized features is dominated by whichever feature has the largest variance, regardless of its meaning. Standardize before running.
-- **Treating components as causes.** Component scores describe positions in a compressed space; they do not explain why a customer thinks a brand is premium.
-- **Assuming the axes are stable across surveys.** A perceptual map computed on a 2024 survey may have a "convenience" axis; a 2026 refit may rotate the axes and produce a "service quality" axis. Track the underlying loadings, not just the chart.
+<Pitfall title="Forgetting standardization">
+PCA on un-standardized features is dominated by whichever feature has the largest variance, regardless of its meaning. **Standardize before running.**
+</Pitfall>
+
+<Pitfall title="Assuming axes are stable across surveys">
+A 2024 survey may yield a "convenience" axis while a 2026 refit rotates the axes into a "service quality" one. **Track the underlying loadings over time, not just the chart.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The bottom line">
 
-PCA and Factor Analysis are dimensionality-reduction tools that survive their early-statistics packaging because they answer a recurring managerial question: behind all these correlated attributes, how many things are really going on? The right way to engage as a manager:
-
-> *Read the loadings to name the axes. Read the scree to know how much story is left in higher components. Read the biplot or perceptual map to find the white space — and decide whether the white space is worth occupying.*
+PCA and Factor Analysis survive their early-statistics packaging because they answer a recurring managerial question: behind all these correlated attributes, how many things are really going on? The way to engage as a manager: *read the loadings to name the axes, read the scree to know how much story is left in higher components, and read the biplot or perceptual map to find the white space — then decide whether that white space is worth occupying.*
 
 The next article is about visualizations that look similar to perceptual maps but answer a different question — and demand a different kind of caution to read.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on PCA and perceptual maps."
-  questions={[
-    {
-      prompt: <>A scree plot shows the first two components capturing 70% of total variance, the third 8%, the fourth 4%. The reasonable summary number of components to retain is:</>,
-      options: [
-        { label: <>Five, to capture as much variance as possible.</> },
-        { label: <>Two — the elbow is between the second and third components, and additional components don't carry much variance.</> },
-        { label: <>All of them.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The elbow rule trades variance retained for interpretive simplicity. Two components carry the bulk of the structure; the rest contributes mostly noise.</>,
-    },
-    {
-      prompt: <>On a biplot, "affordability" loads at (-0.85, 0.05) and "premium" at (0.85, 0.45). The first component is reasonably interpreted as:</>,
-      options: [
-        { label: <>An axis from value to premium positioning.</> },
-        { label: <>A measure of convenience.</> },
-        { label: <>A noise component.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>Loadings of opposite sign on a single axis indicate a polarity. "Affordable" on the negative side and "premium" on the positive side is the textbook value-to-premium dimension.</>,
-    },
-    {
-      prompt: <>A brand sits in a sparsely populated quadrant of the perceptual map. The honest implication is:</>,
-      options: [
-        { label: <>This is a guaranteed growth opportunity.</> },
-        { label: <>The brand occupies a distinctive position perceptually — whether that is a strategic opportunity depends on whether customers <em>weight</em> the attributes defining that quadrant when choosing.</> },
-        { label: <>The brand is mis-categorized.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Perceptual maps show perception, not preference. Empty quadrants are opportunities only if the attributes defining them matter to the choice.</>,
-    },
-  ]}
-/>
+</Takeaway>

@@ -4,7 +4,8 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { TfIdfBars } from '@/components/Book/part5/TextDiagrams';
 
 <DropCap>
@@ -156,56 +157,24 @@ TF-IDF still earns its place in a modern stack despite the dominance of embeddin
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Stop-word lists that erase negation">
+Many libraries' default stop-word lists include "not" and "no". Drop them and "not good" becomes "good" — a sentiment model silently inverts. **Always inspect what is actually in the stop-word list before you apply it.**
+</Pitfall>
 
-- **Stop-word lists that erase negation.** Drop "not" and a sentiment model breaks. Always check what's actually in the list.
-- **Aggressive stemming on a copy-heavy corpus.** Marketing copy chooses words deliberately; stemming collapses those choices.
-- **Mismatched vocabularies between training and inference.** TF-IDF needs the same vocabulary at score time as at train time. Out-of-vocabulary words are silently dropped.
-- **Reading TF-IDF as importance for a decision.** TF-IDF tells you which words *distinguish* the class. Whether intervening on the underlying behaviour changes the outcome is still a Part III question.
+<Pitfall title="Aggressive stemming on copy-heavy corpora">
+Marketing copy chooses words deliberately, and stemming collapses "universal" and "universe" into one token, erasing those choices. **Prefer lemmatization, and use stemming sparingly on text where word choice carries meaning.**
+</Pitfall>
+
+<Pitfall title="Mismatched vocabularies">
+TF-IDF needs the same vocabulary at score time as at train time; out-of-vocabulary words are silently dropped at inference. **Freeze and version the fitted vocabulary, and re-fit deliberately rather than letting it drift.**
+</Pitfall>
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="What this buys you">
 
-The simplest, oldest, most-defensible representation of text is also one of the most useful. Bag-of-words and TF-IDF are not what you'll build a customer voice intelligence system on — but they are the baseline every more elaborate method has to beat, and the first lens every text project should run.
-
-> *Clean honestly. Weight by informativeness. Read the top terms next to the documents that produced them. Don't ask bag-of-words to do work it can't.*
+The simplest, oldest, most-defensible representation of text is also one of the most useful. Bag-of-words and TF-IDF are not what you'll build a customer voice intelligence system on — but they are the *baseline every more elaborate method has to beat*, and the first lens every text project should run. Clean honestly, weight by informativeness, read the top terms next to the documents that produced them, and don't ask bag-of-words to do work it can't.
 
 The next article picks up the model end of the pipeline — classification and sentiment on top of the matrix this article just built.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three short questions on preprocessing and TF-IDF."
-  questions={[
-    {
-      prompt: <>A team is building a sentiment model on app reviews. The library's default stop-word list includes "not" and "no". What is the most likely consequence?</>,
-      options: [
-        { label: <>Smaller vocabulary, slightly faster training.</> },
-        { label: <>Negation is silently dropped — "not good" becomes "good" — and sentiment polarity flips in those reviews.</> },
-        { label: <>The model's calibration improves.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Negation words are common in many stop-word lists. Their removal is the most consequential preprocessing decision in sentiment work.</>,
-    },
-    {
-      prompt: <>The word "the" has very high term frequency in almost every document and a very low IDF. What is its TF-IDF score?</>,
-      options: [
-        { label: <>High — common words always rank.</> },
-        { label: <>Near zero — TF × IDF crushes words that appear everywhere.</> },
-        { label: <>Undefined.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>That is exactly the point of TF-IDF. The IDF factor drives down words that fail to distinguish documents from one another.</>,
-    },
-    {
-      prompt: <>A TF-IDF model has been deployed and works well. A new model based on embeddings improves AUC by 0.4 points. Which question should be asked before switching?</>,
-      options: [
-        { label: <>"Is the 0.4-point gain worth losing the per-token interpretability and operational simplicity of TF-IDF?"</> },
-        { label: <>"Can we make the embedding model even bigger?"</> },
-        { label: <>"Should we ship both?"</> },
-      ],
-      correctIndex: 0,
-      explanation: <>The right comparison is whole-system: accuracy, latency, cost, maintenance, audit. Small accuracy gains rarely justify giving up the operational virtues of a baseline that ships in a few hundred lines.</>,
-    },
-  ]}
-/>
+</Takeaway>

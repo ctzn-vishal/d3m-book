@@ -3,6 +3,7 @@ import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Takeaway } from '@/components/Book/Takeaway';
 import {
   EvidenceStackMap,
   ArtefactFamilyTree,
@@ -159,18 +160,30 @@ We end where we started — naming the action, the counterfactual, and the thres
 
 ---
 
-## Managerial Takeaway
+<Takeaway label="The bottom line">
 
 Six evidence languages, five artefacts, five studios, one through-line, one map. This article is the orientation; the rest of the book is the work.
 
-> *Whichever Part you read next, ask the same question — what action does this method help name, what counterfactual does it construct, what threshold does it support?*
+*Whichever Part you read next, ask the same question — what action does this method help name, what counterfactual does it construct, what threshold does it support?*
+
+</Takeaway>
 
 Part I starts on the next page, with the question of what business claims a table is actually capable of supporting.
 
 <QuizBlock
   title="Concept check"
-  intro="Three short questions on the evidence stack."
+  intro="Three questions spanning the decision-driven stance and the evidence stack that climbs the ladder."
   questions={[
+    {
+      prompt: <>A dashboard shows that customers who received a marketing email spent more than customers who did not. The team rolls out the email. The most charitable description of this work is:</>,
+      options: [
+        { label: <>A successful data-driven decision.</> },
+        { label: <>Data-decorated — the action was named but the counterfactual ("what those customers would have spent without the email") was not constructed.</> },
+        { label: <>A causal inference.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Recipients of marketing email are a self-selected group; their higher spend is the average of two effects (the email's effect and the selection). Naming the counterfactual is what turns the action into a decision.</>,
+    },
     {
       prompt: <>A team wants to know whether a recent price change *caused* a margin lift. Which Part of the book is the natural home for this question?</>,
       options: [
@@ -190,16 +203,6 @@ Part I starts on the next page, with the question of what business claims a tabl
       ],
       correctIndex: 2,
       explanation: <>Parts IV and V answer complementary questions: <em>who and how loud</em> vs. <em>what and why</em>. Part VI (§24.2) is largely about the intersection.</>,
-    },
-    {
-      prompt: <>Which of the following is <em>not</em> one of the five artefacts in the family?</>,
-      options: [
-        { label: <>The Decision Memo.</> },
-        { label: <>The Predictive Task Contract.</> },
-        { label: <>A dashboard.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>A dashboard is a monitoring artefact (Part II / Part VI), not a one-page card in the family. The five cards / memos are: Decision Question Card, Predictive Task Contract, Model Card, AI Workflow Card, Decision Memo.</>,
     },
   ]}
 />

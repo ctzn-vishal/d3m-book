@@ -1,6 +1,7 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
 import { DecisionBriefBuilder } from '@/components/Book/part1/DecisionBriefBuilder';
 import briefRaw from './data/data-language-brief.json';
@@ -41,23 +42,25 @@ Figure 2 is the grading standard. It is short because the artifact should be reu
 
 The point is not bureaucracy. It is reuse. If the brief is well written, a different analyst can build the first chart in Part II without re-litigating what a row means, whether Zillow has been reshaped, whether Progresso share has a denominator, or whether a missing customer ID should be dropped.
 
-## What can go wrong
+<Pitfall title="The brief starts too late">
+If the first artifact is a dashboard screenshot, the grain and metric decisions have already been made invisibly — and inherited without review. **Write the brief before the first chart, so those decisions are named while they can still be changed.**
+</Pitfall>
 
-<Callout variant="caveat" title="A chart deck is not a data brief">
+<Pitfall title="Verbal metric definitions">
+"Active customer" and "market share" sound clear until someone asks for the denominator and the window. **Commit each metric to a written formula with its window, unit, and exclusions before it reaches a slide.**
+</Pitfall>
 
-**The brief starts too late.** If the first artifact is a dashboard screenshot, grain and metric decisions have already been made invisibly.
-
-**The metric definition is verbal.** "Active customer" and "market share" sound clear until a denominator and window are written down.
-
-**The join map is missing.** Without row-count and anti-join checks, a technically valid join can still inflate revenue or drop customers.
-
-</Callout>
+<Pitfall title="A missing join map">
+Without row-count and anti-join checks, a technically valid join can still inflate revenue or silently drop customers. **Record the row count before and after every join, and run the anti-join, as part of the brief.**
+</Pitfall>
 
 The professional habit is to leave behind the reusable definitions, not just the finished slide. That habit is what turns a one-time analysis into an evidence asset.
 
-## Managerial takeaway
+<Takeaway label="The bottom line">
 
-Part I gives managers a language for reading data before asking data to decide. The studio brief is the handoff: here is the decision question, here is what one row means, here are the metric contracts, here are the joins, here are the quality caveats, and here is what the data cannot yet prove. Once that brief exists, Part II visualization has a trustworthy foundation.
+Part I gives managers a language for reading data before asking data to decide. The studio brief is the handoff: here is the decision question, here is what one row means, here are the metric contracts, here are the joins, here are the quality caveats, and here is what the data cannot yet prove. Once that brief exists, Part II visualization has a *trustworthy foundation*.
+
+</Takeaway>
 
 ---
 

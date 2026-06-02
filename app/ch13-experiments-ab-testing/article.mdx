@@ -1,10 +1,10 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
-import { DataTable } from '@/components/Book/DataTable';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
 import { RandomAssignmentBalance, LiftWithCI } from '@/components/Book/part3/ConceptDiagrams';
 import { MilkQuasiExperimentFigure, MilkStudySummary } from '@/components/Book/part3/CausalRegressionVisuals';
 import part3 from '@/data/part3-cases.json';
@@ -124,53 +124,6 @@ A defensible quasi-experiment carries the same diagnostic discipline an A/B test
 
 These checks are exactly the discipline of the Decision Question Card carried into observational data.
 
-<QuizBlock
-  title="Concept check"
-  intro="Four conceptual questions on experimental thinking. Click an answer to reveal the explanation."
-  questions={[
-    {
-      prompt: <>Why does random assignment produce an unbiased estimate of the average treatment effect?</>,
-      options: [
-        { label: <>Because the treatment and control groups always end up with the same number of units.</> },
-        { label: <>Because the assignment is statistically independent of the potential outcomes, so the observed mean in each arm is an unbiased estimate of the corresponding potential-outcome mean.</> },
-        { label: <>Because random assignment removes measurement error from the outcome.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Equal sample sizes are not required, and randomization does nothing about measurement error. What it buys is <M>{String.raw`(Y(1), Y(0)) \perp D`}</M>, which makes the difference in observed means an unbiased estimator of the ATE.</>,
-    },
-    {
-      prompt: <>An experiment readout shows a point estimate of +3% lift, with a 95% confidence interval of [−1%, +7%]. The team's decision threshold is +2%. What is the most defensible interpretation?</>,
-      options: [
-        { label: <>Roll out: the point estimate is above the threshold.</> },
-        { label: <>Reject: the interval crosses zero, so the effect is not real.</> },
-        { label: <>The test is underpowered. The interval does not let us distinguish "no effect," "below threshold," or "above threshold." Run longer or get a bigger sample before deciding.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>Acting on the point estimate ignores uncertainty; rejecting because of <em>p</em> &gt; 0.05 confuses statistical with practical decisions. The interval here is consistent with anything from "no effect" to "well above threshold." The decision is to keep the experiment running, not to ship or kill.</>,
-    },
-    {
-      prompt: <>Stratified randomization improves on simple randomization by…</>,
-      options: [
-        { label: <>Eliminating selection bias from observational data.</> },
-        { label: <>Guaranteeing balance on a small set of named pre-treatment variables, which reduces the variance of the lift estimator.</> },
-        { label: <>Making it possible to run a smaller sample size for any required power.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Stratification randomizes <em>within</em> strata defined by pre-treatment variables, so those variables are balanced by construction. The estimator has lower variance because variation from those stratified covariates is removed. It is a variance-reduction tool inside a randomized design; it does nothing for observational data.</>,
-    },
-    {
-      prompt: <>For which of the following experiments are multi-armed bandits the <em>worst</em> fit?</>,
-      options: [
-        { label: <>Choosing among five headlines for a marketing email opened within minutes of being sent.</> },
-        { label: <>Selecting which of three promotional banners to show on a search result page.</> },
-        { label: <>Measuring whether a new onboarding flow raises 90-day retention and lifetime value.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>Bandits shift allocation as the short-run signal accrues, which contaminates any stable long-run cohort comparison. Slow outcomes like retention and lifetime value need a fixed-allocation A/B test so that the treated and control cohorts remain defined for the full measurement window.</>,
-    },
-  ]}
-/>
-
 ---
 
 ## Data Case: The Milk Pricing Quasi-Experiment
@@ -197,19 +150,21 @@ That is the most this quasi-experimental design can claim: *given the diagnostic
 
 ---
 
-## What Can Go Wrong
+<Pitfall title="Sample ratio mismatch">
+When the actual traffic split deviates from the intended one — 52/48 instead of 50/50 — it is almost always a randomization bug or selective drop-out, not random noise. **Check the split before reading any lift; a broken split means the arms are no longer comparable.**
+</Pitfall>
 
-Three operational failures recur in production experiments:
+<Pitfall title="Early stopping">
+Peeking daily and stopping the moment the result crosses the significance line inflates the apparent lift — the inflation is a mathematical consequence of selecting on a noisy walk, not evidence the effect is real. **Pre-register the stopping rule and hold to it, or use a sequential test designed for peeking.**
+</Pitfall>
 
-1.  **Sample ratio mismatch (SRM).** The actual traffic split deviates from the intended split (say, 52/48 instead of 50/50). It is almost always a randomization bug or a selective drop-out — not random noise. Investigate before reading any lift.
-2.  **Early stopping.** Peeking at the results daily and stopping the test the moment it crosses the significance line. Early-stopped tests inflate the apparent lift; the inflation is a mathematical consequence of selecting on a noisy walk, not a sign that the effect is real.
-3.  **Interference and spillovers.** Treated users telling control users about the feature, treated stores cannibalizing demand from neighboring control stores. The control arm is no longer a clean counterfactual when this happens, and the estimated lift attenuates toward zero.
+<Pitfall title="Interference and spillovers">
+When treated users tell control users about the feature, or treated stores cannibalize demand from neighbors, the control arm is no longer a clean counterfactual and the estimated lift attenuates toward zero. **Randomize at a level above the interference — by store, region, or market — when units can influence each other.**
+</Pitfall>
 
----
+<Takeaway label="The operating posture">
 
-## Managerial Takeaway
-
-Use a randomized experiment whenever you control the assignment of the lever. When you do not, do not abandon causal analysis — carry the discipline of an experiment into the observational data:
+Use a randomized experiment whenever you control the assignment of the lever. When you do not, do not abandon causal analysis — carry the *discipline* of an experiment into the observational data:
 
 - Define the treated and untreated cohorts before looking at the outcome.
 - Run balance checks on every pre-treatment variable you have.
@@ -217,3 +172,5 @@ Use a randomized experiment whenever you control the assignment of the lever. Wh
 - Read lifts as intervals against a stated decision threshold, never as a point against zero.
 
 The next article digs into why those checks so rarely pass for raw historical data — and what to do about it.
+
+</Takeaway>
