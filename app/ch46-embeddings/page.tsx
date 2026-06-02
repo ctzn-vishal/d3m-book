@@ -4,9 +4,9 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§19.1 What Are Embeddings? | ${book.title}`,
+  title: `§19.1 Embeddings and Semantic Search | ${book.title}`,
   description:
-    'Embeddings as a coordinate system for meaning — and what changes when documents become vectors.',
+    'Embeddings as a coordinate system for meaning — and the first thing you build on them: search, clustering, and brand positioning by meaning rather than vocabulary.',
 };
 
 export default function Page() {

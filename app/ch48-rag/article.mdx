@@ -11,7 +11,7 @@ A general-purpose language model has read a lot of the public internet and very 
 
 </DropCap>
 
-This article walks through the RAG pipeline end to end. The pieces are familiar from earlier in the part — chunking is a text-preprocessing decision (§18.2), embedding is from §19.1, the vector index is from §19.2, the LLM is from §21. RAG is what happens when they are wired together into a workflow that answers questions with sources attached.
+This article walks through the RAG pipeline end to end. The pieces are familiar from earlier in the part — chunking is a text-preprocessing decision (§18.2), embedding and the vector index are both from §19.1, the LLM is from §21. RAG is what happens when they are wired together into a workflow that answers questions with sources attached.
 
 ---
 
@@ -38,7 +38,7 @@ A walk-through:
 1.  **Documents.** The firm's authoritative content — policies, manuals, FAQs, pricing decks, support history. Whatever the system is expected to answer from.
 2.  **Chunk.** Documents are split into chunks of roughly 500–800 tokens with some overlap. Chunks small enough that retrieval can be precise; large enough to carry self-contained meaning.
 3.  **Embed.** Each chunk is embedded with the same model that will embed queries. The vectors are stored in a vector database.
-4.  **Index.** The database supports nearest-neighbour search across the chunk vectors. This is the §19.2 infrastructure.
+4.  **Index.** The database supports nearest-neighbour search across the chunk vectors. This is the §19.1 infrastructure.
 5.  **Query.** A user (or another system) submits a question.
 6.  **Embed the query.** With the same model.
 7.  **Retrieve.** Top-k chunks nearest to the query in vector space.
@@ -147,7 +147,7 @@ A common mistake is to grade only on the first metric. A system with perfect ret
 
 - The questions are conversational rather than factual (a small custom prompt may be enough).
 - The knowledge is small enough to fit entirely in the context window (just include it — no retrieval needed).
-- The system needs to act, not just answer (agents — §21.4 — wrap RAG in a workflow with tools).
+- The system needs to act, not just answer (agents — §21.3 — wrap RAG in a workflow with tools).
 - The questions are about *patterns in data* rather than facts (a structured query against a database is better than a RAG search).
 
 RAG is *one* AI pattern. It is the right one for grounded Q&amp;A. It is the wrong one for almost everything else.

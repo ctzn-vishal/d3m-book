@@ -4,7 +4,7 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§19.3 GPT-as-Measurement | ${book.title}`,
+  title: `§19.2 GPT-as-Measurement | ${book.title}`,
   description:
     'From surface features to measured constructs — the bridge between classical NLP and the language-model age.',
 };

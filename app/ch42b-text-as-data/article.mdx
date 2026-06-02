@@ -119,7 +119,7 @@ For Bean &amp; Basket the recurring business questions are short. Each one bends
 2.  **Which reviews indicate churn risk?** Document = review; label = churn-within-60-days; method = supervised classification (§18.4, §15.1).
 3.  **What product attributes drive positive sentiment?** Document = review; method = aspect-based sentiment (§18.4).
 4.  **Which topics are growing over time?** Document = review; method = topic model + time series (§18.5).
-5.  **How does our brand language differ from competitors'?** Document = social post; method = embedding clustering (§19.2).
+5.  **How does our brand language differ from competitors'?** Document = social post; method = embedding clustering (§19.1).
 
 Three of these questions go through bag-of-words and TF-IDF. Two need embeddings to handle synonyms and rephrasings. The same source dataset, the same vocabulary, the same metadata — but five distinct configurations of the pipeline.
 

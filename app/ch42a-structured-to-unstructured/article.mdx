@@ -65,7 +65,7 @@ The technique used to extract evidence depends on the data type. The decision lo
   ]}
 />
 
-Each family will get its own treatment. Reviews and tickets dominate Chapter 18. Documents enter in §20.3. Images and multimodal arrive in §20.2–§20.4. Transcripts and "anything in language" pull in across §19.3, §21, and §22.
+Each family will get its own treatment. Reviews and tickets dominate Chapter 18. Documents enter in §20.3. Images and multimodal arrive in §20.2–§20.4. Transcripts and "anything in language" pull in across §19.2, §21, and §22.
 
 ---
 
@@ -77,7 +77,7 @@ For text:
 
 - **Bag-of-words / TF-IDF.** A document becomes a sparse vector of word counts. Cheap, transparent, the bedrock of §18.3–§18.5.
 - **Embeddings.** A document becomes a dense vector in a learned meaning space. The bridge from classical to modern (§19).
-- **LLM measurement.** A document is read by a language model that returns scores or labels on managerially defined constructs. The conceptual heart of the part (§19.3).
+- **LLM measurement.** A document is read by a language model that returns scores or labels on managerially defined constructs. The conceptual heart of the part (§19.2).
 
 For images:
 
@@ -87,7 +87,7 @@ For images:
 For documents:
 
 - **OCR + layout.** A scanned page becomes text plus spatial structure (§20.3).
-- **Schema-driven extraction.** A document plus a JSON schema becomes a set of validated fields (§21.3).
+- **Schema-driven extraction.** A document plus a JSON schema becomes a set of validated fields (§21.2).
 
 The representation determines which questions become askable. Bag-of-words can answer "which words are most overrepresented in negative reviews?" An embedding can answer "what are customers angry about, even if they don't use the word *angry*?" An LLM measurement can answer "do these customers feel betrayed?" These are three different questions, and they require three different representations.
 

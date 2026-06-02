@@ -11,7 +11,7 @@ import {
 
 <DropCap>
 
-The methods of Chapter 18 measure surface features of text — which words appear, how often, in what combinations. The methods of §19.1–§19.2 measure semantic similarity — which documents are near which others in a learned meaning space. Both are useful. Both stop short of the question a manager usually wants to ask: *given this document, how high is the customer's intent to return, the executive's evasiveness, the candidate's authentic enthusiasm?* These are not vocabulary properties or similarity properties. They are **constructs** — the things a human analyst would extract after reading.
+The methods of Chapter 18 measure surface features of text — which words appear, how often, in what combinations. The methods of §19.1 measure semantic similarity — which documents are near which others in a learned meaning space. Both are useful. Both stop short of the question a manager usually wants to ask: *given this document, how high is the customer's intent to return, the executive's evasiveness, the candidate's authentic enthusiasm?* These are not vocabulary properties or similarity properties. They are **constructs** — the things a human analyst would extract after reading.
 
 </DropCap>
 
@@ -77,7 +77,7 @@ Three things make the construct-measurement paradigm operationally feasible only
 
 1.  **The model is capable enough.** Frontier LLMs can apply a definition consistently across thousands of documents with the kind of internal coherence that used to require trained human raters.
 2.  **The price has collapsed.** What once cost thousands of dollars in human annotation now costs a few dollars in API spend.
-3.  **The interface is stable.** Structured outputs (§21.3) let the measurement return JSON that flows into the rest of the pipeline without manual cleanup.
+3.  **The interface is stable.** Structured outputs (§21.2) let the measurement return JSON that flows into the rest of the pipeline without manual cleanup.
 
 <Figure width="page-outset" caption="Figure 3. Cost of rating 240 documents on 10 attributes, log scale, from the GABRIEL paper. Frontier LLM measurement is 700×–17,000× cheaper than human annotation. The implication is not just savings — it's that research questions that were previously infeasible become routine.">
   <div className="not-prose">
@@ -136,12 +136,12 @@ A short matrix to keep the use cases straight.
     },
     {
       q: 'What themes recur in the corpus?',
-      tool: 'Topic model (§18.5) or embedding clustering (§19.2)',
+      tool: 'Topic model (§18.5) or embedding clustering (§19.1)',
       why: 'Discovery question; both methods produce candidate themes the analyst names.',
     },
     {
       q: 'Find me documents about delivery problems even when the word "delivery" isn\'t used.',
-      tool: 'Semantic search (§19.2)',
+      tool: 'Semantic search (§19.1)',
       why: 'Meaning-similarity question; embeddings handle vocabulary mismatch structurally.',
     },
     {
@@ -156,7 +156,7 @@ A short matrix to keep the use cases straight.
     },
     {
       q: 'Pull renewal dates and dollar amounts from these contracts.',
-      tool: 'LLM extraction (§21.3)',
+      tool: 'LLM extraction (§21.2)',
       why: 'Structured extraction; the schema is the contract.',
     },
   ]}

@@ -37,10 +37,10 @@ The loop has six stages. Each stage produces an artefact that feeds the next.
 The stages, with the artefact each owes the next:
 
 1.  **Classify.** Reviews and tickets get routed to topic buckets and tagged with urgency (§18.4). *Artefact:* per-document tags, a weekly volume-by-topic chart.
-2.  **Measure.** Constructs are measured on every relevant document (§19.3): intent to return, severity, sense of betrayal, evasiveness, whatever the firm has named. *Artefact:* construct scores per document, weekly aggregate by region/product.
-3.  **Cluster.** Documents are embedded (§19.1) and clustered (§19.2). New themes surface; emerging complaints get flagged. *Artefact:* clusters with names and example documents.
+2.  **Measure.** Constructs are measured on every relevant document (§19.2): intent to return, severity, sense of betrayal, evasiveness, whatever the firm has named. *Artefact:* construct scores per document, weekly aggregate by region/product.
+3.  **Cluster.** Documents are embedded (§19.1) and clustered (§19.1). New themes surface; emerging complaints get flagged. *Artefact:* clusters with names and example documents.
 4.  **Retrieve.** When a question comes in — from an employee, from a manager, from a downstream agent — RAG (§20.1) pulls grounded context from the firm's knowledge base. *Artefact:* answers with citations.
-5.  **Summarize and act.** A customer-insights agent (§21.4) reads the day's classified-and-measured documents, identifies actionable signals, drafts proposed responses, and routes them through a human-approval gate. *Artefact:* approved Slack alerts, drafted customer responses, populated CRM updates.
+5.  **Summarize and act.** A customer-insights agent (§21.3) reads the day's classified-and-measured documents, identifies actionable signals, drafts proposed responses, and routes them through a human-approval gate. *Artefact:* approved Slack alerts, drafted customer responses, populated CRM updates.
 6.  **Monitor.** The §22.1 rubric runs continuously over the workflow's outputs. *Artefact:* the weekly evaluation dashboard, the rolling golden-set score, the alert log.
 
 The feedback arrow is the part that turns this into a system: the monitor's findings reshape the classifier's labels, the construct definitions, the cluster boundaries, and the agent's prompt. Without that loop, the workflow ages out within a quarter.
@@ -53,7 +53,7 @@ A concrete week in the life of the deployed studio.
 
 **Monday morning.** The classifier processed last week's reviews and tickets. Volume is normal; ticket category distribution is stable; sentiment is +0.16 on average. The classified output flows into the measurement step.
 
-**Monday afternoon.** Construct measurement runs. Most documents score modestly across all constructs. One cluster of reviews — about 80, mostly from the South-East — scores unusually high on "intent to switch" and "anger at perceived dishonesty". Pre-§19.3, the team would have seen these as "negative reviews" and routed them to a manager. The constructs name what is actually happening.
+**Monday afternoon.** Construct measurement runs. Most documents score modestly across all constructs. One cluster of reviews — about 80, mostly from the South-East — scores unusually high on "intent to switch" and "anger at perceived dishonesty". Pre-§19.2, the team would have seen these as "negative reviews" and routed them to a manager. The constructs name what is actually happening.
 
 **Tuesday morning.** Embedding clustering surfaces those 80 reviews as a distinct cluster. The cluster is new — it didn't exist last month. A representative review is pulled for inspection: a complaint about a regional promotion that appears to have been mis-stated by a third-party affiliate.
 
@@ -106,12 +106,12 @@ A sponsor reviewing the studio should see a single page that traces every decisi
     {
       section: 'Constructs',
       question: 'What deeper signals are we measuring? (intent, severity, betrayal, evasiveness)',
-      artefact: 'Construct measurement panel (§19.3).',
+      artefact: 'Construct measurement panel (§19.2).',
     },
     {
       section: 'Themes',
       question: 'What emerging clusters appeared this week?',
-      artefact: 'Embedding clusters with names (§19.2).',
+      artefact: 'Embedding clusters with names (§19.1).',
     },
     {
       section: 'Grounded answers',
@@ -121,7 +121,7 @@ A sponsor reviewing the studio should see a single page that traces every decisi
     {
       section: 'Actions',
       question: 'What did the agent draft, and what did humans approve?',
-      artefact: 'Agent log + approval queue (§21.4).',
+      artefact: 'Agent log + approval queue (§21.3).',
     },
     {
       section: 'Evaluation',
@@ -174,7 +174,7 @@ That's the operating-system view of decisions. The methods are the language. The
 
 The studio inherits every failure mode of every method it uses. Some are worth restating because they get more dangerous in integration:
 
-- **Confused construct definitions.** When §19.3 measurements feed §19.2 clusters that feed §21.4 agent actions, an ambiguous construct definition propagates all the way to a customer email.
+- **Confused construct definitions.** When §19.2 measurements feed §19.1 clusters that feed §21.3 agent actions, an ambiguous construct definition propagates all the way to a customer email.
 - **Stale evaluation set.** The golden set was good a year ago. Customer language has shifted; the evaluation no longer represents production. Refresh quarterly.
 - **Drift in the agent's tool surface.** A tool the agent depends on changes behavior (an API update, a schema change). The agent silently misuses it until someone reads the logs.
 - **Lost ownership.** The team that built the studio rotated out. The card is six months stale. New team members can't reconstruct the design intent. Tie ownership to roles, not individuals.

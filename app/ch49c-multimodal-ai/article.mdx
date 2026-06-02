@@ -115,7 +115,7 @@ Brief notes on the three less-discussed modalities:
 
 **Video.** Treated as either a stack of images or as a separate modality. Two patterns dominate: extract keyframes and run image analysis (cheap, works well for static scenes), or use a video-aware model that reasons about motion (more expensive, necessary for action recognition). In-store analytics, content moderation at scale, and ad-creative analysis all run on this.
 
-**Structured data alongside text.** Less glamorous, increasingly important: an LLM that can read a CSV or query a database alongside its prose context. Tools like Code Interpreter, function calling, and "computer use" agents (§21.4) make this routine. The boundary between "text + structured" and "agentic" is blurring fast.
+**Structured data alongside text.** Less glamorous, increasingly important: an LLM that can read a CSV or query a database alongside its prose context. Tools like Code Interpreter, function calling, and "computer use" agents (§21.3) make this routine. The boundary between "text + structured" and "agentic" is blurring fast.
 
 ---
 
@@ -189,7 +189,7 @@ The next chapter pivots from "what AI can do" to "how to put it to work" — lan
         { label: <>Image → OCR.</> },
       ],
       correctIndex: 0,
-      explanation: <>Sales calls are audio; transcription (Whisper or similar) brings them into text, where the same LLM patterns from §21.3 apply.</>,
+      explanation: <>Sales calls are audio; transcription (Whisper or similar) brings them into text, where the same LLM patterns from §21.2 apply.</>,
     },
     {
       prompt: <>The defining property of a multimodal foundation model (CLIP and successors) is:</>,

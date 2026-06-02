@@ -85,7 +85,7 @@ Two things to notice:
 - **The aspects are a managerial choice.** They reflect the levers the firm can pull. "Wait time" appears because there is an operations team that can fix it; "app" appears because there is a product team that owns it.
 - **Geographic variation is the action.** The headline number ("overall sentiment is +0.18 this week") doesn't tell anyone what to do on Monday. The heatmap tells the South-East operations lead exactly where to look.
 
-This is also the cleanest setup for the GPT-as-measurement move in §19.3. Once you can name aspects, you can also name constructs: "intent to return", "severity of complaint", "anger vs. disappointment". The aspect-based heatmap is the warm-up for the construct-based heatmap.
+This is also the cleanest setup for the GPT-as-measurement move in §19.2. Once you can name aspects, you can also name constructs: "intent to return", "severity of complaint", "anger vs. disappointment". The aspect-based heatmap is the warm-up for the construct-based heatmap.
 
 <Callout variant="finding" title="Why aspect sentiment wins">
   Aspect-based sentiment moves the conversation from "is the brand healthy?" to "where, and for whom, is which part of the brand under stress?" The first question is hard to act on. The second is what an operator needs.
@@ -97,7 +97,7 @@ This is also the cleanest setup for the GPT-as-measurement move in §19.3. Once 
 
 **Entity-based sentiment.** Same idea, but the units are named entities (people, products, competitors) rather than aspects. The classical use case: a tweet that says "Goose Island used to be great, AB InBev ruined it" is negative on AB InBev and positive-but-nostalgic on Goose Island. Standard sentiment models return a single negative score and miss the asymmetry.
 
-**Emotion detection.** Instead of three sentiment classes, fine-grained emotions: joy, anger, sadness, fear, disappointment, surprise, etc. Useful when the difference between "sad" and "angry" implies a different action — disappointment from a brand acquisition is *not* the same as anger about a defective product. The Goose Island brewery acquisition case in §19.3 leans heavily on this distinction.
+**Emotion detection.** Instead of three sentiment classes, fine-grained emotions: joy, anger, sadness, fear, disappointment, surprise, etc. Useful when the difference between "sad" and "angry" implies a different action — disappointment from a brand acquisition is *not* the same as anger about a defective product. The Goose Island brewery acquisition case in §19.2 leans heavily on this distinction.
 
 Both are special cases of the same idea: aggregating sentiment to a unit smaller than the document gives operators the leverage to act.
 

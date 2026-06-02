@@ -53,10 +53,10 @@ The agent's job, weekly:
 
 1.  **Pull reviews.** Tool: warehouse query. Pull last 7 days of reviews.
 2.  **Classify.** Tool: §18.4 classifier. Tag each review with topic and severity.
-3.  **Embed + cluster.** Tool: §19.2 embedding service + clustering. Surface the dominant complaint clusters.
+3.  **Embed + cluster.** Tool: §19.1 embedding service + clustering. Surface the dominant complaint clusters.
 4.  **Detect emerging issues.** Tool: topic-delta computation against the previous week. Flag clusters growing faster than a threshold.
 5.  **Retrieve related tickets.** Tool: RAG (§20.1) into the support knowledge base. Pull related historical tickets and known resolutions.
-6.  **Summarize.** Tool: LLM with structured output (§21.3). Generate a JSON record per emerging issue: topic, evidence quotes, severity, related tickets, suggested action.
+6.  **Summarize.** Tool: LLM with structured output (§21.2). Generate a JSON record per emerging issue: topic, evidence quotes, severity, related tickets, suggested action.
 7.  **Human review.** A manager sees the proposed alerts. Approves, edits-and-approves, or rejects.
 8.  **Send alert + log.** Tools: Slack API + audit log database. Post the approved alerts; record the decision.
 

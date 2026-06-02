@@ -4,7 +4,7 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§21.4 Agents and Tool Use | ${book.title}`,
+  title: `§21.3 Agents and Tool Use | ${book.title}`,
   description:
     'When an LLM becomes a workflow component — tools, memory, planning, and the human-approval gate.',
 };

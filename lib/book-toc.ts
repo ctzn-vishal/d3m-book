@@ -212,9 +212,8 @@ export const book: Book = {
           number: 19,
           title: 'Embeddings and Measured Constructs',
           articles: [
-            { slug: 'ch46-embeddings', number: '19.1', title: 'What Are Embeddings?', status: 'published' },
-            { slug: 'ch47-semantic-search', number: '19.2', title: 'Semantic Search and Brand Positioning', status: 'published' },
-            { slug: 'ch47b-gpt-measurement', number: '19.3', title: 'GPT-as-Measurement: From Surface Features to Constructs', status: 'published' },
+            { slug: 'ch46-embeddings', number: '19.1', title: 'Embeddings and Semantic Search', status: 'published' },
+            { slug: 'ch47b-gpt-measurement', number: '19.2', title: 'GPT-as-Measurement: From Surface Features to Constructs', status: 'published' },
           ],
         },
         {
@@ -231,10 +230,9 @@ export const book: Book = {
           number: 21,
           title: 'LLMs, Prompting, and Structured Workflows',
           articles: [
-            { slug: 'ch50-llms-capabilities', number: '21.1', title: 'What LLMs Do — Capabilities and Limits', status: 'published' },
-            { slug: 'ch50b-prompting', number: '21.2', title: 'Prompting as Task Design', status: 'published' },
-            { slug: 'ch50c-structured-outputs', number: '21.3', title: 'Structured Outputs and Extraction', status: 'published' },
-            { slug: 'ch51-agents-tools', number: '21.4', title: 'Agents and Tool Use', status: 'published' },
+            { slug: 'ch50-llms-capabilities', number: '21.1', title: 'LLM Capabilities and Prompting', status: 'published' },
+            { slug: 'ch50c-structured-outputs', number: '21.2', title: 'Structured Outputs and Extraction', status: 'published' },
+            { slug: 'ch51-agents-tools', number: '21.3', title: 'Agents and Tool Use', status: 'published' },
           ],
         },
         {

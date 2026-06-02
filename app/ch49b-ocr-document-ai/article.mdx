@@ -38,7 +38,7 @@ A walk-through:
 1.  **Scan / PDF.** The input — usually an image or a PDF. May be born-digital (clean text, structured) or scanned (pixels, possibly rotated, possibly with handwriting). The pipeline branches early based on this.
 2.  **Layout detection.** A vision model identifies regions of the page: headers, paragraphs, tables, line items, signatures. The output is a structured layout that the next stage can attach text to.
 3.  **OCR.** Pixels become text. Modern OCR (Tesseract, AWS Textract, Google Document AI, Azure Document Intelligence) is mostly a solved problem on clean printed documents and a hard problem on handwriting, low-quality scans, and unusual fonts.
-4.  **LLM extraction.** A language model is given the OCR'd text + the layout, and a JSON schema describing what to extract. It returns structured fields. This is the §21.3 pattern applied to documents.
+4.  **LLM extraction.** A language model is given the OCR'd text + the layout, and a JSON schema describing what to extract. It returns structured fields. This is the §21.2 pattern applied to documents.
 5.  **Human review.** Low-confidence extractions, edge cases, and flagged document types go to a human reviewer. Their decisions feed back as training data.
 6.  **Downstream system.** Validated JSON flows into the accounting, ERP, CRM, or compliance system that consumes it.
 

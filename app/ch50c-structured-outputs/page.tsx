@@ -4,7 +4,7 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§21.3 Structured Outputs and Extraction | ${book.title}`,
+  title: `§21.2 Structured Outputs and Extraction | ${book.title}`,
   description:
     'From free text to validated JSON — the bridge that lets LLMs feed downstream systems without manual cleanup.',
 };
