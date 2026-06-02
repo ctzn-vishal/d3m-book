@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { KeyNumber } from '@/components/Book/KeyNumber';
@@ -68,6 +69,43 @@ A line through confounded historical data can be precise, visually compelling, a
 <Pitfall title="Hiding the interval">
 A coefficient without an interval is a point pretending to be a fact. **Show the interval** so the reader sees a range of plausible values under the model rather than a command.
 </Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning what a narrow interval does and does not certify, reading distribution shape and the log transform, and overlapping-interval reasoning."
+  questions={[
+    {
+      prompt: <>A dashboard shows last quarter's regional sales gap with very tight error bars, so a VP concludes the gap is a reliable basis to shift the ad budget. What is the strongest objection?</>,
+      options: [
+        { label: <>The error bars should be recomputed at 99% rather than 95% before any decision is made.</> },
+        { label: <>Tight error bars usually signal too small a sample, so the precision is illusory and the gap is probably noise.</> },
+        { label: <>A narrow interval certifies that the descriptive gap is measured precisely, not that the comparison is causal, fair, or actionable — a tight band around a biased estimate is still biased.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Precision answers "uncertainty about what" — here, store-month variation around a summary — not whether the comparison identifies a causal, decision-relevant effect. Recomputing the confidence level changes width, not meaning; and a narrow interval comes from many observations, so it is not evidence of a small sample.</>,
+    },
+    {
+      prompt: <>Store-month soup volume is sharply right-skewed, and the chapter takes the log before plotting price against volume. What is the real reason to use logs here?</>,
+      options: [
+        { label: <>Logging compresses the long tail so the chart looks tidier and the outliers stop dominating the picture.</> },
+        { label: <>It reframes the question from differences in units to differences in percentages, so the slope reads as an elasticity — the multiplicative question a pricing manager actually asks.</> },
+        { label: <>Logging removes the confounding from seasonality and promotions, making the price-volume slope causal.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The log is a change of question, not a cosmetic move: in a log-log chart the slope is a percent-for-percent (elasticity) number, which is what pricing decisions need. A cleaner-looking tail is a side effect, and the log does nothing to fix confounding — winter demand and pricing still move together.</>,
+    },
+    {
+      prompt: <>Two months' mean-share intervals overlap slightly; a teammate says "overlap means no real difference, so ignore it." A second month's interval is much wider than the first. How should you reason?</>,
+      options: [
+        { label: <>Slight overlap does not by itself prove "no difference," and unequal widths are themselves information — the wider interval likely rests on fewer active stores, so coverage belongs read alongside the chart.</> },
+        { label: <>Overlap proves the two months are statistically identical, so the comparison can be dropped from the analysis.</> },
+        { label: <>The wider interval is the more trustworthy one because a larger range is more conservative and less likely to mislead.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>"Intervals overlap, therefore equal" is a common misreading; overlap is suggestive, not a verdict. Width carries meaning: a wide band usually reflects thinner coverage (fewer store-months), which is why coverage notes sit near the figure. A wider interval is less precise, not more trustworthy.</>,
+    },
+  ]}
+/>
 
 <Takeaway label="Net-net">
 

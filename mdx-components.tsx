@@ -52,8 +52,13 @@ function parseMath(text: string): (string | React.JSX.Element)[] {
         // 1. Content is not empty
         // 2. Doesn't start or end with space
         // 3. Doesn't contain newlines
+        // 4. Currency guard: a `$` directly before a digit ($5, $0.65) is a
+        //    dollar amount, not a math opener. Real math here uses <M>/<Equation>,
+        //    so this never collides with intended math and stops currency pairs
+        //    from being parsed as KaTeX (e.g. "$0.65 ... 1.6% ... $0.25").
         const isValidInlineMath =
           mathContent.length > 0 &&
+          !/^[0-9]/.test(mathContent) &&
           !mathContent.startsWith(' ') &&
           !mathContent.endsWith(' ') &&
           !mathContent.includes('\n') &&

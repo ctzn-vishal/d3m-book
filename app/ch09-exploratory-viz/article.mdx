@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
 import { DataTable } from '@/components/Book/DataTable';
 import { Step } from '@/components/Book/Step';
 import { KeyNumber } from '@/components/Book/KeyNumber';
@@ -101,6 +102,43 @@ A single bar showing "Q1 revenue: $1.18M" is not a chart, it is a label. **Every
 </Pitfall>
 
 The deeper pathology behind all three is the same: building dashboards from the *data the team has* instead of the *questions the manager has*. The fix is to start every dashboard project with the question, written down, before any chart template is opened. A team that does this has dashboards that survive their first review. A team that doesn't builds beautiful tools that get closed after ninety seconds.
+
+<QuizBlock
+  title="Concept check"
+  intro="These three questions span choosing a chart from the business question, looking at a full distribution before trusting one summary number, and the difference between exploring data and presenting an executive answer."
+  questions={[
+    {
+      prompt: <>A regional VP asks: "which of our twelve metro markets grew fastest in home values since 2020?" Your housing dataset has monthly price levels per market, but the markets start at very different price points, so a raw multi-line chart is dominated by the expensive coastal markets sitting at the top. Which chart best answers the VP's actual question?</>,
+      options: [
+        { label: <>An indexed line chart that rebases every market to 100 at the start of 2020, so each line shows percent growth and the fastest grower is the steepest line regardless of starting price.</> },
+        { label: <>A raw multi-line chart of price levels, because it shows the true dollar value of each market and the VP can read growth from how high each line ends up.</> },
+        { label: <>A heatmap of market by month colored by price level, because it fits all twelve markets in one panel without overlapping lines.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>The question is about relative growth, so the comparison must be growth, not level. Indexing each market to 100 at a common start converts the lines to percent change, making the fastest grower the steepest line no matter where it started. The raw level chart is the tempting trap: a market can end up high simply because it began high, so "ends up highest" answers "which is most expensive," not "which grew fastest." The heatmap colored by level has the same flaw and buries the ranking the VP needs in a wall of color. The comparison determines the chart, not the other way around.</>,
+    },
+    {
+      prompt: <>Across all Progresso store-months, average monthly unit volume is about 900 units, and the finance team proposes staffing and inventory plans assuming a typical store-month sells around 900. Before signing off, you plot the full distribution of store-month volumes. Which finding would most change how you act on that 900 figure?</>,
+      options: [
+        { label: <>The distribution is tightly clustered just above and below 900, confirming that nearly every store-month behaves like the average.</> },
+        { label: <>The distribution is heavily right-skewed: most store-months sell well under 900, while a thin tail of very high-volume store-months pulls the mean up, so the mean describes almost no actual store.</> },
+        { label: <>The distribution is centered exactly on 900 but the chart looks busy, which mainly tells you the histogram needs fewer bins.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>This is the look-before-you-summarize lesson. A right-skewed shape means a few high-volume store-months drag the mean above where the bulk of stores actually sit, so planning every store around 900 over-resources the typical low-volume store and under-resources the rare giants. The single mean hides that shape entirely; only the distribution reveals it. The tight-cluster option would justify trusting the mean, but it is contradicted by the known skew in the soup store-month data. The third option mistakes a real signal for a cosmetic binning issue and dodges the business consequence.</>,
+    },
+    {
+      prompt: <>You are deep in the drilldown panel of a dashboard, where the article says exploratory visualization lives. You build a scatterplot of store foot traffic against conversion and notice three odd stores far from the cloud of points. A colleague says, "great, drop those three outliers straight onto the executive KPI row so leadership sees them." What is the soundest response?</>,
+      options: [
+        { label: <>Agree, since the scatterplot already revealed the outliers, the exploratory work is done and the same chart can headline the executive page.</> },
+        { label: <>Push back: the scatterplot is exploratory, meant to admit new questions, so the next step is to investigate why those three stores differ, not to promote a raw exploratory chart into the headline that is supposed to deliver a settled, comparison-driven answer.</> },
+        { label: <>Replace the scatterplot with a single KPI tile reading "3 outlier stores" and put that on the headline row, because one number is always cleaner than a chart for executives.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The article places scatterplots and small multiples in the drilldown, where the job is to admit new information and raise questions, which is the essence of exploratory work. Finding three unusual stores is the start of an inquiry, not a finished result, so the disciplined move is to ask why they differ before anything reaches leadership. The headline row, by contrast, is confirmatory in spirit: it lands a settled comparison the manager can act on in seconds. Promoting a raw exploratory scatterplot there skips the investigation. The third option is the vanity-metric trap the article warns about: "3 outlier stores" is a number connected to no decision, so a clean tile does not make it belong on the headline.</>,
+    },
+  ]}
+/>
 
 <Takeaway label="The operating posture">
 

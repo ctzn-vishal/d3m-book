@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
@@ -94,6 +95,43 @@ When a churned customer is removed from the master file, every retention metric 
 <Pitfall title="Mistaking outliers for errors">
 A single $9,500 order looks like an obvious typo but is a catering order for a corporate client. The naive "remove outliers beyond three standard deviations" rule deletes it, the customer vanishes from lifetime-value analyses, and the high-value B2B segment becomes invisible. **Investigate outliers, do not delete them — most of the time they are exactly the rows worth paying attention to.**
 </Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="These three questions span a derived-metric trap (averaging ratios versus computing the ratio of totals), a data-quality decision (how silent imputation of missing or negative values rewrites a conclusion), and a definitional validation check (why a shrinking denominator can manufacture a trend that isn't real)."
+  questions={[
+    {
+      prompt: <>Bean and Basket has three stores. Store A earned 50,000 dollars on 1,000 square feet, Store B earned 60,000 dollars on 2,000 square feet, and Store C earned 40,000 dollars on 1,000 square feet. An analyst wants a single chain-wide "revenue per square foot" figure for the quarterly review. She computes each store's revenue per square foot, then averages those three numbers, and reports about 40 dollars per square foot. The CFO instead divides total revenue by total square footage and gets about 37.50 dollars per square foot. Who is right, and why does it matter?</>,
+      options: [
+        { label: <>The analyst is right: averaging the per-store ratios gives every store an equal vote, which is the fairer way to summarize productivity across the chain.</> },
+        { label: <>Both are equally valid; the gap is just rounding, and either number is fine to put on the slide as long as it is labeled.</> },
+        { label: <>The CFO is right for a chain-wide productivity figure: an average of ratios silently weights each store equally regardless of size, so the small high-density stores get the same vote as the large one. The ratio of the totals is the actual revenue the chain earns per square foot it operates.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>This is the average-of-ratios versus ratio-of-averages trap. The analyst's number answers "what is the typical store's density, weighting each store equally," while the CFO's number answers "across all the square footage we operate, how much revenue does each foot generate." For a chain-wide productivity statement the CFO's ratio-of-totals is correct, because the small dense stores should not count as much as the large store that occupies most of the floor space. Option A states the bias as if it were a virtue, and the gap is not rounding (40.00 versus 37.50) so option B is wrong. The deeper lesson is that a ratio like revenue per square foot encodes a business judgment about what comparison is meaningful, and "average the per-unit ratios" and "divide the totals" are two different metrics that happen to share a name.</>,
+    },
+    {
+      prompt: <>An analyst is preparing the weekly revenue-by-store report. Some rows have a missing (null) amount because of a point-of-sale sync failure, and a handful of rows have negative amounts that are genuine returns. To get the dashboard to run without errors, a colleague suggests one cleanup pass: replace every null amount with zero, and take the absolute value of every negative amount so all the numbers are positive and the totals add up. What is the most important objection?</>,
+      options: [
+        { label: <>Both moves corrupt the conclusion: zero-filling the nulls hides a broken sync process and understates true revenue as if those sales never happened, while absolute-valuing the returns turns refunds into sales and overstates revenue at exactly the stores with the most returns. The fix is to keep missing visible and add a return flag, not to force every value positive.</> },
+        { label: <>The objection is purely performance: imputing values row by row is slow on a large table, so it is better to filter the bad rows out in a single query before aggregating.</> },
+        { label: <>There is no real objection — zero is the natural default for a missing amount, and a return is just negative revenue, so flipping its sign restores the true sale that was originally rung up.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>This combines the silent-imputation and return-row lessons. A missing amount is not zero: zero-filling makes a sync outage look like real zero-dollar activity, suppresses the signal that the pipeline is broken, and understates revenue. A negative amount is not noise to be cleaned: it is a return, and taking the absolute value makes a refund indistinguishable from a sale, inflating revenue precisely where returns cluster. Option C repeats both fallacies as if they were common sense; option B treats a correctness problem as a speed problem, and filtering the bad rows out would also erase the legitimate returns. The correct posture is to let missing stay missing and make the business event visible in the schema with a return flag, so each downstream metric chooses explicitly whether to include returns.</>,
+    },
+    {
+      prompt: <>A retention dashboard shows the 12-month repeat-purchase rate climbing steadily for three straight quarters, and the team is ready to credit a new loyalty program. Before celebrating, you learn that the data engineering team recently started hard-deleting customer records 12 months after a customer's last purchase, to keep the master table small. What single check would most directly tell you whether the rising retention rate is real?</>,
+      options: [
+        { label: <>Re-run the numerator on a larger machine to rule out a memory limit silently truncating the count of repeat customers.</> },
+        { label: <>Reconstruct the denominator from an append-only history (or a soft-delete flag) so churned customers are still counted, then recompute the rate; if the trend flattens or reverses, the "improvement" was survivorship bias from the deletions shrinking the base, not a real lift.</> },
+        { label: <>Recompute the rate with a stricter definition of "repeat" — three or more orders instead of two — to confirm the loyalty program is driving genuinely loyal behavior.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Hard-deleting customers 12 months after their last purchase removes exactly the people who did not come back, so the denominator of the repeat-purchase rate quietly collapses to "customers who were still around," and any survival rate computed on it is overstated and trends upward as more lapsed customers are purged. The targeted validation is to restore the missing churned customers from an append-only or soft-deleted history and recompute: if the rate flattens, the rise was an artifact of the deletions. Option A misreads a definitional bias as a compute limit. Option C changes the metric's definition rather than testing the suspected cause, and tightening "repeat" on an already-biased base would not reveal the deletion problem. The lesson is that a rate is only as honest as its denominator, and a denominator that drops the cases of interest can manufacture a trend the business never actually experienced.</>,
+    },
+  ]}
+/>
 
 <Takeaway label="For the manager">
 

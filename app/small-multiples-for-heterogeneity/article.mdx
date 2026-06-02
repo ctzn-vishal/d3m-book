@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
@@ -11,7 +12,7 @@ export const soup = soupRaw;
 export const coefficientRows = soupRaw.regionCoefficients.map((row) => ({
   region: row.group,
   estimate: row.estimate.toFixed(2),
-  interval: `{"${row.ci_low.toFixed(2)} to $"}{row.ci_high.toFixed(2)}`,
+  interval: `${row.ci_low.toFixed(2)} to ${row.ci_high.toFixed(2)}`,
   r2: row.r2.toFixed(2),
 }));
 
@@ -27,7 +28,7 @@ The soup case has four census regions: East, Midwest, South, and West. A single 
 
 Figure 1 uses small multiples with the same scales across regions. The same-scale choice matters. If every panel had its own y-axis, each region would look equally volatile. A common y-axis makes the differences in level and movement visible.
 
-<Figure width="screen-inset" caption="Figure 1. Progresso price rises into the weak-demand months in every region, but the share story is not equally strong everywhere. Small multiples reveal heterogeneity the national average hides.">
+<Figure width="body-outset" caption="Figure 1. Progresso price rises into the weak-demand months in every region, but the share story is not equally strong everywhere. Small multiples reveal heterogeneity the national average hides.">
   <div className="not-prose">
     <SoupRegionSmallMultiples data={soup} />
   </div>
@@ -41,7 +42,7 @@ Small multiples also prepare students for later regression. A regression with on
 
 Figure 2 previews the later pricing chapter by plotting log(Progresso volume) against log(Progresso price), separately by region. The downward trend line is an elasticity-style visual: a one percent increase in price is associated with a percent change in volume. We are not yet claiming a causal elasticity. We are teaching students how to see the slope before they see the equation.
 
-<Figure width="screen-inset" caption="Figure 2. The log price-volume slope is negative in every region, but the slope is steeper in the Midwest than in the East or West. This previews elasticity without yet making a causal claim.">
+<Figure width="body-outset" caption="Figure 2. The log price-volume slope is negative in every region, but the slope is steeper in the Midwest than in the East or West. This previews elasticity without yet making a causal claim.">
   <div className="not-prose">
     <SoupElasticityScatter data={soup} groupBy="region" />
   </div>
@@ -73,6 +74,43 @@ Different y-axes make every region look equally important; different time window
 <Pitfall title="Small multiples as decoration">
 Four small charts are not automatically better than one. **Small multiples earn their space only when the managerial question is about heterogeneity** — regions, segments, products, cohorts, stores, or seasons.
 </Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="These three questions span the role of an explicit baseline as a comparison anchor, the same-scale rule that keeps small-multiple panels honest, and the judgment of when small multiples earn their space versus when a national average suffices."
+  questions={[
+    {
+      prompt: <>A brand manager circulates a slide reading "Progresso non-winter price: 3.42 dollars" as evidence that pricing is too aggressive in the off-season. A colleague objects that the number, standing alone, cannot support that conclusion. What is the strongest version of the colleague's objection?</>,
+      options: [
+        { label: <>The figure should have been shown as an index relative to January rather than in dollars, because dollar levels are never the right unit for a pricing decision.</> },
+        { label: <>A single number carries no meaning until it names what it is being compared with — the winter price, a competitor's price, or last year's — so "3.42" without a baseline anchor cannot say whether pricing is aggressive at all.</> },
+        { label: <>The objection is misplaced: a single off-season average is sufficient, and adding any comparison would only clutter the slide.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The article's core move is that every number on a chart is implicitly a comparison, and the comparison has to be named to mean anything. "3.42 dollars" is neither high nor low until it is set against an anchor — the winter price, a rival, or a prior year. Indexing is one way to express a comparison, but the claim that dollars are "never" the right unit overshoots; the real defect is the missing baseline, not the unit. Declaring one number sufficient is exactly the error the chapter warns against.</>,
+    },
+    {
+      prompt: <>You build a four-panel small-multiple of soup volume by region. To "let each region breathe," a teammate sets each panel's y-axis to its own min and max so every region fills its frame. Why does the chapter treat this as a defect rather than a polish?</>,
+      options: [
+        { label: <>Independent y-axes make every region's swings look the same size, destroying the cross-panel comparison that is the whole point of small multiples; the axes must be shared so only the data varies.</> },
+        { label: <>Independent y-axes are fine for volume but should never be used for price, so the issue is limited to this particular metric.</> },
+        { label: <>The only problem is aesthetic: panels with different axes look mismatched, but the comparison itself remains valid.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Small multiples work because the eye compares panels directly, and that only holds when the scale, the time window, and the panel order are fixed across every panel. Free y-axes rescale each region to fill its frame, so a tiny swing and a huge swing look identical — the reader reads shape and concludes the regions are alike when they are not. This is a correctness failure, not a cosmetic one, and it is not specific to volume versus price.</>,
+    },
+    {
+      prompt: <>A VP asks whether the company's countercyclical pricing pattern "holds everywhere or just in a few markets." An analyst answers with the single national average price-by-month line. When does the national line suffice, and when do small multiples earn their space here?</>,
+      options: [
+        { label: <>The national line always suffices; small multiples are decorative and add cost without changing the decision.</> },
+        { label: <>Small multiples always beat a national line, so every chart should be faceted by region regardless of the question.</> },
+        { label: <>The national line answers "is there a pattern on average," but the VP's question is explicitly about heterogeneity across markets, so small multiples earn their space precisely because the question is whether the pattern survives region by region.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>The chapter's discipline is that small multiples are justified only when the managerial question is about heterogeneity — regions, segments, cohorts — and are otherwise clutter. A national average is the right tool for "is there a pattern overall," but the VP asked whether the pattern holds everywhere, which is a heterogeneity question by construction. Faceting earns its space here; faceting everything by reflex is the opposite error the chapter also warns against.</>,
+    },
+  ]}
+/>
 
 <Takeaway label="The call">
 

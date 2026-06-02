@@ -304,7 +304,7 @@ export function SoupRegionSmallMultiples({ data }: { data: { regionMonth: Region
   const shareDomain = paddedDomain(extent(rows, d => d.progresso_share), 0.06);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
       {REGION_ORDER.map(region => {
         const regionRows = rows.filter(d => d.region === region).sort((a, b) => a.month - b.month);
         const color = REGION_COLORS[region];
@@ -346,7 +346,7 @@ export function SoupElasticityScatter({
   const coefs = groupBy === 'region' ? data.regionCoefficients ?? [] : data.seasonCoefficients ?? [];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
       {groups.map(group => {
         const groupPoints = points.filter(d => groupBy === 'region' ? d.region === group : d.season === group);
         const line = data.trendLines?.find(d => d.group === group) ?? fittedTrendLine(group, groupPoints);

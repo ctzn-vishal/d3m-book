@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { Pitfall } from '@/components/Book/Pitfall';
@@ -57,6 +58,43 @@ A chart shows volume falling as price rises and the caption says price caused th
 <Pitfall title="Missing operational context">
 Store coverage, region definitions, winter definitions, product definitions, and map approximations all change interpretation. A dashboard need not display every caveat at once, **but it must put the relevant caveat next to the relevant chart.**
 </Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning the decision-ending dashboard, the monitor-diagnose-decide handoff to causal work, and editing a visual brief around the question."
+  questions={[
+    {
+      prompt: <>The soup dashboard makes one pattern unmistakable: volume falls in summer while Progresso's price rises. A reviewer calls it "finished" because the insight is obvious at a glance. What is the design flaw this praise is hiding?</>,
+      options: [
+        { label: <>The dashboard ends at an interesting pattern instead of a decision or next test, so it earns praise and then changes nothing — the "attractive dead end."</> },
+        { label: <>The charts need more polish before the dashboard can be considered complete.</> },
+        { label: <>Three additional metrics should be added so the pattern can be cross-checked from every angle.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>A dashboard succeeds when the reader knows what to do next, not when a chart is striking. Obviousness is not an ending; the page must close on the next managerial decision or test. More polish or more panels do not fix a page that stops at "interesting."</>,
+    },
+    {
+      prompt: <>In the monitor-diagnose-decide sequence, the decide panel shows volume dropping as price rises. A manager wants the caption to read "raising price lowered volume; cut price." Why should the dashboard refuse?</>,
+      options: [
+        { label: <>The sample of months is too small for the caption to be statistically reliable.</> },
+        { label: <>A descriptive dashboard can show the association but cannot separate price from seasonality; its honest job is to hand off to a credible pricing test or quasi-experimental design.</> },
+        { label: <>Decide panels should never carry captions, only the monitor panel should.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Monitor asks if something changed, diagnose asks where from, decide names the next action — and that action here is the next test, not a causal verdict. The dashboard observes countercyclical pricing but cannot prove price caused the decline; overwriting that limit with a causal caption is the overclaiming trap.</>,
+    },
+    {
+      prompt: <>Building the capstone's six-panel decision brief, you have computed revenue, AOV, repeat rate, gross margin, revenue per active customer, and a rolling trend. The instinct is to give each its own panel "for completeness." What does the brief discipline require instead?</>,
+      options: [
+        { label: <>Show every metric you computed, since omitting one looks like you failed to analyze it.</> },
+        { label: <>Pick the panels by which charts render most attractively, regardless of the question.</> },
+        { label: <>Include only the panels the executive question needs — question, KPI, trend, store comparison, the drilldown that comparison surfaces, and the recommended action — and leave the rest out.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>A decision brief is edited around the question→visual→decision flow, not around the analyst's effort. Computing a metric is not a reason to display it; completeness dilutes the decision path. The drilldown should follow whatever the comparison panel surfaces, and unused metrics stay in the appendix, not the brief.</>,
+    },
+  ]}
+/>
 
 <Takeaway label="What to ship">
 

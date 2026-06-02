@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
@@ -43,6 +44,43 @@ A string sort of dates puts "2024-13-01" before "2024-2-01," because string comp
 <Pitfall title="Arithmetic on ordered categories">
 With sizes encoded Small / Medium / Large, rank-based operations make sense (the median order, which sizes are over-represented in returns) but arithmetic does not — there is no "average size" because the intervals are not equal. Worse, if someone recodes sizes as `1`, `2`, `3` "for convenience," the spreadsheet will happily return an average of `2.4` that means nothing but looks like it does. **Keep ordered categories as labels, not numbers, so the arithmetic that fails silently is never offered.**
 </Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning the unit of observation (grain), the data structure that fits a question, and measurement type versus storage type."
+  questions={[
+    {
+      prompt: <>A regional report shows three stores' "average basket" — $7.10, $5.80, $4.35 — and the manager averages those three figures to claim a chain-wide average basket of $5.75. Why is the $5.75 wrong, and what would fix it?</>,
+      options: [
+        { label: <>It is wrong only because of rounding; carrying more decimal places in each store's average would make the chain figure accurate.</> },
+        { label: <>It averages three means that summarize different numbers of transactions, so it weights each store equally; the fix is to recompute from the finer grain — total revenue divided by total transactions.</> },
+        { label: <>It is wrong because basket size should never be averaged at all; the only valid summary is the median basket per store.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A mean-of-means silently weights every group the same regardless of size, so a high-volume store counts no more than a low-volume one. The number is biased no matter how many decimals you keep, and the mean itself is a fine statistic. The cure is to keep the transaction-level grain available and aggregate up once at the end: total revenue over total transactions.</>,
+    },
+    {
+      prompt: <>Last quarter's store ranking shows Downtown on top and Suburban near the bottom. Hidden underneath is eight weeks of store-week data in which Downtown is flat and Suburban has nearly tripled. Why can the ranking actively mislead the investment decision?</>,
+      options: [
+        { label: <>The ranking is a cross-section: it captures level at one moment and discards trajectory, so it rewards a stagnant leader and hides the store with real momentum.</> },
+        { label: <>The ranking is a time-series, so it overstates trends and should be replaced with a single-week snapshot.</> },
+        { label: <>The ranking is fine; a store's current level is always the best guide to where future growth will come from.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>A single-period ranking is a cross-section — units compared with time held fixed — and it cannot distinguish a steady leader from one that peaked and is fading, or a small store from a fast-growing one. Only the panel (same units over time) shows trajectory. Trusting the ranking is how organizations fund stagnation and starve momentum.</>,
+    },
+    {
+      prompt: <>An analyst notices that customer_id, ZIP code, and a 1-to-5 satisfaction rating are all stored as integers, and reports the "average" of each. Which diagnosis is correct?</>,
+      options: [
+        { label: <>All three averages are valid because the database stores them as numbers, and any column stored as a number supports arithmetic.</> },
+        { label: <>The ID and ZIP averages are meaningless because they are really keys and locations, while the rating average is fine because a rating is a genuine number.</> },
+        { label: <>None of the three averages is trustworthy: IDs and ZIPs are categories or locations used to group and map, and a rating is an ordered category whose gaps are not equal, so it calls for a median or a top-2-box share.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Storage type (what the engine sees) is not measurement type (what you are allowed to do). An ID is a key, a ZIP is a location — both group and map but never average. A rating is an ordered category: the distance from 4 to 5 need not equal the distance from 1 to 2, so the arithmetic mean misleads even though it computes. Report a median or the share of 4-or-5 responses instead.</>,
+    },
+  ]}
+/>
 
 <Takeaway label="What this buys you">
 
