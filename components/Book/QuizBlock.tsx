@@ -65,23 +65,23 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
   };
 
   return (
-    <section className="not-prose my-10 rounded-md border border-slate-200 bg-slate-50 p-6">
-      <header className="flex items-baseline justify-between gap-4">
-        <h3 className="text-base font-semibold uppercase tracking-wide text-slate-700">
+    <section className="not-prose my-9 rounded-md border border-slate-200 bg-slate-50/80 p-4 shadow-sm sm:p-5">
+      <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-700">
           {title}
         </h3>
-        <div className="flex gap-3 text-xs">
+        <div className="flex gap-2 text-xs">
           <button
             type="button"
             onClick={revealAll}
-            className="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-700 hover:bg-slate-100"
+            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 transition-colors hover:bg-slate-100"
           >
             Reveal all
           </button>
           <button
             type="button"
             onClick={reset}
-            className="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-700 hover:bg-slate-100"
+            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 transition-colors hover:bg-slate-100"
           >
             Reset
           </button>
@@ -92,14 +92,14 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
         <p className="mt-2 text-sm leading-relaxed text-slate-600">{intro}</p>
       )}
 
-      <ol className="mt-5 space-y-5">
+      <ol className="mt-4 space-y-4">
         {questions.map((q, qi) => {
           const pickIndex = picks[qi];
           const isRevealed = revealed[qi];
           return (
             <li
               key={qi}
-              className="rounded-md border border-slate-200 bg-white p-4"
+              className="rounded-md border border-slate-200 bg-white p-3.5"
             >
               <div className="flex gap-2 text-sm font-medium text-slate-900">
                 <span className="text-slate-500">{qi + 1}.</span>
@@ -126,7 +126,7 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
                       <button
                         type="button"
                         onClick={() => pick(qi, oi)}
-                        className={`flex w-full items-start gap-3 rounded border px-3 py-2 text-left text-sm transition-colors ${stateClass}`}
+                        className={`flex w-full items-start gap-3 rounded-md border px-3 py-2 text-left text-sm leading-snug transition-colors ${stateClass}`}
                       >
                         <span className="mt-px font-semibold">{letter}.</span>
                         <span className="flex-1">{opt.label}</span>
@@ -143,7 +143,7 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
               </ul>
 
               {isRevealed && (
-                <div className="mt-3 rounded border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700">
+                <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700">
                   <strong className="font-semibold text-slate-900">Why:</strong>{' '}
                   {q.explanation}
                 </div>

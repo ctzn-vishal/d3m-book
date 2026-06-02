@@ -35,7 +35,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
       <ReadingProgress />
       <StickyBookBar book={book} />
 
-      <div className="mx-auto w-full max-w-7xl flex-1 px-6 lg:px-10 xl:grid xl:grid-cols-[1fr_minmax(0,48rem)_14rem] xl:gap-8">
+      <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-10 xl:grid xl:grid-cols-[minmax(8rem,1fr)_minmax(0,48rem)_13rem] xl:gap-9 2xl:grid-cols-[minmax(12rem,1fr)_minmax(0,48rem)_13rem]">
         {/* Left spacer — balances the right TOC rail so the prose column
             stays optically centered on wide screens. */}
         <div className="hidden xl:block" aria-hidden="true" />
@@ -59,12 +59,12 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
             )}
           </nav>
 
-          <article className="w-full min-w-0 py-10 prose prose-neutral">
-            <header className="mb-10 not-prose">
+          <article className="w-full min-w-0 py-10 prose prose-neutral prose-headings:font-display prose-headings:tracking-normal prose-h2:mt-12 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h3:mt-8 prose-h3:text-[1.2rem] prose-h3:leading-snug prose-p:leading-7 prose-li:leading-7">
+            <header className="mb-9 not-prose">
               <p className="text-xs uppercase tracking-wider text-muted">
                 {formatArticleNumber(article.number)}
               </p>
-              <h1 className="mt-2 text-3xl font-display font-semibold text-body sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-display font-semibold leading-tight text-body sm:text-[2.35rem]">
                 {article.title}
               </h1>
             </header>
@@ -74,7 +74,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
 
         {/* Right rail — in-page "On this page" TOC, sticky under the book bar. */}
         <aside className="hidden xl:block">
-          <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto py-10">
+          <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto py-10 pr-1">
             <OnThisPage />
           </div>
         </aside>
@@ -100,7 +100,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
 function StickyBookBar({ book }: { book: Book }) {
   return (
     <div className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 lg:px-10 py-2.5">
+      <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-4 px-5 sm:px-6 lg:px-10 py-2.5">
         <Link
           href="/"
           className="text-sm font-display font-semibold text-body hover:text-link transition-colors truncate"
@@ -111,7 +111,7 @@ function StickyBookBar({ book }: { book: Book }) {
           <SearchTrigger />
           <Link
             href="/studios"
-            className="hidden sm:inline-block rounded-md px-3 py-1.5 text-xs font-medium text-muted hover:text-body hover:bg-card transition-colors"
+            className="hidden sm:inline-block rounded-md px-2.5 py-1.5 text-xs font-medium text-muted hover:text-body hover:bg-card transition-colors"
           >
             Case Gallery
           </Link>
@@ -124,12 +124,12 @@ function StickyBookBar({ book }: { book: Book }) {
 function BookFooter({ prev, next }: { prev: Article | null; next: Article | null }) {
   return (
     <footer className="mt-auto border-t border-border bg-card">
-      <nav className="mx-auto flex max-w-3xl items-stretch gap-4 px-6 py-8">
+      <nav className="mx-auto flex max-w-3xl items-stretch gap-3 px-5 sm:px-6 py-7">
         <div className="flex-1">
           {prev && (
             <Link
               href={`/${prev.slug}`}
-              className="block rounded-md border border-border p-4 hover:border-border-strong transition-colors"
+              className="block rounded-md border border-border bg-surface p-3.5 hover:border-border-strong transition-colors"
             >
               <p className="text-xs uppercase tracking-wider text-muted">
                 ← Previous
@@ -144,7 +144,7 @@ function BookFooter({ prev, next }: { prev: Article | null; next: Article | null
           {next && (
             <Link
               href={`/${next.slug}`}
-              className="block rounded-md border border-border p-4 text-right hover:border-border-strong transition-colors"
+              className="block rounded-md border border-border bg-surface p-3.5 text-right hover:border-border-strong transition-colors"
             >
               <p className="text-xs uppercase tracking-wider text-muted">
                 Next →

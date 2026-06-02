@@ -47,17 +47,17 @@ export function KeyNumber({
   return (
     <div
       className={[
-        'not-prose my-8',
+        'not-prose my-7 rounded-md border border-slate-200 bg-slate-50/70 px-4 py-4',
         align === 'center' ? 'text-center' : 'text-left',
       ].join(' ')}
     >
       <div className="flex items-baseline gap-2 justify-start">
         {align === 'center' && <span className="flex-1" />}
-        <span className="text-6xl font-semibold tracking-tight tabular-nums text-body">
+        <span className="text-4xl font-semibold leading-none tracking-tight tabular-nums text-body sm:text-5xl">
           {value}
         </span>
         {unit && (
-          <span className="text-2xl text-muted font-normal">{unit}</span>
+          <span className="text-xl font-normal text-muted sm:text-2xl">{unit}</span>
         )}
         {align === 'center' && <span className="flex-1" />}
       </div>
@@ -78,7 +78,7 @@ export function KeyNumber({
         >
           <span
             className={[
-              'inline-block px-2 py-0.5 rounded-md text-xs font-medium tabular-nums',
+              'inline-block rounded-md px-2 py-0.5 text-xs font-medium tabular-nums',
               changeColor(change),
             ].join(' ')}
           >

@@ -12,6 +12,18 @@ article :is(h1, h2, h3, h4) {
   scroll-margin-top: 6rem;
 }
 
+article :where(.not-prose) {
+  min-width: 0;
+}
+
+article :where(.not-prose svg, .not-prose img, .not-prose canvas) {
+  max-width: 100%;
+}
+
+article :where(.not-prose svg:not(.recharts-surface), .not-prose img) {
+  height: auto;
+}
+
 /* One-time soft pulse on the floating Contents pill to draw the eye on
    first article load. After 2 cycles it stops, so it doesn't become
    visual noise during reading. */

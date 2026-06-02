@@ -195,8 +195,8 @@ export default function TimeseriesIndexV1({
         const visible = payload.filter((s: any) => visibleGroups.has(s.name));
         if (visible.length === 0) return null;
         return (
-            <div className="bg-white p-3 border border-gray-300 shadow-lg rounded-md text-sm max-w-xs">
-                <p className="font-semibold mb-2 text-gray-700">{`Year: ${label}`}</p>
+            <div className="max-w-xs rounded-md border border-slate-200 bg-white p-3 text-sm shadow-lg">
+                <p className="mb-2 font-semibold text-slate-700">{`Year: ${label}`}</p>
                 {visible.map((s: any) => {
                     const colorIndex = demographicGroups.indexOf(s.name);
                     const color = colorIndex !== -1 ? COLORS[colorIndex % COLORS.length] : '#8884d8';
@@ -204,16 +204,16 @@ export default function TimeseriesIndexV1({
                     return (
                         <div key={s.name} className="mb-1.5 last:mb-0">
                             <p className="font-medium" style={{ color }}>{s.name}</p>
-                            <p className="text-gray-600" style={{ color }}>
+                            <p className="text-slate-600" style={{ color }}>
                                 {`Index: ${s.value != null ? s.value.toFixed(1) : 'N/A'}`}
                             </p>
                             {raw != null && (
-                                <p className="text-gray-500 text-xs">
+                                <p className="text-xs text-slate-500">
                                     {`Raw: ${raw.toFixed(1)}%`}
                                 </p>
                             )}
                             {s.payload?.n_actual && (
-                                <p className="text-gray-500 text-xs">
+                                <p className="text-xs text-slate-500">
                                     {`N: ${s.payload.n_actual.toLocaleString()}`}
                                 </p>
                             )}
@@ -230,17 +230,17 @@ export default function TimeseriesIndexV1({
         <div className={
             compact
                 ? "w-full p-2"
-                : "w-full bg-white rounded-lg shadow px-4 md:px-6 pt-3 md:pt-4 pb-4 md:pb-5"
+                : "w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm md:px-5 md:pt-4"
         }>
             {!compact && (
-                <div className="mb-2">
-                    <h2 className="text-base font-semibold text-gray-800 leading-snug">{data.metadata.title}</h2>
-                    <p className="text-xs text-gray-600 mt-0.5 leading-snug">{subtitle}</p>
-                    {data.metadata.question && <p className="text-xs text-gray-500 italic mt-0.5 leading-snug">{data.metadata.question}</p>}
+                <div className="mb-3 border-b border-slate-100 pb-2">
+                    <h2 className="text-sm font-semibold leading-snug text-slate-900">{data.metadata.title}</h2>
+                    <p className="mt-0.5 text-xs leading-snug text-slate-600">{subtitle}</p>
+                    {data.metadata.question && <p className="mt-0.5 text-xs italic leading-snug text-slate-500">{data.metadata.question}</p>}
                 </div>
             )}
 
-            <div className={compact ? "h-[200px] md:h-[220px] w-full" : "h-[450px] md:h-[500px] w-full"}>
+            <div className={compact ? "h-[180px] md:h-[200px] w-full" : "h-[360px] md:h-[400px] w-full"}>
                 <ResponsiveContainer width="100%" height="100%">
                     <LineChart margin={{ top: 20, right: 20, left: 10, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
@@ -303,8 +303,8 @@ export default function TimeseriesIndexV1({
             </div>
 
             {!compact && (
-                <div className="flex flex-col sm:flex-row justify-between items-center mt-3 sm:mt-1 pt-2 border-t border-gray-200">
-                    <div className="text-xs text-gray-500 text-left order-1 sm:order-none">
+                <div className="mt-3 flex flex-col items-start justify-between gap-2 border-t border-slate-100 pt-2 sm:flex-row sm:items-center">
+                    <div className="order-1 text-left text-[11px] leading-snug text-slate-500 sm:order-none">
                         Source: {data.metadata.source?.name || 'Not specified'}
                         {data.metadata.observations && ` (${data.metadata.observations.toLocaleString()} Observations)`}
                     </div>

@@ -62,14 +62,14 @@ export interface StaticChartV1Props {
  */
 export function StaticChartV1({ svgUrl, alt, source, title, subtitle }: StaticChartV1Props) {
   return (
-    <div className="w-full bg-white rounded-lg shadow px-4 md:px-6 pt-3 md:pt-4 pb-4 md:pb-5">
+    <div className="w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm md:px-5 md:pt-4">
       {(title || subtitle) && (
-        <div className="mb-2">
+        <div className="mb-3 border-b border-slate-100 pb-2">
           {title && (
-            <h2 className="text-base font-semibold text-gray-800 leading-snug">{title}</h2>
+            <h2 className="text-sm font-semibold leading-snug text-slate-900">{title}</h2>
           )}
           {subtitle && (
-            <p className="text-xs text-gray-600 mt-0.5 leading-snug">{subtitle}</p>
+            <p className="mt-0.5 text-xs leading-snug text-slate-600">{subtitle}</p>
           )}
         </div>
       )}
@@ -84,8 +84,8 @@ export function StaticChartV1({ svgUrl, alt, source, title, subtitle }: StaticCh
       </div>
 
       {source && (
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-3 sm:mt-1 pt-2 border-t border-gray-200">
-          <div className="text-xs text-gray-500 text-left order-1 sm:order-none">
+        <div className="mt-3 border-t border-slate-100 pt-2">
+          <div className="text-left text-[11px] leading-snug text-slate-500">
             Source: {source}
           </div>
         </div>

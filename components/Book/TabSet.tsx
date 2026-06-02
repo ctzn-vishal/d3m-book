@@ -85,12 +85,12 @@ export function TabSet({
   };
 
   return (
-    <div className="not-prose my-8">
+    <div className="not-prose my-7">
       <div
         role="tablist"
         aria-label={ariaLabel}
         onKeyDown={onKeyDown}
-        className="flex gap-1 border-b border-border mb-4"
+        className="mb-4 flex gap-1 overflow-x-auto border-b border-border"
       >
         {tabs.map((tab, i) => {
           const isActive = i === active;
@@ -108,7 +108,7 @@ export function TabSet({
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActive(i)}
               className={[
-                'px-4 py-2 text-sm transition-colors',
+                'shrink-0 px-3 py-2 text-sm transition-colors',
                 'border-b-2 -mb-px',
                 isActive
                   ? 'font-semibold text-body border-body'

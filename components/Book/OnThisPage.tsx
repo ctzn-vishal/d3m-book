@@ -54,11 +54,11 @@ export function OnThisPage() {
   if (headings.length < 2) return null;
 
   return (
-    <nav aria-label="On this page" className="text-sm">
-      <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
+    <nav aria-label="On this page" className="text-[13px]">
+      <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">
         On this page
       </p>
-      <ul className="space-y-1.5 border-l border-border">
+      <ul className="space-y-1 border-l border-border">
         {headings.map(h => {
           const isActive = h.id === activeId;
           return (
@@ -68,7 +68,7 @@ export function OnThisPage() {
                 onClick={() => setActiveId(h.id)}
                 className={[
                   'block border-l-2 -ml-px py-0.5 leading-snug transition-colors',
-                  h.level === 3 ? 'pl-6' : 'pl-4',
+                  h.level === 3 ? 'pl-5 text-[12px]' : 'pl-3.5',
                   isActive
                     ? 'border-link text-body font-medium'
                     : 'border-transparent text-muted hover:text-body hover:border-border-strong',

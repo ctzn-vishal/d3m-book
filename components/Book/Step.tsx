@@ -22,15 +22,15 @@ export interface StepProps {
  */
 export function Step({ number, title, children }: StepProps) {
   return (
-    <div className="flex gap-4 my-4 not-prose">
+    <div className="my-4 flex gap-3 not-prose">
       <div className="flex-shrink-0">
-        <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-body text-white text-sm font-semibold tabular-nums">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-body text-xs font-semibold tabular-nums text-white">
           {number}
         </span>
       </div>
-      <div className="flex-1 pt-0.5">
-        <div className="font-semibold text-body mb-1">{title}</div>
-        <div className="text-subtle leading-relaxed">{children}</div>
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 font-semibold text-body">{title}</div>
+        <div className="text-sm leading-relaxed text-subtle">{children}</div>
       </div>
     </div>
   );

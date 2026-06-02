@@ -80,12 +80,12 @@ export function SmallMultiples({
   sharedY,
 }: SmallMultiplesProps) {
   const items = React.Children.toArray(children);
-  const gridClass = `grid grid-cols-1 ${COLUMN_CLASSES[columns]} gap-4`;
+  const gridClass = `grid grid-cols-1 ${COLUMN_CLASSES[columns]} gap-3`;
 
   return (
-    <figure className="not-prose my-10">
+    <figure className="not-prose my-9">
       {(subtitle || legend) && (
-        <div className="mb-4 flex flex-col gap-2">
+        <div className="mb-3 flex flex-col gap-2">
           {subtitle && (
             <p className="text-sm text-subtle leading-snug">{subtitle}</p>
           )}
@@ -114,13 +114,13 @@ export function SmallMultiples({
             : child;
 
           return (
-            <div key={i} className="flex flex-col">
+            <div key={i} className="flex min-w-0 flex-col">
               {label && (
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-muted mb-1.5">
+                <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
                   {label}
                 </div>
               )}
-              <div className="bg-card rounded-md border border-border">
+              <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
                 {childWithProps}
               </div>
             </div>
@@ -128,7 +128,7 @@ export function SmallMultiples({
         })}
       </div>
 
-      <figcaption className="mt-4 text-xs text-muted italic leading-snug">
+      <figcaption className="mt-3 text-xs italic leading-snug text-muted">
         Source: {source}
       </figcaption>
     </figure>

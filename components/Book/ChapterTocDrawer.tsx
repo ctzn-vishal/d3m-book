@@ -53,10 +53,10 @@ export function ChapterTocDrawer({ book, currentSlug }: ChapterTocDrawerProps) {
         onClick={() => setOpen(true)}
         aria-label="Open table of contents"
         aria-expanded={open}
-        className="fixed bottom-8 right-8 z-40 inline-flex items-center gap-2.5 rounded-full bg-brand-primary px-5 py-3.5 shadow-xl shadow-brand-primary/30 hover:shadow-2xl hover:shadow-brand-primary/40 hover:scale-105 active:scale-95 transition-all text-sm font-semibold text-white book-toc-pill-pulse"
+        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-brand-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-primary/25 transition-all hover:scale-105 hover:shadow-xl hover:shadow-brand-primary/35 active:scale-95 sm:right-6 sm:px-4 book-toc-pill-pulse"
       >
         <List size={18} strokeWidth={2.5} />
-        <span>Contents</span>
+        <span className="hidden sm:inline">Contents</span>
       </button>
 
       <AnimatePresence>
@@ -84,7 +84,7 @@ export function ChapterTocDrawer({ book, currentSlug }: ChapterTocDrawerProps) {
               role="dialog"
               aria-modal="true"
               aria-label="Table of contents"
-              className="fixed top-0 right-0 z-50 h-full w-full sm:w-[420px] bg-surface border-l border-border shadow-2xl overflow-y-auto"
+              className="fixed right-0 top-0 z-50 h-full w-full overflow-y-auto border-l border-border bg-surface shadow-2xl sm:w-[400px]"
             >
               <div className="sticky top-0 flex items-center justify-between border-b border-border bg-surface/95 backdrop-blur px-6 py-4">
                 <div>
@@ -105,7 +105,7 @@ export function ChapterTocDrawer({ book, currentSlug }: ChapterTocDrawerProps) {
                 <Link
                   href="/studios"
                   onClick={() => setOpen(false)}
-                  className="mb-6 flex items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 text-sm font-medium text-body hover:border-border-strong hover:text-link transition-colors"
+                  className="mb-6 flex items-center justify-between gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm font-medium text-body transition-colors hover:border-border-strong hover:text-link"
                 >
                   <span>Case Study &amp; Dashboard Gallery</span>
                   <span aria-hidden="true" className="text-link">→</span>

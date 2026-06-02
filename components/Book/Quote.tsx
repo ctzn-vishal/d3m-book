@@ -29,9 +29,9 @@ export function Quote({ children, author, work, year }: QuoteProps) {
   // already wrapped in their own <p> by the auto-paragraph rule, and
   // <p> inside <p> is invalid HTML.
   return (
-    <blockquote className="border-l-4 border-border-strong pl-4 my-6 italic text-subtle not-prose">
-      <div className="leading-relaxed">{children}</div>
-      <cite className="block mt-2 not-italic text-sm text-muted">
+    <blockquote className="my-6 border-l-2 border-border-strong pl-4 italic text-subtle not-prose">
+      <div className="text-[0.95rem] leading-relaxed">{children}</div>
+      <cite className="mt-2 block text-sm not-italic text-muted">
         — {author}
         {work && (
           <>

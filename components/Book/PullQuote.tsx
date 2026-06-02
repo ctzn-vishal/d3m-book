@@ -20,8 +20,8 @@ export function PullQuote({ children }: PullQuoteProps) {
   // wrapped in their own <p> by the auto-paragraph rule, and a <p> inside
   // a <p> is invalid HTML and triggers a hydration error.
   return (
-    <aside className="my-12 py-6 border-y border-border-strong not-prose">
-      <div className="text-2xl font-serif italic text-subtle leading-snug text-center max-w-2xl mx-auto">
+    <aside className="my-10 border-y border-border py-5 not-prose">
+      <div className="mx-auto max-w-2xl text-center font-serif text-xl italic leading-snug text-subtle sm:text-2xl">
         {children}
       </div>
     </aside>

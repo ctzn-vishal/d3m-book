@@ -66,14 +66,14 @@ export function DataTable<R extends Record<string, unknown>>({
   cellClass,
 }: DataTableProps<R>) {
   return (
-    <figure className="not-prose my-10">
-      <figcaption className="text-sm italic text-subtle mb-2 leading-snug">
+    <figure className="not-prose my-9">
+      <figcaption className="mb-2 text-[13px] italic leading-snug text-subtle">
         {caption}
       </figcaption>
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm tabular-nums border-collapse">
+      <div className="overflow-x-auto rounded-md border border-slate-200 bg-white shadow-sm">
+        <table className="w-full border-collapse text-sm tabular-nums">
           <thead>
-            <tr className="border-b-2 border-border-strong">
+            <tr className="border-b border-slate-200 bg-slate-50">
               {columns.map((col, ci) => {
                 const align = col.align ?? defaultAlign(ci);
                 return (
@@ -81,7 +81,7 @@ export function DataTable<R extends Record<string, unknown>>({
                     key={col.key}
                     scope="col"
                     className={[
-                      'py-2 px-3 font-semibold text-body',
+                      'px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600',
                       ALIGN_CLASS[align],
                     ].join(' ')}
                   >
@@ -98,8 +98,8 @@ export function DataTable<R extends Record<string, unknown>>({
                 <tr
                   key={ri}
                   className={[
-                    'border-b border-border hover:bg-code-bg',
-                    isHighlight ? 'font-semibold text-body' : 'text-subtle',
+                    'border-b border-slate-100 last:border-b-0 hover:bg-slate-50/80',
+                    isHighlight ? 'font-semibold text-slate-950' : 'text-slate-700',
                   ].join(' ')}
                 >
                   {columns.map((col, ci) => {
@@ -112,7 +112,7 @@ export function DataTable<R extends Record<string, unknown>>({
                       <td
                         key={col.key}
                         className={[
-                          'py-2 px-3',
+                          'px-3 py-2.5',
                           ALIGN_CLASS[align],
                           extra,
                         ].join(' ')}

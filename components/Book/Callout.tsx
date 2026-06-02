@@ -20,23 +20,23 @@ interface VariantSpec {
 const VARIANTS: Record<CalloutVariant, VariantSpec> = {
   caveat: {
     container:
-      'rounded-md border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-900',
+      'rounded-md border border-amber-200 bg-amber-50/70 px-4 py-3.5 text-sm text-amber-950 shadow-sm shadow-amber-100/60',
     defaultTitle: 'Methodological note',
   },
   definition: {
     container:
-      'rounded-md border-l-4 border-gray-400 bg-gray-50 p-4 text-sm text-gray-800',
+      'rounded-md border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800',
     defaultTitle: null,
   },
   finding: {
     container:
-      'rounded-md border-l-4 border-blue-500 bg-blue-50 p-4 text-sm text-blue-900',
+      'rounded-md border border-sky-200 bg-sky-50/80 px-4 py-3.5 text-sm text-sky-950 shadow-sm shadow-sky-100/60',
     defaultTitle: 'Key finding',
   },
   aside: {
     // No background, no rounded card — feels conversational.
     container:
-      'border-l-2 border-gray-200 pl-6 italic text-gray-700 text-[0.95em]',
+      'border-l-2 border-slate-200 pl-5 italic text-slate-700 text-[0.95em]',
     defaultTitle: null,
   },
 };
@@ -66,9 +66,9 @@ export function Callout({
   const resolvedTitle = title === undefined ? spec.defaultTitle : title;
 
   return (
-    <aside className={`my-8 not-prose ${spec.container}`}>
+    <aside className={`my-7 not-prose leading-relaxed ${spec.container}`}>
       {resolvedTitle && (
-        <strong className="font-semibold mr-1">{resolvedTitle}.</strong>
+        <strong className="mr-1 font-semibold">{resolvedTitle}.</strong>
       )}
       <span>{children}</span>
     </aside>

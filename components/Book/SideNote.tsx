@@ -33,9 +33,10 @@ export function SideNote({ children, label }: SideNoteProps) {
         // Mobile / md: inline italic block.
         'block my-4 pl-4 border-l-2 border-border italic text-sm text-subtle',
         // lg: float to the right of the prose column.
-        'lg:float-right lg:clear-right lg:my-0 lg:ml-6 lg:-mr-44',
-        'lg:w-40 lg:pl-3 lg:border-l-0 lg:border-l lg:border-border-strong',
+        'lg:float-right lg:clear-right lg:my-0 lg:ml-5 lg:-mr-36',
+        'lg:w-36 lg:pl-3 lg:border-l-0 lg:border-l lg:border-border-strong',
         'lg:not-italic lg:text-xs lg:leading-snug',
+        'xl:float-none xl:clear-none xl:ml-0 xl:mr-0 xl:w-auto xl:border-l-2 xl:border-border xl:italic xl:text-sm xl:leading-relaxed',
       ].join(' ')}
     >
       {label && (

@@ -43,8 +43,8 @@ export interface FigureProps {
  * horizontal room to outset into. Sub-`lg:` everything collapses to
  * body width (= prose column width).
  *
- * The escape uses the standard "negative-margin to viewport-edge"
- * trick:
+ * Up to `lg`, the escape uses the standard "negative-margin to
+ * viewport-edge" trick:
  *
  *   margin-left  = 50% - 50vw + Xrem
  *   max-width    = 100vw - 2*Xrem
@@ -60,11 +60,10 @@ export interface FigureProps {
  *   page-outset   — 4rem inset (substantial escape; ~1152px on 1280)
  *   screen-inset  — 2rem inset (near-bleed; ~1216px on 1280)
  *
- * Note: at `lg:` (1024px), even `body-outset` collapses to roughly
- * body width because the calc resolves to ~0 margin. The visual
- * difference between zones really shows at `xl:` (1280px) and up,
- * which matches how Distill handled it — escape is a desktop-only
- * affordance.
+ * At `xl:` and up the book shell also renders a sticky right rail, so
+ * wide figures switch to an asymmetric escape: they grow left into the
+ * balancing column while the right edge stays inside the article lane.
+ * That preserves room for the in-page menu.
  */
 // Hard pixel ceilings: on very wide displays (>1440px-ish) the calc-based
 // width keeps growing toward the viewport edge, which makes charts and
@@ -74,11 +73,11 @@ export interface FigureProps {
 const WIDTH_CLASS: Record<FigureWidth, string> = {
   body: '',
   'body-outset':
-    'lg:mx-[max(calc(50%-50vw+8rem),calc(50%-460px))] lg:max-w-[min(calc(100vw-16rem),920px)]',
+    'lg:mx-[max(calc(50%-50vw+8rem),calc(50%-460px))] lg:max-w-[min(calc(100vw-16rem),920px)] xl:ml-[-3rem] xl:mr-0 xl:max-w-[calc(100%+3rem)] 2xl:ml-[-4rem] 2xl:max-w-[calc(100%+4rem)]',
   'page-outset':
-    'lg:mx-[max(calc(50%-50vw+4rem),calc(50%-550px))] lg:max-w-[min(calc(100vw-8rem),1100px)]',
+    'lg:mx-[max(calc(50%-50vw+4rem),calc(50%-550px))] lg:max-w-[min(calc(100vw-8rem),1100px)] xl:ml-[-6rem] xl:mr-0 xl:max-w-[calc(100%+6rem)] 2xl:ml-[-8rem] 2xl:max-w-[calc(100%+8rem)]',
   'screen-inset':
-    'lg:mx-[max(calc(50%-50vw+2rem),calc(50%-640px))] lg:max-w-[min(calc(100vw-4rem),1280px)]',
+    'lg:mx-[max(calc(50%-50vw+2rem),calc(50%-640px))] lg:max-w-[min(calc(100vw-4rem),1280px)] xl:ml-[-9rem] xl:mr-0 xl:max-w-[calc(100%+9rem)] 2xl:ml-[-11rem] 2xl:max-w-[calc(100%+11rem)]',
 };
 
 /**
@@ -125,16 +124,16 @@ export function Figure({ width = 'body', caption, children }: FigureProps) {
   // own caption.
   if (caption) {
     return (
-      <figure className={['not-prose my-6', escapeClass].filter(Boolean).join(' ')}>
+      <figure className={['not-prose my-6 min-w-0', escapeClass].filter(Boolean).join(' ')}>
         {children}
-        <figcaption className="mt-3 text-sm italic text-muted leading-snug">
+        <figcaption className="mt-3 max-w-3xl border-t border-border/80 pt-2 text-[13px] italic leading-snug text-muted">
           {caption}
         </figcaption>
       </figure>
     );
   }
   return (
-    <div className={['not-prose my-6', escapeClass].filter(Boolean).join(' ')}>
+    <div className={['not-prose my-6 min-w-0', escapeClass].filter(Boolean).join(' ')}>
       {children}
     </div>
   );
