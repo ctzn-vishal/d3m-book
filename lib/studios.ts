@@ -52,6 +52,17 @@ export const studios: Studio[] = [
     accent: '#2F8F7B',
   },
   {
+    slug: 'nyc-taxi-covid-emergency',
+    title: 'NYC Taxi/Ride-Hail: Uber & Lyft at the COVID Emergency',
+    blurb:
+      'Trace Uber and Lyft rides across NYC pickup zones as demand breaks around the March 2020 emergency declaration, then compare the late-April floor by borough and zone.',
+    domain: 'Mobility',
+    methods: ['Shock analysis', 'Time series', 'Spatial ranking'],
+    relatedSlug: 'dashboard-decision-systems',
+    kind: 'dashboard',
+    accent: '#2563A6',
+  },
+  {
     slug: 'nyc-airbnb-atlas',
     title: 'NYC Airbnb: A Listings Atlas',
     blurb:
