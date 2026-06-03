@@ -9,6 +9,8 @@ import * as React from 'react';
  *   - ArtefactFamilyTree: the chain from Decision Question Card → Decision Memo.
  *   - EvidenceStackMap: the six evidence languages and what each one buys.
  *   - CasePortfolio: through-line + standalone cases with the methods each one serves.
+ *   - DataGenerationMap, StorageStackMap, UseCaseRouter, DataDecisionLoop:
+ *     the modern data operating system introduced in Part 0.
  */
 
 const C = {
@@ -270,6 +272,279 @@ export function CasePortfolio() {
       <p className="mt-3 text-[11px] text-slate-500">
         Standalone cases are appended outside chapter prose. They give the methods a second testing ground beyond the Bean &amp; Basket through-line.
       </p>
+    </Card>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* DataGenerationMap - where business data originates                   */
+/* ------------------------------------------------------------------ */
+
+export function DataGenerationMap() {
+  const sources = [
+    {
+      title: 'Customer behavior',
+      examples: 'Purchases, clicks, searches, visits, returns, ratings, reviews',
+      decision: 'Demand, loyalty, churn, product-market fit',
+      color: C.blue,
+    },
+    {
+      title: 'Business operations',
+      examples: 'Inventory, invoices, CRM records, shipments, staffing, contracts',
+      decision: 'Margin, service quality, capacity, working capital',
+      color: C.green,
+    },
+    {
+      title: 'Digital systems',
+      examples: 'App events, web logs, ad auctions, recommendation impressions',
+      decision: 'Funnels, personalization, attribution, experimentation',
+      color: C.purple,
+    },
+    {
+      title: 'Physical world',
+      examples: 'Sensors, location, cameras, store traffic, delivery scans',
+      decision: 'Utilization, loss prevention, routing, field execution',
+      color: C.amber,
+    },
+    {
+      title: 'Human language',
+      examples: 'Support tickets, chats, call transcripts, emails, documents',
+      decision: 'Customer voice, compliance, knowledge retrieval, workflow routing',
+      color: C.red,
+    },
+    {
+      title: 'AI workflows',
+      examples: 'Prompts, responses, citations, tool calls, evals, human review',
+      decision: 'Automation quality, risk controls, continuous improvement',
+      color: C.teal,
+    },
+  ];
+
+  return (
+    <Card title="Where business data comes from">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+        {sources.map(source => (
+          <div
+            key={source.title}
+            className="rounded-md border border-slate-200 bg-white p-3"
+            style={{ borderLeft: `4px solid ${source.color}` }}
+          >
+            <div className="text-[12px] font-semibold text-slate-900">{source.title}</div>
+            <div className="mt-1 text-[11px] leading-snug text-slate-600">{source.examples}</div>
+            <div className="mt-2 rounded bg-slate-50 px-2 py-1.5 text-[10.5px] italic leading-snug text-slate-600">
+              Business use: {source.decision}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-[11px] text-slate-500">
+        Data is usually a trace of work that already happened. The trace can be useful, but it is never the whole reality.
+      </p>
+    </Card>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* StorageStackMap - how data is stored for different jobs              */
+/* ------------------------------------------------------------------ */
+
+export function StorageStackMap() {
+  const systems = [
+    {
+      name: 'Operational SQL',
+      job: 'Run the application',
+      examples: 'Orders, accounts, payments, POS, CRM',
+      question: 'Can the business record the next transaction correctly?',
+      color: C.blue,
+    },
+    {
+      name: 'NoSQL and search',
+      job: 'Serve flexible app data',
+      examples: 'Documents, sessions, profiles, product catalogs, keyword search',
+      question: 'Can the app retrieve the right object quickly?',
+      color: C.purple,
+    },
+    {
+      name: 'Lake and files',
+      job: 'Keep raw and semi-raw assets',
+      examples: 'Logs, parquet files, PDFs, images, audio, vendor drops',
+      question: 'Can the firm preserve data before every use is known?',
+      color: C.green,
+    },
+    {
+      name: 'Warehouse or lakehouse',
+      job: 'Answer analytical questions',
+      examples: 'Snowflake, BigQuery, Databricks-style lakehouses',
+      question: 'Can managers scan history across customers, products, and time?',
+      color: C.amber,
+    },
+    {
+      name: 'Local analytics',
+      job: 'Let one analyst work quickly',
+      examples: 'DuckDB, notebooks, local parquet, reproducible extracts',
+      question: 'Can a small team investigate without waiting on production systems?',
+      color: C.teal,
+    },
+    {
+      name: 'Vector and graph stores',
+      job: 'Find meaning and relationships',
+      examples: 'Embeddings, semantic search, RAG indexes, product/customer graphs',
+      question: 'Can the workflow retrieve related ideas, documents, or entities?',
+      color: C.red,
+    },
+  ];
+
+  const flow = ['Source systems', 'Ingestion', 'Storage', 'Transform', 'Metrics, models, AI', 'Decision'];
+
+  return (
+    <Card title="The storage stack is a division of labor">
+      <div className="mb-4 grid grid-cols-2 gap-1.5 md:grid-cols-6">
+        {flow.map((step, i) => (
+          <div key={step} className="flex items-center">
+            <div className="w-full rounded-md border border-slate-200 bg-slate-50 px-2 py-2 text-center text-[10.5px] font-semibold text-slate-700">
+              {step}
+            </div>
+            {i < flow.length - 1 && <span className="mx-1 hidden text-slate-300 md:inline">-&gt;</span>}
+          </div>
+        ))}
+      </div>
+      <div className="overflow-hidden rounded-md border border-slate-200">
+        <table className="w-full text-[12px]">
+          <thead>
+            <tr className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-500">
+              <th className="px-2 py-1.5 text-left">System</th>
+              <th className="px-2 py-1.5 text-left">Primary job</th>
+              <th className="px-2 py-1.5 text-left">Common examples</th>
+              <th className="px-2 py-1.5 text-left">Managerial question</th>
+            </tr>
+          </thead>
+          <tbody>
+            {systems.map((system, i) => (
+              <tr key={system.name} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}>
+                <td className="px-2 py-1.5">
+                  <span className="inline-flex items-center gap-1.5 font-semibold text-slate-800">
+                    <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: system.color }} />
+                    {system.name}
+                  </span>
+                </td>
+                <td className="px-2 py-1.5 text-slate-700">{system.job}</td>
+                <td className="px-2 py-1.5 text-slate-600">{system.examples}</td>
+                <td className="px-2 py-1.5 italic text-slate-600">{system.question}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-[11px] text-slate-500">
+        The practical distinction is transactional versus analytical: one system records the next event; another scans many past events to support a decision.
+      </p>
+    </Card>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* UseCaseRouter - how data is put to work                              */
+/* ------------------------------------------------------------------ */
+
+export function UseCaseRouter() {
+  const rows = [
+    {
+      question: 'What is happening?',
+      workflow: 'Monitoring and KPI dashboards',
+      asset: 'Metric card, alert, scorecard',
+      home: 'Parts I-II',
+      color: C.blue,
+    },
+    {
+      question: 'Where and for whom?',
+      workflow: 'Segmentation, cohorts, drilldowns',
+      asset: 'Segment profile, cohort view, diagnostic dashboard',
+      home: 'Parts II-IV',
+      color: C.green,
+    },
+    {
+      question: 'Did our action cause it?',
+      workflow: 'Experiments and causal designs',
+      asset: 'Identification memo, lift chart, effect estimate',
+      home: 'Part III',
+      color: C.teal,
+    },
+    {
+      question: 'What is likely next?',
+      workflow: 'Prediction, forecasting, risk scoring',
+      asset: 'Predictive task contract, model card',
+      home: 'Part IV',
+      color: C.purple,
+    },
+    {
+      question: 'What should we show first?',
+      workflow: 'Ranking and recommendation',
+      asset: 'Ranked list, threshold rule, monitoring view',
+      home: 'Part IV',
+      color: C.amber,
+    },
+    {
+      question: 'What does the text, document, or image say?',
+      workflow: 'Extraction, search, RAG, AI-assisted workflows',
+      asset: 'AI workflow card, eval dashboard, review queue',
+      home: 'Part V',
+      color: C.red,
+    },
+  ];
+
+  return (
+    <Card title="Use-case router: business question to evidence workflow">
+      <div className="space-y-2">
+        {rows.map(row => (
+          <div key={row.question} className="grid gap-2 rounded-md border border-slate-200 bg-white p-3 md:grid-cols-[1.1fr_1.1fr_1.2fr_70px] md:items-center">
+            <div className="flex items-center gap-2">
+              <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: row.color }} />
+              <span className="text-[12px] font-semibold text-slate-900">{row.question}</span>
+            </div>
+            <div className="text-[11.5px] text-slate-700">{row.workflow}</div>
+            <div className="text-[11px] italic text-slate-600">{row.asset}</div>
+            <div className="rounded bg-slate-100 px-1.5 py-1 text-center font-mono text-[10px] text-slate-600">{row.home}</div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-[11px] text-slate-500">
+        The same source data can support several workflows. The manager's first job is to route the question before choosing the method.
+      </p>
+    </Card>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* DataDecisionLoop - the book's new front-door operating loop          */
+/* ------------------------------------------------------------------ */
+
+export function DataDecisionLoop() {
+  const steps = [
+    { label: 'Human or machine activity', detail: 'A customer acts, a process runs, a model responds', color: C.blue },
+    { label: 'Source record', detail: 'A transaction, log, ticket, document, image, or prompt trace', color: C.green },
+    { label: 'Storage and transformation', detail: 'Operational DB, lake, warehouse, feature table, vector index', color: C.amber },
+    { label: 'Evidence asset', detail: 'Metric, chart, causal estimate, prediction, retrieval result', color: C.purple },
+    { label: 'Decision and action', detail: 'A manager changes a price, offer, process, policy, or workflow', color: C.red },
+    { label: 'Feedback and monitoring', detail: 'The action creates new data and the loop starts again', color: C.teal },
+  ];
+
+  return (
+    <Card title="The data-to-decision loop">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+        {steps.map((step, i) => (
+          <div key={step.label} className="relative rounded-md border border-slate-200 bg-white p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[10px] font-mono text-slate-400">Step {i + 1}</span>
+              <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: step.color }} />
+            </div>
+            <div className="text-[12px] font-semibold leading-tight text-slate-900">{step.label}</div>
+            <div className="mt-1 text-[11px] leading-snug text-slate-600">{step.detail}</div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] leading-snug text-slate-600">
+        The loop is circular, not linear. Every decision changes the business, and that changed business generates the next round of data.
+      </div>
     </Card>
   );
 }

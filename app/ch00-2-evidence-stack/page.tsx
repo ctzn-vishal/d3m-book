@@ -4,9 +4,9 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§0.2 The D3M Evidence Stack | ${book.title}`,
+  title: `§0.2 How Data Is Stored | ${book.title}`,
   description:
-    'Six evidence languages, the artefacts they produce, the studios that capstone them, and the case portfolio that anchors them.',
+    'A practical map of operational databases, analytical warehouses, data lakes, DuckDB-style local analytics, search, graph, and vector systems.',
 };
 
 export default function Page() {

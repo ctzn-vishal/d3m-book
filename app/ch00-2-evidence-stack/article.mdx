@@ -1,208 +1,162 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
-import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
-import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
-import {
-  EvidenceStackMap,
-  ArtefactFamilyTree,
-  CasePortfolio,
-} from '@/components/Book/part0/Part0Diagrams';
+import { StorageStackMap } from '@/components/Book/part0/Part0Diagrams';
 
 <DropCap>
 
-A modern firm can answer different kinds of questions only by reaching for different kinds of evidence. The number on the dashboard answers a descriptive question. The chart that compares this year to last answers a visual one. The randomized experiment answers a causal one. The supervised model answers a predictive one. The language model reading the support inbox answers a textual one. None of these displaces the others. Each adds to the stack.
+The word "database" hides too much. The system that records a customer's payment is not built for the same job as the system that scans five years of transactions for a pricing analysis. The place that stores raw app logs is not the same as the place that supports semantic search over policy documents. A manager does not need to administer these systems, but does need to understand their roles. Otherwise every data conversation becomes vague: "Can we get the data?" Which data? From which system? For what decision? At what latency? With what quality contract?
 
 </DropCap>
 
-This article lays out the **six evidence languages** the book teaches, the **artefacts** each one produces, the **studios** that capstone each Part, and the **case portfolio** that anchors the methods to real data. It is the map. Read it once now; refer back to it when you need to orient.
+## The executive question: *what job is this data system doing?*
 
----
+Modern firms usually store data in several layers. Each layer optimizes for a different job.
 
-## The Executive Question
+An **operational** database records the next event correctly: a payment, an order, a login, a shipment, a service case. It is built for reliability, identity, permissions, and fast small updates. An **analytical** database scans many past events: a year of transactions, a panel of stores, a customer cohort, a product assortment, a marketing funnel. It is built for aggregation, history, and comparison. The distinction is not technical trivia. It determines whether the system is meant to run the business or analyze the business.
 
-> *Given a business question, which evidence language should we reach for, and what does it cost to climb to the next rung of the ladder?*
-
-The map below pairs each rung of the decision ladder from §0.1 with the evidence language that answers it, the Part of the book that develops it, and the Studio that ships its capstone.
-
----
-
-## Six Evidence Languages, One per Part
-
-<Figure width="page-outset" caption="Figure 1. Six evidence languages, mapped to the questions they answer, the Part of the book that develops them, and the Studio that ships their capstone artefact.">
+<Figure width="page-outset" caption="Figure 1. The modern storage stack is a division of labor. Each system class stores a different kind of evidence for a different kind of decision.">
   <div className="not-prose">
-    <EvidenceStackMap />
+    <StorageStackMap />
   </div>
 </Figure>
 
-A short pass through each:
-
-- **Description (Part I).** Reading data as business evidence — what is a dataset, what is the unit of observation, what business claim does a given table support? The work happens *before* visualization, regression, or prediction. Without it, every later step inherits its mistakes.
-- **Visual evidence (Part II).** Visualization is its own evidence language, not a styling layer on top of analysis. Every later Part begins with the visual version of its question. The interval plot, the event-study chart, the calibration plot, the embedding scatter — Part II teaches them all *before* any method that needs them.
-- **Causal designs (Part III).** Experiments and quasi-experiments that produce credible counterfactuals. The Part where "we observed it" becomes "we caused it."
-- **Prediction (Part IV).** Supervised learning and segmentation on structured data. The Part where "what is likely?" gets a model with an evaluation rubric and a deployment plan.
-- **AI workflows (Part V).** Embeddings, GPT-as-measurement, retrieval-augmented generation, vision, multimodal AI, agents. The Part where text, images, and language models become part of the workflow.
-- **The system view (Part VI).** Running the analytics organization as a learning system rather than a sequence of projects. The Part where the methods become an operating discipline.
-
-The order is deliberate: each Part adds an evidence language to the ones that came before. By Part V, a customer scored by a Part IV model is also a paragraph in a Part V complaint cluster. By Part VI, both feed one memo.
+Figure 1 is the practical map. Operational SQL, NoSQL, lakes, warehouses, local analytical engines, vector databases, graph stores, and search indexes are not competing names for the same thing. They are specialized pieces of a workflow that moves from source activity to decision.
 
 ---
 
-## The Artefact Family
+## Transactional versus analytical
 
-The book is structured around five one-page artefacts that survive the work. They form a chain — the discipline of each one extends the one above it.
+The most important distinction is **transactional versus analytical**.
 
-<Figure width="page-outset" caption="Figure 2. The five artefacts every Part of the book teaches you to write. The Decision Question Card is the parent; the Decision Memo is the synthesis. Each card carries a different question, but they share the same operating discipline.">
-  <div className="not-prose">
-    <ArtefactFamilyTree />
-  </div>
-</Figure>
+A transactional system answers: *can we record and retrieve one business event correctly right now?* The point-of-sale system must know the price, charge the customer, update inventory, and create a receipt. The CRM must record a sales interaction. The app database must know which user is logged in. Mistakes here interrupt the business.
 
-Where to find each one in the book:
-
-- **Decision Question Card (§9.1).** The parent artefact. Six lines: action, outcome, unit, timing, comparison, threshold.
-- **Predictive Task Contract (§14.2).** The four-decision setup for any supervised model: target, features, unit of prediction, label timing.
-- **Model Card (§15.5).** What a deployed model does, where it fails, who owns it.
-- **AI Workflow Card (§22.1).** What an LLM-driven workflow does, what governs it, who responds when it breaks.
-- **Decision Memo (§24.1).** The synthesis. The one-page document that ties every form of evidence into a recommendation an executive can sign.
-
-A working analytics organization produces all five, every time. A research artefact stops at one or two. The chain is one way to tell the difference.
-
----
-
-## The Five Studios
-
-Each Part ends with a **Studio** — a capstone article that integrates the Part's methods into a ship-able portfolio piece.
+An analytical system answers: *what pattern emerges across many business events?* The warehouse computes weekly revenue by region, demand by product, churn by cohort, margin by promotion, and service quality by store. It is not trying to record the next transaction. It is trying to make history comparable.
 
 <DataTable
-  caption="Table 1. The five capstone Studios of the book. Each one is a working integration of its Part's methods, sized to be an executive-shareable artefact."
+  caption="Table 1. Transactional and analytical systems answer different questions. Confusing them creates slow tools, fragile reporting, and mistrusted numbers."
   columns={[
-    { key: 'studio', label: 'Studio', align: 'left' },
-    { key: 'where', label: 'Where', align: 'left' },
-    { key: 'deliverable', label: 'Deliverable', align: 'left' },
+    { key: 'dimension', label: 'Dimension', align: 'left' },
+    { key: 'transactional', label: 'Transactional system', align: 'left' },
+    { key: 'analytical', label: 'Analytical system', align: 'left' },
   ]}
   rows={[
     {
-      studio: 'Data Language Studio',
-      where: '§4.1',
-      deliverable: 'A clean metric brief — grain, dictionary, transformation, trust assessment.',
+      dimension: 'Primary job',
+      transactional: 'Record the next event correctly',
+      analytical: 'Compare many past events',
     },
     {
-      studio: 'Visual Decision Brief Studio',
-      where: '§8.2',
-      deliverable: 'A soup-case visual sequence ending in an executive pricing brief.',
+      dimension: 'Typical questions',
+      transactional: 'Did this order, payment, or login succeed?',
+      analytical: 'Which customers, stores, products, or periods are changing?',
     },
     {
-      studio: 'Pricing & Promotion Strategy Studio',
-      where: '§13.4',
-      deliverable: 'A Bean & Basket pricing recommendation with identification, heterogeneity, and guardrails.',
+      dimension: 'Data shape',
+      transactional: 'Current records, normalized entities, app state',
+      analytical: 'History, panels, aggregates, derived metrics',
     },
     {
-      studio: 'Customer Intelligence Studio',
-      where: '§17.4',
-      deliverable: 'A score → segment → target → act → monitor loop for Bean & Basket retention.',
+      dimension: 'Latency',
+      transactional: 'Immediate or near-immediate',
+      analytical: 'Batch, near-real-time, or streaming depending on the use case',
     },
     {
-      studio: 'Customer Voice Intelligence Studio',
-      where: '§22.2',
-      deliverable: 'A classify → measure → cluster → retrieve → act → monitor loop on customer text.',
+      dimension: 'Failure mode',
+      transactional: 'The business cannot operate',
+      analytical: 'The organization makes decisions from stale or inconsistent evidence',
     },
   ]}
 />
 
-By the end of the book, the reader has built (or read) five complete Studios. Part VI shows how to operate them as one portfolio.
+Managers feel this distinction in ordinary meetings. When the CFO asks for margin by promotion over the past six quarters, the answer should not come from the live checkout database. When customer support needs the current status of an order, the answer should not wait for the nightly warehouse refresh. Each system can be excellent and still be wrong for the job.
+
+<Pitfall title="The live-system reporting trap">
+Pulling heavy executive reports directly from operational systems can slow the systems that run the business and still produce incomplete history. Use operational systems for operational state. Use analytical systems for historical comparison.
+</Pitfall>
 
 ---
 
-## The Case Portfolio
+## The major storage roles
 
-The methods are anchored to data. One company runs throughout; a handful of standalone cases give the methods a second testing ground.
+**SQL operational databases** store structured app and business records: customers, orders, payments, products, subscriptions, tickets. They usually enforce relationships and consistency. If one customer has many orders, SQL is good at keeping that relationship explicit.
 
-<Figure width="page-outset" caption="Figure 3. The case portfolio. Bean & Basket Coffee is the through-line that appears in every Part. The standalone cases — Soup, Milk, Zillow, BAV, Airbnb, Yelp, Goose Island, earnings calls, job postings — anchor specific methods to real datasets and live in the appended case packs.">
-  <div className="not-prose">
-    <CasePortfolio />
-  </div>
-</Figure>
+**NoSQL systems** serve flexible or high-scale application data: product catalogs, session state, user profiles, event payloads, documents, and other records whose structure changes often. They are often useful when the application needs fast reads and writes over flexible objects.
 
-The case packs are external to the chapter prose. The chapters develop the *concepts*; the case packs deliver the *exercises*. This separation is deliberate: it lets the chapters stay portable and offline-renderable while letting the empirical work live in its own versioned home.
+**Data lakes and object storage** keep raw or semi-raw assets: logs, vendor files, parquet tables, documents, images, audio, and historical extracts. The lake is useful when the firm wants to preserve data before every analytical use is known.
 
----
+**Warehouses and lakehouses** make history analyzable. Systems such as Snowflake, BigQuery, and Databricks-style lakehouses are used to scan large historical datasets, join source systems, define metrics, and support dashboards, notebooks, and model training.
 
-## How the Map Connects
+**DuckDB-style local analytics** gives analysts a fast, lightweight way to work with serious data on a laptop or in a reproducible script. This is useful for teaching, prototyping, case packs, and focused investigation before work becomes shared infrastructure.
 
-The decision ladder, the evidence languages, the artefacts, the studios, the cases — these are not five separate organizational schemes. They are five views of the same structure:
+**Search, vector, and graph systems** support retrieval and relationships. Keyword search finds exact or near-exact terms. Vector databases store embeddings so workflows can retrieve semantically related documents, products, customers, or images. Graph stores represent relationships such as referrals, product co-purchases, supply chains, account networks, and organizational structures.
 
-- **The ladder** is the question hierarchy.
-- **The evidence languages** are the answers at each rung.
-- **The artefacts** are the durable outputs that survive the work.
-- **The studios** are the integrated capstones at the end of each Part.
-- **The cases** are the data the methods get tested against.
-
-Hold all five in mind when you read the book. The next time you face an actual business decision, the right next move is usually to walk down the ladder until you find the rung that matches it — and then read the corresponding Part.
-
-<Callout variant="finding" title="The map is the book">
-  Five Parts, six evidence languages, five artefacts, five studios, one through-line case, nine standalone case packs, one final memo. This article is the longest you will see all of them on one page. Refer back when you need to orient.
-</Callout>
+The point is not to memorize product names. The point is to ask which system is doing which job.
 
 ---
 
-## A Brief Foreshadowing of Part VI
+## Batch, streaming, and freshness
 
-The book climbs the decision ladder and then turns to a different kind of question: not *what method should we use*, but *how do we run all of these methods together as one operating system*? That is Part VI's job. It introduces:
+Data also differs by freshness.
 
-- **The Data Product View (§23.1).** Every artefact has a name, an owner, a version, a contract, and a refresh cadence.
-- **The Decision Memo (§24.1).** The synthesis document; the page an executive signs.
-- **Portfolio Monitoring and Learning Loops (§24.2).** How to run §17.4 and §22.2 side by side as one customer-analytics system.
-- **The Final Integrative Case (§25.1).** A Bean &amp; Basket strategic decision that uses every Part's contribution at once.
+Some workflows are fine with a nightly refresh. A weekly executive KPI dashboard, a monthly pricing review, or a quarterly market expansion analysis does not need every transaction within seconds. Other workflows need near-real-time data: fraud detection, stockout alerts, delivery routing, ad bidding, anomaly detection, or a customer-facing recommendation shown during a session.
 
-We end where we started — naming the action, the counterfactual, and the threshold — but now with the full toolkit and the full operating model.
+Freshness has a cost. Real-time systems are harder to build, harder to monitor, and easier to over-trust. A manager should ask: *what decision becomes better if this is refreshed sooner?* If the action is weekly, minute-level freshness may only create noise.
+
+<DataTable
+  caption="Table 2. Data freshness should match the decision cadence. Faster is valuable only when someone can act faster."
+  columns={[
+    { key: 'cadence', label: 'Cadence', align: 'left' },
+    { key: 'example', label: 'Example workflow', align: 'left' },
+    { key: 'managerialTest', label: 'Managerial test', align: 'left' },
+  ]}
+  rows={[
+    {
+      cadence: 'Daily or weekly batch',
+      example: 'Executive KPI dashboard, store performance review',
+      managerialTest: 'Will anyone change an action more than once per day or week?',
+    },
+    {
+      cadence: 'Near-real-time',
+      example: 'Inventory alert, fraud flag, support escalation',
+      managerialTest: 'Does a faster signal prevent loss or improve service immediately?',
+    },
+    {
+      cadence: 'Streaming or session-time',
+      example: 'Ad bidding, next-best recommendation, live routing',
+      managerialTest: 'Is the decision made during the customer or operational interaction?',
+    },
+  ]}
+/>
 
 ---
 
-<Takeaway label="The bottom line">
+## How storage affects methods
 
-Six evidence languages, five artefacts, five studios, one through-line, one map. This article is the orientation; the rest of the book is the work.
+The rest of the book repeatedly depends on storage choices.
 
-*Whichever Part you read next, ask the same question — what action does this method help name, what counterfactual does it construct, what threshold does it support?*
+- Dashboards need stable metric tables, not ad hoc extracts.
+- Causal analysis needs historical data at the right grain, not only summary reports.
+- Prediction needs labels, features, and timestamps aligned in a feature table.
+- Recommenders need exposure logs as well as purchase logs, or they confuse preference with what the system happened to show.
+- Retrieval-augmented generation needs a document store, a search or vector index, source metadata, and a way to evaluate retrieval quality.
+- Governance needs lineage: where the data came from, who owns it, how fresh it is, and what changed since last time.
+
+<Pitfall title="Treating storage as an IT detail">
+Storage choices become managerial constraints. If the firm never stores exposure logs, it cannot evaluate recommendations properly. If the warehouse only keeps monthly aggregates, it cannot estimate store-week effects. If documents are not versioned, an AI workflow cannot prove which policy it used.
+</Pitfall>
+
+<Takeaway label="Managerial habit">
+
+When someone says "the data is in the database," ask four questions:
+
+1. Is this system operational or analytical?
+2. What is the finest grain of history it preserves?
+3. How fresh is it, and does that match the decision cadence?
+4. What data lineage, ownership, and quality checks make the output trustworthy?
+
+The goal is not to become a database engineer. The goal is to know whether the storage layer can support the decision being proposed.
 
 </Takeaway>
-
-Part I starts on the next page, with the question of what business claims a table is actually capable of supporting.
-
-<QuizBlock
-  title="Concept check"
-  intro="Three questions spanning the decision-driven stance and the evidence stack that climbs the ladder."
-  questions={[
-    {
-      prompt: <>A dashboard shows that customers who received a marketing email spent more than customers who did not. The team rolls out the email. The most charitable description of this work is:</>,
-      options: [
-        { label: <>A successful data-driven decision.</> },
-        { label: <>Data-decorated — the action was named but the counterfactual ("what those customers would have spent without the email") was not constructed.</> },
-        { label: <>A causal inference.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Recipients of marketing email are a self-selected group; their higher spend is the average of two effects (the email's effect and the selection). Naming the counterfactual is what turns the action into a decision.</>,
-    },
-    {
-      prompt: <>A team wants to know whether a recent price change *caused* a margin lift. Which Part of the book is the natural home for this question?</>,
-      options: [
-        { label: <>Part II — visual evidence.</> },
-        { label: <>Part III — causal designs (and Part II for the visual that frames it).</> },
-        { label: <>Part IV — prediction.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>"Cause" is the rung-3 question. Part III develops the methods (DiD, synthetic control, regression with identification) that earn the right to say "caused" rather than "associated with."</>,
-    },
-    {
-      prompt: <>A team has a churn model (§15.1) and a customer-voice complaint cluster (§19.1) for the same customers. The strongest action is most likely to come from:</>,
-      options: [
-        { label: <>The model alone.</> },
-        { label: <>The cluster alone.</> },
-        { label: <>The intersection — customers who score high on both — because they have both <em>risk</em> and <em>articulated reason</em>.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>Parts IV and V answer complementary questions: <em>who and how loud</em> vs. <em>what and why</em>. Part VI (§24.2) is largely about the intersection.</>,
-    },
-  ]}
-/>

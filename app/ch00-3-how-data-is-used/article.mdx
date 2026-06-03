@@ -1,0 +1,190 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { DataTable } from '@/components/Book/DataTable';
+import { Callout } from '@/components/Book/Callout';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { UseCaseRouter } from '@/components/Book/part0/Part0Diagrams';
+
+<DropCap>
+
+Data creates value only when it changes a workflow. A dashboard no one reviews is a report, not a management system. A prediction score that triggers no action is a number, not intelligence. A recommendation system that cannot learn from exposure and feedback is guesswork with software around it. A language model that summarizes documents without evaluation is convenience without control. The practical question is always the same: what job is the data doing?
+
+</DropCap>
+
+## The executive question: *what decision workflow will this evidence improve?*
+
+Modern data use falls into a small number of recurring workflow families. The names change by industry, but the managerial logic is stable.
+
+Some workflows **monitor** the business: revenue, margin, churn, conversion, service time, stockouts, quality, risk. Some **diagnose** where a metric moved: by customer segment, geography, product, cohort, channel, store, or time period. Some **learn causally**: did a price change, campaign, policy, or process change cause an outcome? Some **predict**: which customers will churn, which orders are risky, how much demand should we expect? Some **rank and recommend**: what should be shown first, who should be contacted first, which action should be suggested next? Some **read unstructured work**: tickets, calls, documents, images, contracts, resumes, invoices, policy manuals. Some **optimize** a constrained action: staffing, inventory, routing, pricing, media spend, assortment, or scheduling.
+
+<Figure width="page-outset" caption="Figure 1. The use-case router. Start with the business question, then choose the workflow, evidence asset, and book home that fits it.">
+  <div className="not-prose">
+    <UseCaseRouter />
+  </div>
+</Figure>
+
+Figure 1 is one of the book's central habits. Before debating tools, route the question.
+
+---
+
+## Monitoring: what is happening?
+
+Monitoring is the most familiar use of data. The firm defines metrics, refreshes them on a cadence, and watches for movement. KPI dashboards, scorecards, alerts, and operating reviews all live here.
+
+Monitoring is useful when:
+
+- the metric is clearly defined;
+- the owner knows what action they can take;
+- the refresh cadence matches the action cadence;
+- the dashboard separates normal variation from signals that require attention;
+- the view supports drilldown when a metric moves.
+
+Monitoring fails when the dashboard becomes a collection of charts without a decision path. A useful dashboard answers three questions in sequence: *what moved, where did it move, and what should we inspect or do next?*
+
+---
+
+## Diagnosis: where, for whom, and why might it be happening?
+
+Diagnosis starts after monitoring notices movement. If weekly margin falls, the manager needs to know whether the issue is a product, store, region, customer segment, campaign, channel, or supply problem. This is where segmentation, cohorts, funnels, small multiples, maps, and drilldowns matter.
+
+Diagnosis does not prove causality. It narrows the search. It tells the team where to investigate and what comparison might be useful.
+
+<DataTable
+  caption="Table 1. Monitoring and diagnosis are different workflow stages. A dashboard should support both without confusing them."
+  columns={[
+    { key: 'stage', label: 'Stage', align: 'left' },
+    { key: 'question', label: 'Question', align: 'left' },
+    { key: 'defaultEvidence', label: 'Default evidence', align: 'left' },
+    { key: 'failure', label: 'Common failure', align: 'left' },
+  ]}
+  rows={[
+    {
+      stage: 'Monitor',
+      question: 'What changed?',
+      defaultEvidence: 'KPI trend, alert, scorecard',
+      failure: 'No action owner or threshold',
+    },
+    {
+      stage: 'Diagnose',
+      question: 'Where did it change?',
+      defaultEvidence: 'Segment drilldown, cohort, small multiples',
+      failure: 'Treating a pattern as proof of cause',
+    },
+    {
+      stage: 'Decide',
+      question: 'What should we do?',
+      defaultEvidence: 'Decision brief, experiment, model, memo',
+      failure: 'Jumping from dashboard to action without comparison',
+    },
+  ]}
+/>
+
+---
+
+## Strategic decisions: where should the firm place its bets?
+
+Strategy uses data differently from daily operations. The evidence is often less fresh, more aggregated, and more uncertain. Market expansion, pricing architecture, product portfolio, customer segment focus, channel strategy, capacity investment, and acquisition screening all require a blend of historical data, external context, assumptions, and judgment.
+
+The practical discipline is to separate three things:
+
+1. **Facts from the current business.** What do our customers, products, stores, channels, and margins show?
+2. **Assumptions about the future.** What must be true for the strategy to work?
+3. **Tests and signals.** What data would tell us early that the strategy is working or failing?
+
+This is why the book returns to decision memos. Strategic decisions need evidence, but they also need an explicit threshold for acting and a plan for learning after action.
+
+---
+
+## Causal learning: did the action work?
+
+Many business questions are causal: did the email cause incremental sales, did the discount lift profit, did the new onboarding flow reduce churn, did the policy change reduce risk? Historical data alone often makes these questions look easier than they are.
+
+The key issue is the counterfactual: what would have happened without the action? Experiments, A/B tests, difference-in-differences, synthetic control, regression with credible identification, and other designs are ways of constructing a comparison that earns the word "caused."
+
+Causal learning is not always required. If the question is only "which stores are currently above target?", a dashboard is enough. If the question is "should we roll out this promotion nationally?", a dashboard is not enough.
+
+---
+
+## Prediction, ranking, and recommendation
+
+Prediction asks what is likely to happen next. Churn models, demand forecasts, fraud scores, lead scores, risk models, and delivery-time predictions all live here. The model does not need to know what caused the outcome to be useful, but it does need a clear action attached to the score.
+
+Ranking and recommendation go one step further. They order choices: which product to show, which customer to contact, which ticket to escalate, which loan to review, which store to visit, which document to retrieve. Ranking systems need extra care because they shape the future data they observe. If a product is never shown, the system cannot learn whether customers would have liked it.
+
+<Callout variant="finding" title="Prediction is not intervention">
+  A churn model can tell you who is likely to leave. It does not tell you which offer will change their mind. That second question requires experimentation, causal reasoning, or a carefully designed uplift workflow.
+</Callout>
+
+---
+
+## Generative AI and unstructured workflows
+
+Many modern workflows use data that does not look like rows and columns: support tickets, product reviews, policy documents, sales calls, PDFs, images, screenshots, contracts, invoices, code, slides, and emails. AI workflows help classify, extract, summarize, retrieve, draft, route, and monitor this work.
+
+The mature version is not "ask the model." It is a designed workflow:
+
+1. collect the source material;
+2. retrieve or select relevant context;
+3. ask the model for a bounded task;
+4. require structured output when the result must feed another system;
+5. evaluate accuracy, grounding, bias, privacy, and refusal behavior;
+6. route uncertain or high-risk cases to human review;
+7. monitor the workflow after deployment.
+
+AI is powerful because it makes language, documents, and images operational. It is risky for the same reason: it can make weak evidence look fluent.
+
+---
+
+## Optimization: what should we do under constraints?
+
+Optimization turns predictions, rules, and business constraints into an action plan. How many employees should be scheduled? Which stores should receive inventory? How should delivery routes be assigned? Which media channels should receive budget? Which price should be offered under margin and fairness constraints?
+
+Optimization is often where analytics becomes real. It also exposes hidden objectives. Are we optimizing revenue, margin, customer satisfaction, utilization, fairness, retention, or risk? If the objective is wrong, the optimized answer is wrong with confidence.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three routing questions. Pick the workflow before picking the method."
+  questions={[
+    {
+      prompt: <>A dashboard shows that Southeast revenue fell last week. The team wants to know whether the decline came from a specific product family, store type, or customer segment. What workflow is this?</>,
+      options: [
+        { label: <>Monitoring only.</> },
+        { label: <>Diagnosis through drilldown and segmentation.</> },
+        { label: <>Causal inference.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The dashboard noticed the movement; now the team is asking where it happened. That is diagnostic work. It can suggest causal hypotheses, but it does not prove cause by itself.</>,
+    },
+    {
+      prompt: <>A churn model ranks customers by risk, but no retention team owns the action attached to the score. What is missing?</>,
+      options: [
+        { label: <>A larger training set.</> },
+        { label: <>A workflow that connects score to action, threshold, owner, and monitoring.</> },
+        { label: <>A causal estimate of every feature.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Prediction creates value only when a decision workflow uses the score. Without an owner, threshold, action, and monitoring plan, the model can be accurate and still operationally useless.</>,
+    },
+    {
+      prompt: <>A support AI summarizes policy documents for agents. The key managerial concern is:</>,
+      options: [
+        { label: <>Whether the summary is fluent.</> },
+        { label: <>Whether the workflow is evaluated for grounding, source use, escalation, and failure monitoring.</> },
+        { label: <>Whether the model can answer any question in the business.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>For business use, fluency is not enough. The AI workflow must be evaluated against source evidence and governed with escalation paths and monitoring.</>,
+    },
+  ]}
+/>
+
+<Takeaway label="Managerial habit">
+
+Before asking "what tool should we use?", finish this sentence:
+
+*"This data will improve [workflow] by helping [owner] decide [action] when [signal] crosses [threshold], and we will monitor success with [feedback metric]."*
+
+If the sentence cannot be completed, the data use case is not yet designed.
+
+</Takeaway>

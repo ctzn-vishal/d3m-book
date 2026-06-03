@@ -6,15 +6,17 @@ export const book: Book = {
   parts: [
     {
       numeral: '0',
-      title: 'The D3M Mindset',
+      title: 'The Modern Data Operating System',
       chapters: [
         {
           number: 0,
-          title: 'From Metrics to Decisions',
+          title: 'From Data Traces to Decisions',
           articles: [
             { slug: 'ch00-0-foreword', number: '0.0', title: 'Foreword: How to Read This Book', status: 'published' },
-            { slug: 'ch00-1-what-is-d3m', number: '0.1', title: 'What Is Data Driven Decision Making?', status: 'published' },
-            { slug: 'ch00-2-evidence-stack', number: '0.2', title: 'The D3M Evidence Stack', status: 'published' },
+            { slug: 'ch00-1-what-is-d3m', number: '0.1', title: 'Where Data Comes From', status: 'published' },
+            { slug: 'ch00-2-evidence-stack', number: '0.2', title: 'How Data Is Stored', status: 'published' },
+            { slug: 'ch00-3-how-data-is-used', number: '0.3', title: 'How Data Is Used', status: 'published' },
+            { slug: 'ch00-4-data-to-decision-loop', number: '0.4', title: 'The Data-to-Decision Loop', status: 'published' },
           ],
         },
       ],

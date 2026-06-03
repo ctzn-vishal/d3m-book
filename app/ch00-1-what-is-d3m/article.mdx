@@ -1,156 +1,143 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { DataTable } from '@/components/Book/DataTable';
+import { Callout } from '@/components/Book/Callout';
 import { Takeaway } from '@/components/Book/Takeaway';
-import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
+import { DataGenerationMap } from '@/components/Book/part0/Part0Diagrams';
 
 <DropCap>
 
-Most analytics looks data-driven and isn't. A team builds a dashboard tracking weekly sales by region. The chart is beautiful. The numbers are accurate. The colours are tasteful. Then a region trends down, somebody clicks through, somebody asks "what should we do?", and the conversation goes silent. The dashboard described the world. It did not decide anything. The work was data-*decorated*, not data-*driven*.
+Data begins before it is a table. It begins as ordinary life: a customer searches for a product, walks into a store, taps a card, opens an app, ignores an offer, leaves a review, calls support, uploads a receipt, asks a chatbot a question, or cancels a subscription. Modern businesses are covered in these traces. Some are clean rows. Some are messy sentences. Some are images, audio, locations, documents, or model outputs. All of them are partial records of something a person, machine, or organization did.
 
 </DropCap>
 
-This article draws the line between the two. The distinction is small enough to define in three rules and large enough that almost every analytics failure in a modern firm sits on the wrong side of it. The article also previews the **decision ladder** — the seven-rung spine of the book — and introduces **Bean &amp; Basket Coffee**, the firm we will think alongside from here to Part VI.
+## The executive question: *what business activity generated this data?*
 
----
+The first managerial skill is not choosing a model. It is asking what the data is a trace of. A sales row is a trace of a completed transaction, not of all customer demand. A click is a trace of attention inside one interface, not of preference in general. A support ticket is a trace of a problem serious enough to report, not of every problem customers experienced. A prompt log is a trace of an AI workflow being used, not proof that the workflow helped.
 
-## The Executive Question
+This matters because every data source carries the bias of the process that created it. If the process changes, the data changes even when the underlying business does not. If the app redesign makes the return button harder to find, return requests may fall while dissatisfaction rises. If a chatbot deflects simple questions, the support tickets that remain will look more severe. If a store starts scanning loyalty IDs more consistently, "repeat customer" metrics may jump without any real change in loyalty.
 
-> *What separates a decision that is data-driven from a decision that is merely data-decorated?*
-
-The honest answer is three rules. Decisions are data-driven when:
-
-1.  **The action is named.** A specific lever a specific person could pull.
-2.  **The counterfactual is named.** What would happen if we did not act, or acted differently.
-3.  **The threshold for acting is named.** The minimum effect size, ROI, or signal we would need to commit.
-
-Anything missing any of those three is description in disguise. It may be smart description. It may be useful description. But it is not yet a decision.
-
----
-
-## Three Ways the Distinction Breaks Down
-
-Three failure patterns recur. None of them is a methods problem. All of them are framing problems.
-
-**Failure 1: action without comparison.** A team observes that customers who received a marketing email spent more than customers who did not. They roll out the email campaign. They've optimized for a metric — *spend among recipients* — that always rises when the firm contacts its best customers. The comparison they needed — *what those same customers would have done without the email* — never appeared. Part III is largely about why this happens and how to fix it.
-
-**Failure 2: prediction without action.** A team builds a high-AUC churn model. It's accurate. It's well-calibrated. It's deployed. No retention team owns the action the score is supposed to trigger. The model produces a score every Monday morning that goes into nobody's queue. The model is correct. The decision is missing. Part IV opens with this failure.
-
-**Failure 3: AI without governance.** A team ships a customer-facing chatbot that answers from the firm's documents. Six weeks later it confidently quotes a refund policy that doesn't exist. The team is shocked. The model wasn't asked to refuse; the documents weren't versioned; nobody monitored grounding rate. Part V's last chapter is the playbook against this failure.
-
-Each failure can be diagnosed by reading the three rules backwards: which one was missing?
-
----
-
-## The Decision Question Card (Preview)
-
-The artefact that holds the three rules together appears for the first time in §9.1. It is a six-line card a sponsor and an analyst fill in together before any data work begins:
-
-1.  **Action.** The specific intervention under managerial control.
-2.  **Outcome.** The business metric that should move.
-3.  **Unit of analysis.** The level at which the action is applied and measured.
-4.  **Timing and horizon.** When the intervention starts; the window over which the outcome is measured.
-5.  **Counterfactual comparison.** What would have happened to the same units in the absence of the action.
-6.  **Threshold for acting.** The minimum effect that would justify acting.
-
-A team that can fill this card in a fifteen-minute meeting has the bones of a defensible analytics project. A team that cannot is not yet ready to fit a model. The card grows up across the book: it becomes the Predictive Task Contract in §14.2, the Model Card in §15.5, the AI Workflow Card in §22.1, and the Decision Memo in §24.1. We will trace the family in §0.2.
-
----
-
-## The Decision Ladder
-
-The book's spine is a sequence of decision questions, each one harder than the last and each one requiring a new evidence language to answer.
-
-<Figure width="screen-inset" caption="Figure 1. The seven-rung decision ladder. Each rung is a question; each Part of the book is the evidence language that climbs to it.">
+<Figure width="page-outset" caption="Figure 1. Business data is generated by many kinds of activity. The manager reads each source by asking what work created the record and what decision it can support.">
   <div className="not-prose">
-    <LadderPosition />
+    <DataGenerationMap />
   </div>
 </Figure>
 
-Reading the ladder:
-
-- **Rungs 1–2 (Parts I–II).** Description and visual comparison. The work of seeing what happened, where, and for whom.
-- **Rungs 3–4 (Part III).** Causal designs and regression. The work of separating "what we see" from "what we caused."
-- **Rung 5 (Part IV).** Prediction. The work of saying who or what will likely do what next.
-- **Rung 6 (Part V).** AI workflows on unstructured data. The work of reading text, images, and documents the structured methods cannot see.
-- **Rung 7 (Part VI).** The system view. The work of running the analytics organization as a learning system rather than a sequence of one-off projects.
-
-The ladder is climbed; it is not skipped. Every rung uses what was learned on the rungs below. The book is structured so that a question at any rung can be traced down to the description it rests on and up to the operation it informs.
+Figure 1 gives the broad map. Six source families cover most data a modern manager will encounter: customer behavior, business operations, digital systems, the physical world, human language, and AI workflows. The source family matters because it tells you what kind of claim the data can support.
 
 ---
 
-## Bean &amp; Basket Coffee — The Firm We Will Think Alongside
+## A day in the life of data
 
-Bean &amp; Basket is a multi-store specialty coffee chain. It has roughly 2,000 stores across the United States. It runs a mobile app, an email marketing program, a loyalty tier, a small set of seasonal promotions, and a regional org structure. It has the data sources you would expect:
+Consider one Bean &amp; Basket customer on a Tuesday morning.
+
+At 7:48 a.m., Maya searches the mobile app for "oat latte." That creates a **search event**. At 7:49, the app shows her a seasonal drink recommendation. That creates an **impression**. She taps it, adds a pastry, applies a loyalty reward, and checks out. That creates **cart**, **transaction**, **payment**, **promotion**, and **loyalty** records. Her order is prepared at Store 104, where the point-of-sale system updates **inventory** and the kitchen display records **fulfillment time**. Her phone location confirms she picked up the order. At 9:10, she rates the experience four stars and writes, "Great drink, long wait." That creates a **rating** and **review text**. Later, the operations team uses that review in a text dashboard, the marketing team uses the transaction in a churn model, the product team uses the search event to tune recommendations, and the regional manager sees the wait-time issue in a KPI dashboard.
+
+One morning produced many records. None of them is "the customer" in full. Each is a trace from a specific system, with a specific purpose and a specific blind spot.
 
 <DataTable
-  caption="Table 1. Bean & Basket's data inventory. Every Part of the book pulls from a subset of these tables; by Part VI the same customer appears in multiple of them."
+  caption="Table 1. One customer morning becomes several business records. The managerial question changes with the source."
   columns={[
-    { key: 'name', label: 'Data source', align: 'left' },
-    { key: 'rows', label: 'What each row is', align: 'left' },
-    { key: 'use', label: 'Where it appears', align: 'left' },
+    { key: 'trace', label: 'Trace', align: 'left' },
+    { key: 'record', label: 'Likely record', align: 'left' },
+    { key: 'question', label: 'Question it can support', align: 'left' },
+    { key: 'blindSpot', label: 'What it misses', align: 'left' },
   ]}
   rows={[
-    { name: 'customers', rows: 'one row per customer', use: 'Parts I–IV (RFM, churn)' },
-    { name: 'transactions', rows: 'one row per receipt', use: 'Parts I–III (pricing, baskets)' },
-    { name: 'products', rows: 'one row per SKU', use: 'Parts I, IV (assortment, recs)' },
-    { name: 'stores', rows: 'one row per location', use: 'Parts II–III (panel data)' },
-    { name: 'store_week_panel', rows: 'store × week', use: 'Parts II–III (panel models)' },
-    { name: 'campaigns / experiments', rows: 'one row per send', use: 'Part III (A/B tests, lift)' },
-    { name: 'reviews', rows: 'one row per app review', use: 'Part V (text, embeddings)' },
-    { name: 'support_tickets', rows: 'one row per ticket', use: 'Part V (classification, RAG)' },
-    { name: 'knowledge base docs', rows: 'one row per policy/manual', use: 'Part V (RAG)' },
-    { name: 'image_cases', rows: 'one row per image use case', use: 'Part V (vision, multimodal)' },
+    {
+      trace: 'Search for oat latte',
+      record: 'app_search_events',
+      question: 'What are customers trying to find?',
+      blindSpot: 'Needs not expressed through search',
+    },
+    {
+      trace: 'Recommendation shown',
+      record: 'recommendation_impressions',
+      question: 'Which offers receive attention?',
+      blindSpot: 'What would have happened without the recommendation',
+    },
+    {
+      trace: 'Completed purchase',
+      record: 'transactions',
+      question: 'What did customers buy, where, and when?',
+      blindSpot: 'Customers who considered but did not buy',
+    },
+    {
+      trace: 'Long wait',
+      record: 'fulfillment_time',
+      question: 'Where is the operating process slow?',
+      blindSpot: 'Subjective tolerance for waiting',
+    },
+    {
+      trace: 'Four-star review',
+      record: 'reviews',
+      question: 'What language do customers use to describe the experience?',
+      blindSpot: 'Silent customers who never leave reviews',
+    },
+    {
+      trace: 'AI summary used by support',
+      record: 'ai_workflow_logs',
+      question: 'Is the AI workflow accurate, grounded, and useful?',
+      blindSpot: 'Errors not caught by human review',
+    },
   ]}
 />
 
-The recurring questions Bean &amp; Basket faces are the questions the ladder climbs:
-
-- *What's happening in the Southeast region's app sentiment this month?* (Part I–II)
-- *Did our last pastry promotion cause a margin lift, or just attract customers who would have come anyway?* (Part III)
-- *Which customers are most likely to churn in the next sixty days, and what offer would change their mind?* (Part IV)
-- *What are customers actually saying in their reviews and tickets, and what does that say about where the operation is breaking?* (Part V)
-- *How do we run all of this together as one customer-analytics system?* (Part VI)
-
-Five questions, five Parts, one company. The methods will rotate. The firm will not.
+The lesson is practical: do not call these records "customer data" as if they were interchangeable. The search event, transaction, review, wait-time record, and AI log are different slices of the customer's interaction with the firm. They become powerful only when the manager knows which slice is being used.
 
 ---
 
-## A Few Standalone Cases
+## The source changes the claim
 
-Bean &amp; Basket cannot teach everything. A handful of standalone data cases anchor specific methods to real datasets, appended outside the chapter prose:
+The same managerial topic can look different depending on where the data came from.
 
-- The **Progresso soup** scanner panel for visual evidence, fixed effects, and elasticity (Parts II–III).
-- The **Milk field data** for quasi-experimental designs and heterogeneous effects (Part III).
-- The **Zillow Colorado** housing series for difference-in-differences and synthetic control (Part III).
-- The **BAV Fast Food** brand survey for PCA and perceptual mapping (Part IV).
-- An **Airbnb-style listing pricing** dataset for numeric prediction (Part IV).
-- **Yelp** reviews, **Goose Island** Twitter, **earnings call** transcripts, and **job postings** for classical NLP, GPT measurement, and AI workflows (Part V).
+Take customer satisfaction. A firm might measure it through star ratings, review text, support tickets, refund requests, call transcripts, social posts, survey responses, churn, or repeat purchase. These are not redundant measures of the same thing. They capture different moments in the customer journey.
 
-The full case map appears in §0.2.
+- **Star ratings** are easy to monitor but shallow.
+- **Review text** explains reasons but overrepresents people willing to write.
+- **Support tickets** reveal operational problems but only after the customer escalates.
+- **Refunds and returns** capture costly dissatisfaction but miss silent disappointment.
+- **Churn** is a final outcome, often too late for diagnosis.
+- **AI summaries** can scale interpretation but must be evaluated against source evidence.
 
----
+The managerial question is not "which data source is best?" The question is: *which source is closest to the decision we need to make, and what bias does its generation process introduce?*
 
-## What This Book Asks of the Reader
-
-A few habits the book will keep coming back to. Forming them now will save the reader effort throughout:
-
-1.  **Write the brief before fitting the model.** If you can't write the Decision Question Card, the modelling work isn't ready.
-2.  **Read the visual first.** Every method in the book has a default chart; learn the chart before the equation.
-3.  **Treat methods as decision aids, not rituals.** Methods earn their place by improving a specific decision. If they don't, they don't ship.
-4.  **Distinguish association, causation, prediction, recommendation, and automation.** They look similar. They aren't.
-5.  **End with an artefact.** Cards, memos, model cards, dashboards, studios — every Part ships something durable.
-
-These are not stylistic preferences. They are how the book intends to be useful long after the page closes.
+<Callout variant="caveat" title="Do not confuse trace with truth">
+  A dataset is evidence created by a process. It is not a neutral mirror of the world. Before using any source, ask who or what had to act for the record to exist, and who is missing because they did not or could not act that way.
+</Callout>
 
 ---
 
-<Takeaway label="Decision rule">
+## Three generation traps
 
-The line between data-decorated and data-driven is narrow and consequential. Three rules — name the action, name the counterfactual, name the threshold — separate them. Everything in the book is downstream of that distinction.
+**Trap 1: activity bias.** Data overrepresents people who act inside the measured system. App data overrepresents app users. Reviews overrepresent people motivated to write. Loyalty data overrepresents identified customers. The unmeasured population may behave differently.
 
-*If the analysis cannot finish three sentences — "we propose this action, compared to this alternative, and we will act if the effect exceeds this threshold" — it is not yet a decision.*
+**Trap 2: workflow bias.** Data changes when the business process changes. A new refund policy, a redesigned app, a chatbot handoff rule, or a new sales script can change recorded behavior without changing underlying demand or satisfaction.
+
+**Trap 3: AI feedback bias.** AI workflows create new records and change the behavior that future models learn from. If an AI support assistant routes some complaints away from human agents, the remaining ticket data no longer represents the full complaint mix. If a recommender shows the same products repeatedly, future purchase data reflects exposure as much as preference.
+
+These traps are not reasons to avoid data. They are reasons to read data as a product of its generating process.
+
+---
+
+## What this chapter changes about the rest of the book
+
+Part I will soon teach rows, columns, grain, variable types, joins, and transformations. Those concepts matter more after this chapter, not less. A row is not just a row. It is the footprint of a business event. A column is not just a column. It is a measurement choice. A table is not just a table. It is a compressed view of some workflow.
+
+Later parts extend the same stance:
+
+- A dashboard is a repeated view of selected traces.
+- A causal design asks whether one action changed a future trace.
+- A prediction model learns patterns in past traces to rank future cases.
+- A recommender shapes the traces it will later observe.
+- A language model workflow turns documents, prompts, retrievals, and human reviews into governed evidence.
+
+<Takeaway label="Managerial habit">
+
+When a new data source appears, write one paragraph before opening a chart:
+
+*"This data was generated when [person/system/process] did [action] in [context]. One record exists only if [condition]. It can support decisions about [business use], but it underrepresents [missing population or missing behavior]."*
+
+If you cannot write that paragraph, you do not yet know what the data means.
 
 </Takeaway>
-
-The next article — §0.2 — lays out the evidence languages that climb the ladder, the artefacts they produce, and how to read the book around them.
