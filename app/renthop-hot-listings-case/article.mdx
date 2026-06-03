@@ -1,0 +1,202 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  RentHopActionQueue,
+  RentHopCaseOverview,
+  RentHopFeatureImportance,
+  RentHopFeatureSignals,
+  RentHopModelComparison,
+  RentHopSegmentMap,
+} from '@/components/Book/part4/RentHopCaseStudy';
+import renthopRaw from './data/renthop-case.json';
+
+export const renthop = renthopRaw;
+
+export const taskRows = [
+  {
+    decision: 'Unit',
+    renthop: 'One apartment listing',
+    why: 'The action is listing-level: feature, rank, price-coach, or hold back.',
+  },
+  {
+    decision: 'Target',
+    renthop: 'Hot Apartments = Hot',
+    why: 'The label is a proxy for renter demand, not a causal measure of what made demand happen.',
+  },
+  {
+    decision: 'Features',
+    renthop: 'Rent, bedrooms, bathrooms, latitude/longitude clusters, parsed amenities',
+    why: 'Everything used here is available at listing time in the CSV.',
+  },
+  {
+    decision: 'Evaluation',
+    renthop: renthop.metadata.split,
+    why: 'The held-out slice grades the ranking before any top-listing queue is trusted.',
+  },
+  {
+    decision: 'Action',
+    renthop: 'Sort listings by predicted Hot probability',
+    why: 'RentHop needs a priority queue more than a yes/no verdict.',
+  },
+];
+
+<DropCap>
+
+RentHop is a clean predictive-modeling case because the business action is concrete. A marketplace has thousands of apartment listings and limited attention to allocate. The decision is not whether a model can explain the New York rental market. The decision is which listings should be shown first, which landlords should be offered premium placement, and where the product team should watch demand clusters.
+
+</DropCap>
+
+The original RentHop exercise asks students to upload a CSV, parse messy amenities, cluster latitude and longitude into neighborhood-like groups, compare logistic regression, a decision tree, and a random forest, then rank the top listings. This case study turns that prompt into a worked article inside the predictive-models section.
+
+The important lesson is not that a random forest is magic. It is that **feature engineering plus held-out ranking turns raw marketplace rows into an operating queue**.
+
+---
+
+## The Executive Question
+
+> Which apartment listings should RentHop move to the front of the experience, and what evidence says those listings are more likely to be Hot?
+
+That wording matters. "Predict Hot apartments" sounds like a modelling task. "Move listings to the front" is the business task. The model earns its keep only if its scores can support that ranking decision.
+
+<Figure width="page-outset" caption={`Figure 1. RentHop case evidence. The source CSV has ${renthop.metadata.rows.toLocaleString()} listings, ${renthop.metadata.hot_count.toLocaleString()} of them labelled Hot. The top held-out score decile is ${renthop.modelMetrics.find(m => m.model === renthop.metadata.best_model).top_decile_lift.toFixed(1)}x as Hot as the average listing.`}>
+  <div className="not-prose">
+    <RentHopCaseOverview data={renthop} />
+  </div>
+</Figure>
+
+---
+
+## The Task Contract Comes First
+
+Before touching algorithms, write the predictive task contract. In this case the target is already labelled, but the unit, features, and action still need to be explicit.
+
+<DataTable
+  caption="Table 1. The RentHop predictive task contract. The row is a listing, the target is a Hot label, and the score is useful because RentHop can rank listings by it."
+  columns={[
+    { key: 'decision', label: 'Decision', align: 'left' },
+    { key: 'renthop', label: 'RentHop choice', align: 'left' },
+    { key: 'why', label: 'Why it matters', align: 'left' },
+  ]}
+  rows={taskRows}
+/>
+
+Two feature-engineering moves carry the case:
+
+1. **Coordinates become segments.** Raw latitude and longitude are too granular for a manager to reason about and too continuous for a simple categorical story. K-means turns them into 18 neighborhood-like segments.
+2. **Amenities become indicators.** The `features` column is text. Parsing the common amenities into yes/no flags lets the model learn that "no fee," "hardwood floors," and laundry-related signals carry demand information.
+
+These are not decorations before the model. They are the model's business vocabulary.
+
+---
+
+## Location Does Most of the Storytelling
+
+The segment map shows why location clustering is more than a technical preprocessing step. It creates a market map a product team can reason about: high-rate value zones, central expensive zones, and small segments that may deserve manual review before becoming rules.
+
+<Figure width="screen-inset" caption="Figure 2. Listing map and location segments. Segment labels are approximate names from centroids, not official neighborhood boundaries; the point is to convert raw coordinates into interpretable market structure.">
+  <div className="not-prose">
+    <RentHopSegmentMap data={renthop} />
+  </div>
+</Figure>
+
+The highest-rate segments are not simply the priciest parts of Manhattan. The top queue leans toward lower-rent Brooklyn, Queens, and upper-Manhattan/Bronx-adjacent segments where a listing can look like strong value. That does not mean those areas are "better" markets. It means the Hot label in this data rewards a price-location-amenity balance.
+
+<Pitfall title="Treating clusters as neighborhoods">
+K-means clusters are artificial. They are useful because they summarize location for a model and a manager, not because they reproduce official neighborhood boundaries. **Use them as demand segments, then rename or govern them carefully before deployment.**
+</Pitfall>
+
+---
+
+## Amenities and Price Turn Messy Rows Into Signals
+
+Amenities are a good feature-engineering lesson because the raw field looks like prose but behaves like a feature catalog once parsed. The strongest amenity association is `no fee`: listings with that flag are materially more likely to be labelled Hot than the average listing.
+
+<Figure width="page-outset" caption="Figure 3. Amenity and price signals. Amenity bars show percentage-point lift over the overall Hot rate; price bands show observed Hot rates by monthly rent band.">
+  <div className="not-prose">
+    <RentHopFeatureSignals data={renthop} />
+  </div>
+</Figure>
+
+The price pattern is equally important. Hot does not mean expensive. The value bands below the luxury tail carry stronger Hot rates, especially when paired with favorable locations. That is exactly why a listing score should be multivariate: price alone misses the segment context, and segment alone misses the rent/value position.
+
+<Callout variant="finding" title="Feature engineering lesson">
+  The largest predictive gain is not from trying more algorithms. It is from translating the listing into business-readable features: location segment, value position, unit mix, and amenities.
+</Callout>
+
+---
+
+## Model Comparison: A Narrow Win for the Forest
+
+The random forest is the best held-out model in this run, with AUC {renthop.modelMetrics.find(m => m.model === 'Random forest').auc.toFixed(3)}. But the logistic regression baseline is close at AUC {renthop.modelMetrics.find(m => m.model === 'Logistic regression').auc.toFixed(3)}. That is a useful result. It says the engineered features are doing much of the work, and the more flexible model adds incremental lift rather than rescuing a weak setup.
+
+<Figure width="page-outset" caption="Figure 4. Held-out model comparison. AUC and average precision grade ranking quality; the score-decile chart translates ranking into the operating language of which listings to feature first.">
+  <div className="not-prose">
+    <RentHopModelComparison data={renthop} />
+  </div>
+</Figure>
+
+For a marketplace, the score-decile chart is usually easier to act on than the ROC curve. The top decile of random-forest scores has a Hot rate of {`${(renthop.scoreDeciles[0].hot_rate * 100).toFixed(1)}%`}, compared with {`${(renthop.metadata.hot_rate * 100).toFixed(1)}%`} overall. That means the model is useful as a ranking system even though no threshold is morally special.
+
+<Pitfall title="Optimising AUC and stopping">
+AUC tells RentHop whether the score ranks better than random. It does not decide how many listings to feature. **The business threshold still depends on placement inventory, landlord revenue, renter experience, and the cost of promoting a false positive.**
+</Pitfall>
+
+---
+
+## What the Model Leaned On
+
+The winning model leans first on price and value features, then location, then amenities and unit mix. That ranking is inspection, not causation. It says what sorted listings in the historical labels. It does not prove that lowering rent, adding an amenity, or moving a unit to another segment would create a Hot listing.
+
+<Figure width="page-outset" caption="Figure 5. Random-forest feature importance. Importance ranks what the model used to sort listings; it should feed model inspection and product hypotheses, not causal claims.">
+  <div className="not-prose">
+    <RentHopFeatureImportance data={renthop} />
+  </div>
+</Figure>
+
+The managerial use is disciplined: if price/value and location dominate, RentHop should make sure those features are stable, refreshed, and monitored. If a single amenity unexpectedly dominated, that would be a reason to audit the parsing logic and label definition before shipping.
+
+---
+
+## The Deployment Artifact Is the Queue
+
+The model becomes useful when it produces a queue. In the held-out test set, the top 50 predicted listings have an actual Hot rate of {`${(renthop.top50Summary.actual_hot_rate * 100).toFixed(0)}%`} and a median rent of {`$${renthop.top50Summary.median_price.toLocaleString()}`}. This is the concrete product output: "here are the listings the platform should consider featuring first."
+
+<Figure width="page-outset" caption="Figure 6. Held-out top-50 action queue. The queue shows how probabilities become a marketplace operation: rank listings, inspect segment concentration, and review the highest-probability candidates.">
+  <div className="not-prose">
+    <RentHopActionQueue data={renthop} />
+  </div>
+</Figure>
+
+This queue should not be fully automated on day one. A reasonable deployment path is:
+
+1.  Use the score to create a daily candidate list for editorial or marketplace operations review.
+2.  Track whether featured model-ranked listings get faster renter engagement than comparable non-featured listings.
+3.  Add a threshold-profit or capacity curve once RentHop knows the value of a true positive placement and the cost of a false positive.
+
+---
+
+## What This Case Teaches
+
+The RentHop case connects five ideas from Part IV:
+
+1.  **Task design.** The model predicts a listing label so RentHop can rank listings.
+2.  **Feature engineering.** Coordinates and text become business-readable features.
+3.  **Generalization.** A 70/30 held-out split grades the ranking before the queue is trusted.
+4.  **Model comparison.** The random forest wins narrowly, which keeps the baseline honest.
+5.  **Deployment framing.** The score must turn into a queue, a threshold, and a monitoring loop.
+
+<Pitfall title="Reading prediction as policy">
+Feature importance and score lift are predictive evidence. They do not prove which landlord actions would create demand. **If RentHop wants to advise landlords to change price or amenities, that becomes a causal question and needs the Part III toolkit.**
+</Pitfall>
+
+<Takeaway label="Case study bottom line">
+
+A good marketplace prediction model is not an algorithm leaderboard. It is a task contract, a feature catalog, a held-out ranking, and a deployment queue. RentHop's best model is useful because it turns thousands of messy listing rows into a short list the business can inspect and act on.
+
+*Ship the queue with the caveats, not just the AUC.*
+
+</Takeaway>

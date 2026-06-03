@@ -169,6 +169,7 @@ export const book: Book = {
             { slug: 'ch31-numeric-prediction', number: '15.3', title: 'Numeric Prediction', status: 'published' },
             { slug: 'ch32-trees-ensembles', number: '15.4', title: 'Trees and Ensembles', status: 'published' },
             { slug: 'ch33-automl-explainability', number: '15.5', title: 'AutoML, Explainability, and Model Cards', status: 'published' },
+            { slug: 'renthop-hot-listings-case', number: '15.6', title: 'Case Study: RentHop Hot Listings', status: 'published' },
           ],
         },
         {
