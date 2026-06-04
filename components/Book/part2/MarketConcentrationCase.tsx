@@ -60,6 +60,36 @@ type ThresholdSensitivity = {
   hhi_band: string;
 };
 
+type MarketDefinitionSensitivityRow = {
+  field: string;
+  markets: number;
+  spend: number;
+  high_markets: number;
+  moderate_markets: number;
+  unconcentrated_markets: number;
+  high_spend_share: number;
+  concentrated_spend_share: number;
+  median_spend: number;
+  median_hhi: number;
+  p90_hhi: number;
+  avg_hhi: number;
+  median_cr4: number;
+  median_entities: number;
+};
+
+type PharmaMarket = {
+  field: string;
+  market: string;
+  owner_entities: number;
+  spend: number;
+  leader: string;
+  cr1: number;
+  cr4: number;
+  hhi: number;
+  effective_entities: number;
+  hhi_band: string;
+};
+
 type TopOwner = {
   industry: string;
   rank: number;
@@ -69,10 +99,17 @@ type TopOwner = {
 };
 
 type MarketConcentrationData = {
+  meta?: {
+    defaultMarketField?: string;
+  };
   overview: {
     row_count: number;
     spend: number;
     industry_groups: number;
+    industries: number;
+    majors: number;
+    categories: number;
+    subcategories: number;
     owner_entities: number;
     raw_parent_entities: number;
     advertisers: number;
@@ -83,9 +120,11 @@ type MarketConcentrationData = {
   entitySpendDistribution: Record<string, number>;
   bandCounts: Record<string, number>;
   industryMetrics: IndustryMetric[];
+  marketDefinitionSensitivity: MarketDefinitionSensitivityRow[];
   levelComparison: LevelComparison[];
   annualDelta: AnnualDelta[];
   thresholdSensitivity: ThresholdSensitivity[];
+  pharmaMarketDrilldown: PharmaMarket[];
   topOwners: TopOwner[];
 };
 
@@ -114,6 +153,21 @@ const fmtInt = (value: number) => Math.round(value).toLocaleString();
 const fmtPct = (value: number) => `${(value * 100).toFixed(1)}%`;
 const shortLabel = (value: string, max = 27) => value.length > max ? `${value.slice(0, max - 1)}...` : value;
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+const SUBSTANTIAL_MARKET_SPEND = 500_000_000;
+
+const fieldLabels: Record<string, string> = {
+  Industry_Group: "Industry group",
+  INDUSTRY: "Industry",
+  MAJOR: "Major",
+  CATEGORY: "Category",
+  SUBCATEGORY: "Subcategory",
+  MICROCATEGORY: "Microcategory",
+};
+
+const substantialIndustryRows = (data: MarketConcentrationData) =>
+  data.industryMetrics
+    .filter(row => row.spend >= SUBSTANTIAL_MARKET_SPEND)
+    .sort((a, b) => b.hhi - a.hhi);
 
 function scaleLinear(domain: [number, number], range: [number, number]) {
   const [d0, d1] = domain;
@@ -156,15 +210,16 @@ function Legend({ items }: { items: Array<{ label: string; color: string }> }) {
 }
 
 export function ConcentrationMetricCards({ data }: { data: MarketConcentrationData }) {
-  const top = data.industryMetrics[0];
+  const top = substantialIndustryRows(data)[0] ?? data.industryMetrics[0];
   const moderate = data.bandCounts["Moderately concentrated"] ?? 0;
   const high = data.bandCounts["Highly concentrated"] ?? 0;
   const unknownShare = data.overview.parent_unknown_spend / data.overview.spend;
+  const marketField = data.meta?.defaultMarketField ?? "INDUSTRY";
   const cards = [
     {
       label: "Study window",
-      value: `${data.overview.industry_groups} industries`,
-      detail: `${fmtMoney(data.overview.spend)} in positive 2018-2022 ad spend`,
+      value: `${data.overview.industries} ${marketField} markets`,
+      detail: `${data.overview.industry_groups} broad groups; ${fmtMoney(data.overview.spend)} in positive 2018-2022 ad spend`,
     },
     {
       label: "Owner proxy entities",
@@ -177,9 +232,9 @@ export function ConcentrationMetricCards({ data }: { data: MarketConcentrationDa
       detail: "DOJ/FTC-style thresholds used as visual reference lines",
     },
     {
-      label: "Top industry",
+      label: "Top large industry",
       value: fmtInt(top.hhi),
-      detail: `${top.industry}; ${fmtPct(top.cr4)} CR4`,
+      detail: `${top.industry}; ${fmtPct(top.cr4)} CR4; ${fmtMoney(top.spend)} spend`,
     },
     {
       label: "Unknown-parent spend",
@@ -196,7 +251,7 @@ export function ConcentrationMetricCards({ data }: { data: MarketConcentrationDa
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map(card => (
         <div key={card.label} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">{card.label}</p>
+          <p className="text-[10px] font-semibold uppercase text-slate-500">{card.label}</p>
           <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-950">{card.value}</p>
           <p className="mt-1 text-xs leading-snug text-slate-500">{card.detail}</p>
         </div>
@@ -206,25 +261,25 @@ export function ConcentrationMetricCards({ data }: { data: MarketConcentrationDa
 }
 
 export function HHIRankChart({ data }: { data: MarketConcentrationData }) {
-  const rows = [...data.industryMetrics].sort((a, b) => b.hhi - a.hhi);
+  const rows = substantialIndustryRows(data).slice(0, 24);
   const W = 940;
   const H = rows.length * 29 + 78;
   const m = { top: 28, right: 78, bottom: 34, left: 238 };
-  const x = scaleLinear([0, Math.max(3600, Math.max(...rows.map(d => d.hhi)) * 1.05)], [m.left, W - m.right]);
+  const x = scaleLinear([0, Math.max(5200, Math.max(...rows.map(d => d.hhi)) * 1.05)], [m.left, W - m.right]);
   const yFor = (index: number) => m.top + index * 29;
   return (
     <ChartCard
-      title="HHI by broad industry group"
-      subtitle="Owner-proxy ad spend shares, 2018-2022 pooled; vertical lines mark 1,000 and 1,800 HHI reference thresholds."
+      title="HHI by substantial source-defined industry"
+      subtitle={`Owner-proxy ad spend shares, 2018-2022 pooled; shown for INDUSTRY markets with at least ${fmtMoney(SUBSTANTIAL_MARKET_SPEND)} spend.`}
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="HHI by broad industry group.">
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="HHI by source-defined industry.">
         {[1000, 1800].map(t => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={m.top - 18} y2={H - m.bottom} stroke={t === 1800 ? "#9f3a38" : "#c58a2e"} strokeDasharray="5 5" />
             <text x={x(t)} y={m.top - 20} textAnchor="middle" className="fill-slate-500 text-[10px]">{t.toLocaleString()}</text>
           </g>
         ))}
-        {[0, 1000, 1800, 3000].map(t => (
+        {[0, 1000, 1800, 3000, 5000].map(t => (
           <g key={`tick-${t}`}>
             <line x1={x(t)} x2={x(t)} y1={H - m.bottom} y2={H - m.bottom + 5} stroke="#94a3b8" />
             <text x={x(t)} y={H - 10} textAnchor="middle" className="fill-slate-500 text-[10px]">{t.toLocaleString()}</text>
@@ -258,34 +313,155 @@ export function HHIRankChart({ data }: { data: MarketConcentrationData }) {
   );
 }
 
+export function MarketDefinitionSensitivity({ data }: { data: MarketConcentrationData }) {
+  const fieldOrder = ["Industry_Group", "INDUSTRY", "MAJOR", "CATEGORY", "SUBCATEGORY"];
+  const rows = fieldOrder
+    .map(field => data.marketDefinitionSensitivity.find(row => row.field === field))
+    .filter((row): row is MarketDefinitionSensitivityRow => Boolean(row));
+  const maxMedianHhi = Math.max(4000, ...rows.map(row => row.median_hhi));
+
+  return (
+    <ChartCard
+      title="Market definition changes the empirical result"
+      subtitle="The same owner-proxy spend shares are recomputed at progressively narrower source hierarchy levels."
+    >
+      <div className="space-y-4">
+        {rows.map(row => {
+          const concentratedMarkets = row.high_markets + row.moderate_markets;
+          return (
+            <div key={row.field} className="grid gap-2 border-t border-slate-100 pt-4 first:border-t-0 first:pt-0 lg:grid-cols-[150px_1fr_1fr] lg:items-center">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">{fieldLabels[row.field] ?? row.field}</p>
+                <p className="text-xs text-slate-500">{fmtInt(row.markets)} markets; median {fmtInt(row.median_entities)} entities</p>
+              </div>
+              <div>
+                <div className="mb-1 flex items-center justify-between text-[10px] uppercase text-slate-500">
+                  <span>Market count by HHI band</span>
+                  <span>{fmtInt(concentratedMarkets)} concentrated</span>
+                </div>
+                <div className="flex h-3 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="bg-[#9f3a38]"
+                    style={{ width: `${(row.high_markets / row.markets) * 100}%` }}
+                    title={`${fmtInt(row.high_markets)} highly concentrated`}
+                  />
+                  <div
+                    className="bg-[#c58a2e]"
+                    style={{ width: `${(row.moderate_markets / row.markets) * 100}%` }}
+                    title={`${fmtInt(row.moderate_markets)} moderately concentrated`}
+                  />
+                  <div
+                    className="bg-[#2f6f77]"
+                    style={{ width: `${(row.unconcentrated_markets / row.markets) * 100}%` }}
+                    title={`${fmtInt(row.unconcentrated_markets)} unconcentrated`}
+                  />
+                </div>
+              </div>
+              <div>
+                <div className="mb-1 flex items-center justify-between text-[10px] uppercase text-slate-500">
+                  <span>Median HHI</span>
+                  <span>{fmtInt(row.median_hhi)}</span>
+                </div>
+                <div className="relative h-3 rounded-full bg-slate-100">
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full bg-[#214e78]"
+                    style={{ width: `${clamp((row.median_hhi / maxMedianHhi) * 100, 1, 100)}%` }}
+                  />
+                </div>
+                <p className="mt-1 text-xs text-slate-500">
+                  {fmtPct(row.concentrated_spend_share)} of spend is in markets with HHI &gt;= 1,000.
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <Legend items={BAND_LABELS.map(label => ({ label, color: BAND_COLORS[label] }))} />
+    </ChartCard>
+  );
+}
+
+export function PharmaMarketDrilldown({ data }: { data: MarketConcentrationData }) {
+  const broadRows = data.pharmaMarketDrilldown
+    .filter(row => row.field === "INDUSTRY")
+    .sort((a, b) => b.spend - a.spend);
+  const subcategoryRows = data.pharmaMarketDrilldown
+    .filter(row => row.field === "SUBCATEGORY")
+    .sort((a, b) => b.spend - a.spend)
+    .slice(0, 10);
+  const rows = [...broadRows, ...subcategoryRows];
+  const maxHhi = Math.max(6500, ...rows.map(row => row.hhi));
+
+  return (
+    <ChartCard
+      title="Pharma concentration appears after narrowing the market"
+      subtitle="Industry_Group is fixed to Pharmaceuticals; rows compare the source INDUSTRY level with high-spend prescription subcategories."
+    >
+      <div className="space-y-3">
+        {rows.map(row => (
+          <div key={`${row.field}-${row.market}`} className="grid gap-2 border-t border-slate-100 pt-3 first:border-t-0 first:pt-0 md:grid-cols-[1fr_210px] md:items-center">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-sm bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-500">
+                  {fieldLabels[row.field] ?? row.field}
+                </span>
+                <p className="text-sm font-semibold leading-snug text-slate-900">{row.market}</p>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                {row.leader}; {fmtMoney(row.spend)} spend; CR4 {fmtPct(row.cr4)}
+              </p>
+            </div>
+            <div>
+              <div className="mb-1 flex justify-between text-xs tabular-nums text-slate-600">
+                <span>HHI</span>
+                <span>{fmtInt(row.hhi)}</span>
+              </div>
+              <div className="h-3 rounded-full bg-slate-100">
+                <div
+                  className="h-3 rounded-full"
+                  style={{
+                    width: `${clamp((row.hhi / maxHhi) * 100, 1, 100)}%`,
+                    backgroundColor: BAND_COLORS[row.hhi_band] ?? "#64748b",
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Legend items={BAND_LABELS.map(label => ({ label, color: BAND_COLORS[label] }))} />
+    </ChartCard>
+  );
+}
+
 export function CRScatter({ data }: { data: MarketConcentrationData }) {
-  const rows = data.industryMetrics;
+  const rows = substantialIndustryRows(data);
   const W = 760;
   const H = 430;
   const m = { top: 26, right: 34, bottom: 48, left: 58 };
-  const x = scaleLinear([0, 0.62], [m.left, W - m.right]);
-  const y = scaleLinear([0, 0.82], [H - m.bottom, m.top]);
+  const x = scaleLinear([0, 0.75], [m.left, W - m.right]);
+  const y = scaleLinear([0, 1.02], [H - m.bottom, m.top]);
   const labelIndustries = new Set([
-    "HH Supplies and Cleaners",
-    "Energy",
-    "Telecommunications",
-    "Personal Care Products",
-    "Local Services",
-    "Pharmaceuticals",
+    "Household Soaps, Cleansers & Polishes",
+    "Discount Department & Variety Stores",
+    "Communications",
+    "Medicines & Proprietary Remedies",
+    "Business & Technology NEC",
+    "Misc Services & Amusements",
   ]);
   return (
     <ChartCard
       title="CR1 and CR4 ask different concentration questions"
-      subtitle="CR1 is the leader's share; CR4 is the combined top-four share. HHI adds how unequal the rest of the distribution is."
+      subtitle={`Substantial INDUSTRY markets only; bubble size is total ad spend. CR1 is leader share and CR4 is combined top-four share.`}
     >
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Scatterplot of CR1 and CR4 by industry.">
-        {[0, 0.15, 0.30, 0.45, 0.60].map(t => (
+        {[0, 0.15, 0.30, 0.45, 0.60, 0.75].map(t => (
           <g key={`x-${t}`}>
             <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke="#f1f5f9" />
             <text x={x(t)} y={H - 18} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtPct(t)}</text>
           </g>
         ))}
-        {[0, 0.2, 0.4, 0.6, 0.8].map(t => (
+        {[0, 0.2, 0.4, 0.6, 0.8, 1.0].map(t => (
           <g key={`y-${t}`}>
             <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
             <text x={m.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{fmtPct(t)}</text>
@@ -321,7 +497,18 @@ export function CRScatter({ data }: { data: MarketConcentrationData }) {
 }
 
 export function HierarchySensitivity({ data }: { data: MarketConcentrationData }) {
-  const selected = data.levelComparison.slice(0, 8);
+  const selectedNames = [
+    "Household Soaps, Cleansers & Polishes",
+    "Discount Department & Variety Stores",
+    "Communications",
+    "Business & Technology NEC",
+    "Government, Politics & Organizations",
+    "Medicines & Proprietary Remedies",
+    "Misc Services & Amusements",
+  ];
+  const selected = selectedNames
+    .map(name => data.levelComparison.find(row => row.industry === name))
+    .filter((row): row is LevelComparison => Boolean(row));
   const W = 900;
   const H = selected.length * 58 + 56;
   const m = { top: 18, right: 58, bottom: 34, left: 230 };
@@ -336,7 +523,7 @@ export function HierarchySensitivity({ data }: { data: MarketConcentrationData }
   return (
     <ChartCard
       title="The unit of analysis can change the apparent market structure"
-      subtitle="Same rows, same industry denominator, three entity definitions. Owner proxy aggregates corporate families; advertiser and brand split them."
+      subtitle="Same rows, same INDUSTRY denominator, three entity definitions. Owner proxy aggregates corporate families; advertiser and brand split them."
     >
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="HHI sensitivity by entity hierarchy.">
         {[1000, 1800].map(t => (
@@ -383,18 +570,18 @@ export function HierarchySensitivity({ data }: { data: MarketConcentrationData }
 
 export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationData }) {
   const selectedIndustries = [
-    "HH Supplies and Cleaners",
-    "Telecommunications",
-    "Pharmaceuticals",
-    "Medical Services and Equipment",
-    "Local Services",
+    "Household Soaps, Cleansers & Polishes",
+    "Business & Technology NEC",
+    "Government, Politics & Organizations",
+    "Medicines & Proprietary Remedies",
+    "Misc Services & Amusements",
   ];
   const colors: Record<string, string> = {
-    "HH Supplies and Cleaners": "#9f3a38",
-    Telecommunications: "#214e78",
-    Pharmaceuticals: "#6f5aa8",
-    "Medical Services and Equipment": "#2f6f77",
-    "Local Services": "#c58a2e",
+    "Household Soaps, Cleansers & Polishes": "#9f3a38",
+    "Business & Technology NEC": "#214e78",
+    "Government, Politics & Organizations": "#c58a2e",
+    "Medicines & Proprietary Remedies": "#6f5aa8",
+    "Misc Services & Amusements": "#2f6f77",
   };
   const rows = data.thresholdSensitivity.filter(row => row.level === "Owner proxy" && selectedIndustries.includes(row.industry));
   const thresholds = [0, 10000, 100000, 1000000];
@@ -459,8 +646,9 @@ export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationD
 }
 
 export function AnnualConcentrationChange({ data }: { data: MarketConcentrationData }) {
-  const increases = [...data.annualDelta].sort((a, b) => b.hhi_delta - a.hhi_delta).slice(0, 5);
-  const decreases = [...data.annualDelta].sort((a, b) => a.hhi_delta - b.hhi_delta).slice(0, 5);
+  const substantial = data.annualDelta.filter(row => Math.max(row.spend_2018, row.spend_2022) >= SUBSTANTIAL_MARKET_SPEND);
+  const increases = [...substantial].sort((a, b) => b.hhi_delta - a.hhi_delta).slice(0, 5);
+  const decreases = [...substantial].sort((a, b) => a.hhi_delta - b.hhi_delta).slice(0, 5);
   const rows = [...increases, ...decreases].sort((a, b) => b.hhi_delta - a.hhi_delta);
   const W = 850;
   const H = rows.length * 34 + 68;
@@ -472,7 +660,7 @@ export function AnnualConcentrationChange({ data }: { data: MarketConcentrationD
   return (
     <ChartCard
       title="Concentration changed unevenly from 2018 to 2022"
-      subtitle="Largest increases and decreases in owner-proxy HHI; spend changes are shown beside the bars."
+      subtitle={`Largest increases and decreases in owner-proxy HHI among INDUSTRY markets with at least ${fmtMoney(SUBSTANTIAL_MARKET_SPEND)} in either endpoint year.`}
     >
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Change in HHI from 2018 to 2022.">
         <line x1={x(0)} x2={x(0)} y1={m.top - 8} y2={H - m.bottom} stroke="#94a3b8" />

@@ -12,6 +12,8 @@ import duckdb
 SOURCE_URL = "https://vishal.t3.tigrisfiles.io/sqlroom/Ad_data.parquet"
 OUTPUT_PATH = Path("app/market-concentration-metrics-case/data/market-concentration.json")
 CUTOFF_DATE = "2022-12-01"
+DEFAULT_MARKET_FIELD = "INDUSTRY"
+MARKET_FIELDS = ["Industry_Group", "INDUSTRY", "MAJOR", "CATEGORY", "SUBCATEGORY"]
 
 
 def fetch_records(con: duckdb.DuckDBPyConnection, sql: str) -> list[dict]:
@@ -76,6 +78,10 @@ def main() -> None:
           count(DISTINCT Date) AS months,
           sum(dollar_spent) AS spend,
           count(DISTINCT Industry_Group) AS industry_groups,
+          count(DISTINCT INDUSTRY) AS industries,
+          count(DISTINCT MAJOR) AS majors,
+          count(DISTINCT CATEGORY) AS categories,
+          count(DISTINCT SUBCATEGORY) AS subcategories,
           count(DISTINCT {owner_expr}) AS owner_entities,
           count(DISTINCT PARENT) AS raw_parent_entities,
           count(DISTINCT ADVERTISER) AS advertisers,
@@ -102,7 +108,7 @@ def main() -> None:
         f"""
         WITH entity AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             {owner_expr} AS entity,
             sum(dollar_spent) AS spend
           {base}
@@ -126,7 +132,7 @@ def main() -> None:
         f"""
         WITH entity AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             {owner_expr} AS entity,
             sum(dollar_spent) AS spend
           {base}
@@ -156,12 +162,66 @@ def main() -> None:
     )
     industry_metrics = [add_band(row) for row in industry_metrics]
 
+    market_definition_sensitivity: list[dict] = []
+    for field in MARKET_FIELDS:
+        market_definition_sensitivity.extend(
+            fetch_records(
+                con,
+                f"""
+                WITH entity AS (
+                  SELECT
+                    {field} AS market,
+                    {owner_expr} AS entity,
+                    sum(dollar_spent) AS spend
+                  {base}
+                  GROUP BY 1, 2
+                ),
+                shares AS (
+                  SELECT
+                    *,
+                    spend / sum(spend) OVER (PARTITION BY market) AS market_share,
+                    row_number() OVER (PARTITION BY market ORDER BY spend DESC) AS rn
+                  FROM entity
+                ),
+                metrics AS (
+                  SELECT
+                    market,
+                    count(*) AS entities,
+                    sum(spend) AS spend,
+                    max(CASE WHEN rn = 1 THEN entity END) AS leader,
+                    sum(CASE WHEN rn = 1 THEN market_share ELSE 0 END) AS cr1,
+                    sum(CASE WHEN rn <= 4 THEN market_share ELSE 0 END) AS cr4,
+                    sum(market_share * market_share) * 10000 AS hhi,
+                    1 / sum(market_share * market_share) AS effective_entities
+                  FROM shares
+                  GROUP BY 1
+                )
+                SELECT
+                  '{field}' AS field,
+                  count(*) AS markets,
+                  sum(spend) AS spend,
+                  sum(CASE WHEN hhi > 1800 THEN 1 ELSE 0 END) AS high_markets,
+                  sum(CASE WHEN hhi BETWEEN 1000 AND 1800 THEN 1 ELSE 0 END) AS moderate_markets,
+                  sum(CASE WHEN hhi < 1000 THEN 1 ELSE 0 END) AS unconcentrated_markets,
+                  sum(CASE WHEN hhi > 1800 THEN spend ELSE 0 END) / sum(spend) AS high_spend_share,
+                  sum(CASE WHEN hhi >= 1000 THEN spend ELSE 0 END) / sum(spend) AS concentrated_spend_share,
+                  quantile_cont(spend, 0.5) AS median_spend,
+                  quantile_cont(hhi, 0.5) AS median_hhi,
+                  quantile_cont(hhi, 0.9) AS p90_hhi,
+                  avg(hhi) AS avg_hhi,
+                  quantile_cont(cr4, 0.5) AS median_cr4,
+                  quantile_cont(entities, 0.5) AS median_entities
+                FROM metrics
+                """,
+            )
+        )
+
     level_comparison = fetch_records(
         con,
         f"""
         WITH source AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             {owner_expr} AS owner_entity,
             ADVERTISER AS advertiser,
             BRAND AS brand,
@@ -218,7 +278,7 @@ def main() -> None:
         f"""
         WITH entity AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             date_part('year', Date)::INT AS year,
             {owner_expr} AS entity,
             sum(dollar_spent) AS spend
@@ -255,7 +315,7 @@ def main() -> None:
         f"""
         WITH entity AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             date_part('year', Date)::INT AS year,
             {owner_expr} AS entity,
             sum(dollar_spent) AS spend
@@ -310,7 +370,7 @@ def main() -> None:
         f"""
         WITH entity AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             {owner_expr} AS entity,
             sum(dollar_spent) AS spend
           {base}
@@ -340,7 +400,7 @@ def main() -> None:
         f"""
         WITH entity AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             Media_Group AS media,
             {owner_expr} AS entity,
             sum(dollar_spent) AS spend
@@ -375,7 +435,7 @@ def main() -> None:
         f"""
         WITH source AS (
           SELECT
-            Industry_Group AS industry,
+            {DEFAULT_MARKET_FIELD} AS industry,
             {owner_expr} AS owner_entity,
             PARENT AS raw_parent,
             ADVERTISER AS advertiser,
@@ -460,6 +520,47 @@ def main() -> None:
     )
     threshold_sensitivity = [add_band(row) for row in threshold_sensitivity]
 
+    pharma_market_drilldown: list[dict] = []
+    for field in ["INDUSTRY", "CATEGORY", "SUBCATEGORY", "MICROCATEGORY"]:
+        pharma_market_drilldown.extend(
+            fetch_records(
+                con,
+                f"""
+                WITH entity AS (
+                  SELECT
+                    {field} AS market,
+                    {owner_expr} AS entity,
+                    sum(dollar_spent) AS spend
+                  {base}
+                    AND Industry_Group = 'Pharmaceuticals'
+                  GROUP BY 1, 2
+                ),
+                shares AS (
+                  SELECT
+                    *,
+                    spend / sum(spend) OVER (PARTITION BY market) AS market_share,
+                    row_number() OVER (PARTITION BY market ORDER BY spend DESC) AS rn
+                  FROM entity
+                )
+                SELECT
+                  '{field}' AS field,
+                  market,
+                  count(*) AS owner_entities,
+                  sum(spend) AS spend,
+                  max(CASE WHEN rn = 1 THEN entity END) AS leader,
+                  sum(CASE WHEN rn = 1 THEN market_share ELSE 0 END) AS cr1,
+                  sum(CASE WHEN rn <= 4 THEN market_share ELSE 0 END) AS cr4,
+                  sum(market_share * market_share) * 10000 AS hhi,
+                  1 / sum(market_share * market_share) AS effective_entities
+                FROM shares
+                GROUP BY 1, 2
+                HAVING sum(spend) >= 100000000
+                ORDER BY spend DESC, hhi DESC
+                """,
+            )
+        )
+    pharma_market_drilldown = [add_band(row) for row in pharma_market_drilldown]
+
     band_counts = {}
     for row in industry_metrics:
         band_counts[row["hhi_band"]] = band_counts.get(row["hhi_band"], 0) + 1
@@ -470,10 +571,12 @@ def main() -> None:
             "source": SOURCE_URL,
             "generatedAt": datetime.now(timezone.utc).isoformat(),
             "cutoffDate": CUTOFF_DATE,
+            "defaultMarketField": DEFAULT_MARKET_FIELD,
             "notes": [
                 "The case excludes Jan-Jun 2023 so all trend comparisons end at the last complete calendar year, Dec 2022.",
+                "The default market proxy is INDUSTRY. Industry_Group, MAJOR, CATEGORY, and SUBCATEGORY are included as market-definition sensitivity checks.",
                 "The headline firm unit is an owner proxy: PARENT when available, otherwise ADVERTISER when PARENT is PARENT UNKNOWN.",
-                "The metrics measure concentration of advertising spend within broad industry groups, not product-market sales concentration.",
+                "The metrics measure concentration of advertising spend within source-defined market buckets, not product-market sales concentration.",
             ],
         },
         "overview": overview,
@@ -481,12 +584,14 @@ def main() -> None:
         "entitySpendDistribution": entity_spend_distribution,
         "bandCounts": band_counts,
         "industryMetrics": industry_metrics,
+        "marketDefinitionSensitivity": market_definition_sensitivity,
         "levelComparison": level_comparison,
         "annualMetrics": annual_metrics,
         "annualDelta": annual_delta,
         "topOwners": top_owners,
         "mediaConcentration": media_concentration,
         "thresholdSensitivity": threshold_sensitivity,
+        "pharmaMarketDrilldown": pharma_market_drilldown,
     }
 
     OUTPUT_PATH.write_text(json.dumps(clean_payload(payload), separators=(",", ":"), allow_nan=False), encoding="utf-8")
