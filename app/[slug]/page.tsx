@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { BookShell } from '@/components/Book/BookShell';
 import { book, findArticle, getAllSlugs } from '@/lib/book-toc';
+import { createPreviewMetadata } from '@/lib/share-metadata';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -17,8 +18,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!found) {
     return { title: 'Not found' };
   }
+  const title = `§${found.article.number} ${found.article.title} | ${book.title}`;
+  const description = `${found.article.title}, an article from ${book.title}.`;
   return {
-    title: `§${found.article.number} ${found.article.title} | ${book.title}`,
+    title,
+    description,
+    ...createPreviewMetadata({
+      title,
+      description,
+      imagePath: `/${slug}/opengraph-image`,
+      imageAlt: `${found.article.title} preview card`,
+      type: 'article',
+    }),
   };
 }
 

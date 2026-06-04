@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { book } from '@/lib/book-toc';
+import { createPreviewMetadata } from '@/lib/share-metadata';
 import { findStudio, getStudioSlugs, relatedChapter } from '@/lib/studios';
 
 interface Props {
@@ -17,9 +18,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const studio = findStudio(slug);
   if (!studio) return { title: 'Studio not found' };
+  const title = `${studio.title} | ${book.title}`;
   return {
-    title: `${studio.title} | ${book.title}`,
+    title,
     description: studio.blurb,
+    ...createPreviewMetadata({
+      title,
+      description: studio.blurb,
+      imagePath: `/studios/${studio.slug}/opengraph-image`,
+      imageAlt: `${studio.title} preview card`,
+    }),
   };
 }
 

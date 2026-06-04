@@ -4,6 +4,7 @@ import './globals.css';
 import 'katex/dist/katex.min.css';
 import { MainArea } from '@/components/MainArea';
 import { book } from '@/lib/book-toc';
+import { createPreviewMetadata, getMetadataBase } from '@/lib/share-metadata';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,8 +22,10 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: getMetadataBase(),
   title: book.title,
   description: book.subtitle,
+  ...createPreviewMetadata(),
 };
 
 export default function RootLayout({

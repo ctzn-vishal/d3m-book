@@ -2,12 +2,22 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowUpRight, FlaskConical, LayoutDashboard } from 'lucide-react';
 import { book } from '@/lib/book-toc';
+import { createPreviewMetadata } from '@/lib/share-metadata';
 import { studios, relatedChapter, type Studio } from '@/lib/studios';
 
+const pageTitle = `Case Study & Dashboard Gallery | ${book.title}`;
+const pageDescription =
+  'Interactive, self-contained dashboards and hands-on exercises that pair with the book — pricing, regression, exploratory views, and more.';
+
 export const metadata: Metadata = {
-  title: `Case Study & Dashboard Gallery | ${book.title}`,
-  description:
-    'Interactive, self-contained dashboards and hands-on exercises that pair with the book — pricing, regression, exploratory views, and more.',
+  title: pageTitle,
+  description: pageDescription,
+  ...createPreviewMetadata({
+    title: pageTitle,
+    description: pageDescription,
+    imagePath: '/studios/opengraph-image',
+    imageAlt: 'D3M case study and dashboard gallery preview card',
+  }),
 };
 
 function formatArticleNumber(num: string): string {
