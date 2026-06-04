@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lottery ZIP Psychographics: How Neighborhoods Play</title>
+<style>
+:root{
+  --bg:#f7f8fa;
+  --ink:#171a1f;
+  --muted:#68707c;
+  --subtle:#4d5662;
+  --panel:#ffffff;
+  --panel-2:#eef1f5;
+  --line:#d9dee6;
+  --line-strong:#aeb6c2;
+  --daily:#5b6068;
+  --convenience:#2a9d8f;
+  --jackpot:#c85b47;
+  --blue:#4e79a7;
+  --gold:#d99a2b;
+  --ink-soft:#262b33;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit}
+button{color:inherit}
+.wrap{max-width:1500px;margin:0 auto;padding:26px}
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(420px,.8fr);
+  gap:28px;
+  align-items:stretch;
+  padding:0 0 24px;
+  border-bottom:1px solid var(--line);
+}
+.hero-copy{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:420px;
+  padding:8px 0 0;
+}
+.eyebrow{
+  margin:0 0 12px;
+  font-size:12px;
+  font-weight:820;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--blue);
+}
+h1{
+  max-width:860px;
+  margin:0;
+  font-size:clamp(38px,5.8vw,78px);
+  line-height:.96;
+  font-weight:880;
+  letter-spacing:0;
+}
+.dek{
+  max-width:820px;
+  margin:18px 0 0;
+  color:var(--subtle);
+  font-size:18px;
+  line-height:1.44;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:28px;
+}
+.kpi,.panel,.callout,.story-card,.segment-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.kpi{padding:14px}
+.kpi .value{font-size:25px;line-height:1;font-weight:850}
+.kpi .label{margin-top:6px;font-size:12px;line-height:1.25;color:var(--muted)}
+.hero-visual{
+  position:relative;
+  overflow:hidden;
+  min-height:420px;
+  background:#1b2027;
+  color:#fff;
+  border:1px solid #252c36;
+  border-radius:8px;
+}
+.hero-visual header{
+  position:absolute;
+  left:18px;
+  right:18px;
+  top:16px;
+  display:flex;
+  justify-content:space-between;
+  gap:16px;
+  z-index:2;
+}
+.hero-visual h2{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.12em}
+.hero-visual p{margin:4px 0 0;color:#b8c0cc;font-size:12px}
+.hero-visual .mini-note{max-width:270px;text-align:right}
+.hero-visual svg{position:absolute;inset:0;width:100%;height:100%}
+.storyline{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:14px;
+  margin:22px 0;
+}
+.story-card{
+  padding:16px;
+  min-height:145px;
+  border-top:4px solid var(--line-strong);
+}
+.story-card:nth-child(1){border-top-color:var(--gold)}
+.story-card:nth-child(2){border-top-color:var(--blue)}
+.story-card:nth-child(3){border-top-color:var(--convenience)}
+.story-card:nth-child(4){border-top-color:var(--jackpot)}
+.story-card .num{font-size:11px;font-weight:850;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.story-card h3{margin:8px 0 7px;font-size:18px;line-height:1.1}
+.story-card p{margin:0;color:var(--subtle);line-height:1.45;font-size:13px}
+.main{
+  display:grid;
+  grid-template-columns:310px minmax(0,1fr) 350px;
+  gap:18px;
+  align-items:start;
+}
+.below{
+  display:grid;
+  grid-template-columns:minmax(0,1.18fr) minmax(360px,.82fr);
+  gap:18px;
+  margin-top:18px;
+}
+.panel{overflow:hidden}
+.panel-h{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:13px 15px;
+  border-bottom:1px solid var(--line);
+}
+.panel-h h2,.panel-h h3{
+  margin:0;
+  font-size:13px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#363d47;
+}
+.panel-h .meta{font-size:12px;color:var(--muted);text-align:right}
+.panel-b{padding:15px}
+.callouts{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-top:18px;
+}
+.callout{padding:16px;border-left:5px solid var(--blue)}
+.callout strong{display:block;margin-bottom:6px;font-size:15px}
+.callout p{margin:0;color:var(--subtle);font-size:13px;line-height:1.45}
+.controls{display:grid;gap:12px}
+.field label{
+  display:block;
+  margin:0 0 6px;
+  color:#363d47;
+  font-size:12px;
+  font-weight:800;
+}
+input[type="search"],select{
+  width:100%;
+  border:1px solid var(--line-strong);
+  background:#fff;
+  border-radius:6px;
+  padding:9px 10px;
+  outline:none;
+}
+input[type="search"]:focus,select:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(78,121,167,.16);
+}
+.chips,.tabs{display:flex;flex-wrap:wrap;gap:7px}
+.chip,.tab,.metric-button{
+  border:1px solid var(--line-strong);
+  border-radius:999px;
+  background:#fff;
+  padding:7px 10px;
+  cursor:pointer;
+  font-size:12px;
+  line-height:1;
+  font-weight:800;
+}
+.chip.active,.tab.active,.metric-button.active{background:#1f252d;color:#fff;border-color:#1f252d}
+.zip-list{
+  max-height:468px;
+  overflow:auto;
+  margin-top:14px;
+  border-top:1px solid var(--line);
+}
+.zip-row{
+  width:100%;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:10px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:transparent;
+  padding:10px 2px;
+  text-align:left;
+  cursor:pointer;
+}
+.zip-row:hover{background:var(--panel-2)}
+.zip-row.active{background:#e7eef6}
+.zip-main{font-weight:850}
+.zip-sub{margin-top:3px;color:var(--muted);font-size:12px}
+.zip-num{text-align:right;font-weight:850;font-size:13px}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:6px}
+.chart-shell{position:relative}
+svg{display:block;width:100%;height:auto}
+.axis{fill:var(--muted);font-size:12px}
+.axis-title{fill:#343b45;font-size:13px;font-weight:850}
+.grid{stroke:var(--line);stroke-dasharray:2 4}
+.zero{stroke:#252b33;stroke-width:1.4;stroke-dasharray:5 5;opacity:.55}
+.point{stroke:#fff;stroke-width:1.2;cursor:pointer}
+.point.dim{opacity:.13}
+.point.active{stroke:#111;stroke-width:3}
+.centroid{stroke:#111;stroke-width:2}
+.label{
+  font-size:11px;
+  font-weight:850;
+  fill:#20252c;
+  paint-order:stroke;
+  stroke:#fff;
+  stroke-width:4px;
+  stroke-linejoin:round;
+}
+.hero-label{
+  font-size:12px;
+  font-weight:850;
+  fill:#e8ecf2;
+  paint-order:stroke;
+  stroke:#1b2027;
+  stroke-width:4px;
+}
+.tip{
+  position:absolute;
+  z-index:5;
+  pointer-events:none;
+  opacity:0;
+  transform:translate(-50%,-115%);
+  max-width:280px;
+  border-radius:8px;
+  background:#10151c;
+  color:#fff;
+  padding:10px 12px;
+  box-shadow:0 14px 36px rgba(0,0,0,.24);
+  font-size:12px;
+  line-height:1.45;
+}
+.tip b{display:block;font-size:14px;margin-bottom:4px}
+.legend{display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:10px;color:var(--muted);font-size:12px}
+.legend span{display:inline-flex;align-items:center}
+.detail-title{font-size:30px;line-height:1;margin:0}
+.detail-seg{font-size:14px;font-weight:850;margin:7px 0 14px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.detail-metric{background:var(--panel-2);border-radius:8px;padding:10px}
+.detail-metric .v{font-weight:850;font-size:22px;line-height:1}
+.detail-metric .l{margin-top:5px;color:var(--muted);font-size:12px}
+.bar-row{display:grid;grid-template-columns:132px 1fr 64px;gap:8px;align-items:center;margin:10px 0}
+.bar-row .l{font-size:12px;color:var(--muted)}
+.bar-row .v{text-align:right;font-size:12px;font-weight:850}
+.track{height:13px;background:#e4e9ef;border-radius:999px;position:relative;overflow:hidden}
+.track.center:before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#aab2bd}
+.bar{position:absolute;top:0;bottom:0;border-radius:999px}
+.bar.fill{left:0;background:var(--blue)}
+.bar.pos{left:50%;background:var(--convenience)}
+.bar.neg{right:50%;background:var(--jackpot)}
+.note{margin:12px 0 0;color:var(--muted);font-size:13px;line-height:1.5}
+.profile-head{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 230px;
+  gap:12px;
+  align-items:start;
+  margin-bottom:14px;
+}
+.profile-row{
+  display:grid;
+  grid-template-columns:178px 1fr 88px;
+  gap:10px;
+  align-items:center;
+  margin:10px 0;
+}
+.profile-row .cluster{font-size:13px;font-weight:850}
+.profile-track{height:25px;background:var(--panel-2);border-radius:6px;overflow:hidden}
+.profile-fill{height:100%;border-radius:6px}
+.profile-row .value{text-align:right;font-weight:850;font-size:13px}
+.mix-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.segment-card{padding:14px;border-top:5px solid var(--line-strong)}
+.segment-card h3{margin:0 0 7px;font-size:17px;line-height:1.12}
+.segment-card p{margin:0;color:var(--subtle);font-size:13px;line-height:1.42}
+.mixbar{display:flex;height:16px;border-radius:999px;overflow:hidden;margin:11px 0;background:var(--panel-2)}
+.mixbar span{height:100%}
+.topzip{margin-top:10px;font-size:12px;color:var(--muted);line-height:1.45}
+.topzip b{color:var(--ink)}
+.borough-note{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:12px;margin-top:10px}
+.scree-row,.corr-row,.load-row{
+  display:grid;
+  grid-template-columns:78px 1fr 58px;
+  gap:10px;
+  align-items:center;
+  margin:10px 0;
+}
+.scree-track{height:22px;background:var(--panel-2);border-radius:6px;overflow:hidden}
+.scree-fill{height:100%;background:var(--blue)}
+.load-row{grid-template-columns:185px 1fr 54px}
+.load-row .l,.corr-row .l{font-size:12px;color:var(--muted)}
+.load-row .v,.corr-row .v{text-align:right;font-size:12px;font-weight:850}
+.factor-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.factor-card{border:1px solid var(--line);border-radius:8px;padding:12px;background:#fff}
+.factor-card h3{margin:0 0 8px;font-size:15px;line-height:1.12}
+.tiny-load{display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;margin:6px 0;font-size:12px;color:var(--muted)}
+.tiny-load b{color:var(--ink);font-weight:800}
+.source-block{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+.method-list{
+  margin:0;
+  padding-left:18px;
+  color:var(--subtle);
+  font-size:13px;
+  line-height:1.55;
+}
+.spotlights{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin-top:18px;
+}
+.spotlight{
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:12px;
+  background:#fff;
+  cursor:pointer;
+}
+.spotlight:hover{border-color:var(--line-strong);box-shadow:0 8px 22px rgba(29,35,42,.07)}
+.spotlight .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:850}
+.spotlight .z{font-size:22px;font-weight:880;margin-top:6px}
+.spotlight .m{font-size:12px;color:var(--subtle);line-height:1.35;margin-top:4px}
+@media(max-width:1260px){
+  .hero,.main,.below,.source-block{grid-template-columns:1fr}
+  .hero-copy{min-height:auto}
+  .hero-visual{min-height:360px}
+  .storyline{grid-template-columns:1fr 1fr}
+  .spotlights{grid-template-columns:1fr 1fr 1fr}
+}
+@media(max-width:760px){
+  .wrap{padding:16px}
+  .hero-grid,.storyline,.callouts,.mix-grid,.factor-grid,.spotlights{grid-template-columns:1fr}
+  .profile-head{grid-template-columns:1fr}
+  .profile-row{grid-template-columns:130px 1fr 72px}
+  .bar-row{grid-template-columns:112px 1fr 54px}
+  .hero-visual{min-height:320px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-copy">
+      <div>
+        <p class="eyebrow">Part 4 case study</p>
+        <h1>Lottery ZIP Psychographics: How Neighborhoods Play</h1>
+        <p class="dek">A NYC ZIP-level segmentation built from NY Lottery baseline behavior. The model ignores demographics while it learns the behavior space, then uses income, education, race, ethnicity, population, and retailer availability to interpret the segments afterward.</p>
+      </div>
+      <div class="hero-grid" id="kpis"></div>
+    </div>
+    <div class="hero-visual">
+      <header>
+        <div>
+          <h2>Behavior Space</h2>
+          <p>PCA scores from 35 lottery behavior features</p>
+        </div>
+        <p class="mini-note">Each dot is an active NYC ZIP. Color is the final k-means segment.</p>
+      </header>
+      <svg id="heroMap" viewBox="0 0 720 420" role="img" aria-label="Preview of lottery ZIP behavior space"></svg>
+    </div>
+  </header>
+
+  <section class="storyline">
+    <article class="story-card">
+      <div class="num">Step 1</div>
+      <h3>Do not cluster on dollars.</h3>
+      <p>Raw lottery sales mostly follow population and retailer availability. The case starts by separating scale from play style.</p>
+    </article>
+    <article class="story-card">
+      <div class="num">Step 2</div>
+      <h3>Compress behavior.</h3>
+      <p>PCA turns correlated product, channel, add-on, timing, entropy, and habit measures into readable coordinates.</p>
+    </article>
+    <article class="story-card">
+      <div class="num">Step 3</div>
+      <h3>Rotate for meaning.</h3>
+      <p>Factor analysis names latent play modes: daily habit, rapid convenience, jackpot add-ons, and incidental variation.</p>
+    </article>
+    <article class="story-card">
+      <div class="num">Step 4</div>
+      <h3>Profile the clusters.</h3>
+      <p>K-means on behavior scores gives three segments. Demographics explain them only after the clusters are formed.</p>
+    </article>
+  </section>
+
+  <main class="main">
+    <aside class="panel">
+      <div class="panel-h"><h2>Controls</h2><span class="meta" id="pointCount"></span></div>
+      <div class="panel-b">
+        <div class="controls">
+          <div class="field">
+            <label>Segment</label>
+            <div class="chips" id="segmentChips"></div>
+          </div>
+          <div class="field">
+            <label for="search">ZIP or borough</label>
+            <input id="search" type="search" placeholder="Search 10014 or Queens">
+          </div>
+          <div class="field">
+            <label for="sortBy">List sort</label>
+            <select id="sortBy">
+              <option value="volume">Largest lottery volume</option>
+              <option value="daily">Most daily-routine</option>
+              <option value="jackpot">Most jackpot-led</option>
+              <option value="income">Highest income</option>
+              <option value="percap">Highest sales per resident</option>
+            </select>
+          </div>
+        </div>
+        <div class="zip-list" id="zipList"></div>
+      </div>
+    </aside>
+
+    <section class="panel">
+      <div class="panel-h">
+        <h2>PCA Behavior Map</h2>
+        <span class="meta">x = daily habit/social routine, y = jackpot/add-on intensity</span>
+      </div>
+      <div class="panel-b">
+        <div class="chart-shell">
+          <svg id="scoreMap" viewBox="0 0 940 590" role="img" aria-label="PCA behavior map for lottery ZIP segments"></svg>
+          <div class="tip" id="tip"></div>
+        </div>
+        <div class="legend" id="legend"></div>
+        <div class="callouts">
+          <div class="callout">
+            <strong>Behavior first, labels second.</strong>
+            <p>The axes and clusters use product mix, channel context, add-on rates, timing, concentration, entropy, volatility, and habit signals. No demographics enter the fit.</p>
+          </div>
+          <div class="callout" style="border-left-color:var(--jackpot)">
+            <strong>Segments are lenses, not causes.</strong>
+            <p>A ZIP placed in the daily-routine segment is behaviorally similar to other daily-routine ZIPs. That does not say why residents play that way.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-h"><h2>ZIP Inspector</h2><span class="meta" id="selectedMeta"></span></div>
+      <div class="panel-b" id="detail"></div>
+    </aside>
+  </main>
+
+  <section class="below">
+    <div class="panel">
+      <div class="panel-h">
+        <h2>Segment Profile</h2>
+        <span class="meta">cluster means, NYC active ZIPs</span>
+      </div>
+      <div class="panel-b">
+        <div class="profile-head">
+          <div class="tabs" id="metricButtons"></div>
+          <select id="metricSelect" aria-label="Profile metric"></select>
+        </div>
+        <div id="profileBars"></div>
+        <div class="mix-grid" id="segmentCards"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h">
+        <h2>Borough Strip</h2>
+        <span class="meta">grouped ZIPs, not polygon geometry</span>
+      </div>
+      <div class="panel-b">
+        <div class="chart-shell">
+          <svg id="boroughStrip" viewBox="0 0 900 520" role="img" aria-label="Borough grouped ZIP behavior strip"></svg>
+          <div class="tip" id="stripTip"></div>
+        </div>
+        <div class="borough-note">
+          <span>Vertical position follows the first behavior component.</span>
+          <span>Point size follows lottery sales.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="spotlights" id="spotlights"></section>
+
+  <section class="below">
+    <div class="panel">
+      <div class="panel-h">
+        <h2>PCA and Loadings</h2>
+        <span class="meta">standardized behavior features only</span>
+      </div>
+      <div class="panel-b">
+        <div id="scree"></div>
+        <p class="note" id="pcaNote"></p>
+        <div class="tabs" id="loadingTabs" style="margin-top:14px"></div>
+        <div id="loadings"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h">
+        <h2>Why Raw Sales Are Not a Segment</h2>
+        <span class="meta">correlations in the analysis sample</span>
+      </div>
+      <div class="panel-b" id="rawCorrs"></div>
+    </div>
+  </section>
+
+  <section class="below">
+    <div class="panel">
+      <div class="panel-h">
+        <h2>Factor Analysis Readout</h2>
+        <span class="meta">rotated loadings</span>
+      </div>
+      <div class="panel-b">
+        <p class="note" style="margin-top:0">PCA gives the compact map. Factor analysis gives a language for the latent play styles behind the observed variables.</p>
+        <div class="factor-grid" id="factorCards"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h">
+        <h2>Demographics After Scoring</h2>
+        <span class="meta">not used in the fit</span>
+      </div>
+      <div class="panel-b" id="demoCorrs"></div>
+    </div>
+  </section>
+
+  <section class="source-block">
+    <div class="panel">
+      <div class="panel-h"><h2>Method</h2><span class="meta">gallery version</span></div>
+      <div class="panel-b">
+        <ol class="method-list" id="methodList"></ol>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><h2>Caveats</h2><span class="meta">read before teaching</span></div>
+      <div class="panel-b">
+        <ul class="method-list" id="caveatList"></ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const state = {
+  data:null,
+  segment:'all',
+  selected:null,
+  search:'',
+  sortBy:'volume',
+  metric:'Daily Numbers share',
+  loadingComponent:'PC1'
+};
+const svgNS = 'http://www.w3.org/2000/svg';
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmt = (n,d=0) => n == null || Number.isNaN(Number(n)) ? 'n/a' : Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const money = n => n == null ? 'n/a' : '$' + Number(n).toLocaleString('en-US',{maximumFractionDigits:0});
+const pct = n => n == null ? 'n/a' : Math.round(Number(n)*100) + '%';
+const pct1 = n => n == null ? 'n/a' : (Number(n)*100).toLocaleString('en-US',{maximumFractionDigits:0}) + '%';
+const node = (name, attrs={}, text='') => {
+  const n = document.createElementNS(svgNS, name);
+  Object.entries(attrs).forEach(([k,v]) => {
+    if (v !== null && v !== undefined) n.setAttribute(k,v);
+  });
+  if (text !== '') n.textContent = text;
+  return n;
+};
+const metricFormats = {
+  'Instant scratch share': pct1,
+  'Quick Draw share': pct1,
+  'Daily Numbers share': pct1,
+  'Jackpot share': pct1,
+  'Add-on rate': pct1,
+  'Habit index': v => fmt(v,1),
+  'Portfolio entropy': v => fmt(v,2),
+  'Routine checkout': pct1,
+  'Social channel': pct1,
+  'Incidental play': pct1,
+  'Lottery sales': money,
+  'Retailer count': v => fmt(v,1),
+  'Sales per resident': money,
+  'Median income': money,
+  'Poverty rate': pct1,
+  'College or above': pct1,
+  'Black share': pct1,
+  'Hispanic share': pct1,
+  'Population': v => fmt(v,0)
+};
+const pointMetric = {
+  'Instant scratch share':'pre_instant_share',
+  'Quick Draw share':'pre_quickdraw_share',
+  'Daily Numbers share':'pre_daily_share',
+  'Jackpot share':'jackpot_combined_share',
+  'Add-on rate':'pre_general_addon',
+  'Habit index':'pre_habit_index',
+  'Portfolio entropy':'pre_portfolio_entropy',
+  'Routine checkout':'pre_routine_checkout_share',
+  'Social channel':'pre_social_channel_share',
+  'Incidental play':'pre_incidental_share',
+  'Lottery sales':'pre_total_lottery',
+  'Retailer count':'pre_n_retailers',
+  'Sales per resident':'sales_per_resident',
+  'Median income':'median_income',
+  'Poverty rate':'per_underpoverty',
+  'College or above':'per_college_above',
+  'Black share':'per_black',
+  'Hispanic share':'per_hispanic',
+  'Population':'total_pop'
+};
+function segmentMap(){ return Object.fromEntries(state.data.segments.map(s => [s.id,s])); }
+function visiblePoints(){
+  const q = state.search.trim().toLowerCase();
+  return state.data.points.filter(p => {
+    const inSegment = state.segment === 'all' || p.segment === state.segment;
+    const inSearch = !q || p.zip.includes(q) || p.borough.toLowerCase().includes(q);
+    return inSegment && inSearch;
+  });
+}
+function colorFor(id){ return segmentMap()[id]?.color || '#68707c'; }
+function formatMetric(label,value){ return (metricFormats[label] || (v => fmt(v,2)))(value); }
+
+fetch('data/case.json').then(r => r.json()).then(data => {
+  state.data = data;
+  state.selected = data.spotlights.find(d => d.label === 'Largest lottery volume')?.zip || data.points[0].zip;
+  initControls();
+  renderAll();
+});
+
+function initControls(){
+  segmentChips.innerHTML = `<button class="chip active" data-segment="all">All ZIPs</button>` +
+    state.data.segments.map(s => `<button class="chip" data-segment="${s.id}" style="--c:${s.color}">${esc(s.shortLabel)}</button>`).join('');
+  segmentChips.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    state.segment = btn.dataset.segment;
+    [...segmentChips.querySelectorAll('button')].forEach(chip => {
+      const on = chip.dataset.segment === state.segment;
+      chip.classList.toggle('active', on);
+      chip.style.background = on ? (chip.dataset.segment === 'all' ? '#1f252d' : chip.style.getPropertyValue('--c')) : '#fff';
+      chip.style.borderColor = on ? 'transparent' : 'var(--line-strong)';
+    });
+    renderAll();
+  });
+  search.addEventListener('input', e => { state.search = e.target.value; renderZipList(); });
+  sortBy.addEventListener('change', e => { state.sortBy = e.target.value; renderZipList(); });
+  const profileMetrics = ['Daily Numbers share','Instant scratch share','Quick Draw share','Jackpot share','Add-on rate','Habit index','Routine checkout','Median income','Poverty rate','College or above'];
+  metricButtons.innerHTML = profileMetrics.slice(0,6).map(m => `<button class="metric-button" data-m="${esc(m)}">${esc(m)}</button>`).join('');
+  metricButtons.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    state.metric = btn.dataset.m;
+    metricSelect.value = state.metric;
+    renderProfiles();
+  });
+  metricSelect.innerHTML = state.data.profileMetrics.map(m => `<option value="${esc(m)}">${esc(m)}</option>`).join('');
+  metricSelect.value = state.metric;
+  metricSelect.addEventListener('change', e => { state.metric = e.target.value; renderProfiles(); });
+  loadingTabs.innerHTML = state.data.pca.loadings.map(l => `<button class="tab" data-c="${l.component}">${l.component}</button>`).join('');
+  loadingTabs.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    state.loadingComponent = btn.dataset.c;
+    renderLoadings();
+  });
+}
+
+function renderAll(){
+  renderKpis();
+  renderHeroMap();
+  renderZipList();
+  renderDetail();
+  renderScoreMap();
+  renderProfiles();
+  renderBoroughStrip();
+  renderSpotlights();
+  renderLoadings();
+  renderFactorCards();
+  renderCorrelations();
+  renderMethod();
+}
+
+function renderKpis(){
+  const md = state.data.metadata;
+  const ev2 = state.data.pca.explainedVariance[1].cumulative;
+  kpis.innerHTML = [
+    [fmt(md.analysisRows), 'active NYC ZIPs'],
+    [fmt(md.behaviorFeatureCount), 'behavior features'],
+    [pct(ev2), 'variance in first 2 PCs'],
+    [fmt(md.selectedK), 'behavior segments']
+  ].map(([v,l]) => `<div class="kpi"><div class="value">${v}</div><div class="label">${l}</div></div>`).join('');
+}
+
+function sortedPoints(){
+  const pts = visiblePoints().slice();
+  const sorters = {
+    volume:(a,b)=>b.pre_total_lottery-a.pre_total_lottery,
+    daily:(a,b)=>b.pre_daily_share-a.pre_daily_share,
+    jackpot:(a,b)=>b.jackpot_combined_share-a.jackpot_combined_share,
+    income:(a,b)=>(b.median_income||0)-(a.median_income||0),
+    percap:(a,b)=>(b.sales_per_resident||0)-(a.sales_per_resident||0)
+  };
+  return pts.sort(sorters[state.sortBy]).slice(0,190);
+}
+function renderZipList(){
+  const pts = sortedPoints();
+  pointCount.textContent = `${pts.length} shown`;
+  zipList.innerHTML = pts.map(p => {
+    const s = segmentMap()[p.segment];
+    const metricValue = state.sortBy === 'daily' ? pct1(p.pre_daily_share)
+      : state.sortBy === 'jackpot' ? pct1(p.jackpot_combined_share)
+      : state.sortBy === 'income' ? money(p.median_income)
+      : state.sortBy === 'percap' ? money(p.sales_per_resident)
+      : money(p.pre_total_lottery);
+    return `<button class="zip-row ${p.zip===state.selected?'active':''}" data-zip="${p.zip}">
+      <span>
+        <span class="zip-main">${p.zip} ${esc(p.borough)}</span>
+        <span class="zip-sub"><span class="sw" style="background:${s.color}"></span>${esc(s.shortLabel)}</span>
+      </span>
+      <span class="zip-num">${metricValue}</span>
+    </button>`;
+  }).join('');
+  zipList.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => selectZip(btn.dataset.zip)));
+}
+function selectZip(zip){
+  state.selected = zip;
+  renderZipList();
+  renderDetail();
+  renderScoreMap();
+  renderBoroughStrip();
+}
+
+function renderDetail(){
+  const p = state.data.points.find(d => d.zip === state.selected) || state.data.points[0];
+  const s = segmentMap()[p.segment];
+  selectedMeta.textContent = p.borough;
+  detail.innerHTML = `
+    <h3 class="detail-title">${p.zip}</h3>
+    <div class="detail-seg" style="color:${s.color}">${esc(s.label)}</div>
+    <div class="detail-grid">
+      <div class="detail-metric"><div class="v">${money(p.pre_total_lottery)}</div><div class="l">Lottery sales</div></div>
+      <div class="detail-metric"><div class="v">${fmt(p.pre_n_retailers,1)}</div><div class="l">Retailer count</div></div>
+      <div class="detail-metric"><div class="v">${money(p.sales_per_resident)}</div><div class="l">Sales per resident</div></div>
+      <div class="detail-metric"><div class="v">${money(p.median_income)}</div><div class="l">Median income</div></div>
+    </div>
+    ${fillBar('Daily Numbers', p.pre_daily_share, 0, .65, pct1)}
+    ${fillBar('Instant scratch', p.pre_instant_share, 0, .8, pct1)}
+    ${fillBar('Quick Draw', p.pre_quickdraw_share, 0, .45, pct1)}
+    ${fillBar('Jackpot', p.jackpot_combined_share, 0, .55, pct1)}
+    ${fillBar('Add-on rate', p.pre_general_addon, 0, .24, pct1)}
+    ${fillBar('Habit index', p.pre_habit_index, 0, 9, v => fmt(v,1))}
+    <p class="note">${esc(s.description)}</p>
+  `;
+}
+
+function fillBar(label,value,min,max,format){
+  const width = Math.max(0, Math.min(100, (Number(value)-min)/(max-min)*100));
+  return `<div class="bar-row"><div class="l">${esc(label)}</div><div class="track"><div class="bar fill" style="width:${width}%"></div></div><div class="v">${format(value)}</div></div>`;
+}
+function divBar(label,value,min=-1,max=1,format=v=>fmt(v,2)){
+  const width = Math.min(50, Math.abs(value) / Math.max(Math.abs(min),Math.abs(max)) * 50);
+  const cls = value >= 0 ? 'pos' : 'neg';
+  return `<div class="load-row"><div class="l">${esc(label)}</div><div class="track center"><div class="bar ${cls}" style="width:${width}%"></div></div><div class="v">${format(value)}</div></div>`;
+}
+
+function drawAxes(svg, width, height, margin, xs, ys, xTitle, yTitle, dark=false){
+  const iw = width - margin.l - margin.r;
+  const ih = height - margin.t - margin.b;
+  const maxX = Math.ceil(Math.max(...xs.map(v => Math.abs(v))) * 1.08);
+  const maxY = Math.ceil(Math.max(...ys.map(v => Math.abs(v))) * 1.08);
+  const sx = v => margin.l + (v + maxX) / (2 * maxX) * iw;
+  const sy = v => margin.t + (maxY - v) / (2 * maxY) * ih;
+  const ticks = [-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6];
+  ticks.filter(t => Math.abs(t) <= maxX).forEach(t => {
+    svg.appendChild(node('line',{x1:sx(t),x2:sx(t),y1:margin.t,y2:margin.t+ih,class:'grid',stroke:dark?'#343c48':null}));
+    svg.appendChild(node('text',{x:sx(t),y:height-margin.b+24,'text-anchor':'middle',class:'axis',fill:dark?'#aeb7c4':null}, fmt(t,0)));
+  });
+  ticks.filter(t => Math.abs(t) <= maxY).forEach(t => {
+    svg.appendChild(node('line',{x1:margin.l,x2:margin.l+iw,y1:sy(t),y2:sy(t),class:'grid',stroke:dark?'#343c48':null}));
+    svg.appendChild(node('text',{x:margin.l-10,y:sy(t)+4,'text-anchor':'end',class:'axis',fill:dark?'#aeb7c4':null}, fmt(t,0)));
+  });
+  svg.appendChild(node('line',{x1:sx(0),x2:sx(0),y1:margin.t,y2:margin.t+ih,class:'zero',stroke:dark?'#dbe2ea':null}));
+  svg.appendChild(node('line',{x1:margin.l,x2:margin.l+iw,y1:sy(0),y2:sy(0),class:'zero',stroke:dark?'#dbe2ea':null}));
+  if (xTitle) svg.appendChild(node('text',{x:margin.l+iw/2,y:height-15,'text-anchor':'middle',class:'axis-title',fill:dark?'#e7ecf2':null}, xTitle));
+  if (yTitle) svg.appendChild(node('text',{x:18,y:margin.t+ih/2,transform:`rotate(-90 18 ${margin.t+ih/2})`,'text-anchor':'middle',class:'axis-title',fill:dark?'#e7ecf2':null}, yTitle));
+  return {sx,sy,maxX,maxY,iw,ih};
+}
+function renderScoreMap(){
+  const svg = scoreMap;
+  svg.innerHTML = '';
+  const data = state.data.points;
+  const width=940,height=590,m={l:66,r:28,t:30,b:64};
+  const axes = drawAxes(svg,width,height,m,data.map(d=>d.pc1),data.map(d=>d.pc2),'PC1: daily habit and social routine','PC2: jackpot/add-on intensity');
+  svg.appendChild(node('text',{x:axes.sx(-axes.maxX*.72),y:axes.sy(-axes.maxY*.77),class:'label'}, 'rapid convenience'));
+  svg.appendChild(node('text',{x:axes.sx(axes.maxX*.48),y:axes.sy(axes.maxY*.75),class:'label'}, 'jackpot/add-on'));
+  svg.appendChild(node('text',{x:axes.sx(axes.maxX*.45),y:axes.sy(-axes.maxY*.76),class:'label'}, 'daily routine'));
+  data.forEach(p => {
+    const active = state.segment === 'all' || p.segment === state.segment;
+    const r = p.zip === state.selected ? 7.5 : 4.2;
+    const c = node('circle',{cx:axes.sx(p.pc1),cy:axes.sy(p.pc2),r,fill:colorFor(p.segment),class:`point${active?'':' dim'}${p.zip===state.selected?' active':''}`});
+    c.addEventListener('mouseenter', e => showTip(e,p,tip,scoreMap));
+    c.addEventListener('mousemove', e => showTip(e,p,tip,scoreMap));
+    c.addEventListener('mouseleave', () => tip.style.opacity = 0);
+    c.addEventListener('click', () => selectZip(p.zip));
+    svg.appendChild(c);
+  });
+  state.data.segments.forEach(s => {
+    const pts = data.filter(p => p.segment === s.id);
+    const x = pts.reduce((sum,p)=>sum+p.pc1,0)/pts.length;
+    const y = pts.reduce((sum,p)=>sum+p.pc2,0)/pts.length;
+    svg.appendChild(node('rect',{x:axes.sx(x)-5,y:axes.sy(y)-5,width:10,height:10,fill:s.color,class:'centroid'}));
+    svg.appendChild(node('text',{x:axes.sx(x)+9,y:axes.sy(y)+4,class:'label'}, s.shortLabel));
+  });
+  legend.innerHTML = state.data.segments.map(s => `<span><span class="sw" style="background:${s.color}"></span>${esc(s.label)}</span>`).join('') + '<span>Squares mark segment centers</span>';
+}
+function renderHeroMap(){
+  const svg = heroMap;
+  svg.innerHTML = '';
+  const data = state.data.points;
+  const width=720,height=420,m={l:44,r:28,t:72,b:40};
+  const axes = drawAxes(svg,width,height,m,data.map(d=>d.pc1),data.map(d=>d.pc2),'','',true);
+  data.forEach(p => {
+    svg.appendChild(node('circle',{cx:axes.sx(p.pc1),cy:axes.sy(p.pc2),r:3.3,fill:colorFor(p.segment),opacity:.9,stroke:'#10141a','stroke-width':.5}));
+  });
+  state.data.segments.forEach(s => {
+    const pts = data.filter(p => p.segment === s.id);
+    const x = pts.reduce((sum,p)=>sum+p.pc1,0)/pts.length;
+    const y = pts.reduce((sum,p)=>sum+p.pc2,0)/pts.length;
+    svg.appendChild(node('text',{x:axes.sx(x)+8,y:axes.sy(y)+4,class:'hero-label'}, s.shortLabel));
+  });
+}
+function showTip(ev,p,box,targetSvg){
+  const s = segmentMap()[p.segment];
+  box.innerHTML = `<b>${p.zip} ${esc(p.borough)}</b>${esc(s.shortLabel)}<br>Lottery sales: ${money(p.pre_total_lottery)}<br>Daily share: ${pct1(p.pre_daily_share)}<br>Jackpot share: ${pct1(p.jackpot_combined_share)}<br>Income: ${money(p.median_income)}`;
+  const rect = targetSvg.getBoundingClientRect();
+  box.style.left = (ev.clientX - rect.left) + 'px';
+  box.style.top = (ev.clientY - rect.top) + 'px';
+  box.style.opacity = 1;
+}
+
+function renderProfiles(){
+  [...metricButtons.querySelectorAll('button')].forEach(btn => btn.classList.toggle('active', btn.dataset.m === state.metric));
+  metricSelect.value = state.metric;
+  const vals = state.data.segments.map(s => s.means[state.metric]).filter(v => v != null);
+  const max = Math.max(...vals.map(v => Math.abs(v)), 0.001);
+  profileBars.innerHTML = state.data.segments.map(s => {
+    const val = s.means[state.metric];
+    const width = Math.max(0, Math.min(100, Math.abs(val)/max*100));
+    return `<div class="profile-row">
+      <div class="cluster"><span class="sw" style="background:${s.color}"></span>${esc(s.shortLabel)}</div>
+      <div class="profile-track"><div class="profile-fill" style="width:${width}%;background:${s.color}"></div></div>
+      <div class="value">${formatMetric(state.metric,val)}</div>
+    </div>`;
+  }).join('');
+  segmentCards.innerHTML = state.data.segments.map(s => {
+    const m = s.means;
+    const total = m['Instant scratch share'] + m['Quick Draw share'] + m['Daily Numbers share'] + m['Jackpot share'];
+    const segments = [
+      ['Instant', m['Instant scratch share'], '#4e79a7'],
+      ['Quick', m['Quick Draw share'], '#2a9d8f'],
+      ['Daily', m['Daily Numbers share'], '#5b6068'],
+      ['Jackpot', m['Jackpot share'], '#c85b47']
+    ];
+    return `<article class="segment-card" style="border-top-color:${s.color}">
+      <h3>${esc(s.label)}</h3>
+      <p>${esc(s.description)}</p>
+      <div class="mixbar">${segments.map(x => `<span title="${x[0]}" style="width:${x[1]/total*100}%;background:${x[2]}"></span>`).join('')}</div>
+      <div class="topzip"><b>${s.n} ZIPs.</b> Top volume examples: ${s.topZips.slice(0,3).map(z => `${z.zip} (${z.borough})`).join(', ')}.</div>
+    </article>`;
+  }).join('');
+}
+
+function renderBoroughStrip(){
+  const svg = boroughStrip;
+  svg.innerHTML = '';
+  const data = state.data.points;
+  const width=900,height=520,m={l:48,r:28,t:30,b:56};
+  const boroughs = state.data.boroughOrder;
+  const xs = Object.fromEntries(boroughs.map((b,i) => [b, m.l + i * ((width-m.l-m.r)/(boroughs.length-1))]));
+  const vals = data.map(d => d.pc1);
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const sy = v => m.t + (max-v)/(max-min)*(height-m.t-m.b);
+  boroughs.forEach(b => {
+    const x = xs[b];
+    svg.appendChild(node('line',{x1:x,x2:x,y1:m.t,y2:height-m.b,stroke:'#d9dee6','stroke-width':1}));
+    svg.appendChild(node('text',{x,y:height-22,'text-anchor':'middle',class:'axis-title'}, b));
+  });
+  [-4,-2,0,2,4].forEach(t => {
+    if (t < min || t > max) return;
+    svg.appendChild(node('line',{x1:m.l-18,x2:width-m.r,y1:sy(t),y2:sy(t),class:'grid'}));
+    svg.appendChild(node('text',{x:m.l-22,y:sy(t)+4,'text-anchor':'end',class:'axis'}, fmt(t,0)));
+  });
+  svg.appendChild(node('text',{x:18,y:m.t+(height-m.t-m.b)/2,transform:`rotate(-90 18 ${m.t+(height-m.t-m.b)/2})`,'text-anchor':'middle',class:'axis-title'}, 'PC1 daily-routine score'));
+  data.slice().sort((a,b)=>a.pre_total_lottery-b.pre_total_lottery).forEach((p,i) => {
+    const active = state.segment === 'all' || p.segment === state.segment;
+    const jitter = ((Number(p.zip.slice(-2)) % 11) - 5) * 3.2;
+    const r = p.zip === state.selected ? 7.2 : Math.max(3, Math.min(8, Math.sqrt(p.pre_total_lottery)/155));
+    const c = node('circle',{cx:xs[p.borough]+jitter,cy:sy(p.pc1),r,fill:colorFor(p.segment),class:`point${active?'':' dim'}${p.zip===state.selected?' active':''}`});
+    c.addEventListener('mouseenter', e => showTip(e,p,stripTip,boroughStrip));
+    c.addEventListener('mousemove', e => showTip(e,p,stripTip,boroughStrip));
+    c.addEventListener('mouseleave', () => stripTip.style.opacity = 0);
+    c.addEventListener('click', () => selectZip(p.zip));
+    svg.appendChild(c);
+  });
+}
+
+function renderSpotlights(){
+  spotlights.innerHTML = state.data.spotlights.map(sp => {
+    const s = segmentMap()[sp.segment];
+    const val = sp.label.includes('share') || sp.label.includes('rate') || sp.label.includes('daily') || sp.label.includes('jackpot') || sp.label.includes('add-on')
+      ? pct1(sp.value)
+      : sp.label.includes('resident') || sp.label.includes('volume') ? money(sp.value) : fmt(sp.value,2);
+    return `<button class="spotlight" data-zip="${sp.zip}" style="border-top:4px solid ${s.color}">
+      <div class="l">${esc(sp.label)}</div>
+      <div class="z">${sp.zip}</div>
+      <div class="m">${esc(sp.borough)} · ${esc(s.shortLabel)}<br>${val}</div>
+    </button>`;
+  }).join('');
+  spotlights.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => selectZip(btn.dataset.zip)));
+}
+
+function renderLoadings(){
+  const ev = state.data.pca.explainedVariance;
+  scree.innerHTML = ev.map(d => `<div class="scree-row"><b>${esc(d.component)}</b><div class="scree-track"><div class="scree-fill" style="width:${d.share*100}%"></div></div><span>${pct(d.share)}</span></div>`).join('');
+  pcaNote.innerHTML = `The first two components explain <b>${pct(ev[1].cumulative)}</b> of standardized behavior variation. The clustering uses the first four PC scores so smaller but still useful contrasts can help separate ZIPs.`;
+  [...loadingTabs.querySelectorAll('button')].forEach(btn => btn.classList.toggle('active', btn.dataset.c === state.loadingComponent));
+  const comp = state.data.pca.loadings.find(d => d.component === state.loadingComponent);
+  loadings.innerHTML = `<p class="note"><b>${comp.component}: ${esc(comp.name)}.</b> Strong positive and negative loadings define how to read the axis.</p>` +
+    comp.top.map(r => divBar(r.label, r.loading, -0.55, 0.55, v => fmt(v,2))).join('');
+}
+
+function renderFactorCards(){
+  factorCards.innerHTML = state.data.factorAnalysis.loadings.map(card => `
+    <article class="factor-card">
+      <h3>${esc(card.name)}</h3>
+      ${card.loadings.slice(0,8).map(r => `<div class="tiny-load"><span>${esc(r.label)}</span><b>${fmt(r.loading,2)}</b></div>`).join('')}
+    </article>
+  `).join('');
+}
+function renderCorrelations(){
+  rawCorrs.innerHTML = state.data.rawMetricCorrelations.map(row => `
+    <div style="margin-bottom:14px">
+      <b>${esc(row.metric)}</b>
+      ${divBar('with raw sales', row.rawSales, -1, 1)}
+      ${row.retailers == null ? '' : divBar('with retailers', row.retailers, -1, 1)}
+      ${divBar('with sales/resident', row.salesPerResident, -1, 1)}
+    </div>
+  `).join('') + '<p class="note">The teaching point: scale variables are useful context, but they are not the same as play style.</p>';
+  demoCorrs.innerHTML = state.data.factorAnalysis.scoreCorrelations.map(row => `
+    <div style="margin-bottom:13px">
+      <b>${esc(row.metric)}</b>
+      ${divBar('PC1 daily routine', row.pc1, -1, 1)}
+      ${divBar('PC2 jackpot/add-on', row.pc2, -1, 1)}
+      ${divBar('Daily habit factor', row.dailyFactor, -1, 1)}
+      ${divBar('Add-on factor', row.addonFactor, -1, 1)}
+    </div>
+  `).join('') + '<p class="note">These correlations are interpretive overlays. They are deliberately excluded from the unsupervised model.</p>';
+}
+function renderMethod(){
+  methodList.innerHTML = state.data.metadata.filters.map(x => `<li>${esc(x)}</li>`).join('') +
+    `<li>Standardize ${state.data.metadata.behaviorFeatureCount} behavior variables.</li>` +
+    '<li>Fit PCA for the score map, factor analysis for rotated loading interpretation, and k-means on the first four PC scores.</li>';
+  caveatList.innerHTML = state.data.metadata.caveats.map(x => `<li>${esc(x)}</li>`).join('');
+}
+</script>
+</body>
+</html>

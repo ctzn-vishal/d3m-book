@@ -139,6 +139,17 @@ export const studios: Studio[] = [
     kind: 'dashboard',
     accent: '#4E79A7',
   },
+  {
+    slug: 'lottery-zip-psychographics',
+    title: 'Lottery ZIP Psychographics: How Neighborhoods Play',
+    blurb:
+      'Segment active NYC ZIP codes from NY Lottery behavior signals, then interpret the PCA/factor score space with borough, income, retailer availability, and product-mix profiles.',
+    domain: 'Public Finance',
+    methods: ['PCA', 'Factor analysis', 'K-means clustering'],
+    relatedSlug: 'ch36-unsupervised-segmentation',
+    kind: 'dashboard',
+    accent: '#C85B47',
+  },
 ];
 
 export function findStudio(slug: string): Studio | null {
