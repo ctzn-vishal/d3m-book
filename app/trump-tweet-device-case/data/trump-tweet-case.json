@@ -1,0 +1,791 @@
+{
+  "metadata": {
+    "sourceFile": "case/nlp/Tump_tweet_WP.csv",
+    "contextFile": "case/nlp/case_context.docx",
+    "rows": 5653,
+    "startDate": "January 1, 2016",
+    "endDate": "October 17, 2017",
+    "campaignRows": 3572,
+    "campaignWindow": "January 1, 2016 through November 8, 2016",
+    "deviceCounts": {
+      "iPhone": 3537,
+      "Android": 2116
+    },
+    "note": "The full file continues into 2017; the classifier is trained on the 2016 campaign window to avoid the later all-iPhone source regime."
+  },
+  "monthly": [
+    {
+      "month": "2016-01",
+      "Android": 238,
+      "iPhone": 219,
+      "total": 457,
+      "androidShare": 0.521
+    },
+    {
+      "month": "2016-02",
+      "Android": 253,
+      "iPhone": 218,
+      "total": 471,
+      "androidShare": 0.537
+    },
+    {
+      "month": "2016-03",
+      "Android": 224,
+      "iPhone": 198,
+      "total": 422,
+      "androidShare": 0.531
+    },
+    {
+      "month": "2016-04",
+      "Android": 123,
+      "iPhone": 129,
+      "total": 252,
+      "androidShare": 0.488
+    },
+    {
+      "month": "2016-05",
+      "Android": 191,
+      "iPhone": 114,
+      "total": 305,
+      "androidShare": 0.626
+    },
+    {
+      "month": "2016-06",
+      "Android": 149,
+      "iPhone": 116,
+      "total": 265,
+      "androidShare": 0.562
+    },
+    {
+      "month": "2016-07",
+      "Android": 187,
+      "iPhone": 152,
+      "total": 339,
+      "androidShare": 0.552
+    },
+    {
+      "month": "2016-08",
+      "Android": 103,
+      "iPhone": 160,
+      "total": 263,
+      "androidShare": 0.392
+    },
+    {
+      "month": "2016-09",
+      "Android": 92,
+      "iPhone": 175,
+      "total": 267,
+      "androidShare": 0.345
+    },
+    {
+      "month": "2016-10",
+      "Android": 104,
+      "iPhone": 331,
+      "total": 435,
+      "androidShare": 0.239
+    },
+    {
+      "month": "2016-11",
+      "Android": 87,
+      "iPhone": 97,
+      "total": 184,
+      "androidShare": 0.473
+    },
+    {
+      "month": "2016-12",
+      "Android": 84,
+      "iPhone": 49,
+      "total": 133,
+      "androidShare": 0.632
+    },
+    {
+      "month": "2017-01",
+      "Android": 144,
+      "iPhone": 61,
+      "total": 205,
+      "androidShare": 0.702
+    },
+    {
+      "month": "2017-02",
+      "Android": 111,
+      "iPhone": 43,
+      "total": 154,
+      "androidShare": 0.721
+    },
+    {
+      "month": "2017-03",
+      "Android": 26,
+      "iPhone": 118,
+      "total": 144,
+      "androidShare": 0.181
+    },
+    {
+      "month": "2017-04",
+      "Android": 0,
+      "iPhone": 142,
+      "total": 142,
+      "androidShare": 0.0
+    },
+    {
+      "month": "2017-05",
+      "Android": 0,
+      "iPhone": 143,
+      "total": 143,
+      "androidShare": 0.0
+    },
+    {
+      "month": "2017-06",
+      "Android": 0,
+      "iPhone": 189,
+      "total": 189,
+      "androidShare": 0.0
+    },
+    {
+      "month": "2017-07",
+      "Android": 0,
+      "iPhone": 219,
+      "total": 219,
+      "androidShare": 0.0
+    },
+    {
+      "month": "2017-08",
+      "Android": 0,
+      "iPhone": 242,
+      "total": 242,
+      "androidShare": 0.0
+    },
+    {
+      "month": "2017-09",
+      "Android": 0,
+      "iPhone": 282,
+      "total": 282,
+      "androidShare": 0.0
+    },
+    {
+      "month": "2017-10",
+      "Android": 0,
+      "iPhone": 140,
+      "total": 140,
+      "androidShare": 0.0
+    }
+  ],
+  "campaignSummary": [
+    {
+      "device": "Android",
+      "n": 1679,
+      "share": 0.47,
+      "avgWords": 10.19,
+      "urlShare": 0.088,
+      "mentionRate": 0.98,
+      "hashtagRate": 0.16,
+      "exclaimRate": 0.78,
+      "capsWordRate": 0.79,
+      "attackHits": 0.73,
+      "broadcastHits": 0.21,
+      "lateNightShare": 0.262,
+      "workdayShare": 0.528
+    },
+    {
+      "device": "iPhone",
+      "n": 1893,
+      "share": 0.53,
+      "avgWords": 8.57,
+      "urlShare": 0.711,
+      "mentionRate": 0.34,
+      "hashtagRate": 0.78,
+      "exclaimRate": 0.75,
+      "capsWordRate": 0.86,
+      "attackHits": 0.3,
+      "broadcastHits": 0.56,
+      "lateNightShare": 0.291,
+      "workdayShare": 0.282
+    }
+  ],
+  "signalGroups": [
+    {
+      "id": "tone",
+      "label": "Tone cues",
+      "description": "Words and punctuation that make the Android-labelled tweets read more personally combative.",
+      "metrics": [
+        {
+          "group": "tone",
+          "metric": "Attack-word hits per tweet",
+          "unit": "hits",
+          "direction": "higher_android",
+          "Android": 0.73,
+          "iPhone": 0.3,
+          "gap": 0.43
+        },
+        {
+          "group": "tone",
+          "metric": "Exclamation marks per tweet",
+          "unit": "marks",
+          "direction": "higher_android",
+          "Android": 0.78,
+          "iPhone": 0.75,
+          "gap": 0.03
+        },
+        {
+          "group": "tone",
+          "metric": "Campaign/thanks hits per tweet",
+          "unit": "hits",
+          "direction": "higher_iphone",
+          "Android": 0.21,
+          "iPhone": 0.56,
+          "gap": -0.35
+        }
+      ]
+    },
+    {
+      "id": "distribution",
+      "label": "Distribution cues",
+      "description": "The iPhone-labelled source behaves more like a campaign broadcast channel.",
+      "metrics": [
+        {
+          "group": "distribution",
+          "metric": "Tweets with a URL",
+          "unit": "share",
+          "direction": "higher_iphone",
+          "Android": 0.088,
+          "iPhone": 0.711,
+          "gap": -0.623
+        },
+        {
+          "group": "distribution",
+          "metric": "Hashtags per tweet",
+          "unit": "tags",
+          "direction": "higher_iphone",
+          "Android": 0.16,
+          "iPhone": 0.78,
+          "gap": -0.62
+        },
+        {
+          "group": "distribution",
+          "metric": "Mentions per tweet",
+          "unit": "mentions",
+          "direction": "higher_android",
+          "Android": 0.98,
+          "iPhone": 0.34,
+          "gap": 0.64
+        }
+      ]
+    },
+    {
+      "id": "timing",
+      "label": "Timing cues",
+      "description": "Time-of-day patterns are weaker than the text cues, but still show source routines.",
+      "metrics": [
+        {
+          "group": "timing",
+          "metric": "Late-night share",
+          "unit": "share",
+          "direction": "slightly_higher_android",
+          "Android": 0.262,
+          "iPhone": 0.291,
+          "gap": -0.029
+        },
+        {
+          "group": "timing",
+          "metric": "Workday share",
+          "unit": "share",
+          "direction": "higher_android",
+          "Android": 0.528,
+          "iPhone": 0.282,
+          "gap": 0.246
+        },
+        {
+          "group": "timing",
+          "metric": "Average cleaned words",
+          "unit": "words",
+          "direction": "higher_android",
+          "Android": 10.19,
+          "iPhone": 8.57,
+          "gap": 1.62
+        }
+      ]
+    }
+  ],
+  "classifier": {
+    "model": "Laplace-smoothed multinomial Naive Bayes on unigram and bigram text features",
+    "split": "75/25 stratified held-out split, seed 11",
+    "trainRows": 2678,
+    "testRows": 894,
+    "vocabTerms": 1573,
+    "accuracy": 0.79,
+    "baselineAccuracy": 0.53,
+    "labels": [
+      "Android",
+      "iPhone"
+    ],
+    "confusion": [
+      {
+        "actual": "Android",
+        "predicted": "Android",
+        "count": 349
+      },
+      {
+        "actual": "Android",
+        "predicted": "iPhone",
+        "count": 71
+      },
+      {
+        "actual": "iPhone",
+        "predicted": "Android",
+        "count": 117
+      },
+      {
+        "actual": "iPhone",
+        "predicted": "iPhone",
+        "count": 357
+      }
+    ],
+    "metrics": [
+      {
+        "label": "Android",
+        "precision": 0.749,
+        "recall": 0.831,
+        "actual": 420,
+        "predicted": 466
+      },
+      {
+        "label": "iPhone",
+        "precision": 0.834,
+        "recall": 0.753,
+        "actual": 474,
+        "predicted": 428
+      }
+    ]
+  },
+  "termContrast": {
+    "Android": [
+      {
+        "term": "donaldtrump",
+        "score": 5.287,
+        "positiveCount": 23,
+        "otherCount": 0
+      },
+      {
+        "term": "mails",
+        "score": 4.987,
+        "positiveCount": 17,
+        "otherCount": 0
+      },
+      {
+        "term": "saw",
+        "score": 4.72,
+        "positiveCount": 13,
+        "otherCount": 0
+      },
+      {
+        "term": "paid",
+        "score": 4.72,
+        "positiveCount": 13,
+        "otherCount": 0
+      },
+      {
+        "term": "#trump",
+        "score": 4.554,
+        "positiveCount": 11,
+        "otherCount": 0
+      },
+      {
+        "term": "senate",
+        "score": 4.554,
+        "positiveCount": 11,
+        "otherCount": 0
+      },
+      {
+        "term": "bosses",
+        "score": 4.46,
+        "positiveCount": 10,
+        "otherCount": 0
+      },
+      {
+        "term": "rubio cruz",
+        "score": 4.46,
+        "positiveCount": 10,
+        "otherCount": 0
+      },
+      {
+        "term": "bought",
+        "score": 4.356,
+        "positiveCount": 9,
+        "otherCount": 0
+      },
+      {
+        "term": "angry",
+        "score": 4.356,
+        "positiveCount": 9,
+        "otherCount": 0
+      },
+      {
+        "term": "poor",
+        "score": 4.356,
+        "positiveCount": 9,
+        "otherCount": 0
+      },
+      {
+        "term": "sources",
+        "score": 4.356,
+        "positiveCount": 9,
+        "otherCount": 0
+      },
+      {
+        "term": "only candidate",
+        "score": 4.356,
+        "positiveCount": 9,
+        "otherCount": 0
+      },
+      {
+        "term": "brexit",
+        "score": 4.356,
+        "positiveCount": 9,
+        "otherCount": 0
+      },
+      {
+        "term": "talks",
+        "score": 4.239,
+        "positiveCount": 8,
+        "otherCount": 0
+      },
+      {
+        "term": "poorly",
+        "score": 4.239,
+        "positiveCount": 8,
+        "otherCount": 0
+      }
+    ],
+    "iPhone": [
+      {
+        "term": "#draintheswamp",
+        "score": -6.634,
+        "positiveCount": 0,
+        "otherCount": 65
+      },
+      {
+        "term": "#imwithyou",
+        "score": -6.288,
+        "positiveCount": 0,
+        "otherCount": 46
+      },
+      {
+        "term": "thank america",
+        "score": -5.72,
+        "positiveCount": 0,
+        "otherCount": 26
+      },
+      {
+        "term": "#fitn",
+        "score": -5.72,
+        "positiveCount": 0,
+        "otherCount": 26
+      },
+      {
+        "term": "see soon",
+        "score": -5.64,
+        "positiveCount": 0,
+        "otherCount": 24
+      },
+      {
+        "term": "#bigleaguetruth",
+        "score": -5.597,
+        "positiveCount": 0,
+        "otherCount": 23
+      },
+      {
+        "term": "officers",
+        "score": -5.597,
+        "positiveCount": 0,
+        "otherCount": 23
+      },
+      {
+        "term": "thank support",
+        "score": -5.597,
+        "positiveCount": 0,
+        "otherCount": 23
+      },
+      {
+        "term": "#icymi",
+        "score": -5.458,
+        "positiveCount": 0,
+        "otherCount": 20
+      },
+      {
+        "term": "#vpdebate",
+        "score": -5.354,
+        "positiveCount": 0,
+        "otherCount": 18
+      },
+      {
+        "term": "safe great",
+        "score": -5.297,
+        "positiveCount": 0,
+        "otherCount": 17
+      },
+      {
+        "term": "poll thank",
+        "score": -5.297,
+        "positiveCount": 0,
+        "otherCount": 17
+      },
+      {
+        "term": "thank #trump2016",
+        "score": -5.236,
+        "positiveCount": 0,
+        "otherCount": 16
+      },
+      {
+        "term": "thank #makeamericagreatagain",
+        "score": -5.172,
+        "positiveCount": 0,
+        "otherCount": 15
+      },
+      {
+        "term": "enforcement officers",
+        "score": -5.03,
+        "positiveCount": 0,
+        "otherCount": 13
+      },
+      {
+        "term": "join live",
+        "score": -5.03,
+        "positiveCount": 0,
+        "otherCount": 13
+      }
+    ]
+  },
+  "selectedTerms": {
+    "Android": [
+      {
+        "term": "lyin",
+        "Android": 27,
+        "iPhone": 4,
+        "androidRate": 0.0161,
+        "iphoneRate": 0.0021,
+        "gap": 0.014
+      },
+      {
+        "term": "bad judgement",
+        "Android": 19,
+        "iPhone": 2,
+        "androidRate": 0.0113,
+        "iphoneRate": 0.0011,
+        "gap": 0.0103
+      },
+      {
+        "term": "crooked",
+        "Android": 161,
+        "iPhone": 52,
+        "androidRate": 0.0959,
+        "iphoneRate": 0.0275,
+        "gap": 0.0684
+      },
+      {
+        "term": "fake",
+        "Android": 3,
+        "iPhone": 0,
+        "androidRate": 0.0018,
+        "iphoneRate": 0.0,
+        "gap": 0.0018
+      },
+      {
+        "term": "rubio cruz",
+        "Android": 10,
+        "iPhone": 0,
+        "androidRate": 0.006,
+        "iphoneRate": 0.0,
+        "gap": 0.006
+      },
+      {
+        "term": "dishonest",
+        "Android": 33,
+        "iPhone": 22,
+        "androidRate": 0.0197,
+        "iphoneRate": 0.0116,
+        "gap": 0.008
+      },
+      {
+        "term": "loser",
+        "Android": 4,
+        "iPhone": 3,
+        "androidRate": 0.0024,
+        "iphoneRate": 0.0016,
+        "gap": 0.0008
+      },
+      {
+        "term": "weak",
+        "Android": 25,
+        "iPhone": 6,
+        "androidRate": 0.0149,
+        "iphoneRate": 0.0032,
+        "gap": 0.0117
+      },
+      {
+        "term": "cnn",
+        "Android": 13,
+        "iPhone": 12,
+        "androidRate": 0.0077,
+        "iphoneRate": 0.0063,
+        "gap": 0.0014
+      },
+      {
+        "term": "media",
+        "Android": 75,
+        "iPhone": 19,
+        "androidRate": 0.0447,
+        "iphoneRate": 0.01,
+        "gap": 0.0346
+      },
+      {
+        "term": "disaster",
+        "Android": 21,
+        "iPhone": 10,
+        "androidRate": 0.0125,
+        "iphoneRate": 0.0053,
+        "gap": 0.0072
+      },
+      {
+        "term": "poor",
+        "Android": 9,
+        "iPhone": 0,
+        "androidRate": 0.0054,
+        "iphoneRate": 0.0,
+        "gap": 0.0054
+      }
+    ],
+    "iPhone": [
+      {
+        "term": "#draintheswamp",
+        "Android": 0,
+        "iPhone": 65,
+        "androidRate": 0.0,
+        "iphoneRate": 0.0343,
+        "gap": -0.0343
+      },
+      {
+        "term": "#imwithyou",
+        "Android": 0,
+        "iPhone": 46,
+        "androidRate": 0.0,
+        "iphoneRate": 0.0243,
+        "gap": -0.0243
+      },
+      {
+        "term": "#maga",
+        "Android": 14,
+        "iPhone": 68,
+        "androidRate": 0.0083,
+        "iphoneRate": 0.0359,
+        "gap": -0.0276
+      },
+      {
+        "term": "join live",
+        "Android": 0,
+        "iPhone": 13,
+        "androidRate": 0.0,
+        "iphoneRate": 0.0069,
+        "gap": -0.0069
+      },
+      {
+        "term": "thank support",
+        "Android": 0,
+        "iPhone": 23,
+        "androidRate": 0.0,
+        "iphoneRate": 0.0122,
+        "gap": -0.0122
+      },
+      {
+        "term": "thank america",
+        "Android": 0,
+        "iPhone": 26,
+        "androidRate": 0.0,
+        "iphoneRate": 0.0137,
+        "gap": -0.0137
+      },
+      {
+        "term": "tickets",
+        "Android": 1,
+        "iPhone": 28,
+        "androidRate": 0.0006,
+        "iphoneRate": 0.0148,
+        "gap": -0.0142
+      },
+      {
+        "term": "rally",
+        "Android": 32,
+        "iPhone": 39,
+        "androidRate": 0.0191,
+        "iphoneRate": 0.0206,
+        "gap": -0.0015
+      },
+      {
+        "term": "safe great",
+        "Android": 0,
+        "iPhone": 17,
+        "androidRate": 0.0,
+        "iphoneRate": 0.009,
+        "gap": -0.009
+      },
+      {
+        "term": "thoughts prayers",
+        "Android": 0,
+        "iPhone": 10,
+        "androidRate": 0.0,
+        "iphoneRate": 0.0053,
+        "gap": -0.0053
+      },
+      {
+        "term": "#americafirst",
+        "Android": 1,
+        "iPhone": 69,
+        "androidRate": 0.0006,
+        "iphoneRate": 0.0365,
+        "gap": -0.0359
+      },
+      {
+        "term": "#trump2016",
+        "Android": 27,
+        "iPhone": 297,
+        "androidRate": 0.0161,
+        "iphoneRate": 0.1569,
+        "gap": -0.1408
+      }
+    ]
+  },
+  "examples": {
+    "Android": [
+      {
+        "date": "2016-07-06 04:36",
+        "device": "Android",
+        "tweet": "Crooked Hillary Clinton is unfit to serve as President of the U.S. Her temperament is weak and her opponents are strong. BAD JUDGEMENT!"
+      },
+      {
+        "date": "2016-08-14 16:50",
+        "device": "Android",
+        "tweet": "Crooked Hillary Clinton is being protected by the media. She is not a talented person or politician. The dishonest media refuses to expose!"
+      },
+      {
+        "date": "2016-05-26 13:18",
+        "device": "Android",
+        "tweet": "The Inspector General's report on Crooked Hillary Clinton is a disaster. Such bad judgement and temperament cannot be allowed in the W.H."
+      }
+    ],
+    "iPhone": [
+      {
+        "date": "2016-01-28 17:32",
+        "device": "iPhone",
+        "tweet": "It is my great honor to support our Veterans with you! You can join me now. Thank you! #Trump4Vetshttps://t.co/UVn3kUd2DV"
+      },
+      {
+        "date": "2016-02-23 03:51",
+        "device": "iPhone",
+        "tweet": "Join me live- now in Las Vegas Nevada! We will MAKE AMERICA SAFE &amp; GREAT AGAIN! #VoteTrumpNV #NevadaCaucus https://t.co/IW9s9noxDT"
+      },
+      {
+        "date": "2016-07-01 17:07",
+        "device": "iPhone",
+        "tweet": "Thank you for your support! We will MAKE AMERICA SAFE AND GREAT AGAIN! #ImWithYou #AmericaFirst https://t.co/ravfFT5UBE"
+      }
+    ]
+  }
+}

@@ -1,0 +1,169 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  BeerAcquisitionOverview,
+  BeerAcquisitionTimeline,
+  BeerPeriodExplorer,
+} from '@/components/Book/part5/NlpCaseStudies';
+import beerRaw from './data/goose-island-case.json';
+
+export const beer = beerRaw;
+
+export const contractRows = [
+  {
+    item: 'Document',
+    choice: 'One public tweet mentioning Goose Island',
+    implication: 'The row is social chatter. It can include product opinion, check-ins, news links, jokes, and false positives.',
+  },
+  {
+    item: 'Event window',
+    choice: beer.metadata.periodNote,
+    implication: 'The source labels create a pre/event/post structure; the analysis treats that structure as descriptive.',
+  },
+  {
+    item: 'Sentiment',
+    choice: beer.metadata.sentimentMethod,
+    implication: 'The score is transparent enough for teaching, but it is not a human-coded sentiment label.',
+  },
+  {
+    item: 'Noise controls',
+    choice: 'URL share, check-in source, promotional/feed source, and acquisition cue share',
+    implication: 'A social-listening dashboard must separate opinion from automated links and location posts.',
+  },
+];
+
+export const periodRows = beer.periods.map((row) => ({
+  period: row.period,
+  tweets: row.n.toLocaleString(),
+  positive: `${(row.positiveShare * 100).toFixed(0)}%`,
+  negative: `${(row.negativeShare * 100).toFixed(0)}%`,
+  acquisition: `${(row.acquisitionCueShare * 100).toFixed(0)}%`,
+  url: `${(row.urlShare * 100).toFixed(0)}%`,
+}));
+
+<DropCap>
+
+Goose Island is a better sentiment case than it first appears because the obvious question is too simple. In March 2011, Anheuser-Busch acquired the Chicago craft brewery. A naive social-listening report would ask, "Did sentiment go negative?" The better NLP question is: **which part of the tweet stream is product opinion, which part is acquisition news, and which part is just noisy social-media plumbing?**
+
+</DropCap>
+
+The file contains {beer.metadata.rows.toLocaleString()} tweets from {beer.metadata.startDate} through {beer.metadata.endDate}. The source already labels each tweet as `Pre`, `Acquisition`, or `Post`. The event window is short and loud: March 28-29 is the acquisition-news window, and March 30 starts the post-acquisition period.
+
+This case uses a transparent lexicon rather than a black-box sentiment model. That is deliberate. Students can see the measurement choices, audit the cue words, and understand why a single sentiment line would be misleading.
+
+---
+
+## The Executive Question
+
+> Did the Goose Island acquisition change public sentiment, or did it mostly change the composition of social chatter?
+
+The answer is mixed. The acquisition window is visibly more negative, but it is also dominated by news links and acquisition vocabulary. Post-event conversation returns toward product talk, with acquisition language lingering in the background.
+
+---
+
+## Scope, Measures, and Caveats
+
+Before scoring sentiment, define what the row can and cannot represent. The dataset is not a panel of consumers, purchases, or brand loyalists. It is a public tweet stream with lots of URLs, check-ins, auto-posts, beer-app activity, and ambiguous mentions.
+
+<DataTable
+  caption="Table 1. The Goose Island sentiment case separates product sentiment from event vocabulary and social-media noise."
+  columns={[
+    { key: 'item', label: 'Item', align: 'left' },
+    { key: 'choice', label: 'Case choice', align: 'left' },
+    { key: 'implication', label: 'Why it matters', align: 'left' },
+  ]}
+  rows={contractRows}
+/>
+
+<DataTable
+  caption="Table 2. The period summary shows why volume alone is not sentiment: the acquisition window has the most event vocabulary and the highest URL share."
+  columns={[
+    { key: 'period', label: 'Period', align: 'left' },
+    { key: 'tweets', label: 'Tweets' },
+    { key: 'positive', label: 'Positive' },
+    { key: 'negative', label: 'Negative' },
+    { key: 'acquisition', label: 'Acq. cues' },
+    { key: 'url', label: 'URL share' },
+  ]}
+  rows={periodRows}
+/>
+
+---
+
+## The Event Spike Is Real, but It Is Not Pure Opinion
+
+The event window has {beer.periods.find((row) => row.period === 'Acquisition').n.toLocaleString()} tweets in two days. That is a major spike. It is also a measurement warning: {`${(beer.periods.find((row) => row.period === 'Acquisition').urlShare * 100).toFixed(0)}%`} of acquisition-window tweets contain URLs, and {`${(beer.periods.find((row) => row.period === 'Acquisition').acquisitionCueShare * 100).toFixed(0)}%`} contain acquisition cues.
+
+<Figure width="page-outset" caption="Figure 1. Period-level acquisition readout. The event window is high-volume and more negative, but the link and news mix means the analyst should not call it pure customer sentiment.">
+  <div className="not-prose">
+    <BeerAcquisitionOverview data={beer} />
+  </div>
+</Figure>
+
+The negative share rises from {`${(beer.periods.find((row) => row.period === 'Pre').negativeShare * 100).toFixed(0)}%`} pre-event to {`${(beer.periods.find((row) => row.period === 'Acquisition').negativeShare * 100).toFixed(0)}%`} during the acquisition window, then settles at {`${(beer.periods.find((row) => row.period === 'Post').negativeShare * 100).toFixed(0)}%`} post-event. That is a real directional signal. But because the event window is also a news-link burst, the correct interpretation is "acquisition talk created a more negative event stream," not "all Goose Island drinkers became negative."
+
+<Callout variant="finding" title="Main read">
+  The acquisition changed the composition of chatter first and sentiment second. Event vocabulary and links dominate the spike; product conversation reappears in the post period.
+</Callout>
+
+---
+
+## Read Volume, Tone, and Noise Separately
+
+An event-study chart needs separate views. Volume tells us whether the conversation changed. Sentiment shares tell us how the tone changed. URL and acquisition-cue shares tell us whether the measurement target changed.
+
+<Figure width="page-outset" caption="Figure 2. Daily Goose Island tweet stream. Use the controls to compare volume, sentiment shares, and noise indicators around the March 30 acquisition date.">
+  <div className="not-prose">
+    <BeerAcquisitionTimeline data={beer} />
+  </div>
+</Figure>
+
+The most important visual habit is not to over-read the peak. A news spike can make sentiment look worse because negative words appear in stories about loss of craft independence, not because everyday product experiences collapsed. The spike is still useful, but it answers a different question: what did people talk about when the acquisition became news?
+
+---
+
+## The Period Explorer Shows What Changed
+
+The acquisition period is dominated by `anheuser`, `busch`, `bought`, `sold`, and `craft`. The pre and post periods return more strongly to product and venue vocabulary: `ipa`, `matilda`, `312`, `stout`, `sofie`, `honkers`, and `clybourn`. The source mix changes too. Check-in and beer-app posts are common before and after the event, but nearly disappear during the acquisition-news window.
+
+<Figure width="page-outset" caption="Figure 3. Period explorer. The same corpus can look like brand sentiment, acquisition news, or product conversation depending on which period and source mix are on screen.">
+  <div className="not-prose">
+    <BeerPeriodExplorer data={beer} />
+  </div>
+</Figure>
+
+This is why a social sentiment dashboard should show term evidence beside the score. A line labelled "negative sentiment" is not enough. The analyst needs to know whether the score came from product disappointment, anti-corporate acquisition language, a news headline, or noisy false positives such as "Grey Goose" and "Long Island."
+
+---
+
+## What the Case Teaches
+
+Three NLP lessons carry the case:
+
+1.  **Sentiment needs a measurement target.** Product satisfaction, acquisition anxiety, and news amplification are different constructs.
+2.  **Source mix is part of the model.** Foursquare, Untappd, feeds, links, and native tweets do not mean the same thing.
+3.  **Transparent baselines are useful.** A simple lexicon exposes the core measurement problem before a more complex model hides it.
+
+<Pitfall title="Calling every mention an opinion">
+Many tweets in this file are links, check-ins, venue posts, or automated promotions. **Filter or stratify source types before treating the corpus as customer sentiment.**
+</Pitfall>
+
+<Pitfall title="Ignoring entity ambiguity">
+The words "goose" and "island" do not always mean the brewery; some rows refer to Grey Goose, Long Island, venues, or unrelated jokes. **Entity filtering is part of sentiment measurement, not cleanup after the fact.**
+</Pitfall>
+
+<Pitfall title="Treating the lexicon as ground truth">
+The lexicon makes the case auditable, but it misses sarcasm, context, and mixed sentiment. **Use it as a baseline, then validate against a labelled sample before making brand-health claims.**
+</Pitfall>
+
+---
+
+<Takeaway label="Case study bottom line">
+
+The Goose Island acquisition did create a visible negative event stream. But the strongest conclusion is compositional: acquisition news, links, and anti-corporate vocabulary flooded the corpus for two days, then product conversation returned with some lingering event language. A good NLP dashboard would not report one sentiment score. It would separate product talk, event talk, source noise, and examples before asking anyone to act.
+
+</Takeaway>

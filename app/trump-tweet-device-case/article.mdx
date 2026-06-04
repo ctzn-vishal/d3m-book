@@ -1,0 +1,142 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  TrumpClassifierPanel,
+  TrumpSignalExplorer,
+  TrumpSourceOverview,
+} from '@/components/Book/part5/NlpCaseStudies';
+import trumpRaw from './data/trump-tweet-case.json';
+
+export const trump = trumpRaw;
+
+export const taskRows = [
+  {
+    item: 'Document',
+    choice: 'One tweet from the @realdonaldtrump handle',
+    implication: 'The model classifies source at the tweet level, not at the day, topic, or account level.',
+  },
+  {
+    item: 'Label',
+    choice: 'Android versus iPhone source label',
+    implication: 'The label is a device/source proxy. It is not direct observation of who typed every word.',
+  },
+  {
+    item: 'Features',
+    choice: 'Tokens, bigrams, URLs, hashtags, mentions, punctuation, and timing cues',
+    implication: 'The analysis shows how ordinary text features combine with metadata to create a fingerprint.',
+  },
+  {
+    item: 'Evaluation',
+    choice: `${trump.classifier.split}; ${trump.classifier.testRows.toLocaleString()} held-out tweets`,
+    implication: 'A held-out score checks whether the fingerprint generalizes beyond the examples we read.',
+  },
+  {
+    item: 'Interpretation',
+    choice: 'Classification evidence, not authorship proof',
+    implication: 'A source classifier can support an audit story, but it cannot settle intent or identity by itself.',
+  },
+];
+
+<DropCap>
+
+This case starts with a famous Washington Post observation: when the Trump account wished teams good luck, the tweet often came from an iPhone; when it attacked rivals, it often came from Android. That is a perfect teaching case for classical NLP because the business object is small, the label is concrete, and the interpretation is tempting enough to be dangerous.
+
+</DropCap>
+
+The file contains {trump.metadata.rows.toLocaleString()} tweets from {trump.metadata.startDate} through {trump.metadata.endDate}. Each row has a timestamp, tweet text, and a source label: Android or iPhone. The context document frames the exercise as feature extraction plus classification: one source is treated as Trump, the other as a surrogate using the same handle.
+
+The point of the case is not to turn NLP into political gossip. The point is to show how language, metadata, and a transparent baseline model can build an authorship-style fingerprint while still keeping the caveats visible.
+
+---
+
+## The Executive Question
+
+> Can tweet text and simple metadata distinguish Android-labelled tweets from iPhone-labelled tweets, and what does that distinction actually mean?
+
+The careful version: the model can classify source labels. It cannot prove who physically typed a given tweet, and it should not ignore that campaign operations changed over time.
+
+---
+
+## Start With the Source Regime
+
+The full corpus continues into 2017, but the main classifier uses the campaign window: {trump.metadata.campaignWindow}. That restriction matters because the device mix changes after the election and eventually becomes an all-iPhone stream. A classifier that quietly learns a period regime is less useful as an authorship lesson.
+
+<Figure width="page-outset" caption="Figure 1. The tweet corpus by source label. The campaign-window model avoids the later all-iPhone regime so the exercise stays focused on language and posting cues rather than post-election operations.">
+  <div className="not-prose">
+    <TrumpSourceOverview data={trump} />
+  </div>
+</Figure>
+
+The first lesson is metadata-first. The timestamp and device label are not afterthoughts; they determine what the text task is allowed to claim.
+
+<DataTable
+  caption="Table 1. Tweet-source classification task contract. The task is source-label prediction, not direct authorship attribution."
+  columns={[
+    { key: 'item', label: 'Decision', align: 'left' },
+    { key: 'choice', label: 'Case choice', align: 'left' },
+    { key: 'implication', label: 'Analytical implication', align: 'left' },
+  ]}
+  rows={taskRows}
+/>
+
+---
+
+## What Features Carry the Fingerprint?
+
+The strongest differences are not exotic. Android-labelled tweets use more combative cue words and more direct mentions. iPhone-labelled tweets carry more campaign-broadcast mechanics: URLs, hashtags, event language, thanks, and rally logistics. That is exactly what a manager should expect if two communication workflows share one public account.
+
+<Figure width="page-outset" caption="Figure 2. Source fingerprint explorer. The signal is not one magic word; it is a bundle of tone, distribution, and timing cues.">
+  <div className="not-prose">
+    <TrumpSignalExplorer data={trump} />
+  </div>
+</Figure>
+
+This is also where preprocessing matters. A naive bag-of-words model treats `#draintheswamp`, `join live`, and `crooked` as tokens. Those tokens are not neutral: some represent campaign distribution, some represent rhetoric, and some represent the political target mix. The analyst has to decide whether those are legitimate source cues or leakage from the campaign calendar.
+
+<Callout variant="finding" title="Feature lesson">
+  Authorship-like classification is usually a bundle of small features. Tone words, URLs, hashtags, mentions, and timing cues together create the fingerprint.
+</Callout>
+
+---
+
+## A Transparent Baseline Is Enough to Be Useful
+
+A simple Naive Bayes model trained on unigrams and bigrams reaches {`${(trump.classifier.accuracy * 100).toFixed(0)}%`} held-out accuracy, versus a {`${(trump.classifier.baselineAccuracy * 100).toFixed(0)}%`} majority-class baseline. That is strong enough to show a real source signal and modest enough to keep the interpretation honest.
+
+<Figure width="page-outset" caption="Figure 3. Held-out tweet-source classifier. The model is useful because it beats the baseline clearly; it is limited because the off-diagonal cells remain meaningful.">
+  <div className="not-prose">
+    <TrumpClassifierPanel data={trump} />
+  </div>
+</Figure>
+
+The cue list is more important than the algorithm name. Android-labelled tweets are more likely to carry terms such as `crooked`, `lyin`, `media`, and `weak`; iPhone-labelled tweets are more likely to carry campaign hashtags, links, `join live`, `thank support`, and event language. That contrast is the story. The classifier merely tests whether the contrast is stable enough to predict unseen tweets.
+
+---
+
+## What the Case Teaches
+
+The responsible interpretation has three layers:
+
+1.  **A source fingerprint exists.** Text and posting features distinguish Android-labelled tweets from iPhone-labelled tweets in the campaign window.
+2.  **The fingerprint is operational.** The iPhone stream looks more like a campaign broadcast channel; the Android stream looks more like direct commentary and attack language.
+3.  **The label is a proxy.** Device source is not a sworn authorship record. It reflects tools, staff workflows, time periods, and campaign communication routines.
+
+<Pitfall title="Turning source labels into identity proof">
+The label says Android or iPhone. It does not directly say who typed the tweet, who drafted it, or who approved it. **Use the classifier as source-label evidence, not as a forensic claim about a person.**
+</Pitfall>
+
+<Pitfall title="Letting time leak into the story">
+The full file extends into 2017, when the source regime changes. A model trained without checking that shift can learn period operations rather than language style. **Always inspect the label mix over time before interpreting text features.**
+</Pitfall>
+
+---
+
+<Takeaway label="Case study bottom line">
+
+The Trump tweet file is a clean NLP case because the model output is easy to understand: Android or iPhone. The lesson is that even a transparent classical model can find a meaningful fingerprint when text and metadata agree. The discipline is to stop at the claim the data supports: source-label classification, with strong operational clues and visible caveats.
+
+</Takeaway>

@@ -1,0 +1,2504 @@
+{
+  "metadata": {
+    "sourceFile": "case/nlp/beer_sentiment.csv",
+    "contextFile": "case/nlp/case_context.docx",
+    "rows": 19687,
+    "startDate": "January 1, 2011",
+    "endDate": "June 30, 2011",
+    "acquisitionDate": "March 30, 2011",
+    "periodNote": "The source labels March 28-29 as the acquisition-news window and March 30-June 30 as post-acquisition.",
+    "sentimentMethod": "Transparent teaching lexicon: positive product words minus negative/friction words, plus a separate acquisition-cue dictionary."
+  },
+  "periods": [
+    {
+      "period": "Pre",
+      "n": 5575,
+      "startDate": "January 1, 2011",
+      "endDate": "March 27, 2011",
+      "avgSentiment": 0.175,
+      "positiveShare": 0.187,
+      "negativeShare": 0.045,
+      "neutralShare": 0.768,
+      "acquisitionCueShare": 0.017,
+      "urlShare": 0.462,
+      "checkinShare": 0.177,
+      "promoShare": 0.134,
+      "evaluativeShare": 0.253,
+      "productHits": 0.96
+    },
+    {
+      "period": "Acquisition",
+      "n": 6090,
+      "startDate": "March 28, 2011",
+      "endDate": "March 29, 2011",
+      "avgSentiment": -0.064,
+      "positiveShare": 0.089,
+      "negativeShare": 0.142,
+      "neutralShare": 0.769,
+      "acquisitionCueShare": 0.743,
+      "urlShare": 0.642,
+      "checkinShare": 0.003,
+      "promoShare": 0.17,
+      "evaluativeShare": 0.831,
+      "productHits": 0.43
+    },
+    {
+      "period": "Post",
+      "n": 8022,
+      "startDate": "March 30, 2011",
+      "endDate": "June 30, 2011",
+      "avgSentiment": 0.132,
+      "positiveShare": 0.174,
+      "negativeShare": 0.062,
+      "neutralShare": 0.764,
+      "acquisitionCueShare": 0.138,
+      "urlShare": 0.489,
+      "checkinShare": 0.105,
+      "promoShare": 0.167,
+      "evaluativeShare": 0.352,
+      "productHits": 0.68
+    }
+  ],
+  "daily": [
+    {
+      "date": "2011-01-01",
+      "period": "Pre",
+      "n": 62,
+      "avgSentiment": 0.226,
+      "positiveShare": 0.226,
+      "negativeShare": 0.016,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.419
+    },
+    {
+      "date": "2011-01-02",
+      "period": "Pre",
+      "n": 59,
+      "avgSentiment": 0.085,
+      "positiveShare": 0.085,
+      "negativeShare": 0.017,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.559
+    },
+    {
+      "date": "2011-01-03",
+      "period": "Pre",
+      "n": 28,
+      "avgSentiment": 0.036,
+      "positiveShare": 0.143,
+      "negativeShare": 0.107,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.571
+    },
+    {
+      "date": "2011-01-04",
+      "period": "Pre",
+      "n": 57,
+      "avgSentiment": 0.193,
+      "positiveShare": 0.211,
+      "negativeShare": 0.07,
+      "acquisitionCueShare": 0.088,
+      "urlShare": 0.491
+    },
+    {
+      "date": "2011-01-05",
+      "period": "Pre",
+      "n": 55,
+      "avgSentiment": 0.2,
+      "positiveShare": 0.218,
+      "negativeShare": 0.036,
+      "acquisitionCueShare": 0.055,
+      "urlShare": 0.6
+    },
+    {
+      "date": "2011-01-06",
+      "period": "Pre",
+      "n": 68,
+      "avgSentiment": 0.25,
+      "positiveShare": 0.265,
+      "negativeShare": 0.029,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.426
+    },
+    {
+      "date": "2011-01-07",
+      "period": "Pre",
+      "n": 126,
+      "avgSentiment": 0.103,
+      "positiveShare": 0.135,
+      "negativeShare": 0.056,
+      "acquisitionCueShare": 0.008,
+      "urlShare": 0.397
+    },
+    {
+      "date": "2011-01-08",
+      "period": "Pre",
+      "n": 81,
+      "avgSentiment": 0.222,
+      "positiveShare": 0.21,
+      "negativeShare": 0.049,
+      "acquisitionCueShare": 0.012,
+      "urlShare": 0.543
+    },
+    {
+      "date": "2011-01-09",
+      "period": "Pre",
+      "n": 56,
+      "avgSentiment": 0.214,
+      "positiveShare": 0.179,
+      "negativeShare": 0.018,
+      "acquisitionCueShare": 0.036,
+      "urlShare": 0.375
+    },
+    {
+      "date": "2011-01-10",
+      "period": "Pre",
+      "n": 36,
+      "avgSentiment": 0.389,
+      "positiveShare": 0.333,
+      "negativeShare": 0.028,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.444
+    },
+    {
+      "date": "2011-01-11",
+      "period": "Pre",
+      "n": 60,
+      "avgSentiment": 0.2,
+      "positiveShare": 0.217,
+      "negativeShare": 0.05,
+      "acquisitionCueShare": 0.05,
+      "urlShare": 0.383
+    },
+    {
+      "date": "2011-01-12",
+      "period": "Pre",
+      "n": 65,
+      "avgSentiment": 0.185,
+      "positiveShare": 0.2,
+      "negativeShare": 0.046,
+      "acquisitionCueShare": 0.031,
+      "urlShare": 0.4
+    },
+    {
+      "date": "2011-01-13",
+      "period": "Pre",
+      "n": 74,
+      "avgSentiment": 0.23,
+      "positiveShare": 0.189,
+      "negativeShare": 0.014,
+      "acquisitionCueShare": 0.027,
+      "urlShare": 0.5
+    },
+    {
+      "date": "2011-01-14",
+      "period": "Pre",
+      "n": 53,
+      "avgSentiment": 0.17,
+      "positiveShare": 0.094,
+      "negativeShare": 0.019,
+      "acquisitionCueShare": 0.019,
+      "urlShare": 0.491
+    },
+    {
+      "date": "2011-01-15",
+      "period": "Pre",
+      "n": 87,
+      "avgSentiment": 0.287,
+      "positiveShare": 0.241,
+      "negativeShare": 0.011,
+      "acquisitionCueShare": 0.011,
+      "urlShare": 0.368
+    },
+    {
+      "date": "2011-01-16",
+      "period": "Pre",
+      "n": 64,
+      "avgSentiment": 0.094,
+      "positiveShare": 0.172,
+      "negativeShare": 0.078,
+      "acquisitionCueShare": 0.016,
+      "urlShare": 0.547
+    },
+    {
+      "date": "2011-01-17",
+      "period": "Pre",
+      "n": 45,
+      "avgSentiment": 0.378,
+      "positiveShare": 0.311,
+      "negativeShare": 0.089,
+      "acquisitionCueShare": 0.022,
+      "urlShare": 0.378
+    },
+    {
+      "date": "2011-01-18",
+      "period": "Pre",
+      "n": 50,
+      "avgSentiment": 0.24,
+      "positiveShare": 0.24,
+      "negativeShare": 0.04,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.34
+    },
+    {
+      "date": "2011-01-19",
+      "period": "Pre",
+      "n": 64,
+      "avgSentiment": 0.078,
+      "positiveShare": 0.156,
+      "negativeShare": 0.094,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.266
+    },
+    {
+      "date": "2011-01-20",
+      "period": "Pre",
+      "n": 62,
+      "avgSentiment": 0.226,
+      "positiveShare": 0.242,
+      "negativeShare": 0.016,
+      "acquisitionCueShare": 0.016,
+      "urlShare": 0.435
+    },
+    {
+      "date": "2011-01-21",
+      "period": "Pre",
+      "n": 76,
+      "avgSentiment": 0.237,
+      "positiveShare": 0.224,
+      "negativeShare": 0.026,
+      "acquisitionCueShare": 0.039,
+      "urlShare": 0.474
+    },
+    {
+      "date": "2011-01-22",
+      "period": "Pre",
+      "n": 73,
+      "avgSentiment": 0.192,
+      "positiveShare": 0.192,
+      "negativeShare": 0.041,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.37
+    },
+    {
+      "date": "2011-01-23",
+      "period": "Pre",
+      "n": 110,
+      "avgSentiment": 0.145,
+      "positiveShare": 0.2,
+      "negativeShare": 0.073,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.355
+    },
+    {
+      "date": "2011-01-24",
+      "period": "Pre",
+      "n": 39,
+      "avgSentiment": 0.103,
+      "positiveShare": 0.128,
+      "negativeShare": 0.026,
+      "acquisitionCueShare": 0.026,
+      "urlShare": 0.513
+    },
+    {
+      "date": "2011-01-25",
+      "period": "Pre",
+      "n": 27,
+      "avgSentiment": 0.296,
+      "positiveShare": 0.296,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.556
+    },
+    {
+      "date": "2011-01-26",
+      "period": "Pre",
+      "n": 41,
+      "avgSentiment": 0.317,
+      "positiveShare": 0.268,
+      "negativeShare": 0.049,
+      "acquisitionCueShare": 0.122,
+      "urlShare": 0.463
+    },
+    {
+      "date": "2011-01-27",
+      "period": "Pre",
+      "n": 47,
+      "avgSentiment": 0.277,
+      "positiveShare": 0.191,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.447
+    },
+    {
+      "date": "2011-01-28",
+      "period": "Pre",
+      "n": 71,
+      "avgSentiment": 0.296,
+      "positiveShare": 0.239,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.014,
+      "urlShare": 0.479
+    },
+    {
+      "date": "2011-01-29",
+      "period": "Pre",
+      "n": 94,
+      "avgSentiment": 0.245,
+      "positiveShare": 0.234,
+      "negativeShare": 0.064,
+      "acquisitionCueShare": 0.011,
+      "urlShare": 0.5
+    },
+    {
+      "date": "2011-01-30",
+      "period": "Pre",
+      "n": 76,
+      "avgSentiment": 0.092,
+      "positiveShare": 0.118,
+      "negativeShare": 0.066,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.539
+    },
+    {
+      "date": "2011-01-31",
+      "period": "Pre",
+      "n": 29,
+      "avgSentiment": 0.103,
+      "positiveShare": 0.207,
+      "negativeShare": 0.138,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.345
+    },
+    {
+      "date": "2011-02-01",
+      "period": "Pre",
+      "n": 61,
+      "avgSentiment": 0.197,
+      "positiveShare": 0.197,
+      "negativeShare": 0.066,
+      "acquisitionCueShare": 0.049,
+      "urlShare": 0.459
+    },
+    {
+      "date": "2011-02-02",
+      "period": "Pre",
+      "n": 33,
+      "avgSentiment": 0.091,
+      "positiveShare": 0.182,
+      "negativeShare": 0.121,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.303
+    },
+    {
+      "date": "2011-02-03",
+      "period": "Pre",
+      "n": 46,
+      "avgSentiment": 0.043,
+      "positiveShare": 0.174,
+      "negativeShare": 0.13,
+      "acquisitionCueShare": 0.065,
+      "urlShare": 0.435
+    },
+    {
+      "date": "2011-02-04",
+      "period": "Pre",
+      "n": 63,
+      "avgSentiment": 0.048,
+      "positiveShare": 0.143,
+      "negativeShare": 0.127,
+      "acquisitionCueShare": 0.063,
+      "urlShare": 0.476
+    },
+    {
+      "date": "2011-02-05",
+      "period": "Pre",
+      "n": 80,
+      "avgSentiment": 0.05,
+      "positiveShare": 0.138,
+      "negativeShare": 0.087,
+      "acquisitionCueShare": 0.013,
+      "urlShare": 0.512
+    },
+    {
+      "date": "2011-02-06",
+      "period": "Pre",
+      "n": 83,
+      "avgSentiment": 0.181,
+      "positiveShare": 0.169,
+      "negativeShare": 0.048,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.41
+    },
+    {
+      "date": "2011-02-07",
+      "period": "Pre",
+      "n": 45,
+      "avgSentiment": 0.022,
+      "positiveShare": 0.089,
+      "negativeShare": 0.067,
+      "acquisitionCueShare": 0.022,
+      "urlShare": 0.333
+    },
+    {
+      "date": "2011-02-08",
+      "period": "Pre",
+      "n": 93,
+      "avgSentiment": 0.097,
+      "positiveShare": 0.129,
+      "negativeShare": 0.043,
+      "acquisitionCueShare": 0.011,
+      "urlShare": 0.591
+    },
+    {
+      "date": "2011-02-09",
+      "period": "Pre",
+      "n": 69,
+      "avgSentiment": -0.043,
+      "positiveShare": 0.116,
+      "negativeShare": 0.174,
+      "acquisitionCueShare": 0.043,
+      "urlShare": 0.449
+    },
+    {
+      "date": "2011-02-10",
+      "period": "Pre",
+      "n": 55,
+      "avgSentiment": 0.127,
+      "positiveShare": 0.182,
+      "negativeShare": 0.036,
+      "acquisitionCueShare": 0.073,
+      "urlShare": 0.564
+    },
+    {
+      "date": "2011-02-11",
+      "period": "Pre",
+      "n": 71,
+      "avgSentiment": 0.352,
+      "positiveShare": 0.225,
+      "negativeShare": 0.028,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.38
+    },
+    {
+      "date": "2011-02-12",
+      "period": "Pre",
+      "n": 78,
+      "avgSentiment": 0.141,
+      "positiveShare": 0.154,
+      "negativeShare": 0.051,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.513
+    },
+    {
+      "date": "2011-02-13",
+      "period": "Pre",
+      "n": 56,
+      "avgSentiment": 0.107,
+      "positiveShare": 0.125,
+      "negativeShare": 0.018,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.536
+    },
+    {
+      "date": "2011-02-14",
+      "period": "Pre",
+      "n": 61,
+      "avgSentiment": 0.082,
+      "positiveShare": 0.082,
+      "negativeShare": 0.016,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.311
+    },
+    {
+      "date": "2011-02-15",
+      "period": "Pre",
+      "n": 51,
+      "avgSentiment": 0.196,
+      "positiveShare": 0.216,
+      "negativeShare": 0.02,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.353
+    },
+    {
+      "date": "2011-02-16",
+      "period": "Pre",
+      "n": 54,
+      "avgSentiment": 0.259,
+      "positiveShare": 0.222,
+      "negativeShare": 0.037,
+      "acquisitionCueShare": 0.019,
+      "urlShare": 0.333
+    },
+    {
+      "date": "2011-02-17",
+      "period": "Pre",
+      "n": 120,
+      "avgSentiment": 0.183,
+      "positiveShare": 0.158,
+      "negativeShare": 0.025,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.683
+    },
+    {
+      "date": "2011-02-18",
+      "period": "Pre",
+      "n": 72,
+      "avgSentiment": 0.222,
+      "positiveShare": 0.208,
+      "negativeShare": 0.028,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.375
+    },
+    {
+      "date": "2011-02-19",
+      "period": "Pre",
+      "n": 69,
+      "avgSentiment": 0.174,
+      "positiveShare": 0.203,
+      "negativeShare": 0.043,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.493
+    },
+    {
+      "date": "2011-02-20",
+      "period": "Pre",
+      "n": 76,
+      "avgSentiment": 0.118,
+      "positiveShare": 0.145,
+      "negativeShare": 0.026,
+      "acquisitionCueShare": 0.026,
+      "urlShare": 0.526
+    },
+    {
+      "date": "2011-02-21",
+      "period": "Pre",
+      "n": 69,
+      "avgSentiment": 0.145,
+      "positiveShare": 0.116,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.522
+    },
+    {
+      "date": "2011-02-22",
+      "period": "Pre",
+      "n": 114,
+      "avgSentiment": 0.061,
+      "positiveShare": 0.079,
+      "negativeShare": 0.035,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.684
+    },
+    {
+      "date": "2011-02-23",
+      "period": "Pre",
+      "n": 75,
+      "avgSentiment": 0.173,
+      "positiveShare": 0.16,
+      "negativeShare": 0.053,
+      "acquisitionCueShare": 0.027,
+      "urlShare": 0.373
+    },
+    {
+      "date": "2011-02-24",
+      "period": "Pre",
+      "n": 63,
+      "avgSentiment": 0.127,
+      "positiveShare": 0.143,
+      "negativeShare": 0.016,
+      "acquisitionCueShare": 0.016,
+      "urlShare": 0.524
+    },
+    {
+      "date": "2011-02-25",
+      "period": "Pre",
+      "n": 60,
+      "avgSentiment": 0.2,
+      "positiveShare": 0.167,
+      "negativeShare": 0.033,
+      "acquisitionCueShare": 0.017,
+      "urlShare": 0.417
+    },
+    {
+      "date": "2011-02-26",
+      "period": "Pre",
+      "n": 61,
+      "avgSentiment": 0.164,
+      "positiveShare": 0.197,
+      "negativeShare": 0.049,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.328
+    },
+    {
+      "date": "2011-02-27",
+      "period": "Pre",
+      "n": 65,
+      "avgSentiment": 0.123,
+      "positiveShare": 0.123,
+      "negativeShare": 0.015,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.523
+    },
+    {
+      "date": "2011-02-28",
+      "period": "Pre",
+      "n": 56,
+      "avgSentiment": 0.089,
+      "positiveShare": 0.107,
+      "negativeShare": 0.036,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.643
+    },
+    {
+      "date": "2011-03-01",
+      "period": "Pre",
+      "n": 48,
+      "avgSentiment": 0.083,
+      "positiveShare": 0.104,
+      "negativeShare": 0.042,
+      "acquisitionCueShare": 0.021,
+      "urlShare": 0.417
+    },
+    {
+      "date": "2011-03-02",
+      "period": "Pre",
+      "n": 61,
+      "avgSentiment": 0.213,
+      "positiveShare": 0.197,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.049,
+      "urlShare": 0.475
+    },
+    {
+      "date": "2011-03-03",
+      "period": "Pre",
+      "n": 56,
+      "avgSentiment": 0.125,
+      "positiveShare": 0.125,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.446
+    },
+    {
+      "date": "2011-03-04",
+      "period": "Pre",
+      "n": 89,
+      "avgSentiment": 0.213,
+      "positiveShare": 0.191,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.011,
+      "urlShare": 0.494
+    },
+    {
+      "date": "2011-03-05",
+      "period": "Pre",
+      "n": 76,
+      "avgSentiment": 0.289,
+      "positiveShare": 0.224,
+      "negativeShare": 0.039,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.303
+    },
+    {
+      "date": "2011-03-06",
+      "period": "Pre",
+      "n": 69,
+      "avgSentiment": 0.087,
+      "positiveShare": 0.174,
+      "negativeShare": 0.101,
+      "acquisitionCueShare": 0.029,
+      "urlShare": 0.333
+    },
+    {
+      "date": "2011-03-07",
+      "period": "Pre",
+      "n": 60,
+      "avgSentiment": 0.15,
+      "positiveShare": 0.217,
+      "negativeShare": 0.067,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.55
+    },
+    {
+      "date": "2011-03-08",
+      "period": "Pre",
+      "n": 87,
+      "avgSentiment": 0.103,
+      "positiveShare": 0.138,
+      "negativeShare": 0.08,
+      "acquisitionCueShare": 0.034,
+      "urlShare": 0.448
+    },
+    {
+      "date": "2011-03-09",
+      "period": "Pre",
+      "n": 54,
+      "avgSentiment": 0.148,
+      "positiveShare": 0.148,
+      "negativeShare": 0.019,
+      "acquisitionCueShare": 0.019,
+      "urlShare": 0.407
+    },
+    {
+      "date": "2011-03-10",
+      "period": "Pre",
+      "n": 67,
+      "avgSentiment": 0.269,
+      "positiveShare": 0.284,
+      "negativeShare": 0.03,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.507
+    },
+    {
+      "date": "2011-03-11",
+      "period": "Pre",
+      "n": 78,
+      "avgSentiment": 0.103,
+      "positiveShare": 0.128,
+      "negativeShare": 0.051,
+      "acquisitionCueShare": 0.038,
+      "urlShare": 0.436
+    },
+    {
+      "date": "2011-03-12",
+      "period": "Pre",
+      "n": 102,
+      "avgSentiment": 0.235,
+      "positiveShare": 0.206,
+      "negativeShare": 0.029,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.598
+    },
+    {
+      "date": "2011-03-13",
+      "period": "Pre",
+      "n": 72,
+      "avgSentiment": 0.194,
+      "positiveShare": 0.181,
+      "negativeShare": 0.014,
+      "acquisitionCueShare": 0.014,
+      "urlShare": 0.625
+    },
+    {
+      "date": "2011-03-14",
+      "period": "Pre",
+      "n": 39,
+      "avgSentiment": 0.333,
+      "positiveShare": 0.359,
+      "negativeShare": 0.128,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.385
+    },
+    {
+      "date": "2011-03-15",
+      "period": "Pre",
+      "n": 42,
+      "avgSentiment": 0.0,
+      "positiveShare": 0.119,
+      "negativeShare": 0.143,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.595
+    },
+    {
+      "date": "2011-03-16",
+      "period": "Pre",
+      "n": 47,
+      "avgSentiment": 0.064,
+      "positiveShare": 0.106,
+      "negativeShare": 0.021,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.596
+    },
+    {
+      "date": "2011-03-17",
+      "period": "Pre",
+      "n": 58,
+      "avgSentiment": 0.207,
+      "positiveShare": 0.224,
+      "negativeShare": 0.034,
+      "acquisitionCueShare": 0.017,
+      "urlShare": 0.569
+    },
+    {
+      "date": "2011-03-18",
+      "period": "Pre",
+      "n": 56,
+      "avgSentiment": 0.143,
+      "positiveShare": 0.196,
+      "negativeShare": 0.054,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.429
+    },
+    {
+      "date": "2011-03-19",
+      "period": "Pre",
+      "n": 63,
+      "avgSentiment": 0.127,
+      "positiveShare": 0.19,
+      "negativeShare": 0.079,
+      "acquisitionCueShare": 0.016,
+      "urlShare": 0.429
+    },
+    {
+      "date": "2011-03-20",
+      "period": "Pre",
+      "n": 55,
+      "avgSentiment": 0.291,
+      "positiveShare": 0.291,
+      "negativeShare": 0.018,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.345
+    },
+    {
+      "date": "2011-03-21",
+      "period": "Pre",
+      "n": 46,
+      "avgSentiment": 0.261,
+      "positiveShare": 0.304,
+      "negativeShare": 0.087,
+      "acquisitionCueShare": 0.065,
+      "urlShare": 0.391
+    },
+    {
+      "date": "2011-03-22",
+      "period": "Pre",
+      "n": 52,
+      "avgSentiment": 0.135,
+      "positiveShare": 0.269,
+      "negativeShare": 0.038,
+      "acquisitionCueShare": 0.019,
+      "urlShare": 0.673
+    },
+    {
+      "date": "2011-03-23",
+      "period": "Pre",
+      "n": 98,
+      "avgSentiment": 0.449,
+      "positiveShare": 0.449,
+      "negativeShare": 0.02,
+      "acquisitionCueShare": 0.01,
+      "urlShare": 0.194
+    },
+    {
+      "date": "2011-03-24",
+      "period": "Pre",
+      "n": 65,
+      "avgSentiment": 0.246,
+      "positiveShare": 0.215,
+      "negativeShare": 0.015,
+      "acquisitionCueShare": 0.015,
+      "urlShare": 0.523
+    },
+    {
+      "date": "2011-03-25",
+      "period": "Pre",
+      "n": 65,
+      "avgSentiment": 0.292,
+      "positiveShare": 0.231,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.031,
+      "urlShare": 0.323
+    },
+    {
+      "date": "2011-03-26",
+      "period": "Pre",
+      "n": 75,
+      "avgSentiment": 0.08,
+      "positiveShare": 0.16,
+      "negativeShare": 0.093,
+      "acquisitionCueShare": 0.013,
+      "urlShare": 0.493
+    },
+    {
+      "date": "2011-03-27",
+      "period": "Pre",
+      "n": 61,
+      "avgSentiment": 0.197,
+      "positiveShare": 0.18,
+      "negativeShare": 0.033,
+      "acquisitionCueShare": 0.016,
+      "urlShare": 0.41
+    },
+    {
+      "date": "2011-03-28",
+      "period": "Acquisition",
+      "n": 4884,
+      "avgSentiment": -0.082,
+      "positiveShare": 0.085,
+      "negativeShare": 0.152,
+      "acquisitionCueShare": 0.76,
+      "urlShare": 0.644
+    },
+    {
+      "date": "2011-03-29",
+      "period": "Acquisition",
+      "n": 1206,
+      "avgSentiment": 0.01,
+      "positiveShare": 0.105,
+      "negativeShare": 0.102,
+      "acquisitionCueShare": 0.674,
+      "urlShare": 0.633
+    },
+    {
+      "date": "2011-03-30",
+      "period": "Post",
+      "n": 429,
+      "avgSentiment": 0.002,
+      "positiveShare": 0.1,
+      "negativeShare": 0.091,
+      "acquisitionCueShare": 0.629,
+      "urlShare": 0.681
+    },
+    {
+      "date": "2011-03-31",
+      "period": "Post",
+      "n": 239,
+      "avgSentiment": 0.017,
+      "positiveShare": 0.121,
+      "negativeShare": 0.117,
+      "acquisitionCueShare": 0.372,
+      "urlShare": 0.448
+    },
+    {
+      "date": "2011-04-01",
+      "period": "Post",
+      "n": 221,
+      "avgSentiment": 0.104,
+      "positiveShare": 0.14,
+      "negativeShare": 0.063,
+      "acquisitionCueShare": 0.38,
+      "urlShare": 0.538
+    },
+    {
+      "date": "2011-04-02",
+      "period": "Post",
+      "n": 102,
+      "avgSentiment": 0.049,
+      "positiveShare": 0.206,
+      "negativeShare": 0.147,
+      "acquisitionCueShare": 0.225,
+      "urlShare": 0.471
+    },
+    {
+      "date": "2011-04-03",
+      "period": "Post",
+      "n": 163,
+      "avgSentiment": 0.08,
+      "positiveShare": 0.141,
+      "negativeShare": 0.098,
+      "acquisitionCueShare": 0.27,
+      "urlShare": 0.509
+    },
+    {
+      "date": "2011-04-04",
+      "period": "Post",
+      "n": 122,
+      "avgSentiment": 0.049,
+      "positiveShare": 0.107,
+      "negativeShare": 0.066,
+      "acquisitionCueShare": 0.377,
+      "urlShare": 0.615
+    },
+    {
+      "date": "2011-04-05",
+      "period": "Post",
+      "n": 85,
+      "avgSentiment": 0.106,
+      "positiveShare": 0.141,
+      "negativeShare": 0.047,
+      "acquisitionCueShare": 0.282,
+      "urlShare": 0.6
+    },
+    {
+      "date": "2011-04-06",
+      "period": "Post",
+      "n": 70,
+      "avgSentiment": 0.171,
+      "positiveShare": 0.186,
+      "negativeShare": 0.029,
+      "acquisitionCueShare": 0.171,
+      "urlShare": 0.571
+    },
+    {
+      "date": "2011-04-07",
+      "period": "Post",
+      "n": 89,
+      "avgSentiment": 0.112,
+      "positiveShare": 0.157,
+      "negativeShare": 0.067,
+      "acquisitionCueShare": 0.191,
+      "urlShare": 0.427
+    },
+    {
+      "date": "2011-04-08",
+      "period": "Post",
+      "n": 119,
+      "avgSentiment": 0.168,
+      "positiveShare": 0.218,
+      "negativeShare": 0.076,
+      "acquisitionCueShare": 0.092,
+      "urlShare": 0.563
+    },
+    {
+      "date": "2011-04-09",
+      "period": "Post",
+      "n": 99,
+      "avgSentiment": 0.253,
+      "positiveShare": 0.293,
+      "negativeShare": 0.071,
+      "acquisitionCueShare": 0.101,
+      "urlShare": 0.333
+    },
+    {
+      "date": "2011-04-10",
+      "period": "Post",
+      "n": 71,
+      "avgSentiment": 0.07,
+      "positiveShare": 0.155,
+      "negativeShare": 0.099,
+      "acquisitionCueShare": 0.113,
+      "urlShare": 0.549
+    },
+    {
+      "date": "2011-04-11",
+      "period": "Post",
+      "n": 57,
+      "avgSentiment": 0.175,
+      "positiveShare": 0.211,
+      "negativeShare": 0.035,
+      "acquisitionCueShare": 0.211,
+      "urlShare": 0.526
+    },
+    {
+      "date": "2011-04-12",
+      "period": "Post",
+      "n": 384,
+      "avgSentiment": -0.023,
+      "positiveShare": 0.081,
+      "negativeShare": 0.096,
+      "acquisitionCueShare": 0.081,
+      "urlShare": 0.789
+    },
+    {
+      "date": "2011-04-13",
+      "period": "Post",
+      "n": 194,
+      "avgSentiment": 0.057,
+      "positiveShare": 0.119,
+      "negativeShare": 0.067,
+      "acquisitionCueShare": 0.387,
+      "urlShare": 0.747
+    },
+    {
+      "date": "2011-04-14",
+      "period": "Post",
+      "n": 118,
+      "avgSentiment": 0.136,
+      "positiveShare": 0.144,
+      "negativeShare": 0.017,
+      "acquisitionCueShare": 0.212,
+      "urlShare": 0.653
+    },
+    {
+      "date": "2011-04-15",
+      "period": "Post",
+      "n": 107,
+      "avgSentiment": 0.14,
+      "positiveShare": 0.196,
+      "negativeShare": 0.037,
+      "acquisitionCueShare": 0.121,
+      "urlShare": 0.439
+    },
+    {
+      "date": "2011-04-16",
+      "period": "Post",
+      "n": 64,
+      "avgSentiment": 0.078,
+      "positiveShare": 0.156,
+      "negativeShare": 0.094,
+      "acquisitionCueShare": 0.094,
+      "urlShare": 0.359
+    },
+    {
+      "date": "2011-04-17",
+      "period": "Post",
+      "n": 54,
+      "avgSentiment": 0.037,
+      "positiveShare": 0.093,
+      "negativeShare": 0.037,
+      "acquisitionCueShare": 0.093,
+      "urlShare": 0.352
+    },
+    {
+      "date": "2011-04-18",
+      "period": "Post",
+      "n": 77,
+      "avgSentiment": 0.065,
+      "positiveShare": 0.091,
+      "negativeShare": 0.039,
+      "acquisitionCueShare": 0.104,
+      "urlShare": 0.377
+    },
+    {
+      "date": "2011-04-19",
+      "period": "Post",
+      "n": 125,
+      "avgSentiment": 0.104,
+      "positiveShare": 0.168,
+      "negativeShare": 0.048,
+      "acquisitionCueShare": 0.048,
+      "urlShare": 0.424
+    },
+    {
+      "date": "2011-04-20",
+      "period": "Post",
+      "n": 122,
+      "avgSentiment": 0.164,
+      "positiveShare": 0.189,
+      "negativeShare": 0.041,
+      "acquisitionCueShare": 0.033,
+      "urlShare": 0.598
+    },
+    {
+      "date": "2011-04-21",
+      "period": "Post",
+      "n": 86,
+      "avgSentiment": 0.07,
+      "positiveShare": 0.116,
+      "negativeShare": 0.047,
+      "acquisitionCueShare": 0.058,
+      "urlShare": 0.616
+    },
+    {
+      "date": "2011-04-22",
+      "period": "Post",
+      "n": 81,
+      "avgSentiment": 0.062,
+      "positiveShare": 0.123,
+      "negativeShare": 0.074,
+      "acquisitionCueShare": 0.086,
+      "urlShare": 0.444
+    },
+    {
+      "date": "2011-04-23",
+      "period": "Post",
+      "n": 79,
+      "avgSentiment": 0.19,
+      "positiveShare": 0.165,
+      "negativeShare": 0.025,
+      "acquisitionCueShare": 0.025,
+      "urlShare": 0.481
+    },
+    {
+      "date": "2011-04-24",
+      "period": "Post",
+      "n": 59,
+      "avgSentiment": 0.169,
+      "positiveShare": 0.22,
+      "negativeShare": 0.085,
+      "acquisitionCueShare": 0.017,
+      "urlShare": 0.356
+    },
+    {
+      "date": "2011-04-25",
+      "period": "Post",
+      "n": 46,
+      "avgSentiment": 0.304,
+      "positiveShare": 0.304,
+      "negativeShare": 0.0,
+      "acquisitionCueShare": 0.087,
+      "urlShare": 0.435
+    },
+    {
+      "date": "2011-04-26",
+      "period": "Post",
+      "n": 68,
+      "avgSentiment": 0.235,
+      "positiveShare": 0.265,
+      "negativeShare": 0.059,
+      "acquisitionCueShare": 0.279,
+      "urlShare": 0.485
+    },
+    {
+      "date": "2011-04-27",
+      "period": "Post",
+      "n": 65,
+      "avgSentiment": 0.2,
+      "positiveShare": 0.185,
+      "negativeShare": 0.046,
+      "acquisitionCueShare": 0.031,
+      "urlShare": 0.385
+    },
+    {
+      "date": "2011-04-28",
+      "period": "Post",
+      "n": 64,
+      "avgSentiment": 0.172,
+      "positiveShare": 0.188,
+      "negativeShare": 0.047,
+      "acquisitionCueShare": 0.172,
+      "urlShare": 0.484
+    },
+    {
+      "date": "2011-04-29",
+      "period": "Post",
+      "n": 82,
+      "avgSentiment": 0.11,
+      "positiveShare": 0.134,
+      "negativeShare": 0.037,
+      "acquisitionCueShare": 0.098,
+      "urlShare": 0.427
+    },
+    {
+      "date": "2011-04-30",
+      "period": "Post",
+      "n": 55,
+      "avgSentiment": 0.109,
+      "positiveShare": 0.164,
+      "negativeShare": 0.073,
+      "acquisitionCueShare": 0.091,
+      "urlShare": 0.436
+    },
+    {
+      "date": "2011-05-01",
+      "period": "Post",
+      "n": 54,
+      "avgSentiment": 0.185,
+      "positiveShare": 0.185,
+      "negativeShare": 0.019,
+      "acquisitionCueShare": 0.13,
+      "urlShare": 0.444
+    },
+    {
+      "date": "2011-05-02",
+      "period": "Post",
+      "n": 41,
+      "avgSentiment": 0.171,
+      "positiveShare": 0.195,
+      "negativeShare": 0.049,
+      "acquisitionCueShare": 0.049,
+      "urlShare": 0.39
+    },
+    {
+      "date": "2011-05-03",
+      "period": "Post",
+      "n": 51,
+      "avgSentiment": 0.059,
+      "positiveShare": 0.216,
+      "negativeShare": 0.157,
+      "acquisitionCueShare": 0.196,
+      "urlShare": 0.51
+    },
+    {
+      "date": "2011-05-04",
+      "period": "Post",
+      "n": 73,
+      "avgSentiment": 0.123,
+      "positiveShare": 0.205,
+      "negativeShare": 0.123,
+      "acquisitionCueShare": 0.055,
+      "urlShare": 0.26
+    },
+    {
+      "date": "2011-05-05",
+      "period": "Post",
+      "n": 55,
+      "avgSentiment": 0.164,
+      "positiveShare": 0.218,
+      "negativeShare": 0.091,
+      "acquisitionCueShare": 0.073,
+      "urlShare": 0.364
+    },
+    {
+      "date": "2011-05-06",
+      "period": "Post",
+      "n": 56,
+      "avgSentiment": 0.036,
+      "positiveShare": 0.107,
+      "negativeShare": 0.089,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.393
+    },
+    {
+      "date": "2011-05-07",
+      "period": "Post",
+      "n": 105,
+      "avgSentiment": 0.219,
+      "positiveShare": 0.181,
+      "negativeShare": 0.029,
+      "acquisitionCueShare": 0.038,
+      "urlShare": 0.495
+    },
+    {
+      "date": "2011-05-08",
+      "period": "Post",
+      "n": 32,
+      "avgSentiment": 0.219,
+      "positiveShare": 0.188,
+      "negativeShare": 0.062,
+      "acquisitionCueShare": 0.031,
+      "urlShare": 0.375
+    },
+    {
+      "date": "2011-05-09",
+      "period": "Post",
+      "n": 63,
+      "avgSentiment": 0.206,
+      "positiveShare": 0.222,
+      "negativeShare": 0.016,
+      "acquisitionCueShare": 0.016,
+      "urlShare": 0.46
+    },
+    {
+      "date": "2011-05-10",
+      "period": "Post",
+      "n": 49,
+      "avgSentiment": 0.224,
+      "positiveShare": 0.245,
+      "negativeShare": 0.041,
+      "acquisitionCueShare": 0.02,
+      "urlShare": 0.347
+    },
+    {
+      "date": "2011-05-11",
+      "period": "Post",
+      "n": 65,
+      "avgSentiment": 0.246,
+      "positiveShare": 0.215,
+      "negativeShare": 0.046,
+      "acquisitionCueShare": 0.015,
+      "urlShare": 0.569
+    },
+    {
+      "date": "2011-05-12",
+      "period": "Post",
+      "n": 64,
+      "avgSentiment": 0.266,
+      "positiveShare": 0.25,
+      "negativeShare": 0.047,
+      "acquisitionCueShare": 0.031,
+      "urlShare": 0.422
+    },
+    {
+      "date": "2011-05-13",
+      "period": "Post",
+      "n": 78,
+      "avgSentiment": 0.218,
+      "positiveShare": 0.205,
+      "negativeShare": 0.026,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.526
+    },
+    {
+      "date": "2011-05-14",
+      "period": "Post",
+      "n": 90,
+      "avgSentiment": 0.144,
+      "positiveShare": 0.156,
+      "negativeShare": 0.022,
+      "acquisitionCueShare": 0.044,
+      "urlShare": 0.444
+    },
+    {
+      "date": "2011-05-15",
+      "period": "Post",
+      "n": 80,
+      "avgSentiment": 0.075,
+      "positiveShare": 0.15,
+      "negativeShare": 0.075,
+      "acquisitionCueShare": 0.037,
+      "urlShare": 0.375
+    },
+    {
+      "date": "2011-05-16",
+      "period": "Post",
+      "n": 62,
+      "avgSentiment": 0.145,
+      "positiveShare": 0.161,
+      "negativeShare": 0.032,
+      "acquisitionCueShare": 0.161,
+      "urlShare": 0.5
+    },
+    {
+      "date": "2011-05-17",
+      "period": "Post",
+      "n": 62,
+      "avgSentiment": 0.21,
+      "positiveShare": 0.242,
+      "negativeShare": 0.048,
+      "acquisitionCueShare": 0.145,
+      "urlShare": 0.387
+    },
+    {
+      "date": "2011-05-18",
+      "period": "Post",
+      "n": 77,
+      "avgSentiment": 0.312,
+      "positiveShare": 0.234,
+      "negativeShare": 0.013,
+      "acquisitionCueShare": 0.078,
+      "urlShare": 0.403
+    },
+    {
+      "date": "2011-05-19",
+      "period": "Post",
+      "n": 76,
+      "avgSentiment": 0.25,
+      "positiveShare": 0.263,
+      "negativeShare": 0.066,
+      "acquisitionCueShare": 0.145,
+      "urlShare": 0.355
+    },
+    {
+      "date": "2011-05-20",
+      "period": "Post",
+      "n": 79,
+      "avgSentiment": 0.177,
+      "positiveShare": 0.19,
+      "negativeShare": 0.038,
+      "acquisitionCueShare": 0.038,
+      "urlShare": 0.506
+    },
+    {
+      "date": "2011-05-21",
+      "period": "Post",
+      "n": 86,
+      "avgSentiment": 0.174,
+      "positiveShare": 0.198,
+      "negativeShare": 0.047,
+      "acquisitionCueShare": 0.058,
+      "urlShare": 0.395
+    },
+    {
+      "date": "2011-05-22",
+      "period": "Post",
+      "n": 42,
+      "avgSentiment": 0.071,
+      "positiveShare": 0.167,
+      "negativeShare": 0.071,
+      "acquisitionCueShare": 0.048,
+      "urlShare": 0.429
+    },
+    {
+      "date": "2011-05-23",
+      "period": "Post",
+      "n": 59,
+      "avgSentiment": 0.085,
+      "positiveShare": 0.153,
+      "negativeShare": 0.051,
+      "acquisitionCueShare": 0.017,
+      "urlShare": 0.508
+    },
+    {
+      "date": "2011-05-24",
+      "period": "Post",
+      "n": 58,
+      "avgSentiment": 0.241,
+      "positiveShare": 0.259,
+      "negativeShare": 0.052,
+      "acquisitionCueShare": 0.069,
+      "urlShare": 0.276
+    },
+    {
+      "date": "2011-05-25",
+      "period": "Post",
+      "n": 70,
+      "avgSentiment": 0.214,
+      "positiveShare": 0.186,
+      "negativeShare": 0.029,
+      "acquisitionCueShare": 0.1,
+      "urlShare": 0.457
+    },
+    {
+      "date": "2011-05-26",
+      "period": "Post",
+      "n": 111,
+      "avgSentiment": 0.234,
+      "positiveShare": 0.234,
+      "negativeShare": 0.018,
+      "acquisitionCueShare": 0.027,
+      "urlShare": 0.55
+    },
+    {
+      "date": "2011-05-27",
+      "period": "Post",
+      "n": 78,
+      "avgSentiment": 0.192,
+      "positiveShare": 0.192,
+      "negativeShare": 0.038,
+      "acquisitionCueShare": 0.038,
+      "urlShare": 0.346
+    },
+    {
+      "date": "2011-05-28",
+      "period": "Post",
+      "n": 86,
+      "avgSentiment": 0.105,
+      "positiveShare": 0.174,
+      "negativeShare": 0.105,
+      "acquisitionCueShare": 0.035,
+      "urlShare": 0.477
+    },
+    {
+      "date": "2011-05-29",
+      "period": "Post",
+      "n": 60,
+      "avgSentiment": -0.017,
+      "positiveShare": 0.1,
+      "negativeShare": 0.15,
+      "acquisitionCueShare": 0.067,
+      "urlShare": 0.483
+    },
+    {
+      "date": "2011-05-30",
+      "period": "Post",
+      "n": 59,
+      "avgSentiment": 0.034,
+      "positiveShare": 0.136,
+      "negativeShare": 0.119,
+      "acquisitionCueShare": 0.034,
+      "urlShare": 0.356
+    },
+    {
+      "date": "2011-05-31",
+      "period": "Post",
+      "n": 56,
+      "avgSentiment": 0.089,
+      "positiveShare": 0.107,
+      "negativeShare": 0.018,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.5
+    },
+    {
+      "date": "2011-06-01",
+      "period": "Post",
+      "n": 68,
+      "avgSentiment": 0.294,
+      "positiveShare": 0.324,
+      "negativeShare": 0.059,
+      "acquisitionCueShare": 0.029,
+      "urlShare": 0.397
+    },
+    {
+      "date": "2011-06-02",
+      "period": "Post",
+      "n": 76,
+      "avgSentiment": 0.132,
+      "positiveShare": 0.171,
+      "negativeShare": 0.053,
+      "acquisitionCueShare": 0.026,
+      "urlShare": 0.579
+    },
+    {
+      "date": "2011-06-03",
+      "period": "Post",
+      "n": 113,
+      "avgSentiment": 0.08,
+      "positiveShare": 0.159,
+      "negativeShare": 0.053,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.522
+    },
+    {
+      "date": "2011-06-04",
+      "period": "Post",
+      "n": 114,
+      "avgSentiment": 0.211,
+      "positiveShare": 0.281,
+      "negativeShare": 0.079,
+      "acquisitionCueShare": 0.079,
+      "urlShare": 0.421
+    },
+    {
+      "date": "2011-06-05",
+      "period": "Post",
+      "n": 73,
+      "avgSentiment": 0.164,
+      "positiveShare": 0.205,
+      "negativeShare": 0.055,
+      "acquisitionCueShare": 0.041,
+      "urlShare": 0.425
+    },
+    {
+      "date": "2011-06-06",
+      "period": "Post",
+      "n": 46,
+      "avgSentiment": 0.152,
+      "positiveShare": 0.174,
+      "negativeShare": 0.065,
+      "acquisitionCueShare": 0.043,
+      "urlShare": 0.304
+    },
+    {
+      "date": "2011-06-07",
+      "period": "Post",
+      "n": 74,
+      "avgSentiment": 0.068,
+      "positiveShare": 0.095,
+      "negativeShare": 0.027,
+      "acquisitionCueShare": 0.027,
+      "urlShare": 0.554
+    },
+    {
+      "date": "2011-06-08",
+      "period": "Post",
+      "n": 57,
+      "avgSentiment": 0.298,
+      "positiveShare": 0.263,
+      "negativeShare": 0.035,
+      "acquisitionCueShare": 0.018,
+      "urlShare": 0.316
+    },
+    {
+      "date": "2011-06-09",
+      "period": "Post",
+      "n": 78,
+      "avgSentiment": 0.038,
+      "positiveShare": 0.064,
+      "negativeShare": 0.026,
+      "acquisitionCueShare": 0.103,
+      "urlShare": 0.462
+    },
+    {
+      "date": "2011-06-10",
+      "period": "Post",
+      "n": 94,
+      "avgSentiment": 0.117,
+      "positiveShare": 0.128,
+      "negativeShare": 0.053,
+      "acquisitionCueShare": 0.128,
+      "urlShare": 0.596
+    },
+    {
+      "date": "2011-06-11",
+      "period": "Post",
+      "n": 65,
+      "avgSentiment": 0.215,
+      "positiveShare": 0.215,
+      "negativeShare": 0.031,
+      "acquisitionCueShare": 0.031,
+      "urlShare": 0.4
+    },
+    {
+      "date": "2011-06-12",
+      "period": "Post",
+      "n": 68,
+      "avgSentiment": 0.25,
+      "positiveShare": 0.176,
+      "negativeShare": 0.029,
+      "acquisitionCueShare": 0.044,
+      "urlShare": 0.574
+    },
+    {
+      "date": "2011-06-13",
+      "period": "Post",
+      "n": 54,
+      "avgSentiment": 0.056,
+      "positiveShare": 0.093,
+      "negativeShare": 0.056,
+      "acquisitionCueShare": 0.019,
+      "urlShare": 0.463
+    },
+    {
+      "date": "2011-06-14",
+      "period": "Post",
+      "n": 63,
+      "avgSentiment": 0.143,
+      "positiveShare": 0.175,
+      "negativeShare": 0.095,
+      "acquisitionCueShare": 0.048,
+      "urlShare": 0.333
+    },
+    {
+      "date": "2011-06-15",
+      "period": "Post",
+      "n": 58,
+      "avgSentiment": 0.207,
+      "positiveShare": 0.241,
+      "negativeShare": 0.069,
+      "acquisitionCueShare": 0.017,
+      "urlShare": 0.328
+    },
+    {
+      "date": "2011-06-16",
+      "period": "Post",
+      "n": 48,
+      "avgSentiment": 0.292,
+      "positiveShare": 0.25,
+      "negativeShare": 0.021,
+      "acquisitionCueShare": 0.042,
+      "urlShare": 0.396
+    },
+    {
+      "date": "2011-06-17",
+      "period": "Post",
+      "n": 90,
+      "avgSentiment": 0.178,
+      "positiveShare": 0.211,
+      "negativeShare": 0.067,
+      "acquisitionCueShare": 0.078,
+      "urlShare": 0.311
+    },
+    {
+      "date": "2011-06-18",
+      "period": "Post",
+      "n": 101,
+      "avgSentiment": 0.307,
+      "positiveShare": 0.287,
+      "negativeShare": 0.03,
+      "acquisitionCueShare": 0.02,
+      "urlShare": 0.347
+    },
+    {
+      "date": "2011-06-19",
+      "period": "Post",
+      "n": 69,
+      "avgSentiment": 0.217,
+      "positiveShare": 0.232,
+      "negativeShare": 0.043,
+      "acquisitionCueShare": 0.0,
+      "urlShare": 0.333
+    },
+    {
+      "date": "2011-06-20",
+      "period": "Post",
+      "n": 36,
+      "avgSentiment": 0.139,
+      "positiveShare": 0.222,
+      "negativeShare": 0.111,
+      "acquisitionCueShare": 0.083,
+      "urlShare": 0.306
+    },
+    {
+      "date": "2011-06-21",
+      "period": "Post",
+      "n": 77,
+      "avgSentiment": 0.364,
+      "positiveShare": 0.286,
+      "negativeShare": 0.039,
+      "acquisitionCueShare": 0.026,
+      "urlShare": 0.481
+    },
+    {
+      "date": "2011-06-22",
+      "period": "Post",
+      "n": 53,
+      "avgSentiment": 0.264,
+      "positiveShare": 0.245,
+      "negativeShare": 0.075,
+      "acquisitionCueShare": 0.019,
+      "urlShare": 0.396
+    },
+    {
+      "date": "2011-06-23",
+      "period": "Post",
+      "n": 69,
+      "avgSentiment": 0.101,
+      "positiveShare": 0.145,
+      "negativeShare": 0.058,
+      "acquisitionCueShare": 0.058,
+      "urlShare": 0.319
+    },
+    {
+      "date": "2011-06-24",
+      "period": "Post",
+      "n": 101,
+      "avgSentiment": 0.277,
+      "positiveShare": 0.257,
+      "negativeShare": 0.01,
+      "acquisitionCueShare": 0.04,
+      "urlShare": 0.386
+    },
+    {
+      "date": "2011-06-25",
+      "period": "Post",
+      "n": 67,
+      "avgSentiment": 0.164,
+      "positiveShare": 0.224,
+      "negativeShare": 0.06,
+      "acquisitionCueShare": 0.09,
+      "urlShare": 0.343
+    },
+    {
+      "date": "2011-06-26",
+      "period": "Post",
+      "n": 63,
+      "avgSentiment": 0.143,
+      "positiveShare": 0.175,
+      "negativeShare": 0.079,
+      "acquisitionCueShare": 0.032,
+      "urlShare": 0.349
+    },
+    {
+      "date": "2011-06-27",
+      "period": "Post",
+      "n": 57,
+      "avgSentiment": 0.035,
+      "positiveShare": 0.123,
+      "negativeShare": 0.105,
+      "acquisitionCueShare": 0.105,
+      "urlShare": 0.491
+    },
+    {
+      "date": "2011-06-28",
+      "period": "Post",
+      "n": 62,
+      "avgSentiment": 0.177,
+      "positiveShare": 0.194,
+      "negativeShare": 0.032,
+      "acquisitionCueShare": 0.032,
+      "urlShare": 0.403
+    },
+    {
+      "date": "2011-06-29",
+      "period": "Post",
+      "n": 79,
+      "avgSentiment": 0.177,
+      "positiveShare": 0.266,
+      "negativeShare": 0.089,
+      "acquisitionCueShare": 0.038,
+      "urlShare": 0.443
+    },
+    {
+      "date": "2011-06-30",
+      "period": "Post",
+      "n": 76,
+      "avgSentiment": 0.092,
+      "positiveShare": 0.145,
+      "negativeShare": 0.079,
+      "acquisitionCueShare": 0.053,
+      "urlShare": 0.513
+    }
+  ],
+  "sourceGroups": [
+    {
+      "sourceGroup": "Native text tweet",
+      "Pre": 0.5,
+      "Acquisition": 0.343,
+      "Post": 0.48
+    },
+    {
+      "sourceGroup": "Link-bearing chatter",
+      "Pre": 0.189,
+      "Acquisition": 0.484,
+      "Post": 0.248
+    },
+    {
+      "sourceGroup": "Promotional / feed",
+      "Pre": 0.134,
+      "Acquisition": 0.17,
+      "Post": 0.167
+    },
+    {
+      "sourceGroup": "Check-in / beer app",
+      "Pre": 0.177,
+      "Acquisition": 0.003,
+      "Post": 0.105
+    }
+  ],
+  "periodCueTerms": [
+    {
+      "term": "anheuser",
+      "Pre": 0,
+      "PreRate": 0.0,
+      "Acquisition": 3418,
+      "AcquisitionRate": 0.5612,
+      "Post": 361,
+      "PostRate": 0.045
+    },
+    {
+      "term": "busch",
+      "Pre": 1,
+      "PreRate": 0.0002,
+      "Acquisition": 3373,
+      "AcquisitionRate": 0.5539,
+      "Post": 328,
+      "PostRate": 0.0409
+    },
+    {
+      "term": "bought",
+      "Pre": 11,
+      "PreRate": 0.002,
+      "Acquisition": 490,
+      "AcquisitionRate": 0.0805,
+      "Post": 134,
+      "PostRate": 0.0167
+    },
+    {
+      "term": "sold",
+      "Pre": 7,
+      "PreRate": 0.0013,
+      "Acquisition": 324,
+      "AcquisitionRate": 0.0532,
+      "Post": 83,
+      "PostRate": 0.0103
+    },
+    {
+      "term": "craft",
+      "Pre": 29,
+      "PreRate": 0.0052,
+      "Acquisition": 463,
+      "AcquisitionRate": 0.076,
+      "Post": 308,
+      "PostRate": 0.0384
+    },
+    {
+      "term": "corporate",
+      "Pre": 3,
+      "PreRate": 0.0005,
+      "Acquisition": 13,
+      "AcquisitionRate": 0.0021,
+      "Post": 6,
+      "PostRate": 0.0007
+    },
+    {
+      "term": "sellout",
+      "Pre": 0,
+      "PreRate": 0.0,
+      "Acquisition": 6,
+      "AcquisitionRate": 0.001,
+      "Post": 9,
+      "PostRate": 0.0011
+    },
+    {
+      "term": "ruined",
+      "Pre": 1,
+      "PreRate": 0.0002,
+      "Acquisition": 8,
+      "AcquisitionRate": 0.0013,
+      "Post": 0,
+      "PostRate": 0.0
+    },
+    {
+      "term": "goodbye",
+      "Pre": 0,
+      "PreRate": 0.0,
+      "Acquisition": 21,
+      "AcquisitionRate": 0.0034,
+      "Post": 73,
+      "PostRate": 0.0091
+    },
+    {
+      "term": "nostalgia",
+      "Pre": 0,
+      "PreRate": 0.0,
+      "Acquisition": 0,
+      "AcquisitionRate": 0.0,
+      "Post": 1,
+      "PostRate": 0.0001
+    },
+    {
+      "term": "ipa",
+      "Pre": 268,
+      "PreRate": 0.0481,
+      "Acquisition": 18,
+      "AcquisitionRate": 0.003,
+      "Post": 323,
+      "PostRate": 0.0403
+    },
+    {
+      "term": "matilda",
+      "Pre": 264,
+      "PreRate": 0.0474,
+      "Acquisition": 59,
+      "AcquisitionRate": 0.0097,
+      "Post": 249,
+      "PostRate": 0.031
+    },
+    {
+      "term": "312",
+      "Pre": 0,
+      "PreRate": 0.0,
+      "Acquisition": 0,
+      "AcquisitionRate": 0.0,
+      "Post": 0,
+      "PostRate": 0.0
+    },
+    {
+      "term": "stout",
+      "Pre": 347,
+      "PreRate": 0.0622,
+      "Acquisition": 43,
+      "AcquisitionRate": 0.0071,
+      "Post": 236,
+      "PostRate": 0.0294
+    },
+    {
+      "term": "sofie",
+      "Pre": 118,
+      "PreRate": 0.0212,
+      "Acquisition": 13,
+      "AcquisitionRate": 0.0021,
+      "Post": 211,
+      "PostRate": 0.0263
+    },
+    {
+      "term": "honkers",
+      "Pre": 63,
+      "PreRate": 0.0113,
+      "Acquisition": 22,
+      "AcquisitionRate": 0.0036,
+      "Post": 80,
+      "PostRate": 0.01
+    },
+    {
+      "term": "bourbon",
+      "Pre": 313,
+      "PreRate": 0.0561,
+      "Acquisition": 53,
+      "AcquisitionRate": 0.0087,
+      "Post": 176,
+      "PostRate": 0.0219
+    },
+    {
+      "term": "clybourn",
+      "Pre": 262,
+      "PreRate": 0.047,
+      "Acquisition": 14,
+      "AcquisitionRate": 0.0023,
+      "Post": 430,
+      "PostRate": 0.0536
+    }
+  ],
+  "termContrast": {
+    "Acquisition": [
+      {
+        "term": "brewery million",
+        "score": 7.289,
+        "positiveCount": 78,
+        "otherCount": 0
+      },
+      {
+        "term": "buys chicago's",
+        "score": 7.152,
+        "positiveCount": 68,
+        "otherCount": 0
+      },
+      {
+        "term": "island trending",
+        "score": 7.043,
+        "positiveCount": 61,
+        "otherCount": 0
+      },
+      {
+        "term": "anheuser buy",
+        "score": 6.884,
+        "positiveCount": 52,
+        "otherCount": 0
+      },
+      {
+        "term": "million details",
+        "score": 6.804,
+        "positiveCount": 48,
+        "otherCount": 0
+      },
+      {
+        "term": "busch chicago",
+        "score": 6.647,
+        "positiveCount": 41,
+        "otherCount": 0
+      },
+      {
+        "term": "buy chicago",
+        "score": 6.622,
+        "positiveCount": 40,
+        "otherCount": 0
+      },
+      {
+        "term": "owned anheuser",
+        "score": 6.489,
+        "positiveCount": 35,
+        "otherCount": 0
+      },
+      {
+        "term": "sold anheuserbusch",
+        "score": 6.43,
+        "positiveCount": 33,
+        "otherCount": 0
+      },
+      {
+        "term": "alliance",
+        "score": 6.368,
+        "positiveCount": 31,
+        "otherCount": 0
+      },
+      {
+        "term": "brewers alliance",
+        "score": 6.301,
+        "positiveCount": 29,
+        "otherCount": 0
+      },
+      {
+        "term": "deschutes brett",
+        "score": 6.301,
+        "positiveCount": 29,
+        "otherCount": 0
+      },
+      {
+        "term": "brew lovers",
+        "score": 6.23,
+        "positiveCount": 27,
+        "otherCount": 0
+      },
+      {
+        "term": "drink water",
+        "score": 6.23,
+        "positiveCount": 27,
+        "otherCount": 0
+      },
+      {
+        "term": "expansion chicago",
+        "score": 6.23,
+        "positiveCount": 27,
+        "otherCount": 0
+      },
+      {
+        "term": "lovers goose",
+        "score": 6.23,
+        "positiveCount": 27,
+        "otherCount": 0
+      }
+    ],
+    "Post": [
+      {
+        "term": "anheuser",
+        "score": 7.873,
+        "positiveCount": 361,
+        "otherCount": 0
+      },
+      {
+        "term": "anheuser busch",
+        "score": 7.718,
+        "positiveCount": 309,
+        "otherCount": 0
+      },
+      {
+        "term": "brewmaster",
+        "score": 7.409,
+        "positiveCount": 227,
+        "otherCount": 0
+      },
+      {
+        "term": "island brewmaster",
+        "score": 7.183,
+        "positiveCount": 181,
+        "otherCount": 0
+      },
+      {
+        "term": "brewmaster greg",
+        "score": 6.667,
+        "positiveCount": 108,
+        "otherCount": 0
+      },
+      {
+        "term": "urinating",
+        "score": 6.629,
+        "positiveCount": 104,
+        "otherCount": 0
+      },
+      {
+        "term": "purchase",
+        "score": 6.462,
+        "positiveCount": 88,
+        "otherCount": 0
+      },
+      {
+        "term": "glasses bar",
+        "score": 6.416,
+        "positiveCount": 84,
+        "otherCount": 0
+      },
+      {
+        "term": "hall found",
+        "score": 6.367,
+        "positiveCount": 80,
+        "otherCount": 0
+      },
+      {
+        "term": "found urinating",
+        "score": 6.355,
+        "positiveCount": 79,
+        "otherCount": 0
+      },
+      {
+        "term": "apologizes",
+        "score": 6.316,
+        "positiveCount": 76,
+        "otherCount": 0
+      },
+      {
+        "term": "goodbye",
+        "score": 6.276,
+        "positiveCount": 73,
+        "otherCount": 0
+      },
+      {
+        "term": "beer glasses",
+        "score": 6.22,
+        "positiveCount": 69,
+        "otherCount": 0
+      },
+      {
+        "term": "goodbye goose",
+        "score": 6.175,
+        "positiveCount": 66,
+        "otherCount": 0
+      }
+    ],
+    "Pre": [
+      {
+        "term": "island cafe",
+        "score": -6.574,
+        "positiveCount": 0,
+        "otherCount": 52
+      },
+      {
+        "term": "feb",
+        "score": -6.494,
+        "positiveCount": 0,
+        "otherCount": 48
+      },
+      {
+        "term": "wed island",
+        "score": -6.473,
+        "positiveCount": 0,
+        "otherCount": 47
+      },
+      {
+        "term": "tv time",
+        "score": -6.473,
+        "positiveCount": 0,
+        "otherCount": 47
+      },
+      {
+        "term": "outsourcing",
+        "score": -6.408,
+        "positiveCount": 0,
+        "otherCount": 44
+      },
+      {
+        "term": "winter goose",
+        "score": -6.385,
+        "positiveCount": 0,
+        "otherCount": 43
+      },
+      {
+        "term": "longman",
+        "score": -6.313,
+        "positiveCount": 0,
+        "otherCount": 40
+      },
+      {
+        "term": "island outsourcing",
+        "score": -6.313,
+        "positiveCount": 0,
+        "otherCount": 40
+      },
+      {
+        "term": "longman eagle",
+        "score": -6.261,
+        "positiveCount": 0,
+        "otherCount": 38
+      },
+      {
+        "term": "cafe best",
+        "score": -6.15,
+        "positiveCount": 0,
+        "otherCount": 34
+      },
+      {
+        "term": "best act",
+        "score": -6.15,
+        "positiveCount": 0,
+        "otherCount": 34
+      },
+      {
+        "term": "act receive",
+        "score": -6.058,
+        "positiveCount": 0,
+        "otherCount": 31
+      },
+      {
+        "term": "cash prize",
+        "score": -6.058,
+        "positiveCount": 0,
+        "otherCount": 31
+      },
+      {
+        "term": "receive cash",
+        "score": -6.058,
+        "positiveCount": 0,
+        "otherCount": 31
+      }
+    ]
+  },
+  "examples": {
+    "Pre": [
+      {
+        "label": "Positive product talk before the event",
+        "date": "2011-01-29",
+        "source": "Twitter for iPhone",
+        "text": "Enjoying a special Goose Island IPA flown in just for me from Chicago!  Fresh and delicious!",
+        "sentimentScore": 4
+      },
+      {
+        "label": "Positive product talk before the event",
+        "date": "2011-01-13",
+        "source": "Twitter for Android",
+        "text": "Good conversation, good calamari, good goose island @obtiva happy hour.",
+        "sentimentScore": 4
+      },
+      {
+        "label": "Positive product talk before the event",
+        "date": "2011-02-06",
+        "source": "Twitter Web Client",
+        "text": "homemade guacamole turned out awesome, fresh local tortilla chips, cold Goose Island, gotta love the #SuperBowl !",
+        "sentimentScore": 4
+      }
+    ],
+    "Acquisition": [
+      {
+        "label": "Acquisition anxiety and news talk",
+        "date": "2011-03-28",
+        "source": "twitterfeed",
+        "text": "US: Anheuser-Busch InBev to buy Goose Island in US: Beverage news ...: The US arm of Anheuser-Busch InBev has lined up the purchase o...",
+        "sentimentScore": 0
+      },
+      {
+        "label": "Acquisition anxiety and news talk",
+        "date": "2011-03-28",
+        "source": "Twitter for BlackBerry\u00ae",
+        "text": "How can Anheuser-Busch buys Goose Island but InBev owns Anheuser-Busch?!?!?",
+        "sentimentScore": 0
+      },
+      {
+        "label": "Acquisition anxiety and news talk",
+        "date": "2011-03-28",
+        "source": "Google",
+        "text": "Goose Island Bought By Anheuser-Busch For $38.8 Million: Anheuser-Busch announced Monday that it was spending nearly $40 million to buy\u0085",
+        "sentimentScore": 0
+      }
+    ],
+    "Post": [
+      {
+        "label": "Post-event product conversation",
+        "date": "2011-06-08",
+        "source": "Twitter for Android",
+        "text": "Goose Island Dominique is a great sour ale stored in bourbon barrels...great nose, good taste...almost tastes like a lighter 2009 Utopias.",
+        "sentimentScore": 4
+      },
+      {
+        "label": "Post-event product conversation",
+        "date": "2011-04-27",
+        "source": "Twitter Web Client",
+        "text": "The sun is back! A perfect time to enjoy new season Yorkshire asparagus with a refreshing bottle of Goose Island IPA (love those hops!)#fb",
+        "sentimentScore": 4
+      },
+      {
+        "label": "Post-event product conversation",
+        "date": "2011-04-01",
+        "source": "Twitter Web Client",
+        "text": "Mmmm Goose Island Bourbon County Stout - love coming back to an old favorite after a rough week",
+        "sentimentScore": 3
+      }
+    ]
+  },
+  "lexicon": {
+    "positive": [
+      "amazing",
+      "awesome",
+      "balanced",
+      "beautiful",
+      "best",
+      "cheers",
+      "chill",
+      "cold",
+      "delicious",
+      "enjoy",
+      "enjoyed",
+      "enjoying",
+      "excellent",
+      "excited",
+      "favorite",
+      "favourite",
+      "fine",
+      "fresh",
+      "good",
+      "great",
+      "happy",
+      "like",
+      "liked",
+      "love",
+      "loved",
+      "mmmm",
+      "nice",
+      "perfect",
+      "refreshing",
+      "smooth",
+      "solid",
+      "special",
+      "tasty",
+      "wonderful"
+    ],
+    "negative": [
+      "awful",
+      "bad",
+      "bland",
+      "corporate",
+      "delay",
+      "disappointed",
+      "disappointing",
+      "disgusting",
+      "fail",
+      "fuck",
+      "garbage",
+      "hate",
+      "hated",
+      "never",
+      "no",
+      "nostalgia",
+      "not",
+      "poor",
+      "ruin",
+      "ruined",
+      "sad",
+      "save",
+      "sellout",
+      "shit",
+      "suck",
+      "sucks",
+      "terrible",
+      "typical",
+      "weak",
+      "worse",
+      "worst"
+    ],
+    "acquisition": [
+      "ab",
+      "acquired",
+      "acquisition",
+      "anheuser",
+      "bought",
+      "budweiser",
+      "busch",
+      "buy",
+      "buyout",
+      "buys",
+      "changes",
+      "corporate",
+      "craft",
+      "goodbye",
+      "inbev",
+      "macro",
+      "merger",
+      "nostalgia",
+      "ruined",
+      "save",
+      "selling",
+      "sellout",
+      "sold",
+      "takeover"
+    ]
+  }
+}

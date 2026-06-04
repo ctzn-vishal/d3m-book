@@ -211,6 +211,8 @@ export const book: Book = {
             { slug: 'ch43-text-classification', number: '18.4', title: 'Text Classification and Sentiment', status: 'published' },
             { slug: 'ch44-topic-models', number: '18.5', title: 'Topic Models and Text Dashboards', status: 'published' },
             { slug: 'ch45-limits-of-classical-nlp', number: '18.6', title: 'Limits of Classical NLP', status: 'published' },
+            { slug: 'trump-tweet-device-case', number: '18.7', title: 'Case Study: Trump Tweet Source Classification', status: 'published' },
+            { slug: 'goose-island-acquisition-sentiment-case', number: '18.8', title: 'Case Study: Goose Island Acquisition Sentiment', status: 'published' },
           ],
         },
         {
