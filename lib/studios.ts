@@ -30,6 +30,17 @@ export type Studio = {
  */
 export const studios: Studio[] = [
   {
+    slug: 'cfpb-crisis-monitor',
+    title: 'CFPB Crisis Monitor',
+    blurb:
+      'Use public consumer complaints as a crisis early-warning system: pin incident spikes, inspect consented narratives, and separate product mix shifts from real operational improvement.',
+    domain: 'Consumer Finance',
+    methods: ['Text as data', 'Spike detection', 'Structural shift'],
+    relatedSlug: 'ch42b-text-as-data',
+    kind: 'dashboard',
+    accent: '#28527A',
+  },
+  {
     slug: 'presidential-election-atlas',
     title: 'Presidential Election Atlas: 1976-2024',
     blurb:
