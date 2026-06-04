@@ -1,0 +1,243 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  AnnualConcentrationChange,
+  ConcentrationMetricCards,
+  CRScatter,
+  HHIRankChart,
+  HierarchySensitivity,
+  ThresholdSensitivityChart,
+  TopOwnerTable,
+} from '@/components/Book/part2/MarketConcentrationCase';
+import concentrationRaw from './data/market-concentration.json';
+
+export const concentration = concentrationRaw;
+
+export const metricRows = [
+  {
+    metric: 'CR1',
+    formula: 'largest entity share',
+    reads_as: 'How much of the market proxy is controlled by the single largest voice.',
+    failure_mode: 'Can miss the difference between one dominant firm plus a fringe and four roughly equal leaders.',
+  },
+  {
+    metric: 'CR4',
+    formula: 'sum of the four largest shares',
+    reads_as: 'How much of the market proxy is controlled by the leading set of firms.',
+    failure_mode: 'Ignores how unequal the top four are and ignores the shape of the remaining tail.',
+  },
+  {
+    metric: 'HHI',
+    formula: '10,000 x sum of squared shares',
+    reads_as: 'A full-distribution concentration index that gives more weight to large firms.',
+    failure_mode: 'Looks precise even when the market definition or ownership hierarchy is only a proxy.',
+  },
+  {
+    metric: 'Effective entities',
+    formula: '10,000 / HHI',
+    reads_as: 'The number of equal-sized firms that would produce the same HHI.',
+    failure_mode: 'Useful intuition, but not an actual count of competitors.',
+  },
+];
+
+export const topRows = concentration.industryMetrics.slice(0, 8).map(row => ({
+  industry: row.industry,
+  leader: row.leader,
+  cr1: `${(row.cr1 * 100).toFixed(1)}%`,
+  cr4: `${(row.cr4 * 100).toFixed(1)}%`,
+  hhi: Math.round(row.hhi).toLocaleString(),
+  effective: row.effective_entities.toFixed(1),
+  band: row.hhi_band,
+}));
+
+export const thresholdRows = concentration.thresholdSensitivity
+  .filter(row => row.level === 'Owner proxy' && row.min_entity_spend === 1000000)
+  .filter(row => ['HH Supplies and Cleaners', 'Telecommunications', 'Pharmaceuticals', 'Medical Services and Equipment', 'Local Services'].includes(row.industry))
+  .map(row => ({
+    industry: row.industry,
+    retained: `${(row.retained_spend_share * 100).toFixed(1)}%`,
+    entities: row.retained_entities.toLocaleString(),
+    hhi: Math.round(row.hhi).toLocaleString(),
+    band: row.hhi_band,
+  }));
+
+<DropCap>
+
+Imagine the analyst is sitting inside the FDA's Office of Prescription Drug Promotion. The office's mission is not to run merger review. It is to make sure prescription drug promotion is truthful, balanced, and accurately communicated. But before reviewing a message environment, the analyst has to ask a prior quantitative question: *whose voices dominate the advertising market?* If a small number of owners account for most public-facing spend in a category, surveillance, sampling, and compliance priorities should look different than they would in a fragmented field.
+
+</DropCap>
+
+## The executive question: *how concentrated is market voice across industries?*
+
+This case uses the same parquet file behind the [Industry Ad Spend Explorer](/studios/ad-spend-explorer), but the metric question is different. The studio asks how advertising budgets moved through the Covid shock. Here the question is cross-sectional: which broad industries have concentrated advertising voice, and how sensitive is that answer to the definition of "firm"?
+
+The economic intuition comes from industrial organization. Market power is not observed directly in a descriptive ad-spend table. Instead, the analyst chooses a market boundary, chooses a firm boundary, converts dollars into shares, and summarizes the share distribution. That is why concentration metrics are excellent teaching examples for a visualization chapter: the chart is only as honest as the metric definition underneath it.
+
+The case borrows reference thresholds from the [DOJ/FTC 2023 Merger Guidelines](https://www.justice.gov/atr/merger-guidelines/applying-merger-guidelines/guideline-1), which describe HHI above 1,000 as concentrated and HHI above 1,800 as highly concentrated. Those lines are used here as visual benchmarks, not as legal conclusions. The same guidelines also emphasize that market shares and concentration are most probative when calculated in a properly identified market; a broad ad-spend industry is a useful screen, not a final relevant market.
+
+<Callout variant="finding" title="Main result">
+  Only 2 of 25 broad ad-spend industries cross the highly concentrated HHI threshold using the owner-proxy definition, and 20 are below 1,000. The tail is fragmented. The top of the distribution is not: household supplies and cleaners has a CR4 of 73.6%, with Procter & Gamble alone at 55.4%.
+</Callout>
+
+## The metric contract
+
+The source table has a useful hierarchy: `PARENT`, `SUBSIDIARY`, `ADVERTISER`, `BRAND`, `PRODUCT`, `Media_Group`, and `Industry_Group`. The headline unit in this case is an **owner proxy**: use `PARENT` when it is known, and use `ADVERTISER` when `PARENT` is the pooled `PARENT UNKNOWN` bucket. That rule avoids treating many unrelated unknown-parent advertisers as one giant firm.
+
+The market proxy is `Industry_Group`. The share variable is total positive `dollar_spent` from January 2018 through December 2022. The data contains 2.98 million positive spend rows over 60 months and about $369B in measured spend. The metrics describe **share of advertising voice**, not share of sales, prescriptions, patients, or units.
+
+<Figure width="page-outset" caption="Figure 1. The measurement contract matters before the chart does: broad industry is the market proxy, owner proxy is the firm proxy, and ad dollars are the share basis.">
+  <div className="not-prose">
+    <ConcentrationMetricCards data={concentration} />
+  </div>
+</Figure>
+
+<DataTable
+  caption="Table 1. Concentration metrics are compact summaries of the same share vector. CR1 and CR4 focus on the leaders; HHI uses the whole distribution."
+  columns={[
+    { key: 'metric', label: 'Metric', align: 'left' },
+    { key: 'formula', label: 'Formula', align: 'left' },
+    { key: 'reads_as', label: 'Reads as', align: 'left' },
+    { key: 'failure_mode', label: 'Watch out for', align: 'left' },
+  ]}
+  rows={metricRows}
+/>
+
+<Equation latex={"CR_k = \\sum_{i=1}^{k} s_i"} label="Concentration ratio" />
+
+<Equation latex={"HHI = 10{,}000 \\times \\sum_{i=1}^{N} s_i^2"} label="Herfindahl-Hirschman Index" />
+
+The HHI formula squares shares before summing them. That is the reason a market with one 55% firm looks very different from a market with four 14% firms, even if both have visible top-four concentration. The effective-entities transformation, `10,000 / HHI`, gives a useful intuition: household supplies and cleaners has an HHI of about 3,246, equivalent to roughly 3.1 equal-sized firms.
+
+## Concentration is rare, but top-four voice is common
+
+Figure 2 ranks the broad industries by owner-proxy HHI. The most concentrated industries are household supplies and cleaners, energy, government and organizations, pets, and telecommunications. The rest of the distribution falls sharply. Pharmaceuticals, despite being strategically salient for FDA surveillance, has an HHI around 640 in this broad industry view. That is not because pharmaceutical advertising is unimportant. It is because the broad `Pharmaceuticals` industry group contains many owners and products. A drug-class or condition-level market would be the next cut.
+
+<Figure width="page-outset" caption="Figure 2. HHI separates the concentrated top of the ad-spend distribution from the long tail of broad industries.">
+  <div className="not-prose">
+    <HHIRankChart data={concentration} />
+  </div>
+</Figure>
+
+<DataTable
+  caption="Table 2. The highest-HHI industries show different structures: one dominant owner in household cleaners, a high top-four share in energy, and a public-service voice in government and organizations."
+  columns={[
+    { key: 'industry', label: 'Industry', align: 'left' },
+    { key: 'leader', label: 'Leader', align: 'left' },
+    { key: 'cr1', label: 'CR1' },
+    { key: 'cr4', label: 'CR4' },
+    { key: 'hhi', label: 'HHI' },
+    { key: 'effective', label: 'Effective entities' },
+    { key: 'band', label: 'Band', align: 'left' },
+  ]}
+  rows={topRows}
+/>
+
+Figure 3 shows why CR1, CR4, and HHI should be read together. Telecommunications has a CR4 near 65%, but HHI is lower than household supplies because the top firms are more balanced. Personal care products has a CR4 above 54%, but falls below the 1,000 HHI line because the distribution beyond Procter & Gamble and L'Oreal is broader. Local services is the opposite extreme: many advertisers, low CR1, low CR4, and very low HHI.
+
+<Figure width="body-outset" caption="Figure 3. CR1 and CR4 reveal leader dominance and top-four dominance, while HHI captures whether the rest of the market is also concentrated.">
+  <div className="not-prose">
+    <CRScatter data={concentration} />
+  </div>
+</Figure>
+
+The FDA-style surveillance implication is practical rather than legal. If a regulated claims team wants broad coverage of household-cleaner advertising, a small set of owners gets it far. If the same team wants broad coverage of local services or retail, owner-level sampling is a long-tail problem. For prescription drugs, the broad pharmaceutical industry is too coarse; the same logic should be repeated by condition, product class, channel, and claim type.
+
+## The firm boundary is not a detail
+
+The largest methodological risk is entity definition. The same underlying rows can be summarized by parent owner, advertiser, or brand. Those definitions are not interchangeable. Parent-level aggregation is closest to a firm-level IO question because it groups multiple brands and advertiser labels under common ownership. Advertiser and brand definitions are useful for marketing execution, but they split corporate families and usually make concentration look lower.
+
+<Figure width="page-outset" caption="Figure 4. Ownership aggregation can materially change the HHI. Household supplies and cleaners looks highly concentrated at owner level, but much less concentrated at advertiser or brand level.">
+  <div className="not-prose">
+    <HierarchySensitivity data={concentration} />
+  </div>
+</Figure>
+
+The biggest example is household supplies and cleaners: owner-proxy HHI is about 3,246, while advertiser-level HHI is about 415 and brand-level HHI is about 185. That is not a contradiction. It is the measurement hierarchy doing exactly what it is supposed to do. If the question is corporate market power or coordinated control of advertising strategy, split brands are too granular. If the question is creative execution or consumer-facing brand clutter, brand-level concentration may be the right object.
+
+<Pitfall title="A metric cannot repair a wrong market definition">
+HHI looks rigorous because it is a formula. It is still only a summary of the share vector you chose. A broad industry, a product category, a drug class, a geography, and a media channel can all produce different HHIs from the same source table.
+</Pitfall>
+
+## Thresholds should be shown as sensitivity, not hidden as cleaning
+
+The user-facing problem with this dataset is the micro-entity tail. The median owner-industry entity spends only about $4k over the full five-year window, while the 99th percentile spends about $7.9M. It is reasonable to ask whether tiny positive spend entities should be removed before computing concentration. But the choice is not free: dropping the tail and renormalizing retained entities mechanically raises HHI.
+
+The main metric therefore keeps all positive entity spend. Figure 5 treats thresholds as a sensitivity check. The $1M cutoff barely changes household supplies and cleaners because it still retains 99.5% of spend. It changes local services more because the cutoff retains only 86.5% of spend. In that setting, the higher HHI is partly a definition artifact.
+
+<Figure width="body-outset" caption="Figure 5. Minimum-spend thresholds are useful only when the retained-spend share is visible beside the recomputed concentration metric.">
+  <div className="not-prose">
+    <ThresholdSensitivityChart data={concentration} />
+  </div>
+</Figure>
+
+<DataTable
+  caption="Table 3. At the $1M owner-spend cutoff, some industries still retain nearly all spend, while long-tail industries lose enough denominator that the renormalized HHI becomes a stress test."
+  columns={[
+    { key: 'industry', label: 'Industry', align: 'left' },
+    { key: 'retained', label: 'Retained spend' },
+    { key: 'entities', label: 'Retained entities' },
+    { key: 'hhi', label: 'HHI' },
+    { key: 'band', label: 'Band', align: 'left' },
+  ]}
+  rows={thresholdRows}
+/>
+
+The rule for practice is simple: use all positive spend as the default denominator, then report threshold sensitivity with retained spend. If the HHI ranking is stable and retained spend is high, the conclusion is robust to de minimis noise. If the cutoff drops a large share of spend, treat the recomputed metric as an upper-bound stress test, not a replacement for the main estimate.
+
+## Concentration moved through the shock, but not in one direction
+
+The 2018 to 2022 comparison is descriptive, not causal. Still, it shows a useful pattern: concentration can rise even as category spend falls. Household supplies and cleaners became more concentrated from 2018 to 2022 while measured spend fell. Medical services and equipment also became more concentrated. Energy moved the other way: HHI fell sharply as spend fell, so decline alone does not imply consolidation.
+
+<Figure width="body-outset" caption="Figure 6. HHI change from 2018 to 2022 varied by industry; contraction and concentration did not move mechanically together.">
+  <div className="not-prose">
+    <AnnualConcentrationChange data={concentration} />
+  </div>
+</Figure>
+
+For surveillance, this kind of chart is a triage tool. A category with rising concentration may deserve a different sampling plan, especially if the leader changes, if spend shifts toward television or digital, or if the industry is already in a regulated claims environment. But the chart does not say why concentration changed. It could reflect entry, exit, media reallocation, product launches, missing ownership detail, or demand shocks.
+
+<Figure width="page-outset" caption="Figure 7. The top four owners make the ad-spend structure concrete; the same CR4 can come from a dominant leader or a more balanced set of large firms.">
+  <div className="not-prose">
+    <TopOwnerTable data={concentration} industries={['HH Supplies and Cleaners', 'Telecommunications', 'Pharmaceuticals', 'Local Services']} />
+  </div>
+</Figure>
+
+## What the FDA perspective adds
+
+FDA does not need this analysis to decide whether an ad is misleading. That requires claim-level evidence, labeling, context, and applicable rules. The [Office of Prescription Drug Promotion](https://www.fda.gov/drugs/surveillance/prescription-drug-advertising-and-promotional-labeling) focuses on whether prescription drug information is communicated truthfully and with balance. FDA's direct-to-consumer TV and radio rule guidance also emphasizes that major risk statements must be presented in a clear, conspicuous, and neutral manner.
+
+Concentration metrics add a different layer: they help an analyst decide where the public message environment is structurally dominated. In a concentrated voice market, a few sponsors can shape a large share of consumer exposure. In a fragmented market, risk comes less from one owner's dominance and more from coverage, sampling, and heterogeneous claims.
+
+The pharmaceutical finding is therefore intentionally modest. At the broad industry level, pharmaceutical ad spend is not highly concentrated by HHI. That does not settle the question a regulator would care about. The next regulator-relevant market definition would be narrower: therapeutic area, condition, prescription status, DTC versus professional promotion, media group, and possibly drug class. The visualization lesson is that the first chart should expose that next question rather than bury it.
+
+## Method notes and robustness
+
+The calculations use the following choices:
+
+1. Keep all rows with positive `dollar_spent` through December 2022.
+2. Define the headline firm unit as `PARENT` unless the parent is `PARENT UNKNOWN`, in which case use `ADVERTISER`.
+3. Aggregate to owner-by-industry total spend over 2018-2022.
+4. Convert each owner's spend into an industry share.
+5. Compute CR1, CR4, CR8, HHI, and effective entities from that share vector.
+6. Recompute sensitivity at minimum owner-spend cutoffs of $10k, $100k, and $1M, always reporting retained spend.
+
+The robustness checks support the main descriptive pattern. The highest-concentration industries remain high under minimum-spend thresholds because the retained spend share is near complete. Long-tail industries remain low-HHI even after aggressive cutoffs, but those cutoffs drop more denominator and should be read as stress tests.
+
+<Pitfall title="Using antitrust thresholds as automatic labels">
+The HHI threshold line is a benchmark, not a verdict. A true merger or conduct analysis would need a relevant product and geography market, sales or unit shares, competitive substitution evidence, entry conditions, and the proposed change in concentration.
+</Pitfall>
+
+<Pitfall title="Confusing share of voice with market share">
+Ad spend can be a strategic input, a signal of launch intensity, or a proxy for public exposure. It is not the same thing as revenue, prescriptions, users, or welfare.
+</Pitfall>
+
+<Takeaway label="What to ship">
+
+Concentration metrics should ship with their definitions visible. For this ad-spend case, the defensible default is owner-proxy shares by broad industry, all positive spend retained, with CR1, CR4, HHI, and effective entities shown together. The strongest substantive result is that broad advertising voice is usually fragmented, but several industries have concentrated leaders or top-four structures. The strongest methodological result is even more important: change the firm hierarchy or threshold rule, and the chart can change. That is why a concentration dashboard should always include the metric contract and sensitivity view, not just the HHI bar chart.
+
+</Takeaway>

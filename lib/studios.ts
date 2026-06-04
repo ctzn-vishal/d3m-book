@@ -47,7 +47,7 @@ export const studios: Studio[] = [
       'Explore 2018-2022 advertising spend by industry group, advertiser, and media type, with a Covid-era lens on budget shocks, recovery, and media mix shifts.',
     domain: 'Advertising',
     methods: ['Dashboard sequencing', 'Media mix', 'Shock analysis'],
-    relatedSlug: 'dashboard-decision-systems',
+    relatedSlug: 'market-concentration-metrics-case',
     kind: 'dashboard',
     accent: '#2F8F7B',
   },

@@ -70,6 +70,7 @@ export const book: Book = {
           articles: [
             { slug: 'ch09-exploratory-viz', number: '5.1', title: 'Exploratory Visualization and Dashboards', status: 'published' },
             { slug: 'chart-atlas', number: '5.2', title: 'Chart Atlas', status: 'published' },
+            { slug: 'market-concentration-metrics-case', number: '5.3', title: 'Case Study: Market Concentration Metrics', status: 'published' },
           ],
         },
         {
