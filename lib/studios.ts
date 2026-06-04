@@ -117,6 +117,28 @@ export const studios: Studio[] = [
     kind: 'dashboard',
     accent: '#F43F5E',
   },
+  {
+    slug: 'fast-food-perceptual-map',
+    title: 'Fast-Food Brand Perceptual Map',
+    blurb:
+      'Reduce 48 BAV brand attributes into factor-map axes, inspect loadings, cluster fast-food brands, and test how much Brand Asset follows from the latent perception scores.',
+    domain: 'Restaurants',
+    methods: ['PCA', 'Factor analysis', 'Brand clustering'],
+    relatedSlug: 'ch37-pca-perceptual-maps',
+    kind: 'dashboard',
+    accent: '#2A9D8F',
+  },
+  {
+    slug: 'nyc-zip-health-segments',
+    title: 'NYC Metro ZIP Health Segments',
+    blurb:
+      'Use health prevalence measures to build factor scores, cluster ZIP codes, and interpret the segments by correlating scores with income, age, college share, and deprivation.',
+    domain: 'Public Health',
+    methods: ['Factor scores', 'K-means clustering', 'Segment profiling'],
+    relatedSlug: 'ch36-unsupervised-segmentation',
+    kind: 'dashboard',
+    accent: '#4E79A7',
+  },
 ];
 
 export function findStudio(slug: string): Studio | null {

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fast-Food Brand Perceptual Map</title>
+<style>
+:root{
+  --bg:#f5f7f8;
+  --ink:#202326;
+  --muted:#65707b;
+  --panel:#ffffff;
+  --panel-2:#eef2f4;
+  --line:#d7dee4;
+  --line-strong:#aeb8c2;
+  --blue:#2f6fb0;
+  --red:#c4514a;
+  --teal:#2a9d8f;
+  --gray:#6b7280;
+  --gold:#d99a2b;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select{font:inherit}
+.wrap{max-width:1420px;margin:0 auto;padding:28px}
+.mast{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:28px;
+  align-items:end;
+  padding:0 0 24px;
+  border-bottom:1px solid var(--line);
+}
+.eyebrow{font-size:12px;font-weight:750;text-transform:uppercase;color:var(--teal);margin:0 0 10px}
+h1{font-size:clamp(34px,5vw,64px);line-height:1;margin:0;font-weight:820}
+.dek{max-width:780px;margin:14px 0 0;color:var(--muted);font-size:17px;line-height:1.45}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(116px,1fr));gap:10px;min-width:min(100%,560px)}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+.kpi .v{font-size:24px;font-weight:800;line-height:1}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:5px}
+.summary{
+  margin:24px 0;
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:18px;
+}
+.callout,.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:8px;
+}
+.callout{padding:18px 20px;border-left:5px solid var(--gold)}
+.callout b{display:block;margin-bottom:6px}
+.callout p{margin:0;color:var(--muted);line-height:1.5}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr) 330px;gap:18px;align-items:start}
+.panel{overflow:hidden}
+.panel-h{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:13px 15px;border-bottom:1px solid var(--line);
+}
+.panel-h h2,.panel-h h3{margin:0;font-size:13px;text-transform:uppercase;font-weight:800;color:#3c4650}
+.panel-h .meta{font-size:12px;color:var(--muted)}
+.panel-b{padding:15px}
+.controls{display:grid;gap:12px}
+.field label{display:block;font-size:12px;font-weight:750;color:#3c4650;margin-bottom:6px}
+select,input[type="search"]{
+  width:100%;
+  background:#fff;
+  border:1px solid var(--line-strong);
+  border-radius:6px;
+  padding:9px 10px;
+  color:var(--ink);
+  outline:none;
+}
+select:focus,input[type="search"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,111,176,.14)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  border:1px solid var(--line-strong);
+  background:#fff;
+  color:#39424c;
+  border-radius:999px;
+  padding:6px 10px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:700;
+}
+.chip.active{color:#fff;border-color:transparent}
+.brand-list{margin-top:14px;max-height:430px;overflow:auto;border-top:1px solid var(--line)}
+.brand-row{
+  width:100%;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:transparent;
+  color:var(--ink);
+  padding:10px 2px;
+  cursor:pointer;
+  text-align:left;
+}
+.brand-row:hover{background:var(--panel-2)}
+.brand-row.active{background:#e8f0f8}
+.brand-row .name{font-weight:760;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.brand-row .sub{font-size:12px;color:var(--muted)}
+.brand-row .num{font-weight:800}
+.chart-shell{position:relative}
+svg{display:block;width:100%;height:auto}
+.axis text,.grid text,.axis{fill:var(--muted);font-size:12px}
+.axis path,.axis line{stroke:var(--line-strong)}
+.grid line,line.grid{stroke:var(--line);stroke-dasharray:2 4}
+.zero{stroke:#1e252b;stroke-width:1.4;stroke-dasharray:5 5;opacity:.55}
+.point{stroke:#fff;stroke-width:1.7;cursor:pointer}
+.point.dim{opacity:.16}
+.point.active{stroke:#111;stroke-width:3}
+.label{font-size:11px;font-weight:800;fill:#222;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.axis-title{font-size:13px;font-weight:800;fill:#303942}
+.tip{
+  position:absolute;
+  pointer-events:none;
+  z-index:4;
+  opacity:0;
+  background:#111820;
+  color:#fff;
+  border-radius:8px;
+  padding:10px 12px;
+  max-width:245px;
+  box-shadow:0 12px 34px rgba(0,0,0,.18);
+  transform:translate(-50%,-115%);
+  font-size:12px;
+  line-height:1.45;
+}
+.tip b{display:block;font-size:14px;margin-bottom:4px}
+.legend{display:flex;flex-wrap:wrap;gap:12px 18px;margin-top:12px;font-size:12px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:11px;height:11px;border-radius:3px;display:inline-block}
+.detail-title{font-size:24px;font-weight:820;line-height:1.05;margin:0 0 6px}
+.detail-cluster{font-size:13px;font-weight:800;margin-bottom:14px}
+.metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.metric{background:var(--panel-2);border-radius:8px;padding:10px}
+.metric .v{font-size:22px;font-weight:840}
+.metric .l{font-size:12px;color:var(--muted)}
+.attr-row{display:grid;grid-template-columns:122px 1fr 44px;align-items:center;gap:8px;margin:10px 0}
+.attr-row .l{font-size:12px;color:var(--muted)}
+.track{height:13px;background:#e5e9ed;border-radius:999px;position:relative;overflow:hidden}
+.track::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:#a8b2bc}
+.bar{position:absolute;top:0;bottom:0;border-radius:999px}
+.bar.pos{left:50%;background:var(--teal)}
+.bar.neg{right:50%;background:var(--red)}
+.attr-row .v{text-align:right;font-weight:800;font-size:12px}
+.profile-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.cluster-profile{border-top:4px solid var(--gray);background:var(--panel);border-radius:8px;padding:13px;border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.cluster-profile h3{font-size:15px;margin:0 0 5px}
+.cluster-profile p{margin:0 0 10px;color:var(--muted);font-size:13px;line-height:1.4}
+.mini{font-size:12px;color:var(--muted);line-height:1.45}
+.mini b{color:var(--ink)}
+.below{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.scree-row{display:grid;grid-template-columns:60px 1fr 58px;gap:10px;align-items:center;margin:12px 0}
+.scree-track{height:24px;background:var(--panel-2);border-radius:6px;overflow:hidden}
+.scree-fill{height:100%;background:var(--blue)}
+.corr-grid{display:grid;grid-template-columns:120px repeat(3,1fr);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:12px}
+.corr-grid div{padding:9px;text-align:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-size:12px}
+.corr-grid div:nth-child(4n){border-right:0}
+.corr-grid .head{font-weight:800;background:var(--panel-2)}
+.load-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:14px}
+.note{font-size:13px;color:var(--muted);line-height:1.5;margin:12px 0 0}
+@media(max-width:1180px){
+  .mast,.summary,.layout,.below{grid-template-columns:1fr}
+  .kpis{min-width:0}
+  .profile-grid,.load-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:680px){
+  .wrap{padding:18px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .profile-grid,.load-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="mast">
+    <div>
+      <p class="eyebrow">Part 4 case study</p>
+      <h1>Fast-Food Brand Perceptual Map</h1>
+      <p class="dek">A BAV teaching file for reading brand perception, reducing 48 attributes into interpretable factors, and clustering similar fast-food and casual-dining brands.</p>
+    </div>
+    <div class="kpis" id="kpis"></div>
+  </header>
+
+  <section class="summary">
+    <div class="callout">
+      <b>The first lesson is compression.</b>
+      <p>The updated file contains 48 brand-attribute percentages. PCA shows how much of that high-dimensional perception space is captured by the first few components; the rotated factor map gives the two-axis view a more readable business interpretation.</p>
+    </div>
+    <div class="callout">
+      <b>The managerial question is positioning.</b>
+      <p>Which brands are perceived as close competitors, which brands occupy premium or value territory, and how much Brand Asset can be reconstructed from the latent factors.</p>
+    </div>
+  </section>
+
+  <main class="layout">
+    <aside class="panel">
+      <div class="panel-h"><h2>Controls</h2><span class="meta" id="brandCount"></span></div>
+      <div class="panel-b">
+        <div class="controls">
+          <div class="field">
+            <label for="xAttr">X axis</label>
+            <select id="xAttr"></select>
+          </div>
+          <div class="field">
+            <label for="yAttr">Y axis</label>
+            <select id="yAttr"></select>
+          </div>
+          <div class="field">
+            <label for="sizeBy">Bubble size</label>
+            <select id="sizeBy">
+              <option value="brandAsset">Brand Asset</option>
+              <option value="marketShare">Market share</option>
+              <option value="flat">Equal size</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Cluster</label>
+            <div class="chips" id="clusterChips"></div>
+          </div>
+          <div class="field">
+            <label for="search">Brand</label>
+            <input id="search" type="search" placeholder="Search brands">
+          </div>
+        </div>
+        <div class="brand-list" id="brandList"></div>
+      </div>
+    </aside>
+
+    <section class="panel">
+      <div class="panel-h"><h2>Perceptual Map</h2><span class="meta">default axes are rotated factor scores</span></div>
+      <div class="panel-b">
+        <div class="chart-shell">
+          <svg id="scatter" viewBox="0 0 900 560" role="img" aria-label="Fast-food brand perceptual map"></svg>
+          <div class="tip" id="tip"></div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-h"><h2>Selected Brand</h2><span class="meta" id="selectedMeta"></span></div>
+      <div class="panel-b" id="detail"></div>
+    </aside>
+  </main>
+
+  <section class="below">
+    <div class="panel">
+      <div class="panel-h"><h2>PCA and Factor Diagnostic</h2><span class="meta">variance, loadings, and Brand Asset fit</span></div>
+      <div class="panel-b">
+        <div id="scree"></div>
+        <p class="note" id="pcaNote"></p>
+        <div id="corr"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><h2>Cluster Profiles</h2><span class="meta">means by brand segment</span></div>
+      <div class="panel-b">
+        <div class="profile-grid" id="profiles"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const state = {
+  data:null,
+  xAttr:'Contemporary / premium',
+  yAttr:'Brand strength / trust-value',
+  sizeBy:'brandAsset',
+  cluster:'all',
+  search:'',
+  selected:'Starbucks'
+};
+const fmt = (n,d=0) => n == null ? 'n/a' : Number(n).toLocaleString('en-US',{maximumFractionDigits:d,minimumFractionDigits:d});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const pct = n => n == null ? 'n/a' : Math.round(n*100) + '%';
+const svgNS = 'http://www.w3.org/2000/svg';
+const el = (name, attrs={}, text='') => {
+  const node = document.createElementNS(svgNS, name);
+  for (const [k,v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (text !== '') node.textContent = text;
+  return node;
+};
+
+fetch('data/case.json').then(r => r.json()).then(data => {
+  state.data = data;
+  if (!data.brands.some(b => b.name === state.selected)) state.selected = data.brands[0].name;
+  initControls();
+  renderAll();
+});
+
+function clusterById(){
+  return Object.fromEntries(state.data.clusters.map(c => [c.id,c]));
+}
+function attrKeys(){
+  return state.data.attributes.map(a => a.key);
+}
+function axisKeys(){
+  return state.data.factorAxes.concat(attrKeys());
+}
+function axisValue(brand, key){
+  if (brand.factor && key in brand.factor) return brand.factor[key];
+  return brand.attrs[key];
+}
+function axisFormat(key, value){
+  return state.data.factorAxes.includes(key) ? fmt(value,2) : `${fmt(value,1)}%`;
+}
+function activeBrands(){
+  return state.data.brands.filter(b => state.cluster === 'all' || b.cluster === state.cluster);
+}
+function initControls(){
+  const opts = axisKeys().map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  xAttr.innerHTML = opts;
+  yAttr.innerHTML = opts;
+  xAttr.value = state.xAttr;
+  yAttr.value = state.yAttr;
+  xAttr.addEventListener('change', e => { state.xAttr = e.target.value; renderAll(); });
+  yAttr.addEventListener('change', e => { state.yAttr = e.target.value; renderAll(); });
+  sizeBy.addEventListener('change', e => { state.sizeBy = e.target.value; drawScatter(); });
+  search.addEventListener('input', e => { state.search = e.target.value.trim().toLowerCase(); renderBrandList(); });
+  const chips = [`<button class="chip active" data-cluster="all">All</button>`].concat(
+    state.data.clusters.map(c => `<button class="chip" data-cluster="${c.id}" style="--c:${c.color}">${esc(c.shortLabel)}</button>`)
+  );
+  clusterChips.innerHTML = chips.join('');
+  clusterChips.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    state.cluster = btn.dataset.cluster;
+    [...clusterChips.querySelectorAll('.chip')].forEach(chip => {
+      chip.classList.toggle('active', chip.dataset.cluster === state.cluster);
+      chip.style.background = chip.classList.contains('active')
+        ? (chip.dataset.cluster === 'all' ? '#202326' : chip.style.getPropertyValue('--c'))
+        : '#fff';
+    });
+    renderAll();
+  });
+  clusterChips.querySelector('.chip').style.background = '#202326';
+}
+function renderAll(){
+  renderKpis();
+  renderBrandList();
+  renderDetail();
+  drawScatter();
+  renderPca();
+  renderProfiles();
+}
+function renderKpis(){
+  const d = state.data.pca.diagnostic;
+  kpis.innerHTML = [
+    [fmt(state.data.metadata.rows), 'brands'],
+    [state.data.metadata.attributeCount, 'perception scores'],
+    [pct(d.pc12Share), 'variance in first 2 PCs'],
+    [pct(d.brandAssetR2FromFactors), 'Brand Asset R² from factors'],
+  ].map(([v,l]) => `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+}
+function renderBrandList(){
+  const q = state.search;
+  const brands = activeBrands()
+    .filter(b => !q || b.name.toLowerCase().includes(q))
+    .sort((a,b) => b.brandAsset - a.brandAsset);
+  brandCount.textContent = `${brands.length} shown`;
+  brandList.innerHTML = brands.map(b => {
+    const c = clusterById()[b.cluster];
+    return `<button class="brand-row ${b.name === state.selected ? 'active' : ''}" data-brand="${esc(b.name)}">
+      <span><span class="name">${esc(b.name)}</span><br><span class="sub"><span class="sw" style="background:${c.color}"></span> ${esc(c.shortLabel)}</span></span>
+      <span class="num">${fmt(b.brandAsset,0)}</span>
+    </button>`;
+  }).join('');
+  brandList.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+    state.selected = btn.dataset.brand;
+    renderAll();
+  }));
+}
+function renderDetail(){
+  const b = state.data.brands.find(d => d.name === state.selected) || activeBrands()[0];
+  if (!b) return;
+  state.selected = b.name;
+  const c = clusterById()[b.cluster];
+  selectedMeta.textContent = c.shortLabel;
+  detail.innerHTML = `
+    <h3 class="detail-title">${esc(b.name)}</h3>
+    <div class="detail-cluster" style="color:${c.color}">${esc(c.label)}</div>
+    <div class="metric-grid">
+      <div class="metric"><div class="v">${fmt(b.brandAsset,0)}</div><div class="l">Brand Asset</div></div>
+      <div class="metric"><div class="v">${fmt(b.marketShare,0)}</div><div class="l">Market share</div></div>
+      <div class="metric"><div class="v">${fmt(b.factor['Brand strength / trust-value'],2)}</div><div class="l">Strength factor</div></div>
+      <div class="metric"><div class="v">${fmt(b.factor['Contemporary / premium'],2)}</div><div class="l">Premium factor</div></div>
+    </div>
+    ${b.topAttributes.map(a => pctBar(a.attribute, a.value, 45)).join('')}
+    <p class="note">${esc(c.description)}</p>
+  `;
+}
+function centeredBar(label, value, maxAbs=3, formatter=v => fmt(v,2)){
+  const w = Math.min(50, Math.abs(value) / maxAbs * 50);
+  const cls = value >= 0 ? 'pos' : 'neg';
+  return `<div class="attr-row">
+    <div class="l">${esc(label)}</div>
+    <div class="track"><div class="bar ${cls}" style="width:${w}%"></div></div>
+    <div class="v">${formatter(value)}</div>
+  </div>`;
+}
+function pctBar(label, value, max=45){
+  const w = Math.min(100, Math.max(0, value / max * 100));
+  return `<div class="attr-row">
+    <div class="l">${esc(label)}</div>
+    <div class="track"><div class="bar pos" style="left:0;width:${w}%"></div></div>
+    <div class="v">${fmt(value,1)}%</div>
+  </div>`;
+}
+function niceTicks(min, max, count=6){
+  const span = max - min || 1;
+  const raw = span / Math.max(1, count - 1);
+  const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = raw / pow <= 2 ? 2 * pow : raw / pow <= 5 ? 5 * pow : 10 * pow;
+  const start = Math.ceil(min / step) * step;
+  const out = [];
+  for (let v = start; v <= max + step * .5; v += step) out.push(Number(v.toFixed(6)));
+  return out;
+}
+function scaleSpec(values){
+  const min = Math.min(...values), max = Math.max(...values);
+  if (min < 0 && max > 0) {
+    const lim = Math.max(Math.abs(min), Math.abs(max)) * 1.1;
+    return {min:-lim, max:lim};
+  }
+  return {min:Math.min(0, min * .95), max:max * 1.1};
+}
+function drawScatter(){
+  const svg = scatter;
+  svg.innerHTML = '';
+  const data = state.data.brands;
+  const clusters = clusterById();
+  const m = {l:62,r:26,t:28,b:62}, w = 900, h = 560, iw = w-m.l-m.r, ih = h-m.t-m.b;
+  const xVals = data.map(d => axisValue(d, state.xAttr));
+  const yVals = data.map(d => axisValue(d, state.yAttr));
+  const xr = scaleSpec(xVals), yr = scaleSpec(yVals);
+  const sx = v => m.l + (v - xr.min) / (xr.max - xr.min) * iw;
+  const sy = v => m.t + (yr.max - v) / (yr.max - yr.min) * ih;
+  niceTicks(xr.min, xr.max).forEach(t => {
+    svg.appendChild(el('line',{x1:sx(t),x2:sx(t),y1:m.t,y2:m.t+ih,class:'grid'}));
+    svg.appendChild(el('text',{x:sx(t),y:m.t+ih+22,'text-anchor':'middle',class:'axis'}, state.data.factorAxes.includes(state.xAttr) ? fmt(t,0) : fmt(t,0)));
+  });
+  niceTicks(yr.min, yr.max).forEach(t => {
+    svg.appendChild(el('line',{x1:m.l,x2:m.l+iw,y1:sy(t),y2:sy(t),class:'grid'}));
+    svg.appendChild(el('text',{x:m.l-12,y:sy(t)+4,'text-anchor':'end',class:'axis'}, fmt(t,0)));
+  });
+  if (xr.min <= 0 && xr.max >= 0) svg.appendChild(el('line',{x1:sx(0),x2:sx(0),y1:m.t,y2:m.t+ih,class:'zero'}));
+  if (yr.min <= 0 && yr.max >= 0) svg.appendChild(el('line',{x1:m.l,x2:m.l+iw,y1:sy(0),y2:sy(0),class:'zero'}));
+  svg.appendChild(el('text',{x:m.l+iw/2,y:h-17,'text-anchor':'middle',class:'axis-title'}, state.xAttr));
+  svg.appendChild(el('text',{x:18,y:m.t+ih/2,transform:`rotate(-90 18 ${m.t+ih/2})`,'text-anchor':'middle',class:'axis-title'}, state.yAttr));
+  const maxSizeVal = Math.max(...data.map(d => state.sizeBy === 'brandAsset' ? d.brandAsset : d.marketShare));
+  const radius = d => state.sizeBy === 'flat' ? 7 : 4 + Math.sqrt((state.sizeBy === 'brandAsset' ? d.brandAsset : d.marketShare) / maxSizeVal) * 10;
+  const top = new Set(data.slice().sort((a,b) => b.brandAsset-a.brandAsset).slice(0,8).map(d => d.name));
+  data.slice().sort((a,b) => radius(a)-radius(b)).forEach(d => {
+    const active = state.cluster === 'all' || d.cluster === state.cluster;
+    const circle = el('circle',{
+      cx:sx(axisValue(d, state.xAttr)), cy:sy(axisValue(d, state.yAttr)), r:radius(d),
+      fill:clusters[d.cluster].color, class:`point${active ? '' : ' dim'}${d.name === state.selected ? ' active' : ''}`,
+      tabindex:0
+    });
+    circle.addEventListener('mouseenter', ev => showTip(ev, d));
+    circle.addEventListener('mousemove', ev => showTip(ev, d));
+    circle.addEventListener('mouseleave', hideTip);
+    circle.addEventListener('click', () => { state.selected = d.name; renderAll(); });
+    svg.appendChild(circle);
+    if (d.name === state.selected || (active && top.has(d.name))) {
+      svg.appendChild(el('text',{x:sx(axisValue(d, state.xAttr))+radius(d)+4,y:sy(axisValue(d, state.yAttr))+4,class:'label'}, d.name));
+    }
+  });
+  legend.innerHTML = state.data.clusters.map(c => `<span><span class="sw" style="background:${c.color}"></span>${esc(c.shortLabel)}</span>`).join('') +
+    `<span>Bubble size: ${state.sizeBy === 'brandAsset' ? 'Brand Asset' : state.sizeBy === 'marketShare' ? 'market share' : 'equal'}</span>`;
+}
+function showTip(ev, d){
+  const c = clusterById()[d.cluster];
+  tip.innerHTML = `<b>${esc(d.name)}</b>${esc(c.shortLabel)}<br>Brand Asset: ${fmt(d.brandAsset,0)}<br>Market share: ${fmt(d.marketShare,0)}<br>${esc(state.xAttr)}: ${axisFormat(state.xAttr, axisValue(d,state.xAttr))}<br>${esc(state.yAttr)}: ${axisFormat(state.yAttr, axisValue(d,state.yAttr))}`;
+  const box = scatter.getBoundingClientRect();
+  tip.style.left = (ev.clientX - box.left) + 'px';
+  tip.style.top = (ev.clientY - box.top) + 'px';
+  tip.style.opacity = 1;
+}
+function hideTip(){ tip.style.opacity = 0; }
+function renderPca(){
+  scree.innerHTML = state.data.pca.explainedVariance.slice(0,8).map(d => `
+    <div class="scree-row">
+      <b>${esc(d.component)}</b>
+      <div class="scree-track"><div class="scree-fill" style="width:${d.share*100}%"></div></div>
+      <span>${pct(d.share)}</span>
+    </div>
+  `).join('');
+  const d = state.data.pca.diagnostic;
+  pcaNote.innerHTML = `The first two PCs explain <b>${pct(d.pc12Share)}</b> of the 48-attribute space; the first five explain <b>${pct(d.pc5Share)}</b>. The two rotated factor scores explain <b>${pct(d.brandAssetR2FromFactors)}</b> of Brand Asset variation, while all 48 attributes explain <b>${pct(d.brandAssetR2FromAttributes)}</b>.`;
+  const load = state.data.factor.loadings;
+  const factorBlock = key => {
+    const rows = load.slice().sort((a,b) => Math.abs(b[key]) - Math.abs(a[key])).slice(0,14);
+    return `<div><h3 style="font-size:15px;margin:0 0 8px">${esc(key)} loadings</h3>${rows.map(r => centeredBar(r.attribute, r[key], 1)).join('')}</div>`;
+  };
+  corr.innerHTML = `<div class="load-grid">${factorBlock('Brand strength / trust-value')}${factorBlock('Contemporary / premium')}</div>`;
+}
+function renderProfiles(){
+  profiles.innerHTML = state.data.clusters.map(c => `
+    <div class="cluster-profile" style="border-top-color:${c.color}">
+      <h3>${esc(c.label)}</h3>
+      <p>${esc(c.description)}</p>
+      <div class="mini"><b>${c.n}</b> brands · Brand Asset <b>${fmt(c.means['Brand_Asset'],0)}</b> · share <b>${fmt(c.means['Mkt.Share'],0)}</b></div>
+      ${state.data.featuredAttributes.map(a => pctBar(a, c.means[a], 35)).join('')}
+      <div class="mini">Examples: ${c.topBrands.map(esc).join(', ')}</div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
