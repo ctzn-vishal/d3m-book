@@ -181,6 +181,7 @@ export const book: Book = {
             { slug: 'ch36-unsupervised-segmentation', number: '16.1', title: 'Clustering for Segmentation', status: 'published' },
             { slug: 'ch37-pca-perceptual-maps', number: '16.2', title: 'PCA, Factor Analysis, and Perceptual Maps', status: 'published' },
             { slug: 'ch37b-tsne-umap', number: '16.3', title: 'Nonlinear Maps: t-SNE and UMAP', status: 'published' },
+            { slug: 'lottery-zip-psychographics-case', number: '16.4', title: 'Case Study: Lottery ZIP Psychographics', status: 'published' },
           ],
         },
         {

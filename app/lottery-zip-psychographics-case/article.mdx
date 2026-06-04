@@ -1,0 +1,295 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  LotteryCaseOverview,
+  LotteryControlledAssociations,
+  LotteryDemographicGradients,
+  LotteryInteractionGrid,
+  LotteryPcaMap,
+  LotterySegmentProfiles,
+} from '@/components/Book/part4/LotteryStateCaseStudy';
+import lotteryRaw from './data/lottery-state-case.json';
+
+export const lottery = lotteryRaw;
+
+export const activeShare = lottery.metadata.activeRows / lottery.metadata.sourceRows;
+export const top10Share = lottery.salesConcentration.rows.find(row => row.label === 'Top 10% of ZIPs')?.salesShare;
+export const top20Share = lottery.salesConcentration.rows.find(row => row.label === 'Top 20% of ZIPs')?.salesShare;
+export const nycSalesShare = lottery.salesConcentration.regionSalesShare.find(row => row.label === 'NYC')?.share;
+export const urbanSegment = lottery.segments.find(segment => segment.id === 'urban_daily');
+export const quickdrawSegment = lottery.segments.find(segment => segment.id === 'quickdraw_venues');
+export const checkoutSegment = lottery.segments.find(segment => segment.id === 'checkout_scratch');
+export const mixedSegment = lottery.segments.find(segment => segment.id === 'mixed_retail');
+export const incomeQ1 = lottery.groups.incomeQuartile[0];
+export const incomeQ4 = lottery.groups.incomeQuartile[3];
+export const hispanicQ1 = lottery.groups.hispanicQuartile[0];
+export const hispanicQ4 = lottery.groups.hispanicQuartile[3];
+export const highPopHighHispanic = lottery.groups.populationHispanicInteraction.find(
+  row => row.population === 'High population' && row.hispanic === 'Higher Hispanic share'
+);
+export const lowPopLowHispanic = lottery.groups.populationHispanicInteraction.find(
+  row => row.population === 'Low population' && row.hispanic === 'Lower Hispanic share'
+);
+
+export const definitionRows = [
+  {
+    item: 'Unit',
+    definition: 'ZIP code cross-section',
+    note: `${lottery.metadata.sourceRows.toLocaleString()} source ZIP rows; ${lottery.metadata.activeRows.toLocaleString()} active rows after filtering zero/thin observations.`,
+  },
+  {
+    item: 'Behavior features',
+    definition: 'Product mix, channel context, timing, entropy, habit, retailer density, and log intensity',
+    note: `${lottery.metadata.behaviorFeatureCount} standardized features enter PCA and k-means.`,
+  },
+  {
+    item: 'Demographics',
+    definition: 'Income, poverty, college share, Black share, Hispanic share, and population',
+    note: 'Used only after fitting the unsupervised model, so demographics explain the segments rather than define them.',
+  },
+  {
+    item: 'Interpretation',
+    definition: 'Descriptive ecological analysis',
+    note: 'The row is a neighborhood-like ZIP aggregate. The article makes no individual-level or causal claim.',
+  },
+];
+
+export const segmentRows = lottery.segments.map(segment => ({
+  segment: segment.label,
+  zips: segment.zips,
+  sales: segment.salesPerCapita.toFixed(1),
+  instant: `${(segment.instantShare * 100).toFixed(0)}%`,
+  daily: `${(segment.dailyShare * 100).toFixed(0)}%`,
+  quickdraw: `${(segment.quickdrawShare * 100).toFixed(0)}%`,
+  habit: segment.habitIndex.toFixed(1),
+}));
+
+export const robustnessRows = [
+  {
+    check: 'Active-ZIP filter',
+    result: `${lottery.metadata.excludedRows} rows excluded from the main model`,
+    interpretation: 'Zero sales, zero retailers, or very small populations would otherwise form a technical "inactive" cluster rather than a sociological segment.',
+  },
+  {
+    check: 'Demographic holdout from model fit',
+    result: 'PCA and k-means use behavior and access features only',
+    interpretation: 'Race, ethnicity, income, poverty, education, and population are profiling variables, not segmentation inputs.',
+  },
+  {
+    check: 'k sensitivity',
+    result: lottery.clusterDiagnostics.choice,
+    interpretation: 'The main story survives as four broad routines; additional clusters mostly subdivide scratch/check-out ZIPs.',
+  },
+  {
+    check: 'Controlled associations',
+    result: 'Region, population, income, poverty, education, race/ethnicity, and retailer density entered the descriptive adjustment',
+    interpretation: 'The adjustment reduces but does not erase the dense daily-number pattern; it still does not identify causal mechanisms.',
+  },
+];
+
+<DropCap>
+
+Lottery data is a small but revealing example of what unsupervised learning can and cannot do. A ZIP code has no psychology in the individual sense. It has retailers, commuting patterns, neighborhood routines, product availability, demographic composition, and many players whose behavior is aggregated into one row. The task is not to infer who buys lottery tickets or why a person plays. The task is to ask whether **neighborhood-level lottery portfolios differ in stable, interpretable ways**.
+
+</DropCap>
+
+This case study uses a baseline ZIP-level file derived from public NY Lottery data and joined to demographic measures. The original time-window metadata is unavailable, so the `pre_` fields are treated as a baseline cross-section. The analysis is intentionally non-causal: PCA and k-means are fit on lottery behavior and retailer-access variables, then the resulting scores and segments are profiled by income, poverty, education, race/ethnicity, population, and region.
+
+The strongest finding is not that "poor neighborhoods play the lottery." That story is too simple for this file. The more interesting pattern is that **different kinds of neighborhoods play different product portfolios**. Dense ZIPs, especially in NYC and downstate, are more daily-number and habit-index oriented. Small upstate ZIPs are more likely to split into routine checkout scratch corridors or specialized Quick Draw venue ZIPs. Higher-income ZIPs do not disappear from the lottery map; they shift toward jackpot-style portfolios and lower retailer density.
+
+---
+
+## The Research Question
+
+> What neighborhood-level lottery routines can be recovered from ZIP-level behavior, and how do those routines interact with local demography?
+
+That wording is deliberately ecological. The data supports statements about ZIPs, not individuals. A high-Hispanic-share ZIP with high Daily Numbers share does not prove that Hispanic residents buy Daily Numbers. It says that ZIP-level demographic composition, urban density, retail ecology, and product mix move together in the cross-section.
+
+<Callout variant="finding" title="Main result">
+  Lottery heterogeneity is primarily a product-mix and retail-context story. Per-capita intensity is noisy and geographically concentrated, but the most interpretable structure is the split between dense daily-number routines, mixed retail portfolios, venue Quick Draw ZIPs, and checkout scratch corridors.
+</Callout>
+
+---
+
+## Scope, Measures, and Modeling Contract
+
+The source file contains {lottery.metadata.sourceRows.toLocaleString()} ZIP rows and {lottery.metadata.columns} columns. The main model uses {lottery.metadata.activeRows.toLocaleString()} active ZIPs, or {(activeShare * 100).toFixed(1)}% of the source rows, after excluding rows with no recorded sales, no retailers, or population below 100. This exclusion is not a claim that the omitted ZIPs do not matter; it prevents inactive or unstable rows from becoming an artificial cluster.
+
+<DataTable
+  caption="Table 1. The lottery psychographics case is a descriptive ZIP-level analysis; demographics are used for interpretation, not model fitting."
+  columns={[
+    { key: 'item', label: 'Item', align: 'left' },
+    { key: 'definition', label: 'Definition', align: 'left' },
+    { key: 'note', label: 'Analytical implication', align: 'left' },
+  ]}
+  rows={definitionRows}
+/>
+
+The feature set includes product shares (instant scratch, Quick Draw, Daily Numbers, jackpot), channel context (bar, convenience, grocery, chain, gas, and related contexts), temporal structure, entropy/concentration indices, add-on behavior, retailer density, and log sales intensity. The demographic fields are held out of the unsupervised fit. They enter only after the clusters and PCA scores exist.
+
+---
+
+## Sales Are Concentrated, but Concentration Is Not the Whole Story
+
+The recorded baseline volume is highly concentrated. The top 10% of active ZIPs account for {(top10Share * 100).toFixed(1)}% of observed lottery volume, and the top 20% account for {(top20Share * 100).toFixed(1)}%. NYC alone accounts for {(nycSalesShare * 100).toFixed(1)}% of observed volume while representing a much smaller share of active ZIP rows.
+
+<Figure width="page-outset" caption="Figure 1. Statewide lottery baseline. The left panel shows concentration of observed lottery volume; the right panel shows that NYC and the downstate suburbs carry most recorded volume, even though the active ZIP rows cover the entire state.">
+  <div className="not-prose">
+    <LotteryCaseOverview data={lottery} />
+  </div>
+</Figure>
+
+This concentration has two implications. First, raw volume is not a neutral measure of neighborhood propensity because it absorbs population, commuting, retailer count, and destination retail. Second, a good unsupervised case should not stop at raw sales. It should ask which ZIPs have similar portfolios after standardizing behavior and access.
+
+<Pitfall title="Confusing volume with propensity">
+High total sales often mean many people, many retailers, or a destination retail corridor. To talk about neighborhood routines, inspect product mix, retailer context, and per-resident intensity alongside raw volume.
+</Pitfall>
+
+---
+
+## PCA Finds a Product-Portfolio Space, Not a Moral Ranking
+
+The first three principal components explain {(lottery.pca.explainedVariance[2].cumulative * 100).toFixed(1)}% of standardized behavioral variance. That is enough to make a useful map, not enough to pretend the map is the whole data. PC1 contrasts broad, high-entropy daily-number routines against concentrated rapid-resolution or venue-style play. PC2 separates checkout scratch retail from social Quick Draw venues. PC3, not plotted here, is largely an add-on and jackpot-sophistication axis.
+
+<Figure width="page-outset" caption="Figure 2. PCA score space for active ZIPs. The first axis separates broad daily-number routines from concentrated rapid-resolution or venue play; the second separates checkout scratch retail from social Quick Draw contexts.">
+  <div className="not-prose">
+    <LotteryPcaMap data={lottery} />
+  </div>
+</Figure>
+
+The PCA map is useful because it makes a negative result visible: there is no single "lottery intensity" line. Instead, ZIPs vary along several behavioral dimensions. A ZIP can be high in per-resident sales because it is dense and daily-number oriented, because it is a retail destination, or because it has a small population denominator. These are different sociological objects.
+
+---
+
+## Four ZIP Routines Are More Useful Than One Statewide Average
+
+K-means with k=4 gives the smallest operationally readable segmentation: {urbanSegment.zips} dense daily-number ZIPs, {mixedSegment.zips} mixed retail ZIPs, {quickdrawSegment.zips} Quick Draw venue ZIPs, and {checkoutSegment.zips} checkout scratch ZIPs. The silhouette scores are modest, which is typical for continuous social data; the point is not to discover natural species, but to create a stable lens for interpretation.
+
+<Figure width="page-outset" caption="Figure 3. Segment profiles. Each segment is named after its behavioral profile, not after its demographic composition. The demographic rows at the bottom are post-hoc profiles.">
+  <div className="not-prose">
+    <LotterySegmentProfiles data={lottery} />
+  </div>
+</Figure>
+
+<DataTable
+  caption="Table 2. The four segments differ most sharply in product mix and retail context: dense daily-number routines, mixed portfolios, Quick Draw venues, and checkout scratch corridors."
+  columns={[
+    { key: 'segment', label: 'Segment', align: 'left' },
+    { key: 'zips', label: 'ZIPs' },
+    { key: 'sales', label: 'Sales/resident' },
+    { key: 'instant', label: 'Instant' },
+    { key: 'daily', label: 'Daily' },
+    { key: 'quickdraw', label: 'Quick Draw' },
+    { key: 'habit', label: 'Habit' },
+  ]}
+  rows={segmentRows}
+/>
+
+The segment labels are analytical shorthand:
+
+1.  **Dense Daily-Number Routines.** These ZIPs are large, heavily downstate, and show high Daily Numbers share, high portfolio entropy, and high habit index. They look less like occasional jackpot play and more like repeated low-denomination routines embedded in dense retail life.
+2.  **Mixed Retail Portfolios.** This is the broad middle of the state: instant scratch tickets are high, Quick Draw is present but not dominant, and the product portfolio is balanced enough to avoid a single-channel story.
+3.  **Quick Draw Venue ZIPs.** These ZIPs are small and specialized. Median Quick Draw share is {(quickdrawSegment.quickdrawShare * 100).toFixed(1)}%, with bar/social context defining the segment. This is less a neighborhood deprivation story than a venue ecology story.
+4.  **Checkout Scratch Corridors.** These are small-population, routine checkout ZIPs where instant tickets and convenience context dominate. They are behaviorally regular but not high in habit index the way dense daily-number ZIPs are.
+
+---
+
+## Demography Predicts Product Mix More Than Simple Intensity
+
+The most important demographic result is a distinction between **intensity** and **portfolio**. Median sales per resident is surprisingly flat across income quartiles: {incomeQ1.salesPerCapita.toFixed(2)} in the lowest-income quartile and {incomeQ4.salesPerCapita.toFixed(2)} in the highest-income quartile. But product mix changes sharply. Higher-income ZIPs have higher median jackpot share ({(incomeQ4.jackpotShare * 100).toFixed(1)}% versus {(incomeQ1.jackpotShare * 100).toFixed(1)}%) and higher portfolio entropy.
+
+<Figure width="page-outset" caption="Figure 4. Demographic gradients. Income is more visible in jackpot and portfolio mix than in simple per-resident intensity; race/ethnicity composition is more visible in Daily Numbers and habit-index gradients.">
+  <div className="not-prose">
+    <LotteryDemographicGradients data={lottery} />
+  </div>
+</Figure>
+
+The racial/ethnic composition gradients are stronger, but they require more caution. ZIPs in the highest Hispanic-share quartile have median Daily Numbers share of {(hispanicQ4.dailyShare * 100).toFixed(1)}%, compared with {(hispanicQ1.dailyShare * 100).toFixed(1)}% in the lowest quartile. Their median habit index is {hispanicQ4.habitIndex.toFixed(1)}, compared with {hispanicQ1.habitIndex.toFixed(1)}. The same broad pattern appears for high-Black-share ZIPs. This is not evidence of individual preference by race or ethnicity. It is evidence that ZIP-level race/ethnicity, density, retailer ecology, and daily-number product routines are spatially entangled in New York.
+
+<Pitfall title="Ecological inference">
+The data row is a ZIP, not a person. A demographic association at ZIP level can arise from retailer placement, commuting, store format, density, language-market retail, neighborhood age structure, or many other mechanisms. Do not turn these ZIP-level correlations into individual claims.
+</Pitfall>
+
+---
+
+## The Daily-Number Pattern Is an Urban Interaction
+
+The clearest sociological interaction is between density and demographic composition. Low-population, low-Hispanic-share ZIPs have median Daily Numbers share of {(lowPopLowHispanic.dailyShare * 100).toFixed(1)}% and habit index {lowPopLowHispanic.habitIndex.toFixed(1)}. High-population, high-Hispanic-share ZIPs have median Daily Numbers share of {(highPopHighHispanic.dailyShare * 100).toFixed(1)}% and habit index {highPopHighHispanic.habitIndex.toFixed(1)}.
+
+<Figure width="page-outset" caption="Figure 5. Population and Hispanic-share interaction. The daily-number gradient is not simply an ethnic-composition gradient; it steepens in high-population ZIPs, where retailer density, foot traffic, and repeated routines are more plausible mechanisms.">
+  <div className="not-prose">
+    <LotteryInteractionGrid data={lottery} />
+  </div>
+</Figure>
+
+This interaction is the article's most sociologically interesting result. It suggests a neighborhood routine rather than a single psychological preference. Daily-number play seems to live where dense retail circulation, repeated local transactions, and demographic composition coincide. That reading is still descriptive. It turns the result into a set of hypotheses: language-market retail? cash-oriented checkout routines? age structure? commuting nodes? neighborhood lottery advertising? Those mechanisms are not in this file, but the unsupervised analysis tells us where to look.
+
+---
+
+## Controlled Checks Preserve the Main Pattern but Do Not Make It Causal
+
+To check whether the raw gradients were only proxies for region or population, I fit descriptive ridge models with standardized predictors: population, income, poverty, college share, Black share, Hispanic share, retailer density, and region indicators. These are not causal regressions. They are robustness checks against the easiest alternative explanation.
+
+<Figure width="page-outset" caption="Figure 6. Controlled descriptive associations. Region and population explain a large part of product mix, but the dense daily-number and habit-index patterns remain aligned with ZIP demographic composition after simple controls.">
+  <div className="not-prose">
+    <LotteryControlledAssociations data={lottery} />
+  </div>
+</Figure>
+
+The adjusted models reinforce three claims:
+
+1.  **Daily Numbers are spatially structured.** The Daily Numbers model has high descriptive fit (R2 0.73). NYC, Black share, Hispanic share, poverty, and income all remain positive after controls. That is a pattern to explain, not a causal estimate.
+2.  **Habit index is even more structured.** The habit-index model has R2 0.85, with NYC, Black share, population, downstate suburban location, and Hispanic share among the largest positive associations.
+3.  **Per-resident sales is more about access and size.** Log sales per resident loads most strongly on retailer density and population, while region effects distinguish downstate and upstate patterns. Income is not the central story for intensity.
+
+---
+
+## A Sociological Reading: Routines, Retail Ecology, and Product Form
+
+The lottery portfolio is a social object because games differ in how they fit everyday life. Instant scratch tickets are immediate and checkout-compatible. Quick Draw is venue-compatible. Daily Numbers are routine-compatible: repeated, local, low-denomination, and easy to fold into a daily retail circuit. Jackpot games are event-compatible: they attach to large draws, add-ons, and occasional upside.
+
+That frame explains why the demographic findings are not reducible to poverty. Poverty is present in the file, but it is not the master variable. Higher-income ZIPs show more jackpot share and portfolio entropy. Dense minority ZIPs show more Daily Numbers and habit. Small upstate ZIPs split between convenience scratch and venue Quick Draw. These patterns are about **how lottery products are socially and commercially embedded**, not simply how much money a ZIP has.
+
+<Callout variant="finding" title="Most useful inference">
+  The right sociological hypothesis is not "who plays more." It is "which local retail routines make which lottery products available, normal, and repeatable." The data can locate those routines; it cannot identify the individual motives behind them.
+</Callout>
+
+---
+
+## Robustness, Uncertainty, and What Could Change the Story
+
+<DataTable
+  caption="Table 3. The case is rigorous because the main caveats are part of the result: active-row filtering, demographic holdout, k sensitivity, and descriptive controls all shape the interpretation."
+  columns={[
+    { key: 'check', label: 'Check', align: 'left' },
+    { key: 'result', label: 'Result', align: 'left' },
+    { key: 'interpretation', label: 'Interpretation', align: 'left' },
+  ]}
+  rows={robustnessRows}
+/>
+
+Four limitations matter most.
+
+First, the file lacks the original calendar metadata, so the analysis treats the `pre_` variables as a baseline period without dating the period. Second, ZIPs are imperfect neighborhoods: commercial corridors, commuters, tourists, and destination retail can all enter the numerator without belonging to the resident denominator. Third, demographic variables are aggregate shares. They cannot be mapped to individual players. Fourth, the channel-context shares may overlap; a ZIP's retail context is not a mutually exclusive set of store types.
+
+The next data improvements are clear:
+
+1.  Add exact time-window metadata and repeat the analysis across time.
+2.  Join ZIPs to county, borough, urbanicity, age, transit, and retail-establishment measures.
+3.  Split resident denominators from retail-destination denominators where possible.
+4.  Test whether the segment assignments remain stable under hierarchical clustering, Gower distance, or a model that excludes intensity variables entirely.
+5.  Use the unsupervised segments to generate hypotheses for causal work, not to make policy claims directly.
+
+---
+
+<Takeaway label="Case study bottom line">
+
+The NY Lottery ZIP file is simple, but it is analytically rich because it separates three ideas that are often collapsed: volume, product mix, and neighborhood routine. The most interesting non-causal finding is that dense daily-number routines, venue Quick Draw, mixed retail portfolios, and checkout scratch corridors are distinct neighborhood-level patterns. Demographics help interpret those patterns, but they do not license individual or causal claims.
+
+Unsupervised learning earns its place here by turning a flat ZIP table into a sociological map of local retail routines. The map is not the territory, but it tells us where a serious investigation should start.
+
+</Takeaway>
