@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GDELT Media Agenda Lab</title>
+<style>
+:root {
+  --bg: #f7f6f2;
+  --panel: #ffffff;
+  --panel-soft: #eef3f1;
+  --ink: #182126;
+  --muted: #5f6d72;
+  --soft: #8b979b;
+  --rule: #dce3e0;
+  --rule-strong: #9ba9a6;
+  --teal: #187c78;
+  --teal-soft: #dcefed;
+  --amber: #c67b2f;
+  --amber-soft: #f4e5d4;
+  --blue: #315d8f;
+  --rose: #b6505a;
+  --green: #537d4d;
+  --violet: #7361a6;
+  --shadow: 0 18px 42px rgba(24, 33, 38, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.74), rgba(247, 246, 242, 0.92)),
+    repeating-linear-gradient(90deg, rgba(24, 33, 38, 0.028) 0, rgba(24, 33, 38, 0.028) 1px, transparent 1px, transparent 96px);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+.page {
+  width: min(1500px, 100%);
+  margin: 0 auto;
+  padding: 28px 32px 48px;
+}
+
+.masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 440px);
+  gap: 28px;
+  align-items: end;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.title-block h1 {
+  max-width: 900px;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 5.6vw, 5.9rem);
+  line-height: 0.91;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.title-block p {
+  max-width: 760px;
+  margin: 18px 0 0;
+  color: #405157;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+}
+
+.source-card {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  border-radius: 8px;
+}
+
+.source-card h2,
+.panel h2,
+.panel h3,
+.query-card h2 {
+  margin: 0;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #334348;
+}
+
+.source-card p {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.source-card a,
+.footer a {
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.source-card a:hover,
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.query-card {
+  margin-top: 20px;
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+
+.query-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) 170px 156px auto auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field label,
+.micro-label,
+.chip-label,
+.status-label,
+.kpi-label,
+.axis-label,
+.legend,
+.footer strong {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+input,
+select {
+  min-height: 40px;
+  width: 100%;
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+  padding: 0 12px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(24, 124, 120, 0.14);
+}
+
+.button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--ink);
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  padding: 0 14px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.button.secondary {
+  background: #fff;
+  color: var(--ink);
+  border-color: var(--rule-strong);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.chips,
+.examples,
+.station-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chips {
+  align-items: center;
+  margin-top: 14px;
+}
+
+.chip,
+.station-pill {
+  border: 1px solid var(--rule);
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 10px;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chip:hover,
+.station-pill:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.station-pill input {
+  width: auto;
+  min-height: auto;
+  margin: 0 6px 0 0;
+  accent-color: var(--teal);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 0;
+  border-bottom: 1px solid var(--rule-strong);
+  overflow-x: auto;
+}
+
+.tab {
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  padding: 12px 12px 10px;
+  color: var(--muted);
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tab.active {
+  color: var(--ink);
+  border-bottom-color: var(--teal);
+}
+
+.workspace {
+  margin-top: 18px;
+}
+
+.panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+  gap: 18px;
+}
+
+.panel,
+.kpi,
+.evidence-card,
+.status-rail {
+  background: var(--panel);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.panel {
+  padding: 16px;
+  min-width: 0;
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.panel-title p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.kpi {
+  padding: 14px;
+}
+
+.kpi-value {
+  margin-top: 8px;
+  font-size: clamp(1.45rem, 2.4vw, 2.25rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.kpi-note {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.chart-box {
+  position: relative;
+  min-height: 280px;
+  overflow: hidden;
+}
+
+.chart-box svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.axis text {
+  fill: var(--soft);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.grid-line {
+  stroke: #e6ece9;
+  stroke-width: 1;
+}
+
+.axis-line {
+  stroke: #c7d0cd;
+  stroke-width: 1;
+}
+
+.line-path {
+  fill: none;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bar-label {
+  fill: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.bar-value {
+  fill: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.legend-item {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.side-stack {
+  display: grid;
+  gap: 18px;
+}
+
+.status-rail {
+  padding: 14px;
+}
+
+.status-rail strong {
+  display: block;
+  margin-top: 6px;
+}
+
+.status-text {
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: var(--teal-soft);
+  color: #0d5c58;
+  font-weight: 900;
+  font-size: 0.8rem;
+}
+
+.badge.demo {
+  background: var(--amber-soft);
+  color: #87511f;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.split-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.mini-button {
+  border: 1px solid var(--rule);
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 10px;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.mini-button.active {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 10px;
+}
+
+.evidence-card {
+  padding: 13px;
+  box-shadow: none;
+}
+
+.evidence-card a {
+  color: var(--ink);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.evidence-card a:hover {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+.evidence-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.evidence-summary {
+  margin: 8px 0 0;
+  color: #4c5a5f;
+}
+
+.word-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: center;
+  min-height: 160px;
+  padding-top: 6px;
+}
+
+.word-cloud span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 700;
+  color: var(--teal);
+}
+
+.word-cloud span:nth-child(3n) { color: var(--amber); }
+.word-cloud span:nth-child(4n) { color: var(--blue); }
+.word-cloud span:nth-child(5n) { color: var(--rose); }
+
+.tv-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 12px;
+  margin: 12px 0 4px;
+  align-items: end;
+}
+
+.empty-state {
+  min-height: 160px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--muted);
+  background: var(--panel-soft);
+  border: 1px dashed var(--rule-strong);
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.footer {
+  margin-top: 24px;
+  border-top: 1px solid var(--rule-strong);
+  padding-top: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);
+  gap: 22px;
+  color: var(--muted);
+}
+
+.footer p {
+  margin: 7px 0 0;
+}
+
+.code-line {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 0.82rem;
+  background: #eef3f1;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 10px;
+  overflow: auto;
+  white-space: nowrap;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 1080px) {
+  .masthead,
+  .panel-grid,
+  .footer {
+    grid-template-columns: 1fr;
+  }
+
+  .query-grid {
+    grid-template-columns: minmax(240px, 1fr) 150px 150px;
+  }
+
+  .query-grid .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 18px 14px 34px;
+  }
+
+  .masthead {
+    gap: 16px;
+  }
+
+  .query-grid,
+  .tv-controls,
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    padding: 13px;
+  }
+
+  .panel-header {
+    display: grid;
+  }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div class="title-block">
+      <h1>GDELT Media Agenda Lab</h1>
+      <p>Search the global news stream and television transcripts as a live classroom lab for agenda setting, attention spikes, tone, and evidence-driven media analysis.</p>
+    </div>
+    <aside class="source-card">
+      <h2>Live Source</h2>
+      <p>Uses the public <a href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/" target="_blank" rel="noreferrer">GDELT DOC 2.0 API</a> and <a href="https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/" target="_blank" rel="noreferrer">GDELT TV 2.0 API</a>. The page throttles calls to respect public API limits and falls back to clearly labeled demo data when the live endpoint is unavailable.</p>
+    </aside>
+  </header>
+
+  <section class="query-card" aria-labelledby="queryTitle">
+    <h2 id="queryTitle">Search Console</h2>
+    <form id="searchForm" class="query-grid">
+      <div class="field">
+        <label for="queryInput">Topic or GDELT query</label>
+        <input id="queryInput" name="query" type="text" value="artificial intelligence" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="lensSelect">Lens</label>
+        <select id="lensSelect" name="lens">
+          <option value="global">Global news</option>
+          <option value="tv">Television news</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="timespanSelect">Window</label>
+        <select id="timespanSelect" name="timespan">
+          <option value="1week">1 week</option>
+          <option value="1month" selected>1 month</option>
+          <option value="3months">3 months</option>
+        </select>
+      </div>
+      <button id="demoButton" type="button" class="button secondary">Demo</button>
+      <button id="liveButton" type="submit" class="button">Live Search</button>
+    </form>
+    <div class="chips" aria-label="Query helpers">
+      <span class="chip-label">Helpers</span>
+      <button class="chip" type="button" data-helper='"artificial intelligence"'>exact phrase</button>
+      <button class="chip" type="button" data-helper='(tariffs OR trade)'>OR block</button>
+      <button class="chip" type="button" data-helper='sourcecountry:india'>source country</button>
+      <button class="chip" type="button" data-helper='sourcelang:spanish'>language</button>
+      <button class="chip" type="button" data-helper='tone<-5'>negative tone</button>
+      <button class="chip" type="button" data-helper='theme:CLIMATE_CHANGE'>GKG theme</button>
+    </div>
+    <div class="chips examples" aria-label="Example searches">
+      <span class="chip-label">Examples</span>
+      <button class="chip" type="button" data-example="artificial intelligence">artificial intelligence</button>
+      <button class="chip" type="button" data-example="tariffs">tariffs</button>
+      <button class="chip" type="button" data-example="climate change">climate change</button>
+      <button class="chip" type="button" data-example="immigration">immigration</button>
+      <button class="chip" type="button" data-example="Ukraine">Ukraine</button>
+      <button class="chip" type="button" data-example="Tesla">Tesla</button>
+    </div>
+  </section>
+
+  <nav class="tabs" aria-label="Dashboard lenses">
+    <button class="tab active" id="globalTab" type="button" data-tab="global">Global News</button>
+    <button class="tab" id="tvTab" type="button" data-tab="tv">Television News</button>
+    <button class="tab" id="methodTab" type="button" data-tab="method">Method Notes</button>
+  </nav>
+
+  <section id="globalPanel" class="workspace">
+    <div class="kpis" id="globalKpis"></div>
+    <div class="panel-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Attention Timeline</h2>
+            <p>Share of monitored online coverage matching the query. Live DOC data reports normalized coverage share when available.</p>
+          </div>
+          <span id="globalBadge" class="badge demo"><span class="dot"></span> Demo data</span>
+        </div>
+        <div id="globalTimeline" class="chart-box"></div>
+        <div id="globalLegend" class="legend-row"></div>
+      </div>
+      <aside class="side-stack">
+        <div class="status-rail">
+          <span class="status-label">API Status</span>
+          <strong id="apiStatusTitle">Ready</strong>
+          <div id="apiStatusText" class="status-text">Demo data is loaded. Use Live Search to query GDELT.</div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2>Tone Distribution</h2>
+              <p>Useful because an average tone can hide polarized coverage.</p>
+            </div>
+          </div>
+          <div id="toneChart" class="chart-box"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="panel-grid" style="margin-top:18px">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Where The Agenda Is Loudest</h2>
+            <p>In live mode this uses source-country or language fields when GDELT returns them; otherwise it shows the demo lens.</p>
+          </div>
+          <div class="split-controls">
+            <button class="mini-button active" type="button" data-global-breakdown="source">Source countries</button>
+            <button class="mini-button" type="button" data-global-breakdown="language">Languages</button>
+          </div>
+        </div>
+        <div id="globalBreakdown" class="chart-box"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Evidence Cards</h2>
+            <p>Recent or representative stories used to interpret spikes.</p>
+          </div>
+        </div>
+        <div id="globalEvidence" class="evidence-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tvPanel" class="workspace hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">
+          <h2>Television Query Setup</h2>
+          <p>GDELT TV searches station transcript clips. Normalized percentages are best for comparing outlets with different monitored airtime.</p>
+        </div>
+        <span id="tvBadge" class="badge demo"><span class="dot"></span> Demo data</span>
+      </div>
+      <div class="tv-controls">
+        <div class="field">
+          <label>Stations</label>
+          <div class="station-list" id="stationList"></div>
+        </div>
+        <div class="field">
+          <label for="tvWindowSelect">TV date anchor</label>
+          <select id="tvWindowSelect">
+            <option value="">2009-present</option>
+            <option value="2017">Jan 2017-present</option>
+            <option value="2022">Jan 2022-present</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpis" id="tvKpis"></div>
+    <div class="panel-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Normalized Airtime Timeline</h2>
+            <p>Percent of monitored clips on each station matching the query.</p>
+          </div>
+        </div>
+        <div id="tvTimeline" class="chart-box"></div>
+        <div id="tvLegend" class="legend-row"></div>
+      </div>
+      <aside class="side-stack">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2>Station Ranking</h2>
+              <p>Relative attention by station.</p>
+            </div>
+          </div>
+          <div id="stationChart" class="chart-box"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <h2>Transcript Terms</h2>
+              <p>Top words from matching clips.</p>
+            </div>
+          </div>
+          <div id="wordCloud" class="word-cloud"></div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="panel-grid" style="margin-top:18px">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Top Shows</h2>
+            <p>Programs where the query appears most often.</p>
+          </div>
+        </div>
+        <div id="showChart" class="chart-box"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>TV Evidence</h2>
+            <p>Demo examples explain how to interpret clip-gallery results when a live response is available.</p>
+          </div>
+        </div>
+        <div id="tvEvidence" class="evidence-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="methodPanel" class="workspace hidden">
+    <div class="panel-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Why This Makes A Good Classroom Lab</h2>
+            <p>Students can move from a raw keyword to a defensible claim about media attention.</p>
+          </div>
+        </div>
+        <div class="evidence-list">
+          <div class="evidence-card">
+            <a href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/" target="_blank" rel="noreferrer">1. Attention is normalized, not just counted</a>
+            <p class="evidence-summary">DOC timeline volume reports coverage as a percent of the global monitored news stream, which makes time comparisons less naive than raw article counts.</p>
+          </div>
+          <div class="evidence-card">
+            <a href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/" target="_blank" rel="noreferrer">2. Tone should be treated as a distribution</a>
+            <p class="evidence-summary">The GDELT docs emphasize tone histograms because a single average can hide whether coverage is actually clustered, neutral, or polarized.</p>
+          </div>
+          <div class="evidence-card">
+            <a href="https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/" target="_blank" rel="noreferrer">3. TV comparisons need airtime normalization</a>
+            <p class="evidence-summary">The TV API recommends normalized clip percentages for comparing stations and periods, since monitored airtime and programming mix differ across stations.</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>API Query Pattern</h2>
+            <p>The page builds URLs from the current query and lens, then queues requests at least five seconds apart.</p>
+          </div>
+        </div>
+        <div class="code-line" id="urlPreview"></div>
+        <div style="height:12px"></div>
+        <div class="status-rail">
+          <span class="status-label">Interpretation Caveat</span>
+          <strong>Media attention is not public opinion</strong>
+          <div class="status-text">GDELT measures what monitored media says, where, when, and with what machine-coded tone. It should be interpreted as a media agenda signal, not a survey of what people believe.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div>
+      <strong>Sources</strong>
+      <p><a href="https://www.gdeltproject.org/" target="_blank" rel="noreferrer">The GDELT Project</a>, <a href="https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/" target="_blank" rel="noreferrer">DOC 2.0 API documentation</a>, and <a href="https://blog.gdeltproject.org/gdelt-2-0-television-api-debuts/" target="_blank" rel="noreferrer">TV 2.0 API documentation</a>. The newer <a href="https://docs.gdeltcloud.com/api-reference/v2" target="_blank" rel="noreferrer">GDELT Cloud v2 API</a> is cleaner for structured event dashboards but requires an API key, so this public gallery page uses the no-key public APIs.</p>
+    </div>
+    <div>
+      <strong>Live API Behavior</strong>
+      <p>The public endpoint can return empty responses or rate-limit bursts. This page makes requests sequentially, caches live results per query, and labels synthetic demo data whenever it is shown.</p>
+    </div>
+  </footer>
+</div>
+
+<script>
+const COLORS = {
+  teal: '#187c78',
+  amber: '#c67b2f',
+  blue: '#315d8f',
+  rose: '#b6505a',
+  green: '#537d4d',
+  violet: '#7361a6',
+  gray: '#76858a'
+};
+
+const STATIONS = [
+  { code: 'CNN', label: 'CNN', color: COLORS.green },
+  { code: 'FOXNEWS', label: 'FOX News', color: COLORS.rose },
+  { code: 'MSNBC', label: 'MSNBC', color: COLORS.blue },
+  { code: 'BBCNEWS', label: 'BBC News', color: COLORS.teal },
+  { code: 'BLOOMBERG', label: 'Bloomberg', color: COLORS.amber },
+  { code: 'ALJAZ', label: 'Al Jazeera', color: COLORS.violet }
+];
+
+const DEMO_CACHE = new Map();
+const LIVE_CACHE = new Map();
+
+const state = {
+  query: 'artificial intelligence',
+  lens: 'global',
+  timespan: '1month',
+  globalBreakdown: 'source',
+  selectedStations: ['CNN', 'FOXNEWS', 'MSNBC'],
+  tvWindow: '',
+  source: 'demo',
+  global: null,
+  tv: null,
+  lastFetchAt: 0
+};
+
+const els = {
+  queryInput: document.getElementById('queryInput'),
+  lensSelect: document.getElementById('lensSelect'),
+  timespanSelect: document.getElementById('timespanSelect'),
+  searchForm: document.getElementById('searchForm'),
+  demoButton: document.getElementById('demoButton'),
+  liveButton: document.getElementById('liveButton'),
+  globalPanel: document.getElementById('globalPanel'),
+  tvPanel: document.getElementById('tvPanel'),
+  methodPanel: document.getElementById('methodPanel'),
+  globalTab: document.getElementById('globalTab'),
+  tvTab: document.getElementById('tvTab'),
+  methodTab: document.getElementById('methodTab'),
+  globalKpis: document.getElementById('globalKpis'),
+  tvKpis: document.getElementById('tvKpis'),
+  globalTimeline: document.getElementById('globalTimeline'),
+  tvTimeline: document.getElementById('tvTimeline'),
+  toneChart: document.getElementById('toneChart'),
+  globalBreakdown: document.getElementById('globalBreakdown'),
+  stationChart: document.getElementById('stationChart'),
+  showChart: document.getElementById('showChart'),
+  wordCloud: document.getElementById('wordCloud'),
+  globalEvidence: document.getElementById('globalEvidence'),
+  tvEvidence: document.getElementById('tvEvidence'),
+  globalLegend: document.getElementById('globalLegend'),
+  tvLegend: document.getElementById('tvLegend'),
+  globalBadge: document.getElementById('globalBadge'),
+  tvBadge: document.getElementById('tvBadge'),
+  apiStatusTitle: document.getElementById('apiStatusTitle'),
+  apiStatusText: document.getElementById('apiStatusText'),
+  stationList: document.getElementById('stationList'),
+  tvWindowSelect: document.getElementById('tvWindowSelect'),
+  urlPreview: document.getElementById('urlPreview')
+};
+
+function hashText(text) {
+  let hash = 2166136261;
+  for (let i = 0; i < text.length; i += 1) {
+    hash ^= text.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededRandom(seed) {
+  let value = seed || 1;
+  return function next() {
+    value = Math.imul(value ^ value >>> 15, 1 | value);
+    value ^= value + Math.imul(value ^ value >>> 7, 61 | value);
+    return ((value ^ value >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function daysBack(count) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Array.from({ length: count }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(today.getDate() - (count - i - 1));
+    return d;
+  });
+}
+
+function makeSeries(query, names, count, scale) {
+  const seed = hashText(query + names.join('|') + count);
+  const rand = seededRandom(seed);
+  const dates = daysBack(count);
+  return names.map((name, seriesIndex) => {
+    const base = 0.18 + rand() * 0.42 + seriesIndex * 0.03;
+    const peakA = Math.floor(count * (0.24 + rand() * 0.22));
+    const peakB = Math.floor(count * (0.58 + rand() * 0.24));
+    const values = dates.map((date, i) => {
+      const wave = Math.sin((i / count) * Math.PI * 3 + seriesIndex) * 0.16;
+      const burstA = Math.exp(-Math.pow(i - peakA, 2) / (count * 0.9)) * (0.8 + rand());
+      const burstB = Math.exp(-Math.pow(i - peakB, 2) / (count * 1.3)) * (0.5 + rand() * 0.9);
+      const noise = (rand() - 0.5) * 0.12;
+      return {
+        date,
+        value: Math.max(0.02, (base + wave + burstA + burstB + noise) * scale)
+      };
+    });
+    return {
+      name,
+      color: [COLORS.teal, COLORS.amber, COLORS.blue, COLORS.rose, COLORS.green, COLORS.violet][seriesIndex % 6],
+      values
+    };
+  });
+}
+
+function createDemoData(query) {
+  const key = query.toLowerCase();
+  if (DEMO_CACHE.has(key)) return DEMO_CACHE.get(key);
+  const seed = hashText(query);
+  const rand = seededRandom(seed);
+  const globalSeries = makeSeries(query, ['Global coverage share'], 42, 0.9 + rand());
+  const countries = ['United States', 'United Kingdom', 'India', 'Germany', 'France', 'Canada', 'Brazil', 'Japan']
+    .map((name, i) => ({ name, value: Math.round((48 - i * 4 + rand() * 18) * 10) / 10, color: [COLORS.teal, COLORS.blue, COLORS.amber, COLORS.green, COLORS.rose, COLORS.violet, COLORS.gray, COLORS.teal][i] }));
+  const languages = ['English', 'Spanish', 'French', 'German', 'Arabic', 'Hindi', 'Portuguese', 'Japanese']
+    .map((name, i) => ({ name, value: Math.round((42 - i * 3.5 + rand() * 14) * 10) / 10, color: [COLORS.teal, COLORS.amber, COLORS.blue, COLORS.green, COLORS.rose, COLORS.violet, COLORS.gray, COLORS.teal][i] }));
+  const tone = Array.from({ length: 17 }, (_, i) => {
+    const bin = i - 8;
+    const center = (rand() - 0.5) * 2.6;
+    const height = Math.exp(-Math.pow(bin - center, 2) / 18) * 100 + rand() * 10;
+    return { bin, value: Math.round(height) };
+  });
+  const topicWords = keywordTerms(query);
+  const evidence = [
+    {
+      title: `Global coverage of ${query} rises after policy and market signals converge`,
+      url: 'https://www.gdeltproject.org/',
+      domain: 'Demo source',
+      country: 'United States',
+      language: 'English',
+      date: new Date().toISOString(),
+      summary: 'Synthetic evidence card showing how a live GDELT result would be used to interpret the largest attention spike.'
+    },
+    {
+      title: `Regional outlets frame ${query} around local costs, security, and public trust`,
+      url: 'https://www.gdeltproject.org/',
+      domain: 'Demo source',
+      country: 'India',
+      language: 'English',
+      date: new Date(Date.now() - 86400000 * 2).toISOString(),
+      summary: 'A second representative story highlights the difference between attention volume and narrative framing.'
+    },
+    {
+      title: `Analysts debate whether ${query} is a short news cycle or durable agenda shift`,
+      url: 'https://www.gdeltproject.org/',
+      domain: 'Demo source',
+      country: 'United Kingdom',
+      language: 'English',
+      date: new Date(Date.now() - 86400000 * 4).toISOString(),
+      summary: 'Students should inspect evidence near peaks rather than reading the timeline as a self-explanatory fact.'
+    }
+  ];
+  const tvSeries = makeSeries(query, STATIONS.filter(s => state.selectedStations.includes(s.code)).map(s => s.label), 36, 1.4);
+  tvSeries.forEach(series => {
+    const station = STATIONS.find(s => s.label === series.name);
+    if (station) series.color = station.color;
+  });
+  const stationRows = STATIONS.filter(s => state.selectedStations.includes(s.code)).map((s, i) => ({
+    name: s.label,
+    value: Math.round((7.8 - i * 0.9 + rand() * 2.7) * 10) / 10,
+    color: s.color
+  }));
+  const showRows = [
+    'Morning News', 'Prime Time', 'The Briefing', 'Market Close', 'World Report', 'Inside Politics', 'Evening Edition'
+  ].map((name, i) => ({
+    name,
+    value: Math.round((5.8 - i * 0.45 + rand() * 1.8) * 10) / 10,
+    color: [COLORS.blue, COLORS.rose, COLORS.green, COLORS.teal, COLORS.amber, COLORS.violet, COLORS.gray][i]
+  }));
+  const words = topicWords.map((word, i) => ({ text: word, value: 42 - i * 2 + Math.round(rand() * 10) }));
+  const result = {
+    global: { timeline: globalSeries, tone, countries, languages, evidence },
+    tv: {
+      timeline: tvSeries,
+      stations: stationRows,
+      shows: showRows,
+      words,
+      evidence: evidence.map(item => ({ ...item, domain: 'Demo TV clip', summary: 'Synthetic TV evidence card showing how a clip gallery would support the airtime chart.' }))
+    }
+  };
+  DEMO_CACHE.set(key, result);
+  return result;
+}
+
+function keywordTerms(query) {
+  const base = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const generic = ['policy', 'markets', 'risk', 'trust', 'regulation', 'security', 'growth', 'public', 'evidence', 'debate', 'industry', 'government', 'consumers', 'global', 'local'];
+  return [...new Set([...base, ...generic])].slice(0, 18);
+}
+
+function formatNumber(value, suffix) {
+  if (!Number.isFinite(value)) return '0';
+  const abs = Math.abs(value);
+  if (abs >= 1000) return `${(value / 1000).toFixed(1)}k${suffix || ''}`;
+  if (abs >= 10) return `${value.toFixed(1)}${suffix || ''}`;
+  return `${value.toFixed(2)}${suffix || ''}`;
+}
+
+function formatDate(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+}
+
+function maxInSeries(series) {
+  return Math.max(...series.flatMap(s => s.values.map(d => d.value)), 0);
+}
+
+function averageInSeries(series) {
+  const values = series.flatMap(s => s.values.map(d => d.value));
+  if (!values.length) return 0;
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function peakDate(series) {
+  let peak = null;
+  series.forEach(s => {
+    s.values.forEach(point => {
+      if (!peak || point.value > peak.value) peak = point;
+    });
+  });
+  return peak ? formatDate(peak.date) : 'n/a';
+}
+
+function toneAverage(tone) {
+  const total = tone.reduce((sum, row) => sum + row.value, 0);
+  if (!total) return 0;
+  return tone.reduce((sum, row) => sum + row.bin * row.value, 0) / total;
+}
+
+function setStatus(title, text, busy) {
+  els.apiStatusTitle.textContent = title;
+  els.apiStatusText.textContent = text;
+  els.liveButton.disabled = Boolean(busy);
+}
+
+function setBadge(element, source) {
+  element.className = source === 'live' ? 'badge' : 'badge demo';
+  element.innerHTML = `<span class="dot"></span> ${source === 'live' ? 'Live GDELT' : 'Demo data'}`;
+}
+
+function renderKpis(container, items) {
+  container.innerHTML = items.map(item => `
+    <div class="kpi">
+      <div class="kpi-label">${escapeHtml(item.label)}</div>
+      <div class="kpi-value">${escapeHtml(item.value)}</div>
+      <div class="kpi-note">${escapeHtml(item.note)}</div>
+    </div>
+  `).join('');
+}
+
+function renderLineChart(container, series, options = {}) {
+  if (!series || !series.length || !series.some(s => s.values && s.values.length)) {
+    container.innerHTML = '<div class="empty-state">No timeline data returned for this query.</div>';
+    return;
+  }
+  const width = 940;
+  const height = options.height || 310;
+  const margin = { top: 18, right: 18, bottom: 38, left: 54 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  const all = series.flatMap(s => s.values);
+  const minTime = Math.min(...all.map(d => d.date.getTime()));
+  const maxTime = Math.max(...all.map(d => d.date.getTime()));
+  const maxY = Math.max(...all.map(d => d.value), 1);
+  const yMax = maxY * 1.15;
+  const x = date => margin.left + ((date.getTime() - minTime) / Math.max(1, maxTime - minTime)) * plotW;
+  const y = value => margin.top + plotH - (value / yMax) * plotH;
+  const yTicks = [0, yMax * 0.25, yMax * 0.5, yMax * 0.75, yMax];
+  const xTicks = [new Date(minTime), new Date((minTime + maxTime) / 2), new Date(maxTime)];
+  const paths = series.map(s => {
+    const d = s.values.map((point, i) => `${i === 0 ? 'M' : 'L'} ${x(point.date).toFixed(2)} ${y(point.value).toFixed(2)}`).join(' ');
+    return `<path class="line-path" d="${d}" stroke="${s.color || COLORS.teal}"></path>`;
+  }).join('');
+  const latestLabels = series.map(s => {
+    const last = s.values[s.values.length - 1];
+    if (!last) return '';
+    return `<text x="${Math.min(width - 118, x(last.date) + 8)}" y="${y(last.value) + 4}" class="bar-value" fill="${s.color || COLORS.teal}">${escapeHtml(s.name)}</text>`;
+  }).join('');
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.label || 'Timeline chart')}">
+      <g>
+        ${yTicks.map(tick => `<line class="grid-line" x1="${margin.left}" x2="${width - margin.right}" y1="${y(tick)}" y2="${y(tick)}"></line>`).join('')}
+        <line class="axis-line" x1="${margin.left}" x2="${width - margin.right}" y1="${margin.top + plotH}" y2="${margin.top + plotH}"></line>
+        <line class="axis-line" x1="${margin.left}" x2="${margin.left}" y1="${margin.top}" y2="${margin.top + plotH}"></line>
+      </g>
+      <g class="axis">
+        ${yTicks.map(tick => `<text x="${margin.left - 10}" y="${y(tick) + 4}" text-anchor="end">${formatNumber(tick, options.unit || '')}</text>`).join('')}
+        ${xTicks.map(date => `<text x="${x(date)}" y="${height - 12}" text-anchor="middle">${formatDate(date)}</text>`).join('')}
+      </g>
+      ${paths}
+      ${latestLabels}
+    </svg>
+  `;
+}
+
+function renderLegend(container, series) {
+  container.innerHTML = (series || []).map(s => `
+    <span class="legend-item"><span class="legend-swatch" style="background:${s.color || COLORS.teal}"></span>${escapeHtml(s.name)}</span>
+  `).join('');
+}
+
+function renderHorizontalBars(container, rows, options = {}) {
+  if (!rows || !rows.length) {
+    container.innerHTML = '<div class="empty-state">No breakdown returned for this query.</div>';
+    return;
+  }
+  const width = 640;
+  const barH = 28;
+  const gap = 12;
+  const margin = { top: 16, right: 60, bottom: 18, left: options.left || 150 };
+  const height = margin.top + margin.bottom + rows.length * (barH + gap);
+  const max = Math.max(...rows.map(row => row.value), 1);
+  const plotW = width - margin.left - margin.right;
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.label || 'Bar chart')}">
+      ${rows.map((row, i) => {
+        const y = margin.top + i * (barH + gap);
+        const w = (row.value / max) * plotW;
+        return `
+          <text class="bar-label" x="${margin.left - 10}" y="${y + 18}" text-anchor="end">${escapeHtml(row.name)}</text>
+          <rect x="${margin.left}" y="${y}" width="${Math.max(2, w)}" height="${barH}" rx="5" fill="${row.color || COLORS.teal}"></rect>
+          <text class="bar-value" x="${margin.left + Math.max(2, w) + 8}" y="${y + 18}">${formatNumber(row.value, options.unit || '')}</text>
+        `;
+      }).join('')}
+    </svg>
+  `;
+}
+
+function renderToneChart(container, tone) {
+  if (!tone || !tone.length) {
+    container.innerHTML = '<div class="empty-state">No tone distribution returned for this query.</div>';
+    return;
+  }
+  const width = 500;
+  const height = 260;
+  const margin = { top: 16, right: 16, bottom: 36, left: 38 };
+  const plotW = width - margin.left - margin.right;
+  const plotH = height - margin.top - margin.bottom;
+  const max = Math.max(...tone.map(d => d.value), 1);
+  const barW = plotW / tone.length;
+  container.innerHTML = `
+    <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Tone distribution chart">
+      <line class="axis-line" x1="${margin.left}" x2="${width - margin.right}" y1="${margin.top + plotH}" y2="${margin.top + plotH}"></line>
+      <line class="grid-line" x1="${margin.left + plotW / 2}" x2="${margin.left + plotW / 2}" y1="${margin.top}" y2="${margin.top + plotH}"></line>
+      ${tone.map((d, i) => {
+        const h = (d.value / max) * plotH;
+        const x = margin.left + i * barW + 2;
+        const y = margin.top + plotH - h;
+        const color = d.bin < -1 ? COLORS.rose : d.bin > 1 ? COLORS.green : COLORS.gray;
+        return `<rect x="${x}" y="${y}" width="${Math.max(2, barW - 4)}" height="${Math.max(1, h)}" rx="3" fill="${color}"></rect>`;
+      }).join('')}
+      <g class="axis">
+        <text x="${margin.left}" y="${height - 12}" text-anchor="start">negative</text>
+        <text x="${margin.left + plotW / 2}" y="${height - 12}" text-anchor="middle">neutral</text>
+        <text x="${width - margin.right}" y="${height - 12}" text-anchor="end">positive</text>
+      </g>
+    </svg>
+  `;
+}
+
+function renderEvidence(container, items) {
+  if (!items || !items.length) {
+    container.innerHTML = '<div class="empty-state">No evidence cards returned for this query.</div>';
+    return;
+  }
+  container.innerHTML = items.slice(0, 8).map(item => `
+    <article class="evidence-card">
+      <a href="${escapeAttr(item.url || 'https://www.gdeltproject.org/')}" target="_blank" rel="noreferrer">${escapeHtml(item.title || 'Untitled GDELT result')}</a>
+      <div class="evidence-meta">
+        <span>${escapeHtml(item.domain || 'unknown source')}</span>
+        <span>${escapeHtml(item.country || item.language || 'global')}</span>
+        <span>${escapeHtml(formatDate(item.date || new Date()))}</span>
+      </div>
+      ${item.summary ? `<p class="evidence-summary">${escapeHtml(item.summary)}</p>` : ''}
+    </article>
+  `).join('');
+}
+
+function renderWordCloud(container, words) {
+  if (!words || !words.length) {
+    container.innerHTML = '<div class="empty-state">No terms returned for this query.</div>';
+    return;
+  }
+  const max = Math.max(...words.map(d => d.value), 1);
+  container.innerHTML = words.slice(0, 22).map(word => {
+    const size = 0.85 + (word.value / max) * 1.35;
+    return `<span style="font-size:${size.toFixed(2)}rem">${escapeHtml(word.text)}</span>`;
+  }).join('');
+}
+
+function renderGlobal() {
+  const data = state.global;
+  setBadge(els.globalBadge, state.source);
+  renderKpis(els.globalKpis, [
+    { label: 'Peak attention', value: formatNumber(maxInSeries(data.timeline), '%'), note: `highest point near ${peakDate(data.timeline)}` },
+    { label: 'Average attention', value: formatNumber(averageInSeries(data.timeline), '%'), note: `${data.timeline[0]?.values.length || 0} time points` },
+    { label: 'Tone center', value: toneAverage(data.tone).toFixed(1), note: 'weighted tone-bin average' },
+    { label: 'Evidence cards', value: String(data.evidence.length), note: state.source === 'live' ? 'from GDELT response' : 'synthetic examples' }
+  ]);
+  renderLineChart(els.globalTimeline, data.timeline, { unit: '%', label: 'Global news attention timeline' });
+  renderLegend(els.globalLegend, data.timeline);
+  renderToneChart(els.toneChart, data.tone);
+  renderHorizontalBars(els.globalBreakdown, state.globalBreakdown === 'source' ? data.countries : data.languages, { unit: '%', left: 142 });
+  renderEvidence(els.globalEvidence, data.evidence);
+  updateUrlPreview();
+}
+
+function renderTv() {
+  const data = state.tv;
+  setBadge(els.tvBadge, state.source);
+  renderKpis(els.tvKpis, [
+    { label: 'Peak airtime', value: formatNumber(maxInSeries(data.timeline), '%'), note: `highest station point near ${peakDate(data.timeline)}` },
+    { label: 'Average airtime', value: formatNumber(averageInSeries(data.timeline), '%'), note: 'normalized clip share' },
+    { label: 'Stations', value: String(state.selectedStations.length), note: 'selected for comparison' },
+    { label: 'Top show share', value: formatNumber(data.shows[0]?.value || 0, '%'), note: data.shows[0]?.name || 'n/a' }
+  ]);
+  renderLineChart(els.tvTimeline, data.timeline, { unit: '%', label: 'TV airtime timeline' });
+  renderLegend(els.tvLegend, data.timeline);
+  renderHorizontalBars(els.stationChart, data.stations, { unit: '%', left: 112 });
+  renderHorizontalBars(els.showChart, data.shows, { unit: '%', left: 152 });
+  renderWordCloud(els.wordCloud, data.words);
+  renderEvidence(els.tvEvidence, data.evidence);
+  updateUrlPreview();
+}
+
+function renderAll() {
+  renderGlobal();
+  renderTv();
+}
+
+function showTab(tab) {
+  state.lens = tab === 'method' ? state.lens : tab;
+  els.globalPanel.classList.toggle('hidden', tab !== 'global');
+  els.tvPanel.classList.toggle('hidden', tab !== 'tv');
+  els.methodPanel.classList.toggle('hidden', tab !== 'method');
+  [els.globalTab, els.tvTab, els.methodTab].forEach(button => {
+    button.classList.toggle('active', button.dataset.tab === tab);
+  });
+  if (tab !== 'method') els.lensSelect.value = tab;
+  updateUrlPreview();
+}
+
+function loadDemo(query = state.query) {
+  state.query = query.trim() || 'artificial intelligence';
+  state.source = 'demo';
+  const demo = createDemoData(state.query);
+  state.global = demo.global;
+  state.tv = demo.tv;
+  setStatus('Demo loaded', 'Synthetic data is active. Use Live Search to call GDELT for the current query.', false);
+  renderAll();
+}
+
+async function runLiveSearch(event) {
+  if (event) event.preventDefault();
+  state.query = els.queryInput.value.trim() || 'artificial intelligence';
+  state.timespan = els.timespanSelect.value;
+  const lens = els.lensSelect.value;
+  showTab(lens);
+  const cacheKey = `${lens}|${state.query}|${state.timespan}|${state.selectedStations.join(',')}|${state.tvWindow}`;
+  if (LIVE_CACHE.has(cacheKey)) {
+    const cached = LIVE_CACHE.get(cacheKey);
+    state.source = 'live';
+    if (lens === 'global') state.global = cached;
+    if (lens === 'tv') state.tv = cached;
+    setStatus('Loaded from cache', 'Using browser-cached GDELT results for this exact query.', false);
+    renderAll();
+    return;
+  }
+  try {
+    setStatus('Calling GDELT', 'Submitting one request at a time to respect the public API rate limit.', true);
+    if (lens === 'global') {
+      const live = await fetchGlobalLive(state.query, state.timespan);
+      if (!live) throw new Error('No usable DOC data returned.');
+      state.global = live;
+      state.source = 'live';
+      LIVE_CACHE.set(cacheKey, live);
+    } else {
+      const live = await fetchTvLive(state.query);
+      if (!live) throw new Error('No usable TV data returned.');
+      state.tv = live;
+      state.source = 'live';
+      LIVE_CACHE.set(cacheKey, live);
+    }
+    setStatus('Live results loaded', `GDELT returned data for "${state.query}".`, false);
+  } catch (error) {
+    loadDemo(state.query);
+    setStatus('Live API unavailable', `${describeLiveError(error)} Demo data remains active for the same query.`, false);
+  }
+  renderAll();
+}
+
+function describeLiveError(error) {
+  const message = error && error.message ? error.message : 'The live request could not be completed.';
+  if (/failed to fetch/i.test(message)) {
+    return 'The browser could not reach the public GDELT endpoint from this session.';
+  }
+  return message.endsWith('.') ? message : `${message}.`;
+}
+
+async function fetchWithThrottle(url, label) {
+  const elapsed = Date.now() - state.lastFetchAt;
+  const wait = Math.max(0, 5400 - elapsed);
+  if (wait > 0) {
+    setStatus('Waiting for public API window', `Next request starts in ${Math.ceil(wait / 1000)} seconds: ${label}.`, true);
+    await new Promise(resolve => setTimeout(resolve, wait));
+  }
+  setStatus('Calling GDELT', label, true);
+  state.lastFetchAt = Date.now();
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) throw new Error(`GDELT returned HTTP ${response.status}.`);
+  const text = await response.text();
+  if (!text || !text.trim()) throw new Error('GDELT returned an empty response.');
+  const data = JSON.parse(text);
+  if (!data || Object.keys(data).length === 0) throw new Error('GDELT returned no matches for this query.');
+  return data;
+}
+
+async function fetchGlobalLive(query, timespan) {
+  const base = 'https://api.gdeltproject.org/api/v2/doc/doc';
+  const common = `query=${encodeURIComponent(query)}&format=json&timespan=${encodeURIComponent(timespan)}`;
+  const timelinePayload = await fetchWithThrottle(`${base}?${common}&mode=timelinevol&timelinesmooth=0`, 'Global news timeline');
+  const timeline = parseTimeline(timelinePayload, 'Global coverage share', COLORS.teal);
+  if (!timeline.length) throw new Error('The DOC timeline response did not include chartable points.');
+  let tone = createDemoData(query).global.tone;
+  let evidence = createDemoData(query).global.evidence;
+  try {
+    const tonePayload = await fetchWithThrottle(`${base}?${common}&mode=tonechart`, 'Tone distribution');
+    tone = parseTone(tonePayload) || tone;
+  } catch (error) {
+    setStatus('Tone fallback active', 'The timeline loaded, but tone did not. Keeping demo tone bins.', true);
+  }
+  try {
+    const articlePayload = await fetchWithThrottle(`${base}?${common}&mode=artlist&maxrecords=12&sort=DateDesc`, 'Article evidence');
+    evidence = parseArticles(articlePayload);
+  } catch (error) {
+    setStatus('Evidence fallback active', 'The timeline loaded, but article cards did not. Keeping demo evidence cards.', true);
+  }
+  const demo = createDemoData(query).global;
+  return { timeline, tone, countries: demo.countries, languages: demo.languages, evidence: evidence.length ? evidence : demo.evidence };
+}
+
+async function fetchTvLive(query) {
+  const selected = STATIONS.filter(station => state.selectedStations.includes(station.code));
+  if (!selected.length) throw new Error('Select at least one TV station.');
+  const stationQuery = selected.map(station => `station:${station.code}`).join(' OR ');
+  const tvQuery = `"${query.replace(/"/g, '')}" (${stationQuery})`;
+  const start = state.tvWindow === '2017' ? '&STARTDATETIME=20170101000000' : state.tvWindow === '2022' ? '&STARTDATETIME=20220101000000' : '';
+  const base = 'https://api.gdeltproject.org/api/v2/tv/tv';
+  const common = `query=${encodeURIComponent(tvQuery)}&format=json&datanorm=perc&timelinesmooth=0&datacomb=sep${start}`;
+  const timelinePayload = await fetchWithThrottle(`${base}?${common}&mode=timelinevol`, 'TV airtime timeline');
+  const timeline = parseTimeline(timelinePayload, 'TV airtime', COLORS.blue);
+  if (!timeline.length) throw new Error('The TV timeline response did not include chartable points.');
+  const demo = createDemoData(query).tv;
+  let stations = demo.stations;
+  let shows = demo.shows;
+  let words = demo.words;
+  try {
+    const stationPayload = await fetchWithThrottle(`${base}?${common}&mode=stationchart`, 'TV station ranking');
+    stations = parseNamedRows(stationPayload.stationchart || stationPayload.data || [], 'station', selected);
+  } catch (error) {}
+  try {
+    const showPayload = await fetchWithThrottle(`${base}?${common}&mode=showchart`, 'TV show ranking');
+    shows = parseNamedRows(showPayload.showchart || showPayload.data || [], 'show');
+  } catch (error) {}
+  try {
+    const wordPayload = await fetchWithThrottle(`${base}?${common}&mode=wordcloud`, 'TV word cloud');
+    words = parseWords(wordPayload.wordcloud || wordPayload.data || []);
+  } catch (error) {}
+  return { timeline, stations, shows, words, evidence: demo.evidence };
+}
+
+function parseTimeline(payload, fallbackName, fallbackColor) {
+  const source = payload.timeline || payload.data || payload.results || [];
+  const series = [];
+  if (Array.isArray(source)) {
+    source.forEach((entry, index) => {
+      if (Array.isArray(entry.data)) {
+        const name = entry.series || entry.name || fallbackName || `Series ${index + 1}`;
+        const station = STATIONS.find(s => s.code === name || s.label === name);
+        const values = entry.data.map(row => ({ date: parseGdeltDate(row.date || row.datetime || row.time), value: Number(row.value ?? row.count ?? row.perc ?? 0) })).filter(row => row.date && Number.isFinite(row.value));
+        if (values.length) series.push({ name: station?.label || name, color: station?.color || fallbackColor || COLORS.teal, values });
+      } else if (entry.date || entry.datetime || entry.time) {
+        const values = source.map(row => ({ date: parseGdeltDate(row.date || row.datetime || row.time), value: Number(row.value ?? row.count ?? row.perc ?? 0) })).filter(row => row.date && Number.isFinite(row.value));
+        if (values.length) series.push({ name: fallbackName, color: fallbackColor || COLORS.teal, values });
+      }
+    });
+  }
+  return uniqueSeries(series);
+}
+
+function uniqueSeries(series) {
+  const seen = new Set();
+  return series.filter(item => {
+    const key = item.name + ':' + item.values.length;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function parseGdeltDate(raw) {
+  if (!raw) return null;
+  const text = String(raw);
+  if (/^\d{14}$/.test(text)) {
+    return new Date(Date.UTC(Number(text.slice(0, 4)), Number(text.slice(4, 6)) - 1, Number(text.slice(6, 8)), Number(text.slice(8, 10)), Number(text.slice(10, 12)), Number(text.slice(12, 14))));
+  }
+  if (/^\d{8}$/.test(text)) {
+    return new Date(Date.UTC(Number(text.slice(0, 4)), Number(text.slice(4, 6)) - 1, Number(text.slice(6, 8))));
+  }
+  const date = new Date(text);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function parseTone(payload) {
+  const rows = payload.tonechart || payload.toneChart || payload.bins || payload.data || [];
+  if (!Array.isArray(rows) || !rows.length) return null;
+  const parsed = rows.map((row, i) => ({
+    bin: Number(row.bin ?? row.tone ?? row.name ?? row.label ?? i - Math.floor(rows.length / 2)),
+    value: Number(row.count ?? row.value ?? row.articles ?? row.perc ?? row.percent ?? 0)
+  })).filter(row => Number.isFinite(row.bin) && Number.isFinite(row.value));
+  return parsed.length ? parsed : null;
+}
+
+function parseArticles(payload) {
+  const rows = payload.articles || payload.results || payload.articlelist || payload.data || [];
+  if (!Array.isArray(rows)) return [];
+  return rows.slice(0, 12).map(row => ({
+    title: row.title || row.name || row.headline || 'Untitled GDELT article',
+    url: row.url || row.link || row.articleurl || 'https://www.gdeltproject.org/',
+    domain: row.domain || row.source || row.sourceCommonName || row.sourceCollectionIdentifier || 'GDELT result',
+    country: row.sourceCountry || row.sourcecountry || row.country || '',
+    language: row.language || row.sourcelang || '',
+    date: row.seendate || row.date || row.datetime || row.published || new Date(),
+    summary: row.summary || ''
+  }));
+}
+
+function parseNamedRows(rows, field, selectedStations) {
+  if (!Array.isArray(rows)) return [];
+  const parsed = rows.slice(0, 12).map((row, i) => {
+    const rawName = row[field] || row.name || row.label || row.station || row.show || `Item ${i + 1}`;
+    const station = selectedStations?.find(s => s.code === rawName || s.label === rawName);
+    return {
+      name: station?.label || rawName,
+      value: Number(row.count ?? row.value ?? row.perc ?? row.percent ?? 0),
+      color: station?.color || [COLORS.teal, COLORS.blue, COLORS.amber, COLORS.green, COLORS.rose, COLORS.violet][i % 6]
+    };
+  }).filter(row => Number.isFinite(row.value));
+  return parsed;
+}
+
+function parseWords(rows) {
+  if (!Array.isArray(rows)) return [];
+  return rows.slice(0, 26).map((row, i) => ({
+    text: row.word || row.text || row.name || row.label || String(row),
+    value: Number(row.count ?? row.value ?? row.weight ?? (26 - i))
+  })).filter(row => row.text && Number.isFinite(row.value));
+}
+
+function updateUrlPreview() {
+  const query = encodeURIComponent(state.query || els.queryInput.value || 'artificial intelligence');
+  if (els.lensSelect.value === 'tv' || !els.tvPanel.classList.contains('hidden')) {
+    const stations = state.selectedStations.map(code => `station:${code}`).join('%20OR%20');
+    els.urlPreview.textContent = `https://api.gdeltproject.org/api/v2/tv/tv?query=%22${query}%22%20(${stations})&mode=timelinevol&format=json&datanorm=perc`;
+  } else {
+    els.urlPreview.textContent = `https://api.gdeltproject.org/api/v2/doc/doc?query=${query}&mode=timelinevol&format=json&timespan=${state.timespan}`;
+  }
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[char]));
+}
+
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/`/g, '&#096;');
+}
+
+function setupStations() {
+  els.stationList.innerHTML = STATIONS.map(station => `
+    <label class="station-pill">
+      <input type="checkbox" value="${station.code}" ${state.selectedStations.includes(station.code) ? 'checked' : ''}>
+      ${escapeHtml(station.label)}
+    </label>
+  `).join('');
+  els.stationList.addEventListener('change', () => {
+    state.selectedStations = Array.from(els.stationList.querySelectorAll('input:checked')).map(input => input.value);
+    const demo = createDemoData(state.query);
+    state.tv = demo.tv;
+    state.source = 'demo';
+    renderTv();
+  });
+}
+
+document.querySelectorAll('[data-helper]').forEach(button => {
+  button.addEventListener('click', () => {
+    const value = button.dataset.helper;
+    const current = els.queryInput.value.trim();
+    els.queryInput.value = current ? `${current} ${value}` : value;
+    state.query = els.queryInput.value;
+    updateUrlPreview();
+  });
+});
+
+document.querySelectorAll('[data-example]').forEach(button => {
+  button.addEventListener('click', () => {
+    els.queryInput.value = button.dataset.example;
+    loadDemo(button.dataset.example);
+  });
+});
+
+document.querySelectorAll('[data-tab]').forEach(button => {
+  button.addEventListener('click', () => showTab(button.dataset.tab));
+});
+
+document.querySelectorAll('[data-global-breakdown]').forEach(button => {
+  button.addEventListener('click', () => {
+    state.globalBreakdown = button.dataset.globalBreakdown;
+    document.querySelectorAll('[data-global-breakdown]').forEach(item => item.classList.toggle('active', item === button));
+    renderGlobal();
+  });
+});
+
+els.lensSelect.addEventListener('change', () => showTab(els.lensSelect.value));
+els.timespanSelect.addEventListener('change', () => {
+  state.timespan = els.timespanSelect.value;
+  updateUrlPreview();
+});
+els.tvWindowSelect.addEventListener('change', () => {
+  state.tvWindow = els.tvWindowSelect.value;
+  updateUrlPreview();
+});
+els.demoButton.addEventListener('click', () => loadDemo(els.queryInput.value));
+els.searchForm.addEventListener('submit', runLiveSearch);
+
+setupStations();
+loadDemo(state.query);
+</script>
+</body>
+</html>

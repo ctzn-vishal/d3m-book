@@ -30,6 +30,17 @@ export type Studio = {
  */
 export const studios: Studio[] = [
   {
+    slug: 'gdelt-media-agenda-lab',
+    title: 'GDELT Media Agenda Lab',
+    blurb:
+      'Search global news and television coverage as an agenda-setting lab: compare attention, tone, source geography, station airtime, and evidence cards from live GDELT APIs.',
+    domain: 'Global Media',
+    methods: ['Live API', 'Tone analysis', 'Media agenda'],
+    relatedSlug: 'ch42b-text-as-data',
+    kind: 'dashboard',
+    accent: '#187C78',
+  },
+  {
     slug: 'cfpb-crisis-monitor',
     title: 'CFPB Crisis Monitor',
     blurb:
