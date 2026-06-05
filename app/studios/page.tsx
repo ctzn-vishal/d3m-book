@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowUpRight, FlaskConical, LayoutDashboard } from 'lucide-react';
 import { book } from '@/lib/book-toc';
 import { createPreviewMetadata } from '@/lib/share-metadata';
-import { studios, relatedChapter, type Studio } from '@/lib/studios';
+import { studios, relatedChapter, type StudioCollection } from '@/lib/studios';
+import StudiosGallery, { type ActiveGalleryFilter, type GalleryStudio } from './StudiosGallery';
 
 const pageTitle = `Case Study & Dashboard Gallery | ${book.title}`;
 const pageDescription =
@@ -20,11 +20,48 @@ export const metadata: Metadata = {
   }),
 };
 
-function formatArticleNumber(num: string): string {
-  return num.includes('.') ? `§${num}` : `Ch. ${num}`;
+type StudiosSearchParams = {
+  collection?: string | string[];
+  method?: string | string[];
+};
+
+type Props = {
+  searchParams?: Promise<StudiosSearchParams>;
+};
+
+function firstParam(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
 }
 
-export default function StudiosGalleryPage() {
+function resolveActiveFilter(
+  params: StudiosSearchParams | undefined,
+  galleryStudios: GalleryStudio[],
+): ActiveGalleryFilter {
+  const availableCollections = new Set<StudioCollection>(
+    galleryStudios.flatMap(studio => studio.collections),
+  );
+  const availableMethods = new Set(galleryStudios.flatMap(studio => studio.methodTags));
+
+  const collection = firstParam(params?.collection);
+  if (collection && availableCollections.has(collection as StudioCollection)) {
+    return { type: 'collection', value: collection as StudioCollection };
+  }
+
+  const method = firstParam(params?.method);
+  if (method && availableMethods.has(method)) {
+    return { type: 'method', value: method };
+  }
+
+  return { type: 'all', value: 'all' };
+}
+
+export default async function StudiosGalleryPage({ searchParams }: Props) {
+  const galleryStudios: GalleryStudio[] = studios.map(studio => ({
+    ...studio,
+    related: relatedChapter(studio),
+  }));
+  const activeFilter = resolveActiveFilter(await searchParams, galleryStudios);
+
   return (
     <div className="bg-surface text-body min-h-screen flex flex-col">
       {/* Top bar — mirrors the article shell's sticky book bar. */}
@@ -60,82 +97,13 @@ export default function StudiosGalleryPage() {
         </div>
       </section>
 
-      {/* Card grid */}
-      <section className="flex-1">
-        <div className="mx-auto max-w-7xl px-6 lg:px-10 py-14">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {studios.map(studio => (
-              <StudioCard key={studio.slug} studio={studio} />
-            ))}
-          </div>
-        </div>
-      </section>
+      <StudiosGallery activeFilter={activeFilter} studios={galleryStudios} />
 
       <footer className="border-t border-border bg-card">
         <div className="mx-auto max-w-7xl px-6 lg:px-10 py-10 text-xs text-muted">
           {studios.length} interactive studios · part of {book.title}.
         </div>
       </footer>
-    </div>
-  );
-}
-
-function StudioCard({ studio }: { studio: Studio }) {
-  const related = relatedChapter(studio);
-  const KindIcon = studio.kind === 'exercise' ? FlaskConical : LayoutDashboard;
-  const kindLabel = studio.kind === 'exercise' ? 'Exercise' : 'Dashboard';
-
-  return (
-    <div className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm transition-shadow hover:shadow-md">
-      <div className="h-1 w-full" style={{ backgroundColor: studio.accent }} aria-hidden="true" />
-      <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-muted">
-            {studio.domain}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-2.5 py-0.5 text-[11px] font-medium text-subtle">
-            <KindIcon size={12} strokeWidth={2.5} aria-hidden="true" />
-            {kindLabel}
-          </span>
-        </div>
-
-        <h2 className="mt-3 font-display text-xl font-semibold leading-snug text-body">
-          <Link href={`/studios/${studio.slug}`} className="hover:text-link transition-colors">
-            <span className="absolute inset-0" aria-hidden="true" />
-            {studio.title}
-          </Link>
-        </h2>
-
-        <p className="mt-2.5 text-sm leading-relaxed text-muted">{studio.blurb}</p>
-
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {studio.methods.map(m => (
-            <span
-              key={m}
-              className="rounded bg-card px-2 py-0.5 text-[11px] font-medium text-subtle"
-            >
-              {m}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-5 flex items-center justify-between border-t border-border/70 pt-4">
-          <span className="inline-flex items-center gap-1.5 text-sm font-medium text-link">
-            Open studio
-            <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </span>
-          {related && (
-            // z-10 lifts this above the card's stretched title link so the
-            // chapter cross-link stays independently clickable.
-            <Link
-              href={`/${related.slug}`}
-              className="relative z-10 text-xs text-muted hover:text-link transition-colors"
-            >
-              Pairs with {formatArticleNumber(related.number)}
-            </Link>
-          )}
-        </div>
-      </div>
     </div>
   );
 }

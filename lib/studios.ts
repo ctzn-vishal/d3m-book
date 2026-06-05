@@ -1,6 +1,16 @@
 import { findArticle } from '@/lib/book-toc';
 
 export type StudioKind = 'dashboard' | 'exercise';
+export type StudioCollection = 'teaching' | 'research' | 'blog';
+
+export type StudioPreview = {
+  /** Public image path for the gallery card preview. */
+  src: string;
+  /** Describes the actual chart/map/interface shown in the preview. */
+  alt: string;
+  /** Optional focal point for responsive object-fit cropping. */
+  objectPosition?: string;
+};
 
 export type Studio = {
   /** URL slug → /studios/<slug> and public/studios/<slug>/index.html */
@@ -10,12 +20,18 @@ export type Studio = {
   blurb: string;
   /** Short domain tag, e.g. "Airlines", "Pricing". */
   domain: string;
+  /** Publication collection; currently all studios are teaching assets. */
+  collections: StudioCollection[];
+  /** Broad gallery filter tags, separate from the more detailed method chips. */
+  methodTags: string[];
   /** Skills/methods the studio exercises — rendered as chips. */
   methods: string[];
   /** Slug of the chapter this studio pairs with (cross-link both ways). */
   relatedSlug: string;
   /** "dashboard" = explore a live view; "exercise" = hands-on, do it yourself. */
   kind: StudioKind;
+  /** Real screenshot-based gallery preview. */
+  preview: StudioPreview;
   /** Accent hex for the card's top rule. Kept within the brand-adjacent palette. */
   accent: string;
 };
@@ -35,9 +51,16 @@ export const studios: Studio[] = [
     blurb:
       'Search global news and television coverage as an agenda-setting lab: compare attention, tone, source geography, station airtime, and evidence cards from live GDELT APIs.',
     domain: 'Global Media',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Text analysis', 'Live API'],
     methods: ['Live API', 'Tone analysis', 'Media agenda'],
     relatedSlug: 'ch42b-text-as-data',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/gdelt-media-agenda-lab/preview.jpg',
+      alt: 'GDELT media agenda dashboard with global news attention, tone, and coverage charts',
+      objectPosition: 'center',
+    },
     accent: '#187C78',
   },
   {
@@ -46,9 +69,16 @@ export const studios: Studio[] = [
     blurb:
       'Use public consumer complaints as a crisis early-warning system: pin incident spikes, inspect consented narratives, and separate product mix shifts from real operational improvement.',
     domain: 'Consumer Finance',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Text analysis', 'Shock analysis'],
     methods: ['Text as data', 'Spike detection', 'Structural shift'],
     relatedSlug: 'ch42b-text-as-data',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/cfpb-crisis-monitor/preview.jpg',
+      alt: 'CFPB complaints dashboard with crisis-monitoring charts and product mix views',
+      objectPosition: 'center',
+    },
     accent: '#28527A',
   },
   {
@@ -57,9 +87,16 @@ export const studios: Studio[] = [
     blurb:
       'A state-by-state presidential election dashboard: move across 1976-2024, compare national outcomes, read the hex map, and inspect which states shifted most from the prior election.',
     domain: 'Politics',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Maps', 'Exploratory viz'],
     methods: ['Dashboard sequencing', 'Geospatial comparison', 'State shifts'],
     relatedSlug: 'ch09-exploratory-viz',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/presidential-election-atlas/preview.jpg',
+      alt: 'Presidential election atlas with state map and election result panels',
+      objectPosition: 'center',
+    },
     accent: '#287D67',
   },
   {
@@ -68,9 +105,16 @@ export const studios: Studio[] = [
     blurb:
       'Explore 2018-2022 advertising spend by industry group, advertiser, and media type, with a Covid-era lens on budget shocks, recovery, and media mix shifts.',
     domain: 'Advertising',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Shock analysis'],
     methods: ['Dashboard sequencing', 'Media mix', 'Shock analysis'],
     relatedSlug: 'market-concentration-metrics-case',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/ad-spend-explorer/preview.jpg',
+      alt: 'Advertising spend dashboard with industry, media mix, and time-series charts',
+      objectPosition: 'center',
+    },
     accent: '#2F8F7B',
   },
   {
@@ -79,9 +123,16 @@ export const studios: Studio[] = [
     blurb:
       'Trace Uber and Lyft rides across NYC pickup zones as demand breaks around the March 2020 emergency declaration, then compare the late-April floor by borough and zone.',
     domain: 'Mobility',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Maps', 'Shock analysis'],
     methods: ['Shock analysis', 'Time series', 'Spatial ranking'],
     relatedSlug: 'dashboard-decision-systems',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/nyc-taxi-covid-emergency/preview.jpg',
+      alt: 'NYC taxi and ride-hail COVID dashboard with demand shock charts and zone rankings',
+      objectPosition: 'center',
+    },
     accent: '#2563A6',
   },
   {
@@ -90,9 +141,16 @@ export const studios: Studio[] = [
     blurb:
       'Explore tens of thousands of NYC listings by neighborhood, room type, and price — a worked example of how exploratory views turn a raw marketplace dump into a map of where supply and money actually sit.',
     domain: 'Marketplaces',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Maps', 'Exploratory viz'],
     methods: ['Exploratory viz', 'Geospatial mapping', 'Distributions'],
     relatedSlug: 'ch09-exploratory-viz',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/nyc-airbnb-atlas/preview.jpg',
+      alt: 'NYC Airbnb atlas with map, listing distribution, and neighborhood views',
+      objectPosition: 'center',
+    },
     accent: '#0EA5E9',
   },
   {
@@ -101,9 +159,16 @@ export const studios: Studio[] = [
     blurb:
       'When demand is seasonal and a recession hits, when should a soup brand cut price and when should it hold? Trace promotion, volume, and competitive response across the cycle.',
     domain: 'CPG & Pricing',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Pricing', 'Time series'],
     methods: ['Pricing strategy', 'Demand seasonality', 'Time series'],
     relatedSlug: 'ch24-capstone-pricing-promotion',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/progresso-dashboard/preview.jpg',
+      alt: 'Progresso soup pricing dashboard with seasonality and price-volume charts',
+      objectPosition: 'center',
+    },
     accent: '#F97316',
   },
   {
@@ -112,9 +177,16 @@ export const studios: Studio[] = [
     blurb:
       'Does a low-cost carrier entering a route really pull fares down — and by how much, once you hold distance and demand fixed? A visual walk through the classic regression.',
     domain: 'Airlines',
+    collections: ['teaching'],
+    methodTags: ['Regression', 'Dashboard', 'Controls'],
     methods: ['Regression', 'Effect isolation', 'Controls'],
     relatedSlug: 'ch15-regression-effect-isolation',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/southwest-regression/preview.jpg',
+      alt: 'Southwest regression studio with fare comparison and regression visualizations',
+      objectPosition: 'center',
+    },
     accent: '#10B981',
   },
   {
@@ -123,9 +195,16 @@ export const studios: Studio[] = [
     blurb:
       'The hands-on companion: download the route data, run the regression yourself, and read the coefficients the way a manager would. Built for a live class session.',
     domain: 'Airlines',
+    collections: ['teaching'],
+    methodTags: ['Regression', 'Exercise', 'Data workflow'],
     methods: ['Hands-on regression', 'Coefficient reading', 'Data download'],
     relatedSlug: 'ch15-regression-effect-isolation',
     kind: 'exercise',
+    preview: {
+      src: '/studios/southwest-regression-exercise/preview.jpg',
+      alt: 'Regression exercise interface for estimating the Southwest airfare effect',
+      objectPosition: 'center',
+    },
     accent: '#8B5CF6',
   },
   {
@@ -134,9 +213,16 @@ export const studios: Studio[] = [
     blurb:
       'How did the pandemic redraw where consumers spent their fast-food dollars? A share-of-wallet dashboard that benchmarks chains against the category through the shock and recovery.',
     domain: 'Restaurants',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Benchmarking', 'Shock analysis'],
     methods: ['Share of wallet', 'Benchmarking', 'Shock analysis'],
     relatedSlug: 'dashboard-decision-systems',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/share-of-wallet/preview.jpg',
+      alt: 'Fast-food share-of-wallet dashboard with chain benchmarks and COVID impact charts',
+      objectPosition: 'center',
+    },
     accent: '#F43F5E',
   },
   {
@@ -145,9 +231,16 @@ export const studios: Studio[] = [
     blurb:
       'Reduce 48 BAV brand attributes into factor-map axes, inspect loadings, cluster fast-food brands, and test how much Brand Asset follows from the latent perception scores.',
     domain: 'Restaurants',
+    collections: ['teaching'],
+    methodTags: ['PCA / clustering', 'Dashboard', 'Perceptual maps'],
     methods: ['PCA', 'Factor analysis', 'Brand clustering'],
     relatedSlug: 'ch37-pca-perceptual-maps',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/fast-food-perceptual-map/preview.jpg',
+      alt: 'Fast-food perceptual map with brand positions and clustering controls',
+      objectPosition: 'center',
+    },
     accent: '#2A9D8F',
   },
   {
@@ -156,9 +249,16 @@ export const studios: Studio[] = [
     blurb:
       'Use health prevalence measures to build factor scores, cluster ZIP codes, and interpret the segments by correlating scores with income, age, college share, and deprivation.',
     domain: 'Public Health',
+    collections: ['teaching'],
+    methodTags: ['PCA / clustering', 'Dashboard', 'Segmentation'],
     methods: ['Factor scores', 'K-means clustering', 'Segment profiling'],
     relatedSlug: 'ch36-unsupervised-segmentation',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/nyc-zip-health-segments/preview.jpg',
+      alt: 'NYC ZIP health segmentation dashboard with cluster and profile charts',
+      objectPosition: 'center',
+    },
     accent: '#4E79A7',
   },
   {
@@ -167,9 +267,16 @@ export const studios: Studio[] = [
     blurb:
       'Segment active NYC ZIP codes from NY Lottery behavior signals, then interpret the PCA/factor score space with borough, income, retailer availability, and product-mix profiles.',
     domain: 'Public Finance',
+    collections: ['teaching'],
+    methodTags: ['PCA / clustering', 'Dashboard', 'Segmentation'],
     methods: ['PCA', 'Factor analysis', 'K-means clustering'],
     relatedSlug: 'ch36-unsupervised-segmentation',
     kind: 'dashboard',
+    preview: {
+      src: '/studios/lottery-zip-psychographics/preview.jpg',
+      alt: 'Lottery ZIP psychographics dashboard with PCA and cluster segmentation charts',
+      objectPosition: 'center',
+    },
     accent: '#C85B47',
   },
 ];
