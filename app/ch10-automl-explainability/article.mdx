@@ -14,7 +14,7 @@ The economics of machine-learning work have shifted. A decade ago, a churn proje
 
 This article maps that shift. We look briefly at what an AutoML leaderboard does (and doesn't) tell a manager; we work through the two interpretability tools — feature importance and partial dependence — that survive into production; and we land on the **model card**, the one-page document that should accompany every shipped model.
 
-The Model Card is the third entry in the artefact family introduced at [§0.2](/ch00-data-storage). The Decision Question Card ([§5.1](/ch05-metrics-to-decisions)) frames the original action; the Predictive Task Contract ([§9.2](/ch09-supervised-setup)) specifies the prediction; the Model Card describes the system that ships. Each one extends the discipline of the last. The chain continues into [§16.4](/ch16-ai-governance) (AI Workflow Card) and lands at the [§17.2](/ch17-decision-memos) Decision Memo.
+The Model Card is the third entry in the artefact family introduced at [§0.4](/ch00-decision-loop). The Decision Question Card ([§5.1](/ch05-metrics-to-decisions)) frames the original action; the Predictive Task Contract ([§9.2](/ch09-supervised-setup)) specifies the prediction; the Model Card describes the system that ships. Each one extends the discipline of the last. The chain continues into [§16.4](/ch16-ai-governance) (AI Workflow Card) and lands at the [§17.2](/ch17-decision-memos) Decision Memo.
 
 ---
 
@@ -57,7 +57,7 @@ A practical guideline: treat the AutoML leaderboard as a *menu of candidate mode
 
 Once a model — single or ensemble — has been fit, the standard inspection move is to ask which features it relied on most.
 
-<Figure width="page-outset" caption="Figure 1. Feature importance for the deployed Bean &amp; Basket churn model. The bars rank features by their contribution to the model's predictions, not by their causal effect on churn.">
+<Figure width="page-outset" caption="Figure 1. Feature importance for the deployed Bean & Basket churn model. The bars rank features by their contribution to the model's predictions, not by their causal effect on churn.">
   <div className="not-prose">
     <FeatureImportanceBars />
   </div>

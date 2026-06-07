@@ -72,7 +72,7 @@ The chart is more useful than a single overall sentiment number for one reason: 
 
 Overall sentiment hides the picture. A 3-star review that says "food was incredible but the wait was awful" looks the same to a sentiment classifier as one that says "totally fine, nothing memorable." Both score around 0. They encode different information for an operator.
 
-**Aspect-based sentiment** scores the document against named aspects of the product or service. For Bean &amp; Basket the natural aspects are coffee, pastry, staff, wait time, app, value. The output is a grid of (aspect × document) sentiment scores.
+**Aspect-based sentiment** scores the document against named aspects of the product or service. For Bean & Basket the natural aspects are coffee, pastry, staff, wait time, app, value. The output is a grid of (aspect × document) sentiment scores.
 
 <Figure width="page-outset" caption="Figure 3. Aspect-based sentiment for Bean & Basket, by store region. Coffee and staff are loved everywhere; the app is hurting everywhere; the South-East has a wait-time problem the other regions do not. None of this is visible from overall sentiment.">
   <div className="not-prose">
@@ -97,7 +97,7 @@ This is also the cleanest setup for the GPT-as-measurement move in §14.4. Once 
 
 **Entity-based sentiment.** Same idea, but the units are named entities (people, products, competitors) rather than aspects. The classical use case: a tweet that says "Goose Island used to be great, AB InBev ruined it" is negative on AB InBev and positive-but-nostalgic on Goose Island. Standard sentiment models return a single negative score and miss the asymmetry.
 
-**Emotion detection.** Instead of three sentiment classes, fine-grained emotions: joy, anger, sadness, fear, disappointment, surprise, etc. Useful when the difference between "sad" and "angry" implies a different action — disappointment from a brand acquisition is *not* the same as anger about a defective product. The Goose Island brewery acquisition case in §14.4 leans heavily on this distinction.
+**Emotion detection.** Instead of three sentiment classes, fine-grained emotions: joy, anger, sadness, fear, disappointment, surprise, etc. Useful when the difference between "sad" and "angry" implies a different action — disappointment from a brand acquisition is *not* the same as anger about a defective product. The Goose Island brewery acquisition case in §14.2 leans heavily on this distinction.
 
 Both are special cases of the same idea: aggregating sentiment to a unit smaller than the document gives operators the leverage to act.
 

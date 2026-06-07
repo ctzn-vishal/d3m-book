@@ -46,3 +46,19 @@ and cross-references changed, and thin chapters merged so their articles became 
 **One pre-existing dangling ref corrected** (not a renumber artifact): §13.1 (`ch13-structured-to-unstructured`) cited a non-existent "§19.3" → retargeted to **§14.4** (GPT-as-Measurement / construct measurement), which is what the pitfall is about.
 
 `book-toc.ts` rewritten to the 18-chapter structure; `next.config.ts` carries 80 permanent redirects (78 new + 2 legacy chained forward); `lib/studios.ts` `relatedSlug` cross-links remapped. **Build compiles, typecheck clean.**
+
+---
+
+## Cohesion pass — cross-reference fossils + foreword (no teaching content changed)
+Pre-existing semantic errors flagged by `audit/flow.md`, corrected (these were wrong *before* the renumber):
+- **§1.3** (`ch01-variable-types`): "Text … treated in Part **IV**" → **Part V** (where text-as-data actually lives).
+- **§13.4** (`ch13-text-classification`): the Goose Island case was pointed at the GPT-as-measurement article; retargeted to the **§14.2** case study (the §14.4 reference one line up, to GPT-as-measurement, is correct and was left).
+- **§5.1** & **§10.5**: the "artefact / card family map" was cited at **§0.2** (How Data Is Stored); the family actually lives at **§0.4** (The Data-to-Decision Loop, "Figure 4. The artifact family") — both refs retargeted.
+
+Foreword (`ch00-foreword`, "A note on cases"), per PROPOSAL §6:
+- Normalized the through-line brand `Bean &amp; Basket` → **Bean & Basket** across all articles (book-toc string already clean). 5 non-brand `&amp;` left as-is (render as `&` in MDX).
+- Rewrote the standalone-cases paragraph to **name the six cases that actually run** (market-concentration/ad-spend, RentHop, NY Lottery ZIP, Trump tweets, Goose Island, Amazon reviews) alongside Progresso/Milk/Zillow.
+- **BAV repointed, not dropped:** the foreword now states the BAV brand-survey data powers the Fast-Food Perceptual Map studio.
+- Added an explicit step-off note: the Part III causal chapters deliberately leave Bean & Basket (clean identification needs field data a coffee chain can't supply).
+
+**Final production build: compiles, typecheck clean, all 78 routes + 80 redirects generate.**
