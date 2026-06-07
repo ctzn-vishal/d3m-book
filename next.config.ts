@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
   // (ch47 → ch46 in §19; ch50b → ch50 in §21). Keeps inbound links alive.
   async redirects() {
     return [
+      // Consolidation renumber (Medium): old chNN-keyword → new chNN-keyword.
+      // Part 0 (new Ch 0):
+      { source: '/ch00-0-foreword', destination: '/ch00-foreword', permanent: true },
+      { source: '/ch00-1-what-is-d3m', destination: '/ch00-data-origins', permanent: true },
+      { source: '/ch00-2-evidence-stack', destination: '/ch00-data-storage', permanent: true },
+      { source: '/ch00-3-how-data-is-used', destination: '/ch00-data-uses', permanent: true },
+      { source: '/ch00-4-data-to-decision-loop', destination: '/ch00-decision-loop', permanent: true },
       { source: '/ch47-semantic-search', destination: '/ch46-embeddings', permanent: true },
       { source: '/ch50b-prompting', destination: '/ch50-llms-capabilities', permanent: true },
     ];

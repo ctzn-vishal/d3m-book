@@ -4,14 +4,14 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§0.3 How Data Is Used | ${book.title}`,
+  title: `§0.2 How Data Is Stored | ${book.title}`,
   description:
-    'A practical router from business questions to monitoring, diagnosis, causal learning, prediction, recommendation, optimization, and AI workflows.',
+    'A practical map of operational databases, analytical warehouses, data lakes, DuckDB-style local analytics, search, graph, and vector systems.',
 };
 
 export default function Page() {
   return (
-    <BookShell slug="ch00-3-how-data-is-used" book={book} findArticle={findArticle}>
+    <BookShell slug="ch00-data-storage" book={book} findArticle={findArticle}>
       <Article />
     </BookShell>
   );

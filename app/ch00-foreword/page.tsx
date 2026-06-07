@@ -4,14 +4,14 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§0.4 The Data-to-Decision Loop | ${book.title}`,
+  title: `Foreword: How to Read This Book | ${book.title}`,
   description:
-    'The operating loop that connects source activity, storage, evidence assets, decisions, actions, feedback, and governance.',
+    'A short note on the modern data operating system frame, who the book is for, and how to use it.',
 };
 
 export default function Page() {
   return (
-    <BookShell slug="ch00-4-data-to-decision-loop" book={book} findArticle={findArticle}>
+    <BookShell slug="ch00-foreword" book={book} findArticle={findArticle}>
       <Article />
     </BookShell>
   );
