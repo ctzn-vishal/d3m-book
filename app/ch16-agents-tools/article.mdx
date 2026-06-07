@@ -1,0 +1,214 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  AgentWorkflowDiagram,
+  HumanApprovalGate,
+} from '@/components/Book/part5/RagVisionAgentDiagrams';
+
+<DropCap>
+
+An LLM by itself reads a prompt and writes a reply. An agent does more: it reads, decides which tool to call, calls the tool, reads the result, decides the next step, and keeps going until the task is done. The model still does the thinking. The tools — retrieval, code, APIs, the calendar, the browser, the file system, sometimes a shell — do the acting. The hard part isn't the model. The hard part is the loop, the tools the agent can reach, and the gate that decides when a human looks before it ships.
+
+</DropCap>
+
+This article walks through what an agent actually is, what kinds of agents work in production, the failure modes that take agents down, and the human-approval gate that is the defining design choice. The deeper governance and evaluation discipline arrives in Chapter 16.
+
+---
+
+## The Executive Question
+
+> When can we trust a language model to take a multi-step action on the firm's behalf — and what controls keep that trust honest?
+
+The honest version: agents work in narrow domains with well-defined tools, low-stakes individual actions, and a human-in-the-loop for anything irreversible. They don't work as a general "do my job" oracle.
+
+---
+
+## What an Agent Is
+
+The minimal agent has four moving parts:
+
+1.  **An LLM.** The reasoning engine.
+2.  **A set of tools.** Functions the LLM can call, each with a defined input schema and an output. Tools can be RAG retrieval, structured-output extraction, a database query, an HTTP request, a calculator, a code interpreter, a Slack message, anything.
+3.  **A memory.** Short-term: the conversation so far. Long-term: a vector index or database the agent can read and write across sessions.
+4.  **A control loop.** The orchestration that lets the LLM choose a tool, observe the result, and decide the next step.
+
+That's it. Everything else — multi-agent architectures, planning frameworks, the various open-source agent libraries — is variations on these four pieces. The complexity in production agents is in *which tools* and *what gates between them*, not in the model.
+
+---
+
+## A Worked Example: The Customer-Insights Agent
+
+A concrete agent built from pieces already in Part V.
+
+<Figure width="screen-inset" caption="Figure 1. A customer-insights agent in eight steps. The model orchestrates; the tools do the work; a human approves before any external action. The dashed feedback loop is where the agent's own decisions become signal for the next run.">
+  <div className="not-prose">
+    <AgentWorkflowDiagram />
+  </div>
+</Figure>
+
+The agent's job, weekly:
+
+1.  **Pull reviews.** Tool: warehouse query. Pull last 7 days of reviews.
+2.  **Classify.** Tool: §13.4 classifier. Tag each review with topic and severity.
+3.  **Embed + cluster.** Tool: §14.3 embedding service + clustering. Surface the dominant complaint clusters.
+4.  **Detect emerging issues.** Tool: topic-delta computation against the previous week. Flag clusters growing faster than a threshold.
+5.  **Retrieve related tickets.** Tool: RAG (§15.1) into the support knowledge base. Pull related historical tickets and known resolutions.
+6.  **Summarize.** Tool: LLM with structured output (§16.2). Generate a JSON record per emerging issue: topic, evidence quotes, severity, related tickets, suggested action.
+7.  **Human review.** A manager sees the proposed alerts. Approves, edits-and-approves, or rejects.
+8.  **Send alert + log.** Tools: Slack API + audit log database. Post the approved alerts; record the decision.
+
+The feedback loop closes by making the manager's approval decisions training data — the agent learns which kinds of alerts get sent verbatim, which get edited, which get rejected.
+
+Notice what the model does *not* do: take an external action without approval. Every irreversible move (a Slack post, an email, a ticket creation) passes through a human gate.
+
+---
+
+## The Human-Approval Gate
+
+The gate is not a nice-to-have. For most production agents it is the architecture.
+
+<Figure width="page-outset" caption="Figure 2. The human-approval gate. The agent proposes an action; a human reviews and selects one of three responses; every decision feeds back into the training signal for the next iteration.">
+  <div className="not-prose">
+    <HumanApprovalGate />
+  </div>
+</Figure>
+
+Three states the gate enables:
+
+- **Approve.** The agent's proposal goes verbatim. Highest trust; should be reserved for narrow tasks with well-validated agents.
+- **Edit + approve.** The reviewer modifies the proposal before it goes. The most common state in early deployments — it lets the agent draft 80% of the message and the human polish 20%.
+- **Reject.** The proposal is logged and discarded. The next agent run sees this and (in some architectures) adjusts.
+
+The choice of *where* to put gates determines the agent's risk profile:
+
+- **No gate (fully autonomous).** Appropriate for very narrow, very low-stakes, very well-validated tasks. Examples: tagging non-customer-facing content, internal data cleanup, low-risk routing.
+- **One gate at the end.** Appropriate for most "agent drafts, human ships" workflows. The agent does the work; the human is the editor.
+- **Gates at multiple stages.** Appropriate for high-stakes or compliance-sensitive workflows. Each major step is reviewable.
+- **Approval per external action.** Appropriate for actions that touch external systems (payments, emails to customers, system changes). Every irreversible move passes through review.
+
+A practical rule: **the right level of autonomy is determined by what the agent can break, not by what it can do well.** An agent that drafts beautifully but can also accidentally email all customers needs a gate.
+
+<Callout variant="finding" title="The autonomy rule">
+  Autonomy is appropriate in inverse proportion to the cost of a single bad action. Start with gates everywhere and remove them deliberately, only where the agent's performance has earned the trust.
+</Callout>
+
+---
+
+## Tools: The Real Engineering
+
+The LLM is increasingly commodity. The tools are not.
+
+A few patterns for tool design:
+
+- **Each tool is a function with a typed schema.** Input parameters, output type. The agent picks tools by their schemas (and short descriptions), so the schemas have to be informative.
+- **Tools should be idempotent where possible.** Calling the same tool with the same input twice should not break anything. This makes retries safe.
+- **Tools should be cheap-to-call and expensive-to-side-effect.** Read tools (queries, retrieval, calculation) are fine to call freely; write tools (email, payment, deploy) should require explicit confirmation.
+- **The tool allow-list is the security perimeter.** An agent cannot do anything outside its registered tools. Be deliberate about what's on the list.
+- **Tool calls are auditable.** Every call gets logged with arguments, output, timestamp, and which step of which agent run made it.
+
+The tool surface is what makes an agent powerful and what makes it dangerous. Designing it carefully is more important than choosing the underlying LLM.
+
+---
+
+## Single-Agent vs. Multi-Agent
+
+A recurring question: should a complex workflow be one agent with many tools, or many specialized agents working together?
+
+The honest answer: **usually one agent**.
+
+- Single-agent designs are simpler to reason about, simpler to evaluate, and simpler to monitor.
+- Multi-agent designs make sense when the problem genuinely decomposes — different agents have access to different tool sets, different memory, different security clearances.
+- "Multi-agent" as a brand for "I want to add complexity" usually fails. The orchestration overhead is rarely repaid by the supposed division of labor.
+
+If you find yourself building a multi-agent system, ask whether the same effect could be achieved with one agent and better tool design. Often it can.
+
+---
+
+## Memory, Briefly
+
+Agents have two kinds of memory:
+
+- **Short-term:** the conversation context. Modern LLMs have large context windows (often 200k+ tokens), but blowing through them with verbose tool outputs degrades both cost and quality. Summarize old turns into condensed memory blocks when contexts get long.
+- **Long-term:** a vector database or structured store the agent reads and writes across sessions. Useful for "remember what we discussed last week," for accumulating customer history, for building up a knowledge graph over time.
+
+Both kinds of memory share a property: they need to be *managed*. Without bounded memory, agents accumulate noise, drift in behavior, and become hard to debug. The discipline of "what does this agent remember, for how long, and who can see it?" is mostly a privacy and audit question — but it has a technical side too.
+
+---
+
+## Where Agents Are Working in 2026
+
+A short tour of production deployments:
+
+- **Customer support drafting.** Agent reads ticket, pulls history, drafts response. Human edits and sends. The single biggest live use case.
+- **Internal Q&amp;A.** RAG-style agent over company documents. Adds tool calls for fresh data (org chart, calendars, dashboards).
+- **Code assistants.** Cursor, Claude Code, Copilot. Agentic loops that read code, propose edits, run tests, iterate. Human approval per commit.
+- **Operations automation.** Triage agents that route tickets, fill CRM fields, schedule meetings. Bounded tool surface; high-volume; medium-stakes.
+- **Sales playbook agents.** Read CRM, pull product info, draft personalized outreach. Sales rep ships.
+- **Compliance and content moderation.** Multi-step review of submitted content against policies. Human appeal path.
+
+Where agents *aren't* working yet: anything that requires deep judgment over the full context of a complex organization, anything where the cost of a single misfire is catastrophic, anything that requires the agent to negotiate with another autonomous system at scale.
+
+---
+
+<Pitfall title="Hallucinated tool arguments">
+The agent makes up a customer ID or an invoice number and calls a tool with it. **Use typed schemas, validate arguments before tool execution, and ground tool inputs in retrieved data rather than the model's guess.**
+</Pitfall>
+
+<Pitfall title="Over-eager autonomy">
+The agent decides to "be helpful" and takes an action outside its mandate. **Use explicit refusal patterns, narrow tool allow-lists, and gates on anything irreversible — the right autonomy is set by what the agent can break, not what it does well.**
+</Pitfall>
+
+<Pitfall title="Cost explosion">
+A bad loop can burn through an API budget in minutes before anyone notices. **Set per-run cost caps, alerting, and budget guardrails so a runaway loop trips a circuit-breaker instead of an invoice.**
+</Pitfall>
+
+---
+
+<Takeaway label="The operating posture">
+
+An agent is a language model plus a set of tools plus a loop. The model is increasingly cheap; the *tools and the loop are the engineering*. The defining design choice is the human-approval gate — where it sits, how it works, and whether it stays in place as trust accrues. Define the tools, bound the autonomy, place the gates, log everything, and earn trust before removing gates.
+
+The next two articles — Chapter 16 — wrap all of this into a governance framework and a final capstone that integrates everything in Part V into a single Bean &amp; Basket customer-voice system.
+
+</Takeaway>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning the chapter — what to ask an LLM, how to structure its output, and when to let it act."
+  questions={[
+    {
+      prompt: <>A team wires an LLM directly into a workflow that computes refund amounts to the cent from long invoices. Exact arithmetic is exactly where LLMs are unreliable. The right fix is:</>,
+      options: [
+        { label: <>Use a bigger, more capable model and trust the numbers.</> },
+        { label: <>Have the model call out to a calculator or code-interpreter tool for the arithmetic, rather than doing the math itself.</> },
+        { label: <>Lower the temperature and re-run until two answers agree.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The right response to most LLM weaknesses is a workflow fix, not a model fix. Arithmetic belongs in a deterministic tool; the model orchestrates, the calculator computes.</>,
+    },
+    {
+      prompt: <>A schema has no slot for "I don't know". The model is being asked to extract a renewal date that isn't always present in contracts. Most likely consequence?</>,
+      options: [
+        { label: <>The model leaves the field empty.</> },
+        { label: <>The model fabricates plausible-looking dates when they aren't in the document, because the schema gives it no way to refuse.</> },
+        { label: <>The model errors out.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Without a refusal slot, the model invents. The fix is explicit nullability or a per-field confidence/refusal channel.</>,
+    },
+    {
+      prompt: <>A customer-support agent drafts a reply and sends it directly to the customer with no review. Three weeks later, an embarrassing reply ships. The architectural fault is:</>,
+      options: [
+        { label: <>The LLM is too small.</> },
+        { label: <>Missing human-approval gate — anything customer-facing should pass through a reviewer until the agent has earned the autonomy.</> },
+        { label: <>The customer should not have asked.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The right autonomy level is determined by the cost of a single bad action. Customer-facing replies almost always merit a gate.</>,
+    },
+  ]}
+/>

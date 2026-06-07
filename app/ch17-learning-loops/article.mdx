@@ -1,0 +1,203 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  PortfolioMonitoring,
+  TwoStudioIntersection,
+} from '@/components/Book/part6/Part6Diagrams';
+
+<DropCap>
+
+A single model with a monitoring dashboard is good. A single AI workflow with an eval rubric is good. A working analytics organization has dozens of each, plus dashboards, memos, case packs, and studios. The discipline doesn't end at "each thing is monitored." It ends at "the portfolio is monitored, and what one studio learns shows up in the next." This article scales the §12.3 and §16.4 monitoring patterns up to the organization, and shows how the two customer studios feed each other.
+
+</DropCap>
+
+The article has four moves. From individual to portfolio monitoring. Drift, decay, and the re-investment cadence. The intersection of the Part IV and Part V studios as one customer system. And the failure modes that come specifically from running analytics as a learning system rather than a project queue.
+
+---
+
+## The Executive Question
+
+> *How do we run the analytics organization as a learning system — where the artefacts compound rather than decay, and the studios feed each other?*
+
+The shift is from monitoring a thing to monitoring a portfolio. The same techniques apply; the unit of analysis grows.
+
+---
+
+## Portfolio Monitoring
+
+A working organization's monitoring dashboard is *not* about one model. It is about every shipped artefact at once.
+
+<Figure width="page-outset" caption="Figure 1. Portfolio monitoring — every studio, every KPI, on one screen. Status lights point operators at what needs attention; the alert at the bottom drives action. The §12.3 and §16.4 patterns scale to the whole portfolio without becoming illegible.">
+  <div className="not-prose">
+    <PortfolioMonitoring />
+  </div>
+</Figure>
+
+Three rules for portfolio dashboards:
+
+1.  **One screen, summary KPIs per artefact, a single alert area.** A dashboard with thirty rows of detail nobody reads is worse than one with five summary rows everyone scans.
+2.  **Roll up, don't pile up.** The Customer Voice Studio is one row, not seven. Its sub-metrics live in its own monitoring view (§16.4), which the portfolio row links to.
+3.  **Status, not exhaustion.** Each row has a binary or three-state health: healthy / watch / alert. The portfolio view is for triage; the detail view is for diagnosis.
+
+A monitoring view that obeys these rules can be read in two minutes. That is the only kind anyone reads twice.
+
+---
+
+## Drift, Decay, and the Re-investment Cadence
+
+Every artefact in the catalog from §17.1 decays at its own rate. A few patterns recur:
+
+<DataTable
+  caption="Table 1. Typical decay rates and re-investment cadences for the major artefact types. The cadences are starting points; actual cadences should be tuned to the firm's rate of change."
+  columns={[
+    { key: 'kind', label: 'Artefact type', align: 'left' },
+    { key: 'decay', label: 'Typical decay rate', align: 'left' },
+    { key: 'cadence', label: 'Re-investment cadence', align: 'left' },
+  ]}
+  rows={[
+    { kind: 'Logistic / classification models', decay: 'Slow drift; sharp on regime change', cadence: 'Quarterly refit; triggered refit on monitoring alert' },
+    { kind: 'Tree ensembles / gradient boosting', decay: 'Faster drift; more sensitive to feature shift', cadence: 'Monthly–quarterly refit; weekly drift monitoring' },
+    { kind: 'RAG indices', decay: 'Stale within weeks for changing docs', cadence: 'Event-triggered re-indexing + scheduled monthly refresh' },
+    { kind: 'LLM prompts and workflow cards', decay: 'Slow until the underlying model changes', cadence: 'Re-evaluated on every model upgrade + quarterly review' },
+    { kind: 'Topic models / clusterings', decay: 'Themes shift in months', cadence: 'Quarterly refit with explicit re-naming' },
+    { kind: 'Dashboards', decay: 'Visual usefulness erodes as questions change', cadence: 'Semi-annual review; retire unused panes' },
+    { kind: 'Decision memos', decay: 'Recommendation may become outdated', cadence: 'Revisit at the next-test deadline named in the memo' },
+    { kind: 'Case packs', decay: 'Data ages; methods stay relevant longer', cadence: 'Annual refresh of data; chapter revisions when method changes' },
+  ]}
+/>
+
+The cadence is the *re-investment* schedule, not the *update* schedule. Most artefacts get a small refresh more often than the cadence; the cadence is when the team commits real engineering attention.
+
+---
+
+## The Two-Studio Intersection
+
+The book's two customer studios — Part IV's Customer Intelligence Studio (§12.4) and Part V's Customer Voice Intelligence Studio (§16.5) — answer complementary questions. Run separately, they each work. Run together, they multiply.
+
+<Figure width="page-outset" caption="Figure 2. The two studios as one customer system. Each studio knows part of the picture; their intersection is the customer set where the strongest actions live. Most retention spend should be routed by what's in both circles, not by either alone.">
+  <div className="not-prose">
+    <TwoStudioIntersection />
+  </div>
+</Figure>
+
+The intersection is the operational payoff:
+
+- A customer in the **Customer Intelligence** circle is at risk (a high churn score) or high-value (a strong LTV score) but the firm may not know *why*.
+- A customer in the **Customer Voice** circle has articulated *what* is bothering them, but the firm may not know how at-risk or how valuable they are.
+- A customer in **both** circles is both at risk *and* articulating the reason. That is where retention budget delivers the highest expected lift per dollar.
+
+A working customer system *routes by the intersection*. The lookalike audience used for the retention campaign in the Bean &amp; Basket sample memo (§17.2) was constructed exactly this way: high churn risk × emerging app-reliability cluster. The combined signal moves the action much further than either signal alone.
+
+<Callout variant="finding" title="The intersection rule">
+  Where two evidence languages agree about the same customer, the action is unusually safe. Route retention spend, voice-of-customer outreach, and proactive service interventions through that intersection.
+</Callout>
+
+---
+
+## Decision Retrospectives
+
+The cheapest, highest-leverage analytics activity: read a memo from six months ago and check whether the recommendation worked.
+
+The retrospective has a standard shape:
+
+1.  **Pull the memo.** Read the recommendation, the threshold, and the next-test design.
+2.  **Pull the outcome data.** What actually happened on the named metric over the named horizon?
+3.  **Score the recommendation.** Did the action ship? If yes, did it meet the threshold? If no, why not?
+4.  **Score the uncertainty.** Did the things the team flagged as risks materialize? Were there risks the memo missed?
+5.  **Update the artefact.** What's the new memo, the new model card, the new monitoring criterion based on what we learned?
+
+A team that runs retrospectives quarterly across its memo portfolio is a team that *learns systematically*. A team that doesn't is a team that re-litigates the same arguments every year.
+
+---
+
+## Bad Incentives and Learning Failures
+
+Three structural failures recur in production analytics that look fine on the dashboard:
+
+**Closed-loop targeting.** A lead-scoring model directs sales reps to high-score leads. The reps only call high-score leads. The firm stops learning what low-score leads would have done. The dataset the next model trains on is censored by the previous model's choices. The fix is an **exploration budget** — a small fraction of leads called outside the model's recommendation — and a holdout that lets the firm continue to measure incrementality.
+
+**Filter-bubble recommendations.** A recommender system surfaces what users have liked. Users click what's surfaced. The next training cycle learns that the surfaced items are popular. Over months, the system narrows. Mitigations: diversity terms in the ranking objective, periodic exploration impressions, retraining on baselines that don't condition on the previous model's choices.
+
+**Threshold gaming.** A team is held to a KPI threshold. The KPI is computed from a model the team owns. The team adjusts the model — or the data feeding it — to clear the threshold. The threshold no longer measures what it was supposed to. The structural fix is to separate the team that builds the model from the team that owns the threshold (or to use externally-defined holdouts).
+
+All three failures share a structure: the analytics system has been allowed to change the world it observes. The cure is procedural, not algorithmic — exploration budgets, holdouts, separated incentives, decision retrospectives.
+
+---
+
+## The Organizational Side
+
+Three operational notes that don't fit cleanly elsewhere:
+
+- **The governance committee.** A small cross-functional group (analytics leadership, engineering, legal, business owners) reviews high-risk artefacts on a quarterly cadence — new AI workflows, models with regulatory exposure, customer-facing deployments. The committee's job is not to approve everything in detail; it is to ensure the artefacts have completed the §16.4 checklist before they ship.
+- **The on-call rotation.** Production models and AI workflows behave like services. Someone is on call when they fail. Naming that person — and equipping them with the model card, the alert thresholds, and the rollback procedure — is part of what makes the system operate-able.
+- **The kill switch.** Every customer-facing deployment ships with a clear, fast deactivation path. If the recommender starts surfacing offensive content, if the agent starts hallucinating refund policies, if the churn model starts targeting a protected class, the on-call has to be able to stop it within minutes. The kill switch is part of the architecture, not an afterthought.
+
+None of these is a methods topic. All of them shape whether the methods of Parts I–V produce value or accumulate risk.
+
+---
+
+<Pitfall title="Cadence creep">
+"We'll refresh quarterly" becomes "we haven't refreshed in nine months." **Treat cadence misses as visible incidents, not soft commitments.**
+</Pitfall>
+
+<Pitfall title="Retrospectives that turn into blame">
+A memo recommendation didn't work, and the team treats the retrospective as accountability theatre. **Focus retrospectives on *what we now know*, not *who was wrong*.**
+</Pitfall>
+
+<Pitfall title="Kill switches that don't work in practice">
+A deactivation path tested once at deploy time and never exercised will fail when it is finally needed. **Run periodic kill-switch drills so the path stays live.**
+</Pitfall>
+
+---
+
+<Takeaway label="Net-net">
+
+Monitoring is not the last item on the project plan. It is the operating posture that turns a stack of analytics into a learning system. Portfolio monitoring, deliberate re-investment cadences, the two-studio intersection, retrospectives, exploration budgets, governance committees, kill switches — these are the practices that separate one-quarter wonders from a system that compounds.
+
+*Monitor the portfolio. Refresh on cadence. Route by the intersection. Hold retrospectives. Budget for exploration. Drill the kill switch.*
+
+The last article — §17.4 — pulls everything together. A Bean &amp; Basket strategic decision that uses every Part of the book at once.
+
+</Takeaway>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning the decision memo and the monitoring loops that run across a portfolio of them."
+  questions={[
+    {
+      prompt: <>The decision memo and a research write-up are related but distinct artefacts. The cleanest description of the difference is:</>,
+      options: [
+        { label: <>The memo is shorter.</> },
+        { label: <>The memo is the action-triggering artefact, sized for a sponsor's five-minute read; the research write-up is the audit-trail artefact, sized for an analyst to reproduce the work. Both ship.</> },
+        { label: <>They're the same document at different formality levels.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Both artefacts have a role. The memo drives action; the write-up provides reproducibility. Most working organisations ship both.</>,
+    },
+    {
+      prompt: <>A sales-lead scoring model has been live for a year. The team notices that the model's lift over random has fallen from 3.5× to 1.8×. The most likely structural cause is:</>,
+      options: [
+        { label: <>The model needs to be bigger.</> },
+        { label: <>Closed-loop targeting — reps only call high-score leads, so the firm has stopped observing what low-score leads would have done, and the model is no longer being trained on a representative sample.</> },
+        { label: <>The leads are getting worse.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Closed-loop targeting is the canonical learning failure. The structural fix is an exploration budget and a holdout that preserves the firm's ability to learn.</>,
+    },
+    {
+      prompt: <>The Customer Intelligence Studio (§12.4) ranks a customer as high-risk for churn. The Customer Voice Studio (§16.5) places the same customer in an emerging complaint cluster. The operational implication is:</>,
+      options: [
+        { label: <>The two studios are duplicating effort; pick one.</> },
+        { label: <>The intersection is where retention spend pays off most — the firm knows both <em>that</em> the customer is at risk and <em>why</em> — and the right action is to route this customer to a targeted, voice-aware retention campaign.</> },
+        { label: <>The customer should be removed from both lists.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The two-studio intersection is the central operational pattern of Part VI. Where the structured and unstructured evidence agree, the action is unusually well-grounded.</>,
+    },
+  ]}
+/>

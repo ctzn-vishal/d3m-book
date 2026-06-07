@@ -1,0 +1,215 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { Part3CapstoneBrief } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+A capable manager rarely has the luxury of a single, clean piece of evidence on which to base a decision. The day-to-day reality is several streams of evidence, often pointing in different directions, all competing for influence over a single strategic choice. This capstone takes the four evidence languages of Part III — randomization, regression with identification, panel fixed effects, difference-in-differences and synthetic control, and elasticity-to-price — and shows how to combine them into one professional artifact: a strategic pricing and promotion memo that a senior executive can read in five minutes.
+
+</DropCap>
+
+The article is organized around two ideas. First, every strong recommendation should distinguish four kinds of claims — descriptive, causal, model, and decision — and earn each one separately. Second, the memo format itself enforces that discipline: when a section is empty or weak, the recommendation is not yet ready.
+
+---
+
+## The Executive Question: Which Lever, for Whom, and How Do We Learn?
+
+A category director faces three competing proposals to lift contribution profit by 12% this quarter:
+
+1.  **Broad price hike.** Raise all beverage prices 15% across all stores, on the claim that coffee demand is historically inelastic.
+2.  **Targeted loyalty promotion.** Send a 20% latte coupon to occasional customers in lower-income ZIP codes via the app.
+3.  **Cross-product bundle.** Cut pastry prices 10% when paired with a beverage, on the claim that complement effects drive a positive net basket lift.
+
+Each proposal sounds reasonable; each is supported by one of the evidence languages from Part III. The capstone job is *reconciliation* — choosing the lever for which the evidence is strongest, defending the choice in a memo, and designing a rollout that continues to learn from real data.
+
+---
+
+## Four Kinds of Claims, Always Separated
+
+A serious recommendation distinguishes four claims and earns each one separately.
+
+| Claim | Question | What it requires |
+| --- | --- | --- |
+| **Descriptive** | What patterns appear in historical data? | Correlations, dashboards, summary statistics — easy to compute, no causal weight. |
+| **Causal** | What would have happened if we had acted differently? | An identification strategy (experiment, fixed effects, DiD, synthetic control) that constructs a credible counterfactual. |
+| **Model** | How much does the lever move the outcome, holding other observables constant? | A specified regression with identified controls; the elasticity or treatment-effect coefficient and its interval. |
+| **Decision** | Given the model's coefficient, the costs, and the risks, what price or promotion should we set? | An optimization (Lerner rule, profit threshold) plus guardrails for fairness, retention, and competitor reaction. |
+
+The most common executive-deck failure is conflating these four. A causal claim made on descriptive evidence ("the campaign worked — sales went up") is the canonical error. A decision claim built on a confounded model ("price elasticity is <M>{String.raw`-3.21`}</M>, so cut prices") is the costly one.
+
+---
+
+## The Reconciled Decision Board
+
+Three evidence streams from Part III flow into a single pricing memo:
+
+<Figure width="screen-inset" caption="Figure 1. The reconciled decision board. Heterogeneity from quasi-experiments tells us who responds. Synthetic control gives a credible baseline for market-level interventions. Panel fixed effects give an unconfounded elasticity for individual SKUs. The strategic memo integrates all three and ends with a staggered field test rather than an immediate national rollout.">
+  <div className="not-prose my-6 flex justify-center bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+    <svg viewBox="0 0 800 340" width="100%" height="auto" className="max-w-[760px] text-slate-800 font-sans">
+      <defs>
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#0f172a" floodOpacity="0.08" />
+        </filter>
+        <marker id="rdb-arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#0f766e" />
+        </marker>
+      </defs>
+
+      <rect x="10" y="10" width="780" height="150" rx="12" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1.5" />
+      <text x="25" y="32" className="text-xs font-bold uppercase tracking-wider fill-slate-400">Three evidence languages</text>
+
+      <g filter="url(#shadow)">
+        <rect x="30" y="45" width="220" height="95" rx="8" fill="#ffffff" stroke="#0d9488" strokeWidth="1.5" />
+        <rect x="30" y="45" width="220" height="6" rx="3" fill="#0d9488" />
+        <text x="45" y="70" className="text-sm font-bold fill-slate-900">Quasi-experiments + HTE</text>
+        <text x="45" y="88" className="text-[11px] font-semibold fill-slate-500">Worked case · flat milk pricing</text>
+        <text x="45" y="106" className="text-[11px] fill-slate-600">Identifies which segments respond</text>
+        <text x="45" y="122" className="text-[11px] fill-slate-600">and which to suppress.</text>
+      </g>
+
+      <g filter="url(#shadow)">
+        <rect x="290" y="45" width="220" height="95" rx="8" fill="#ffffff" stroke="#0284c7" strokeWidth="1.5" />
+        <rect x="290" y="45" width="220" height="6" rx="3" fill="#0284c7" />
+        <text x="305" y="70" className="text-sm font-bold fill-slate-900">Synthetic control</text>
+        <text x="305" y="88" className="text-[11px] font-semibold fill-slate-500">Worked case · Zillow Colorado</text>
+        <text x="305" y="106" className="text-[11px] fill-slate-600">Builds a weighted counterfactual</text>
+        <text x="305" y="122" className="text-[11px] fill-slate-600">for single-unit interventions.</text>
+      </g>
+
+      <g filter="url(#shadow)">
+        <rect x="550" y="45" width="220" height="95" rx="8" fill="#ffffff" stroke="#d97706" strokeWidth="1.5" />
+        <rect x="550" y="45" width="220" height="6" rx="3" fill="#d97706" />
+        <text x="565" y="70" className="text-sm font-bold fill-slate-900">Panel fixed effects + elasticity</text>
+        <text x="565" y="88" className="text-[11px] font-semibold fill-slate-500">Worked case · Progresso soup</text>
+        <text x="565" y="106" className="text-[11px] fill-slate-600">Unconfounded own-price slope</text>
+        <text x="565" y="122" className="text-[11px] fill-slate-600">for optimal markup pricing.</text>
+      </g>
+
+      <path d="M 140 140 L 140 180 L 360 180 L 360 210" fill="none" stroke="#0f766e" strokeWidth="2" strokeDasharray="3 3" markerEnd="url(#rdb-arrow)" />
+      <path d="M 400 140 L 400 210" fill="none" stroke="#0f766e" strokeWidth="2" strokeDasharray="3 3" markerEnd="url(#rdb-arrow)" />
+      <path d="M 660 140 L 660 180 L 440 180 L 440 210" fill="none" stroke="#0f766e" strokeWidth="2" strokeDasharray="3 3" markerEnd="url(#rdb-arrow)" />
+
+      <g filter="url(#shadow)">
+        <rect x="180" y="220" width="440" height="90" rx="10" fill="#f0fdfa" stroke="#0f766e" strokeWidth="2" />
+        <text x="200" y="248" className="text-base font-black fill-[#0f766e]">Strategic pricing &amp; promotion memo</text>
+        <text x="200" y="270" className="text-xs font-semibold fill-slate-700">Targets by segment · prices by Lerner · validates by staggered field test</text>
+        <text x="200" y="290" className="text-xs fill-slate-600">Action: pilot before national; learn continuously.</text>
+      </g>
+    </svg>
+  </div>
+</Figure>
+
+The empirical headlines from each case anchor the synthesis:
+
+<Figure width="screen-inset" caption="Figure 2. Headline numbers from the three Part III cases. Each one demonstrates a different evidence language; the capstone is reading them together rather than separately.">
+  <div className="not-prose">
+    <Part3CapstoneBrief data={data} />
+  </div>
+</Figure>
+
+What each case actually argues, with its limitation:
+
+- **Milk +12.8 pp lift in low-income ZIPs.** Pricing nudges are highly heterogeneous. Action: target by income tier, do not deploy uniformly. Limit: flat pricing was not randomized; corporate pricing rules might correlate with regional preferences.
+- **Zillow +20.2% Colorado gap.** Single-unit interventions can be evaluated when a credible synthetic counterfactual exists. Action: for any single-market launch, demand a synthetic control study before declaring success. Limit: an unmeasured Colorado-specific shock (e.g., a tech boom) could account for part of the gap.
+- **Soup elasticity −2.23 vs. naive −3.21.** Identification matters more than algorithms. Action: never set prices on a naive elasticity; use within-store variation. Limit: weekly prices still co-move with promotions; the elasticity is conditional on the controls included.
+
+---
+
+## The Memo Template
+
+A defensible strategic pricing memo has five sections. Each section answers a question and presents one piece of evidence. The memo is short because the discipline of being short forces the team to commit.
+
+```markdown
+1. EXECUTIVE SUMMARY (the recommendation, in three lines)
+   - The specific lever (price, promotion, target segment).
+   - The expected effect, with its uncertainty.
+   - The rollout plan and the trigger for national deployment.
+
+2. CAUSAL IDENTIFICATION
+   - The Decision Question Card (action, outcome, unit, horizon, counterfactual, threshold).
+   - Why naive correlation would be biased.
+   - The identification strategy (experiment, FE, DiD, SC) and its main threat.
+
+3. MODEL PARAMETERS
+   - Estimated own- and cross-price elasticities (or treatment effects) with intervals.
+   - The optimal price (or expected lift) from the formula.
+   - Heterogeneity by segment, if any.
+
+4. RISK & RETENTION AUDIT
+   - Competitor cross-price vulnerability and likely retaliation.
+   - Customer trust and loyalty implications.
+   - Basket complement effects on adjacent SKUs.
+
+5. ROLLOUT & LEARNING PLAN
+   - Staggered field test design, test/control assignment, sample size.
+   - KPIs that trigger expansion or rollback.
+   - Long-run retention holdout to monitor LTV.
+```
+
+Each section is exactly one screen. A section that requires more space usually means the underlying evidence is not yet clear enough to support a decision.
+
+---
+
+## A Worked Memo
+
+> ### Executive memorandum
+> **TO:** Pricing committee
+> **FROM:** Category director, premium beverages
+> **DATE:** 2026-05-20
+> **SUBJECT:** Optimization of the premium oat-milk surcharge
+>
+> **1. Recommendation.** Raise the premium oat-milk surcharge from $0.50 to $0.75 (a 5% retail price increase on a standard $5 latte), implemented first as a 30-day staggered pilot in 25 West Coast stores with 25 matched control stores. Projected category margin lift across the 400-store network if validated: roughly $14.5k per week.
+>
+> **2. Causal identification.** Naive historical regressions return an oat-milk elasticity near <M>{String.raw`-2.85`}</M>. This estimate is confounded: oat-milk promotions are concentrated in summer weekends when traffic spikes. We re-estimate with store-week fixed effects on 18 months of scanner data; within-store variation gives an elasticity of <M>{String.raw`-1.85`}</M> with a 95% interval of <M>{String.raw`[-2.10, -1.60]`}</M>. Threat: time-varying local marketing campaigns; we partially address by including a promotion flag.
+>
+> **3. Model parameters.** Marginal cost is $1.50. The Lerner rule gives
+>
+> <Equation latex={String.raw`P^* \;=\; \frac{\$1.50}{1 + 1/(-1.85)} \;\approx\; \$3.26`} />
+>
+> ...which, added to the base beverage cost, justifies a $5.25 retail price (an increase of $0.25 over the current $5.00). The corresponding pastry cross-price elasticity is <M>{String.raw`-0.32`}</M> (complement), implying a roughly 1.6% pastry volume decline at the 5% beverage price increase.
+>
+> **4. Risk audit.** Pastry margin loss (~$0.65 × 1.6% × baseline pastry volume) is materially smaller than the latte margin gain (~$0.25 × residual latte volume after elasticity-driven shrinkage). Net category contribution lift is positive but not insensitive to the assumed elasticity. Competitor matching is plausible but limited — premium oat-milk surcharges are not standardized across competitors.
+>
+> **5. Rollout and learning.** 25 treated stores at $5.25, 25 matched control stores at $5.00 for 30 days. KPIs: weekly category contribution profit, pastry attachment rate, loyalty-member 90-day repeat rate. National rollout trigger: per-store contribution lift of at least $25/week without statistically significant degradation in either of the other two KPIs. Retention holdout: 10% of loyalty members retained at $5.00 indefinitely for long-run LTV monitoring.
+
+The memo is one page. Every claim is supported by exactly one piece of evidence from Part III: identification from Chapter 6, elasticity from Chapter 8.1, cross-effects from 13.2, pricing rule from 13.3, rollout discipline from 10.
+
+---
+
+<Pitfall title="Overclaiming causality from a fitted model">
+A regression with fixed effects is not a randomized experiment. It controls for stable confounders, not time-varying ones. **The memo's identification section must name the threats it does not address.**
+</Pitfall>
+
+<Pitfall title="The price war trap">
+Cross-price models assume rivals stand still. They never do. **Pair every aggressive pricing move with an explicit competitor-reaction scenario.**
+</Pitfall>
+
+<Pitfall title="Short-run elasticity for long-run decisions">
+Regressions on weekly variation capture short-run response. Long-run customer churn from sustained price hikes is in neither the data nor the formula. **A retention holdout is the only way to learn it.**
+</Pitfall>
+
+---
+
+<Takeaway label="The Part III discipline">
+
+Part III is a discipline, not a tool set:
+
+- Separate the four claims — descriptive, causal, model, decision — and defend each one with its own evidence.
+- Reconcile multiple evidence languages: heterogeneity tells you who; synthetic control tells you the baseline; fixed-effects elasticity gives you the magnitude.
+- Treat formulas as generators of candidate test prices, not as commands.
+- Always end with a staggered rollout and a learning plan. Field data is the final arbiter of every regression coefficient you have learned to estimate.
+
+</Takeaway>
+
+---
+
+## Forward to Part IV
+
+Part III asked *what caused the move?* — and produced effects we can act on. Part IV asks a different question of the same data: *what is likely to happen next, for whom?* Where causal inference isolates one lever's effect under careful identification, prediction learns broad patterns that generalize. The methods rhyme — both fit functions of features to outcomes — but the discipline shifts. Part III's coefficients are *effects*; Part IV's scores are *bets*. Both are useful; confusing the two costs money.

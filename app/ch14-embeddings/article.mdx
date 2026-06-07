@@ -1,0 +1,256 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { EmbeddingScatter, KeywordVsSemanticSearch, SurveyVsTextMap } from '@/components/Book/part5/TextDiagrams';
+
+<DropCap>
+
+If a document is a sparse vector of word counts, "refund" and "money back" are orthogonal — they share no words and the bag-of-words model sees no relationship. To a customer service team they are obviously the same thing. The representational gap is the entire reason embeddings exist. An embedding is a dense vector — a few hundred or a few thousand numbers — placed in a learned coordinate system where similar meanings sit near each other, even when they share no vocabulary.
+
+</DropCap>
+
+This article does two things: it introduces embeddings as a *coordinate system for meaning*, then puts that coordinate system to work in its most operationally valuable use — **semantic search**, finding documents by meaning rather than vocabulary. The math is light; the consequences are large. Most of the modern toolkit — semantic search, RAG, multimodal AI, embedding-based recommenders — rests on the idea that meaning has coordinates and those coordinates can be computed.
+
+---
+
+## The Executive Question
+
+> When we have text, images, audio, or documents, can we represent each one as a vector such that *similar things are close together* — even when they share nothing on the surface — and then retrieve, cluster, and position them by that similarity?
+
+The answer is yes, and the rest of Part V is what that yes lets us build.
+
+---
+
+## The Coordinate System Analogy
+
+The most useful intuition is geographic. A city in a coordinate system has a latitude and longitude. Two cities close on the map are close in the world. The map is a *representation* — a few numbers per city — that preserves something about the relationships of the underlying cities.
+
+An embedding does the same thing for documents (or words, or images). Each document gets a vector. Documents whose meanings are close sit near each other in the vector space. The "map" is now hundreds or thousands of dimensions instead of two, so we can't draw it directly — but the property that matters (close meanings → close vectors) is the same.
+
+A small worked example. Suppose the corpus has these phrases:
+
+- *refund*
+- *return*
+- *money back*
+- *cancel order*
+- *delivery delay*
+- *order arrived late*
+- *driver was slow*
+- *app crashed*
+- *cannot sign in*
+
+Bag-of-words puts them in nine orthogonal directions — each phrase shares no words with any other. An embedding places them in roughly three clusters:
+
+- A "refund/return" cluster.
+- A "delivery delay" cluster.
+- An "app technical" cluster.
+
+That clustering wasn't programmed in. It was *learned* from the training corpus the embedding model saw. The model observed that "refund" and "money back" co-occur with similar surrounding language and therefore mean similar things — and represented them with nearby vectors.
+
+---
+
+## A Picture of the Space
+
+A scatter plot of the embeddings (after reducing to 2D for the page) makes the structure visible.
+
+<Figure width="page-outset" caption="Figure 1. A 2D projection of phrase embeddings from Bean &amp; Basket customer messages. Phrases cluster by meaning — refund vocabulary on the upper left, delivery delays on the upper right, app technical issues on the lower left, product praise on the lower right. The query 'unhappy with refund process' lands in the refund cluster, even though that phrase doesn't appear verbatim in the corpus.">
+  <div className="not-prose">
+    <EmbeddingScatter />
+  </div>
+</Figure>
+
+Two reading habits carry forward from §11.3:
+
+- **Trust neighbourhoods.** The clusters and which phrases sit near each other are real.
+- **Distrust geometry.** The exact distances between clusters depend on the projection. The axes have no business meaning. UMAP/t-SNE caveats apply.
+
+The neighbour panel on the right of the figure is what most embedding applications use. Given a query, return the top-k items by vector distance. That single primitive — "find me documents that mean approximately the same thing as this one" — underwrites semantic search (later in this article), RAG (§15.1), embedding-based segmentation, recommendation, and anomaly detection.
+
+---
+
+## Distance and Similarity
+
+Two vectors in the embedding space have a **distance**. The two standard choices:
+
+- **Euclidean distance** — straight-line distance.
+- **Cosine similarity** — the cosine of the angle between vectors. Higher is more similar; ranges from -1 to 1.
+
+For text embeddings, cosine similarity is the default. The reason is that text vectors often differ in magnitude (longer documents tend to have larger vectors), and cosine similarity ignores magnitude — it asks only about *direction* in meaning space.
+
+<Equation
+  label="Cosine similarity"
+  latex={String.raw`\text{cos}(u, v) = \frac{u \cdot v}{\|u\| \|v\|}`}
+/>
+
+Practical note: most embedding APIs return vectors already normalized to unit length, in which case Euclidean distance and cosine similarity give the same ranking.
+
+---
+
+## What Gets Embedded
+
+The same idea works across modalities:
+
+<DataTable
+  caption="Table 1. The modalities embedding models cover, and what the resulting vectors are good for. Multimodal embeddings — text and images in one shared space — are the foundation of §15.4."
+  columns={[
+    { key: 'kind', label: 'What gets embedded', align: 'left' },
+    { key: 'model', label: 'Representative model family', align: 'left' },
+    { key: 'use', label: 'What the vector is good for', align: 'left' },
+  ]}
+  rows={[
+    {
+      kind: 'Words',
+      model: 'word2vec, GloVe (classical); contextual: BERT subwords.',
+      use: 'Synonym detection, analogies, classical NLP features.',
+    },
+    {
+      kind: 'Sentences / documents',
+      model: 'Sentence-Transformers (open), text-embedding-3 (OpenAI), Cohere embed.',
+      use: 'Semantic search, clustering, RAG retrieval.',
+    },
+    {
+      kind: 'Images',
+      model: 'CLIP, DINO, SigLIP image encoders.',
+      use: 'Visual similarity, image search, content moderation.',
+    },
+    {
+      kind: 'Images + text in one space',
+      model: 'CLIP and successors.',
+      use: 'Text-query → image search and vice versa (§15.4).',
+    },
+    {
+      kind: 'Audio',
+      model: 'Whisper encoder, audio CLIP variants.',
+      use: 'Acoustic similarity, transcript-free search.',
+    },
+    {
+      kind: 'Products / users / structured entities',
+      model: 'Recommender embeddings (matrix factorization, two-tower nets).',
+      use: 'Collaborative recommenders (§12.2).',
+    },
+  ]}
+/>
+
+The unifying idea: anything that has a notion of "similar" can in principle be embedded. The space, the model, and the training data change. The "find nearby items" primitive does not.
+
+---
+
+## Embeddings Are Learned, Not Declared
+
+Two properties to hold onto before we start building.
+
+**Embeddings are learned, not declared.** Nobody told the model that "refund" and "money back" are similar. The model learned it from the contexts in which those words appear. That means the embedding inherits the biases, gaps, and assumptions of its training data. A clinical-domain embedding may not recognize coffee jargon; an English embedding may garble Mandarin.
+
+**The embedding is downstream of a choice of model.** "OpenAI text-embedding-3-small" and "Sentence-Transformers all-MiniLM-L6-v2" produce different vectors for the same input. The downstream system has to commit to one model. Mixing embeddings from different models is meaningless — the vectors live in different spaces.
+
+<Callout variant="finding" title="The embedding contract">
+  An embedding is one model's opinion about meaning, made into coordinates. Useful, learnable, and not neutral — it carries whatever was in its training data, so audit before high-stakes use. The model choice is part of the system architecture, not a detail.
+</Callout>
+
+---
+
+## Semantic Search: Keywords vs. Meaning
+
+Now put the primitive to work. A manager wants to find "customers angry about delivery delays." A keyword search returns only documents that contain "angry" or "delivery." A semantic search returns documents that share the *meaning*, regardless of vocabulary.
+
+<Figure width="page-outset" caption="Figure 2. Keyword vs. semantic retrieval on the query 'customers angry about delivery delays'. Keyword search misses 'driver was late again' and 'food arrived cold' because the words don't match. Semantic search recovers them — the embedding placed those documents near the query in meaning space.">
+  <div className="not-prose">
+    <KeywordVsSemanticSearch />
+  </div>
+</Figure>
+
+The mechanism is the nearest-neighbour primitive applied in two steps:
+
+1.  **At index time.** Embed every document in the corpus. Store the vectors in a database that supports nearest-neighbour queries.
+2.  **At query time.** Embed the query with the *same model*. Retrieve the top-k documents whose vectors are nearest.
+
+That's the entire architecture. The complexity is in scaling the nearest-neighbour search (approximate methods become essential beyond a few million documents) and in the prompt or interface that uses the retrieved documents.
+
+<Pitfall title="Similarity is not relevance">
+  Two documents can be close in meaning and still be the wrong answer to the user's actual question. Production search pairs semantic retrieval with a relevance re-ranker — a smaller classifier or an LLM — that re-orders the top-k. Semantic search needs evaluation, just like a classifier does.
+</Pitfall>
+
+---
+
+## Vector Databases, Plainly
+
+A vector database is what stores embeddings and answers "give me the k nearest neighbours of this vector, fast." The standard names — Pinecone, Weaviate, Qdrant, Milvus, Postgres+pgvector — implement variations of the same idea: index the vectors with an approximate-nearest-neighbour structure (HNSW, IVF, ScaNN), trade exactness for speed at scale, expose a simple query API.
+
+Three managerial decisions when picking one:
+
+- **Approximate or exact?** Approximate is essential beyond a few million vectors; the precision loss is usually small and tunable.
+- **Hybrid search?** Combining vector similarity with classical text filters (date, region, language) is often necessary. Most databases support this; pure-vector ones lose value quickly in production.
+- **Where it lives.** Hosted service vs. self-hosted vs. embedded-in-existing-DB. The right choice depends on data sensitivity, scale, and team capacity.
+
+<Pitfall title="Versioned vectors">
+  Every stored embedding is tied to the model that produced it. Upgrade the embedding model and you must re-embed the entire corpus — old and new vectors live in incompatible coordinate systems, and a query embedded by the new model against a corpus embedded by the old one returns garbage. The embedding model and its version are part of the system contract, not a swappable detail.
+</Pitfall>
+
+---
+
+## Embedding-Based Clustering
+
+The same vectors that power search also power clustering. Once every document is a vector, K-means, hierarchical clustering, or DBSCAN — all from §11.1 — apply. The output is a segmentation of the corpus by meaning, not by vocabulary.
+
+A few common business applications:
+
+- **Complaint segmentation.** Cluster customer support tickets into themes; compare to the topic-model results from §13.5. The clusters are usually more stable across refits.
+- **Lead segmentation from sales notes.** Cluster sales-call notes; identify customer personas the structured CRM fields don't capture.
+- **Story discovery in social posts.** Cluster posts mentioning the brand; surface narratives the team didn't know existed.
+
+The interpretive workflow is the same as §13.5: the algorithm produces clusters, the analyst names them, the manager decides which deserve action.
+
+---
+
+## Brand Positioning From Text
+
+In §11.2, a perceptual map placed brands in a low-dimensional space using *survey ratings* (premium, affordable, cozy, convenient). The same kind of map can be built from *review text* using embeddings.
+
+<Figure width="page-outset" caption="Figure 3. Two brand maps of the same six brands. Left: PCA of survey attribute ratings. Right: UMAP of review embeddings. The same competitive structure surfaces from two completely different evidence languages.">
+  <div className="not-prose">
+    <SurveyVsTextMap />
+  </div>
+</Figure>
+
+The procedure for the text map:
+
+1.  Collect reviews for each brand.
+2.  Embed each review with a sentence/document embedding model.
+3.  Average the embeddings within each brand to get a single brand vector.
+4.  Reduce to 2D with UMAP or PCA for visualization.
+5.  Read the resulting positions.
+
+The reading habits differ across the two maps:
+
+- **The survey map has named axes.** PC1 might be "value → premium." Useful for explaining the position.
+- **The text map has neighbourhoods.** Brands close together are perceived similarly; the axes have no business meaning.
+
+The strongest use is **triangulation**. If the survey map and the text map agree, the positioning is robust. If they disagree, that disagreement is informative — perhaps customers say one thing on surveys and another in reviews, or the survey questions don't capture the dimensions reviews actually emphasize.
+
+<Callout variant="finding" title="The triangulation rule">
+  A brand position you can see in both survey ratings <em>and</em> review embeddings is a position you can trust. Disagreement between the two is a research question, not a methodological failure.
+</Callout>
+
+---
+
+## Beyond Search: Anomaly Detection and Drift
+
+**Anomaly detection.** Documents whose embeddings are far from every cluster are candidates for human review. A support ticket that doesn't look like any previous ticket is exactly what an escalation queue should surface.
+
+**Drift monitoring.** The centroid of "incoming reviews this week" can drift away from "incoming reviews last quarter" in embedding space. The drift is a richer signal than a single sentiment number — it captures what kind of language has changed, not just whether the overall tone shifted.
+
+Both are restatements of the same primitive: distance in embedding space carries managerial information when interpreted carefully.
+
+<Takeaway label="What to ship">
+
+Embeddings make *meaning* computable, and semantic search is the simplest, most operationally useful thing you build on top of them — extended naturally into clustering, brand positioning, anomaly detection, and drift. The cost is opacity (no per-dimension interpretation), versioning (model upgrades break stored vectors), and dependency (you are leaning on someone else's notion of similarity). The benefit is that every classical NLP failure from §13.6 — synonyms, idiom, polysemy — gets a structural answer rather than a tactical patch.
+
+*Treat embeddings as a coordinate system for meaning. Commit to a model. Search, cluster, and position by meaning — then triangulate with the structured evidence you already have, and trust the neighbourhoods, not the axes.*
+
+</Takeaway>
+
+The next article generalizes the move. Instead of using embeddings as a similarity primitive, it uses a language model directly to *measure* the constructs a manager cares about.

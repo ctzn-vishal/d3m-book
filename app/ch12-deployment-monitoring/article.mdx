@@ -1,0 +1,184 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import {
+  MonitoringDashboardMock,
+  DriftSchematic,
+} from '@/components/Book/part4/SegmentationDiagrams';
+
+<DropCap>
+
+A model that ships well is a model that has been graded under a production-shaped evaluation. A model that *stays* well is a different problem. The world drifts. Features that were predictive last quarter degrade quietly; customer behaviour shifts in ways no one alerted the team to; the system's own outputs change what gets observed next. Monitoring is the discipline of catching those changes before they cost more than the model originally saved.
+
+</DropCap>
+
+This article is short on machinery and long on operating discipline. It distinguishes two kinds of drift, walks through the dashboard that catches both, and lays out the retraining cadence and human-in-the-loop policies that turn a research artefact into a piece of infrastructure.
+
+---
+
+## The Executive Question
+
+> Six months after the model went live, is it still doing what we asked it to — and how would we know if it weren't?
+
+The honest answer requires an answer to a prior question: what *did* we ask it to do? The model card from [§10.5](/ch10-automl-explainability) is the canonical contract. Monitoring is how the team grades the model against the contract, week after week.
+
+---
+
+## Two Kinds of Drift
+
+The world can change in two distinct ways under a deployed model:
+
+<Figure width="page-outset" caption="Figure 1. The two drifts. Data drift (left) shifts the distribution of inputs the model sees; the model itself is still mapping the same features to the same predictions, but the features now look unfamiliar. Concept drift (right) keeps the input distribution roughly stable but changes the relationship between inputs and outcomes — the same features now mean something different.">
+  <div className="not-prose">
+    <DriftSchematic />
+  </div>
+</Figure>
+
+**Data drift** changes the input distribution. The model still computes its function correctly; the inputs simply don't look like the training data anymore. A churn model that was trained on customers from a few city regions and is now scoring customers from new regions is experiencing data drift. Often, performance degrades gracefully — the model can still rank, just less well.
+
+**Concept drift** changes the relationship between inputs and outputs. Even if every feature value is in the same range as training, the meaning of those features has shifted. A pricing model that was trained before a competitor opened next door will overpredict for the listings near the competitor. Often, concept drift is more dangerous than data drift because the model's confidence does not degrade until the team sees a performance metric — by which point the bad scores are already in production.
+
+Both deserve monitoring. The two require different remedies. Data drift can sometimes be patched with calibration; concept drift usually requires retraining.
+
+---
+
+## What to Monitor
+
+A minimal monitoring stack tracks four classes of signal:
+
+1.  **Output health.** Rolling AUC, PR-AUC, or RMSE against any labels that have arrived. Most production tasks have a delay between scoring and labelling; the monitoring has to gracefully handle the gap.
+2.  **Input distribution.** Statistical distance (KS test, population stability index, Wasserstein) between the current input feature distribution and the training distribution. Alert when key features drift beyond a threshold.
+3.  **Score distribution.** The model's *outputs* over time. A score distribution that shifts even when the inputs look stable is a warning.
+4.  **Coverage and freshness.** What fraction of scoreable units are actually being scored? What is the median latency between an event and the score it produces? Quietly missing 10% of customers is its own failure mode.
+
+The dashboard below is a compact version of all four:
+
+<Figure width="page-outset" caption="Figure 2. A model-in-production dashboard. AUC and lift summarize how the model is performing on labelled outcomes; KS measures input-feature drift; coverage tracks whether the model is reaching the population it was designed for. An alert is firing for input drift on the model's most important feature.">
+  <div className="not-prose">
+    <MonitoringDashboardMock />
+  </div>
+</Figure>
+
+Two principles for designing such a dashboard:
+
+- **One screen, four KPIs, one alert.** A dashboard that lists thirty metrics will not be read. Pick the four that, if they all stay green, the model is healthy.
+- **The alert is the artefact.** A KPI that crosses a threshold should produce a notification with the change, the affected feature or segment, and the suggested action. Without the alert, the dashboard is decoration.
+
+---
+
+## Retraining Cadences
+
+Three retraining strategies cover most production settings:
+
+- **Scheduled.** Retrain on a calendar cadence — quarterly is a common starting point — regardless of whether monitoring has fired. Simple, low operational risk, may waste compute when the model hasn't drifted.
+- **Triggered.** Retrain when monitoring shows performance or drift past a threshold. More efficient, harder to operate; demands trustworthy drift signals.
+- **Continuous (online learning).** The model updates in near-real-time as new labels arrive. Theoretically the most responsive; in practice the most dangerous, because the team has no stable artefact to inspect.
+
+For most book-relevant settings — retention, pricing, recommenders in a stable category — *scheduled with triggered overrides* is the right default. The schedule is the safety net; the trigger is the responsiveness.
+
+A neglected question: **how do you know the retrained model is better?** Every refit should:
+
+1.  Be evaluated on a *fresh* held-out set, not the one the previous model saw.
+2.  Be compared against the *current* deployed model on the same fresh set.
+3.  Be subjected to a *staged rollout* — small percentage of traffic first, full rollout only if the staged metrics match expectations.
+
+Models that ship without these three discipline points are how production accidents happen.
+
+---
+
+## Human-in-the-Loop and Override Policies
+
+For high-stakes decisions — lending, hiring, medical triage, content moderation — the right deployment is almost never fully autonomous. The pattern is:
+
+- The model produces a score and a confidence.
+- A human reviewer sees the score plus the relevant evidence and makes the final call.
+- Reviewer decisions feed back into the training data.
+
+The cheap version: a one-click override path that lets a human flag and reverse a model decision. The expensive version: a full case-management system with audit logs. Either way, the discipline is the same — the human is part of the system, not external to it.
+
+Where full autonomy is appropriate (low-stakes, high-volume decisions like ad-targeting impressions, content ranking, recommendations), the human-in-the-loop appears at the level of the *policy*, not the *decision*. A small team continuously reviews the model's behaviour on a sampled set of cases, looking for failure modes the dashboard would not catch.
+
+---
+
+## Fairness, Privacy, and Governance
+
+Deployed models inherit a set of obligations the prototype did not have:
+
+- **Disparate impact.** A model can be perfectly accurate on average and systematically less accurate (or differently calibrated) across protected groups. The remedy is to disaggregate evaluation by group, not just to compute it overall.
+- **Privacy.** Production scoring touches personal data. The infrastructure must satisfy whatever regulatory regime applies (GDPR, CCPA, sector-specific) — and that regime may forbid certain features, certain joinable sources, or certain retention windows.
+- **Explainability on demand.** Customer-facing decisions often need to come with a reason. SHAP-style local explanations from [§10.5](/ch10-automl-explainability) are usually the right shape; the engineering of producing them in production is non-trivial.
+- **Auditability.** A model decision made in March may need to be reconstructed in October. The combination of the model artefact, the features as of the score date, and the threshold has to be retrievable.
+
+Governance is mostly a process problem, not a math problem. The math problems show up in disparate-impact analysis and in calibration across subgroups; the rest is operational discipline that the firm either has or doesn't.
+
+<Callout variant="caveat" title="The first-100-days rule">
+  A model's failure modes almost always emerge in the first 100 days of production, when its operating environment is most different from the lab. Plan the monitoring and the retraining trigger before you ship — not after the first incident.
+</Callout>
+
+---
+
+<Pitfall title="Silent drift">
+The most common production failure is not a catastrophic break but a slow erosion of lift over months, with no single alert firing. **Run rolling monitoring and be willing to retrain even when no specific metric is red.**
+</Pitfall>
+
+<Pitfall title="Dashboard fatigue">
+A wall of metrics no one reads is no better than no metrics. **Compress to a few KPIs, each with a named owner.**
+</Pitfall>
+
+<Pitfall title="Retraining without baseline comparison">
+Replacing a deployed model with a new one without a head-to-head evaluation is how regressions enter production. **Compare the candidate against the current model on the same fresh held-out set before rollout.**
+</Pitfall>
+
+<Callout variant="caveat" title="Counterfactual check">
+  Once a model starts changing the world it observes, the §5.2 counterfactual question becomes operational: <em>what would have happened without this model?</em> Maintain an exploration arm (a small fraction of decisions made outside the model's recommendation) and a held-out audience that lets the firm continue to measure incrementality. Without them, the dashboard's "lift" number measures what the team already decided to do.
+</Callout>
+
+---
+
+<Takeaway label="What this buys you">
+
+Deployment is where Part IV stops being about models and starts being about systems. The frame: *define the model card before the launch; define the four monitoring KPIs and the one alert before the launch; define the retraining cadence before the launch; decide where the human-in-the-loop sits before the launch.*
+
+Models that launch without these definitions tend to acquire them under stress, after something has gone wrong. The cheaper sequence is to commit to them up front and treat the model as a piece of infrastructure from day one.
+
+</Takeaway>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning Chapter 12 — measuring targeting lift, grading recommenders, and catching drift."
+  questions={[
+    {
+      prompt: <>A team uses a 1% lookalike from their top-100 high-value customers and reports excellent conversion. They infer that the platform's targeting works well. What additional evidence would actually support that inference?</>,
+      options: [
+        { label: <>An incrementality test or holdout that compares the lookalike audience to a comparable untargeted population — measuring lift, not absolute conversion.</> },
+        { label: <>Higher click-through rate.</> },
+        { label: <>A larger seed audience.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>High conversion in a lookalike audience may reflect targeting that found users who would have converted anyway. Incrementality measurement is the only way to separate true lift from selection.</>,
+    },
+    {
+      prompt: <>Market basket analysis returns a high-confidence rule "if latte then croissant." The same rule has lift = 0.9. The honest interpretation is:</>,
+      options: [
+        { label: <>Customers who buy a latte are very likely to buy a croissant.</> },
+        { label: <>Customers who buy a latte buy a croissant about as often as random customers do — the high confidence reflects the croissant's overall popularity, not a meaningful association.</> },
+        { label: <>The rule is broken.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Lift below 1 means the co-occurrence is less than chance; lift near 1 means the pairing is uninformative. Confidence is misleading when the consequent is popular regardless of the antecedent.</>,
+    },
+    {
+      prompt: <>A churn model's input distribution has not changed materially, but its rolling AUC has dropped from 0.82 to 0.71. The most likely diagnosis is:</>,
+      options: [
+        { label: <>Data drift — features look different.</> },
+        { label: <>Concept drift — the relationship between features and the churn outcome has shifted, even though the features themselves look familiar.</> },
+        { label: <>The dashboard is broken.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Stable inputs with declining performance is the signature of concept drift. Retraining (rather than recalibration) is usually the right remedy.</>,
+    },
+  ]}
+/>

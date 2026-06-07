@@ -1,0 +1,137 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { ElasticityZones } from '@/components/Book/part3/ConceptDiagrams';
+import { SoupRegressionLadder, SoupSeasonScatter } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+Pricing is the most leveraged decision a firm makes. A one-percent price increase, with volume held constant, drops straight to revenue and disproportionately to profit. The catch is that volume is almost never constant: raising price alienates the most price-sensitive customers and lowering it gives away margin you cannot get back. To navigate that tradeoff systematically, managers measure how *much* volume responds to a price change, in units that compare across products and across price levels. That measure is price elasticity of demand.
+
+</DropCap>
+
+This article defines own-price elasticity, walks through why we estimate it with a log-log regression rather than a linear one, names the three pricing zones every elasticity value sits in, and ends with a data case showing how a confounded estimate of elasticity can lead a pricing decision badly astray.
+
+---
+
+## The Executive Question: Will Volume Loss Erode Margin?
+
+A category manager weighs a 10% price increase on lattes. Two things will happen at once: every cup sold makes more money, and fewer cups are sold. Without an estimate of how much volume drops, the decision is a guess.
+
+The right question is not *will price increase revenue?* — it is *how price-sensitive is the segment of customers we serve, and will the volume we lose outweigh the margin we gain on the cups we keep selling?*
+
+The unit of measurement that makes this question quantitative is the **price elasticity of demand**.
+
+---
+
+## The Math of Elasticity
+
+Formally, own-price elasticity (<M>{String.raw`\epsilon`}</M>) is the ratio of the percentage change in quantity demanded to the percentage change in price:
+
+<Equation
+  label="Price elasticity of demand"
+  latex={String.raw`\epsilon \;=\; \frac{\Delta Q / Q}{\Delta P / P} \;=\; \frac{d\ln Q}{d\ln P} \;=\; \frac{dQ}{dP} \cdot \frac{P}{Q}`}
+/>
+
+Because price and quantity move in opposite directions for normal goods, own-price elasticity is almost always a negative number. An elasticity of <M>{String.raw`-2`}</M> means a 1% price increase reduces volume by 2%.
+
+### Why log-log, not linear
+
+A linear demand specification, <M>{String.raw`Q = \beta_0 + \beta_1 P`}</M>, has an elasticity that *changes at every price*. At very high prices a $0.10 increase is a small percentage and triggers a large percentage drop in volume (highly elastic); at very low prices the same dollar change is a big percentage and triggers a smaller drop (inelastic). For pricing planning we want a single, transportable number — an elasticity that does not depend on where we are on the curve.
+
+That is what the log-log specification gives us. Writing the demand model in logs,
+
+<Equation
+  label="Constant-elasticity (log-log) demand"
+  latex={String.raw`\ln(Q_{it}) \;=\; \beta_0 + \beta_1 \ln(P_{it}) + \gamma \,\text{Controls}_{it} + u_{it}`}
+/>
+
+makes <M>{String.raw`\beta_1`}</M> exactly the elasticity. Why? Because <M>{String.raw`d\ln(Q) = dQ/Q`}</M> and <M>{String.raw`d\ln(P) = dP/P`}</M>, so the slope of <M>{String.raw`\ln Q`}</M> on <M>{String.raw`\ln P`}</M> is
+
+<Equation
+  latex={String.raw`\beta_1 \;=\; \frac{d\ln Q}{d\ln P} \;=\; \frac{dQ/Q}{dP/P} \;=\; \epsilon`}
+/>
+
+A regression coefficient of <M>{String.raw`-2.23`}</M> in log-log space says: *a 1% price increase reduces volume by 2.23%*, independent of the baseline level of either price or volume.
+
+---
+
+## The Three Zones
+
+Every elasticity value sits in one of three qualitatively different pricing zones, each with a different strategic implication.
+
+<Figure caption="Figure 1. The three zones of own-price elasticity. Inelastic (|ε| < 1) means raising price increases revenue. Unit elastic (|ε| = 1) means revenue does not change with small price moves. Elastic (|ε| > 1) means raising price reduces revenue — and is where most well-run firms actually operate.">
+  <ElasticityZones />
+</Figure>
+
+The zones translate into three different strategic responses:
+
+| Zone | Range of <M>{String.raw`\epsilon`}</M> | Revenue response to price increase | Strategy |
+| --- | --- | --- | --- |
+| Inelastic | <M>{String.raw`-1 < \epsilon < 0`}</M> | Increases | Raise price (you are leaving margin on the table) |
+| Unit elastic | <M>{String.raw`\epsilon = -1`}</M> | Roughly unchanged | Revenue-maximizing point (but not profit-max) |
+| Elastic | <M>{String.raw`\epsilon < -1`}</M> | Decreases | Hold price unless you also lower cost or improve product |
+
+One important asymmetry: a firm that finds itself in the inelastic zone of its own demand curve is almost always under-pricing, because raising price would simultaneously increase revenue and reduce the costs that scale with units sold. In practice, well-run firms almost always operate in the elastic zone. Estimating an inelastic value should immediately raise suspicion about the regression specification, not encourage immediate price hikes.
+
+---
+
+## Data Case: Estimating Progresso's Own-Price Elasticity
+
+Two figures from the Progresso panel make the lesson concrete: where the *data* lives in log-log space, and how the estimated elasticity moves as confounders are added.
+
+### What the raw data look like
+
+<Figure width="screen-inset" caption="Figure 2. Log-price vs. log-volume scatter for Progresso soup, faceted by census region. The downward slope inside each panel confirms the log-log form is appropriate; the differences in slope and intercept across regions hint that a pooled regression is mixing very different demand environments.">
+  <div className="not-prose">
+    <SoupSeasonScatter data={data.soup} groupBy="region" />
+  </div>
+</Figure>
+
+Two things to notice. First, the within-region scatter is clearly downward-sloping in log-log space — the constant-elasticity functional form is reasonable for this data. Second, the regional clouds are shifted and rotated relative to one another: pooling them without a regional or store fixed effect will produce a slope that is some weighted average of different regional slopes, distorted by the level differences across regions.
+
+### Climbing the regression ladder
+
+<Figure width="screen-inset" caption="Figure 3. The Progresso pricing regression ladder. The own-price coefficient moves from a naive −3.21 down to a store-fixed-effects estimate of −2.23 as confounders are added.">
+  <div className="not-prose">
+    <SoupRegressionLadder data={data.soup} />
+  </div>
+</Figure>
+
+The naive bivariate regression returns an elasticity of about <M>{String.raw`-3.21`}</M>. That estimate is mechanically biased by the omitted-variable story from Chapter 5.2: retailers run promotions in low-demand months, so the historical pairing of low price and high volume is partially a seasonality artifact, not a price effect. Adding seasonality, then competitor price, then regional dummies, then store fixed effects walks the estimate down to about <M>{String.raw`-2.23`}</M>.
+
+The difference matters operationally. A pricing recommendation built on <M>{String.raw`-3.21`}</M> would conclude that customers are extraordinarily price-sensitive and would call for aggressive discounting to chase volume. The discounting would erode margin and, in the world where the true elasticity is <M>{String.raw`-2.23`}</M>, would not produce the volume lift the naive model predicted. The safe foundation for pricing is the within-store estimate, with controls — not the headline regression.
+
+---
+
+<Pitfall title="Confusing percentage with absolute changes">
+An elasticity of <M>{String.raw`-2.23`}</M> says a 1% price *change* produces a 2.23% *volume change* — not that a $1 increase reduces volume by 2.23 units. **Translate to absolute terms only after checking that the price move is small relative to the baseline.**
+</Pitfall>
+
+<Pitfall title="Extrapolating beyond the support">
+A constant elasticity estimated on prices that ranged from $1.80 to $2.20 says nothing about $0.99 or $4.00. Consumer psychology is highly non-linear at thresholds (the famous $2.99 → $3.00 effect), and log-log models do not capture those breakpoints. **Hold the recommendation inside the price range the data actually covers.**
+</Pitfall>
+
+<Pitfall title="Endogeneity from promotion bundling">
+Discounts are usually accompanied by in-store displays and flyer ads. A regression that does not control for those features attributes all of the volume lift to the price cut and overstates own-price sensitivity. **Always include promotional flags when available.**
+</Pitfall>
+
+---
+
+<Takeaway label="Bottom line for the business">
+
+Elasticity is the bridge from a regression to a pricing decision. Three rules:
+
+- Estimate elasticity in log-log space with explicit controls, never from a linear bivariate regression.
+- State the conditioning explicitly when reporting: "within a store, controlling for competitor price and seasonality, a 1% price increase implies a 2.23% volume decline."
+- An inelastic estimate (<M>{String.raw`|\epsilon| < 1`}</M>) is almost always a signal that confounders remain, not a green light for price hikes.
+
+The next chapter takes the story to interactions between products: substitution, cannibalization, and complement effects — the cross-price world.
+
+</Takeaway>

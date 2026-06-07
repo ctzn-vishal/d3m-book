@@ -1,0 +1,165 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { TextPipeline } from '@/components/Book/part5/TextDiagrams';
+
+<DropCap>
+
+Before any model touches a single review, the team has already made a dozen quiet choices. Was the document the review itself, or the (review + star rating) pair? Were two-word phrases — "cold brew" — treated as one unit or two? Was "running" reduced to "run"? Was the emoji thrown away? These choices look small. They are why two text projects working on the same data can end up answering different questions.
+
+</DropCap>
+
+This article fixes the vocabulary that every text method in Part V depends on. Once a manager can speak fluently in **document**, **corpus**, **token**, **vocabulary**, **n-gram**, and **metadata**, the rest of the part — sentiment, topics, embeddings, RAG — drops into a clean place.
+
+---
+
+## The Executive Question
+
+> What is a unit of text in our business, and what is around it that the model also needs to see?
+
+The honest version: the unit of text is the level at which a decision is made. A "complaint" can be one review, one paragraph of a review, one ticket thread, or one transcript. The unit of analysis decides what gets compared to what.
+
+---
+
+## The Pipeline at a Glance
+
+The path from raw text to a business decision is the same shape across every method in this part.
+
+<Figure width="page-outset" caption="Figure 1. The standard pipeline from raw text to a business action. Each stage encodes choices — preprocessing, representation, modelling, deployment. The representation chosen in stage 4 is what most of Part V is about.">
+  <div className="not-prose">
+    <TextPipeline />
+  </div>
+</Figure>
+
+The chapters of Part V map onto this pipeline:
+
+- **18.3** lives in stage 3 (tokens) and stage 4 (features) — bag-of-words, TF-IDF.
+- **18.4 and 18.5** live in stage 5 (model) — classification, sentiment, topic models.
+- **19.1–19.2** swap the stage-4 representation from TF-IDF to embeddings.
+- **19.3** replaces stages 4–5 with an LLM that produces constructs directly.
+- **20.1** adds a retrieval step before stage 5.
+- **21** and **22** govern the whole loop.
+
+The pipeline is generic. The chapters specialize it.
+
+---
+
+## The Vocabulary
+
+A short glossary, with one Bean &amp; Basket example per term.
+
+<DataTable
+  caption="Table 1. The basic vocabulary of text analysis. Every term shows up in the chapters that follow; getting them right at the start avoids a lot of confusion later."
+  columns={[
+    { key: 'term', label: 'Term', align: 'left' },
+    { key: 'def', label: 'Definition', align: 'left' },
+    { key: 'ex', label: 'Bean & Basket example', align: 'left' },
+  ]}
+  rows={[
+    {
+      term: 'Document',
+      def: 'A single unit of text the model treats as one thing.',
+      ex: 'One app store review.',
+    },
+    {
+      term: 'Corpus',
+      def: 'A collection of documents, often the dataset for a method.',
+      ex: 'All May 2026 app store reviews.',
+    },
+    {
+      term: 'Token',
+      def: 'A unit produced by splitting a document — usually a word or sub-word.',
+      ex: '"My", "latte", "was", "perfect".',
+    },
+    {
+      term: 'Vocabulary',
+      def: 'The set of unique tokens across the corpus.',
+      ex: '~6,000 unique words across 20,000 reviews.',
+    },
+    {
+      term: 'N-gram',
+      def: 'A contiguous run of n tokens. Unigram = 1; bigram = 2.',
+      ex: '"cold brew" is a useful bigram in coffee text.',
+    },
+    {
+      term: 'Stop words',
+      def: 'Common tokens that often contribute little signal.',
+      ex: '"the", "and", "of" — usually dropped.',
+    },
+    {
+      term: 'Metadata',
+      def: 'Structured fields attached to each document.',
+      ex: 'Star rating, store, date, verified-purchase flag.',
+    },
+    {
+      term: 'Label',
+      def: 'A target attached to the document for supervised tasks.',
+      ex: 'Sentiment, complaint category, recommend-or-not.',
+    },
+  ]}
+/>
+
+A subtle but important point: the **document** is a choice, not a given. The same data can be treated as:
+
+- *one review per document* — natural for review classification.
+- *one sentence per document* — natural for aspect-based sentiment.
+- *one customer per document* (concatenated reviews) — natural for customer-level scoring.
+
+Each choice produces a different corpus, a different vocabulary, and different models.
+
+---
+
+## Five Questions That Drive the Pipeline
+
+For Bean &amp; Basket the recurring business questions are short. Each one bends the pipeline a little.
+
+1.  **What are customers complaining about?** Document = review; method = topic model + classification (§13.5, §13.4).
+2.  **Which reviews indicate churn risk?** Document = review; label = churn-within-60-days; method = supervised classification (§13.4, §10.1).
+3.  **What product attributes drive positive sentiment?** Document = review; method = aspect-based sentiment (§13.4).
+4.  **Which topics are growing over time?** Document = review; method = topic model + time series (§13.5).
+5.  **How does our brand language differ from competitors'?** Document = social post; method = embedding clustering (§14.3).
+
+Three of these questions go through bag-of-words and TF-IDF. Two need embeddings to handle synonyms and rephrasings. The same source dataset, the same vocabulary, the same metadata — but five distinct configurations of the pipeline.
+
+---
+
+## Text Plus Metadata
+
+Almost every business text dataset comes with structured fields alongside the body. Reviews come with stars, store, date, and verified-purchase flag. Tickets come with issue type, urgency, and resolution time. Treating text as if those fields didn't exist throws away signal.
+
+A few patterns:
+
+- **Stratify before you model.** Run sentiment by store region; topics by month; classification accuracy by channel. The variation in metadata is where the manager's interpretation lives.
+- **Use metadata as labels.** Star rating is a free sentiment label. Resolution time is a free label for "did the ticket get resolved?" Many supervised text models cost nothing once metadata is available.
+- **Avoid leakage through metadata.** If a model trained to predict satisfaction has access to `resolution_time`, it's not predicting satisfaction — it's learning that fast tickets get resolved.
+
+<Callout variant="finding" title="The metadata rule">
+  Text is rarely worth analyzing alone. Most of the value comes from text <em>plus</em> the structured fields that travel with it.
+</Callout>
+
+---
+
+<Pitfall title="Wrong document boundary">
+Analyzing whole reviews when the decision lives at the aspect level (food vs. service vs. price) — or vice versa — lets the aggregation collapse the signal. **Set the document boundary at the level where the decision is actually made.**
+</Pitfall>
+
+<Pitfall title="Vocabulary drift">
+The training corpus uses "iced latte"; the production corpus uses "ice latte." The model never sees the new spelling and silently misses it. **Monitor the live vocabulary against the training vocabulary and refit when the gap grows.**
+</Pitfall>
+
+<Pitfall title="Treating language as universal">
+A model trained on English app reviews and scored on Spanish reviews returns confident nonsense. **Either filter to one language or use a multilingual model — and audit the result either way.**
+</Pitfall>
+
+---
+
+<Takeaway label="The operating posture">
+
+Most of the rigour in text analysis lives in choices that look small. The document boundary, the vocabulary, the stop-word list, the n-gram window — these are the levers that decide *what the rest of the pipeline can see*. Name the document, name the corpus, name the metadata, then choose the method.
+
+The next article begins the work: cleaning text into tokens, building TF-IDF, and reading the results without overclaiming.
+
+</Takeaway>

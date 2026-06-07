@@ -1,0 +1,180 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { TfIdfBars } from '@/components/Book/part5/TextDiagrams';
+
+<DropCap>
+
+A document-term matrix is the simplest text representation that still works. Each row is a document. Each column is a word in the vocabulary. Each cell is a count or a weight. That's it. Almost every classical method in this chapter — and almost every benchmark a more elaborate method has to beat — runs on this matrix. The art is in two places: cleaning the text into honest tokens, and weighting the resulting counts so that informative words rise to the top.
+
+</DropCap>
+
+This article walks through both. The cleaning side is unglamorous and consequential. The TF-IDF side is the simplest piece of math in the book that consistently does useful work.
+
+---
+
+## The Executive Question
+
+> Which words distinguish the documents in this corpus from each other — and how do we get to them without throwing away the meaning along the way?
+
+The cleaning step is full of small choices that look neutral and aren't. The TF-IDF step is the standard way to surface the words that actually carry information.
+
+---
+
+## Preprocessing: Honest Choices
+
+Most preprocessing choices have a defensible version and an aggressive version. The aggressive version is faster and throws more away.
+
+<DataTable
+  caption="Table 1. Common text preprocessing choices, with the defensible-vs-aggressive trade-off and a Bean & Basket example where each matters."
+  columns={[
+    { key: 'step', label: 'Step', align: 'left' },
+    { key: 'safe', label: 'Defensible', align: 'left' },
+    { key: 'risk', label: 'Aggressive variant risks', align: 'left' },
+    { key: 'ex', label: 'Example where it matters', align: 'left' },
+  ]}
+  rows={[
+    {
+      step: 'Lowercasing',
+      safe: 'Lower everything.',
+      risk: 'Mostly safe; can erase NER signal ("Apple" the company vs. "apple" the fruit).',
+      ex: 'Brand mentions in tweets.',
+    },
+    {
+      step: 'Punctuation',
+      safe: 'Strip standalone punctuation.',
+      risk: 'Aggressive removal of "!"/"?" drops urgency signal.',
+      ex: 'Support tickets — "URGENT!!!" matters.',
+    },
+    {
+      step: 'Stop words',
+      safe: 'Remove a small list of true noise words.',
+      risk: 'Big lists strip negation: "not" and "no" are stop words in some libraries.',
+      ex: '"not good" → "good" — sentiment inverted.',
+    },
+    {
+      step: 'Stemming',
+      safe: 'Use sparingly on noisy corpora.',
+      risk: 'Reduces "universal" and "universe" to the same stem; collapses meaning.',
+      ex: 'Marketing copy with deliberate word choice.',
+    },
+    {
+      step: 'Lemmatization',
+      safe: 'Reduce inflections to dictionary form.',
+      risk: 'Generally safer than stemming; can mis-tag homographs.',
+      ex: '"better" → "good" — useful in sentiment.',
+    },
+    {
+      step: 'N-grams',
+      safe: 'Keep bigrams for domain phrases.',
+      risk: 'Including trigrams explodes vocabulary with little signal.',
+      ex: '"cold brew", "wait time", "app crash".',
+    },
+    {
+      step: 'Negation handling',
+      safe: 'Tag tokens after "not"/"no" with a negation marker.',
+      risk: 'Ignoring negation flips sentiment polarity silently.',
+      ex: '"not good" should not become positive.',
+    },
+    {
+      step: 'Emoji / unicode',
+      safe: 'Map common emojis to sentiment tokens.',
+      risk: 'Dropping them throws away signal in social text.',
+      ex: '"app keeps crashing 😡" — emoji is the verdict.',
+    },
+  ]}
+/>
+
+A single piece of teaching to remember from this table: **the choices that look most innocuous are usually the ones that change results.** Removing stop words from a sentiment task that hinges on "not" silently inverts the result.
+
+<Callout variant="caveat" title="The cold-brew warning">
+  "Cold brew" is the canonical example of a domain bigram. If preprocessing splits it into "cold" + "brew", the word "cold" lands in the negative vocabulary even though the product is delicious. Domain dictionaries — a few dozen phrases the firm cares about — usually fix the most consequential cases.
+</Callout>
+
+---
+
+## Bag-of-Words
+
+After preprocessing, a corpus of <M>{String.raw`N`}</M> documents over a vocabulary of <M>{String.raw`V`}</M> words becomes a **document-term matrix** of shape <M>{String.raw`N \times V`}</M>. Each cell is the count of that word in that document. Most cells are zero — the matrix is sparse.
+
+That's the entire idea of bag-of-words. Word order is gone. Context is gone. What survives is the frequency profile of words inside each document.
+
+Two consequences for the manager:
+
+- **Counts overweight common words.** "The" appears everywhere; "cold" appears in some negative reviews and many cold-brew reviews. Raw counts confuse the two.
+- **No semantics.** "Refund" and "money back" are unrelated tokens to bag-of-words. They will be related to embeddings (§19).
+
+The fix for the first consequence is TF-IDF. The fix for the second is to move to embeddings.
+
+---
+
+## TF-IDF: Weighting Counts by Informativeness
+
+**Term frequency–inverse document frequency** weighs each word in each document by:
+
+<Equation
+  label="TF-IDF"
+  latex={String.raw`\text{tfidf}(w, d) = \underbrace{\text{tf}(w, d)}_{\text{how often in } d} \times \underbrace{\log \frac{N}{\text{df}(w)}}_{\text{rare across corpus}}`}
+/>
+
+The first factor rewards words that appear often inside the document. The second factor — the IDF — penalizes words that appear in many documents. A word that is everywhere ("the") has near-zero IDF and gets crushed. A word that appears in a few documents and is dense inside them ("crashed") gets a large weight.
+
+The result is a matrix where the highest-weighted cells correspond to the most *distinctive* words in each document. That is the property classical text methods lean on.
+
+---
+
+## Reading TF-IDF Honestly
+
+The most common managerial use of TF-IDF is to rank words by their weight inside a *class* of documents — positive reviews, support tickets, complaints from one region. The bar chart below is the standard output.
+
+<Figure width="page-outset" caption="Figure 1. Top TF-IDF terms in positive vs. negative Bean & Basket reviews. The lists look reassuring but contain the trap discussed in this chapter: 'cold' is in the negative column even though some negative reviews actually praise cold brew.">
+  <div className="not-prose">
+    <TfIdfBars />
+  </div>
+</Figure>
+
+Three reading habits:
+
+- **Read the words, not just the scores.** A high TF-IDF score does not mean a word is informative *about what you think*. "Cold" can be in the negative column for two unrelated reasons.
+- **Look for the trap words.** Words with multiple senses ("cold", "fresh", "premium") are where bag-of-words leaks meaning. They are the bridge into §13.6 (limits of classical NLP) and §19 (embeddings).
+- **Pair TF-IDF with example documents.** Always click through the top-ranked words to a few example reviews. The interpretation lives there, not in the score.
+
+---
+
+## When TF-IDF Earns Its Place
+
+TF-IDF still earns its place in a modern stack despite the dominance of embeddings:
+
+- **Speed.** A TF-IDF model trains in seconds on millions of documents.
+- **Transparency.** Every prediction can be traced to the words that drove it.
+- **Strong baseline.** Many production text classifiers are TF-IDF + logistic regression. A more elaborate method should have to beat that baseline to justify the maintenance cost.
+- **Diagnostic value.** Even when embeddings power the final model, TF-IDF rankings are a useful first inspection — they tell you what the data *looks like* before any neural network is trained.
+
+---
+
+<Pitfall title="Stop-word lists that erase negation">
+Many libraries' default stop-word lists include "not" and "no". Drop them and "not good" becomes "good" — a sentiment model silently inverts. **Always inspect what is actually in the stop-word list before you apply it.**
+</Pitfall>
+
+<Pitfall title="Aggressive stemming on copy-heavy corpora">
+Marketing copy chooses words deliberately, and stemming collapses "universal" and "universe" into one token, erasing those choices. **Prefer lemmatization, and use stemming sparingly on text where word choice carries meaning.**
+</Pitfall>
+
+<Pitfall title="Mismatched vocabularies">
+TF-IDF needs the same vocabulary at score time as at train time; out-of-vocabulary words are silently dropped at inference. **Freeze and version the fitted vocabulary, and re-fit deliberately rather than letting it drift.**
+</Pitfall>
+
+---
+
+<Takeaway label="What this buys you">
+
+The simplest, oldest, most-defensible representation of text is also one of the most useful. Bag-of-words and TF-IDF are not what you'll build a customer voice intelligence system on — but they are the *baseline every more elaborate method has to beat*, and the first lens every text project should run. Clean honestly, weight by informativeness, read the top terms next to the documents that produced them, and don't ask bag-of-words to do work it can't.
+
+The next article picks up the model end of the pipeline — classification and sentiment on top of the matrix this article just built.
+
+</Takeaway>

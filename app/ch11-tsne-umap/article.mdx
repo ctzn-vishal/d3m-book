@@ -1,0 +1,138 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { TsneVsPca } from '@/components/Book/part4/SegmentationDiagrams';
+
+<DropCap>
+
+PCA gives a map whose axes a manager can read: value to premium, convenience to indulgence. For some datasets — high-dimensional customer behaviour, image embeddings, document representations — no linear axis carries that kind of meaning. The variation isn't captured by a small number of straight lines through the cloud; it lives on a curved manifold that PCA cannot recover. **t-SNE** and **UMAP** are the two methods that handle that case, at the cost of producing maps whose axes intentionally have no business meaning at all.
+
+</DropCap>
+
+This is a short article. The visualizations are powerful enough that students see them everywhere; the caveats are powerful enough that a single article on how to read them safely is worth the space.
+
+---
+
+## The Executive Question
+
+> When the structure in our data is too curved or too local for PCA to summarize, what tools let us see clusters of behaviour — and what is the price we pay for seeing them?
+
+The price is that the picture stops being algebraic and becomes pictorial. PCA's axes are equations. t-SNE and UMAP's axes are decorative. The clusters they reveal are real; the geometry between clusters is not.
+
+---
+
+## What These Methods Do
+
+Both t-SNE (t-distributed stochastic neighbour embedding) and UMAP (uniform manifold approximation and projection) are **nonlinear dimensionality reduction** methods. The intuition behind both is the same in three steps:
+
+1.  In the original high-dimensional space, compute, for each point, which other points are its **near neighbours**.
+2.  In a low-dimensional space (usually 2D for visualization), place the points so that the same neighbours stay close together.
+3.  Solve for the placement that best preserves these local neighbourhoods.
+
+The two methods differ in technical details — t-SNE optimizes a probability-based loss; UMAP uses a graph construction with a different mathematical foundation — but for managerial purposes they produce maps with the same character: dense little neighbourhoods of similar points, sometimes well-separated, with everything in between essentially up to the random seed.
+
+---
+
+## Reading the Maps Honestly
+
+<Figure width="page-outset" caption="Figure 1. The same toy data viewed two ways. PCA (left) gives a layout whose axes carry meaning — direction along PC1 has a story. t-SNE / UMAP (right) gives tighter neighbourhoods that make groups visible, but the axes are decorative: the same point pattern could have been rotated, flipped, or rearranged with a different random seed.">
+  <div className="not-prose">
+    <TsneVsPca />
+  </div>
+</Figure>
+
+A short, important checklist for reading a t-SNE or UMAP plot:
+
+- **Do trust:** which points end up close to which other points. The local neighbourhood structure is what the algorithm optimizes for.
+- **Don't trust:** the distance between two clusters. Two clusters that look close on the plot may be far in the original space; two that look far may be close.
+- **Don't trust:** the orientation of the axes. Up-down and left-right are meaningless; if you tilt your head, you have not changed the data.
+- **Don't trust:** cluster sizes on the plot. The algorithms tend to inflate small dense clusters and shrink large diffuse ones for visual balance.
+- **Don't trust:** the plot across runs. With a different random seed or different hyperparameters (perplexity in t-SNE, n_neighbours in UMAP), the cluster shapes can change while the cluster *membership* stays roughly the same.
+
+The phrase to remember: **neighbourhoods, not geometry**.
+
+---
+
+## When to Reach for These Tools
+
+A short list of situations where t-SNE or UMAP earn their place:
+
+- **Exploratory visualization of high-dimensional embeddings.** When the input is itself a learned representation (text embeddings, image embeddings, product embeddings — all discussed in Part V), PCA usually flattens the structure into uninterpretable blobs. UMAP reveals the cluster topology that the embedding has learned.
+- **Validating that segmentation is plausible.** If a K-means clustering produces a story the team likes, a UMAP plot colored by segment is a quick way to see whether the segments correspond to visible regions of similarity in the data — and where the boundaries are fuzzy.
+- **Diagnosing data quality issues.** A surprisingly tight cluster on a UMAP that doesn't correspond to a known segment is often a data-engineering artefact (duplicate records, an unusual data source, a feature with a stuck value).
+
+A short list of situations where they should *not* be used:
+
+- **Communicating positioning to an executive audience.** A perceptual map (PCA) is better here because the axes have meaning.
+- **As input features to downstream models.** UMAP coordinates can be unstable across runs, which makes them bad inputs to systems that need reproducibility.
+- **For policy decisions.** "Customers in this cluster look like those" is a fine *hypothesis* generated by a UMAP plot. Decisions need to fall back on stable, definable feature sets.
+
+<Callout variant="caveat" title="The 'ten-Twitter-threads' rule">
+  Many beautiful t-SNE and UMAP plots that go viral are over-interpreted at a level the methods can't support. The picture is real; the axes are not.
+</Callout>
+
+---
+
+<Pitfall title="Picking hyperparameters to taste">
+t-SNE perplexity and UMAP n_neighbours change the look of the plot substantially, and choosing the "prettiest" run is not a methodology. **Fix the hyperparameters by a stated rule, and confirm structure across several settings.**
+</Pitfall>
+
+<Pitfall title="Interpreting cluster centroids">
+Two cluster centroids in a UMAP plot represent nothing mathematically — there is no embedding of "the average" point. **Read membership, never the location of a centroid.**
+</Pitfall>
+
+<Pitfall title="Comparing plots across runs">
+A UMAP plot from last quarter and one from this quarter can look very different with nothing changed in the data. **Compare on quantitative metrics — cluster purity, silhouette in the original space — not on visual impressions.**
+</Pitfall>
+
+---
+
+<Takeaway label="What to ship">
+
+t-SNE and UMAP are the right tools when neighbourhoods matter more than coordinates, and especially when the input is itself a learned embedding. They are the wrong tools when the manager needs to explain *why* points sit where they do, or when downstream decisions need to be reproducible.
+
+*Use these maps to find groups; use other tools to explain them.*
+
+The next part introduces text and image embeddings, where this kind of plot becomes the standard way to see what an embedding has learned. By the time we get there, the discipline of reading neighbourhoods rather than geometry will already be habit.
+
+</Takeaway>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning Chapter 11 — clustering, PCA, and nonlinear maps."
+  questions={[
+    {
+      prompt: <>A team runs K-means with k=4 and k=5 on the same standardized features. The five-cluster solution splits one of the four clusters in two; the other four are unchanged. The honest reading is:</>,
+      options: [
+        { label: <>The two clusters that didn't change are stable across this choice; the split cluster is where the choice of k matters.</> },
+        { label: <>K=5 is correct.</> },
+        { label: <>K=4 is correct.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Stability across reasonable choices is the strongest evidence that a cluster is real. Where solutions disagree, the right move is to investigate, not to pick a side and move on.</>,
+    },
+    {
+      prompt: <>On a biplot, "affordability" loads at (-0.85, 0.05) and "premium" at (0.85, 0.45). The first component is reasonably interpreted as:</>,
+      options: [
+        { label: <>An axis from value to premium positioning.</> },
+        { label: <>A measure of convenience.</> },
+        { label: <>A noise component.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Loadings of opposite sign on a single axis indicate a polarity. "Affordable" on the negative side and "premium" on the positive side is the textbook value-to-premium dimension.</>,
+    },
+    {
+      prompt: <>A UMAP plot shows five tight clusters. Re-running with a different random seed produces five tight clusters with similar membership but visibly different positions and shapes. The right interpretation is:</>,
+      options: [
+        { label: <>The data is unstable.</> },
+        { label: <>The cluster <em>membership</em> is reliable; the visual layout (orientation, distances between clusters, shapes) is not.</> },
+        { label: <>The algorithm is broken.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Neighbourhoods are what UMAP optimizes; everything else is decorative. Re-running with a new seed should preserve memberships but can rotate and reshape the picture.</>,
+    },
+  ]}
+/>

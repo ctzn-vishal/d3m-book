@@ -54,7 +54,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Text analysis', 'Live API'],
     methods: ['Live API', 'Tone analysis', 'Media agenda'],
-    relatedSlug: 'ch42b-text-as-data',
+    relatedSlug: 'ch13-text-as-data',
     kind: 'dashboard',
     preview: {
       src: '/studios/gdelt-media-agenda-lab/preview.jpg',
@@ -72,7 +72,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Text analysis', 'Shock analysis'],
     methods: ['Text as data', 'Spike detection', 'Structural shift'],
-    relatedSlug: 'ch42b-text-as-data',
+    relatedSlug: 'ch13-text-as-data',
     kind: 'dashboard',
     preview: {
       src: '/studios/cfpb-crisis-monitor/preview.jpg',
@@ -90,7 +90,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Exploratory viz'],
     methods: ['Dashboard sequencing', 'Geospatial comparison', 'State shifts'],
-    relatedSlug: 'ch09-exploratory-viz',
+    relatedSlug: 'ch03-exploratory-viz',
     kind: 'dashboard',
     preview: {
       src: '/studios/presidential-election-atlas/preview.jpg',
@@ -108,7 +108,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Shock analysis'],
     methods: ['Dashboard sequencing', 'Media mix', 'Shock analysis'],
-    relatedSlug: 'market-concentration-metrics-case',
+    relatedSlug: 'ch03-concentration-case',
     kind: 'dashboard',
     preview: {
       src: '/studios/ad-spend-explorer/preview.jpg',
@@ -126,7 +126,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Shock analysis'],
     methods: ['Shock analysis', 'Time series', 'Spatial ranking'],
-    relatedSlug: 'dashboard-decision-systems',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/nyc-taxi-covid-emergency/preview.jpg',
@@ -144,7 +144,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Exploratory viz'],
     methods: ['Exploratory viz', 'Geospatial mapping', 'Distributions'],
-    relatedSlug: 'ch09-exploratory-viz',
+    relatedSlug: 'ch03-exploratory-viz',
     kind: 'dashboard',
     preview: {
       src: '/studios/nyc-airbnb-atlas/preview.jpg',
@@ -162,7 +162,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Pricing', 'Time series'],
     methods: ['Pricing strategy', 'Demand seasonality', 'Time series'],
-    relatedSlug: 'ch24-capstone-pricing-promotion',
+    relatedSlug: 'ch08-studio-pricing',
     kind: 'dashboard',
     preview: {
       src: '/studios/progresso-dashboard/preview.jpg',
@@ -180,7 +180,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Regression', 'Dashboard', 'Controls'],
     methods: ['Regression', 'Effect isolation', 'Controls'],
-    relatedSlug: 'ch15-regression-effect-isolation',
+    relatedSlug: 'ch06-regression',
     kind: 'dashboard',
     preview: {
       src: '/studios/southwest-regression/preview.jpg',
@@ -198,7 +198,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Regression', 'Exercise', 'Data workflow'],
     methods: ['Hands-on regression', 'Coefficient reading', 'Data download'],
-    relatedSlug: 'ch15-regression-effect-isolation',
+    relatedSlug: 'ch06-regression',
     kind: 'exercise',
     preview: {
       src: '/studios/southwest-regression-exercise/preview.jpg',
@@ -216,7 +216,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Benchmarking', 'Shock analysis'],
     methods: ['Share of wallet', 'Benchmarking', 'Shock analysis'],
-    relatedSlug: 'dashboard-decision-systems',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/share-of-wallet/preview.jpg',
@@ -234,7 +234,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['PCA / clustering', 'Dashboard', 'Perceptual maps'],
     methods: ['PCA', 'Factor analysis', 'Brand clustering'],
-    relatedSlug: 'ch37-pca-perceptual-maps',
+    relatedSlug: 'ch11-pca',
     kind: 'dashboard',
     preview: {
       src: '/studios/fast-food-perceptual-map/preview.jpg',
@@ -252,7 +252,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['PCA / clustering', 'Dashboard', 'Segmentation'],
     methods: ['Factor scores', 'K-means clustering', 'Segment profiling'],
-    relatedSlug: 'ch36-unsupervised-segmentation',
+    relatedSlug: 'ch11-clustering',
     kind: 'dashboard',
     preview: {
       src: '/studios/nyc-zip-health-segments/preview.jpg',
@@ -270,7 +270,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['PCA / clustering', 'Dashboard', 'Segmentation'],
     methods: ['PCA', 'Factor analysis', 'K-means clustering'],
-    relatedSlug: 'ch36-unsupervised-segmentation',
+    relatedSlug: 'ch11-clustering',
     kind: 'dashboard',
     preview: {
       src: '/studios/lottery-zip-psychographics/preview.jpg',

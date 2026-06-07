@@ -1,0 +1,144 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  CoPurchaseNetwork,
+  RankedListMock,
+} from '@/components/Book/part4/SegmentationDiagrams';
+
+<DropCap>
+
+A recommender is a scoring engine wearing the user interface of a list. Where a churn model produces a single probability per customer, a recommender produces a sorted ordering of items per customer — five pastries to add to the morning coffee, ten movies to consider tonight, twenty products tagged "you might like." The machinery underneath looks like a logistic model, a tree ensemble, or a similarity engine, depending on the era and the surface. The interface — the ranked list, the cut-off, the position effects — is what the manager mostly designs.
+
+</DropCap>
+
+This article keeps the same conceptual stance the rest of Part IV has used: the algorithm is one move, the action is another. We sketch the three families of recommenders that recur across retail and media, the metrics that grade ranked lists rather than single predictions, and the cold-start and feedback-loop pitfalls that make recommender deployments uniquely tricky.
+
+---
+
+## The Executive Question
+
+> For a given customer at a given moment, what items should we surface — and how many?
+
+The number is part of the question. A list of three add-on suggestions in a checkout flow performs very differently from a list of fifty. The right cut-off is shaped by the surface, the cognitive load on the customer, and the cost of irrelevant suggestions.
+
+---
+
+## Three Families of Recommenders
+
+**Collaborative filtering** uses the wisdom of similar users. The classic move: build a user-item matrix where rows are customers and columns are products (or songs, or videos), and fill in the cells with ratings or purchases. For a target customer, find other customers with similar matrices and recommend items those neighbours liked and the target hasn't tried. The technique works astonishingly well when there is enough overlap in the user-item matrix; it struggles for new users, new items, and sparse domains.
+
+**Content-based recommenders** use the items' own features. Instead of "people like you bought this," the recipe is "this is similar to items you've already bought." For a customer who buys dark roasts, a content-based model might recommend other dark roasts based on attributes (origin, roast level, tasting notes). Content-based methods sidestep the cold-start problem on the *item* side — a brand-new product can be recommended on its features — but they cannot surface unexpected pairings the way collaborative filtering can.
+
+**Hybrid and modern learned recommenders** combine the two. Most production systems today are deep learning models that take user features, item features, and historical interactions, and output a relevance score. Embedding-based recommenders (a topic that returns in Part V) represent both users and items as vectors in the same space and recommend by nearest neighbour. They are the dominant production architecture in 2026, and the framing — score, sort, threshold — looks identical to the ones from earlier chapters.
+
+---
+
+## Market Basket Analysis: The Simplest Recommender
+
+The oldest and most interpretable recommender is market basket analysis: which items co-occur in baskets often enough that recommending one when a customer buys another would have paid off?
+
+<Figure width="page-outset" caption="Figure 1. A co-purchase network for Bean &amp; Basket's morning surface. Edge thickness corresponds to a combined measure of how often the pair co-occurs (support) and how surprising the co-occurrence is given each item's overall popularity (lift). The latte is the central hub; pastries fan off it.">
+  <div className="not-prose">
+    <CoPurchaseNetwork />
+  </div>
+</Figure>
+
+Three quantities define a co-purchase pattern, and the right recommender uses all three:
+
+- **Support.** How often the pair appears in the same basket overall. Useful for detecting "this happens often enough to bother with."
+- **Confidence.** Among baskets that contain A, what fraction also contain B? Asymmetric — confidence(A→B) ≠ confidence(B→A). Useful for choosing the direction of the recommendation.
+- **Lift.** Confidence divided by the baseline rate of B. A lift of 1 means co-occurrence is no more than expected by chance; a lift of 3 means buying A triples the likelihood of also buying B. The right surface for distinguishing meaningful pairings from common-product co-occurrence.
+
+Market basket analysis remains a strong baseline for transactional recommendation. It is interpretable, fast to compute, and easy to communicate to a non-technical sponsor. When the data has enough volume and the cold-start problem is manageable, a co-occurrence model is often within a few percentage points of a much more elaborate learned system.
+
+---
+
+## Grading a Ranked List
+
+A confusion matrix doesn't grade a ranked list. Two metrics dominate practical evaluation:
+
+- **Precision@k.** Of the top *k* items the recommender ranked, what fraction did the customer actually act on? Captures the value of the very top of the list, where most user attention concentrates.
+- **Recall@k.** Of all the items the customer eventually acted on, what fraction appeared in the top *k*? Captures coverage at the top.
+
+Two more advanced metrics get used in production:
+
+- **NDCG (normalized discounted cumulative gain).** Weights hits at higher positions more heavily. Captures the intuition that the first item in the list matters more than the tenth.
+- **MAP (mean average precision).** Averages precision over recall levels. A summary statistic that combines precision and recall across the whole list.
+
+For most managerial conversations, precision@k is the right headline. NDCG and MAP are the right next-level numbers when the surface has many positions and the team needs to model position effects carefully.
+
+---
+
+## A Ranked-List Mock
+
+Here is what the output looks like in production: a sorted list with a managerial cut-off.
+
+<Figure width="page-outset" caption="Figure 2. A ranked add-on recommendation for one customer at 8:14 AM. The cut-off — show the top 4 — is a business decision. The score column drives the ranking; everything below 0.6 is suppressed not because it is wrong but because it would dilute the surface.">
+  <div className="not-prose">
+    <RankedListMock />
+  </div>
+</Figure>
+
+The cut-off matters in two ways. First, it determines how much of the surface the recommender controls. Second, it interacts with **diversity**: a top-4 list that is all pastries surfaces a narrow part of the product catalog. Most production recommenders include a diversity penalty so the list doesn't collapse to one category.
+
+---
+
+## Cold Start
+
+The recurring practical headache of recommendation systems is the **cold start** problem:
+
+- **New users** have no interaction history. Collaborative filtering has nothing to lean on. Default surfaces (popular items, generic top picks) are the fallback until the user has enough activity to be modelled.
+- **New items** have no interaction history. They cannot be recommended via collaborative filtering. Content-based features bootstrap them.
+- **New surfaces** — a new app, a new section of the website — have no interaction history *and* may not have stable behaviour patterns. The right move is to deliberately treat the early period as an exploration phase rather than expecting the recommender to work immediately.
+
+Production recommenders almost always combine multiple strategies: a learned model for warm users and items, a content-based fallback for new items, and a popularity baseline for new users.
+
+---
+
+## Feedback Loops
+
+The most consequential thing about recommenders, repeated for emphasis: **they change the data their successors will train on.** The system shapes what users see, which shapes what users click, which shapes what the next training cycle thinks is signal.
+
+Two failure modes recur:
+
+- **Filter bubbles.** A recommender that always shows what a user has liked stops giving the user a chance to expand their tastes. Over time, the model's beliefs about the user are based entirely on the categories the model itself decided to surface.
+- **Popularity collapse.** The most popular items keep getting surfaced, accumulate more interaction history, and become even more popular. The long tail of inventory becomes invisible to the model.
+
+The mitigations are largely policy, not algorithm:
+
+- Reserve some impressions for **exploration** — surface items the model is uncertain about, so the data keeps reflecting the real preference distribution.
+- Include **diversity** in the ranking objective.
+- Periodically retrain on baselines that don't condition entirely on the previous model's choices.
+
+<Callout variant="finding" title="The recommender's covenant">
+  A recommender is a participant in the data-generating process, not an observer of it. The team has to budget for exploration and diversity, or the model's view of the world will narrow over time.
+</Callout>
+
+---
+
+<Pitfall title="Offline AUC for a recommender">
+AUC summarizes how the model orders pairs of items, but customers see a list. **Grade ranked lists with precision@k and NDCG, not AUC.**
+</Pitfall>
+
+<Pitfall title="Cold-start denial">
+Pretending a learned model handles new users when it actually falls back to a popularity baseline misleads everyone downstream. **State in the model card which population the model truly serves.**
+</Pitfall>
+
+<Pitfall title="A/B test on the wrong objective">
+Optimizing click-through can erode downstream metrics like margin per session and return rate. **Grade the recommender on the business KPI it ultimately moves, not on clicks.**
+</Pitfall>
+
+---
+
+<Takeaway label="The call">
+
+A recommender is a ranked-list interface attached to a scoring engine. The scoring engine is a Chapter 9 / 15 model with extra evaluation language. The interface is a Chapter 11 / 17 product decision about cut-offs, diversity, and position effects.
+
+*Pick the cut-off deliberately. Reserve some impressions for exploration. Grade the system on the business metric, not on its own ranking accuracy.*
+
+The next article moves from "the model works at design time" to "the model still works six months in" — deployment, monitoring, and drift.
+
+</Takeaway>

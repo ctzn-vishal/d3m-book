@@ -1,0 +1,125 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { ProbabilityScoreToAction } from '@/components/Book/part4/PredictionDiagrams';
+
+<DropCap>
+
+Logistic regression appeared in Part III as a tool for isolating effects: a coefficient on a treatment, holding controls constant, that we asked whether to interpret causally. In Part IV the same machinery does a different job. We no longer ask what the coefficient on a feature *means* in a causal sense. We ask how well the model, taken as a whole, *ranks* future customers by their likelihood of doing something we care about.
+
+</DropCap>
+
+That shift in stance is the entire content of this article. The model is identical. The questions it has to answer are different. Once a manager internalizes the move from "what is the effect of X on Y?" to "given X, what does this unit look like?", logistic regression becomes a remarkably useful first model — interpretable enough to inspect, calibrated enough to threshold, fast enough to retrain weekly.
+
+---
+
+## The Executive Question
+
+> Of all our active customers, which ones are most likely to churn in the next 60 days — and how confident is the model in that order?
+
+The deliverable is not "which customers will churn." Nobody knows that. The deliverable is a **sortable score** — a probability between 0 and 1 attached to every customer — that a retention team can use to prioritize action.
+
+---
+
+## From Linear Combination to Probability
+
+Logistic regression starts with the linear combination Part III used:
+
+<Equation
+  label="Linear predictor"
+  latex={String.raw`\eta_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \cdots + \beta_p x_{ip}`}
+/>
+
+For a customer with features <M>{String.raw`x_i`}</M>, the predictor <M>{String.raw`\eta_i`}</M> can be any real number. To turn it into a probability, logistic regression passes it through the **logistic function**:
+
+<Equation
+  label="Logistic transform"
+  latex={String.raw`\Pr(Y_i = 1 \mid x_i) = \frac{1}{1 + e^{-\eta_i}}`}
+/>
+
+The shape is an S-curve flattened to the interval (0, 1). Two consequences matter for the manager:
+
+- **The output is a probability**, with all the usual interpretive meaning. A score of 0.82 means the model believes 82 of every 100 customers with these features churn in the relevant window.
+- **The score is monotone in <M>{String.raw`\eta`}</M>**. Whatever changes raise <M>{String.raw`\eta`}</M> raise the probability, in the same order. That is what makes the score a useful **ranking** even when its calibration is imperfect.
+
+---
+
+## Reading Coefficients in Log-Odds
+
+Logistic regression's coefficients have a fixed interpretation in **log-odds**. A coefficient of <M>{String.raw`\beta_1 = 0.4`}</M> on <code>tickets_last_30d</code> means a one-ticket increase multiplies the *odds* of churn by <M>{String.raw`e^{0.4} \approx 1.49`}</M>, holding the other features constant.
+
+A few rules that hold whenever coefficients are interpreted this way:
+
+- The transformation is multiplicative on **odds**, not on probabilities. A 50% boost in odds is roughly a 50% boost in probability when probabilities are small, but tapers off as they approach 1.
+- "Holding other features constant" still has to be true. If a coefficient is reported on a model with collinear features (e.g., trailing-30-day spend and trailing-90-day spend), the coefficient's marginal interpretation breaks down.
+- The coefficients are **predictive**, not causal. A high coefficient on <code>support_tickets_last_30d</code> does not imply that reducing ticket counts will reduce churn. It implies the model uses tickets to rank customers, and that ranking is useful for targeting offers.
+
+This last point is the bridge back to Part III. Causal effects and predictive associations can have the same sign and entirely different magnitudes. The model is a useful sorter, not a verdict on causal mechanism.
+
+---
+
+## The Score Distribution and the Threshold
+
+The most useful single chart for a logistic model is the distribution of predicted probabilities, split by the realized outcome on the held-out set.
+
+<Figure width="page-outset" caption="Figure 1. Predicted-probability distributions on the held-out set for customers who churned (red) and stayed (blue). The shaded zone marks customers above a 0.5 decision threshold — the population a default retention offer would target.">
+  <div className="not-prose">
+    <ProbabilityScoreToAction />
+  </div>
+</Figure>
+
+Three things to notice in this kind of plot:
+
+1.  **Separation.** The two distributions should be visibly offset. If they fully overlap, the model has not learned to distinguish the groups; threshold choice will not save it.
+2.  **Overlap.** A well-fit model still has overlap in the middle. Every customer in the overlap zone is genuinely ambiguous; the score is doing its job by reflecting that ambiguity.
+3.  **Skew.** Many real churn models have skewed score distributions — a small high-risk tail and a long low-risk body. This is fine, but it means the choice of threshold is not symmetric around 0.5. The mass of customers, and therefore the cost of a one-size offer, lives in the body.
+
+The 0.5 threshold has no special status. It is a default the textbook used to avoid choosing. The choice we *do* care about — the threshold that maximizes expected profit — is the subject of [§10.2](/ch10-classification-eval).
+
+---
+
+## When Is Logistic Regression the Right First Model?
+
+The honest answer is: almost always, when the model has to be defended to a non-technical audience. Three features make it durable:
+
+- **Calibration is straightforward.** Out of the box the model produces probabilities, not arbitrary scores. They may need recalibration, but the units are interpretable.
+- **Coefficients are inspectable.** A manager can read the sign and rough size of each effect. Engineering errors and leakage often show up here first.
+- **Speed.** A logistic model with a thoughtful feature set retrains in seconds. The cost of trying ten variants is low.
+
+Where it falls short: when interactions and non-linearities dominate, a linear-on-log-odds model leaves predictive power on the table. That is where trees and ensembles come in, in [§10.4](/ch10-trees-ensembles). The right move is usually to start with logistic and switch only when the marginal accuracy gain pays for the loss of interpretability.
+
+<Callout variant="finding" title="Default rule">
+  The first model on a new prediction problem should be a logistic regression on a hand-curated feature catalog. Beat it, in a like-for-like evaluation, before adopting anything more elaborate.
+</Callout>
+
+---
+
+<Pitfall title="Coefficients read as causal effects">
+A logistic coefficient's sign can disagree with the causal effect estimated under Part III's identification logic. **Use coefficients for inspection and debugging; use Part III for any claim about what an intervention would change.**
+</Pitfall>
+
+<Pitfall title="Class imbalance hidden by accuracy">
+If 3% of customers churn, a model that always predicts "stay" is 97% accurate and useless. Logistic regression handles imbalance gracefully through probabilities, but **grade it on PR-AUC or lift, not raw accuracy.**
+</Pitfall>
+
+<Pitfall title="Importance off raw coefficient size">
+Coefficients live on the scale of each feature, so a 0.001 coefficient on a 0–10,000 feature can matter more than a 2 on a 0–1 feature. **Standardize, or convert to odds ratios on a comparable scale, before ranking features by importance.**
+</Pitfall>
+
+---
+
+<Takeaway label="For the manager">
+
+Logistic regression is the workhorse of customer scoring. It produces a probability, not a verdict; it ranks reliably; it explains itself to anyone willing to read odds ratios. The right way to engage with a logistic model is to ask three questions:
+
+- *How separated are the score distributions on held-out data?*
+- *Which features are doing the work, and do those features tell a story I recognize?*
+- *At what threshold do we act, and what is the cost of being wrong on either side?*
+
+The next article gives the language for that third question.
+
+</Takeaway>

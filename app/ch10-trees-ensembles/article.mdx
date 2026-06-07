@@ -1,0 +1,120 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  DecisionTreeDiagram,
+  EnsembleCommittee,
+  BiasVarianceSchematic,
+} from '@/components/Book/part4/PredictionDiagrams';
+
+<DropCap>
+
+A logistic model encodes the assumption that effects are linear on log-odds and additive across features. Most real customer behavior is neither. Discount sensitivity differs by loyalty tier; weekend buying differs by region; new and returning customers respond to messaging in opposite directions. Decision trees, and the ensembles built from them, are the family of methods that learn this kind of structure without anyone having to spell it out in advance.
+
+</DropCap>
+
+This article does three things. It introduces trees as a single readable model. It introduces ensembles — random forests and gradient boosting — as committees of trees that average out the wobble of any one. And it sets up the bias–variance trade-off that explains why a deeper, more flexible model is sometimes better and sometimes worse.
+
+---
+
+## The Executive Question
+
+> When the patterns we want to learn involve interactions and non-linearities, what kind of model lets us capture them without losing the manager's ability to inspect what it has done?
+
+Trees do that for one model. Ensembles do it for the prediction, while trading some inspectability.
+
+---
+
+## A Single Tree Reads Like a Playbook
+
+A decision tree partitions the feature space by asking yes/no questions, one at a time, and assigning a prediction to each leaf.
+
+<Figure width="page-outset" caption="Figure 1. A small lead-scoring tree. Each split is a business question; each leaf is a managerial bucket. Trees are easy to read because the structure mirrors how managers already think about segmentation.">
+  <div className="not-prose">
+    <DecisionTreeDiagram />
+  </div>
+</Figure>
+
+The fitting procedure is simple. At each node, the algorithm tries every candidate split on every feature and picks the one that most reduces a chosen impurity (Gini or entropy for classification; variance for regression). It recurses until a stopping criterion fires — minimum samples per leaf, maximum depth, no further gain.
+
+Trees have three managerial virtues:
+
+- **Readable.** Anyone can trace a path from root to leaf.
+- **Interaction-aware.** A split on feature A followed by a split on feature B in one subtree but not another encodes an interaction implicitly.
+- **Distribution-agnostic.** Trees do not care whether features are skewed, multimodal, or on incompatible scales. No transformation pipeline is required.
+
+The price they pay is **instability**. Two slightly different training samples can produce two very different trees, and small changes in the training data can flip which split appears at the root. This is exactly the problem ensembles are designed to solve.
+
+---
+
+## Ensembles: A Committee of Diverse Trees
+
+The core idea: a single tree is high variance; the average of many decorrelated trees is low variance with similar bias. Two recipes dominate.
+
+<Figure width="page-outset" caption="Figure 2. The ensemble idea. Many trees, each trained on a slightly different view of the data or each correcting its predecessor's errors, contribute to a single, stabler prediction.">
+  <div className="not-prose">
+    <EnsembleCommittee />
+  </div>
+</Figure>
+
+**Random forests** train many deep trees, each on a bootstrap sample of the rows and a random subset of the features at each split. The randomness is the point — it decorrelates the trees, so their errors cancel when averaged. Random forests are nearly always a strong baseline. They require almost no tuning, handle mixed feature types out of the box, and produce calibrated probabilities through the proportion of trees voting for each class.
+
+**Gradient boosting** trains trees sequentially. Each new tree is fit on the residuals of the current ensemble, so the next tree concentrates on the cases the current ensemble gets wrong. Implementations like XGBoost, LightGBM, and CatBoost are typically state-of-the-art on tabular data — at the cost of more tuning and more careful regularization.
+
+The choice between the two is mostly:
+
+- **Random forest** when you want a strong baseline with little tuning, or when the team will not have time to maintain hyperparameters.
+- **Gradient boosting** when an additional few points of accuracy meaningfully change the business decision, and the team has the discipline to manage learning rate, tree depth, and early stopping.
+
+In both cases, the single-tree readability disappears. The ensemble's prediction is a function of hundreds of trees; the inspection layer moves to **feature importance** and **partial dependence**, covered in [§10.5](/ch10-automl-explainability).
+
+---
+
+## The Bias–Variance Trade-off
+
+Every prediction model lives somewhere on this trade-off:
+
+- **High bias, low variance.** Simple models — linear regression, shallow trees. Predictions are stable across resamples but may miss real structure. Risk of **underfitting**.
+- **Low bias, high variance.** Flexible models — deep trees, large neural nets. Predictions can fit any pattern, including patterns that are just noise. Risk of **overfitting**.
+
+<Figure width="page-outset" caption="Figure 3. Training error falls monotonically as the model gets more complex; validation error is U-shaped. The sweet spot — neither too simple nor too flexible — is the model the holdout grades best, not the model that fits the training set best.">
+  <div className="not-prose">
+    <BiasVarianceSchematic />
+  </div>
+</Figure>
+
+The diagnostic procedure is mechanical: plot training and validation error against a complexity dial (tree depth, ensemble size, regularization strength). The sweet spot is where validation error bottoms out — usually well before training error does.
+
+The trade-off does not pick a single "right" complexity. It says that for *this dataset, this feature set, this evaluation* there is a region of complexity that generalizes best. Move outside it in either direction and the model gets worse, in different ways.
+
+Ensembles partially work around the trade-off by averaging many high-variance models. The variance reduction is what lets random forests grow deep individual trees without overfitting badly. But there is no free lunch: an ensemble of overcomplicated models with no regularization will still overfit. The discipline is the same — let the held-out set choose the dial.
+
+<Callout variant="finding" title="The standard recipe">
+  Start with a logistic baseline. Move to a random forest when you suspect interactions matter; tune lightly. Move to gradient boosting only if the random forest gain is real and the team can maintain it. Always grade the choice with the same evaluation toolkit from §10.2 and §10.3.
+</Callout>
+
+---
+
+<Pitfall title="Deep single trees in production">
+A tree grown to depth 20 ranks training data perfectly and live data poorly. **Prune it, or move to an averaged ensemble, before shipping.**
+</Pitfall>
+
+<Pitfall title="Importance compared across ensembles">
+Feature importance from a random forest and a gradient boost on the same data can rank features differently. **Use importance for inspection within a single model, never for comparison across models.**
+</Pitfall>
+
+<Pitfall title="Hidden hyperparameters">
+Boosting has many tuning knobs — learning rate, max depth, regularization terms — and an unwritten training config makes the model reproducible only to the person who trained it. **Version the full training configuration alongside the model.**
+</Pitfall>
+
+---
+
+<Takeaway label="The bottom line">
+
+Trees are the bridge from "rules a manager could write" to "patterns the data can find." Ensembles are how the prediction becomes stable without losing that flexibility. The frame: *add complexity when the bias of a simpler model is the binding constraint, not when a more sophisticated method is available.*
+
+A small lift from a more elaborate model rarely pays for the maintenance and interpretability cost. A clearly bias-bound problem — where the simpler model leaves obvious structure on the table — is exactly where an ensemble earns its keep.
+
+</Takeaway>

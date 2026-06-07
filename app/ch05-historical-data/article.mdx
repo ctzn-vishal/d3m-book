@@ -1,0 +1,212 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { ConfounderDAG, ReverseCausalityDiagram } from '@/components/Book/part3/ConceptDiagrams';
+import { SoupSeasonScatter } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+Historical data is the most attractive raw material in business analytics. It is already collected, virtually free, and often runs into millions of rows. It is also notoriously hard to interpret causally, for one fundamental reason: in historical data, the actions — prices, ads, promotions, layouts, offers — were not assigned randomly. They were chosen by managers responding to the very conditions we are trying to study.
+
+</DropCap>
+
+That purposeful decision-making makes the treatment variable **endogenous**: it carries information about the demand environment in addition to its own causal effect. This article works through the four standard sources of endogeneity, derives the omitted-variable-bias formula that ties them together, and shows the visible signature of confounding in a real scanner dataset.
+
+---
+
+## The Executive Question: What Did the Decision-Maker Know?
+
+A regional manager observes that store managers cut pastry prices by half whenever afternoon traffic looks weak. A junior analyst regresses pastry sales on the discount flag and finds a *negative* correlation. The presented conclusion: "Discounts hurt sales."
+
+The conclusion is wrong, and the reason is structural. The discount was triggered *because* expected sales were low. The historical data has an unobserved confounder built into how the action was chosen. Before treating a historical regression coefficient as a lever, every manager should ask:
+
+> *What did the decision-maker know when they took this action, and how did that knowledge affect both the action and the outcome?*
+
+That question, applied seriously, surfaces four recurring patterns.
+
+<DataTable
+  caption="Table 1. Four recurring sources of endogeneity in historical business data. Each one is a different reason the observed treatment is correlated with the unobserved drivers of the outcome."
+  columns={[
+    { key: 'source', label: 'Source', align: 'left' },
+    { key: 'mechanism', label: 'Mechanism', align: 'left' },
+    { key: 'business_example', label: 'Business setting', align: 'left' },
+    { key: 'direction', label: 'Typical bias on the naive correlation', align: 'left' },
+  ]}
+  rows={[
+    { source: 'Omitted variable', mechanism: 'Unobserved third factor moves both treatment and outcome.', business_example: 'Holiday season raises both ad spend and sales.', direction: 'Inflates the apparent effect of advertising.' },
+    { source: 'Reverse causality', mechanism: 'The outcome causes the treatment, not the other way around.', business_example: 'Prices are cut when sales are already expected to be weak.', direction: 'Makes price look harmful (or beneficial) for the wrong reason.' },
+    { source: 'Simultaneity', mechanism: 'Treatment and outcome are jointly determined in equilibrium.', business_example: 'Our prices and competitor prices both adjust to a shared local cost shock.', direction: 'Blurs who is taking share from whom.' },
+    { source: 'Selection', mechanism: 'Units opt into treatment based on expected outcomes.', business_example: 'Heavy app users opt into the loyalty program first.', direction: 'Overstates the program lift.' },
+  ]}
+/>
+
+The first two are easy to draw, and the picture is worth memorizing.
+
+<Figure caption="Figure 1. The confounding pattern. A third factor Z drives both the treatment D and the outcome Y, creating a backdoor path D ← Z → Y that contaminates the simple D–Y correlation.">
+  <ConfounderDAG />
+</Figure>
+
+<Figure caption="Figure 2. Forward vs. reverse causation. The left panel is the world we assume when we read a regression coefficient as a lever; the right panel is the world that often actually generated the data.">
+  <ReverseCausalityDiagram />
+</Figure>
+
+---
+
+## The Mathematics of Omitted Variable Bias
+
+The four sources above all collapse, mathematically, into the same form. Suppose the true outcome model is
+
+<Equation
+  label="True model"
+  latex={String.raw`Y_i = \beta_0 + \beta_1 X_{1i} + \beta_2 X_{2i} + \varepsilon_i, \qquad \mathbb{E}[\varepsilon_i \mid X_{1i}, X_{2i}] = 0`}
+/>
+
+where <M>{String.raw`X_1`}</M> is the treatment of interest (price), <M>{String.raw`X_2`}</M> is some other driver of the outcome (seasonal demand), and <M>{String.raw`\beta_1`}</M> is the causal effect we want.
+
+An analyst who does not observe (or forgets to control for) <M>{String.raw`X_2`}</M> runs the short regression
+
+<Equation
+  label="Short regression"
+  latex={String.raw`Y_i = \alpha_0 + \alpha_1 X_{1i} + u_i`}
+/>
+
+Standard OLS algebra gives a clean expression for what the short-regression coefficient is really estimating:
+
+<Equation
+  label="Omitted variable bias"
+  latex={String.raw`\mathbb{E}\!\left[\widehat{\alpha}_1\right] \;=\; \underbrace{\beta_1}_{\text{true effect}} \;+\; \underbrace{\beta_2 \cdot \frac{\operatorname{Cov}(X_{1}, X_{2})}{\operatorname{Var}(X_{1})}}_{\text{omitted-variable bias}}`}
+/>
+
+The bias term is the product of two pieces, and both signs must be right to predict the direction of the bias:
+
+1.  How the omitted variable moves the outcome — the sign of <M>{String.raw`\beta_2`}</M>.
+2.  How the omitted variable moves with the treatment — the sign of <M>{String.raw`\operatorname{Cov}(X_1, X_2)`}</M>, which is exactly the slope of a regression of <M>{String.raw`X_2`}</M> on <M>{String.raw`X_1`}</M>.
+
+Memorize the 2×2:
+
+<DataTable
+  caption="Table 2. The sign of omitted-variable bias depends on the sign of two simpler relationships. Get them both right and you can predict whether your naive coefficient overstates or understates the truth."
+  columns={[
+    { key: 'cov', label: 'Cov(X₁, X₂)', align: 'left' },
+    { key: 'beta2pos', label: 'β₂ > 0 (omitted variable raises Y)', align: 'left' },
+    { key: 'beta2neg', label: 'β₂ < 0 (omitted variable lowers Y)', align: 'left' },
+  ]}
+  rows={[
+    { cov: '+ (treatment moves with omitted variable)', beta2pos: 'Bias > 0 — short coefficient too high', beta2neg: 'Bias < 0 — short coefficient too low' },
+    { cov: '− (treatment moves against omitted variable)', beta2pos: 'Bias < 0 — short coefficient too low', beta2neg: 'Bias > 0 — short coefficient too high' },
+  ]}
+/>
+
+<Callout variant="definition" title="Omitted variable bias">
+  The bias an OLS coefficient picks up when a regressor that drives the outcome is also correlated with the included treatment. The included coefficient is forced to absorb both its own effect and a share of the omitted variable's effect.
+</Callout>
+
+### Walking through a pricing example
+
+Why does omitting season distort soup elasticity?
+
+- **True elasticity** <M>{String.raw`\beta_1`}</M> is negative — higher price means lower volume.
+- **Seasonal demand** <M>{String.raw`\beta_2`}</M> is positive — in winter, demand is higher at any price.
+- **Pricing behavior**: retailers raise prices in winter when demand is high, so <M>{String.raw`\operatorname{Cov}(X_1, X_2) > 0`}</M>.
+- **Bias sign**: positive × positive ⇒ bias is positive ⇒ short-regression coefficient is pulled *less negative* than the truth.
+
+A manager who reads the biased coefficient sees customers as relatively insensitive to price, raises prices further, and watches profit collapse when the genuinely negative elasticity finally bites. The bug is not in the math; it is in pretending the omitted variable does not exist.
+
+---
+
+## Reverse Causality and Simultaneity in One Picture
+
+Reverse causality is omitted-variable bias' close cousin: in the short regression, the residual <M>{String.raw`u_i`}</M> contains the demand shock that *triggered* the action. Now <M>{String.raw`X_{1i}`}</M> and <M>{String.raw`u_i`}</M> are correlated *because the manager looked at the demand shock before choosing the action*. The OLS estimate inherits whatever pattern of action-given-demand the manager was using.
+
+Simultaneity is the most general case: two variables move together because each one depends on the other in equilibrium. Competitor pricing is the canonical example — our price depends on theirs, theirs depends on ours, and a shared cost shock moves both. None of OLS, fixed effects, or naive controls can untangle this without an instrument or a design.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions spanning what randomization buys and why raw historical data resists causal reading."
+  questions={[
+    {
+      prompt: <>Why does random assignment produce an unbiased estimate of the average treatment effect?</>,
+      options: [
+        { label: <>Because the treatment and control groups always end up with the same number of units.</> },
+        { label: <>Because the assignment is statistically independent of the potential outcomes, so the observed mean in each arm is an unbiased estimate of the corresponding potential-outcome mean.</> },
+        { label: <>Because random assignment removes measurement error from the outcome.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Equal sample sizes are not required, and randomization does nothing about measurement error. What it buys is <M>{String.raw`(Y(1), Y(0)) \perp D`}</M>, which makes the difference in observed means an unbiased estimator of the ATE.</>,
+    },
+    {
+      prompt: <>Which of the following is the cleanest definition of an <em>endogenous</em> treatment variable?</>,
+      options: [
+        { label: <>The treatment was decided inside the firm rather than imposed by an external policy.</> },
+        { label: <>The treatment is correlated with the error term in the outcome equation — usually because the same factors that drove the treatment also drive the outcome.</> },
+        { label: <>The treatment varies over time rather than being constant.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Endogeneity is a statistical property, not an organizational one. It means the regressor is correlated with the unobservables in the outcome equation, which is exactly what breaks the unbiasedness of OLS.</>,
+    },
+    {
+      prompt: <>Suppose holiday season raises both ad spend (<M>{String.raw`X_1`}</M>) and sales (<M>{String.raw`Y`}</M>). You omit season (<M>{String.raw`X_2`}</M>) from the regression. The OVB formula predicts your estimated ad-spend coefficient is…</>,
+      options: [
+        { label: <>Biased downward — the coefficient looks smaller than the true effect.</> },
+        { label: <>Biased upward — the coefficient looks larger than the true effect, because the bias term <M>{String.raw`\beta_2 \cdot \operatorname{Cov}(X_1, X_2)`}</M> is a positive number times a positive covariance.</> },
+        { label: <>Unbiased on average — bias from omitted variables cancels out across rows.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Both <M>{String.raw`\beta_2 > 0`}</M> (holidays raise sales) and <M>{String.raw`\operatorname{Cov}(X_1, X_2) > 0`}</M> (ad spend rises in holidays). Their product is positive, so the short-regression coefficient on ad spend overstates the true ad-spend effect.</>,
+    },
+  ]}
+/>
+
+---
+
+## Data Case: Season as a Confounder in Soup Pricing
+
+A short-run picture of the confounding pattern in real scanner data: Progresso soup volume against price, faceted by season. If season were unrelated to either price or volume, the two panels would lie on top of each other. Figure 3 shows that they do not.
+
+<Figure width="screen-inset" caption="Figure 3. Log price and log volume for Progresso soup, faceted by season. Winter sits systematically higher (more soup sold at every price level), and the within-season slope is meaningfully different from the pooled slope. Pooling the two seasons without a seasonal control is a textbook omitted-variable trap.">
+  <div className="not-prose">
+    <SoupSeasonScatter data={data.soup} groupBy="season" />
+  </div>
+</Figure>
+
+Two features of Figure 3 are diagnostic. First, the winter cloud sits visibly above the non-winter cloud — soup demand is higher at any given price in winter. Second, the relationship between price and volume is *steeper* within season than the line that would be fit across the pooled data, because the pooled line gets dragged toward the high-price, high-volume corner where winter prices and winter demand coincide.
+
+The naive pooled regression returns an elasticity near <M>{String.raw`-3.21`}</M>. The within-season slopes, and the store fixed-effects model we will build in Chapter 6, return something closer to <M>{String.raw`-2.23`}</M>. The mechanical reason is exactly the omitted-variable formula above: omitting season — with <M>{String.raw`\beta_{\text{season}} > 0`}</M> and <M>{String.raw`\operatorname{Cov}(\text{price}, \text{season}) > 0`}</M> — pulls the price coefficient toward zero.
+
+We will return to this case across Chapter 6 (regression) and Chapter 8 (pricing). For now, the picture is the lesson: where the demand environment moves with the action, the naive coefficient is biased in a predictable direction. Predicting the direction is the first defense; designing around the confounder is the second.
+
+---
+
+<Pitfall title="Controlling for everything in sight">
+Adding controls is not free: a control that is itself a *consequence* of the treatment (a post-treatment variable) closes off part of the causal path you are trying to measure. **Choose the control set on substantive grounds — only variables determined before the treatment — before you fit.**
+</Pitfall>
+
+<Pitfall title="Pretending a time control fixes simultaneity">
+Time controls absorb shared shocks, but they do not undo the fact that our price and a competitor's price are jointly determined in equilibrium. **When two variables are simultaneously determined, reach for an instrument or a design that breaks the loop — no amount of seasonality dummies will.**
+</Pitfall>
+
+<Pitfall title="Pooling regions with different baselines">
+Pooling stores across regions hides large unmodeled level differences and drags the slope toward the high-volume corner. **Add a regional (or store) fixed effect — usually a cheap and decisive fix, built explicitly in the next chapter.**
+</Pitfall>
+
+<Takeaway label="For the manager">
+
+Historical correlations are not causal facts. Before reading a historical coefficient as a lever:
+
+- Map the process that generated the treatment. Who decided, on what information?
+- Name the unobserved demand shocks that plausibly drove the action.
+- Use the omitted-variable formula to predict the *sign* of the bias before running the regression.
+- Choose a design or a control set that breaks the dependence between the treatment and those unobservables.
+
+The next chapter takes that program seriously: regression as a tool for *isolating* an effect once the identification story is named.
+
+</Takeaway>
