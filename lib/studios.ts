@@ -100,6 +100,60 @@ export const studios: Studio[] = [
     accent: '#287D67',
   },
   {
+    slug: 'political-identity-divergence',
+    title: 'The Great Divergence: Teen Political Identity',
+    blurb:
+      'Track how U.S. high school seniors describe their political identity from 1976-2023, with gender gaps, ideological spectrum shifts, and post-2016 decomposition views.',
+    domain: 'Public Opinion',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Exploratory viz'],
+    methods: ['Survey trends', 'Group comparison', 'Cohort shifts'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/political-identity-divergence/preview.jpg',
+      alt: 'Political identity dashboard with trend lines, gender gap views, and spectrum decomposition charts',
+      objectPosition: 'center',
+    },
+    accent: '#B08935',
+  },
+  {
+    slug: 'drug-availability-teens',
+    title: 'Within Reach: Teen Drug Availability',
+    blurb:
+      'Read four decades of Monitoring the Future survey data on how available teens think drugs are, comparing substances, grade levels, long-run declines, and 2024 levels.',
+    domain: 'Public Health',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Survey data'],
+    methods: ['Survey trends', 'Long-run comparison', 'Small multiples'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/drug-availability-teens/preview.jpg',
+      alt: 'Teen drug availability dashboard with substance trend lines, latest-year rankings, and small multiple charts',
+      objectPosition: 'center',
+    },
+    accent: '#C47A2C',
+  },
+  {
+    slug: 'religious-composition-dashboard',
+    title: 'The Shape of Belief: World Religious Composition',
+    blurb:
+      'Explore how global religious composition changes from 2010-2050 across regions, faith groups, population shares, and projected growth patterns.',
+    domain: 'Demographics',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Demographics', 'Forecasts'],
+    methods: ['Composition analysis', 'Regional comparison', 'Projection reading'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/religious-composition-dashboard/preview.jpg',
+      alt: 'World religious composition dashboard with global share charts, regional composition, and projection panels',
+      objectPosition: 'center',
+    },
+    accent: '#6F6B2F',
+  },
+  {
     slug: 'ad-spend-explorer',
     title: 'Industry Ad Spend Explorer',
     blurb:
