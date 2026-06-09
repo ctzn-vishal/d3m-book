@@ -100,6 +100,24 @@ export const studios: Studio[] = [
     accent: '#8A5A44',
   },
   {
+    slug: 'regulation-demand-guns',
+    title: 'Regulation & Demand for Guns',
+    blurb:
+      'Analyze FBI background-check data to see how regulatory changes, major events, seasonality, and COVID-era shocks changed U.S. firearm demand across states.',
+    domain: 'Public Safety',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Regression'],
+    methods: ['Event study', 'Pre/post comparison', 'State variation'],
+    relatedSlug: 'ch07-did',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/regulation-demand-guns/preview.jpg',
+      alt: 'Gun-demand dashboard with FBI background-check time series, regulatory event annotations, and state comparison charts',
+      objectPosition: 'center',
+    },
+    accent: '#6F5D4B',
+  },
+  {
     slug: 'presidential-election-atlas',
     title: 'Presidential Election Atlas: 1976-2024',
     blurb:
