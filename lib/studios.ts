@@ -154,6 +154,24 @@ export const studios: Studio[] = [
     accent: '#B08935',
   },
   {
+    slug: 'political-identification-us',
+    title: 'The Great Sorting: How Americans Re-Sorted Into Two Parties',
+    blurb:
+      'Follow ANES party-identification data from 1952-2024 to see how education, race, class, and religion reshaped the Democratic and Republican coalitions.',
+    domain: 'Public Opinion',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Survey data'],
+    methods: ['Survey trends', 'Coalition sorting', 'Group comparison'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/political-identification-us/preview.jpg',
+      alt: 'Political identification dashboard with ANES party identification trends and coalition sorting charts',
+      objectPosition: 'center',
+    },
+    accent: '#9F4A4A',
+  },
+  {
     slug: 'drug-availability-teens',
     title: 'Within Reach: Teen Drug Availability',
     blurb:
