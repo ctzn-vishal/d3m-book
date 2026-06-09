@@ -82,6 +82,24 @@ export const studios: Studio[] = [
     accent: '#28527A',
   },
   {
+    slug: 'doing-okay-shed',
+    title: 'Doing Okay: American Financial Wellbeing',
+    blurb:
+      'Follow a decade of Federal Reserve SHED survey indicators: financial comfort, inflation-era strain, emergency savings, $400 expense readiness, and education gaps.',
+    domain: 'Household Finance',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Survey data'],
+    methods: ['Survey trends', 'Financial resilience', 'Group comparison'],
+    relatedSlug: 'ch04-dashboards',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/doing-okay-shed/preview.jpg',
+      alt: 'Federal Reserve SHED financial wellbeing dashboard with trend charts, resilience measures, and group comparison views',
+      objectPosition: 'center',
+    },
+    accent: '#8A5A44',
+  },
+  {
     slug: 'presidential-election-atlas',
     title: 'Presidential Election Atlas: 1976-2024',
     blurb:
