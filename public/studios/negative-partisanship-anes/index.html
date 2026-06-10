@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<!-- saved from url=(0097)file:///C:/Users/Vishal%20Singh/Box/Politics/articles/out-party-hate-not-in-party-love/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Forty-six years of ANES feeling thermometers show in-party warmth frozen in place while regard for the opposing party collapsed.">
+<title>Americans Didn't Fall in Love With Their Party. They Learned to Despise the Other One.</title>
+<style>
+:root{
+  --paper:#f6f0e3;
+  --ink:#241e12;
+  --faint:#6f6149;
+  --rule:#d9cbae;
+  --rule-soft:#e7dcc4;
+  --rust:#9c2f1b;
+  --rust-soft:rgba(156,47,27,.09);
+  --green:#2e6e52;
+  --gold:#c9b282;
+  --dem:#3B6CA8;
+  --rep:#B5394C;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:18px/1.68 "Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:0 20px}
+.masthead{padding:54px 0 8px;border-bottom:3px double var(--ink);}
+.kicker{font:700 12px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--rust);margin:0 0 18px}
+h1{font-size:clamp(34px,5.6vw,60px);line-height:1.04;margin:0 0 18px;font-weight:700;letter-spacing:-.012em;max-width:18em}
+.dek{font-size:clamp(18px,2.3vw,23px);line-height:1.45;font-style:italic;color:#4a3f29;max-width:36em;margin:0 0 22px}
+.byline{font:13px/1.6 ui-sans-serif,system-ui,sans-serif;color:var(--faint);padding-bottom:22px}
+.byline b{color:var(--ink)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--rule);border-bottom:1px solid var(--rule);margin:0 0 8px}
+.stat{background:var(--paper);padding:16px 14px 14px}
+.stat .v{font-size:clamp(18px,2.2vw,25px);font-weight:700;letter-spacing:-.01em;white-space:nowrap}
+.stat .v em{font-style:normal;color:var(--rust)}
+.stat .l{font:11px/1.45 ui-sans-serif,system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:var(--faint);margin-top:6px}
+.prose{max-width:680px;margin:0 auto}
+.prose p{margin:0 0 1.25em}
+.opener::first-letter{font-size:3.3em;float:left;line-height:.82;padding:.04em .09em 0 0;font-weight:700;color:var(--rust)}
+h2{font-size:clamp(24px,3.2vw,33px);line-height:1.15;margin:2.2em 0 .7em;letter-spacing:-.01em}
+h2::before{content:"";display:block;width:54px;border-top:3px solid var(--rust);margin-bottom:14px}
+figure{margin:46px auto;max-width:920px}
+figure.hero{max-width:1020px}
+figure h3{font-size:21px;margin:0 0 2px;letter-spacing:-.01em}
+.chart-sub{font:13px/1.5 ui-sans-serif,system-ui,sans-serif;color:var(--faint);margin:0 0 14px}
+figcaption{font:12.5px/1.55 ui-sans-serif,system-ui,sans-serif;color:var(--faint);margin-top:10px;max-width:60em}
+svg{display:block;width:100%;height:auto}
+svg text{font-family:ui-sans-serif,system-ui,sans-serif}
+.axis{font-size:11.5px;fill:var(--faint)}
+.endlab{font-size:13px;font-weight:700}
+.anno{font-size:12px;fill:var(--ink)}
+.cellgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 16px}
+@media(max-width:700px){.cellgrid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}}
+.decomp{max-width:680px;margin:18px auto 0;font:14px/1.5 ui-sans-serif,system-ui,sans-serif}
+.decomp .drow{margin-bottom:14px}
+.decomp .dlab{font-size:12.5px;letter-spacing:.02em;color:var(--faint);margin-bottom:4px;text-transform:uppercase}
+.decomp .dbar{height:30px;background:var(--rule-soft);position:relative;border-radius:2px;overflow:hidden}
+.decomp .dfill{height:100%;display:flex;align-items:center;padding-left:10px;color:#fff;font-weight:700;font-size:13.5px;white-space:nowrap;border-radius:2px 0 0 2px}
+.decomp .dfill.small{color:var(--ink);padding-left:0;background:transparent!important}
+.decomp .dfill.small .chip{height:30px;border-radius:2px;display:inline-block;vertical-align:middle}
+.toggle{display:inline-flex;border:1.5px solid var(--ink);border-radius:999px;overflow:hidden;margin:0 0 14px}
+.toggle button{background:transparent;border:0;padding:7px 16px;cursor:pointer;color:var(--ink);font:600 13px/1 ui-sans-serif,system-ui,sans-serif}
+.toggle button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.toggle button:focus-visible{outline:2.5px solid var(--rust);outline-offset:2px;border-radius:999px}
+#tip{position:absolute;top:0;left:0;opacity:0;pointer-events:none;background:var(--ink);color:var(--paper);
+  padding:9px 11px;font:13px/1.5 ui-sans-serif,system-ui,sans-serif;border-radius:4px;max-width:250px;
+  transition:opacity .1s;z-index:50;box-shadow:0 3px 14px rgba(0,0,0,.25)}
+#tip b{color:#f2d6a0}
+.notes{border-top:3px double var(--ink);margin-top:70px;padding:34px 0 70px;font:14px/1.7 ui-sans-serif,system-ui,sans-serif;color:#4a4131}
+.notes h2{font-size:19px;margin:0 0 14px;font-family:inherit}
+.notes h2::before{display:none}
+.notes ul{margin:0;padding-left:20px}
+.notes li{margin-bottom:8px}
+.notes a{color:var(--rust)}
+.notes a:focus-visible{outline:2px solid var(--rust);outline-offset:2px}
+a{color:var(--rust)}
+</style>
+</head>
+<body>
+
+<header class="masthead wrap">
+  <p class="kicker">The Polarization Ledger · ANES feeling thermometers, 1978–2024</p>
+  <h1>Americans didn’t fall in love with their party. They learned to despise the other one.</h1>
+  <p class="dek">Nearly half a century of survey thermometers shows warmth toward one’s own party has not moved an inch. The entire rise of affective polarization is collapsing regard for the other side — and it happened inside every kind of partisan, not because partisans got stronger.</p>
+  <p class="byline">An analysis of the <b>ANES Cumulative Data File</b>, 1948–2024 release · June 2026</p>
+</header>
+
+<div class="wrap">
+<section class="stats" aria-label="Headline statistics">
+  <div class="stat"><div class="v">71.1 → 70.5</div><div class="l">Own party, 1978 vs 2024</div></div>
+  <div class="stat"><div class="v"><em>48.0 → 20.6</em></div><div class="l">Other party, 1978 vs 2024</div></div>
+  <div class="stat"><div class="v"><em>5.4% → 33.2%</em></div><div class="l">Rate the other party at literal zero</div></div>
+  <div class="stat"><div class="v">31.2% → 6.5%</div><div class="l">Feel any warmth toward the other party</div></div>
+</section>
+</div>
+
+<main class="wrap">
+<article>
+
+<div class="prose">
+<p class="opener">There are two ways a country can polarize. Its citizens can fall harder for their own side, or they can turn on the other one. For nearly half a century, the American National Election Studies has asked partisans to do something clarifying: rate both major parties on a “feeling thermometer” that runs from zero (cold, hostile) to 100 (warm, favorable). The answers settle the question.</p>
+
+<p>In 1978, partisans — counting independents who lean toward a party — rated their own party at 71.1 degrees. In 2024, after twelve presidential elections, cable news, talk radio, the internet, and everything else, they rated it at 70.5. The line is flat. Whatever happened to American politics over those decades, it did not make people love their party more.</p>
+
+<p>The other line did all the work. In 1978, partisans rated the opposing party at 48.0 — a hair under the scale’s neutral midpoint, roughly the temperature of a neighbor you disagree with but still wave to. By 2024 it had fallen to 20.6. The gap between affection and animosity more than doubled, from 23.1 points to 49.9, after peaking at 52.2 in 2020. Plotted together, the two series open like a set of jaws: a stable upper lip of in-party warmth and a lower jaw of out-party regard dropping away beneath it.</p>
+</div>
+
+<figure class="hero">
+  <h3>The jaws of affective polarization</h3>
+  <p class="chart-sub">Mean feeling thermometer among partisans (leaners included), 1978–2024 · weighted · hover for values</p>
+  <div id="jaws"><svg viewBox="0,0,980,480" role="img" aria-label="Two-line chart from 1978 to 2024: in-party thermometer stays near 71 while out-party thermometer falls from 48 to about 21; the gap between them is shaded."><line x1="42" x2="862" y1="440" y2="440" stroke="#e7dcc4" stroke-width="1"></line><text class="axis" x="33" y="444" text-anchor="end">0</text><line x1="42" x2="862" y1="337" y2="337" stroke="#e7dcc4" stroke-width="1"></line><text class="axis" x="33" y="341" text-anchor="end">25</text><line x1="42" x2="862" y1="234" y2="234" stroke="#b9aa8c" stroke-width="1" stroke-dasharray="5 4"></line><text class="axis" x="33" y="238" text-anchor="end">50</text><line x1="42" x2="862" y1="131" y2="131" stroke="#e7dcc4" stroke-width="1"></line><text class="axis" x="33" y="135" text-anchor="end">75</text><line x1="42" x2="862" y1="28" y2="28" stroke="#e7dcc4" stroke-width="1"></line><text class="axis" x="33" y="32" text-anchor="end">100</text><text class="axis" x="33" y="226" text-anchor="end" font-style="italic">neutral</text><text class="axis" x="77.65217391304348" y="464" text-anchor="middle">1980</text><text class="axis" x="255.91304347826087" y="464" text-anchor="middle">1990</text><text class="axis" x="434.17391304347825" y="464" text-anchor="middle">2000</text><text class="axis" x="612.4347826086956" y="464" text-anchor="middle">2010</text><text class="axis" x="790.695652173913" y="464" text-anchor="middle">2020</text><path d="M42,146.986C53.884,145.163,65.768,143.339,77.652,141.135C89.536,138.931,101.42,135.216,113.304,133.76C125.188,132.305,137.072,131.577,148.957,131.577C160.841,131.577,172.725,132.978,184.609,132.978C196.493,132.978,208.377,125.685,220.261,125.685C232.145,125.685,244.029,142.824,255.913,146.368C267.797,149.911,279.681,151.682,291.565,151.682C303.449,151.682,315.333,151.367,327.217,150.735C339.101,150.103,350.986,144.431,362.87,144.431C374.754,144.431,386.638,149.664,398.522,149.664C410.406,149.664,422.29,142.44,434.174,141.012C457.942,138.155,481.71,136.727,505.478,136.727C529.246,136.727,553.014,146.011,576.783,148.592C600.551,151.174,624.319,150,648.087,152.465C671.855,154.93,695.623,163.383,719.391,163.383C743.159,163.383,766.928,145.42,790.696,145.42C814.464,145.42,838.232,147.459,862,149.499L862,355.004C838.232,357.806,814.464,360.608,790.696,360.608C766.928,360.608,743.159,337.536,719.391,332.592C695.623,327.648,671.855,330.12,648.087,325.176C624.319,320.232,600.551,305.166,576.783,297.118C553.014,289.071,529.246,281.634,505.478,276.889C481.71,272.144,457.942,268.649,434.174,268.649C422.29,268.649,410.406,270.338,398.522,270.338C386.638,270.338,374.754,270.283,362.87,270.174C350.986,270.064,339.101,264.859,327.217,264.859C315.333,264.859,303.449,267.619,291.565,267.619C279.681,267.619,267.797,247.431,255.913,247.431C244.029,247.431,232.145,252.293,220.261,252.293C208.377,252.293,196.493,249.574,184.609,249.574C172.725,249.574,160.841,249.972,148.957,250.768C137.072,251.565,125.188,257.566,113.304,257.566C101.42,257.566,89.536,250.521,77.652,247.967C65.768,245.412,53.884,243.826,42,242.24Z" fill="rgba(156,47,27,.10)"></path><path d="M42,146.986C53.884,145.163,65.768,143.339,77.652,141.135C89.536,138.931,101.42,135.216,113.304,133.76C125.188,132.305,137.072,131.577,148.957,131.577C160.841,131.577,172.725,132.978,184.609,132.978C196.493,132.978,208.377,125.685,220.261,125.685C232.145,125.685,244.029,142.824,255.913,146.368C267.797,149.911,279.681,151.682,291.565,151.682C303.449,151.682,315.333,151.367,327.217,150.735C339.101,150.103,350.986,144.431,362.87,144.431C374.754,144.431,386.638,149.664,398.522,149.664C410.406,149.664,422.29,142.44,434.174,141.012C457.942,138.155,481.71,136.727,505.478,136.727C529.246,136.727,553.014,146.011,576.783,148.592C600.551,151.174,624.319,150,648.087,152.465C671.855,154.93,695.623,163.383,719.391,163.383C743.159,163.383,766.928,145.42,790.696,145.42C814.464,145.42,838.232,147.459,862,149.499" fill="none" stroke="#241e12" stroke-width="2.6"></path><path d="M42,242.24C53.884,243.826,65.768,245.412,77.652,247.967C89.536,250.521,101.42,257.566,113.304,257.566C125.188,257.566,137.072,251.565,148.957,250.768C160.841,249.972,172.725,249.574,184.609,249.574C196.493,249.574,208.377,252.293,220.261,252.293C232.145,252.293,244.029,247.431,255.913,247.431C267.797,247.431,279.681,267.619,291.565,267.619C303.449,267.619,315.333,264.859,327.217,264.859C339.101,264.859,350.986,270.064,362.87,270.174C374.754,270.283,386.638,270.338,398.522,270.338C410.406,270.338,422.29,268.649,434.174,268.649C457.942,268.649,481.71,272.144,505.478,276.889C529.246,281.634,553.014,289.071,576.783,297.118C600.551,305.166,624.319,320.232,648.087,325.176C671.855,330.12,695.623,327.648,719.391,332.592C743.159,337.536,766.928,360.608,790.696,360.608C814.464,360.608,838.232,357.806,862,355.004" fill="none" stroke="#9c2f1b" stroke-width="2.6"></path><text class="endlab" x="872" y="150.49879999999996" fill="#241e12">Own party</text><text class="endlab" x="872" y="166.49879999999996" fill="#241e12">70.5</text><text class="endlab" x="872" y="356.00440000000003" fill="#9c2f1b">Other party</text><text class="endlab" x="872" y="372.00440000000003" fill="#9c2f1b">20.6</text><line x1="42" x2="42" y1="146.98559999999998" y2="242.24" stroke="#6f6149" stroke-width="1" stroke-dasharray="2 3"></line><text class="anno" x="49" y="198.6128" fill="#6f6149">23.1 pts apart</text><line x1="790.695652173913" x2="790.695652173913" y1="145.42000000000002" y2="360.6076" stroke="#9c2f1b" stroke-width="1" stroke-dasharray="2 3"></line><text class="anno" x="783.695652173913" y="250.48000000000002" text-anchor="end" fill="#9c2f1b" font-weight="700">peak gap: 52.2 pts</text><line stroke="#6f6149" stroke-width="1" y1="28" y2="440" style="opacity: 0;" x1="291.5652173913044" x2="291.5652173913044"></line><circle r="4.5" fill="#241e12" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;" cx="291.5652173913044" cy="151.68239999999997"></circle><circle r="4.5" fill="#9c2f1b" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;" cx="291.5652173913044" cy="267.6191999999999"></circle><rect x="42" y="28" width="820" height="412" fill="transparent"></rect></svg></div>
+  <figcaption>Shaded band: the in-party/out-party gap. ANES Cumulative Data File; thermometers run 0 (cold) to 100 (warm). Pure independents excluded.</figcaption>
+</figure>
+
+<div class="prose">
+<h2>The crowd migrated to zero</h2>
+
+<p>Averages flatten what is, up close, a much stranger picture. The thermometer is a 0-to-100 scale, and people can park an answer anywhere on it. In 1978 they mostly parked near the middle: the most common rating of the opposing party fell in the band just under 50, and only 5.4% of partisans handed the other side a literal zero — the coldest answer the instrument allows.</p>
+
+<p>By 2020, zero was the single most common answer. Four partisans in ten — 40.0% — went all the way to the floor. The share eased to 33.2% in 2024, which still leaves one partisan in three reaching for the bottom of the scale when asked about the other party. Warmth, meanwhile, has nearly vanished: 31.2% of partisans rated the opposing party above 50 in 1978; in 2024, 6.5% did. A five-fold collapse in the simple willingness to say something kind about the other side.</p>
+</div>
+
+<figure>
+  <h3>Where the answers went</h3>
+  <p class="chart-sub">Distribution of out-party thermometer ratings, weighted share of partisans per bin · the zero bar in red · hover any bar</p>
+  <div id="dist" class="cellgrid"><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 1978; 5.4 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="131.61599999999999" height="14.384000000000015" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="144.91733333333332" height="1.0826666666666824" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="136.87466666666666" height="9.125333333333344" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="124.96266666666668" height="21.037333333333322" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="103.14666666666666" height="42.85333333333334" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="51.04" height="94.96000000000001" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="105.62666666666667" height="40.373333333333335" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="114.45333333333332" height="31.54666666666668" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="143.52506666666665" height="2.474933333333354" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="138.112" height="7.888000000000005" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="145.072" height="0.9279999999999973" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">1978</text><text x="13.523985239852397" y="126.61599999999999" text-anchor="start" font-size="11.5px" font-weight="700" fill="#9c2f1b">5.4%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 1984; 7.9 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="124.89866666666666" height="21.101333333333343" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="145.1504" height="0.8496000000000095" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="127.30666666666667" height="18.693333333333328" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="121.50133333333332" height="24.49866666666668" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="102.95999999999998" height="43.04000000000002" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="78.02666666666667" height="67.97333333333333" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="98.26666666666665" height="47.73333333333335" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="118.53333333333333" height="27.46666666666667" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="144.72533333333334" height="1.2746666666666613" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="134.38666666666666" height="11.613333333333344" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="143.5925333333333" height="2.407466666666693" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">1984</text><text x="13.523985239852397" y="119.89866666666666" text-anchor="start" font-size="11.5px" font-weight="700" fill="#9c2f1b">7.9%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 1992; 8.3 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="123.88533333333334" height="22.114666666666665" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="143.808" height="2.1920000000000073" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="121.80266666666667" height="24.197333333333333" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="110.13333333333333" height="35.866666666666674" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="91.19999999999999" height="54.80000000000001" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="87.49333333333334" height="58.50666666666666" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="106.53333333333333" height="39.46666666666667" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="127.616" height="18.384" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="143.21066666666667" height="2.7893333333333317" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="138.85333333333335" height="7.146666666666647" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="144.7848" height="1.21520000000001" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">1992</text><text x="13.523985239852397" y="118.88533333333334" text-anchor="start" font-size="11.5px" font-weight="700" fill="#9c2f1b">8.3%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 2000; 8.4 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="123.68" height="22.319999999999993" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="138.232" height="7.768000000000001" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="128.18666666666667" height="17.813333333333333" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="112.18666666666667" height="33.81333333333333" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="95.33333333333334" height="50.66666666666666" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="74.45333333333335" height="71.54666666666665" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="112.90666666666667" height="33.093333333333334" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="128.45066666666668" height="17.549333333333323" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="142.00533333333334" height="3.99466666666666" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="140.07733333333334" height="5.922666666666657" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="143.8176" height="2.1824000000000012" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">2000</text><text x="13.523985239852397" y="118.68" text-anchor="start" font-size="11.5px" font-weight="700" fill="#9c2f1b">8.4%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 2008; 14.8 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="106.48" height="39.519999999999996" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="143.5272" height="2.4728000000000065" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="106.61333333333333" height="39.38666666666667" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="103.84" height="42.16" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="101.25333333333332" height="44.746666666666684" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="89.01333333333332" height="56.98666666666668" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="121.17066666666666" height="24.829333333333338" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="133.93333333333334" height="12.066666666666663" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="145.476" height="0.5240000000000009" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="143.34053333333333" height="2.659466666666674" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="144.65200000000002" height="1.3479999999999848" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">2008</text><text x="13.523985239852397" y="101.48" text-anchor="start" font-size="11.5px" font-weight="700" fill="#9c2f1b">14.8%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 2016; 22.2 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="86.74666666666667" height="59.25333333333333" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="127.46933333333334" height="18.53066666666666" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="94.66666666666667" height="51.33333333333333" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="108.90666666666667" height="37.093333333333334" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="109.33333333333334" height="36.66666666666666" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="110.4" height="35.599999999999994" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="130.47466666666668" height="15.525333333333322" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="137.72" height="8.280000000000001" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="145.052" height="0.9480000000000075" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="143.79306666666665" height="2.206933333333353" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="144.73866666666666" height="1.26133333333334" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">2016</text><text x="13.523985239852397" y="81.74666666666667" text-anchor="middle" font-size="11.5px" font-weight="700" fill="#9c2f1b">22.2%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 2020; 40.0 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="39.35999999999999" height="106.64000000000001" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="135.32" height="10.680000000000007" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="93.86666666666666" height="52.13333333333334" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="113.38666666666666" height="32.613333333333344" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="122.88533333333334" height="23.114666666666665" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="121.17866666666667" height="24.821333333333328" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="137.2133333333333" height="8.78666666666669" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="141.37866666666667" height="4.621333333333325" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="145.43253333333334" height="0.567466666666661" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="144.26399999999998" height="1.7360000000000184" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="145.02773333333334" height="0.9722666666666555" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">2020</text><text x="13.523985239852397" y="34.35999999999999" text-anchor="middle" font-size="11.5px" font-weight="700" fill="#9c2f1b">40.0%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div><div><svg viewBox="0,0,230,168" role="img" aria-label="Distribution of out-party ratings in 2024; 33.2 percent rate the opposing party at zero."><line x1="5" x2="225" y1="146" y2="146" stroke="#b9aa8c"></line><rect x="5" width="17.047970479704794" y="57.38666666666667" height="88.61333333333333" fill="#9c2f1b"></rect><rect x="25.29520295202952" width="17.047970479704794" y="130.136" height="15.864000000000004" fill="#c9b282"></rect><rect x="45.59040590405904" width="17.047970479704794" y="89.03999999999999" height="56.96000000000001" fill="#c9b282"></rect><rect x="65.88560885608857" width="17.047970479704794" y="107.81333333333333" height="38.18666666666667" fill="#c9b282"></rect><rect x="86.18081180811808" width="17.047970479704794" y="121.19733333333333" height="24.802666666666667" fill="#c9b282"></rect><rect x="106.47601476014759" width="17.047970479704794" y="121.16533333333334" height="24.834666666666664" fill="#c9b282"></rect><rect x="126.77121771217712" width="17.047970479704794" y="136.45066666666668" height="9.549333333333323" fill="#c9b282"></rect><rect x="147.06642066420665" width="17.047970479704794" y="141.15466666666669" height="4.845333333333315" fill="#c9b282"></rect><rect x="167.36162361623616" width="17.047970479704794" y="144.94639999999998" height="1.0536000000000172" fill="#c9b282"></rect><rect x="187.65682656826567" width="17.047970479704794" y="144.66746666666668" height="1.3325333333333162" fill="#c9b282"></rect><rect x="207.95202952029518" width="17.047970479704794" y="145.38106666666667" height="0.6189333333333309" fill="#c9b282"></rect><text x="5" y="16" font-weight="700" font-size="15px" fill="#241e12">2024</text><text x="13.523985239852397" y="52.38666666666667" text-anchor="middle" font-size="11.5px" font-weight="700" fill="#9c2f1b">33.2%</text><text class="axis" x="13.523985239852397" y="161" text-anchor="middle">0</text><text class="axis" x="216.4760147601476" y="161" text-anchor="end">100</text></svg></div></div>
+  <figcaption>Each panel shows the share of partisans giving the opposing party a rating in each band, from a literal 0 (left, red) to 91–100 (right). The mass slides steadily leftward until it piles up at zero.</figcaption>
+</figure>
+
+<div class="prose">
+<h2>It is not that partisans got stronger</h2>
+
+<p>An obvious objection: maybe the people changed, not the feeling. Americans today are likelier to call themselves <i>strong</i> partisans — 30.9% of all partisans in 1980, 46.1% in 2024 — and strong partisans have always been the coldest toward the other side. Perhaps the collapse is just arithmetic, the average dragged down by a hotter mix of identifiers.</p>
+
+<p>It isn’t, and a shift-share decomposition shows why. Freeze the 1980 mix of strong, weak, and leaning partisans, and let each group feel about the other party the way its members did in 2024: that counterfactual alone reproduces 23.7 of the 26.0-point decline — 91% of it. Run the experiment the other way, giving 2024’s mix of identifiers 1980’s feelings, and composition moves the needle by 0.9 points, about 4%. The change happened <i>within</i> every kind of partisan, not between them.</p>
+
+<p>Strong identifiers rated the opposing party at 42.0 in 1980 and 13.0 in 2024. Weak partisans and leaners traced the same slope from a slightly higher perch. And even among the most committed, love of one’s own side did not grow — it slipped, from 84.5 to 80.5. Nobody fell harder for their team. Everyone learned contempt for the other one.</p>
+</div>
+
+<figure>
+  <h3>Every kind of partisan, same slide</h3>
+  <p class="chart-sub">Out-party thermometer by strength of identification, 1978–2024 · weighted · hover for values</p>
+  <div id="strength"><svg viewBox="0,0,920,400" role="img" aria-label="Out-party thermometer by strength of partisanship, 1978 to 2024: strong, weak, and leaning partisans all decline in parallel."><line x1="42" x2="770" y1="362" y2="362" stroke="#e7dcc4"></line><text class="axis" x="33" y="366" text-anchor="end">0</text><line x1="42" x2="770" y1="249.33333333333337" y2="249.33333333333337" stroke="#e7dcc4"></line><text class="axis" x="33" y="253.33333333333337" text-anchor="end">20</text><line x1="42" x2="770" y1="136.66666666666669" y2="136.66666666666669" stroke="#e7dcc4"></line><text class="axis" x="33" y="140.66666666666669" text-anchor="end">40</text><line x1="42" x2="770" y1="24" y2="24" stroke="#e7dcc4"></line><text class="axis" x="33" y="28" text-anchor="end">60</text><text class="axis" x="73.65217391304348" y="386" text-anchor="middle">1980</text><text class="axis" x="231.91304347826087" y="386" text-anchor="middle">1990</text><text class="axis" x="390.17391304347825" y="386" text-anchor="middle">2000</text><text class="axis" x="548.4347826086956" y="386" text-anchor="middle">2010</text><text class="axis" x="706.695652173913" y="386" text-anchor="middle">2020</text><path d="M42,129.738C52.551,127.682,63.101,125.625,73.652,125.625C84.203,125.625,94.754,155.595,105.304,155.595C115.855,155.595,126.406,144.553,136.957,144.553C147.507,144.553,158.058,147.933,168.609,147.933C179.159,147.933,189.71,146.994,200.261,145.117C210.812,143.239,221.362,130.977,231.913,130.977C242.464,130.977,253.014,159.745,263.565,162.636C274.116,165.528,284.667,165.368,295.217,166.974C305.768,168.58,316.319,172.269,326.87,172.269C337.42,172.269,347.971,171.631,358.522,170.354C369.072,169.077,379.623,160.383,390.174,160.383C411.275,160.383,432.377,185.667,453.478,195.028C474.58,204.389,495.681,207.027,516.783,216.547C537.884,226.068,558.986,249.258,580.087,252.15C601.188,255.042,622.29,253.596,643.391,256.488C664.493,259.379,685.594,287.565,706.696,287.978C727.797,288.391,748.899,288.494,770,288.598" fill="none" stroke="#7c2410" stroke-width="2.4"></path><text class="endlab" x="779" y="292.59766666666667" fill="#7c2410">Strong partisans 13.0</text><path d="M42,77.348C52.551,83.488,63.101,89.628,73.652,89.628C84.203,89.628,94.754,88.239,105.304,86.417C115.855,84.596,126.406,80.352,136.957,78.7C147.507,77.047,158.058,76.221,168.609,76.221C179.159,76.221,189.71,82.699,200.261,82.699C210.812,82.699,221.362,82.699,231.913,82.699C242.464,82.699,253.014,102.923,263.565,102.923C274.116,102.923,284.667,97.853,295.217,97.853C305.768,97.853,316.319,106.866,326.87,106.866C337.42,106.866,347.971,106.359,358.522,106.359C369.072,106.359,379.623,108.951,390.174,108.951C411.275,108.951,432.377,103.205,453.478,103.205C474.58,103.205,495.681,133.784,516.783,144.948C537.884,156.111,558.986,167.781,580.087,170.185C601.188,172.589,622.29,171.387,643.391,173.79C664.493,176.194,685.594,202.164,706.696,203.365C727.797,204.567,748.899,204.868,770,205.168" fill="none" stroke="#b06a2c" stroke-width="2.4"></path><text class="endlab" x="779" y="209.168" fill="#b06a2c">Weak partisans 27.8</text><path d="M42,77.517C52.551,79.329,63.101,81.141,73.652,84.164C84.203,87.187,94.754,95.656,105.304,95.656C115.855,95.656,126.406,90.464,136.957,88.276C147.507,86.089,158.058,82.53,168.609,82.53C179.159,82.53,189.71,83.206,200.261,83.206C210.812,83.206,221.362,81.235,231.913,81.235C242.464,81.235,253.014,113.683,263.565,113.683C274.116,113.683,284.667,101.402,295.217,101.402C305.768,101.402,316.319,108.575,326.87,110.697C337.42,112.819,347.971,114.133,358.522,114.133C369.072,114.133,379.623,108.782,390.174,108.782C411.275,108.782,432.377,109.007,453.478,109.458C474.58,109.908,495.681,120.593,516.783,131.878C537.884,143.164,558.986,167.368,580.087,177.17C601.188,186.972,622.29,182.409,643.391,191.873C664.493,201.337,685.594,233.954,706.696,233.954C727.797,233.954,748.899,223.082,770,212.21" fill="none" stroke="#cfa45f" stroke-width="2.4"></path><text class="endlab" x="779" y="216.20966666666664" fill="#cfa45f">Leaners 26.6</text><line stroke="#6f6149" stroke-width="1" y1="24" y2="362" style="opacity: 0;"></line><circle r="4" fill="#7c2410" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;"></circle><circle r="4" fill="#b06a2c" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;"></circle><circle r="4" fill="#cfa45f" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;"></circle><rect x="42" y="24" width="728" height="338" fill="transparent"></rect></svg></div>
+  <div class="decomp" aria-label="Shift-share decomposition of the 1980 to 2024 decline">
+    <div class="drow">
+      <div class="dlab">Actual out-party decline, 1980 → 2024</div>
+      <div class="dbar"><div class="dfill" style="width:100%;background:#241e12">26.0 pts</div></div>
+    </div>
+    <div class="drow">
+      <div class="dlab">Explained by feelings changing within strength groups</div>
+      <div class="dbar"><div class="dfill" style="width:91%;background:#9c2f1b">23.7 pts · 91%</div></div>
+    </div>
+    <div class="drow">
+      <div class="dlab">Explained by the shift toward stronger partisanship</div>
+      <div class="dbar"><div class="dfill small"><span class="chip" style="width:3.6%;background:#c9b282"></span>&nbsp;0.9 pts · 4%</div></div>
+    </div>
+  </div>
+  <figcaption>Decomposition holds the 1980 strong/weak/leaner composition fixed and applies 2024 within-group means (and vice versa). Composition explains almost nothing.</figcaption>
+</figure>
+
+<div class="prose">
+<h2>2024: the first thaw in a quarter century</h2>
+
+<p>Then the series did something it had not done since the Clinton administration. The out-party thermometer fell every presidential cycle from 41.6 in 2000 down to 19.3 in 2020 — and in 2024 it ticked <i>up</i>, to 20.6. A rise of +1.4 points: tiny, but the first between-cycle increase since 2000. The gap between in-party and out-party feeling narrowed from 52.2 to 49.9, its first narrowing since 2012–2016.</p>
+
+<p>The thaw was selective, and the selection is telling. Republicans warmed toward Democrats by +2.3 points; Democrats warmed toward Republicans by just +0.5. Weak partisans and leaners gained +1.7; people who say they are not much interested in campaigns gained +2.3. And strong partisans? They went from 13.1 to 13.0 — a change of -0.1, which is to say none at all. The ice melted at the edges of the coalitions and stayed solid at the core.</p>
+</div>
+
+<figure>
+  <h3>Who thawed, 2020 → 2024</h3>
+  <p class="chart-sub">Change in mean out-party thermometer by subgroup · weighted · hover a dot for both years’ levels</p>
+  <div id="thaw"><svg viewBox="0,0,920,390" role="img" aria-label="Dot plot of 2020 to 2024 change in out-party thermometer by subgroup: Republicans and the disengaged warm the most, strong partisans not at all."><line x1="282.5" x2="282.5" y1="28" y2="356" stroke="#ece2cc" stroke-width="1"></line><text class="axis" x="282.5" y="376" text-anchor="middle">−0.5</text><line x1="370" x2="370" y1="28" y2="356" stroke="#b9aa8c" stroke-width="1.4"></line><text class="axis" x="370" y="376" text-anchor="middle">0</text><line x1="457.5" x2="457.5" y1="28" y2="356" stroke="#ece2cc" stroke-width="1"></line><text class="axis" x="457.5" y="376" text-anchor="middle">+0.5</text><line x1="545.0000000000001" x2="545.0000000000001" y1="28" y2="356" stroke="#ece2cc" stroke-width="1"></line><text class="axis" x="545.0000000000001" y="376" text-anchor="middle">+1</text><line x1="632.5" x2="632.5" y1="28" y2="356" stroke="#ece2cc" stroke-width="1"></line><text class="axis" x="632.5" y="376" text-anchor="middle">+1.5</text><line x1="720" x2="720" y1="28" y2="356" stroke="#ece2cc" stroke-width="1"></line><text class="axis" x="720" y="376" text-anchor="middle">+2</text><line x1="807.5" x2="807.5" y1="28" y2="356" stroke="#ece2cc" stroke-width="1"></line><text class="axis" x="807.5" y="376" text-anchor="middle">+2.5</text><text class="axis" x="370" y="20" text-anchor="middle" font-style="italic">no change</text><text class="axis" x="860" y="20" text-anchor="end">warmer toward other party →</text><text x="216" y="61" text-anchor="end" font-size="13.5px" font-weight="700" fill="#241e12">All partisans</text><line x1="370" x2="608.0000000000001" y1="57" y2="57" stroke="#2e6e52" stroke-width="2.4"></line><circle cx="608.0000000000001" cy="57" r="7.5" fill="#2e6e52" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="621.0000000000001" y="61" text-anchor="start" font-size="12.5px" font-weight="700" fill="#2e6e52">+1.4</text><text x="216" y="107" text-anchor="end" font-size="13.5px" font-weight="400" fill="#241e12">Democrats (incl. leaners)</text><line x1="370" x2="455.75000000000006" y1="103" y2="103" stroke="#2e6e52" stroke-width="2.4"></line><circle cx="455.75000000000006" cy="103" r="7.5" fill="#2e6e52" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="468.75000000000006" y="107" text-anchor="start" font-size="12.5px" font-weight="700" fill="#2e6e52">+0.5</text><text x="216" y="153" text-anchor="end" font-size="13.5px" font-weight="400" fill="#241e12">Republicans (incl. leaners)</text><line x1="370" x2="779.5" y1="149" y2="149" stroke="#2e6e52" stroke-width="2.4"></line><circle cx="779.5" cy="149" r="7.5" fill="#2e6e52" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="792.5" y="153" text-anchor="start" font-size="12.5px" font-weight="700" fill="#2e6e52">+2.3</text><text x="216" y="199" text-anchor="end" font-size="13.5px" font-weight="400" fill="#241e12">Strong partisans</text><line x1="370" x2="350.75" y1="195" y2="195" stroke="#9c2f1b" stroke-width="2.4"></line><circle cx="350.75" cy="195" r="7.5" fill="#9c2f1b" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="337.75" y="199" text-anchor="end" font-size="12.5px" font-weight="700" fill="#9c2f1b">−0.1</text><text x="216" y="245" text-anchor="end" font-size="13.5px" font-weight="400" fill="#241e12">Weak partisans + leaners</text><line x1="370" x2="669.25" y1="241" y2="241" stroke="#2e6e52" stroke-width="2.4"></line><circle cx="669.25" cy="241" r="7.5" fill="#2e6e52" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="682.25" y="245" text-anchor="start" font-size="12.5px" font-weight="700" fill="#2e6e52">+1.7</text><text x="216" y="291" text-anchor="end" font-size="13.5px" font-weight="400" fill="#241e12">Very interested in campaigns</text><line x1="370" x2="490.75" y1="287" y2="287" stroke="#2e6e52" stroke-width="2.4"></line><circle cx="490.75" cy="287" r="7.5" fill="#2e6e52" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="503.75" y="291" text-anchor="start" font-size="12.5px" font-weight="700" fill="#2e6e52">+0.7</text><text x="216" y="337" text-anchor="end" font-size="13.5px" font-weight="400" fill="#241e12">Not much interested</text><line x1="370" x2="769" y1="333" y2="333" stroke="#2e6e52" stroke-width="2.4"></line><circle cx="769" cy="333" r="7.5" fill="#2e6e52" stroke="#f6f0e3" stroke-width="1.5" style="cursor: default;"></circle><text x="782" y="337" text-anchor="start" font-size="12.5px" font-weight="700" fill="#2e6e52">+2.3</text></svg></div>
+  <figcaption>Positive values: warmer toward the opposing party in 2024 than 2020. Both waves were fielded mixed-mode, making this the cleanest recent between-cycle comparison.</figcaption>
+</figure>
+
+<div class="prose">
+<h2>…except for the people on the ballot</h2>
+
+<p>If hatred of the opposing <i>party</i> has plateaued, hatred of the opposing <i>person</i> has not. Since 1968 the ANES has also asked partisans to rate the presidential candidates. In 1968, the opposing nominee scored 54.3 — warm side of neutral. In 2024 he or she scored 13.4, the coldest reading in the history of the series, lower even than the rating of the opposing party in the same year.</p>
+
+<p>The zeros tell it more brutally. The share of partisans rating the opposing presidential candidate at literal zero went from 5.3% in 1968 to 57.6% in 2020 to 59.7% in 2024 — nearly six partisans in ten assigning the other side’s nominee the lowest score a survey will record. Democrats put Trump at 10.7 degrees. Republicans put Harris at 16.3.</p>
+
+<p>And here the asymmetry that defines the whole era reappears at the level of persons: love for one’s <i>own</i> candidate never wavered. Partisans rated their own nominee at 75.2 in 2024 — a whisker from the warmest reading the series has ever produced, 75.9 in 1984. Same pattern, fifty-six years running: the warm line holds, the cold line falls. In 2024 the two cold lines finally split from each other — the party line bent upward while the candidate line set another record low.</p>
+</div>
+
+<figure>
+  <h3>Parties vs. people</h3>
+  <p class="chart-sub">Feelings toward the opposing party (since 1978) and the opposing presidential candidate (since 1968), among partisans · weighted</p>
+  <div class="toggle" role="group" aria-label="Choose measure">
+    <button type="button" id="btn-mean" aria-pressed="false">Mean rating</button>
+    <button type="button" id="btn-zero" aria-pressed="true">% rating at zero</button>
+  </div>
+  <div id="cand"><svg viewBox="0,0,920,420" role="img" aria-label="Lines comparing feelings toward the opposing party and the opposing presidential candidate, 1968 to 2024; toggle between mean rating and percent rating at zero."><text class="axis" x="67.35714285714286" y="406" text-anchor="middle">1970</text><text class="axis" x="194.14285714285714" y="406" text-anchor="middle">1980</text><text class="axis" x="320.92857142857144" y="406" text-anchor="middle">1990</text><text class="axis" x="447.71428571428567" y="406" text-anchor="middle">2000</text><text class="axis" x="574.5" y="406" text-anchor="middle">2010</text><text class="axis" x="701.2857142857143" y="406" text-anchor="middle">2020</text><g><line x1="42" x2="752" y1="382" y2="382" stroke="#e7dcc4"></line><text class="axis" x="33" y="386" text-anchor="end">0%</text><line x1="42" x2="752" y1="272.46153846153845" y2="272.46153846153845" stroke="#e7dcc4"></line><text class="axis" x="33" y="276.46153846153845" text-anchor="end">20%</text><line x1="42" x2="752" y1="162.9230769230769" y2="162.9230769230769" stroke="#e7dcc4"></line><text class="axis" x="33" y="166.9230769230769" text-anchor="end">40%</text><line x1="42" x2="752" y1="53.384615384615365" y2="53.384615384615365" stroke="#e7dcc4"></line><text class="axis" x="33" y="57.384615384615365" text-anchor="end">60%</text><path d="M42,353.224C58.905,327.275,75.81,301.325,92.714,301.325C109.619,301.325,126.524,336.854,143.429,336.854C160.333,336.854,177.238,316.167,194.143,314.305C211.048,312.443,227.952,311.512,244.857,311.512C261.762,311.512,278.667,316.076,295.571,316.113C312.476,316.149,329.381,316.167,346.286,316.167C363.19,316.167,380.095,316.003,397,316.003C413.905,316.003,430.81,337.029,447.714,337.029C464.619,337.029,481.524,270.599,498.429,270.599C515.333,270.599,532.238,314.743,549.143,314.743C566.048,314.743,582.952,252.224,599.857,218.952C616.762,185.68,633.667,140.541,650.571,115.11C667.476,89.678,684.381,73.777,701.286,66.365C718.19,58.953,735.095,57.1,752,55.247" fill="none" stroke="#9c2f1b" stroke-width="2.6"></path><path d="M168.786,352.457C177.238,349.169,185.69,345.88,194.143,344.401C202.595,342.922,211.048,343.139,219.5,342.183C227.952,341.226,236.405,338.661,244.857,338.661C253.31,338.661,261.762,339.099,270.214,339.099C278.667,339.099,287.119,337.369,295.571,337.369C304.024,337.369,312.476,340.074,320.929,340.074C329.381,340.074,337.833,336.58,346.286,336.58C354.738,336.58,363.19,344.899,371.643,344.899C380.095,344.899,388.548,336.798,397,334.395C405.452,331.991,413.905,330.479,422.357,330.479C430.81,330.479,439.262,336.158,447.714,336.158C464.619,336.158,481.524,320.302,498.429,314.415C515.333,308.527,532.238,309.887,549.143,300.832C566.048,291.777,582.952,257.345,599.857,257.345C616.762,257.345,633.667,260.303,650.571,260.303C667.476,260.303,684.381,162.978,701.286,162.978C718.19,162.978,735.095,181.49,752,200.002" fill="none" stroke="#241e12" stroke-width="2.4" stroke-dasharray="6 3"></path><text class="endlab" x="761" y="204.00184615384617" fill="#241e12">Party at zero 33.2%</text><text class="endlab" x="761" y="59.24676923076926" fill="#9c2f1b">Candidate at zero 59.7%</text></g><line stroke="#6f6149" stroke-width="1" y1="26" y2="382" style="opacity: 0;" x1="346.2857142857143" x2="346.2857142857143"></line><circle r="4.5" fill="#241e12" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;" cx="346.2857142857143" cy="336.57987692307694"></circle><circle r="4.5" fill="#9c2f1b" stroke="#f6f0e3" stroke-width="1.5" style="opacity: 0;" cx="346.2857142857143" cy="316.1673846153846"></circle><rect class="hover" x="42" y="26" width="710" height="356" fill="transparent"></rect></svg></div>
+  <figcaption>Candidate thermometers exist only in presidential years. After 2020, the party series bends up while the candidate series keeps falling — institutional hatred plateaus, person-targeted hatred does not.</figcaption>
+</figure>
+
+<div class="prose">
+<h2>What this does and doesn’t show</h2>
+
+<p>Three honest cautions. First, mode: the 2020 and 2024 ANES waves were mixed-mode and heavily online, and self-administered surveys elicit more extreme answers — more zeros — than interviews do. Some portion of the cliff between 2016 and 2020 is probably mode, not mood. That same fact cuts the other way for the thaw: 2020 and 2024 were fielded similarly, so the +1.4 uptick is at least an apples-to-apples comparison. But it is small, and “plateau” is a safer reading than “reversal.”</p>
+
+<p>Second, thermometers measure expressed feeling, not behavior. A zero is a statement, not a fist. Third, the universe here is partisans including leaners; pure independents are excluded by construction, and Trump appears on three consecutive ballots, which blurs how much of the candidate series is about candidates in general versus one candidate in particular.</p>
+
+<p>What the record shows without qualification is the shape of the thing. Affective polarization in America was never a love story. The warmth people feel for their own party is exactly where it stood when Jimmy Carter was president. Everything that changed — all of it, in every kind of partisan — is the disappearance of ordinary, lukewarm, wave-across-the-fence regard for the other side. The jaws opened from the bottom.</p>
+</div>
+
+</article>
+</main>
+
+<footer class="wrap notes">
+  <h2>Notes &amp; data</h2>
+  <ul>
+    <li><b>Source:</b> American National Election Studies, Cumulative Data File (1948–2024 release). Party feeling thermometers asked since 1978; presidential-candidate thermometers since 1968 (presidential years only).</li>
+    <li><b>Universe:</b> partisans including leaners (7-point party identification 1–3 Democratic, 5–7 Republican); pure independents excluded. “Strong” = points 1/7, “weak” = 2/6, “leaner” = 3/5.</li>
+    <li><b>Weighting:</b> every statistic uses the ANES full-sample weight (VCF0009z). Per-year party-thermometer samples range from N&nbsp;=&nbsp;1,056 (2004) to N&nbsp;=&nbsp;7,201 (2020). Year cells require unweighted N&nbsp;of at least 100; subgroup-year cells at least eighty.</li>
+    <li><b>Definitions:</b> the gap is the weighted in-party mean minus the weighted out-party mean; “warm” means a rating above 50; “zero” means a literal 0 response. The shift-share decomposition applies 1980 strength-group shares to 2024 within-group means (within effect) and 2024 shares to 1980 means (composition effect).</li>
+    <li><b>Mode caveat:</b> the 2020 and 2024 waves were mixed-mode (heavily web); self-administered modes elicit more extreme and zero responses, so part of the 2016–2020 drop may reflect mode rather than sentiment.</li>
+    <li><b>Prior work this builds on:</b> Iyengar, Sood &amp; Lelkes (2012), <a href="https://doi.org/10.1093/poq/nfs038">Affect, Not Ideology: A Social Identity Perspective on Polarization</a>; Iyengar &amp; Krupenkin (2018), <a href="https://doi.org/10.1111/pops.12487">The Strengthening of Partisan Affect</a>; Garzia &amp; Ferreira da Silva (2025), <a href="https://scholar.google.com/scholar?q=Garzia+Ferreira+da+Silva+affective+polarization+Public+Opinion+Quarterly">cross-national extension of the out-party-driven account</a>. This piece extends the canonical U.S. series through the 2024 wave and adds the distribution-of-zeros framing and the strength-composition decomposition.</li>
+  </ul>
+</footer>
+
+<div id="tip" role="status" aria-live="polite" style="opacity: 0; left: 678px; top: 6288.33px;"><b>1992</b><br><span style="color:#f2d6a0">Rate other candidate at 0:</span> 12.0%<br><span style="color:#f2d6a0">Rate other party at 0:</span> 8.3%</div>
+
+<script type="module">
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+const DATA = {"meta":{"generated_by":"analysis/out-party-hate-not-in-party-love/build_data.py","dataset":"ANES cumulative data file 1948-2024 (data/anes/anes_cdf_clean.parquet)","years":"party thermometers 1978-2024; candidate thermometers 1968-2024","weight":"ANES `weight` (VCF0009z full-sample); every statistic is weighted","universe":"partisans incl. leaners: pid_7pt 1-3 (Dem) / 5-7 (Rep); pure independents excluded","definitions":{"therm_in":"feeling thermometer (0-100) toward own party","therm_out":"feeling thermometer toward opposing party","cand_in/cand_out":"thermometer toward own/opposing party's presidential candidate","strength_groups":"strong = pid_7pt 1/7; weak = 2/6; leaner = 3/5"},"suppression":"year cells need unweighted N >= 100; subgroup-year cells N >= 80","mode_caveat":"ANES 2020 and 2024 were mixed-mode (heavily web); self-administered modes elicit more extreme/zero thermometer responses, so part of the 2016->2020 cliff may be mode effect","no_county_geography":"ANES geography is state-level; no county claims"},"party_thermometer_series":[{"year":1978,"therm_in":71.12,"therm_out":48.0,"gap":23.12,"pct_out_zero":5.394,"pct_out_warm":31.21,"n_in":1743,"n_out":1724},{"year":1980,"therm_in":72.54,"therm_out":46.61,"gap":25.92,"pct_out_zero":6.865,"pct_out_warm":35.39,"n_in":1321,"n_out":1311},{"year":1982,"therm_in":74.33,"therm_out":44.28,"gap":30.05,"pct_out_zero":7.27,"pct_out_warm":29.84,"n_in":1188,"n_out":1183},{"year":1984,"therm_in":74.86,"therm_out":45.93,"gap":28.94,"pct_out_zero":7.913,"pct_out_warm":33.94,"n_in":1900,"n_out":1883},{"year":1986,"therm_in":74.52,"therm_out":46.22,"gap":28.3,"pct_out_zero":7.833,"pct_out_warm":33.89,"n_in":1821,"n_out":1800},{"year":1988,"therm_in":76.29,"therm_out":45.56,"gap":30.72,"pct_out_zero":8.149,"pct_out_warm":29.86,"n_in":1730,"n_out":1718},{"year":1990,"therm_in":71.27,"therm_out":46.74,"gap":24.53,"pct_out_zero":7.655,"pct_out_warm":34.84,"n_in":1671,"n_out":1659},{"year":1992,"therm_in":69.98,"therm_out":41.84,"gap":28.14,"pct_out_zero":8.293,"pct_out_warm":25.87,"n_in":2105,"n_out":2101},{"year":1994,"therm_in":70.21,"therm_out":42.51,"gap":27.7,"pct_out_zero":6.774,"pct_out_warm":25.87,"n_in":1573,"n_out":1569},{"year":1996,"therm_in":71.74,"therm_out":41.22,"gap":30.51,"pct_out_zero":8.692,"pct_out_warm":27.17,"n_in":1534,"n_out":1532},{"year":1998,"therm_in":70.47,"therm_out":41.18,"gap":29.29,"pct_out_zero":9.407,"pct_out_warm":25.64,"n_in":1108,"n_out":1109},{"year":2000,"therm_in":72.57,"therm_out":41.59,"gap":30.98,"pct_out_zero":8.37,"pct_out_warm":23.52,"n_in":1544,"n_out":1528},{"year":2004,"therm_in":73.61,"therm_out":39.59,"gap":34.02,"pct_out_zero":12.34,"pct_out_warm":24.42,"n_in":1062,"n_out":1056},{"year":2008,"therm_in":70.73,"therm_out":34.68,"gap":36.05,"pct_out_zero":14.82,"pct_out_warm":15.53,"n_in":1991,"n_out":1983},{"year":2012,"therm_in":69.79,"therm_out":27.87,"gap":41.92,"pct_out_zero":22.76,"pct_out_warm":9.897,"n_in":5083,"n_out":5082},{"year":2016,"therm_in":67.14,"therm_out":26.07,"gap":41.07,"pct_out_zero":22.22,"pct_out_warm":10.58,"n_in":3631,"n_out":3619},{"year":2020,"therm_in":71.5,"therm_out":19.27,"gap":52.23,"pct_out_zero":39.99,"pct_out_warm":6.256,"n_in":7199,"n_out":7201},{"year":2024,"therm_in":70.51,"therm_out":20.63,"gap":49.88,"pct_out_zero":33.23,"pct_out_warm":6.524,"n_in":5086,"n_out":5083}],"out_party_distribution":{"bin_labels":["0","1-10","11-20","21-30","31-40","41-50","51-60","61-70","71-80","81-90","91-100"],"note":"weighted % of partisans in each out-party thermometer bin; first bin is literal zero","years":[{"year":1978,"shares":[5.394,0.406,3.422,7.889,16.07,35.61,15.14,11.83,0.9281,2.958,0.348],"n":1724},{"year":1984,"shares":[7.913,0.3186,7.01,9.187,16.14,25.49,17.9,10.3,0.478,4.355,0.9028],"n":1883},{"year":1992,"shares":[8.293,0.822,9.074,13.45,20.55,21.94,14.8,6.894,1.046,2.68,0.4557],"n":2101},{"year":2000,"shares":[8.37,2.913,6.68,12.68,19.0,26.83,12.41,6.581,1.498,2.221,0.8184],"n":1528},{"year":2008,"shares":[14.82,0.9273,14.77,15.81,16.78,21.37,9.311,4.525,0.1965,0.9973,0.5055],"n":1983},{"year":2016,"shares":[22.22,6.949,19.25,13.91,13.75,13.35,5.822,3.105,0.3555,0.8276,0.473],"n":3619},{"year":2020,"shares":[39.99,4.005,19.55,12.23,8.668,9.308,3.295,1.733,0.2128,0.651,0.3646],"n":7201},{"year":2024,"shares":[33.23,5.949,21.36,14.32,9.301,9.313,3.581,1.817,0.3951,0.4997,0.2321],"n":5083}]},"strength_series":[{"group":"leaner","year":1978,"therm_in":62.85,"therm_out":50.5,"n":501},{"group":"leaner","year":1980,"therm_in":63.18,"therm_out":49.32,"n":332},{"group":"leaner","year":1982,"therm_in":65.24,"therm_out":47.28,"n":258},{"group":"leaner","year":1984,"therm_in":67.69,"therm_out":48.59,"n":502},{"group":"leaner","year":1986,"therm_in":66.89,"therm_out":49.61,"n":452},{"group":"leaner","year":1988,"therm_in":71.07,"therm_out":49.49,"n":490},{"group":"leaner","year":1990,"therm_in":63.52,"therm_out":49.84,"n":456},{"group":"leaner","year":1992,"therm_in":62.94,"therm_out":44.08,"n":639},{"group":"leaner","year":1994,"therm_in":63.77,"therm_out":46.26,"n":434},{"group":"leaner","year":1996,"therm_in":64.52,"therm_out":44.61,"n":412},{"group":"leaner","year":1998,"therm_in":61.81,"therm_out":44.0,"n":308},{"group":"leaner","year":2000,"therm_in":63.05,"therm_out":44.95,"n":485},{"group":"leaner","year":2004,"therm_in":63.95,"therm_out":44.83,"n":340},{"group":"leaner","year":2008,"therm_in":62.14,"therm_out":40.85,"n":603},{"group":"leaner","year":2012,"therm_in":60.41,"therm_out":32.81,"n":1347},{"group":"leaner","year":2016,"therm_in":56.68,"therm_out":30.2,"n":974},{"group":"leaner","year":2020,"therm_in":60.56,"therm_out":22.73,"n":1832},{"group":"leaner","year":2024,"therm_in":59.84,"therm_out":26.59,"n":1420},{"group":"strong","year":1978,"therm_in":81.61,"therm_out":41.23,"n":468},{"group":"strong","year":1980,"therm_in":84.46,"therm_out":41.96,"n":406},{"group":"strong","year":1982,"therm_in":84.73,"therm_out":36.64,"n":412},{"group":"strong","year":1984,"therm_in":84.86,"therm_out":38.6,"n":630},{"group":"strong","year":1986,"therm_in":83.61,"therm_out":38.0,"n":598},{"group":"strong","year":1988,"therm_in":84.6,"therm_out":38.5,"n":619},{"group":"strong","year":1990,"therm_in":80.77,"therm_out":41.01,"n":564},{"group":"strong","year":1992,"therm_in":80.1,"therm_out":35.39,"n":706},{"group":"strong","year":1994,"therm_in":80.39,"therm_out":34.62,"n":549},{"group":"strong","year":1996,"therm_in":81.8,"therm_out":33.68,"n":540},{"group":"strong","year":1998,"therm_in":78.57,"therm_out":34.02,"n":371},{"group":"strong","year":2000,"therm_in":81.82,"therm_out":35.79,"n":569},{"group":"strong","year":2004,"therm_in":83.38,"therm_out":29.64,"n":390},{"group":"strong","year":2008,"therm_in":80.05,"therm_out":25.82,"n":800},{"group":"strong","year":2012,"therm_in":79.98,"therm_out":19.5,"n":2244},{"group":"strong","year":2016,"therm_in":77.83,"therm_out":18.73,"n":1597},{"group":"strong","year":2020,"therm_in":80.64,"therm_out":13.14,"n":3658},{"group":"strong","year":2024,"therm_in":80.54,"therm_out":13.03,"n":2473},{"group":"weak","year":1978,"therm_in":69.99,"therm_out":50.53,"n":755},{"group":"weak","year":1980,"therm_in":69.45,"therm_out":48.35,"n":573},{"group":"weak","year":1982,"therm_in":70.56,"therm_out":48.92,"n":513},{"group":"weak","year":1984,"therm_in":71.15,"therm_out":50.29,"n":751},{"group":"weak","year":1986,"therm_in":71.85,"therm_out":50.73,"n":750},{"group":"weak","year":1988,"therm_in":72.0,"therm_out":49.58,"n":609},{"group":"weak","year":1990,"therm_in":68.42,"therm_out":49.58,"n":639},{"group":"weak","year":1992,"therm_in":66.47,"therm_out":45.99,"n":756},{"group":"weak","year":1994,"therm_in":65.74,"therm_out":46.89,"n":586},{"group":"weak","year":1996,"therm_in":68.31,"therm_out":45.29,"n":580},{"group":"weak","year":1998,"therm_in":69.61,"therm_out":45.38,"n":430},{"group":"weak","year":2000,"therm_in":71.62,"therm_out":44.92,"n":474},{"group":"weak","year":2004,"therm_in":72.0,"therm_out":45.94,"n":326},{"group":"weak","year":2008,"therm_in":68.87,"therm_out":38.53,"n":580},{"group":"weak","year":2012,"therm_in":65.2,"therm_out":34.05,"n":1491},{"group":"weak","year":2016,"therm_in":60.3,"therm_out":33.41,"n":1048},{"group":"weak","year":2020,"therm_in":64.04,"therm_out":28.16,"n":1711},{"group":"weak","year":2024,"therm_in":64.34,"therm_out":27.84,"n":1190}],"decomposition":{"base_year":1980,"end_year":2024,"groups":["strong","weak","leaner"],"shares_1980":{"strong":0.309,"weak":0.4354,"leaner":0.2557},"shares_2024":{"strong":0.4613,"weak":0.2416,"leaner":0.2971},"means_1980":{"strong":41.96,"weak":48.35,"leaner":49.32},"means_2024":{"strong":13.03,"weak":27.84,"leaner":26.59},"actual_1980":46.62,"actual_2024":20.64,"total_decline":25.98,"within_explained_pts":23.68,"within_explained_pct":91.12,"composition_explained_pts":0.9341,"composition_explained_pct":3.595,"n_1980":1311,"n_2024":5083},"candidate_thermometer_series":[{"year":1968,"cand_in":74.87,"cand_out":54.34,"pct_out_zero":5.254,"n":1161},{"year":1972,"cand_in":68.74,"cand_out":46.79,"pct_out_zero":14.73,"n":2227},{"year":1976,"cand_in":74.01,"cand_out":49.94,"pct_out_zero":8.243,"n":1827},{"year":1980,"cand_in":69.56,"cand_out":44.02,"pct_out_zero":12.36,"n":1303},{"year":1984,"cand_in":75.86,"cand_out":42.87,"pct_out_zero":12.87,"n":1919},{"year":1988,"cand_in":74.15,"cand_out":43.72,"pct_out_zero":12.03,"n":1738},{"year":1992,"cand_in":69.55,"cand_out":40.1,"pct_out_zero":12.02,"n":2128},{"year":1996,"cand_in":71.99,"cand_out":40.23,"pct_out_zero":12.05,"n":1528},{"year":2000,"cand_in":71.44,"cand_out":43.07,"pct_out_zero":8.211,"n":1535},{"year":2004,"cand_in":74.59,"cand_out":34.54,"pct_out_zero":20.34,"n":1070},{"year":2008,"cand_in":71.62,"cand_out":38.1,"pct_out_zero":12.28,"n":1993},{"year":2012,"cand_in":75.7,"cand_out":26.29,"pct_out_zero":29.77,"n":5078},{"year":2016,"cand_in":64.79,"cand_out":15.46,"pct_out_zero":48.73,"n":3641},{"year":2020,"cand_in":75.77,"cand_out":14.71,"pct_out_zero":57.63,"n":7085},{"year":2024,"cand_in":75.22,"cand_out":13.36,"pct_out_zero":59.66,"n":5090}],"thaw_2020_2024":[{"key":"all","label":"All partisans","out_2020":19.27,"n_2020":7201,"out_2024":20.63,"n_2024":5083,"change":1.36},{"key":"dem","label":"Democrats (incl. leaners)","out_2020":20.59,"n_2020":3794,"out_2024":21.08,"n_2024":2632,"change":0.49},{"key":"rep","label":"Republicans (incl. leaners)","out_2020":17.81,"n_2020":3407,"out_2024":20.15,"n_2024":2451,"change":2.34},{"key":"strong","label":"Strong partisans","out_2020":13.14,"n_2020":3658,"out_2024":13.03,"n_2024":2473,"change":-0.11},{"key":"weak_lean","label":"Weak partisans + leaners","out_2020":25.45,"n_2020":3543,"out_2024":27.16,"n_2024":2610,"change":1.71},{"key":"hi_interest","label":"Very interested in campaigns","out_2020":14.95,"n_2020":3976,"out_2024":15.64,"n_2024":2551,"change":0.69},{"key":"lo_interest","label":"Not much interested","out_2020":24.58,"n_2020":808,"out_2024":26.86,"n_2024":547,"change":2.28}],"party_2024_detail":{"dem_rates_trump":10.65,"n_dem":2638,"rep_rates_harris":16.28,"n_rep":2452}};
+
+const f1 = d3.format(".1f");
+const fs = d3.format("+.1f");
+
+/* ---------- tooltip ---------- */
+const tip = document.getElementById("tip");
+function showTip(html, ev){
+  tip.innerHTML = html;
+  tip.style.opacity = 1;
+  const pad = 14;
+  const vw = document.documentElement.clientWidth;
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + pad;
+  if (x + r.width + 6 > vw) x = ev.clientX - r.width - pad;
+  if (x < 4) x = 4;
+  let y = ev.clientY + pad;
+  if (y + r.height + 6 > document.documentElement.clientHeight) y = ev.clientY - r.height - pad;
+  tip.style.left = (x + window.scrollX) + "px";
+  tip.style.top  = (y + window.scrollY) + "px";
+}
+function hideTip(){ tip.style.opacity = 0; }
+
+const INK = "#241e12", RUST = "#9c2f1b", GOLD = "#c9b282", FAINT = "#6f6149";
+
+/* ---------- 1. Jaws chart ---------- */
+(function jaws(){
+  const S = DATA.party_thermometer_series;
+  const W = 980, H = 480, M = {t:28, r:118, b:40, l:42};
+  const svg = d3.select("#jaws").append("svg")
+    .attr("viewBox", [0,0,W,H])
+    .attr("role","img")
+    .attr("aria-label","Two-line chart from 1978 to 2024: in-party thermometer stays near 71 while out-party thermometer falls from 48 to about 21; the gap between them is shaded.");
+  const x = d3.scaleLinear([1978, 2024], [M.l, W - M.r]);
+  const y = d3.scaleLinear([0, 100], [H - M.b, M.t]);
+
+  [0,25,50,75,100].forEach(v=>{
+    svg.append("line").attr("x1",M.l).attr("x2",W-M.r).attr("y1",y(v)).attr("y2",y(v))
+      .attr("stroke", v===50 ? "#b9aa8c" : "#e7dcc4").attr("stroke-width",1)
+      .attr("stroke-dasharray", v===50 ? "5 4" : null);
+    svg.append("text").attr("class","axis").attr("x",M.l-9).attr("y",y(v)+4).attr("text-anchor","end").text(v);
+  });
+  svg.append("text").attr("class","axis").attr("x",M.l-9).attr("y",y(50)-8).attr("text-anchor","end").attr("font-style","italic").text("neutral");
+  [1980,1990,2000,2010,2020].forEach(v=>{
+    svg.append("text").attr("class","axis").attr("x",x(v)).attr("y",H-M.b+24).attr("text-anchor","middle").text(v);
+  });
+
+  const area = d3.area().x(d=>x(d.year)).y0(d=>y(d.therm_out)).y1(d=>y(d.therm_in)).curve(d3.curveMonotoneX);
+  svg.append("path").datum(S).attr("d",area).attr("fill","rgba(156,47,27,.10)");
+
+  const lineIn  = d3.line().x(d=>x(d.year)).y(d=>y(d.therm_in)).curve(d3.curveMonotoneX);
+  const lineOut = d3.line().x(d=>x(d.year)).y(d=>y(d.therm_out)).curve(d3.curveMonotoneX);
+  svg.append("path").datum(S).attr("d",lineIn).attr("fill","none").attr("stroke",INK).attr("stroke-width",2.6);
+  svg.append("path").datum(S).attr("d",lineOut).attr("fill","none").attr("stroke",RUST).attr("stroke-width",2.6);
+
+  const last = S[S.length-1], first = S[0];
+  svg.append("text").attr("class","endlab").attr("x",x(2024)+10).attr("y",y(last.therm_in)+1).attr("fill",INK).text("Own party");
+  svg.append("text").attr("class","endlab").attr("x",x(2024)+10).attr("y",y(last.therm_in)+17).attr("fill",INK).text(f1(last.therm_in));
+  svg.append("text").attr("class","endlab").attr("x",x(2024)+10).attr("y",y(last.therm_out)+1).attr("fill",RUST).text("Other party");
+  svg.append("text").attr("class","endlab").attr("x",x(2024)+10).attr("y",y(last.therm_out)+17).attr("fill",RUST).text(f1(last.therm_out));
+
+  // 1978 gap annotation
+  svg.append("line").attr("x1",x(1978)).attr("x2",x(1978))
+    .attr("y1",y(first.therm_in)).attr("y2",y(first.therm_out))
+    .attr("stroke",FAINT).attr("stroke-width",1).attr("stroke-dasharray","2 3");
+  svg.append("text").attr("class","anno").attr("x",x(1978)+7).attr("y",y((first.therm_in+first.therm_out)/2)+4)
+    .attr("fill",FAINT).text("23.1 pts apart");
+
+  // 2020 peak annotation
+  const p20 = S.find(d=>d.year===2020);
+  svg.append("line").attr("x1",x(2020)).attr("x2",x(2020))
+    .attr("y1",y(p20.therm_in)).attr("y2",y(p20.therm_out))
+    .attr("stroke",RUST).attr("stroke-width",1).attr("stroke-dasharray","2 3");
+  svg.append("text").attr("class","anno").attr("x",x(2020)-7).attr("y",y(46)).attr("text-anchor","end")
+    .attr("fill",RUST).attr("font-weight","700").text("peak gap: 52.2 pts");
+
+  // hover
+  const guide = svg.append("line").attr("stroke",FAINT).attr("stroke-width",1)
+    .attr("y1",M.t).attr("y2",H-M.b).style("opacity",0);
+  const dotIn  = svg.append("circle").attr("r",4.5).attr("fill",INK).attr("stroke","#f6f0e3").attr("stroke-width",1.5).style("opacity",0);
+  const dotOut = svg.append("circle").attr("r",4.5).attr("fill",RUST).attr("stroke","#f6f0e3").attr("stroke-width",1.5).style("opacity",0);
+  const bis = d3.bisector(d=>d.year).center;
+
+  svg.append("rect").attr("x",M.l).attr("y",M.t).attr("width",W-M.l-M.r).attr("height",H-M.t-M.b)
+    .attr("fill","transparent")
+    .on("pointermove",(ev)=>{
+      const [mx] = d3.pointer(ev, svg.node());
+      const d = S[bis(S, x.invert(mx))];
+      guide.attr("x1",x(d.year)).attr("x2",x(d.year)).style("opacity",1);
+      dotIn.attr("cx",x(d.year)).attr("cy",y(d.therm_in)).style("opacity",1);
+      dotOut.attr("cx",x(d.year)).attr("cy",y(d.therm_out)).style("opacity",1);
+      showTip(`<b>${d.year}</b><br>Own party: ${f1(d.therm_in)}<br>Other party: ${f1(d.therm_out)}<br>Gap: ${f1(d.gap)} pts<br><span style="opacity:.75">${d.pct_out_zero.toFixed(1)}% rate the other party at 0</span>`, ev);
+    })
+    .on("pointerleave",()=>{
+      guide.style("opacity",0); dotIn.style("opacity",0); dotOut.style("opacity",0); hideTip();
+    });
+})();
+
+/* ---------- 2. Distribution small multiples ---------- */
+(function dist(){
+  const bins = DATA.out_party_distribution.bin_labels;
+  const wrap = d3.select("#dist");
+  DATA.out_party_distribution.years.forEach(yr=>{
+    const W=230, H=168, M={t:34,r:5,b:22,l:5};
+    const svg = wrap.append("div").append("svg")
+      .attr("viewBox",[0,0,W,H]).attr("role","img")
+      .attr("aria-label",`Distribution of out-party ratings in ${yr.year}; ${f1(yr.shares[0])} percent rate the opposing party at zero.`);
+    const x = d3.scaleBand(d3.range(11), [M.l, W-M.r]).paddingInner(0.16);
+    const y = d3.scaleLinear([0, 42], [H-M.b, M.t]);
+    svg.append("line").attr("x1",M.l).attr("x2",W-M.r).attr("y1",y(0)).attr("y2",y(0)).attr("stroke","#b9aa8c");
+    svg.selectAll("rect").data(yr.shares.map((s,i)=>({s,i}))).join("rect")
+      .attr("x",d=>x(d.i)).attr("width",x.bandwidth())
+      .attr("y",d=>y(d.s)).attr("height",d=>Math.max(0.5, y(0)-y(d.s)))
+      .attr("fill",d=>d.i===0?RUST:GOLD)
+      .on("pointermove",(ev,d)=>showTip(`<b>${yr.year}</b><br>Rated the other party ${d.i===0?"at exactly <b>0</b>":bins[d.i]}<br>${f1(d.s)}% of partisans`,ev))
+      .on("pointerleave",hideTip);
+    svg.append("text").attr("x",M.l).attr("y",16).attr("font-weight","700").attr("font-size","15px").attr("fill",INK).text(yr.year);
+    svg.append("text").attr("x",x(0)+x.bandwidth()/2).attr("y",y(yr.shares[0])-5).attr("text-anchor",yr.shares[0]>20?"middle":"start")
+      .attr("font-size","11.5px").attr("font-weight","700").attr("fill",RUST).text(`${f1(yr.shares[0])}%`);
+    svg.append("text").attr("class","axis").attr("x",x(0)+x.bandwidth()/2).attr("y",H-7).attr("text-anchor","middle").text("0");
+    svg.append("text").attr("class","axis").attr("x",x(10)+x.bandwidth()/2).attr("y",H-7).attr("text-anchor","end").text("100");
+  });
+})();
+
+/* ---------- 3. Strength lines ---------- */
+(function strength(){
+  const groups = [
+    {key:"strong", label:"Strong partisans", color:"#7c2410"},
+    {key:"weak",   label:"Weak partisans",   color:"#b06a2c"},
+    {key:"leaner", label:"Leaners",          color:"#cfa45f"}
+  ];
+  const byG = {};
+  groups.forEach(g=>{ byG[g.key] = DATA.strength_series.filter(d=>d.group===g.key).sort((a,b)=>a.year-b.year); });
+  const years = byG.strong.map(d=>d.year);
+
+  const W=920, H=400, M={t:24,r:150,b:38,l:42};
+  const svg = d3.select("#strength").append("svg")
+    .attr("viewBox",[0,0,W,H]).attr("role","img")
+    .attr("aria-label","Out-party thermometer by strength of partisanship, 1978 to 2024: strong, weak, and leaning partisans all decline in parallel.");
+  const x = d3.scaleLinear([1978,2024],[M.l,W-M.r]);
+  const y = d3.scaleLinear([0,60],[H-M.b,M.t]);
+  [0,20,40,60].forEach(v=>{
+    svg.append("line").attr("x1",M.l).attr("x2",W-M.r).attr("y1",y(v)).attr("y2",y(v)).attr("stroke","#e7dcc4");
+    svg.append("text").attr("class","axis").attr("x",M.l-9).attr("y",y(v)+4).attr("text-anchor","end").text(v);
+  });
+  [1980,1990,2000,2010,2020].forEach(v=>{
+    svg.append("text").attr("class","axis").attr("x",x(v)).attr("y",H-M.b+24).attr("text-anchor","middle").text(v);
+  });
+  const line = d3.line().x(d=>x(d.year)).y(d=>y(d.therm_out)).curve(d3.curveMonotoneX);
+  groups.forEach(g=>{
+    const s = byG[g.key];
+    svg.append("path").datum(s).attr("d",line).attr("fill","none").attr("stroke",g.color).attr("stroke-width",2.4);
+    const e = s[s.length-1];
+    svg.append("text").attr("class","endlab").attr("x",x(2024)+9).attr("y",y(e.therm_out)+4)
+      .attr("fill",g.color).text(`${g.label} ${f1(e.therm_out)}`);
+  });
+
+  const guide = svg.append("line").attr("stroke",FAINT).attr("stroke-width",1).attr("y1",M.t).attr("y2",H-M.b).style("opacity",0);
+  const dots = groups.map(g=>svg.append("circle").attr("r",4).attr("fill",g.color).attr("stroke","#f6f0e3").attr("stroke-width",1.5).style("opacity",0));
+  svg.append("rect").attr("x",M.l).attr("y",M.t).attr("width",W-M.l-M.r).attr("height",H-M.t-M.b)
+    .attr("fill","transparent")
+    .on("pointermove",(ev)=>{
+      const [mx] = d3.pointer(ev, svg.node());
+      const yr = years.reduce((a,b)=>Math.abs(b-x.invert(mx))<Math.abs(a-x.invert(mx))?b:a);
+      guide.attr("x1",x(yr)).attr("x2",x(yr)).style("opacity",1);
+      let rows = "";
+      groups.forEach((g,i)=>{
+        const d = byG[g.key].find(q=>q.year===yr);
+        if(d){ dots[i].attr("cx",x(yr)).attr("cy",y(d.therm_out)).style("opacity",1);
+               rows += `<span style="color:#f2d6a0">${g.label}:</span> ${f1(d.therm_out)}<br>`; }
+      });
+      showTip(`<b>${yr}</b><br>${rows}`, ev);
+    })
+    .on("pointerleave",()=>{ guide.style("opacity",0); dots.forEach(d=>d.style("opacity",0)); hideTip(); });
+})();
+
+/* ---------- 4. Thaw dot plot ---------- */
+(function thaw(){
+  const T = DATA.thaw_2020_2024;
+  const W=920, rowH=46, M={t:34,r:60,b:34,l:230};
+  const H = M.t + T.length*rowH + M.b;
+  const svg = d3.select("#thaw").append("svg")
+    .attr("viewBox",[0,0,W,H]).attr("role","img")
+    .attr("aria-label","Dot plot of 2020 to 2024 change in out-party thermometer by subgroup: Republicans and the disengaged warm the most, strong partisans not at all.");
+  const x = d3.scaleLinear([-0.8, 2.8], [M.l, W-M.r]);
+  [-0.5,0,0.5,1,1.5,2,2.5].forEach(v=>{
+    svg.append("line").attr("x1",x(v)).attr("x2",x(v)).attr("y1",M.t-6).attr("y2",H-M.b)
+      .attr("stroke", v===0 ? "#b9aa8c" : "#ece2cc").attr("stroke-width", v===0?1.4:1);
+    svg.append("text").attr("class","axis").attr("x",x(v)).attr("y",H-M.b+20).attr("text-anchor","middle")
+      .text(v===0?"0":fs(v).replace(".0",""));
+  });
+  svg.append("text").attr("class","axis").attr("x",x(0)).attr("y",M.t-14).attr("text-anchor","middle").attr("font-style","italic").text("no change");
+  svg.append("text").attr("class","axis").attr("x",W-M.r).attr("y",M.t-14).attr("text-anchor","end").text("warmer toward other party →");
+
+  T.forEach((d,i)=>{
+    const cy = M.t + i*rowH + rowH/2;
+    const col = d.change >= 0 ? "#2e6e52" : RUST;
+    svg.append("text").attr("x",M.l-14).attr("y",cy+4).attr("text-anchor","end")
+      .attr("font-size","13.5px").attr("font-weight", d.key==="all" ? "700":"400").attr("fill",INK).text(d.label);
+    svg.append("line").attr("x1",x(0)).attr("x2",x(d.change)).attr("y1",cy).attr("y2",cy)
+      .attr("stroke",col).attr("stroke-width",2.4);
+    svg.append("circle").attr("cx",x(d.change)).attr("cy",cy).attr("r",7.5).attr("fill",col)
+      .attr("stroke","#f6f0e3").attr("stroke-width",1.5)
+      .style("cursor","default")
+      .on("pointermove",(ev)=>showTip(`<b>${d.label}</b><br>2020: ${f1(d.out_2020)} &rarr; 2024: ${f1(d.out_2024)}<br>Change: ${fs(d.change)} pts<br><span style="opacity:.75">N = ${d.n_2020.toLocaleString()} / ${d.n_2024.toLocaleString()}</span>`,ev))
+      .on("pointerleave",hideTip);
+    svg.append("text").attr("x",x(d.change) + (d.change>=0?13:-13)).attr("y",cy+4)
+      .attr("text-anchor", d.change>=0?"start":"end")
+      .attr("font-size","12.5px").attr("font-weight","700").attr("fill",col).text(fs(d.change));
+  });
+})();
+
+/* ---------- 5. Party vs candidate, with toggle ---------- */
+(function cand(){
+  const P = DATA.party_thermometer_series;
+  const C = DATA.candidate_thermometer_series;
+  const W=920, H=420, M={t:26,r:168,b:38,l:42};
+  const svg = d3.select("#cand").append("svg")
+    .attr("viewBox",[0,0,W,H]).attr("role","img")
+    .attr("aria-label","Lines comparing feelings toward the opposing party and the opposing presidential candidate, 1968 to 2024; toggle between mean rating and percent rating at zero.");
+  const x = d3.scaleLinear([1968,2024],[M.l,W-M.r]);
+
+  const MODES = {
+    mean: { yDom:[0,60],  pv:d=>d.therm_out,     cv:d=>d.cand_out,     unit:"", tipP:"Other party", tipC:"Other candidate",
+            pLab:v=>`Other party ${f1(v)}`, cLab:v=>`Other candidate ${f1(v)}`, ticks:[0,20,40,60] },
+    zero: { yDom:[0,65],  pv:d=>d.pct_out_zero,  cv:d=>d.pct_out_zero, unit:"%", tipP:"Rate other party at 0", tipC:"Rate other candidate at 0",
+            pLab:v=>`Party at zero ${f1(v)}%`, cLab:v=>`Candidate at zero ${f1(v)}%`, ticks:[0,20,40,60] }
+  };
+  [1970,1980,1990,2000,2010,2020].forEach(v=>{
+    svg.append("text").attr("class","axis").attr("x",x(v)).attr("y",H-M.b+24).attr("text-anchor","middle").text(v);
+  });
+  const layer = svg.append("g");
+  const guide = svg.append("line").attr("stroke",FAINT).attr("stroke-width",1).attr("y1",M.t).attr("y2",H-M.b).style("opacity",0);
+  const dotP = svg.append("circle").attr("r",4.5).attr("fill",INK).attr("stroke","#f6f0e3").attr("stroke-width",1.5).style("opacity",0);
+  const dotC = svg.append("circle").attr("r",4.5).attr("fill",RUST).attr("stroke","#f6f0e3").attr("stroke-width",1.5).style("opacity",0);
+  let mode = "mean";
+
+  function draw(){
+    const m = MODES[mode];
+    const y = d3.scaleLinear(m.yDom,[H-M.b,M.t]);
+    layer.selectAll("*").remove();
+    m.ticks.forEach(v=>{
+      layer.append("line").attr("x1",M.l).attr("x2",W-M.r).attr("y1",y(v)).attr("y2",y(v)).attr("stroke","#e7dcc4");
+      layer.append("text").attr("class","axis").attr("x",M.l-9).attr("y",y(v)+4).attr("text-anchor","end").text(v + m.unit);
+    });
+    const lp = d3.line().x(d=>x(d.year)).y(d=>y(m.pv(d))).curve(d3.curveMonotoneX);
+    const lc = d3.line().x(d=>x(d.year)).y(d=>y(m.cv(d))).curve(d3.curveMonotoneX);
+    layer.append("path").datum(C).attr("d",lc).attr("fill","none").attr("stroke",RUST).attr("stroke-width",2.6);
+    layer.append("path").datum(P).attr("d",lp).attr("fill","none").attr("stroke",INK).attr("stroke-width",2.4).attr("stroke-dasharray","6 3");
+    const pe = P[P.length-1], ce = C[C.length-1];
+    let yP = y(m.pv(pe)), yC = y(m.cv(ce));
+    if (Math.abs(yP-yC) < 18){ const mid=(yP+yC)/2; yP = mid + (yP<=yC?-9:9); yC = mid + (yP<=yC?9:-9); }
+    layer.append("text").attr("class","endlab").attr("x",x(2024)+9).attr("y",yP+4).attr("fill",INK).text(m.pLab(m.pv(pe)));
+    layer.append("text").attr("class","endlab").attr("x",x(2024)+9).attr("y",yC+4).attr("fill",RUST).text(m.cLab(m.cv(ce)));
+    svg.select("rect.hover").remove();
+    svg.append("rect").attr("class","hover").attr("x",M.l).attr("y",M.t).attr("width",W-M.l-M.r).attr("height",H-M.t-M.b)
+      .attr("fill","transparent")
+      .on("pointermove",(ev)=>{
+        const [mx] = d3.pointer(ev, svg.node());
+        const cYears = C.map(d=>d.year);
+        const yr = cYears.reduce((a,b)=>Math.abs(b-x.invert(mx))<Math.abs(a-x.invert(mx))?b:a);
+        const dc = C.find(d=>d.year===yr);
+        const dp = P.find(d=>d.year===yr);
+        guide.attr("x1",x(yr)).attr("x2",x(yr)).style("opacity",1);
+        dotC.attr("cx",x(yr)).attr("cy",y(m.cv(dc))).style("opacity",1);
+        let html = `<b>${yr}</b><br><span style="color:#f2d6a0">${m.tipC}:</span> ${f1(m.cv(dc))}${m.unit}`;
+        if (dp){ dotP.attr("cx",x(yr)).attr("cy",y(m.pv(dp))).style("opacity",1);
+                 html += `<br><span style="color:#f2d6a0">${m.tipP}:</span> ${f1(m.pv(dp))}${m.unit}`; }
+        else dotP.style("opacity",0);
+        showTip(html, ev);
+      })
+      .on("pointerleave",()=>{ guide.style("opacity",0); dotP.style("opacity",0); dotC.style("opacity",0); hideTip(); });
+  }
+  draw();
+
+  const bMean = document.getElementById("btn-mean");
+  const bZero = document.getElementById("btn-zero");
+  function setMode(m){
+    mode = m;
+    bMean.setAttribute("aria-pressed", m==="mean");
+    bZero.setAttribute("aria-pressed", m==="zero");
+    draw();
+  }
+  bMean.addEventListener("click",()=>setMode("mean"));
+  bZero.addEventListener("click",()=>setMode("zero"));
+})();
+</script>
+
+
+</body></html>

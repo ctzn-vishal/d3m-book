@@ -172,6 +172,60 @@ export const studios: Studio[] = [
     accent: '#9F4A4A',
   },
   {
+    slug: 'negative-partisanship-anes',
+    title: 'Americans Didn’t Fall in Love With Their Party. They Learned to Despise the Other One.',
+    blurb:
+      'Use ANES feeling thermometers from 1978-2024 to separate in-party warmth from out-party dislike, distributional zeros, and affective polarization.',
+    domain: 'Public Opinion',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Survey data'],
+    methods: ['Affective polarization', 'Feeling thermometers', 'Distribution shifts'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/negative-partisanship-anes/preview.jpg',
+      alt: 'ANES affective polarization dashboard with feeling thermometer trends and out-party dislike charts',
+      objectPosition: 'center',
+    },
+    accent: '#A35F3D',
+  },
+  {
+    slug: 'partisans-finally-got-constraint',
+    title: 'Partisans Finally Got Constraint',
+    blurb:
+      'Revisit the partisans-without-constraint thesis with ANES issue-scale correlations, party-identification alignment, heatmaps, and sorting decompositions from 1970-2024.',
+    domain: 'Public Opinion',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Correlation', 'Survey data'],
+    methods: ['Correlation matrices', 'Issue constraint', 'Sorting decomposition'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/partisans-finally-got-constraint/preview.jpg',
+      alt: 'Issue constraint dashboard with ANES correlation heatmaps, party identification alignment, and trend charts',
+      objectPosition: 'center',
+    },
+    accent: '#5E548E',
+  },
+  {
+    slug: 'unsorted-voters-switched',
+    title: 'America Didn’t Wait for the Unsorted to Die — They Switched',
+    blurb:
+      'Track ANES cross-pressured voters from 1972-2024 to test whether partisan sorting came from generational replacement or switching among existing cohorts.',
+    domain: 'Public Opinion',
+    collections: ['teaching'],
+    methodTags: ['Dashboard', 'Time series', 'Survey data'],
+    methods: ['Cohort analysis', 'Cross-pressure', 'Coalition sorting'],
+    relatedSlug: 'ch03-exploratory-viz',
+    kind: 'dashboard',
+    preview: {
+      src: '/studios/unsorted-voters-switched/preview.jpg',
+      alt: 'ANES sorting dashboard with cross-pressured voter trends, education ladder views, and cohort switching charts',
+      objectPosition: 'center',
+    },
+    accent: '#6B7F3A',
+  },
+  {
     slug: 'drug-availability-teens',
     title: 'Within Reach: Teen Drug Availability',
     blurb:
