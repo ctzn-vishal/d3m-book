@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { GalleryExplorer } from '@/components/hub/GalleryExplorer';
-import { getGalleryItems, getGalleryFacets } from '@/lib/gallery';
+import { getGalleryItems, getArticleItems, getGalleryFacets } from '@/lib/gallery';
 
 export const metadata: Metadata = {
   title: 'Vishal Singh — Interactive Data Gallery',
@@ -8,8 +8,15 @@ export const metadata: Metadata = {
     'A gallery of interactive dashboards, data stories, and apps built from real datasets across public health, politics, pricing, and markets — by Vishal Singh, NYU Stern.',
 };
 
-export default function HomeGallery() {
-  const items = getGalleryItems();
+// ISR: re-read the Tigris article manifest periodically so new data stories
+// appear in the gallery without a redeploy (pair with /api/revalidate for instant).
+export const revalidate = 600;
+
+export default async function HomeGallery() {
+  const articles = await getArticleItems();
+  const items = [...getGalleryItems(), ...articles].sort(
+    (a, b) => Number(b.featured) - Number(a.featured)
+  );
   const facets = getGalleryFacets(items);
 
   return (

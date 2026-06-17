@@ -4,6 +4,14 @@ import createMDX from '@next/mdx';
 const nextConfig: NextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  images: {
+    // Gallery article thumbnails are served from the Tigris `vishal` bucket
+    // (and content.vishalsingh.org once the domain is bound).
+    remotePatterns: [
+      { protocol: 'https', hostname: 'vishal.t3.tigrisfiles.io' },
+      { protocol: 'https', hostname: 'content.vishalsingh.org' },
+    ],
+  },
   // Consolidation pass (Medium): every article moved to a gapless, suffix-free
   // chNN-keyword slug. Each old path 301s to its new home so inbound/indexed
   // links survive. The two pre-consolidation redirects are chained forward to

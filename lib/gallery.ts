@@ -66,6 +66,9 @@ type CurateMap = Record<string, Partial<GalleryItem>>;
 const registryItems = ((galleryRegistry as { items?: unknown }).items ?? []) as unknown as GalleryItem[];
 const curate = ((galleryRegistry as { curate?: unknown }).curate ?? {}) as CurateMap;
 
+/** Public base URL for Tigris-hosted content (the `vishal` bucket / its CDN). */
+const CONTENT_URL = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://vishal.t3.tigrisfiles.io').replace(/\/$/, '');
+
 /** Studios → gallery items. Self-contained HTML; opens in a new tab. */
 function studioBase(): GalleryItem[] {
   return studios.map(s => ({
@@ -101,6 +104,53 @@ export function getGalleryItems(opts?: { includeHidden?: boolean }): GalleryItem
 
 export function getGalleryItem(id: string): GalleryItem | undefined {
   return allItems().find(i => i.id === id);
+}
+
+type ManifestItem = {
+  id: string;
+  title: string;
+  description?: string;
+  topic?: string;
+  tags?: string[];
+  file: string;
+  thumb?: string | null;
+  accent?: string;
+  featured?: boolean;
+  status?: GalleryStatus;
+};
+
+/**
+ * Articles = data stories hosted in the Tigris `vishal` bucket. Read from its
+ * manifest.json via ISR (revalidate), so adding a story to the bucket + manifest
+ * refreshes the gallery with no redeploy. Repo-side `curate` overrides still apply.
+ * Returns [] if the manifest is unreachable (gallery still renders studios+apps).
+ */
+export async function getArticleItems(): Promise<GalleryItem[]> {
+  try {
+    const res = await fetch(`${CONTENT_URL}/articles/manifest.json`, { next: { revalidate: 600 } });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { items?: ManifestItem[] };
+    return (data.items ?? [])
+      .map<GalleryItem>(m => ({
+        id: m.id,
+        type: 'article',
+        title: m.title,
+        description: m.description ?? '',
+        topic: m.topic,
+        tags: m.tags?.length ? m.tags : ['data story'],
+        href: `${CONTENT_URL}/${m.file}`,
+        external: true,
+        openInNewTab: true,
+        thumbnail: m.thumb ? `${CONTENT_URL}/${m.thumb}` : undefined,
+        accent: m.accent ?? '#46688f',
+        featured: !!m.featured,
+        status: m.status ?? 'published',
+      }))
+      .map(it => (curate[it.id] ? { ...it, ...curate[it.id] } : it))
+      .filter(i => i.status === 'published');
+  } catch {
+    return [];
+  }
 }
 
 export function getFeaturedItems(limit = 6): GalleryItem[] {
