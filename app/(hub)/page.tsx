@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { GalleryExplorer } from '@/components/hub/GalleryExplorer';
-import { getGalleryItems, getArticleItems, getGalleryFacets } from '@/lib/gallery';
+import { getGalleryItems, getArticleItems, getDatasetItems, getGalleryFacets } from '@/lib/gallery';
 
 export const metadata: Metadata = {
   title: 'Vishal Singh — Interactive Data Gallery',
@@ -13,8 +13,8 @@ export const metadata: Metadata = {
 export const revalidate = 600;
 
 export default async function HomeGallery() {
-  const articles = await getArticleItems();
-  const items = [...getGalleryItems(), ...articles].sort(
+  const [articles, datasets] = await Promise.all([getArticleItems(), getDatasetItems()]);
+  const items = [...getGalleryItems(), ...articles, ...datasets].sort(
     (a, b) => Number(b.featured) - Number(a.featured)
   );
   const facets = getGalleryFacets(items);

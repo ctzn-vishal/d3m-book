@@ -153,6 +153,78 @@ export async function getArticleItems(): Promise<GalleryItem[]> {
   }
 }
 
+export type DatasetColumn = {
+  name: string;
+  dtype: string;
+  nullPct: number | null;
+  unique: number | null;
+  examples: (string | number)[];
+};
+
+export type DatasetRecord = {
+  id: string;
+  title: string;
+  description: string;
+  topic?: string;
+  tags: string[];
+  format: string;
+  rows: number | null;
+  cols: number | null;
+  grain: string;
+  useCases: string[];
+  source: string;
+  confidence?: string;
+  sizeBytes: number | null;
+  sha256: string;
+  file: string;
+  accent: string;
+  featured: boolean;
+  status: GalleryStatus;
+  columns: DatasetColumn[];
+};
+
+async function fetchDatasetManifest(): Promise<DatasetRecord[]> {
+  try {
+    const res = await fetch(`${CONTENT_URL}/datasets/manifest.json`, { next: { revalidate: 600 } });
+    if (!res.ok) return [];
+    const data = (await res.json()) as { items?: DatasetRecord[] };
+    return data.items ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** Datasets → gallery items (internal links to the /datasets/[id] viewer). */
+export async function getDatasetItems(): Promise<GalleryItem[]> {
+  const recs = await fetchDatasetManifest();
+  return recs
+    .map<GalleryItem>(d => ({
+      id: d.id,
+      type: 'dataset',
+      title: d.title,
+      description: d.description,
+      topic: d.topic,
+      tags: d.tags?.length ? d.tags : ['dataset'],
+      href: `/datasets/${d.id}`,
+      external: false,
+      openInNewTab: false,
+      accent: d.accent ?? '#46688f',
+      featured: !!d.featured,
+      status: d.status ?? 'published',
+    }))
+    .map(it => (curate[it.id] ? { ...it, ...curate[it.id] } : it))
+    .filter(i => i.status === 'published');
+}
+
+export async function getDataset(id: string): Promise<DatasetRecord | undefined> {
+  return (await fetchDatasetManifest()).find(d => d.id === id);
+}
+
+/** Absolute URL for a bucket-relative content path (article HTML, dataset file). */
+export function contentUrl(path: string): string {
+  return `${CONTENT_URL}/${path.replace(/^\//, '')}`;
+}
+
 export function getFeaturedItems(limit = 6): GalleryItem[] {
   return getGalleryItems()
     .filter(i => i.featured)
