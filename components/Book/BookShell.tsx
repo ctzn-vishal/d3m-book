@@ -42,7 +42,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
 
         <div className="mx-auto w-full max-w-3xl xl:mx-0 xl:max-w-none">
           <nav className="pt-8 text-sm text-muted" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-link">
+            <Link href="/teaching" className="hover:text-link">
               {book.title}
             </Link>
             {part && (
@@ -102,7 +102,7 @@ function StickyBookBar({ book }: { book: Book }) {
     <div className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
       <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-4 px-5 sm:px-6 lg:px-10 py-2.5">
         <Link
-          href="/"
+          href="/teaching"
           className="text-sm font-display font-semibold text-body hover:text-link transition-colors truncate"
         >
           {book.title}

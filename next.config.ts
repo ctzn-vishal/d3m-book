@@ -92,6 +92,43 @@ const nextConfig: NextConfig = {
       // legacy (pre-consolidation) merges, chained forward:
       { source: '/ch47-semantic-search', destination: '/ch14-embeddings', permanent: true },
       { source: '/ch50b-prompting', destination: '/ch16-llm-capabilities', permanent: true },
+
+      // legacy studio slugs from the first politics batch:
+      {
+        source: '/studios/negative-partisanship-anes',
+        destination: '/studios/out-party-hate-not-in-party-love',
+        permanent: true,
+      },
+      {
+        source: '/studios/unsorted-voters-switched',
+        destination: '/studios/sorting-was-conversion-not-replacement',
+        permanent: true,
+      },
+      {
+        source: '/studios/partisans-finally-got-constraint',
+        destination: '/studios/partisans-got-constraint',
+        permanent: true,
+      },
+    ];
+  },
+
+  // ── Tier C proxy spokes (hub rewrites) ──────────────────────────────────
+  // Each externally-deployed app/data-story is registered in lib/gallery.ts and
+  // currently opens at its live *.vercel.app URL (new tab). To bring it UNDER
+  // vishalsingh.org at the hub path below, uncomment its rule — but ONLY after
+  // its origin is retrofitted, or /_next assets will 404 through the proxy:
+  //   • Next origins → set `basePath` (+ `assetPrefix`) to the mount path in
+  //                    THEIR OWN next.config (e.g. basePath: '/atlas/trade').
+  //   • scrc-data    → Vite SPA: rebuild with `base: '/apps/scrc/'` (no basePath knob).
+  // Keep the hub pinned to a current Next 16.2.x patch — this proxy path is the
+  // surface the rewrite/middleware advisories touched.
+  async rewrites() {
+    return [
+      // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
+      // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
+      // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
+      // { source: '/apps/ai-models/:path*',   destination: 'https://v0-interactive-table-lac.vercel.app/apps/ai-models/:path*' },
+      // { source: '/apps/scrc/:path*',        destination: 'https://scrc-data.vercel.app/apps/scrc/:path*' },
     ];
   },
 };
