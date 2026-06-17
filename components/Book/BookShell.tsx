@@ -110,10 +110,10 @@ function StickyBookBar({ book }: { book: Book }) {
         <div className="flex items-center gap-2 shrink-0">
           <SearchTrigger />
           <Link
-            href="/studios"
+            href="/"
             className="hidden sm:inline-block rounded-md px-2.5 py-1.5 text-xs font-medium text-muted hover:text-body hover:bg-card transition-colors"
           >
-            Case Gallery
+            Gallery
           </Link>
         </div>
       </div>

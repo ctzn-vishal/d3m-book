@@ -23,10 +23,10 @@ function formatArticleNumber(num: string): string {
 function buildIndex(book: Book): Entry[] {
   const entries: Entry[] = [];
   entries.push({
-    href: '/studios',
-    title: 'Case Study & Dashboard Gallery',
-    context: 'Interactive studios',
-    haystack: 'case study dashboard gallery interactive studios',
+    href: '/',
+    title: 'Gallery',
+    context: 'Dashboards, data stories & apps',
+    haystack: 'gallery case study dashboard data story app interactive studios',
     kind: 'page',
   });
   for (const part of book.parts) {

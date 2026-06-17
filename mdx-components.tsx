@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types';
 import * as React from 'react';
 import katex from 'katex';
+import { CaseRef } from '@/components/Book/CaseRef';
 
 function parseMath(text: string): (string | React.JSX.Element)[] {
   const results: (string | React.JSX.Element)[] = [];
@@ -154,6 +155,8 @@ function processMathChildren(children: React.ReactNode): React.ReactNode {
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
     ...components,
+    // Globally available in any chapter MDX (no per-file import).
+    CaseRef,
     p: ({ children, ...props }: any) => (
       <p {...props}>{processMathChildren(children)}</p>
     ),

@@ -68,13 +68,15 @@ function ChapterCard({ chapter }: { chapter: Chapter }) {
             Studios
           </span>
           {related.map(s => (
-            <Link
+            <a
               key={s.slug}
-              href={`/studios/${s.slug}`}
+              href={`/studios/${s.slug}/index.html`}
+              target="_blank"
+              rel="noopener noreferrer"
               className="rounded-md border border-[#bcdcd8] bg-hub-teal-soft px-2 py-0.5 font-plex text-[10.5px] text-hub-teal transition-colors hover:border-hub-teal"
             >
               {s.title.length > 34 ? `${s.title.slice(0, 32)}…` : s.title}
-            </Link>
+            </a>
           ))}
         </div>
       )}

@@ -93,22 +93,29 @@ const nextConfig: NextConfig = {
       { source: '/ch47-semantic-search', destination: '/ch14-embeddings', permanent: true },
       { source: '/ch50b-prompting', destination: '/ch16-llm-capabilities', permanent: true },
 
-      // legacy studio slugs from the first politics batch:
+      // legacy studio slugs from the first politics batch → the renamed studio's HTML:
       {
         source: '/studios/negative-partisanship-anes',
-        destination: '/studios/out-party-hate-not-in-party-love',
+        destination: '/studios/out-party-hate-not-in-party-love/index.html',
         permanent: true,
       },
       {
         source: '/studios/unsorted-voters-switched',
-        destination: '/studios/sorting-was-conversion-not-replacement',
+        destination: '/studios/sorting-was-conversion-not-replacement/index.html',
         permanent: true,
       },
       {
         source: '/studios/partisans-finally-got-constraint',
-        destination: '/studios/partisans-got-constraint',
+        destination: '/studios/partisans-got-constraint/index.html',
         permanent: true,
       },
+
+      // Studios viewer retired (2026-06): the gallery (/) lists every studio, and
+      // each studio is a self-contained HTML file in public/studios/<slug>/. Send
+      // the old pretty paths to the gallery / the raw file. Order matters — the
+      // three specific legacy slugs above resolve before this catch-all.
+      { source: '/studios', destination: '/', permanent: true },
+      { source: '/studios/:slug', destination: '/studios/:slug/index.html', permanent: true },
     ];
   },
 

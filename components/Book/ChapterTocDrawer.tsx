@@ -103,7 +103,7 @@ export function ChapterTocDrawer({ book, currentSlug }: ChapterTocDrawerProps) {
 
               <nav className="px-6 py-6">
                 <Link
-                  href="/studios"
+                  href="/"
                   onClick={() => setOpen(false)}
                   className="mb-6 flex items-center justify-between gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm font-medium text-body transition-colors hover:border-border-strong hover:text-link"
                 >

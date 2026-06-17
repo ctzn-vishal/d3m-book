@@ -1,14 +1,21 @@
 import { studios } from '@/lib/studios';
+import { domainToTopic } from '@/lib/taxonomy';
+import galleryRegistry from '@/content/gallery.json';
 
 /**
- * The unified gallery registry. ONE loader (`getGalleryItems`) merges every
- * content source into a single `GalleryItem[]` so the gallery page never knows
- * where an item came from. This is the swappable seam: when articles/datasets
- * move to Tigris (Phase 2) or a DB later, only this file changes.
+ * The unified gallery registry. ONE loader (`getGalleryItems`) merges:
+ *   1. studios auto-derived from lib/studios.ts (so adding an HTML studio there
+ *      surfaces it here automatically), and
+ *   2. content/gallery.json — the hand-edited curation surface: `items`
+ *      (standalone apps/articles/datasets) + `curate` (per-id overrides for the
+ *      derived studios: featured / status / topic / tags / teaching / …).
  *
- * Link model:
- *   - internal (`external: false`) → in-app navigation (studios, datasets)
- *   - external (`external: true`)  → cross-zone <a target="_blank"> (proxied apps)
+ * This is the swappable seam: moving the source to Turso later is a change to
+ * this file only. Reads are filtered to `status === 'published'`.
+ *
+ * Link model: an item renders as a new-tab <a> when `external` OR `openInNewTab`
+ * (all standalone HTML artifacts + live apps); otherwise as in-app navigation
+ * (reserved for future internal routes like /datasets/[id]).
  */
 
 export type GalleryType =
@@ -20,28 +27,30 @@ export type GalleryType =
   | 'dataset'
   | 'presentation';
 
+export type GalleryStatus = 'published' | 'hidden' | 'draft';
+
 export type GalleryItem = {
   id: string;
   type: GalleryType;
   title: string;
   description: string;
   domain?: string;
+  /** Canonical subject facet (controlled vocabulary — see lib/taxonomy.ts). */
+  topic?: string;
   tags: string[];
+  /** Slug of the book article/chapter this pairs with, if any. */
+  teaching?: string;
   href: string;
-  /** true → render as a plain cross-zone anchor (new tab); false → next/link */
   external: boolean;
+  openInNewTab?: boolean;
   thumbnail?: string;
   accent: string;
   featured: boolean;
-  /**
-   * For proxied apps: the intended hub mount path (via next.config rewrites)
-   * once the origin sets `basePath`. Until then `href` points at the live
-   * deployment so the gallery works today. See next.config.ts.
-   */
+  status: GalleryStatus;
+  /** For proxied apps: intended hub mount path once the origin sets basePath. */
   proxyPath?: string;
 };
 
-/** Human label per type, used by the filter chips and card badges. */
 export const TYPE_LABEL: Record<GalleryType, string> = {
   studio: 'Studio',
   dashboard: 'Dashboard',
@@ -52,114 +61,46 @@ export const TYPE_LABEL: Record<GalleryType, string> = {
   presentation: 'Presentation',
 };
 
-/** A curated set of studios to feature on the home + gallery hero. */
-const FEATURED_STUDIO_SLUGS = new Set<string>([
-  'presidential-election-atlas',
-  'nyc-airbnb-atlas',
-  'share-of-wallet',
-  'southwest-regression',
-  'gdelt-media-agenda-lab',
-  'religious-composition-dashboard',
-]);
+type CurateMap = Record<string, Partial<GalleryItem>>;
 
-/** Studios → gallery items (internal links into the existing /studios viewer). */
-function studioItems(): GalleryItem[] {
+const registryItems = ((galleryRegistry as { items?: unknown }).items ?? []) as unknown as GalleryItem[];
+const curate = ((galleryRegistry as { curate?: unknown }).curate ?? {}) as CurateMap;
+
+/** Studios → gallery items. Self-contained HTML; opens in a new tab. */
+function studioBase(): GalleryItem[] {
   return studios.map(s => ({
     id: s.slug,
-    type: s.kind === 'exercise' ? 'case' : 'dashboard',
+    type: s.kind === 'exercise' ? ('case' as const) : ('dashboard' as const),
     title: s.title,
     description: s.blurb,
     domain: s.domain,
+    topic: domainToTopic(s.domain),
     tags: s.methodTags,
-    href: `/studios/${s.slug}`,
+    teaching: s.relatedSlug,
+    href: `/studios/${s.slug}/index.html`,
     external: false,
+    openInNewTab: true,
     thumbnail: s.preview.src,
     accent: s.accent,
-    featured: FEATURED_STUDIO_SLUGS.has(s.slug),
+    featured: false,
+    status: 'published' as GalleryStatus,
   }));
 }
 
-/**
- * Externally-deployed apps + data stories (Tier C). For v1 the cards open the
- * live deployment in a new tab; `proxyPath` records where each will mount under
- * the hub once its origin sets `basePath` (see next.config.ts rewrite block).
- */
-const HUB_APPS: GalleryItem[] = [
-  {
-    id: 'well-being-atlas',
-    type: 'article',
-    title: 'The Well-Being Atlas',
-    description:
-      'A publication of reproducible data essays on life satisfaction — Gallup World Poll, GSS, and WVS microdata across 50 years and 168 countries.',
-    domain: 'Well-being',
-    tags: ['well-being', 'gallup', 'global', 'data story'],
-    href: 'https://well-being-atlas.vercel.app/',
-    external: true,
-    accent: '#2f6f6b',
-    featured: true,
-    proxyPath: '/atlas/well-being',
-  },
-  {
-    id: 'world-trade-atlas',
-    type: 'app',
-    title: 'World Trade Atlas',
-    description:
-      'A bilateral goods-trade explorer — 226 countries × 5,021 products, 1995–2024 (CEPII BACI), with country profiles, comparisons, and stories.',
-    domain: 'Trade',
-    tags: ['trade', 'geography', 'baci', 'explorer'],
-    href: 'https://world-trade-atlas.vercel.app/',
-    external: true,
-    accent: '#46688f',
-    featured: true,
-    proxyPath: '/atlas/trade',
-  },
-  {
-    id: 'zip-health',
-    type: 'app',
-    title: 'Health of America’s ZIP Codes',
-    description:
-      'A map-first atlas of 26 health and social-need measures across 32,409 ZIP/ZCTAs (CDC PLACES + Census), with stories and methodology.',
-    domain: 'Public health',
-    tags: ['public-health', 'zip', 'places', 'maps'],
-    href: 'https://health-of-americas-zip-codes.vercel.app/',
-    external: true,
-    accent: '#7a4a6e',
-    featured: false,
-    proxyPath: '/apps/zip-health',
-  },
-  {
-    id: 'ai-models',
-    type: 'app',
-    title: 'AI Models & Benchmarks',
-    description:
-      'A filterable, sortable comparison of frontier and open-weight models — context windows, pricing, modalities, and access.',
-    domain: 'AI reference',
-    tags: ['ai', 'benchmarks', 'reference', 'table'],
-    href: 'https://v0-interactive-table-lac.vercel.app/',
-    external: true,
-    accent: '#b9762a',
-    featured: false,
-    proxyPath: '/apps/ai-models',
-  },
-  {
-    id: 'scrc-data',
-    type: 'app',
-    title: 'Research Data Gallery — SCRC & Dewey',
-    description:
-      'A research-data gallery surfacing curated datasets for teaching and analysis.',
-    domain: 'Research data',
-    tags: ['research-data', 'gallery', 'datasets'],
-    href: 'https://scrc-data.vercel.app/',
-    external: true,
-    accent: '#2f6f6b',
-    featured: false,
-    proxyPath: '/apps/scrc',
-  },
-];
+/** Every item, curation applied, before status filtering. */
+function allItems(): GalleryItem[] {
+  const base = [...studioBase(), ...registryItems];
+  return base.map(it => (curate[it.id] ? { ...it, ...curate[it.id] } : it));
+}
 
-/** THE loader. Order: featured-first within a stable type ordering. */
-export function getGalleryItems(): GalleryItem[] {
-  return [...HUB_APPS, ...studioItems()];
+export function getGalleryItems(opts?: { includeHidden?: boolean }): GalleryItem[] {
+  const items = allItems().filter(i => opts?.includeHidden || i.status === 'published');
+  // featured-first, stable otherwise (the explorer re-sorts on demand).
+  return items.sort((a, b) => Number(b.featured) - Number(a.featured));
+}
+
+export function getGalleryItem(id: string): GalleryItem | undefined {
+  return allItems().find(i => i.id === id);
 }
 
 export function getFeaturedItems(limit = 6): GalleryItem[] {
@@ -170,22 +111,27 @@ export function getFeaturedItems(limit = 6): GalleryItem[] {
 
 export type GalleryFacets = {
   types: { type: GalleryType; label: string; count: number }[];
+  topics: { topic: string; count: number }[];
   tags: { tag: string; count: number }[];
   total: number;
 };
 
-/** Filter facets derived live from the data (no hand-maintained lists). */
 export function getGalleryFacets(items: GalleryItem[] = getGalleryItems()): GalleryFacets {
   const typeCounts = new Map<GalleryType, number>();
+  const topicCounts = new Map<string, number>();
   const tagCounts = new Map<string, number>();
   for (const it of items) {
     typeCounts.set(it.type, (typeCounts.get(it.type) ?? 0) + 1);
+    if (it.topic) topicCounts.set(it.topic, (topicCounts.get(it.topic) ?? 0) + 1);
     for (const t of it.tags) tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1);
   }
   return {
     types: [...typeCounts.entries()]
       .map(([type, count]) => ({ type, label: TYPE_LABEL[type], count }))
       .sort((a, b) => b.count - a.count),
+    topics: [...topicCounts.entries()]
+      .map(([topic, count]) => ({ topic, count }))
+      .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic)),
     tags: [...tagCounts.entries()]
       .map(([tag, count]) => ({ tag, count }))
       .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag)),
