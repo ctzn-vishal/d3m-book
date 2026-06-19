@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PartPage } from '@/components/hub/PartPage';
+import { PartPage } from '@/components/Book/PartPage';
 import { book, findPart, getAllPartNumerals } from '@/lib/book-toc';
 import { getPartContent } from '@/lib/book-content';
 
@@ -29,5 +29,5 @@ export default async function TeachingPartPage({ params }: Props) {
   const found = findPart(numeral);
   if (!found) notFound();
 
-  return <PartPage part={found.part} index={found.index} prev={found.prev} next={found.next} />;
+  return <PartPage book={book} part={found.part} index={found.index} prev={found.prev} next={found.next} />;
 }

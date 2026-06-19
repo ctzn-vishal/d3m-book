@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import { TeachingCover } from '@/components/hub/TeachingCover';
+import { TeachingCover } from '@/components/Book/TeachingCover';
 import { book } from '@/lib/book-toc';
 
 export const metadata: Metadata = {
-  title: `${book.title} — Teaching`,
+  title: `${book.title} — Contents`,
   description: book.subtitle,
 };
 

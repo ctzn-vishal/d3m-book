@@ -5,7 +5,8 @@ import { ChapterTocDrawer } from '@/components/Book/ChapterTocDrawer';
 import { OnThisPage } from '@/components/Book/OnThisPage';
 import { ReadingProgress } from '@/components/Book/ReadingProgress';
 import { KeyboardNav } from '@/components/Book/KeyboardNav';
-import { CommandPalette, SearchTrigger } from '@/components/Book/CommandPalette';
+import { CommandPalette } from '@/components/Book/CommandPalette';
+import { BookTopBar } from '@/components/Book/BookTopBar';
 
 export interface BookShellProps {
   slug: string;
@@ -33,7 +34,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
   return (
     <div className="bg-surface text-body min-h-screen flex flex-col">
       <ReadingProgress />
-      <StickyBookBar book={book} />
+      <BookTopBar title={book.title} />
 
       <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-10 xl:grid xl:grid-cols-[minmax(8rem,1fr)_minmax(0,48rem)_13rem] xl:gap-9 2xl:grid-cols-[minmax(12rem,1fr)_minmax(0,48rem)_13rem]">
         {/* Left spacer — balances the right TOC rail so the prose column
@@ -92,35 +93,6 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
         nextSlug={next ? next.slug : null}
       />
       <CommandPalette book={book} />
-    </div>
-  );
-}
-
-/**
- * Thin book bar that stays pinned to the top of the viewport while reading.
- * Carries the book title (→ home), a ⌘K search trigger, and a link to the
- * case-study gallery.
- */
-function StickyBookBar({ book }: { book: Book }) {
-  return (
-    <div className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-4 px-5 sm:px-6 lg:px-10 py-2.5">
-        <Link
-          href="/teaching"
-          className="text-sm font-display font-semibold text-body hover:text-link transition-colors truncate"
-        >
-          {book.title}
-        </Link>
-        <div className="flex items-center gap-2 shrink-0">
-          <SearchTrigger />
-          <Link
-            href="/"
-            className="hidden sm:inline-block rounded-md px-2.5 py-1.5 text-xs font-medium text-muted hover:text-body hover:bg-card transition-colors"
-          >
-            Gallery
-          </Link>
-        </div>
-      </div>
     </div>
   );
 }

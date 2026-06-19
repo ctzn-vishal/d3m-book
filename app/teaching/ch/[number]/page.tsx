@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ChapterPage } from '@/components/hub/ChapterPage';
+import { ChapterPage } from '@/components/Book/ChapterPage';
 import { book, findChapter, getAllChapterNumbers } from '@/lib/book-toc';
 import { getChapterContent } from '@/lib/book-content';
 
@@ -31,6 +31,7 @@ export default async function TeachingChapterPage({ params }: Props) {
 
   return (
     <ChapterPage
+      book={book}
       chapter={found.chapter}
       part={found.part}
       partIndex={found.partIndex}
