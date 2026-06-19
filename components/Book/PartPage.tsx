@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import type { Book, Part } from '@/lib/book-types';
 import { getPartContent } from '@/lib/book-content';
-import { resolveIcon } from '@/lib/book-visuals';
+import { resolveIcon, partColor } from '@/lib/book-visuals';
 import { BookFrame } from '@/components/Book/BookFrame';
 import { ChapterCard } from '@/components/Book/ChapterCard';
 
@@ -14,9 +14,10 @@ interface PartPageProps {
   next: Part | null;
 }
 
-export function PartPage({ book, part, prev, next }: PartPageProps) {
+export function PartPage({ book, part, index, prev, next }: PartPageProps) {
   const content = getPartContent(part.numeral);
   const Icon = resolveIcon(content?.icon);
+  const color = partColor(index);
   const chapterCount = part.chapters.length;
   const articleCount = part.chapters.reduce((n, c) => n + c.articles.length, 0);
 
@@ -35,7 +36,7 @@ export function PartPage({ book, part, prev, next }: PartPageProps) {
         {/* Header */}
         <header className="mt-7 border-b border-border pb-8">
           <div className="flex items-start gap-4">
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-card text-link">
+            <span className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${color.chip} ${color.icon}`}>
               <Icon size={24} strokeWidth={1.7} />
             </span>
             <div className="min-w-0">
@@ -78,7 +79,7 @@ export function PartPage({ book, part, prev, next }: PartPageProps) {
           </h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {part.chapters.map(ch => (
-              <ChapterCard key={ch.number} chapter={ch} />
+              <ChapterCard key={ch.number} chapter={ch} color={color} />
             ))}
           </div>
         </section>

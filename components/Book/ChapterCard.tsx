@@ -1,16 +1,16 @@
 import Link from 'next/link';
 import type { Chapter } from '@/lib/book-types';
 import { getChapterContent } from '@/lib/book-content';
-import { resolveIcon } from '@/lib/book-visuals';
+import { resolveIcon, type PartColor } from '@/lib/book-visuals';
 import { studiosForChapter } from '@/lib/book-studios';
 
 /**
  * A chapter on the contents page and on part pages. The header links to the
  * chapter overview; each article links to the article; studios open in a new
  * tab. Styled in the book's reading theme (white card, Space Grotesk title,
- * sky-blue links).
+ * sky-blue links). The icon carries its part's color.
  */
-export function ChapterCard({ chapter }: { chapter: Chapter }) {
+export function ChapterCard({ chapter, color }: { chapter: Chapter; color: PartColor }) {
   const content = getChapterContent(chapter.number);
   const related = studiosForChapter(chapter);
   const Icon = resolveIcon(content?.icon);
@@ -18,7 +18,7 @@ export function ChapterCard({ chapter }: { chapter: Chapter }) {
   return (
     <div className="flex flex-col rounded-lg border border-border bg-surface p-5 transition-colors hover:border-border-strong">
       <Link href={`/teaching/ch/${chapter.number}`} className="group flex items-start gap-3">
-        <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-card text-link">
+        <span className={`mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${color.chip} ${color.icon}`}>
           <Icon size={18} strokeWidth={1.9} />
         </span>
         <span className="min-w-0">

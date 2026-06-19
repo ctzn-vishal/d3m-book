@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen } from 'lucide-react';
 import type { Book, Chapter, Part } from '@/lib/book-types';
 import { getChapterContent, getArticleBlurb } from '@/lib/book-content';
-import { resolveIcon } from '@/lib/book-visuals';
+import { resolveIcon, partColor } from '@/lib/book-visuals';
 import { studiosForChapter } from '@/lib/book-studios';
 import { BookFrame } from '@/components/Book/BookFrame';
 
@@ -15,9 +15,10 @@ interface ChapterPageProps {
   next: { chapter: Chapter } | null;
 }
 
-export function ChapterPage({ book, chapter, part, prev, next }: ChapterPageProps) {
+export function ChapterPage({ book, chapter, part, partIndex, prev, next }: ChapterPageProps) {
   const content = getChapterContent(chapter.number);
   const Icon = resolveIcon(content?.icon);
+  const color = partColor(partIndex);
   const related = studiosForChapter(chapter);
   const firstArticle = chapter.articles[0];
 
@@ -40,7 +41,7 @@ export function ChapterPage({ book, chapter, part, prev, next }: ChapterPageProp
         {/* Header */}
         <header className="mt-7 border-b border-border pb-8">
           <div className="flex items-start gap-4">
-            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-card text-link">
+            <span className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${color.chip} ${color.icon}`}>
               <Icon size={24} strokeWidth={1.7} />
             </span>
             <div className="min-w-0">

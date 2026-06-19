@@ -1,17 +1,20 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, BookOpen } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
 import { allArticles } from '@/lib/book-toc';
 import { studios } from '@/lib/studios';
 import { getPartContent } from '@/lib/book-content';
-import { resolveIcon } from '@/lib/book-visuals';
+import { resolveIcon, partColor } from '@/lib/book-visuals';
 import { BookFrame } from '@/components/Book/BookFrame';
 import { ChapterCard } from '@/components/Book/ChapterCard';
 
 /**
- * The book's contents page. Reads like the front matter of the textbook: a
- * title block, then one ruled section per Part (linking to its overview) with a
- * grid of chapter cards. Same white reading theme + chrome as the articles.
+ * The book's contents page. Opens with a hero band (an optimized data-viz
+ * collage) carrying the title, then reads like the front matter of the
+ * textbook: one ruled section per Part (linking to its overview) with a grid of
+ * chapter cards. Same white reading theme + chrome as the articles; each part
+ * carries its own icon color.
  */
 export function TeachingCover({ book }: { book: Book }) {
   const chapterCount = book.parts.reduce((n, p) => n + p.chapters.length, 0);
@@ -19,34 +22,40 @@ export function TeachingCover({ book }: { book: Book }) {
 
   return (
     <BookFrame book={book}>
-      {/* Title block */}
-      <header className="border-b border-border">
-        <div className="mx-auto max-w-5xl px-5 py-14 sm:px-6 sm:py-16 lg:px-10">
-          <p className="text-xs uppercase tracking-wider text-muted">An interactive textbook</p>
-          <h1 className="mt-3 max-w-3xl font-display text-[clamp(32px,5.5vw,52px)] font-semibold leading-[1.08] tracking-tight text-body">
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-border bg-slate-950">
+        <Image src="/hero.webp" alt="" fill priority sizes="100vw" className="object-cover" />
+        {/* Scrims: dark on the left for legible white text, fading to reveal the
+            collage on the right; a slight bottom darken anchors the type. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/15" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 to-transparent" />
+
+        <div className="relative mx-auto max-w-5xl px-5 py-16 sm:px-6 sm:py-24 lg:px-10">
+          <p className="text-xs uppercase tracking-wider text-white/65">An interactive textbook</p>
+          <h1 className="mt-3 max-w-3xl font-display text-[clamp(32px,5.5vw,54px)] font-semibold leading-[1.07] tracking-tight text-white">
             {book.title}
           </h1>
-          <p className="mt-3 max-w-2xl text-[clamp(17px,2.4vw,22px)] leading-snug text-muted">
+          <p className="mt-3 max-w-2xl text-[clamp(17px,2.4vw,22px)] leading-snug text-white/85">
             {book.subtitle}
           </p>
-          <p className="mt-6 max-w-2xl text-[16px] leading-relaxed text-subtle">
+          <p className="mt-6 max-w-2xl text-[15.5px] leading-relaxed text-white/75">
             An expandable online book that moves from raw business questions to visual evidence,
             causal estimates, machine-learning models, and modern AI workflows — each chapter
             paired with real datasets and hands-on interactive studios.
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted">
-            <span><b className="font-semibold text-body">{book.parts.length}</b> parts</span>
-            <span><b className="font-semibold text-body">{chapterCount}</b> chapters</span>
-            <span><b className="font-semibold text-body">{allArticles.length}</b> articles</span>
-            <span><b className="font-semibold text-body">{studios.length}</b> studios</span>
+          <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
+            <span><b className="font-semibold text-white">{book.parts.length}</b> parts</span>
+            <span><b className="font-semibold text-white">{chapterCount}</b> chapters</span>
+            <span><b className="font-semibold text-white">{allArticles.length}</b> articles</span>
+            <span><b className="font-semibold text-white">{studios.length}</b> studios</span>
           </div>
 
           {firstSlug && (
             <div className="mt-8">
               <Link
                 href={`/${firstSlug}`}
-                className="inline-flex items-center gap-2 rounded-md bg-brand-primary px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-link-hover"
+                className="inline-flex items-center gap-2 rounded-md bg-brand-primary px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-sky-950/30 transition-colors hover:bg-link-hover"
               >
                 <BookOpen size={16} strokeWidth={2} /> Start reading
                 <ArrowRight size={15} />
@@ -54,18 +63,19 @@ export function TeachingCover({ book }: { book: Book }) {
             </div>
           )}
         </div>
-      </header>
+      </section>
 
       {/* Contents */}
       <div className="mx-auto max-w-5xl px-5 pb-24 sm:px-6 lg:px-10">
-        {book.parts.map(part => {
+        {book.parts.map((part, i) => {
           const content = getPartContent(part.numeral);
           const PartIcon = resolveIcon(content?.icon);
+          const color = partColor(i);
 
           return (
             <section key={part.numeral} className="mt-12 scroll-mt-20 first:mt-10" id={`part-${part.numeral}`}>
               <Link href={`/teaching/part/${part.numeral}`} className="group flex items-start gap-3 border-b border-border pb-4">
-                <span className="mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-card text-link">
+                <span className={`mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${color.chip} ${color.icon}`}>
                   <PartIcon size={20} strokeWidth={1.8} />
                 </span>
                 <span className="min-w-0 flex-1">
@@ -87,7 +97,7 @@ export function TeachingCover({ book }: { book: Book }) {
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {part.chapters.map(ch => (
-                  <ChapterCard key={ch.number} chapter={ch} />
+                  <ChapterCard key={ch.number} chapter={ch} color={color} />
                 ))}
               </div>
             </section>
