@@ -24,13 +24,14 @@ export function TeachingCover({ book }: { book: Book }) {
     <BookFrame book={book}>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border bg-slate-950">
-        <Image src="/hero.webp" alt="" fill priority sizes="100vw" className="object-cover" />
-        {/* Scrims: dark on the left for legible white text, fading to reveal the
-            collage on the right; a slight bottom darken anchors the type. */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-slate-950/15" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 to-transparent" />
+        <Image src="/hero.webp" alt="" fill priority sizes="100vw" className="object-cover brightness-[1.08]" />
+        {/* Light scrims so the collage — including its darker left — stays visible;
+            a drop-shadow on the text keeps the white type legible without a heavy
+            overlay. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/60 via-slate-950/18 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/35 via-transparent to-transparent" />
 
-        <div className="relative mx-auto max-w-5xl px-5 py-16 sm:px-6 sm:py-24 lg:px-10">
+        <div className="relative mx-auto max-w-5xl px-5 py-16 drop-shadow-[0_2px_16px_rgba(2,6,23,0.75)] sm:px-6 sm:py-24 lg:px-10">
           <p className="text-xs uppercase tracking-wider text-white/65">An interactive textbook</p>
           <h1 className="mt-3 max-w-3xl font-display text-[clamp(32px,5.5vw,54px)] font-semibold leading-[1.07] tracking-tight text-white">
             {book.title}
