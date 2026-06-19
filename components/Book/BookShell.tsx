@@ -48,13 +48,17 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
             {part && (
               <>
                 <span className="mx-2 text-subtle">/</span>
-                <span>Part {part.numeral}</span>
+                <Link href={`/teaching/part/${part.numeral}`} className="hover:text-link">
+                  Part {part.numeral}
+                </Link>
               </>
             )}
             {chapter && (
               <>
                 <span className="mx-2 text-subtle">/</span>
-                <span className="text-subtle">{chapter.title}</span>
+                <Link href={`/teaching/ch/${chapter.number}`} className="text-subtle hover:text-link">
+                  {chapter.title}
+                </Link>
               </>
             )}
           </nav>

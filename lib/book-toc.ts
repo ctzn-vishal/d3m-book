@@ -259,3 +259,42 @@ export function getPublishedSlugs(): string[] {
 export function getAllSlugs(): string[] {
   return allArticles.map(a => a.slug);
 }
+
+/** Part navigation: find a part by numeral, with its index and adjacent parts. */
+export function findPart(numeral: string) {
+  const idx = book.parts.findIndex(p => p.numeral === numeral);
+  if (idx === -1) return null;
+  return {
+    part: book.parts[idx],
+    index: idx,
+    prev: idx > 0 ? book.parts[idx - 1] : null,
+    next: idx < book.parts.length - 1 ? book.parts[idx + 1] : null,
+  };
+}
+
+/** Flat list of every chapter, tagged with its part — the chapter reading order. */
+export const allChapters = book.parts.flatMap((part, partIndex) =>
+  part.chapters.map(chapter => ({ chapter, part, partIndex }))
+);
+
+/** Chapter navigation: find a chapter by number, with its part and adjacent chapters. */
+export function findChapter(number: number) {
+  const idx = allChapters.findIndex(c => c.chapter.number === number);
+  if (idx === -1) return null;
+  const here = allChapters[idx];
+  return {
+    chapter: here.chapter,
+    part: here.part,
+    partIndex: here.partIndex,
+    prev: idx > 0 ? allChapters[idx - 1] : null,
+    next: idx < allChapters.length - 1 ? allChapters[idx + 1] : null,
+  };
+}
+
+export function getAllPartNumerals(): string[] {
+  return book.parts.map(p => p.numeral);
+}
+
+export function getAllChapterNumbers(): number[] {
+  return allChapters.map(c => c.chapter.number);
+}
