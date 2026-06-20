@@ -6,9 +6,6 @@ import {
   published,
   working,
   otherWriting,
-  education,
-  honors,
-  service,
   type Publication,
 } from '@/lib/research';
 import { SITE_URL } from '@/lib/share-metadata';
@@ -146,48 +143,6 @@ export default function ResearchPage() {
             ))}
           </ul>
         </Section>
-
-        <div className="mt-12 grid gap-8 sm:grid-cols-3">
-          <div>
-            <h3 className="font-plex text-[11px] uppercase tracking-[0.12em] text-hub-ink-faint">
-              Education
-            </h3>
-            <ul className="mt-3 space-y-3">
-              {education.map(e => (
-                <li key={e.degree} className="text-[13.5px] leading-snug">
-                  <span className="font-medium text-hub-ink">{e.degree}</span>
-                  <br />
-                  <span className="text-hub-ink-soft">{e.school}</span>
-                  {e.year ? <span className="text-hub-ink-faint"> · {e.year}</span> : null}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-plex text-[11px] uppercase tracking-[0.12em] text-hub-ink-faint">
-              Honors
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {honors.map(h => (
-                <li key={h} className="text-[13.5px] leading-snug text-hub-ink-soft">
-                  {h}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-plex text-[11px] uppercase tracking-[0.12em] text-hub-ink-faint">
-              Editorial &amp; Service
-            </h3>
-            <ul className="mt-3 space-y-2">
-              {service.map(s => (
-                <li key={s} className="text-[13.5px] leading-snug text-hub-ink-soft">
-                  {s}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
       </div>
     </div>
   );

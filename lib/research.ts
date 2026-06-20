@@ -20,18 +20,20 @@ export type Publication = {
 
 export const profile = {
   name: 'Vishal Singh',
-  title: 'Professor of Marketing',
+  title: 'Professor of Marketing & Director, Stern Center of Research & Computing (SCRC)',
   affiliation: 'Stern School of Business, New York University',
   email: 'vsingh@stern.nyu.edu',
   links: [
     { label: 'vishalsingh.org', href: 'https://vishalsingh.org/' },
-    { label: 'D3M teaching', href: 'https://www.vishalsingh.org/teaching/d3m/' },
+    { label: 'Teaching', href: 'https://www.vishalsingh.org/teaching' },
     { label: 'LinkedIn', href: 'http://www.linkedin.com/in/visualsingh' },
   ],
 };
 
 export const interests = [
-  'Data-Driven Business Strategies',
+  'Empirical IO',
+  'Retail Competition',
+  'Consumer Behavior',
   'Public Health',
   'Big Data & Psychology',
   'Political Science',
@@ -78,7 +80,7 @@ export const working: Publication[] = [
   { authors: 'Misra, K., U. Guler, V. Singh', title: 'Algorithmic Collusion Through Data Sharing', venue: 'Working paper' },
   { authors: 'Chen, M., M. Draganska, V. Singh', title: 'Risk Shocks and Preventive Demand: Evidence from Dobbs v. Jackson', venue: 'Working paper' },
   { authors: 'Hansman, C., H. Hong, A. De Paula, V. Singh', title: 'A Sticky-Price View of Hoarding', venue: 'Working paper' },
-  { authors: 'Chen, M., V. Singh', title: 'Poverty & Mid-life Crises', venue: 'Working paper' },
+  { authors: 'Chen, M., V. Singh', title: 'Poverty & Consumption', venue: 'Working paper' },
   { authors: 'Kim, B.J., M. Ishihara, V. Singh', title: 'Peer Effects in Platform Adoption: The Case of US High School Teachers', venue: 'Working paper' },
   { authors: 'Amir, O., et al. (incl. V. Singh)', year: '2023', title: 'Using Large Datasets to Address Behavioral Research Questions', venue: 'Working paper' },
 ];
@@ -90,22 +92,4 @@ export const otherWriting: Publication[] = [
   { authors: 'Singh, V.P., J.-P. Gervais, C.P. Baumel', year: '1998', title: 'Consumer Willingness to Purchase Factory-Production Ethanol Cars: A Contingent Valuation Approach', venue: 'Journal of the Transportation Research Forum', detail: '37(2)' },
 ];
 
-export const education = [
-  { degree: 'Ph.D., Marketing', school: 'Kellogg School of Management, Northwestern University', year: '2003' },
-  { degree: 'M.S., Economics', school: 'Iowa State University' },
-  { degree: 'B.A. (Hons), Economics', school: 'University of Delhi', year: '1992' },
-];
 
-export const honors = [
-  'Finalist, Best Paper — Marketing Science (“Will a Fat Tax Work?”)',
-  'Nominated, Paul Green Award (×2), Journal of Marketing Research',
-  'Finalist, John D. C. Little Award',
-  'Xerox Junior Faculty Chair',
-  'MSI Young Scholar',
-];
-
-export const service = [
-  'Associate Editor, Marketing Science (2014–2018)',
-  'Editorial Board, Journal of Retailing',
-  'Ad-hoc reviewer for ~10 journals and the NIH',
-];
