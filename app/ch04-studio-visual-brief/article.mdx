@@ -1,103 +1,51 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { DataTable } from '@/components/Book/DataTable';
-import { Step } from '@/components/Book/Step';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
-import datasetsRaw from './data/case-datasets.json';
+import { VisualBriefStoryboard, VisualBriefWorkflow } from '@/components/Book/part2/VisualDecisionBriefBuilder';
+import brief from './data/decision-brief.json';
 
-export const datasets = datasetsRaw.dataPoints;
+export const decisionBrief = brief;
 
 <DropCap>
 
-The board memo arrives on Friday afternoon. Bean & Basket's chain-wide revenue is up 2% year-over-year — a small positive number that, on its own, says almost nothing. The board wants a fuller answer by Monday morning: *where* is the growth coming from, *which* stores and segments are pulling the chain forward, *which* are dragging on it, and what should the regional manager do about it. The data exists. Five tables, six months of history, three stores, four hundred customers, two thousand transactions. Everything Part I has taught — grain, structure, joins, metrics, quality, dashboards — is a tool you will need by Sunday night. This chapter is the capstone: a single business question that requires every chapter you have read so far, applied in sequence.
+Part II has taught a visual vocabulary — baselines and indexes, small multiples, uncertainty intervals, statistical charts, and the dashboard as a decision system. This studio is where that vocabulary stops being a gallery of chart types and becomes a single executive artifact. You will take the Progresso soup case that ran through Chapters 3 and 4 — the countercyclical pattern where soup *demand* collapses in summer while *price* drifts up — and assemble its scattered visuals into one thing a category manager can act on: a visual decision brief that ends in a pricing question, not another chart. The data is the same retail-scanner panel you have already seen indexed and faceted; the new skill is sequencing those views into an argument.
 
 </DropCap>
 
-## The executive question: *why is growth uneven across stores?*
+## The decision the visuals have to earn
 
-The chain is growing slightly. Inside that average, two of the three stores are doing something very different from the third. The capstone exercise is to find which is which, attach a *why* to each, and write up the recommendation in language a regional manager can act on. The eight tasks below trace the path from raw tables to a defensible Monday-morning memo. Each task corresponds to a chapter; each step builds on the one before.
+The board does not want a dashboard. It wants an answer to one question: *should Progresso investigate whether its soup prices are countercyclical — moving against demand in a way that may be leaving margin on the table or pushing volume away in the wrong season?* That is a pricing question, and Part II cannot answer it. What Part II *can* do is build the visual case that the question is worth a pricing test — and, just as importantly, mark the line the charts cannot cross into causal claims.
 
-The data is in Figure 1. Five tables, each at a specific grain. The exercise begins not with analysis but with reading the table list and writing down what one row means in each — exactly the practice from Chapter 1.
+The brief is built in six moves. Each one is a chart or a sentence you already know how to make; the studio discipline is doing them in order, so the page reads as a decision and not as an inventory.
 
-<DataTable
-  caption="Figure 1. The capstone case pack. Five tables, six months of history (Oct 2023 – Mar 2024). The grain column is the first thing to read — it determines what joins are legal and what aggregations make sense."
-  columns={[
-    { key: 'table',      label: 'Table',                align: 'left' },
-    { key: 'grain',      label: 'Grain (one row =)',    align: 'left' },
-    { key: 'rows',       label: 'Rows',                 align: 'right' },
-    { key: 'key_fields', label: 'Key fields',           align: 'left' },
-  ]}
-  rows={datasets}
-/>
+<VisualBriefWorkflow brief={decisionBrief} />
 
-## The eight tasks
+## Show the pattern, then name the comparison
 
-<Step number={1} title="Identify the grain of every table (Chapter 1)">
+A brief that opens with a screenshot of every panel has already lost the reader. The two panels below are the spine of the argument: an indexed seasonality line that makes the countercyclical pattern legible, and the one comparison the brief turns on — winter versus the rest of the year. Switch the metric and watch volume and share collapse out of season while price climbs. The storyboard is deliberately unfinished: the panels are real, but the one-sentence finding is yours to write, because committing to a sentence is what separates a brief from a gallery.
 
-Before opening anything else, write a one-paragraph note: what does one row mean in `transactions`, in `customers`, in `products`, in `stores`, in `campaigns`? Figure 1 gives the answers, but a manager who has not internalized them will, by task 4, attempt a join at the wrong grain. Note especially that `campaigns` has multiple rows per customer — the duplicate-explosion hazard from Chapter 3 lives here.
+<VisualBriefStoryboard />
 
-</Step>
-
-<Step number={2} title="Classify every variable (Chapter 2)">
-
-For each column across the five tables, name the type: numeric, categorical, ordered categorical, date/time, geographic, boolean, or text. Pay particular attention to the looks-like-a-number-but-isn't traps: `customer_id`, `product_id`, `store_id`, and any ZIP-like field are categorical despite their numeric storage. Write the variable dictionary down once and reuse it across every task that follows.
-
-</Step>
-
-<Step number={3} title="Join the tables (Chapter 3)">
-
-The business question is at the transaction grain — every action ultimately ties back to a purchase. Build the analysis table by left-joining `transactions` to `customers` (to pick up loyalty tier and city), to `products` (to pick up category and unit cost), and to `stores` (to pick up region and square footage). Do **not** join `campaigns` directly without aggregating first; the multiple rows per customer will explode the transaction count. Aggregate `campaigns` to one row per customer (e.g., `was_exposed_any` and `n_campaigns`), then join. Run the anti-join afterwards to surface any transactions whose customer or product is missing from the master files.
-
-</Step>
-
-<Step number={4} title="Create business metrics (Chapter 4)">
-
-From the joined table, derive the metrics that will carry the memo. At minimum: revenue, AOV, repeat-purchase rate, gross margin (using `unit_cost` from `products`), revenue per active customer, and a 4-week rolling chain-wide revenue. Write a one-paragraph definition for each — what window it covers, what counts as "active," what counts as "repeat" — and keep that paragraph next to the chart that will display the number.
-
-</Step>
-
-<Step number={5} title="Reshape monthly sales (Chapter 4)">
-
-Pivot the daily transaction-level data to a **long-format store-month panel**: one row per store per month, with revenue, transactions, and AOV per row. Six months × three stores = eighteen rows. Resist the urge to keep the data in a wide store-by-month spreadsheet for "ease of reading" — every chart you build downstream wants long format, and the wide form locks you out of plotting and modeling.
-
-</Step>
-
-<Step number={6} title="Build the dashboard storyboard (Chapter 5)">
-
-Lay out the page in six panels: executive question at the top, KPI tile for chain-wide revenue with YoY change, line chart of the 6-month chain trend, sorted bar chart of revenue by store, drilldown panel for whichever store the bar chart surfaces as the breakout (or the laggard), recommended action at the bottom. Resist adding panels for completeness; resist showing every metric just because you computed it.
-
-</Step>
-
-<Step number={7} title="Write three descriptive insights">
-
-Three sentences, each backed by a chart from the dashboard. Each one names *which store, which time period, which metric, which comparison*. Example shape: *"Store C (Suburban) grew transactions 47% over the last six months while AOV stayed flat at $4.85; the growth is from new customers, not larger baskets."* Avoid vanity claims (*"the chain is doing well"*); claim specifics that an executive could disprove with a different chart.
-
-</Step>
-
-<Step number={8} title="State what cannot be concluded causally">
-
-This is the most important task and the one most often skipped. Everything you have done in steps 1–7 is **descriptive**. You can describe what is happening; you cannot, with what is in Figure 1, say *why* it is happening or what *would* happen if the regional manager changed something. Write one paragraph naming the limits. *"We do not know whether Suburban's growth is caused by the new university campus three miles away, by the Spring Latte campaign that was disproportionately targeted there, or by a competitor closing on the same block. Distinguishing these explanations requires either an experiment (Chapter 8) or a credible identification strategy (Chapter 11) — neither of which the current case pack supports."*
-
-</Step>
+Notice what the indexed view buys you. In raw cases-sold, the soup numbers are too large to compare against price at all; indexed to January, volume, share, and price land on one scale and the scissors open in plain sight — demand at roughly a fifth of its winter level by June, price up by nearly half. That is the baseline-and-index move from Chapter 4.1 doing exactly the job it was built for: making a comparison visible that the raw units hide.
 
 ## What good looks like
 
-The deliverable is a one-page memo plus the dashboard. The memo names the question, summarizes the three descriptive insights from task 7, and closes with task 8's limits paragraph. The dashboard is the evidence the memo points to. Both should be readable in under three minutes by someone who has not seen the data. The temptation in a capstone is to demonstrate everything you have learned; the discipline is to use only what the question requires.
+The deliverable is a one-page visual brief plus the panels it points to. It opens with the pricing question, walks the six moves above in order, and closes with the single sentence a manager can act on — *investigate this pattern with a pricing test*, not *cut prices now*. Both the page and the panels should be readable in under three minutes by someone who has not seen the scanner data. The temptation in a visual studio is to show every chart form Part II taught; the discipline is to show only the views the pricing question needs, each one answering a named comparison and handing off to the next.
 
-<Pitfall title="Skipping task 1, the grain">
-The grain is the most boring and the most consequential part. **A student who skips writing it down spends task 3 fighting joins and task 5 fighting reshapes** that should have been a single keystroke each.
+<Pitfall title="Leading with the dashboard instead of the question">
+A brief that opens on a six-panel dashboard makes the reader do the work of finding the decision. **Open with the pricing question in one sentence; let every panel that follows be the evidence for it.** The dashboard is the appendix, not the headline.
 </Pitfall>
 
-<Pitfall title="Treating tasks 4–5 as engineering">
-The metric definitions in task 4 and the panel reshape in task 5 are *managerial* decisions, not engineering ones: the window for "active customer" is a choice, and so is the split between growth in new customers and growth in baskets. **Document each choice in the memo, in plain English, where the decision was made.**
+<Pitfall title="Reading a descriptive slope as an elasticity">
+The log-price / log-volume views in Chapter 4.4 *look* like elasticities, and the seasonal scissors *look* like a price effect. They are neither. **A countercyclical pattern is consistent with price driving volume, with weather driving both, and with assortment changes — the chart cannot tell them apart.** Reserve the causal word for the pricing test the brief recommends.
 </Pitfall>
 
-<Pitfall title="Conflating descriptive with causal">
-"Store C is growing because of the Spring Latte campaign" is a causal claim that nothing in Figure 1 supports; "Store C is growing, and the customers driving that growth disproportionately received the Spring Latte campaign" is descriptive and is supported. The two sentences sound alike and are not. **Reserve causal language for task 8, where the limits are stated explicitly.**
+<Pitfall title="Hiding the grain behind the aggregates">
+Every seasonal average in this brief is a summary of a store-month panel whose store coverage shifts month to month. **State the row contract before the aggregate charts**, or a change in which stores reported will masquerade as a change in demand.
 </Pitfall>
 
 <Takeaway label="The bottom line">
 
-Part I has taught a way of reading business data: grain first, structure second, types third, then operations, then quality, then visualization. The capstone is the moment where the sequence stops being theory and becomes a memo. Every chapter you have read shows up here as a task, and every task corresponds to a real decision the regional manager will defend on Monday morning. The chain is growing 2%. *Why* the chain is growing 2% is a question Part I lets you answer carefully, descriptively, with limits — and *which lever to pull next* is a question Part II is built to answer, by adding to the toolkit the one thing Part I deliberately withholds: a credible causal argument.
+Part II taught a way of *seeing* business data: index to make comparisons legible, facet to expose heterogeneity, show the interval so precision is not mistaken for proof, and lay the dashboard out as a decision rather than a display. The visual decision brief is the moment that sequence becomes an artifact. Every chapter shows up here as one move in a six-step build, and the build ends where Part II must end — with a *descriptive* pattern strong enough to justify a pricing test, and an honest line marking everything the charts cannot yet conclude. *Which lever to pull, and what it would do,* is the question Part III is built to answer, by adding the one thing Part II deliberately withholds: a credible causal argument.
 
 </Takeaway>

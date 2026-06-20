@@ -1,6 +1,11 @@
 "use client";
 
 import * as React from 'react';
+import * as Plot from '@observablehq/plot';
+import { PlotFigure } from '@/components/Book/charts/PlotFigure';
+import { withBookTheme, CHART } from '@/lib/chart-theme';
+
+type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
 
 type IndustryMetric = {
   industry: string;
@@ -98,6 +103,17 @@ type TopOwner = {
   market_share: number;
 };
 
+type EntitySpendDistribution = {
+  entity_industry_rows?: number;
+  p10?: number;
+  p25?: number;
+  p50?: number;
+  p75?: number;
+  p90?: number;
+  p99?: number;
+  max_spend?: number;
+} & Record<string, number>;
+
 type MarketConcentrationData = {
   meta?: {
     defaultMarketField?: string;
@@ -117,7 +133,7 @@ type MarketConcentrationData = {
     products: number;
     parent_unknown_spend: number;
   };
-  entitySpendDistribution: Record<string, number>;
+  entitySpendDistribution: EntitySpendDistribution;
   bandCounts: Record<string, number>;
   industryMetrics: IndustryMetric[];
   marketDefinitionSensitivity: MarketDefinitionSensitivityRow[];
@@ -128,10 +144,12 @@ type MarketConcentrationData = {
   topOwners: TopOwner[];
 };
 
+// HHI band palette, expressed against the book's chart tokens so the figures
+// stay on the light reading theme.
 const BAND_COLORS: Record<string, string> = {
-  "Highly concentrated": "#9f3a38",
-  "Moderately concentrated": "#c58a2e",
-  Unconcentrated: "#2f6f77",
+  "Highly concentrated": CHART.rose,
+  "Moderately concentrated": CHART.amber,
+  Unconcentrated: CHART.teal,
 };
 
 const BAND_LABELS = ["Highly concentrated", "Moderately concentrated", "Unconcentrated"];
@@ -141,6 +159,8 @@ const THRESHOLD_LABELS: Record<number, string> = {
   100000: "$100k+",
   1000000: "$1M+",
 };
+const THRESHOLDS = [0, 10000, 100000, 1000000];
+const ENTITY_LEVELS = ["Owner proxy", "Advertiser", "Brand"];
 
 const fmtMoney = (value: number) => {
   const abs = Math.abs(value);
@@ -164,32 +184,37 @@ const fieldLabels: Record<string, string> = {
   MICROCATEGORY: "Microcategory",
 };
 
+const bandFor = (hhi: number) =>
+  hhi >= 1800 ? "Highly concentrated" : hhi >= 1000 ? "Moderately concentrated" : "Unconcentrated";
+
 const substantialIndustryRows = (data: MarketConcentrationData) =>
   data.industryMetrics
     .filter(row => row.spend >= SUBSTANTIAL_MARKET_SPEND)
     .sort((a, b) => b.hhi - a.hhi);
 
-function scaleLinear(domain: [number, number], range: [number, number]) {
-  const [d0, d1] = domain;
-  const [r0, r1] = range;
-  const denom = d1 - d0 || 1;
-  return (value: number) => r0 + ((value - d0) / denom) * (r1 - r0);
-}
+// ---------------------------------------------------------------------------
+// Shared layout primitives (light reading theme).
+// ---------------------------------------------------------------------------
 
 function ChartCard({
   title,
   subtitle,
+  controls,
   children,
 }: {
   title: string;
   subtitle?: string;
+  controls?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-4">
-        <h3 className="text-sm font-semibold text-slate-950">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-950">{title}</h3>
+          {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+        </div>
+        {controls}
       </div>
       {children}
     </div>
@@ -208,6 +233,97 @@ function Legend({ items }: { items: Array<{ label: string; color: string }> }) {
     </div>
   );
 }
+
+/** Segmented button group used for the live entity-level / threshold selectors. */
+function Segmented<T extends string | number>({
+  label,
+  value,
+  options,
+  onChange,
+  format,
+}: {
+  label: string;
+  value: T;
+  options: readonly T[];
+  onChange: (next: T) => void;
+  format?: (option: T) => string;
+}) {
+  return (
+    <div className="flex flex-col gap-1">
+      <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">{label}</span>
+      <div className="inline-flex flex-wrap rounded-md border border-slate-200 bg-slate-50 p-0.5">
+        {options.map(option => {
+          const active = option === value;
+          return (
+            <button
+              key={String(option)}
+              type="button"
+              onClick={() => onChange(option)}
+              aria-pressed={active}
+              className={
+                "rounded px-2.5 py-1 text-xs font-medium transition-colors " +
+                (active
+                  ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
+                  : "text-slate-500 hover:text-slate-800")
+              }
+            >
+              {format ? format(option) : String(option)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const BAND_THRESHOLDS: Array<{ value: number; color: string; label: string }> = [
+  { value: 1000, color: CHART.amber, label: "1,000" },
+  { value: 1800, color: CHART.rose, label: "1,800" },
+];
+
+/** The 1,000 / 1,800 HHI reference lines, drawn as vertical rules with labels. */
+function hhiRefMarksX() {
+  return [
+    Plot.ruleX(BAND_THRESHOLDS, {
+      x: "value",
+      stroke: "color",
+      strokeDasharray: "5 5",
+      strokeWidth: 1.2,
+    }),
+    Plot.text(BAND_THRESHOLDS, {
+      x: "value",
+      text: "label",
+      frameAnchor: "top",
+      dy: -6,
+      fill: d => d.color,
+      fontSize: 10,
+    }),
+  ];
+}
+
+/** The 1,000 / 1,800 HHI reference lines drawn horizontally (for y = HHI). */
+function hhiRefMarksY() {
+  return [
+    Plot.ruleY(BAND_THRESHOLDS, {
+      y: "value",
+      stroke: "color",
+      strokeDasharray: "5 5",
+      strokeWidth: 1.2,
+    }),
+    Plot.text(BAND_THRESHOLDS, {
+      y: "value",
+      text: d => `HHI ${d.label}`,
+      frameAnchor: "right",
+      dx: 4,
+      fill: d => d.color,
+      fontSize: 10,
+    }),
+  ];
+}
+
+// ---------------------------------------------------------------------------
+// 1. Metric cards (text KPIs — no chart to convert).
+// ---------------------------------------------------------------------------
 
 export function ConcentrationMetricCards({ data }: { data: MarketConcentrationData }) {
   const top = substantialIndustryRows(data)[0] ?? data.industryMetrics[0];
@@ -243,8 +359,8 @@ export function ConcentrationMetricCards({ data }: { data: MarketConcentrationDa
     },
     {
       label: "Median entity spend",
-      value: fmtMoney(data.entitySpendDistribution.p50),
-      detail: `99th percentile: ${fmtMoney(data.entitySpendDistribution.p99)}`,
+      value: fmtMoney(data.entitySpendDistribution.p50 ?? 0),
+      detail: `99th percentile: ${fmtMoney(data.entitySpendDistribution.p99 ?? 0)}`,
     },
   ];
   return (
@@ -260,126 +376,251 @@ export function ConcentrationMetricCards({ data }: { data: MarketConcentrationDa
   );
 }
 
+// ---------------------------------------------------------------------------
+// 2. Entity-spend distribution (NEW): the right-skewed tail the text describes.
+//     Plots the percentile ladder as a log-scaled strip with p50/p99 markers.
+// ---------------------------------------------------------------------------
+
+export function EntitySpendDistribution({ data }: { data: MarketConcentrationData }) {
+  const dist = data.entitySpendDistribution;
+  const points = [
+    { pct: "p10", label: "10th", value: dist.p10 ?? 0 },
+    { pct: "p25", label: "25th", value: dist.p25 ?? 0 },
+    { pct: "p50", label: "Median", value: dist.p50 ?? 0 },
+    { pct: "p75", label: "75th", value: dist.p75 ?? 0 },
+    { pct: "p90", label: "90th", value: dist.p90 ?? 0 },
+    { pct: "p99", label: "99th", value: dist.p99 ?? 0 },
+    { pct: "max", label: "Max", value: dist.max_spend ?? 0 },
+  ].filter(d => d.value > 0);
+
+  const highlight = new Set(["Median", "99th"]);
+  const rows = Number(dist.entity_industry_rows ?? 0);
+
+  return (
+    <ChartCard
+      title="Entity spend is extremely right-skewed"
+      subtitle={`Owner-by-INDUSTRY total 2018-2022 spend across ${fmtInt(rows)} entity rows. Note the log axis: the median entity spends about ${fmtMoney(dist.p50 ?? 0)}, while the 99th percentile spends about ${fmtMoney(dist.p99 ?? 0)}.`}
+    >
+      <PlotFigure
+        ariaLabel="Percentile ladder of entity spend on a log scale."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: 230,
+            marginLeft: 70,
+            marginBottom: 38,
+            x: {
+              type: "log",
+              label: "Total 2018-2022 spend per entity (log scale)",
+              grid: true,
+              tickFormat: (d: number) => fmtMoney(d),
+            },
+            y: { label: null, domain: points.map(d => d.label) },
+            color: { legend: false },
+            marks: [
+              // Stem from the smallest percentile so the skew reads as a ramp.
+              Plot.ruleY(points, {
+                y: "label",
+                x1: () => Math.max(1, points[0].value),
+                x2: "value",
+                stroke: CHART.border,
+                strokeWidth: 2,
+              }),
+              Plot.dot(points, {
+                x: "value",
+                y: "label",
+                r: d => (highlight.has(d.label) ? 7 : 5),
+                fill: d => (highlight.has(d.label) ? CHART.rose : CHART.sky),
+                stroke: "white",
+                strokeWidth: 1.5,
+                tip: true,
+                title: d => `${d.label} percentile\n${fmtMoney(d.value)} per entity`,
+              }),
+              Plot.text(points, {
+                x: "value",
+                y: "label",
+                text: d => fmtMoney(d.value),
+                dx: 10,
+                textAnchor: "start",
+                fontSize: 10,
+                fill: CHART.body,
+              }),
+            ],
+          }) as PlotOptions
+        }
+      />
+      <p className="mt-2 text-xs leading-relaxed text-slate-500">
+        The long upper tail is why a minimum-spend threshold is tempting and why it must be reported as a sensitivity check: dropping the
+        bottom percentiles and renormalizing the survivors mechanically raises HHI.
+      </p>
+    </ChartCard>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 3. HHI ranking — lollipop / dot-plot (replaces the old solid bar grammar).
+// ---------------------------------------------------------------------------
+
 export function HHIRankChart({ data }: { data: MarketConcentrationData }) {
   const rows = substantialIndustryRows(data).slice(0, 24);
-  const W = 940;
-  const H = rows.length * 29 + 78;
-  const m = { top: 28, right: 78, bottom: 34, left: 238 };
-  const x = scaleLinear([0, Math.max(5200, Math.max(...rows.map(d => d.hhi)) * 1.05)], [m.left, W - m.right]);
-  const yFor = (index: number) => m.top + index * 29;
   return (
     <ChartCard
       title="HHI by substantial source-defined industry"
-      subtitle={`Owner-proxy ad spend shares, 2018-2022 pooled; shown for INDUSTRY markets with at least ${fmtMoney(SUBSTANTIAL_MARKET_SPEND)} spend.`}
+      subtitle={`Owner-proxy ad spend shares, 2018-2022 pooled; shown for INDUSTRY markets with at least ${fmtMoney(SUBSTANTIAL_MARKET_SPEND)} spend. Each row is a lollipop: stem length and dot color encode HHI.`}
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="HHI by source-defined industry.">
-        {[1000, 1800].map(t => (
-          <g key={t}>
-            <line x1={x(t)} x2={x(t)} y1={m.top - 18} y2={H - m.bottom} stroke={t === 1800 ? "#9f3a38" : "#c58a2e"} strokeDasharray="5 5" />
-            <text x={x(t)} y={m.top - 20} textAnchor="middle" className="fill-slate-500 text-[10px]">{t.toLocaleString()}</text>
-          </g>
-        ))}
-        {[0, 1000, 1800, 3000, 5000].map(t => (
-          <g key={`tick-${t}`}>
-            <line x1={x(t)} x2={x(t)} y1={H - m.bottom} y2={H - m.bottom + 5} stroke="#94a3b8" />
-            <text x={x(t)} y={H - 10} textAnchor="middle" className="fill-slate-500 text-[10px]">{t.toLocaleString()}</text>
-          </g>
-        ))}
-        {rows.map((row, index) => {
-          const y = yFor(index);
-          return (
-            <g key={row.industry}>
-              <text x={m.left - 10} y={y + 13} textAnchor="end" className="fill-slate-700 text-[11px]">
-                {shortLabel(row.industry, 34)}
-              </text>
-              <rect
-                x={m.left}
-                y={y}
-                width={Math.max(1, x(row.hhi) - m.left)}
-                height={17}
-                fill={BAND_COLORS[row.hhi_band] ?? "#64748b"}
-                opacity={0.9}
-              />
-              <text x={x(row.hhi) + 6} y={y + 13} className="fill-slate-700 text-[10px] tabular-nums">
-                {fmtInt(row.hhi)}
-              </text>
-            </g>
-          );
-        })}
-        <text x={(m.left + W - m.right) / 2} y={H - 1} textAnchor="middle" className="fill-slate-500 text-[10px]">Herfindahl-Hirschman Index</text>
-      </svg>
+      <PlotFigure
+        ariaLabel="Lollipop ranking of HHI by source-defined industry."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: rows.length * 26 + 56,
+            marginLeft: 196,
+            marginRight: 46,
+            marginTop: 24,
+            x: {
+              label: "Herfindahl-Hirschman Index",
+              grid: true,
+              domain: [0, Math.max(5200, Math.max(...rows.map(d => d.hhi)) * 1.05)],
+            },
+            y: { label: null, domain: rows.map(d => d.industry), tickFormat: (d: string) => shortLabel(d, 30) },
+            marks: [
+              ...hhiRefMarksX(),
+              Plot.ruleY(rows, { y: "industry", x1: 0, x2: "hhi", stroke: CHART.border, strokeWidth: 1.5 }),
+              Plot.dot(rows, {
+                x: "hhi",
+                y: "industry",
+                r: 5.5,
+                fill: d => BAND_COLORS[d.hhi_band] ?? CHART.slate,
+                stroke: "white",
+                strokeWidth: 1,
+                tip: true,
+                title: d =>
+                  `${d.industry}\nHHI ${fmtInt(d.hhi)} (${d.hhi_band})\nCR1 ${fmtPct(d.cr1)} | CR4 ${fmtPct(d.cr4)}\nLeader: ${d.leader}\nSpend ${fmtMoney(d.spend)}`,
+              }),
+              Plot.text(rows, {
+                x: "hhi",
+                y: "industry",
+                text: d => fmtInt(d.hhi),
+                dx: 11,
+                textAnchor: "start",
+                fontSize: 10,
+                fill: CHART.body,
+              }),
+            ],
+          }) as PlotOptions
+        }
+      />
       <Legend items={BAND_LABELS.map(label => ({ label, color: BAND_COLORS[label] }))} />
     </ChartCard>
   );
 }
+
+// ---------------------------------------------------------------------------
+// 4. Market-definition sensitivity — band-count stacked bars + median HHI dots.
+// ---------------------------------------------------------------------------
 
 export function MarketDefinitionSensitivity({ data }: { data: MarketConcentrationData }) {
   const fieldOrder = ["Industry_Group", "INDUSTRY", "MAJOR", "CATEGORY", "SUBCATEGORY"];
   const rows = fieldOrder
     .map(field => data.marketDefinitionSensitivity.find(row => row.field === field))
     .filter((row): row is MarketDefinitionSensitivityRow => Boolean(row));
-  const maxMedianHhi = Math.max(4000, ...rows.map(row => row.median_hhi));
+
+  // Long-form share-of-markets-in-band, for a 100% stacked bar per level.
+  const stacked = rows.flatMap(row => {
+    const total = row.markets || 1;
+    return [
+      { field: row.field, band: "Highly concentrated", share: row.high_markets / total, count: row.high_markets },
+      { field: row.field, band: "Moderately concentrated", share: row.moderate_markets / total, count: row.moderate_markets },
+      { field: row.field, band: "Unconcentrated", share: row.unconcentrated_markets / total, count: row.unconcentrated_markets },
+    ];
+  });
+  const labelFor = (field: string) => fieldLabels[field] ?? field;
 
   return (
     <ChartCard
       title="Market definition changes the empirical result"
-      subtitle="The same owner-proxy spend shares are recomputed at progressively narrower source hierarchy levels."
+      subtitle="The same owner-proxy spend shares are recomputed at progressively narrower source hierarchy levels. Bars show the share of markets in each HHI band; dots mark the median HHI."
     >
-      <div className="space-y-4">
-        {rows.map(row => {
-          const concentratedMarkets = row.high_markets + row.moderate_markets;
-          return (
-            <div key={row.field} className="grid gap-2 border-t border-slate-100 pt-4 first:border-t-0 first:pt-0 lg:grid-cols-[150px_1fr_1fr] lg:items-center">
-              <div>
-                <p className="text-sm font-semibold text-slate-900">{fieldLabels[row.field] ?? row.field}</p>
-                <p className="text-xs text-slate-500">{fmtInt(row.markets)} markets; median {fmtInt(row.median_entities)} entities</p>
-              </div>
-              <div>
-                <div className="mb-1 flex items-center justify-between text-[10px] uppercase text-slate-500">
-                  <span>Market count by HHI band</span>
-                  <span>{fmtInt(concentratedMarkets)} concentrated</span>
-                </div>
-                <div className="flex h-3 overflow-hidden rounded-full bg-slate-100">
-                  <div
-                    className="bg-[#9f3a38]"
-                    style={{ width: `${(row.high_markets / row.markets) * 100}%` }}
-                    title={`${fmtInt(row.high_markets)} highly concentrated`}
-                  />
-                  <div
-                    className="bg-[#c58a2e]"
-                    style={{ width: `${(row.moderate_markets / row.markets) * 100}%` }}
-                    title={`${fmtInt(row.moderate_markets)} moderately concentrated`}
-                  />
-                  <div
-                    className="bg-[#2f6f77]"
-                    style={{ width: `${(row.unconcentrated_markets / row.markets) * 100}%` }}
-                    title={`${fmtInt(row.unconcentrated_markets)} unconcentrated`}
-                  />
-                </div>
-              </div>
-              <div>
-                <div className="mb-1 flex items-center justify-between text-[10px] uppercase text-slate-500">
-                  <span>Median HHI</span>
-                  <span>{fmtInt(row.median_hhi)}</span>
-                </div>
-                <div className="relative h-3 rounded-full bg-slate-100">
-                  <div
-                    className="absolute inset-y-0 left-0 rounded-full bg-[#214e78]"
-                    style={{ width: `${clamp((row.median_hhi / maxMedianHhi) * 100, 1, 100)}%` }}
-                  />
-                </div>
-                <p className="mt-1 text-xs text-slate-500">
-                  {fmtPct(row.concentrated_spend_share)} of spend is in markets with HHI &gt;= 1,000.
-                </p>
-              </div>
-            </div>
-          );
-        })}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <PlotFigure
+          ariaLabel="Share of markets by HHI band across hierarchy levels."
+          options={(width) =>
+            withBookTheme({
+              width,
+              height: 230,
+              marginLeft: 96,
+              marginBottom: 38,
+              x: { label: "Share of markets in band", percent: true, grid: true },
+              y: { label: null, domain: fieldOrder, tickFormat: labelFor },
+              color: {
+                domain: BAND_LABELS,
+                range: BAND_LABELS.map(b => BAND_COLORS[b]),
+              },
+              marks: [
+                Plot.barX(stacked, {
+                  x: "share",
+                  y: "field",
+                  fill: "band",
+                  order: BAND_LABELS,
+                  tip: true,
+                  title: d => `${labelFor(d.field)}\n${d.band}: ${fmtInt(d.count)} markets (${fmtPct(d.share)})`,
+                }),
+              ],
+            }) as PlotOptions
+          }
+        />
+        <PlotFigure
+          ariaLabel="Median HHI across hierarchy levels."
+          options={(width) =>
+            withBookTheme({
+              width,
+              height: 230,
+              marginLeft: 96,
+              marginRight: 46,
+              marginBottom: 38,
+              marginTop: 22,
+              x: {
+                label: "Median HHI",
+                grid: true,
+                domain: [0, Math.max(2200, Math.max(...rows.map(r => r.median_hhi)) * 1.1)],
+              },
+              y: { label: null, domain: fieldOrder, tickFormat: labelFor },
+              marks: [
+                ...hhiRefMarksX(),
+                Plot.ruleY(rows, { y: "field", x1: 0, x2: "median_hhi", stroke: CHART.border, strokeWidth: 1.5 }),
+                Plot.dot(rows, {
+                  x: "median_hhi",
+                  y: "field",
+                  r: 6,
+                  fill: d => BAND_COLORS[bandFor(d.median_hhi)] ?? CHART.slate,
+                  stroke: "white",
+                  strokeWidth: 1,
+                  tip: true,
+                  title: d =>
+                    `${labelFor(d.field)}\n${fmtInt(d.markets)} markets; median ${fmtInt(d.median_entities)} entities\nMedian HHI ${fmtInt(d.median_hhi)}\n${fmtPct(d.concentrated_spend_share)} of spend in HHI >= 1,000 markets`,
+                }),
+                Plot.text(rows, {
+                  x: "median_hhi",
+                  y: "field",
+                  text: d => fmtInt(d.median_hhi),
+                  dx: 11,
+                  textAnchor: "start",
+                  fontSize: 10,
+                  fill: CHART.body,
+                }),
+              ],
+            }) as PlotOptions
+          }
+        />
       </div>
       <Legend items={BAND_LABELS.map(label => ({ label, color: BAND_COLORS[label] }))} />
     </ChartCard>
   );
 }
+
+// ---------------------------------------------------------------------------
+// 5. Pharma drilldown — horizontal HHI bars with band fill + threshold lines.
+// ---------------------------------------------------------------------------
 
 export function PharmaMarketDrilldown({ data }: { data: MarketConcentrationData }) {
   const broadRows = data.pharmaMarketDrilldown
@@ -389,58 +630,67 @@ export function PharmaMarketDrilldown({ data }: { data: MarketConcentrationData 
     .filter(row => row.field === "SUBCATEGORY")
     .sort((a, b) => b.spend - a.spend)
     .slice(0, 10);
-  const rows = [...broadRows, ...subcategoryRows];
-  const maxHhi = Math.max(6500, ...rows.map(row => row.hhi));
+  const rows = [...broadRows, ...subcategoryRows].map(row => ({
+    ...row,
+    key: `${fieldLabels[row.field] ?? row.field} - ${shortLabel(row.market, 30)}`,
+  }));
+  const order = rows.map(r => r.key);
 
   return (
     <ChartCard
       title="Pharma concentration appears after narrowing the market"
       subtitle="Industry_Group is fixed to Pharmaceuticals; rows compare the source INDUSTRY level with high-spend prescription subcategories."
     >
-      <div className="space-y-3">
-        {rows.map(row => (
-          <div key={`${row.field}-${row.market}`} className="grid gap-2 border-t border-slate-100 pt-3 first:border-t-0 first:pt-0 md:grid-cols-[1fr_210px] md:items-center">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-sm bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold uppercase text-slate-500">
-                  {fieldLabels[row.field] ?? row.field}
-                </span>
-                <p className="text-sm font-semibold leading-snug text-slate-900">{row.market}</p>
-              </div>
-              <p className="mt-1 text-xs text-slate-500">
-                {row.leader}; {fmtMoney(row.spend)} spend; CR4 {fmtPct(row.cr4)}
-              </p>
-            </div>
-            <div>
-              <div className="mb-1 flex justify-between text-xs tabular-nums text-slate-600">
-                <span>HHI</span>
-                <span>{fmtInt(row.hhi)}</span>
-              </div>
-              <div className="h-3 rounded-full bg-slate-100">
-                <div
-                  className="h-3 rounded-full"
-                  style={{
-                    width: `${clamp((row.hhi / maxHhi) * 100, 1, 100)}%`,
-                    backgroundColor: BAND_COLORS[row.hhi_band] ?? "#64748b",
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <PlotFigure
+        ariaLabel="HHI for pharma INDUSTRY rows and prescription subcategories."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: rows.length * 28 + 56,
+            marginLeft: 220,
+            marginRight: 46,
+            marginTop: 24,
+            x: {
+              label: "Herfindahl-Hirschman Index",
+              grid: true,
+              domain: [0, Math.max(6500, Math.max(...rows.map(r => r.hhi)) * 1.05)],
+            },
+            y: { label: null, domain: order },
+            marks: [
+              ...hhiRefMarksX(),
+              Plot.barX(rows, {
+                x: "hhi",
+                y: "key",
+                fill: d => BAND_COLORS[d.hhi_band] ?? CHART.slate,
+                fillOpacity: 0.9,
+                tip: true,
+                title: d =>
+                  `${d.market}\n${fieldLabels[d.field] ?? d.field} level\nHHI ${fmtInt(d.hhi)} (${d.hhi_band})\nCR1 ${fmtPct(d.cr1)} | CR4 ${fmtPct(d.cr4)}\nLeader: ${d.leader}\nSpend ${fmtMoney(d.spend)}`,
+              }),
+              Plot.text(rows, {
+                x: "hhi",
+                y: "key",
+                text: d => fmtInt(d.hhi),
+                dx: 6,
+                textAnchor: "start",
+                fontSize: 10,
+                fill: CHART.body,
+              }),
+            ],
+          }) as PlotOptions
+        }
+      />
       <Legend items={BAND_LABELS.map(label => ({ label, color: BAND_COLORS[label] }))} />
     </ChartCard>
   );
 }
 
+// ---------------------------------------------------------------------------
+// 6. CR1 vs CR4 scatter — Plot dot plot, bubble size = spend.
+// ---------------------------------------------------------------------------
+
 export function CRScatter({ data }: { data: MarketConcentrationData }) {
   const rows = substantialIndustryRows(data);
-  const W = 760;
-  const H = 430;
-  const m = { top: 26, right: 34, bottom: 48, left: 58 };
-  const x = scaleLinear([0, 0.75], [m.left, W - m.right]);
-  const y = scaleLinear([0, 1.02], [H - m.bottom, m.top]);
   const labelIndustries = new Set([
     "Household Soaps, Cleansers & Polishes",
     "Discount Department & Variety Stores",
@@ -449,52 +699,59 @@ export function CRScatter({ data }: { data: MarketConcentrationData }) {
     "Business & Technology NEC",
     "Misc Services & Amusements",
   ]);
+  const labelled = rows.filter(r => labelIndustries.has(r.industry));
+
   return (
     <ChartCard
       title="CR1 and CR4 ask different concentration questions"
-      subtitle={`Substantial INDUSTRY markets only; bubble size is total ad spend. CR1 is leader share and CR4 is combined top-four share.`}
+      subtitle="Substantial INDUSTRY markets only; bubble size is total ad spend. CR1 is leader share and CR4 is combined top-four share."
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Scatterplot of CR1 and CR4 by industry.">
-        {[0, 0.15, 0.30, 0.45, 0.60, 0.75].map(t => (
-          <g key={`x-${t}`}>
-            <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke="#f1f5f9" />
-            <text x={x(t)} y={H - 18} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtPct(t)}</text>
-          </g>
-        ))}
-        {[0, 0.2, 0.4, 0.6, 0.8, 1.0].map(t => (
-          <g key={`y-${t}`}>
-            <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-            <text x={m.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{fmtPct(t)}</text>
-          </g>
-        ))}
-        {rows.map(row => {
-          const radius = clamp(Math.sqrt(row.spend / 1e9) * 2.2, 4, 12);
-          return (
-            <g key={row.industry}>
-              <circle
-                cx={x(row.cr1)}
-                cy={y(row.cr4)}
-                r={radius}
-                fill={BAND_COLORS[row.hhi_band] ?? "#64748b"}
-                fillOpacity={0.78}
-                stroke="#ffffff"
-                strokeWidth={1.5}
-              />
-              {labelIndustries.has(row.industry) && (
-                <text x={x(row.cr1) + radius + 5} y={y(row.cr4) + 3} className="fill-slate-700 text-[10px]">
-                  {shortLabel(row.industry, 23)}
-                </text>
-              )}
-            </g>
-          );
-        })}
-        <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-slate-500 text-[10px]">CR1: largest owner share</text>
-        <text x={15} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 15 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-slate-500 text-[10px]">CR4: top-four owner share</text>
-      </svg>
+      <PlotFigure
+        ariaLabel="Scatterplot of CR1 and CR4 by industry, sized by spend."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: 430,
+            marginLeft: 52,
+            marginBottom: 44,
+            x: { label: "CR1: largest owner share", percent: true, grid: true, domain: [0, 0.75] },
+            y: { label: "CR4: top-four owner share", percent: true, grid: true, domain: [0, 1.02] },
+            r: { range: [3, 14] },
+            marks: [
+              Plot.dot(rows, {
+                x: "cr1",
+                y: "cr4",
+                r: "spend",
+                fill: d => BAND_COLORS[d.hhi_band] ?? CHART.slate,
+                fillOpacity: 0.75,
+                stroke: "white",
+                strokeWidth: 1.2,
+                tip: true,
+                title: d =>
+                  `${d.industry}\nCR1 ${fmtPct(d.cr1)} | CR4 ${fmtPct(d.cr4)}\nHHI ${fmtInt(d.hhi)} (${d.hhi_band})\nSpend ${fmtMoney(d.spend)}`,
+              }),
+              Plot.text(labelled, {
+                x: "cr1",
+                y: "cr4",
+                text: d => shortLabel(d.industry, 23),
+                dx: 12,
+                dy: -2,
+                textAnchor: "start",
+                fontSize: 10,
+                fill: CHART.body,
+              }),
+            ],
+          }) as PlotOptions
+        }
+      />
       <Legend items={BAND_LABELS.map(label => ({ label, color: BAND_COLORS[label] }))} />
     </ChartCard>
   );
 }
+
+// ---------------------------------------------------------------------------
+// 7. Hierarchy sensitivity — grouped bars across three entity definitions.
+// ---------------------------------------------------------------------------
 
 export function HierarchySensitivity({ data }: { data: MarketConcentrationData }) {
   const selectedNames = [
@@ -509,196 +766,360 @@ export function HierarchySensitivity({ data }: { data: MarketConcentrationData }
   const selected = selectedNames
     .map(name => data.levelComparison.find(row => row.industry === name))
     .filter((row): row is LevelComparison => Boolean(row));
-  const W = 900;
-  const H = selected.length * 58 + 56;
-  const m = { top: 18, right: 58, bottom: 34, left: 230 };
-  const max = Math.max(...selected.flatMap(row => [row.owner_hhi, row.advertiser_hhi, row.brand_hhi])) * 1.08;
-  const x = scaleLinear([0, max], [m.left, W - m.right]);
-  const yFor = (index: number) => m.top + index * 58;
-  const series = [
-    { key: "owner_hhi" as const, label: "Owner proxy", color: "#214e78" },
-    { key: "advertiser_hhi" as const, label: "Advertiser", color: "#c58a2e" },
-    { key: "brand_hhi" as const, label: "Brand", color: "#8b5d78" },
+
+  const seriesMeta = [
+    { key: "owner_hhi" as const, label: "Owner proxy", color: CHART.indigo },
+    { key: "advertiser_hhi" as const, label: "Advertiser", color: CHART.amber },
+    { key: "brand_hhi" as const, label: "Brand", color: CHART.violet },
   ];
+  const long = selected.flatMap(row =>
+    seriesMeta.map(s => ({
+      industry: row.industry,
+      level: s.label,
+      hhi: row[s.key],
+    }))
+  );
+
   return (
     <ChartCard
       title="The unit of analysis can change the apparent market structure"
       subtitle="Same rows, same INDUSTRY denominator, three entity definitions. Owner proxy aggregates corporate families; advertiser and brand split them."
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="HHI sensitivity by entity hierarchy.">
-        {[1000, 1800].map(t => (
-          <line key={t} x1={x(t)} x2={x(t)} y1={m.top - 10} y2={H - m.bottom} stroke="#cbd5e1" strokeDasharray="4 5" />
-        ))}
-        {selected.map((row, index) => {
-          const y = yFor(index);
-          return (
-            <g key={row.industry}>
-              <text x={m.left - 10} y={y + 25} textAnchor="end" className="fill-slate-700 text-[11px]">
-                {shortLabel(row.industry, 31)}
-              </text>
-              {series.map((s, si) => {
-                const value = row[s.key];
-                return (
-                  <g key={s.key}>
-                    <rect
-                      x={m.left}
-                      y={y + si * 15}
-                      width={Math.max(1, x(value) - m.left)}
-                      height={10}
-                      fill={s.color}
-                      opacity={0.88}
-                    />
-                    {si === 0 && (
-                      <text x={x(value) + 5} y={y + si * 15 + 9} className="fill-slate-600 text-[9px] tabular-nums">
-                        {fmtInt(value)}
-                      </text>
-                    )}
-                  </g>
-                );
-              })}
-            </g>
-          );
-        })}
-        {[0, 1000, 1800, 3000].map(t => (
-          <text key={t} x={x(t)} y={H - 10} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtInt(t)}</text>
-        ))}
-      </svg>
-      <Legend items={series.map(s => ({ label: s.label, color: s.color }))} />
+      <PlotFigure
+        ariaLabel="Grouped HHI bars by entity hierarchy level."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: selected.length * 64 + 44,
+            marginLeft: 196,
+            marginRight: 46,
+            x: {
+              label: "Herfindahl-Hirschman Index",
+              grid: true,
+              domain: [0, Math.max(...long.map(d => d.hhi)) * 1.08],
+            },
+            y: { label: null, domain: selectedNames.filter(n => selected.some(s => s.industry === n)), tickFormat: (d: string) => shortLabel(d, 30) },
+            fy: { label: null, domain: seriesMeta.map(s => s.label), axis: null },
+            color: {
+              domain: seriesMeta.map(s => s.label),
+              range: seriesMeta.map(s => s.color),
+            },
+            marks: [
+              ...hhiRefMarksX(),
+              Plot.barX(long, {
+                x: "hhi",
+                y: "industry",
+                fy: "level",
+                fill: "level",
+                tip: true,
+                title: d => `${d.industry}\n${d.level}: HHI ${fmtInt(d.hhi)} (${bandFor(d.hhi)})`,
+              }),
+            ],
+          }) as PlotOptions
+        }
+      />
+      <Legend items={seriesMeta.map(s => ({ label: s.label, color: s.color }))} />
     </ChartCard>
   );
 }
 
+// ---------------------------------------------------------------------------
+// 8. LIVE concentration explorer — embedded in the threshold-sensitivity figure.
+//     Selectors for entity level + min-spend threshold recompute HHI / CR1 /
+//     CR4 / effective entities straight from the thresholdSensitivity grid.
+// ---------------------------------------------------------------------------
+
 export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationData }) {
-  const selectedIndustries = [
+  const defaultIndustries = [
     "Household Soaps, Cleansers & Polishes",
     "Business & Technology NEC",
     "Government, Politics & Organizations",
     "Medicines & Proprietary Remedies",
     "Misc Services & Amusements",
   ];
-  const colors: Record<string, string> = {
-    "Household Soaps, Cleansers & Polishes": "#9f3a38",
-    "Business & Technology NEC": "#214e78",
-    "Government, Politics & Organizations": "#c58a2e",
-    "Medicines & Proprietary Remedies": "#6f5aa8",
-    "Misc Services & Amusements": "#2f6f77",
-  };
-  const rows = data.thresholdSensitivity.filter(row => row.level === "Owner proxy" && selectedIndustries.includes(row.industry));
-  const thresholds = [0, 10000, 100000, 1000000];
-  const W = 800;
-  const H = 410;
-  const m = { top: 24, right: 174, bottom: 58, left: 58 };
-  const x = scaleLinear([0, thresholds.length - 1], [m.left, W - m.right]);
-  const maxHhi = Math.max(...rows.map(row => row.hhi)) * 1.08;
-  const y = scaleLinear([0, maxHhi], [H - m.bottom, m.top]);
-  const pathFor = (industry: string) => thresholds.map((threshold, index) => {
-    const row = rows.find(item => item.industry === industry && item.min_entity_spend === threshold);
-    return `${index === 0 ? "M" : "L"} ${x(index).toFixed(2)} ${y(row?.hhi ?? 0).toFixed(2)}`;
-  }).join(" ");
+
+  // Restrict the live control to industries that have the full grid (every
+  // level x threshold) so a selection never produces an empty trace.
+  const grid = data.thresholdSensitivity;
+  const availableIndustries = React.useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const row of grid) counts.set(row.industry, (counts.get(row.industry) ?? 0) + 1);
+    const full = [...counts.entries()].filter(([, c]) => c >= ENTITY_LEVELS.length * THRESHOLDS.length).map(([k]) => k);
+    // Prefer the default narrative industries, then fill alphabetically.
+    const inDefaults = defaultIndustries.filter(n => full.includes(n));
+    const rest = full.filter(n => !inDefaults.includes(n)).sort();
+    return [...inDefaults, ...rest];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [grid]);
+
+  const [level, setLevel] = React.useState<string>("Owner proxy");
+  const [industry, setIndustry] = React.useState<string>(
+    () => availableIndustries.find(n => defaultIndustries.includes(n)) ?? availableIndustries[0]
+  );
+
+  const lineIndustries = defaultIndustries.filter(n => availableIndustries.includes(n));
+  const palette = [CHART.rose, CHART.indigo, CHART.amber, CHART.violet, CHART.teal];
+  const colorOf = (name: string) => palette[lineIndustries.indexOf(name) % palette.length] ?? CHART.slate;
+
+  // Long-form trajectory rows for the selected entity level.
+  const traces = React.useMemo(
+    () =>
+      lineIndustries.flatMap(name =>
+        THRESHOLDS.map(threshold => {
+          const row = grid.find(r => r.industry === name && r.level === level && r.min_entity_spend === threshold);
+          return row
+            ? {
+                industry: name,
+                threshold,
+                thresholdLabel: THRESHOLD_LABELS[threshold],
+                hhi: row.hhi,
+                retained: row.retained_spend_share,
+                cr1: row.cr1,
+                cr4: row.cr4,
+              }
+            : null;
+        }).filter((d): d is NonNullable<typeof d> => Boolean(d))
+      ),
+    [grid, level, lineIndustries]
+  );
+
+  // The live recompute panel for the single selected industry.
+  const selectedRows = React.useMemo(
+    () =>
+      THRESHOLDS.map(threshold => grid.find(r => r.industry === industry && r.level === level && r.min_entity_spend === threshold))
+        .filter((r): r is ThresholdSensitivity => Boolean(r)),
+    [grid, industry, level]
+  );
+  const baseline = selectedRows.find(r => r.min_entity_spend === 0);
+
+  const xLabels = THRESHOLDS.map(t => THRESHOLD_LABELS[t]);
 
   return (
     <ChartCard
       title="Minimum-spend thresholds are a sensitivity check, not the main definition"
-      subtitle="HHI is recomputed after retaining only entities above each total-spend cutoff; labels below show how much spend remains."
+      subtitle="HHI is recomputed after retaining only entities above each total-spend cutoff. Switch the entity definition to see how the same cutoff lands differently on owners, advertisers, and brands."
+      controls={
+        <div className="flex flex-col gap-2">
+          <Segmented label="Entity level" value={level} options={ENTITY_LEVELS} onChange={setLevel} />
+        </div>
+      }
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="HHI sensitivity to minimum entity spend thresholds.">
-        {[1000, 1800, 3000].map(t => (
-          <g key={t}>
-            <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke={t === 1800 ? "#e5c5c2" : "#e2e8f0"} strokeDasharray={t === 1800 ? "5 5" : undefined} />
-            <text x={m.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{fmtInt(t)}</text>
-          </g>
-        ))}
-        {thresholds.map((threshold, index) => (
-          <g key={threshold}>
-            <line x1={x(index)} x2={x(index)} y1={m.top} y2={H - m.bottom} stroke="#f1f5f9" />
-            <text x={x(index)} y={H - 28} textAnchor="middle" className="fill-slate-700 text-[10px]">{THRESHOLD_LABELS[threshold]}</text>
-            <text x={x(index)} y={H - 12} textAnchor="middle" className="fill-slate-400 text-[9px]">min spend</text>
-          </g>
-        ))}
-        {selectedIndustries.map(industry => (
-          <g key={industry}>
-            <path d={pathFor(industry)} fill="none" stroke={colors[industry]} strokeWidth={2.5} />
-            {thresholds.map((threshold, index) => {
-              const row = rows.find(item => item.industry === industry && item.min_entity_spend === threshold);
-              if (!row) return null;
-              return (
-                <circle key={threshold} cx={x(index)} cy={y(row.hhi)} r={4} fill={colors[industry]} stroke="#fff" strokeWidth={1.2} />
-              );
-            })}
-            {(() => {
-              const last = rows.find(item => item.industry === industry && item.min_entity_spend === 1000000);
-              if (!last) return null;
-              return (
-                <text x={W - m.right + 10} y={y(last.hhi) + 4} className="fill-slate-700 text-[10px]">
-                  {shortLabel(industry, 27)} ({fmtPct(last.retained_spend_share)})
-                </text>
-              );
-            })()}
-          </g>
-        ))}
-        <text x={16} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-slate-500 text-[10px]">Renormalized HHI among retained entities</text>
-      </svg>
-      <p className="mt-2 text-xs leading-relaxed text-slate-500">
-        Parenthetical labels at the $1M cutoff show retained spend. A threshold that keeps little spend is a stress test, not a replacement denominator.
+      <PlotFigure
+        ariaLabel="HHI trajectory across minimum-spend thresholds for the selected entity level."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: 380,
+            marginLeft: 56,
+            marginRight: 176,
+            marginBottom: 56,
+            x: { label: "Minimum entity spend", domain: xLabels, grid: true },
+            y: {
+              label: "Renormalized HHI among retained entities",
+              grid: true,
+              domain: [0, Math.max(2000, Math.max(...traces.map(d => d.hhi), 0) * 1.08)],
+            },
+            color: {
+              domain: lineIndustries,
+              range: lineIndustries.map(colorOf),
+            },
+            marks: [
+              ...hhiRefMarksY(),
+              Plot.line(traces, {
+                x: "thresholdLabel",
+                y: "hhi",
+                z: "industry",
+                stroke: "industry",
+                strokeWidth: 2.5,
+                curve: "catmull-rom",
+              }),
+              Plot.dot(traces, {
+                x: "thresholdLabel",
+                y: "hhi",
+                fill: "industry",
+                r: 4,
+                stroke: "white",
+                strokeWidth: 1.2,
+                tip: true,
+                title: d =>
+                  `${d.industry}\n${level} | ${d.thresholdLabel}\nHHI ${fmtInt(d.hhi)} (${bandFor(d.hhi)})\nCR1 ${fmtPct(d.cr1)} | CR4 ${fmtPct(d.cr4)}\nRetained spend ${fmtPct(d.retained)}`,
+              }),
+              Plot.text(
+                traces.filter(d => d.threshold === 1000000),
+                {
+                  x: "thresholdLabel",
+                  y: "hhi",
+                  text: d => `${shortLabel(d.industry, 22)} (${fmtPct(d.retained)})`,
+                  dx: 10,
+                  textAnchor: "start",
+                  fontSize: 10,
+                  fill: d => colorOf(d.industry),
+                }
+              ),
+            ],
+          }) as PlotOptions
+        }
+      />
+
+      {/* Live recompute readout for one selected industry. */}
+      <div className="mt-4 rounded-md border border-slate-200 bg-slate-50/60 p-3">
+        <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-500" htmlFor="conc-industry">
+              Recompute one industry
+            </label>
+            <select
+              id="conc-industry"
+              value={industry}
+              onChange={e => setIndustry(e.target.value)}
+              className="w-full max-w-xs rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-800 shadow-sm sm:w-72"
+            >
+              {availableIndustries.map(name => (
+                <option key={name} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="text-xs text-slate-500">
+            Entity level: <span className="font-semibold text-slate-700">{level}</span>
+            {baseline && (
+              <>
+                {" "}- leader <span className="font-semibold text-slate-700">{baseline.leader}</span>
+              </>
+            )}
+          </p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[480px] border-collapse text-xs">
+            <thead>
+              <tr className="text-left text-[10px] uppercase text-slate-500">
+                <th className="py-1 pr-3 font-semibold">Min spend</th>
+                <th className="py-1 pr-3 text-right font-semibold">HHI</th>
+                <th className="py-1 pr-3 text-right font-semibold">Band</th>
+                <th className="py-1 pr-3 text-right font-semibold">CR1</th>
+                <th className="py-1 pr-3 text-right font-semibold">CR4</th>
+                <th className="py-1 pr-3 text-right font-semibold">Eff. entities</th>
+                <th className="py-1 text-right font-semibold">Retained spend</th>
+              </tr>
+            </thead>
+            <tbody className="tabular-nums text-slate-700">
+              {selectedRows.map(row => (
+                <tr key={row.min_entity_spend} className="border-t border-slate-200">
+                  <td className="py-1.5 pr-3 font-medium text-slate-800">{THRESHOLD_LABELS[row.min_entity_spend]}</td>
+                  <td className="py-1.5 pr-3 text-right">{fmtInt(row.hhi)}</td>
+                  <td className="py-1.5 pr-3 text-right">
+                    <span
+                      className="inline-block rounded-sm px-1.5 py-0.5 text-[10px] font-medium text-white"
+                      style={{ backgroundColor: BAND_COLORS[row.hhi_band] ?? CHART.slate }}
+                    >
+                      {row.hhi_band.split(" ")[0]}
+                    </span>
+                  </td>
+                  <td className="py-1.5 pr-3 text-right">{fmtPct(row.cr1)}</td>
+                  <td className="py-1.5 pr-3 text-right">{fmtPct(row.cr4)}</td>
+                  <td className="py-1.5 pr-3 text-right">{row.effective_entities.toFixed(1)}</td>
+                  <td className="py-1.5 text-right">{fmtPct(row.retained_spend_share)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p className="mt-3 text-xs leading-relaxed text-slate-500">
+        Parenthetical labels at the $1M cutoff show retained spend. A threshold that keeps little spend is a stress test, not a replacement
+        denominator. Switching the entity level recomputes HHI, CR1, CR4, and effective entities from the same source rows.
       </p>
     </ChartCard>
   );
 }
+
+// ---------------------------------------------------------------------------
+// 9. Annual change — diverging lollipop (2022 minus 2018 HHI).
+// ---------------------------------------------------------------------------
 
 export function AnnualConcentrationChange({ data }: { data: MarketConcentrationData }) {
   const substantial = data.annualDelta.filter(row => Math.max(row.spend_2018, row.spend_2022) >= SUBSTANTIAL_MARKET_SPEND);
   const increases = [...substantial].sort((a, b) => b.hhi_delta - a.hhi_delta).slice(0, 5);
   const decreases = [...substantial].sort((a, b) => a.hhi_delta - b.hhi_delta).slice(0, 5);
   const rows = [...increases, ...decreases].sort((a, b) => b.hhi_delta - a.hhi_delta);
-  const W = 850;
-  const H = rows.length * 34 + 68;
-  const m = { top: 18, right: 84, bottom: 36, left: 238 };
-  const min = Math.min(...rows.map(d => d.hhi_delta), -100);
-  const max = Math.max(...rows.map(d => d.hhi_delta), 100);
-  const x = scaleLinear([min, max], [m.left, W - m.right]);
-  const yFor = (index: number) => m.top + index * 34;
+  const bound = Math.max(100, ...rows.map(d => Math.abs(d.hhi_delta))) * 1.12;
+
   return (
     <ChartCard
       title="Concentration changed unevenly from 2018 to 2022"
       subtitle={`Largest increases and decreases in owner-proxy HHI among INDUSTRY markets with at least ${fmtMoney(SUBSTANTIAL_MARKET_SPEND)} in either endpoint year.`}
     >
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Change in HHI from 2018 to 2022.">
-        <line x1={x(0)} x2={x(0)} y1={m.top - 8} y2={H - m.bottom} stroke="#94a3b8" />
-        {rows.map((row, index) => {
-          const y = yFor(index);
-          const positive = row.hhi_delta >= 0;
-          return (
-            <g key={row.industry}>
-              <text x={m.left - 10} y={y + 15} textAnchor="end" className="fill-slate-700 text-[11px]">
-                {shortLabel(row.industry, 32)}
-              </text>
-              <rect
-                x={positive ? x(0) : x(row.hhi_delta)}
-                y={y}
-                width={Math.abs(x(row.hhi_delta) - x(0))}
-                height={18}
-                fill={positive ? "#9f3a38" : "#2f6f77"}
-                opacity={0.9}
-              />
-              <text
-                x={positive ? x(row.hhi_delta) + 6 : x(row.hhi_delta) - 6}
-                y={y + 14}
-                textAnchor={positive ? "start" : "end"}
-                className="fill-slate-700 text-[10px] tabular-nums"
-              >
-                {row.hhi_delta > 0 ? "+" : ""}{fmtInt(row.hhi_delta)}
-              </text>
-              <text x={W - m.right + 18} y={y + 14} className="fill-slate-500 text-[10px] tabular-nums">
-                spend {row.spend_delta > 0 ? "+" : ""}{(row.spend_delta * 100).toFixed(0)}%
-              </text>
-            </g>
-          );
-        })}
-        <text x={(m.left + W - m.right) / 2} y={H - 8} textAnchor="middle" className="fill-slate-500 text-[10px]">HHI change, 2022 minus 2018</text>
-      </svg>
+      <PlotFigure
+        ariaLabel="Diverging lollipop of HHI change from 2018 to 2022."
+        options={(width) =>
+          withBookTheme({
+            width,
+            height: rows.length * 32 + 56,
+            marginLeft: 196,
+            marginRight: 88,
+            marginTop: 20,
+            x: { label: "HHI change, 2022 minus 2018", grid: true, domain: [-bound, bound] },
+            y: { label: null, domain: rows.map(d => d.industry), tickFormat: (d: string) => shortLabel(d, 30) },
+            marks: [
+              Plot.ruleX([0], { stroke: CHART.faint }),
+              Plot.ruleY(rows, {
+                y: "industry",
+                x1: 0,
+                x2: "hhi_delta",
+                stroke: d => (d.hhi_delta >= 0 ? CHART.rose : CHART.teal),
+                strokeWidth: 1.5,
+              }),
+              Plot.dot(rows, {
+                x: "hhi_delta",
+                y: "industry",
+                r: 5.5,
+                fill: d => (d.hhi_delta >= 0 ? CHART.rose : CHART.teal),
+                stroke: "white",
+                strokeWidth: 1,
+                tip: true,
+                title: d =>
+                  `${d.industry}\nHHI ${fmtInt(d.hhi_2018)} -> ${fmtInt(d.hhi_2022)} (${d.hhi_delta > 0 ? "+" : ""}${fmtInt(d.hhi_delta)})\nSpend ${d.spend_delta > 0 ? "+" : ""}${(d.spend_delta * 100).toFixed(0)}%\nLeader ${d.leader_2018} -> ${d.leader_2022}`,
+              }),
+              Plot.text(rows.filter(d => d.hhi_delta >= 0), {
+                x: "hhi_delta",
+                y: "industry",
+                text: d => `+${fmtInt(d.hhi_delta)}`,
+                dx: 10,
+                textAnchor: "start",
+                fontSize: 10,
+                fill: CHART.body,
+              }),
+              Plot.text(rows.filter(d => d.hhi_delta < 0), {
+                x: "hhi_delta",
+                y: "industry",
+                text: d => fmtInt(d.hhi_delta),
+                dx: -10,
+                textAnchor: "end",
+                fontSize: 10,
+                fill: CHART.body,
+              }),
+              Plot.text(rows, {
+                x: () => bound,
+                y: "industry",
+                text: d => `spend ${d.spend_delta > 0 ? "+" : ""}${(d.spend_delta * 100).toFixed(0)}%`,
+                dx: 8,
+                textAnchor: "start",
+                fontSize: 10,
+                fill: CHART.muted,
+              }),
+            ],
+          }) as PlotOptions
+        }
+      />
     </ChartCard>
   );
 }
+
+// ---------------------------------------------------------------------------
+// 10. Top-owner small multiples — compact share table (kept as table grammar).
+// ---------------------------------------------------------------------------
 
 export function TopOwnerTable({ data, industries }: { data: MarketConcentrationData; industries: string[] }) {
   return (
@@ -718,7 +1139,7 @@ export function TopOwnerTable({ data, industries }: { data: MarketConcentrationD
                   <div>
                     <p className="font-medium text-slate-800">{shortLabel(row.entity, 34)}</p>
                     <div className="mt-1 h-2 rounded-full bg-slate-100">
-                      <div className="h-2 rounded-full bg-[#214e78]" style={{ width: `${clamp(row.market_share * 100, 2, 100)}%` }} />
+                      <div className="h-2 rounded-full" style={{ width: `${clamp(row.market_share * 100, 2, 100)}%`, backgroundColor: CHART.indigo }} />
                     </div>
                   </div>
                   <span className="font-mono text-slate-700">{fmtPct(row.market_share)}</span>

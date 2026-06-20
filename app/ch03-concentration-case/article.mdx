@@ -9,6 +9,7 @@ import {
   AnnualConcentrationChange,
   ConcentrationMetricCards,
   CRScatter,
+  EntitySpendDistribution,
   HHIRankChart,
   HierarchySensitivity,
   MarketDefinitionSensitivity,
@@ -220,6 +221,12 @@ HHI looks rigorous because it is a formula. It is still only a summary of the sh
 ## Thresholds should be shown as sensitivity, not hidden as cleaning
 
 The user-facing problem with this dataset is the micro-entity tail. The median owner-by-`INDUSTRY` entity spends only about $4k over the full five-year window, while the 99th percentile spends about $8.4M. It is reasonable to ask whether tiny positive spend entities should be removed before computing concentration. But the choice is not free: dropping the tail and renormalizing retained entities mechanically raises HHI.
+
+<Figure width="body-outset" caption="Figure 6b. Entity spend is extremely right-skewed: a long upper tail sits above a dense floor of micro-entities, which is exactly the shape that makes a minimum-spend cutoff tempting.">
+  <div className="not-prose">
+    <EntitySpendDistribution data={concentration} />
+  </div>
+</Figure>
 
 The main metric therefore keeps all positive entity spend. Figure 7 treats thresholds as a sensitivity check. The $1M cutoff barely changes household soaps or medicines and proprietary remedies because each still retains 99.6% of spend. It changes miscellaneous services and amusements more because the cutoff retains only 87.0% of spend. In that setting, the higher HHI is partly a definition artifact.
 

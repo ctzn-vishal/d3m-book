@@ -1,6 +1,16 @@
-"use client";
+'use client';
 
 import * as React from 'react';
+import * as Plot from '@observablehq/plot';
+import { PlotFigure } from '@/components/Book/charts/PlotFigure';
+import { ChoroplethMap } from '@/components/Book/charts/ChoroplethMap';
+import { withBookTheme, CHART, CATEGORICAL } from '@/lib/chart-theme';
+
+type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
+
+// ---------------------------------------------------------------------------
+// Shared types (unchanged shapes — the article JSON drives these)
+// ---------------------------------------------------------------------------
 
 type MonthPoint = {
   month: number;
@@ -22,6 +32,8 @@ type RegionMonthPoint = {
   month_name: string;
   progresso_price: number;
   progresso_share: number;
+  progresso_volume?: number;
+  total_volume?: number;
   active_stores: number;
 };
 
@@ -60,177 +72,341 @@ type IntervalPoint = {
   ci_low: number;
   ci_high: number;
   n: number;
+  stores?: number;
+  active_stores?: number;
 };
 
 const REGION_ORDER = ['East', 'Midwest', 'South', 'West'];
 const REGION_COLORS: Record<string, string> = {
-  East: '#2563eb',
-  Midwest: '#7c3aed',
-  South: '#059669',
-  West: '#dc2626',
+  East: CHART.sky,
+  Midwest: CHART.violet,
+  South: CHART.emerald,
+  West: CHART.rose,
 };
 
 const SEASON_COLORS: Record<string, string> = {
-  Winter: '#1f3a5f',
-  'Non-winter': '#c87c2a',
+  Winter: CHART.skyDark,
+  'Non-winter': CHART.orange,
 };
 
-const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const monthName = (month: number) => MONTH_NAMES[month - 1] ?? String(month);
+
 const fmtPct = (value: number) => `${Math.round(value * 100)}%`;
 const fmtPct1 = (value: number) => `${(value * 100).toFixed(1)}%`;
 const fmtMoney = (value: number) => `$${value.toFixed(2)}`;
-const fmtIndex = (value: number) => `${Math.round(value)}`;
 const fmtCoef = (value: number) => value.toFixed(2);
-const monthName = (month: number) => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][month - 1] ?? String(month);
+const fmtCount = (value: number) =>
+  value >= 1000 ? `${(value / 1000).toLocaleString(undefined, { maximumFractionDigits: 1 })}k` : value.toLocaleString();
 
-function extent<T>(items: T[], accessor: (item: T) => number): [number, number] {
-  const values = items.map(accessor).filter(Number.isFinite);
-  return [Math.min(...values), Math.max(...values)];
-}
-
-function paddedDomain([min, max]: [number, number], pad = 0.08): [number, number] {
-  if (!Number.isFinite(min) || !Number.isFinite(max)) return [0, 1];
-  if (min === max) return [min - 1, max + 1];
-  const span = max - min;
-  return [min - span * pad, max + span * pad];
-}
-
-function scaleLinear(domain: [number, number], range: [number, number]) {
-  const [d0, d1] = domain;
-  const [r0, r1] = range;
-  const denom = d1 - d0 || 1;
-  return (value: number) => r0 + ((value - d0) / denom) * (r1 - r0);
-}
-
-function linePath<T>(items: T[], x: (item: T) => number, y: (item: T) => number) {
-  return items.map((item, index) => `${index === 0 ? 'M' : 'L'} ${x(item).toFixed(2)} ${y(item).toFixed(2)}`).join(' ');
+/** Ordinary least squares slope of y on x. */
+function olsSlope(points: Array<{ x: number; y: number }>): number | undefined {
+  if (points.length < 2) return undefined;
+  const xMean = points.reduce((s, p) => s + p.x, 0) / points.length;
+  const yMean = points.reduce((s, p) => s + p.y, 0) / points.length;
+  const denom = points.reduce((s, p) => s + (p.x - xMean) ** 2, 0);
+  if (!Number.isFinite(denom) || denom === 0) return undefined;
+  const num = points.reduce((s, p) => s + (p.x - xMean) * (p.y - yMean), 0);
+  return num / denom;
 }
 
 function fittedTrendLine(group: string, points: ScatterPoint[]): TrendLine | undefined {
-  if (points.length < 2) return undefined;
-  const xMean = points.reduce((sum, point) => sum + point.log_price, 0) / points.length;
-  const yMean = points.reduce((sum, point) => sum + point.log_volume, 0) / points.length;
-  const denominator = points.reduce((sum, point) => sum + (point.log_price - xMean) ** 2, 0);
-  if (!Number.isFinite(denominator) || denominator === 0) return undefined;
-  const numerator = points.reduce((sum, point) => sum + (point.log_price - xMean) * (point.log_volume - yMean), 0);
-  const slope = numerator / denominator;
+  const xy = points.map(p => ({ x: p.log_price, y: p.log_volume }));
+  const slope = olsSlope(xy);
+  if (slope === undefined) return undefined;
+  const xMean = xy.reduce((s, p) => s + p.x, 0) / xy.length;
+  const yMean = xy.reduce((s, p) => s + p.y, 0) / xy.length;
   const intercept = yMean - slope * xMean;
-  const [x1, x2] = extent(points, point => point.log_price);
-  return {
-    group,
-    x1,
-    y1: intercept + slope * x1,
-    x2,
-    y2: intercept + slope * x2,
-    slope,
-  };
+  const xs = points.map(p => p.log_price);
+  const x1 = Math.min(...xs);
+  const x2 = Math.max(...xs);
+  return { group, x1, y1: intercept + slope * x1, x2, y2: intercept + slope * x2, slope };
 }
 
-function AxisLabels({ x, y, xLabel, yLabel }: { x: number; y: number; xLabel?: string; yLabel?: string }) {
-  return (
-    <>
-      {xLabel && <text x={x} y={y} textAnchor="middle" className="fill-slate-500 text-[10px]">{xLabel}</text>}
-      {yLabel && (
-        <text x={14} y={110} textAnchor="middle" transform="rotate(-90 14 110)" className="fill-slate-500 text-[10px]">
-          {yLabel}
-        </text>
-      )}
-    </>
-  );
-}
+// ---------------------------------------------------------------------------
+// Small presentational helpers
+// ---------------------------------------------------------------------------
 
 function ChartFrame({
   title,
   subtitle,
+  right,
   children,
 }: {
   title: string;
   subtitle?: string;
+  right?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-3">
-        <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+      <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+          {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+        </div>
+        {right}
       </div>
       {children}
     </div>
   );
 }
 
-function Legend({ items }: { items: Array<{ label: string; color: string }> }) {
+function SegmentedControl<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label?: string;
+  value: T;
+  options: Array<{ value: T; label: string }>;
+  onChange: (value: T) => void;
+}) {
   return (
-    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
-      {items.map(item => (
-        <span key={item.label} className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ background: item.color }} />
-          {item.label}
-        </span>
-      ))}
+    <div className="flex flex-wrap items-center gap-2">
+      {label && <span className="text-[11px] font-medium uppercase tracking-wide text-slate-400">{label}</span>}
+      <div className="inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5">
+        {options.map(option => {
+          const active = option.value === value;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => onChange(option.value)}
+              aria-pressed={active}
+              className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
+                active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-export function SoupBaselineChart({ data }: { data: { monthSeasonality: MonthPoint[]; seasonSummary: Array<Record<string, number | string>> } }) {
-  const months = [...data.monthSeasonality].sort((a, b) => a.month - b.month);
-  const W = 760;
-  const H = 300;
-  const m = { top: 20, right: 74, bottom: 42, left: 48 };
-  const x = scaleLinear([1, 12], [m.left, W - m.right]);
-  const yIndex = scaleLinear([0, 150], [H - m.bottom, m.top]);
-  const volumePath = linePath(months, d => x(d.month), d => yIndex(d.progresso_volume_index_jan ?? 0));
-  const sharePath = linePath(months, d => x(d.month), d => yIndex(d.progresso_share_index_jan ?? 0));
-  const pricePath = linePath(months, d => x(d.month), d => yIndex(d.progresso_price_index_jan ?? 0));
+// ===========================================================================
+// 1. SoupBaselineChart — re-indexable baseline + absolute-level companion
+// ===========================================================================
+
+type BaselineKey = 'jan' | 'jun' | 'prior' | 'campbell';
+
+const BASELINE_OPTIONS: Array<{ value: BaselineKey; label: string }> = [
+  { value: 'jan', label: 'January' },
+  { value: 'jun', label: 'June' },
+  { value: 'prior', label: 'Annual avg' },
+  { value: 'campbell', label: 'vs Campbell' },
+];
+
+const BASELINE_HINT: Record<BaselineKey, string> = {
+  jan: 'January = 100. How far does the year move away from the winter level?',
+  jun: 'June = 100. Emphasizes the recovery out of the summer trough.',
+  prior: 'Annual average = 100. Shows each month relative to the typical month.',
+  campbell: 'Progresso price ÷ Campbell price, indexed to January. Does Progresso move differently from its rival?',
+};
+
+export function SoupBaselineChart({
+  data,
+}: {
+  data: { monthSeasonality: MonthPoint[]; seasonSummary: Array<Record<string, number | string>> };
+}) {
+  const [baseline, setBaseline] = React.useState<BaselineKey>('jan');
+
+  const months = React.useMemo(
+    () => [...data.monthSeasonality].sort((a, b) => a.month - b.month),
+    [data.monthSeasonality],
+  );
+
+  // Re-index every series against the chosen baseline. "campbell" re-indexes the
+  // Progresso/Campbell price RATIO so it answers a competitive question.
+  const indexed = React.useMemo(() => {
+    const baseRow =
+      baseline === 'jun' ? months.find(m => m.month === 6) : months.find(m => m.month === 1);
+
+    const series: Array<{ key: 'volume' | 'share' | 'price'; field: keyof MonthPoint; label: string }> = [
+      { key: 'volume', field: 'progresso_volume', label: 'Volume' },
+      { key: 'share', field: 'progresso_share', label: 'Share' },
+      { key: 'price', field: 'progresso_price', label: 'Price' },
+    ];
+
+    const rows: Array<{ month: number; month_name: string; series: string; index: number; raw: number; unit: string }> = [];
+
+    if (baseline === 'campbell') {
+      // Single competitive series: Progresso price relative to Campbell price.
+      const ratio = (m: MonthPoint) => (m.progresso_price ?? 0) / (m.campbell_price ?? 1);
+      const base = ratio(months.find(r => r.month === 1) ?? months[0]) || 1;
+      for (const m of months) {
+        rows.push({
+          month: m.month,
+          month_name: m.month_name,
+          series: 'Price vs Campbell',
+          index: (ratio(m) / base) * 100,
+          raw: ratio(m),
+          unit: 'ratio',
+        });
+      }
+      return rows;
+    }
+
+    for (const s of series) {
+      const denom =
+        baseline === 'prior'
+          ? months.reduce((sum, m) => sum + Number(m[s.field] ?? 0), 0) / months.length
+          : Number((baseRow ?? months[0])[s.field] ?? 1);
+      const base = denom || 1;
+      for (const m of months) {
+        const raw = Number(m[s.field] ?? 0);
+        rows.push({
+          month: m.month,
+          month_name: m.month_name,
+          series: s.label,
+          index: (raw / base) * 100,
+          raw,
+          unit: s.key === 'price' ? 'usd' : s.key === 'share' ? 'pct' : 'vol',
+        });
+      }
+    }
+    return rows;
+  }, [months, baseline]);
+
+  const seriesNames = React.useMemo(
+    () => Array.from(new Set(indexed.map(d => d.series))),
+    [indexed],
+  );
+
+  const colorRange = baseline === 'campbell' ? [CHART.orange] : [CHART.skyDark, CHART.sky, CHART.orange];
+
+  const indexOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 300,
+        marginLeft: 48,
+        marginRight: 90,
+        marginBottom: 36,
+        x: { domain: MONTH_NAMES, label: null, tickSize: 0 },
+        y: {
+          grid: true,
+          label: baseline === 'campbell' ? 'Price ratio, Jan = 100' : `Index, ${baseline === 'jun' ? 'Jun' : baseline === 'prior' ? 'avg' : 'Jan'} = 100`,
+        },
+        color: { domain: seriesNames, range: colorRange, legend: true },
+        marks: [
+          Plot.ruleY([100], { stroke: CHART.faint, strokeDasharray: '4 4' }),
+          Plot.lineY(indexed, {
+            x: d => monthName(d.month),
+            y: 'index',
+            z: 'series',
+            stroke: 'series',
+            strokeWidth: 2.5,
+            curve: 'catmull-rom',
+          }),
+          Plot.dot(indexed, {
+            x: d => monthName(d.month),
+            y: 'index',
+            fill: 'series',
+            r: 3.2,
+            tip: true,
+            title: d => {
+              const rawStr =
+                d.unit === 'usd'
+                  ? fmtMoney(d.raw)
+                  : d.unit === 'pct'
+                    ? fmtPct1(d.raw)
+                    : d.unit === 'ratio'
+                      ? d.raw.toFixed(3)
+                      : d.raw.toLocaleString(undefined, { maximumFractionDigits: 0 });
+              return `${d.month_name} · ${d.series}\nindex ${Math.round(d.index)}\nlevel ${rawStr}`;
+            },
+          }),
+          Plot.text(
+            indexed.filter(d => d.month === 12),
+            {
+              x: () => monthName(12),
+              y: 'index',
+              text: 'series',
+              fill: 'series',
+              dx: 10,
+              textAnchor: 'start',
+              fontSize: 11,
+              fontWeight: 600,
+            },
+          ),
+        ],
+      }),
+    [indexed, seriesNames, baseline, colorRange],
+  );
+
+  // Companion ABSOLUTE-LEVEL panel — the article preaches pairing an index with
+  // real levels so a small mover is not mistaken for a large one. Two y-axes are
+  // avoided by showing the two volume series Progresso owns in real units (share
+  // %, and volume in millions of units) as a faceted small panel.
+  const absRows = React.useMemo(
+    () =>
+      months.flatMap(m => [
+        { month: m.month, month_name: m.month_name, metric: 'Volume (M units)', value: (m.progresso_volume ?? 0) / 1e6, fmt: 'vol' as const },
+        { month: m.month, month_name: m.month_name, metric: 'Share', value: m.progresso_share ?? 0, fmt: 'pct' as const },
+        { month: m.month, month_name: m.month_name, metric: 'Price (USD)', value: m.progresso_price ?? 0, fmt: 'usd' as const },
+      ]),
+    [months],
+  );
+
+  const absOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 230,
+        marginLeft: 44,
+        marginBottom: 28,
+        fx: { label: null },
+        x: { domain: MONTH_NAMES, label: null, ticks: ['Jan', 'Apr', 'Jul', 'Oct'], tickSize: 0 },
+        y: { grid: true, label: null },
+        marks: [
+          Plot.barY(absRows, {
+            fx: 'metric',
+            x: d => monthName(d.month),
+            y: 'value',
+            fill: d => (d.metric === 'Price (USD)' ? CHART.orange : d.metric === 'Share' ? CHART.sky : CHART.skyDark),
+            tip: true,
+            title: d =>
+              `${d.month_name} · ${d.metric}\n${
+                d.fmt === 'usd' ? fmtMoney(d.value) : d.fmt === 'pct' ? fmtPct1(d.value) : `${d.value.toFixed(1)}M units`
+              }`,
+          }),
+        ],
+      }),
+    [absRows],
+  );
 
   return (
     <div className="space-y-4">
       <ChartFrame
         title="Demand falls before price does"
-        subtitle="Indexed views make the countercyclical pattern visible: volume and share sink in summer while price rises."
+        subtitle={BASELINE_HINT[baseline]}
+        right={<SegmentedControl label="Baseline" value={baseline} options={BASELINE_OPTIONS} onChange={setBaseline} />}
       >
-        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Indexed Progresso volume and share fall in summer while price rises.">
-          <rect x={x(6) - 18} y={m.top - 8} width={x(8) - x(6) + 36} height={H - m.bottom - m.top + 16} fill="#f8fafc" />
-          <text x={(x(6) + x(8)) / 2} y={m.top + 9} textAnchor="middle" className="fill-slate-500 text-[10px]">summer trough</text>
-          {[50, 100, 150].map(t => (
-            <g key={t}>
-              <line x1={m.left} x2={W - m.right} y1={yIndex(t)} y2={yIndex(t)} stroke="#e2e8f0" />
-              <text x={m.left - 8} y={yIndex(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{t}</text>
-            </g>
-          ))}
-          {months.map(d => (
-            <text key={d.month} x={x(d.month)} y={H - 18} textAnchor="middle" className="fill-slate-500 text-[10px]">
-              {d.month_name}
-            </text>
-          ))}
-          <line x1={m.left} x2={W - m.right} y1={yIndex(100)} y2={yIndex(100)} stroke="#94a3b8" strokeDasharray="4 4" />
-          <path d={volumePath} fill="none" stroke="#1f3a5f" strokeWidth={3} />
-          <path d={sharePath} fill="none" stroke="#2563eb" strokeWidth={3} />
-          <path d={pricePath} fill="none" stroke="#c87c2a" strokeWidth={3} />
-          {months.map(d => (
-            <g key={`dots-${d.month}`}>
-              <circle cx={x(d.month)} cy={yIndex(d.progresso_volume_index_jan ?? 0)} r={3.5} fill="#1f3a5f" />
-              <circle cx={x(d.month)} cy={yIndex(d.progresso_share_index_jan ?? 0)} r={3.5} fill="#2563eb" />
-              <circle cx={x(d.month)} cy={yIndex(d.progresso_price_index_jan ?? 0)} r={3.5} fill="#c87c2a" />
-            </g>
-          ))}
-          <text x={W - m.right + 10} y={yIndex(months[11].progresso_volume_index_jan ?? 0) + 4} className="fill-[#1f3a5f] text-[11px]">volume index</text>
-          <text x={W - m.right + 10} y={yIndex(months[11].progresso_share_index_jan ?? 0) + 4} className="fill-[#2563eb] text-[11px]">share index</text>
-          <text x={W - m.right + 10} y={yIndex(months[11].progresso_price_index_jan ?? 0) + 4} className="fill-[#c87c2a] text-[11px]">price index</text>
-          <AxisLabels x={W / 2} y={H - 4} xLabel="Month of year" yLabel="Index, Jan = 100" />
-        </svg>
-        <Legend
-          items={[
-            { label: 'Progresso volume index', color: '#1f3a5f' },
-            { label: 'Progresso share index', color: '#2563eb' },
-            { label: 'Progresso price index', color: '#c87c2a' },
-          ]}
+        <PlotFigure
+          ariaLabel="Indexed Progresso volume, share, and price across the year against a selectable baseline."
+          options={indexOptions}
         />
       </ChartFrame>
+
+      <ChartFrame
+        title="Pair the index with absolute levels"
+        subtitle="The index above flattens scale on purpose. These bars keep the real units so a small mover is not mistaken for a large one."
+      >
+        <PlotFigure
+          ariaLabel="Absolute monthly Progresso volume, share, and price in real units."
+          options={absOptions}
+        />
+      </ChartFrame>
+
       <div className="grid gap-3 sm:grid-cols-2">
         {data.seasonSummary.map(season => (
           <div key={String(season.soup_season)} className="rounded-md border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs uppercase tracking-wide text-slate-500">{season.soup_season}</p>
+            <p className="text-xs uppercase tracking-wide text-slate-500">{String(season.soup_season)}</p>
             <div className="mt-2 grid grid-cols-3 gap-3 text-sm">
               <div>
                 <p className="text-lg font-semibold text-slate-900">{fmtMoney(Number(season.progresso_price))}</p>
@@ -252,312 +428,663 @@ export function SoupBaselineChart({ data }: { data: { monthSeasonality: MonthPoi
   );
 }
 
-function SparkLine({
-  points,
-  field,
-  color,
-  domain,
-  formatter,
-}: {
-  points: RegionMonthPoint[];
-  field: 'progresso_price' | 'progresso_share';
-  color: string;
-  domain: [number, number];
-  formatter: (value: number) => string;
-}) {
-  const W = 250;
-  const H = 124;
-  const m = { top: 14, right: 14, bottom: 22, left: 32 };
-  const x = scaleLinear([1, 12], [m.left, W - m.right]);
-  const y = scaleLinear(domain, [H - m.bottom, m.top]);
-  const path = linePath(points, d => x(d.month), d => y(Number(d[field])));
-  const minPoint = points.reduce((a, b) => Number(b[field]) < Number(a[field]) ? b : a, points[0]);
-  const maxPoint = points.reduce((a, b) => Number(b[field]) > Number(a[field]) ? b : a, points[0]);
+// ===========================================================================
+// 2. SoupRegionSmallMultiples — Plot faceting on a shared scale
+// ===========================================================================
 
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full">
-      {[domain[0], (domain[0] + domain[1]) / 2, domain[1]].map(t => (
-        <g key={t}>
-          <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-slate-400 text-[9px]">{formatter(t)}</text>
-        </g>
-      ))}
-      {[1, 6, 12].map(month => (
-        <text key={month} x={x(month)} y={H - 5} textAnchor="middle" className="fill-slate-400 text-[9px]">{monthName(month)}</text>
-      ))}
-      <path d={path} fill="none" stroke={color} strokeWidth={2.5} />
-      {[minPoint, maxPoint].map(point => (
-        <g key={`${point.month}-${Number(point[field])}`}>
-          <circle cx={x(point.month)} cy={y(Number(point[field]))} r={3.5} fill={color} />
-          <text x={x(point.month)} y={y(Number(point[field])) - 7} textAnchor="middle" className="fill-slate-700 text-[9px]">
-            {formatter(Number(point[field]))}
-          </text>
-        </g>
-      ))}
-    </svg>
-  );
-}
+type SmallMultMetric = 'progresso_share' | 'progresso_price';
 
 export function SoupRegionSmallMultiples({ data }: { data: { regionMonth: RegionMonthPoint[] } }) {
-  const rows = data.regionMonth;
-  const priceDomain = paddedDomain(extent(rows, d => d.progresso_price), 0.04);
-  const shareDomain = paddedDomain(extent(rows, d => d.progresso_share), 0.06);
+  const [metric, setMetric] = React.useState<SmallMultMetric>('progresso_share');
+
+  const rows = React.useMemo(
+    () => [...data.regionMonth].sort((a, b) => a.month - b.month),
+    [data.regionMonth],
+  );
+
+  // Fit one slope per region (metric vs month) so each panel can print it. A
+  // positive share slope means the region builds share through the year.
+  const slopes = React.useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const region of REGION_ORDER) {
+      const regionRows = rows.filter(d => d.region === region);
+      const s = olsSlope(regionRows.map(d => ({ x: d.month, y: Number(d[metric]) })));
+      if (s !== undefined) out[region] = s;
+    }
+    return out;
+  }, [rows, metric]);
+
+  const slopeLabels = React.useMemo(
+    () =>
+      REGION_ORDER.filter(r => slopes[r] !== undefined).map(region => ({
+        region,
+        text:
+          metric === 'progresso_price'
+            ? `slope ${slopes[region] >= 0 ? '+' : ''}${(slopes[region] * 100).toFixed(1)}¢/mo`
+            : `slope ${slopes[region] >= 0 ? '+' : ''}${(slopes[region] * 100).toFixed(2)} pp/mo`,
+      })),
+    [slopes, metric],
+  );
+
+  const valueLabel = metric === 'progresso_price' ? 'Progresso price' : 'Progresso share';
+  const fmt = metric === 'progresso_price' ? fmtMoney : fmtPct1;
+
+  const options = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 360,
+        marginLeft: 48,
+        marginBottom: 34,
+        // Faceting → clean small multiples on a SHARED y-scale (the article's
+        // whole point: only the data varies across panels).
+        fx: { label: null },
+        fy: { label: null },
+        x: { domain: MONTH_NAMES, label: null, ticks: ['Jan', 'Apr', 'Jul', 'Oct'], tickSize: 0 },
+        y: { grid: true, label: valueLabel, tickFormat: metric === 'progresso_price' ? (d: number) => `$${d.toFixed(1)}` : (d: number) => fmtPct(d) },
+        marks: [
+          Plot.frame({ stroke: CHART.grid }),
+          Plot.areaY(rows, {
+            fx: 'region',
+            x: d => monthName(d.month),
+            y: metric,
+            fill: d => REGION_COLORS[d.region],
+            fillOpacity: 0.1,
+            curve: 'catmull-rom',
+          }),
+          Plot.lineY(rows, {
+            fx: 'region',
+            x: d => monthName(d.month),
+            y: metric,
+            stroke: d => REGION_COLORS[d.region],
+            strokeWidth: 2.5,
+            curve: 'catmull-rom',
+          }),
+          Plot.dot(rows, {
+            fx: 'region',
+            x: d => monthName(d.month),
+            y: metric,
+            fill: d => REGION_COLORS[d.region],
+            r: 2.5,
+            tip: true,
+            title: d => `${d.region} · ${d.month_name}\n${valueLabel}: ${fmt(Number(d[metric]))}\nactive stores: ${d.active_stores.toLocaleString()}`,
+          }),
+          // Fitted slope printed on each panel face.
+          Plot.text(slopeLabels, {
+            fx: 'region',
+            frameAnchor: 'top-left',
+            dx: 6,
+            dy: 6,
+            text: 'text',
+            fill: CHART.body,
+            fontSize: 10,
+            fontWeight: 600,
+          }),
+        ],
+      }),
+    [rows, metric, valueLabel, fmt, slopeLabels],
+  );
 
   return (
-    <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
-      {REGION_ORDER.map(region => {
-        const regionRows = rows.filter(d => d.region === region).sort((a, b) => a.month - b.month);
-        const color = REGION_COLORS[region];
-        return (
-          <ChartFrame key={region} title={region} subtitle="Same-scale panels make regional differences comparable.">
-            <div className="grid gap-2 sm:grid-cols-2">
-              <div>
-                <p className="mb-1 text-xs font-medium text-slate-600">Progresso price</p>
-                <SparkLine points={regionRows} field="progresso_price" color={color} domain={priceDomain} formatter={fmtMoney} />
-              </div>
-              <div>
-                <p className="mb-1 text-xs font-medium text-slate-600">Progresso share</p>
-                <SparkLine points={regionRows} field="progresso_share" color={color} domain={shareDomain} formatter={fmtPct} />
-              </div>
-            </div>
-          </ChartFrame>
-        );
-      })}
-    </div>
+    <ChartFrame
+      title="Same-scale small multiples make regional levels comparable"
+      subtitle={
+        metric === 'progresso_share'
+          ? 'Metric-major layout: every panel shares one share axis, so the East’s much higher Progresso share is obvious — a level difference a national average would hide.'
+          : 'Every panel shares one price axis. The countercyclical price rise is broad, but the West prices highest.'
+      }
+      right={
+        <SegmentedControl
+          label="Metric"
+          value={metric}
+          options={[
+            { value: 'progresso_share', label: 'Share' },
+            { value: 'progresso_price', label: 'Price' },
+          ]}
+          onChange={setMetric}
+        />
+      }
+    >
+      <PlotFigure
+        ariaLabel={`Faceted ${valueLabel} by census region across the year on a shared scale.`}
+        options={options}
+      />
+    </ChartFrame>
   );
 }
+
+// ===========================================================================
+// 3. SoupElasticityScatter — scatter + OLS line + slope on the panel face
+// ===========================================================================
 
 export function SoupElasticityScatter({
   data,
   groupBy = 'region',
 }: {
-  data: { scatterSample: ScatterPoint[]; trendLines?: TrendLine[]; regionCoefficients?: Coefficient[]; seasonCoefficients?: Coefficient[] };
+  data: {
+    scatterSample: ScatterPoint[];
+    trendLines?: TrendLine[];
+    regionCoefficients?: Coefficient[];
+    seasonCoefficients?: Coefficient[];
+  };
   groupBy?: 'region' | 'season';
 }) {
   const groups = groupBy === 'region' ? REGION_ORDER : ['Winter', 'Non-winter'];
-  const points = data.scatterSample ?? [];
-  const xDomain = paddedDomain(extent(points, d => d.log_price), 0.05);
-  const yDomain = paddedDomain(extent(points, d => d.log_volume), 0.05);
-  const W = 320;
-  const H = 250;
-  const m = { top: 18, right: 18, bottom: 36, left: 42 };
-  const x = scaleLinear(xDomain, [m.left, W - m.right]);
-  const y = scaleLinear(yDomain, [H - m.bottom, m.top]);
-  const coefs = groupBy === 'region' ? data.regionCoefficients ?? [] : data.seasonCoefficients ?? [];
+  const points = React.useMemo(() => data.scatterSample ?? [], [data.scatterSample]);
+  const colorOf = (g: string) => (groupBy === 'region' ? REGION_COLORS[g] : SEASON_COLORS[g]);
 
-  return (
-    <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
-      {groups.map(group => {
-        const groupPoints = points.filter(d => groupBy === 'region' ? d.region === group : d.season === group);
-        const line = data.trendLines?.find(d => d.group === group) ?? fittedTrendLine(group, groupPoints);
-        const coef = coefs.find(d => d.group === group);
-        const color = groupBy === 'region' ? REGION_COLORS[group] : SEASON_COLORS[group];
-        return (
-          <ChartFrame
-            key={group}
-            title={group}
-            subtitle={coef ? `Descriptive log-log slope: ${fmtCoef(coef.estimate)} (${fmtCoef(coef.ci_low)} to ${fmtCoef(coef.ci_high)})` : undefined}
-          >
-            <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`Log price by log volume scatter for ${group}.`}>
-              {[xDomain[0], (xDomain[0] + xDomain[1]) / 2, xDomain[1]].map(t => (
-                <g key={`x-${t}`}>
-                  <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke="#f1f5f9" />
-                  <text x={x(t)} y={H - 13} textAnchor="middle" className="fill-slate-400 text-[9px]">{t.toFixed(1)}</text>
-                </g>
-              ))}
-              {[yDomain[0], (yDomain[0] + yDomain[1]) / 2, yDomain[1]].map(t => (
-                <g key={`y-${t}`}>
-                  <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-                  <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-slate-400 text-[9px]">{t.toFixed(1)}</text>
-                </g>
-              ))}
-              {groupPoints.map((point, i) => (
-                <circle
-                  key={i}
-                  cx={x(point.log_price)}
-                  cy={y(point.log_volume)}
-                  r={2.2}
-                  fill={color}
-                  opacity={groupBy === 'season' ? 0.28 : 0.32}
-                />
-              ))}
-              {line && (
-                <line
-                  x1={x(line.x1)}
-                  y1={y(line.y1)}
-                  x2={x(line.x2)}
-                  y2={y(line.y2)}
-                  stroke={color}
-                  strokeWidth={3}
-                />
-              )}
-              <AxisLabels x={W / 2} y={H - 1} xLabel="log price" yLabel="log volume" />
-            </svg>
-          </ChartFrame>
-        );
-      })}
-    </div>
+  const groupKey = (d: ScatterPoint) => (groupBy === 'region' ? d.region : d.season);
+
+  const coefs = React.useMemo(
+    () => (groupBy === 'region' ? data.regionCoefficients ?? [] : data.seasonCoefficients ?? []),
+    [groupBy, data.regionCoefficients, data.seasonCoefficients],
   );
-}
 
-export function SoupUncertaintyIntervals({
-  data,
-}: {
-  data: { monthlyShareIntervals: IntervalPoint[]; regionSeasonIntervals: IntervalPoint[]; coverage: Array<{ ym: string; active_stores: number }> };
-}) {
-  const months = [...data.monthlyShareIntervals].sort((a, b) => Number(a.month) - Number(b.month));
-  const W = 760;
-  const H = 260;
-  const m = { top: 18, right: 24, bottom: 40, left: 52 };
-  const yDomain = paddedDomain([Math.min(...months.map(d => d.ci_low)), Math.max(...months.map(d => d.ci_high))], 0.1);
-  const x = scaleLinear([1, 12], [m.left, W - m.right]);
-  const y = scaleLinear(yDomain, [H - m.bottom, m.top]);
-  const coverageExtent = extent(data.coverage, d => d.active_stores);
+  // One OLS trend line per facet. Prefer the precomputed trendLines (which match
+  // the published month-adjusted slopes) and fall back to a fresh fit.
+  const trendLines = React.useMemo(() => {
+    return groups
+      .map(g => {
+        const fromData = data.trendLines?.find(t => t.group === g);
+        if (fromData) return fromData;
+        return fittedTrendLine(g, points.filter(p => groupKey(p) === g));
+      })
+      .filter((t): t is TrendLine => Boolean(t));
+  }, [groups, points, data.trendLines, groupBy]);
 
-  return (
-    <div className="space-y-4">
-      <ChartFrame
-        title="Seasonal share intervals are narrow, but they are not causal proof"
-        subtitle={`Active stores vary from ${coverageExtent[0].toLocaleString()} to ${coverageExtent[1].toLocaleString()} by month in the raw panel.`}
-      >
-        <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Monthly Progresso share with confidence intervals.">
-          {[0.1, 0.2, 0.3, 0.4].map(t => (
-            <g key={t}>
-              <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-              <text x={m.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{fmtPct(t)}</text>
-            </g>
-          ))}
-          {months.map(d => (
-            <g key={d.month_name}>
-              <line x1={x(Number(d.month))} x2={x(Number(d.month))} y1={y(d.ci_low)} y2={y(d.ci_high)} stroke="#1f3a5f" strokeWidth={2} />
-              <circle cx={x(Number(d.month))} cy={y(d.mean)} r={4} fill="#1f3a5f" />
-              <text x={x(Number(d.month))} y={H - 16} textAnchor="middle" className="fill-slate-500 text-[10px]">{d.month_name}</text>
-            </g>
-          ))}
-          <AxisLabels x={W / 2} y={H - 2} xLabel="Month of year" yLabel="Mean store-month share" />
-        </svg>
-      </ChartFrame>
-      <div className="grid gap-3 md:grid-cols-4">
-        {REGION_ORDER.map(region => {
-          const rows = data.regionSeasonIntervals.filter(d => d.region === region);
-          return (
-            <div key={region} className="rounded-md border border-slate-200 bg-white p-4">
-              <p className="text-sm font-semibold text-slate-900">{region}</p>
-              <div className="mt-3 space-y-3">
-                {rows.map(row => (
-                  <div key={row.season}>
-                    <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
-                      <span>{row.season}</span>
-                      <span>{fmtPct1(row.mean)}</span>
-                    </div>
-                    <div className="relative h-2 rounded-full bg-slate-100">
-                      <div
-                        className="absolute top-0 h-2 rounded-full"
-                        style={{
-                          left: `${clamp(row.ci_low * 100, 0, 60)}%`,
-                          width: `${Math.max(2, (row.ci_high - row.ci_low) * 100)}%`,
-                          background: row.season === 'Winter' ? '#1f3a5f' : '#c87c2a',
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
+  const slopeLabels = React.useMemo(
+    () =>
+      groups
+        .map(g => {
+          const coef = coefs.find(c => c.group === g);
+          const tl = trendLines.find(t => t.group === g);
+          const slope = coef?.estimate ?? tl?.slope;
+          if (slope === undefined) return null;
+          return { group: g, text: `slope ${fmtCoef(slope)}` };
+        })
+        .filter((d): d is { group: string; text: string } => Boolean(d)),
+    [groups, coefs, trendLines],
   );
-}
 
-function Histogram({ rows, label }: { rows: Array<{ x0: number; x1: number; count: number; label: string }>; label: string }) {
-  const data = rows.filter(d => d.label === label);
-  const W = 360;
-  const H = 210;
-  const m = { top: 18, right: 12, bottom: 34, left: 44 };
-  const xDomain: [number, number] = [data[0].x0, data[data.length - 1].x1];
-  const yDomain: [number, number] = [0, Math.max(...data.map(d => d.count))];
-  const x = scaleLinear(xDomain, [m.left, W - m.right]);
-  const y = scaleLinear(yDomain, [H - m.bottom, m.top]);
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full">
-      {[0, yDomain[1] / 2, yDomain[1]].map(t => (
-        <g key={t}>
-          <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-slate-400 text-[9px]">{Math.round(t / 1000)}k</text>
-        </g>
-      ))}
-      {data.map(d => (
-        <rect
-          key={`${d.x0}-${d.x1}`}
-          x={x(d.x0) + 1}
-          y={y(d.count)}
-          width={Math.max(1, x(d.x1) - x(d.x0) - 2)}
-          height={H - m.bottom - y(d.count)}
-          fill={label === 'Raw volume' ? '#1f3a5f' : '#2563eb'}
-          opacity={0.82}
-        />
-      ))}
-      <text x={W / 2} y={H - 8} textAnchor="middle" className="fill-slate-500 text-[10px]">{label === 'Raw volume' ? 'Progresso volume' : 'log(Progresso volume)'}</text>
-    </svg>
+  const options = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 340,
+        marginLeft: 48,
+        marginBottom: 38,
+        fx: { label: null, domain: groups },
+        x: { grid: true, label: 'log Progresso price', labelAnchor: 'center' },
+        y: { grid: true, label: 'log Progresso volume' },
+        marks: [
+          Plot.frame({ stroke: CHART.grid }),
+          // Reduce overplotting: low-opacity small dots with hover tips.
+          Plot.dot(points, {
+            fx: groupKey,
+            x: 'log_price',
+            y: 'log_volume',
+            fill: d => colorOf(groupKey(d)),
+            r: 1.8,
+            fillOpacity: 0.18,
+            tip: true,
+            title: d => `${groupKey(d)}\nlog price ${d.log_price.toFixed(2)} · log vol ${d.log_volume.toFixed(2)}`,
+          }),
+          // OLS trend line drawn per facet.
+          Plot.link(trendLines, {
+            fx: 'group',
+            x1: 'x1',
+            y1: 'y1',
+            x2: 'x2',
+            y2: 'y2',
+            stroke: d => colorOf(d.group),
+            strokeWidth: 2.5,
+          }),
+          // Slope labeled on the panel face.
+          Plot.text(slopeLabels, {
+            fx: 'group',
+            frameAnchor: 'top-right',
+            dx: -8,
+            dy: 8,
+            text: 'text',
+            fill: d => colorOf(d.group),
+            fontSize: 11,
+            fontWeight: 600,
+          }),
+        ],
+      }),
+    [points, groups, trendLines, slopeLabels, groupBy],
   );
-}
 
-function CoefficientPlot({ rows, title }: { rows: Coefficient[]; title: string }) {
-  const W = 720;
-  const H = Math.max(170, rows.length * 34 + 54);
-  const m = { top: 20, right: 28, bottom: 28, left: 160 };
-  const domain = paddedDomain([Math.min(...rows.map(d => d.ci_low), -1), Math.max(...rows.map(d => d.ci_high), 0)], 0.04);
-  const x = scaleLinear(domain, [m.left, W - m.right]);
-  const yFor = (index: number) => m.top + 18 + index * 34;
   return (
-    <ChartFrame title={title} subtitle="Intervals preview elasticity intuition; later pricing chapters handle identification.">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label={`${title} coefficient interval plot. `}>
-        {[domain[0], -3, -2, -1, 0].filter(t => t >= domain[0] && t <= domain[1]).map(t => (
-          <g key={t}>
-            <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={t === 0 ? '#94a3b8' : '#e2e8f0'} strokeDasharray={t === 0 ? '4 4' : undefined} />
-            <text x={x(t)} y={H - 8} textAnchor="middle" className="fill-slate-500 text-[10px]">{t}</text>
-          </g>
-        ))}
-        {rows.map((row, index) => {
-          const y = yFor(index);
-          const color = REGION_COLORS[row.group] ?? SEASON_COLORS[row.group] ?? '#1f3a5f';
-          return (
-            <g key={`${row.group}-${row.model ?? ''}`}>
-              <text x={m.left - 10} y={y + 4} textAnchor="end" className="fill-slate-700 text-[11px]">
-                {row.model ? `${row.group} · ${row.model.replace(' preview', '')}` : row.group}
-              </text>
-              <line x1={x(row.ci_low)} x2={x(row.ci_high)} y1={y} y2={y} stroke={color} strokeWidth={2.5} />
-              <circle cx={x(row.estimate)} cy={y} r={4.5} fill={color} />
-              <text x={x(row.estimate) + 8} y={y + 4} className="fill-slate-600 text-[10px]">{fmtCoef(row.estimate)}</text>
-            </g>
-          );
-        })}
-        <text x={(m.left + W - m.right) / 2} y={H - 8} textAnchor="middle" className="fill-slate-500 text-[10px]">log-log slope</text>
-      </svg>
+    <ChartFrame
+      title={groupBy === 'region' ? 'Log price–volume slope by region' : 'Log price–volume slope by season'}
+      subtitle="A downward log-log slope previews price elasticity. The fitted line and slope are descriptive, not yet causal."
+    >
+      <PlotFigure
+        ariaLabel={`Faceted log price versus log volume scatter with OLS trend lines, grouped by ${groupBy}.`}
+        options={options}
+      />
     </ChartFrame>
   );
 }
 
+// ===========================================================================
+// 4. SoupUncertaintyIntervals — dot-and-whisker, dot SIZED by coverage
+// ===========================================================================
+
+export function SoupUncertaintyIntervals({
+  data,
+}: {
+  data: {
+    monthlyShareIntervals: IntervalPoint[];
+    regionSeasonIntervals: IntervalPoint[];
+    coverage: Array<{ ym: string; active_stores: number }>;
+  };
+}) {
+  const months = React.useMemo(
+    () => [...data.monthlyShareIntervals].sort((a, b) => Number(a.month) - Number(b.month)),
+    [data.monthlyShareIntervals],
+  );
+
+  // Each monthly point carries its store count (coverage). The article's whole
+  // point: size the mean dot by active stores so the reader sees that a December
+  // estimate rests on more coverage than a thin summer month.
+  const coverageOf = React.useCallback(
+    (month?: number) => {
+      const row = months.find(m => m.month === month);
+      return row?.n ?? row?.stores ?? row?.active_stores ?? 0;
+    },
+    [months],
+  );
+
+  const coverageExtent: [number, number] = React.useMemo(() => {
+    const counts = months.map(m => coverageOf(m.month));
+    return [Math.min(...counts), Math.max(...counts)];
+  }, [months, coverageOf]);
+
+  const monthlyOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 280,
+        marginLeft: 52,
+        marginBottom: 36,
+        x: { domain: MONTH_NAMES, label: null, tickSize: 0 },
+        y: { grid: true, label: 'Mean store-month Progresso share', tickFormat: (d: number) => fmtPct(d), zero: false },
+        r: { range: [3, 11] },
+        marks: [
+          Plot.ruleX(months, {
+            x: d => monthName(Number(d.month)),
+            y1: 'ci_low',
+            y2: 'ci_high',
+            stroke: CHART.skyDark,
+            strokeWidth: 1.6,
+          }),
+          Plot.dot(months, {
+            x: d => monthName(Number(d.month)),
+            y: 'mean',
+            // Coverage encoded as the dot AREA.
+            r: d => coverageOf(Number(d.month)),
+            fill: CHART.skyDark,
+            stroke: 'white',
+            strokeWidth: 1,
+            tip: true,
+            title: d =>
+              `${d.month_name}\nmean share ${fmtPct1(d.mean)}\n95% CI ${fmtPct1(d.ci_low)}–${fmtPct1(d.ci_high)}\nactive stores ${coverageOf(Number(d.month)).toLocaleString()}`,
+          }),
+        ],
+      }),
+    [months, coverageOf],
+  );
+
+  // Replace the CSS clamp(...) bars with a real shared-axis interval plot:
+  // region × season means as dot-and-whisker on one share axis.
+  const regionSeason = React.useMemo(
+    () =>
+      data.regionSeasonIntervals.map(d => ({
+        ...d,
+        rowKey: `${d.region} · ${d.season}`,
+      })),
+    [data.regionSeasonIntervals],
+  );
+
+  const regionRowOrder = React.useMemo(
+    () =>
+      REGION_ORDER.flatMap(region =>
+        ['Winter', 'Non-winter'].map(season => `${region} · ${season}`),
+      ).filter(key => regionSeason.some(r => r.rowKey === key)),
+    [regionSeason],
+  );
+
+  const intervalOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 300,
+        marginLeft: 130,
+        marginBottom: 34,
+        x: { grid: true, label: 'Mean Progresso share (95% CI)', tickFormat: (d: number) => fmtPct(d) },
+        y: { domain: regionRowOrder, label: null },
+        marks: [
+          Plot.ruleX([0.2], { stroke: CHART.faint, strokeDasharray: '3 3' }),
+          Plot.ruleY(regionSeason, {
+            y: 'rowKey',
+            x1: 'ci_low',
+            x2: 'ci_high',
+            stroke: d => SEASON_COLORS[d.season ?? 'Winter'],
+            strokeWidth: 2,
+          }),
+          Plot.dot(regionSeason, {
+            y: 'rowKey',
+            x: 'mean',
+            fill: d => SEASON_COLORS[d.season ?? 'Winter'],
+            r: 4.5,
+            stroke: 'white',
+            strokeWidth: 1,
+            tip: true,
+            title: d =>
+              `${d.region} · ${d.season}\nmean ${fmtPct1(d.mean)}\n95% CI ${fmtPct1(d.ci_low)}–${fmtPct1(d.ci_high)}\nn = ${d.n.toLocaleString()}`,
+          }),
+        ],
+      }),
+    [regionSeason, regionRowOrder],
+  );
+
+  return (
+    <div className="space-y-4">
+      <ChartFrame
+        title="Seasonal share intervals are narrow — but narrow is not causal"
+        subtitle={`Dot area encodes coverage: active store-months range from ${coverageExtent[0].toLocaleString()} to ${coverageExtent[1].toLocaleString()}. A precise mean built on thin coverage still deserves a second look.`}
+      >
+        <PlotFigure
+          ariaLabel="Monthly mean Progresso share with 95% confidence whiskers; each mean dot is sized by the number of store-months behind it."
+          options={monthlyOptions}
+        />
+      </ChartFrame>
+
+      <ChartFrame
+        title="Region × season on one shared axis"
+        subtitle="A real dot-and-whisker on a single share axis. Winter share sits above non-winter in every region, but the East operates at a different level entirely."
+      >
+        <PlotFigure
+          ariaLabel="Region by season mean Progresso share with 95% confidence intervals on a shared axis."
+          options={intervalOptions}
+        />
+      </ChartFrame>
+    </div>
+  );
+}
+
+// ===========================================================================
+// 5. SoupDistributionAndCoefficients — shared-axis histograms + forest plot
+// ===========================================================================
+
+type HistRow = { bin?: number; x0: number; x1: number; count: number; label: string };
+
 export function SoupDistributionAndCoefficients({
   data,
 }: {
-  data: { histograms: Array<{ x0: number; x1: number; count: number; label: string }>; modelComparison: Coefficient[]; regionCoefficients: Coefficient[]; seasonCoefficients: Coefficient[] };
+  data: {
+    histograms: HistRow[];
+    modelComparison: Coefficient[];
+    regionCoefficients: Coefficient[];
+    seasonCoefficients: Coefficient[];
+  };
 }) {
-  const monthAdjustedRegions = data.regionCoefficients.filter(d => d.model === 'Month-adjusted preview');
+  const [scale, setScale] = React.useState<'raw' | 'log'>('raw');
+
+  const rawRows = React.useMemo(() => data.histograms.filter(d => d.label === 'Raw volume'), [data.histograms]);
+  const logRows = React.useMemo(() => data.histograms.filter(d => d.label !== 'Raw volume'), [data.histograms]);
+
+  const active = scale === 'raw' ? rawRows : logRows;
+
+  // FIX: the old code printed Math.round(count/1000)+"k" for BOTH panels, which
+  // rendered "0k", "5k", "10k" on the log panel (max count ~9.6k). Use a single
+  // formatter that only abbreviates at/above 1000 and shows plain counts below.
+  const histOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 260,
+        marginLeft: 52,
+        marginBottom: 38,
+        x: {
+          label: scale === 'raw' ? 'Progresso volume (units per store-month)' : 'log(Progresso volume)',
+          labelAnchor: 'center',
+          tickFormat: scale === 'raw' ? (d: number) => fmtCount(d) : undefined,
+        },
+        // Shared, clearly labeled COUNT axis.
+        y: { grid: true, label: 'Store-months (count)', tickFormat: (d: number) => fmtCount(d) },
+        marks: [
+          Plot.rectY(active, {
+            x1: 'x0',
+            x2: 'x1',
+            y: 'count',
+            fill: scale === 'raw' ? CHART.skyDark : CHART.sky,
+            fillOpacity: 0.85,
+            inset: 0.5,
+            tip: true,
+            title: d =>
+              scale === 'raw'
+                ? `${fmtCount(d.x0)}–${fmtCount(d.x1)} units\n${d.count.toLocaleString()} store-months`
+                : `log ${d.x0.toFixed(2)}–${d.x1.toFixed(2)}\n${d.count.toLocaleString()} store-months`,
+          }),
+          Plot.ruleY([0], { stroke: CHART.border }),
+        ],
+      }),
+    [active, scale],
+  );
+
+  // Forest / coefficient plot — Plot intervals with a dashed zero rule and 95%
+  // bars. Combine the national model comparison (naive vs month-adjusted),
+  // region month-adjusted previews, and the season slopes into one ordered chart.
+  const monthAdjustedRegions = React.useMemo(
+    () => data.regionCoefficients.filter(d => d.model === 'Month-adjusted preview' || !d.model),
+    [data.regionCoefficients],
+  );
+
+  const forestRows = React.useMemo(() => {
+    const tag = (c: Coefficient, panel: string) => ({
+      ...c,
+      panel,
+      rowKey: c.model && panel === 'National'
+        ? `${c.model.replace(' preview', '')}`
+        : c.group,
+      color:
+        REGION_COLORS[c.group] ??
+        SEASON_COLORS[c.group] ??
+        (c.model?.includes('Month') ? CHART.emerald : CHART.slate),
+    });
+    return [
+      ...data.modelComparison.map(c => tag(c, 'National')),
+      ...monthAdjustedRegions.map(c => tag(c, 'By region')),
+      ...data.seasonCoefficients.map(c => tag(c, 'By season')),
+    ];
+  }, [data.modelComparison, monthAdjustedRegions, data.seasonCoefficients]);
+
+  // Single shared y-band (no faceting, so there are no empty rows). Each row's
+  // key carries its panel so panels stay grouped top-to-bottom; the y tick shows
+  // just the readable label. A left-margin tag names each panel at its first row.
+  const forestOrder = React.useMemo(() => forestRows.map(r => `${r.panel}::${r.rowKey}`), [forestRows]);
+
+  const panelLabels = React.useMemo(() => {
+    const seen = new Set<string>();
+    return forestRows
+      .filter(r => {
+        if (seen.has(r.panel)) return false;
+        seen.add(r.panel);
+        return true;
+      })
+      .map(r => ({ key: `${r.panel}::${r.rowKey}`, panel: r.panel }));
+  }, [forestRows]);
+
+  const forestOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: Math.max(220, forestRows.length * 34 + 60),
+        marginLeft: 150,
+        marginBottom: 38,
+        x: { grid: true, label: 'log-log slope (a 1% price change → x% volume change)', labelAnchor: 'center' },
+        y: { domain: forestOrder, label: null, tickFormat: (d: string) => d.split('::')[1] },
+        marks: [
+          // Dashed zero rule (the no-relationship baseline).
+          Plot.ruleX([0], { stroke: CHART.muted, strokeDasharray: '4 4' }),
+          Plot.ruleY(forestRows, {
+            y: d => `${d.panel}::${d.rowKey}`,
+            x1: 'ci_low',
+            x2: 'ci_high',
+            stroke: d => d.color,
+            strokeWidth: 2.5,
+          }),
+          Plot.dot(forestRows, {
+            y: d => `${d.panel}::${d.rowKey}`,
+            x: 'estimate',
+            fill: d => d.color,
+            r: 5,
+            stroke: 'white',
+            strokeWidth: 1,
+            tip: true,
+            title: d =>
+              `${d.rowKey}${d.model ? ` · ${d.model.replace(' preview', '')}` : ''}\nslope ${fmtCoef(d.estimate)}\n95% CI ${fmtCoef(d.ci_low)} to ${fmtCoef(d.ci_high)}${d.r2 != null ? `\nR² ${d.r2.toFixed(2)}` : ''}`,
+          }),
+          Plot.text(forestRows, {
+            y: d => `${d.panel}::${d.rowKey}`,
+            x: 'estimate',
+            text: d => fmtCoef(d.estimate),
+            dy: -10,
+            fontSize: 10,
+            fill: CHART.body,
+          }),
+          // Panel group tag in the left margin at the first row of each group.
+          Plot.text(panelLabels, {
+            y: 'key',
+            x: 0,
+            frameAnchor: 'left',
+            dx: -144,
+            dy: -14,
+            text: d => d.panel.toUpperCase(),
+            textAnchor: 'start',
+            fontSize: 9,
+            fontWeight: 700,
+            fill: CHART.faint,
+          }),
+        ],
+      }),
+    [forestRows, forestOrder, panelLabels],
+  );
+
   return (
     <div className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-2">
-        <ChartFrame title="Raw volume is a long-tail chart" subtitle="Most store-months are modest, but a few stores move a lot of soup.">
-          <Histogram rows={data.histograms} label="Raw volume" />
-        </ChartFrame>
-        <ChartFrame title="The log transform makes comparison readable" subtitle="The same data becomes closer to a symmetric comparison space.">
-          <Histogram rows={data.histograms} label="Log volume" />
-        </ChartFrame>
+      <ChartFrame
+        title={scale === 'raw' ? 'Raw volume is a long-tail distribution' : 'The log transform makes comparison readable'}
+        subtitle={
+          scale === 'raw'
+            ? 'Most store-months are modest; a few stores move enormous volume. The count axis is shared with the log view so the shape change is the only difference.'
+            : 'The same data, logged: a near-symmetric comparison space. Same count axis as the raw view — only the x-axis changed.'
+        }
+        right={
+          <SegmentedControl
+            label="x-axis"
+            value={scale}
+            options={[
+              { value: 'raw', label: 'Raw' },
+              { value: 'log', label: 'log()' },
+            ]}
+            onChange={setScale}
+          />
+        }
+      >
+        <PlotFigure
+          ariaLabel={`Histogram of ${scale === 'raw' ? 'raw' : 'log'} Progresso store-month volume on a shared count axis.`}
+          options={histOptions}
+        />
+      </ChartFrame>
+
+      <ChartFrame
+        title="Slopes change once seasonality enters the picture"
+        subtitle="A forest plot: each estimate is a center, a 95% interval, and a comparison to zero. The dashed line is the no-relationship baseline; later pricing chapters handle identification."
+      >
+        <PlotFigure
+          ariaLabel="Forest plot of log-log slope estimates with 95% intervals for national, regional, and seasonal models, with a dashed zero rule."
+          options={forestOptions}
+        />
+      </ChartFrame>
+    </div>
+  );
+}
+
+// ===========================================================================
+// 6. SoupDashboardCritique — real composed mini-dashboard
+// ===========================================================================
+
+type DashboardMode = 'Monitor' | 'Diagnose' | 'Decide';
+
+// Illustrative figures pulled from the soup case (the same numbers the other
+// Chapter 4 articles quote) so the mini-dashboard renders real evidence, not
+// placeholder cards. Inlined as typed consts per the substrate rules.
+const DASH_MONTHLY: Array<{ month: number; total_volume: number; progresso_share: number; active_stores: number }> = [
+  { month: 1, total_volume: 58.4, progresso_share: 0.3142, active_stores: 1866 },
+  { month: 2, total_volume: 47.2, progresso_share: 0.3034, active_stores: 1859 },
+  { month: 3, total_volume: 41.2, progresso_share: 0.2586, active_stores: 1864 },
+  { month: 4, total_volume: 28.8, progresso_share: 0.1773, active_stores: 1877 },
+  { month: 5, total_volume: 24.5, progresso_share: 0.1555, active_stores: 1869 },
+  { month: 6, total_volume: 21.7, progresso_share: 0.1433, active_stores: 1947 },
+  { month: 7, total_volume: 24.0, progresso_share: 0.1506, active_stores: 1947 },
+  { month: 8, total_volume: 28.9, progresso_share: 0.1663, active_stores: 1935 },
+  { month: 9, total_volume: 45.1, progresso_share: 0.2569, active_stores: 1931 },
+  { month: 10, total_volume: 59.7, progresso_share: 0.2971, active_stores: 1937 },
+  { month: 11, total_volume: 59.3, progresso_share: 0.2628, active_stores: 1948 },
+  { month: 12, total_volume: 62.9, progresso_share: 0.2517, active_stores: 1968 },
+];
+
+// Region share levels (winter / non-winter) for the small-multiple + interval tiles.
+const DASH_REGION = [
+  { region: 'East', winter: 0.343, nonwinter: 0.286, fips: '36' },
+  { region: 'Midwest', winter: 0.18, nonwinter: 0.137, fips: '17' },
+  { region: 'South', winter: 0.165, nonwinter: 0.118, fips: '48' },
+  { region: 'West', winter: 0.236, nonwinter: 0.176, fips: '06' },
+];
+
+// A coarse census-region → representative state FIPS map so the dashboard can
+// render a real albers-usa map shaded by Progresso winter share. Every state is
+// assigned its census region's winter share (a binned regional map).
+const STATE_REGION: Record<string, string> = {
+  // East / Northeast
+  '09': 'East', '23': 'East', '25': 'East', '33': 'East', '34': 'East', '36': 'East', '42': 'East', '44': 'East', '50': 'East',
+  '10': 'East', '11': 'East', '24': 'East', '37': 'East', '45': 'East', '51': 'East', '54': 'East',
+  // Midwest
+  '17': 'Midwest', '18': 'Midwest', '19': 'Midwest', '20': 'Midwest', '26': 'Midwest', '27': 'Midwest', '29': 'Midwest', '31': 'Midwest', '38': 'Midwest', '39': 'Midwest', '46': 'Midwest', '55': 'Midwest',
+  // South
+  '01': 'South', '05': 'South', '12': 'South', '13': 'South', '21': 'South', '22': 'South', '28': 'South', '40': 'South', '47': 'South', '48': 'South',
+  // West
+  '02': 'West', '04': 'West', '06': 'West', '08': 'West', '15': 'West', '16': 'West', '30': 'West', '32': 'West', '35': 'West', '41': 'West', '49': 'West', '53': 'West', '56': 'West',
+};
+
+const MODE_BADGE: Record<DashboardMode, string> = {
+  Monitor: 'bg-sky-50 text-sky-700 ring-sky-200',
+  Diagnose: 'bg-amber-50 text-amber-700 ring-amber-200',
+  Decide: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+};
+
+function ModeBadge({ mode }: { mode: string }) {
+  const cls = MODE_BADGE[mode as DashboardMode] ?? 'bg-slate-100 text-slate-600 ring-slate-200';
+  return (
+    <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ring-inset ${cls}`}>
+      {mode}
+    </span>
+  );
+}
+
+function KpiTile({ label, value, sub, mode }: { label: string; value: string; sub: string; mode: DashboardMode }) {
+  return (
+    <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+      <div className="flex items-center justify-between">
+        <p className="text-[11px] uppercase tracking-wide text-slate-400">{label}</p>
+        <ModeBadge mode={mode} />
       </div>
-      <CoefficientPlot rows={data.modelComparison} title="National trend changes when seasonality enters the visual argument" />
-      <CoefficientPlot rows={[...monthAdjustedRegions, ...data.seasonCoefficients]} title="Region and season views tell different pricing stories" />
+      <p className="mt-1 text-2xl font-semibold text-slate-900">{value}</p>
+      <p className="mt-0.5 text-xs text-slate-500">{sub}</p>
     </div>
   );
 }
@@ -571,21 +1098,203 @@ export function SoupDashboardCritique({
     dashboardRules: string[];
   };
 }) {
+  // ----- Composed dashboard plots --------------------------------------------
+  const trendOptions = React.useCallback(
+    (width: number): PlotOptions =>
+      withBookTheme({
+        width,
+        height: 170,
+        marginLeft: 40,
+        marginBottom: 26,
+        x: { domain: MONTH_NAMES, label: null, ticks: ['Jan', 'Apr', 'Jul', 'Oct'], tickSize: 0 },
+        y: { grid: true, label: null, tickFormat: (d: number) => `${d}M` },
+        marks: [
+          Plot.areaY(DASH_MONTHLY, { x: d => monthName(d.month), y: 'total_volume', fill: CHART.sky, fillOpacity: 0.12, curve: 'catmull-rom' }),
+          Plot.lineY(DASH_MONTHLY, { x: d => monthName(d.month), y: 'total_volume', stroke: CHART.skyDark, strokeWidth: 2.5, curve: 'catmull-rom' }),
+          Plot.dot(DASH_MONTHLY, {
+            x: d => monthName(d.month),
+            y: 'total_volume',
+            fill: CHART.skyDark,
+            r: 2.5,
+            tip: true,
+            title: d => `${monthName(d.month)}\ncategory volume ${d.total_volume.toFixed(1)}M\nactive stores ${d.active_stores.toLocaleString()}`,
+          }),
+        ],
+      }),
+    [],
+  );
+
+  const regionSmallMultOptions = React.useCallback(
+    (width: number): PlotOptions => {
+      const rows = DASH_REGION.flatMap(r => [
+        { region: r.region, season: 'Winter', share: r.winter },
+        { region: r.region, season: 'Non-winter', share: r.nonwinter },
+      ]);
+      return withBookTheme({
+        width,
+        height: 170,
+        marginLeft: 40,
+        marginBottom: 40,
+        fx: { label: null, domain: REGION_ORDER },
+        x: { label: null, domain: ['Winter', 'Non-winter'], tickSize: 0 },
+        y: { grid: true, label: null, tickFormat: (d: number) => fmtPct(d), domain: [0, 0.36] },
+        marks: [
+          Plot.barY(rows, {
+            fx: 'region',
+            x: 'season',
+            y: 'share',
+            fill: d => SEASON_COLORS[d.season],
+            tip: true,
+            title: d => `${d.region} · ${d.season}\nshare ${fmtPct1(d.share)}`,
+          }),
+        ],
+      });
+    },
+    [],
+  );
+
+  const intervalTileOptions = React.useCallback(
+    (width: number): PlotOptions => {
+      // Winter share point + an illustrative +/- band per region on a shared axis.
+      const rows = DASH_REGION.map(r => ({
+        region: r.region,
+        mean: r.winter,
+        ci_low: r.winter - 0.012,
+        ci_high: r.winter + 0.012,
+      }));
+      return withBookTheme({
+        width,
+        height: 170,
+        marginLeft: 64,
+        marginBottom: 26,
+        x: { grid: true, label: null, tickFormat: (d: number) => fmtPct(d) },
+        y: { domain: REGION_ORDER, label: null },
+        marks: [
+          Plot.ruleY(rows, { y: 'region', x1: 'ci_low', x2: 'ci_high', stroke: d => REGION_COLORS[d.region], strokeWidth: 2 }),
+          Plot.dot(rows, {
+            y: 'region',
+            x: 'mean',
+            fill: d => REGION_COLORS[d.region],
+            r: 4.5,
+            stroke: 'white',
+            strokeWidth: 1,
+            tip: true,
+            title: d => `${d.region}\nwinter share ${fmtPct1(d.mean)}\n~95% band ${fmtPct1(d.ci_low)}–${fmtPct1(d.ci_high)}`,
+          }),
+        ],
+      });
+    },
+    [],
+  );
+
+  // Region map: shade every state by its census region's winter Progresso share.
+  const mapData = React.useMemo(() => {
+    const shareByRegion = Object.fromEntries(DASH_REGION.map(r => [r.region, r.winter]));
+    return Object.entries(STATE_REGION).map(([fips, region]) => ({
+      id: fips,
+      value: shareByRegion[region] ?? null,
+      label: `${region} region`,
+    }));
+  }, []);
+
   return (
     <div className="space-y-5">
-      <div className="grid gap-3 md:grid-cols-2">
-        {data.currentDashboard.map(panel => (
-          <div key={panel.panel} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="text-sm font-semibold text-slate-900">{panel.panel}</h3>
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-600">{panel.mode}</span>
-            </div>
-            <p className="mt-2 text-xs leading-relaxed text-slate-600">{panel.current_job}</p>
-            <p className="mt-3 border-l-2 border-[#1f3a5f] pl-3 text-xs leading-relaxed text-slate-700">{panel.upgrade}</p>
+      {/* ---- The live mini-dashboard ---- */}
+      <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-4 shadow-sm">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-900">Progresso soup decision dashboard</h3>
+            <p className="text-xs text-slate-500">One screen, three modes: monitor the cycle, diagnose the heterogeneity, decide the next test.</p>
           </div>
-        ))}
+          <div className="flex gap-1.5">
+            <ModeBadge mode="Monitor" />
+            <ModeBadge mode="Diagnose" />
+            <ModeBadge mode="Decide" />
+          </div>
+        </div>
+
+        {/* KPI tiles */}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <KpiTile label="Summer trough" value="-54%" sub="Jun category volume vs Jan" mode="Monitor" />
+          <KpiTile label="Price into weakness" value="+47%" sub="Jun Progresso price index (Jan=100)" mode="Monitor" />
+          <KpiTile label="Share spread" value="34% vs 12%" sub="East vs South winter share" mode="Diagnose" />
+          <KpiTile label="Month-adj. slope" value="-2.46" sub="national log-log price→volume" mode="Decide" />
+        </div>
+
+        {/* Charts row */}
+        <div className="mt-3 grid gap-3 lg:grid-cols-2">
+          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-xs font-semibold text-slate-700">Category volume by month</p>
+              <ModeBadge mode="Monitor" />
+            </div>
+            <PlotFigure ariaLabel="Monthly soup category volume trend." options={trendOptions} />
+          </div>
+          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-xs font-semibold text-slate-700">Winter vs non-winter share by region</p>
+              <ModeBadge mode="Diagnose" />
+            </div>
+            <PlotFigure ariaLabel="Region small-multiple of winter and non-winter Progresso share." options={regionSmallMultOptions} />
+          </div>
+          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-xs font-semibold text-slate-700">Winter share with uncertainty band</p>
+              <ModeBadge mode="Diagnose" />
+            </div>
+            <PlotFigure ariaLabel="Winter Progresso share by region with an uncertainty band on a shared axis." options={intervalTileOptions} />
+          </div>
+          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-xs font-semibold text-slate-700">Where Progresso is strong (winter share)</p>
+              <ModeBadge mode="Diagnose" />
+            </div>
+            <ChoroplethMap
+              data={mapData}
+              level="states"
+              scheme="blues"
+              valueLabel="Winter Progresso share"
+              valueFormat={v => fmtPct1(v)}
+              ariaLabel="US map shaded by census-region winter Progresso share."
+            />
+            <p className="mt-1 text-[10px] leading-snug text-slate-400">
+              Binned by census region — an approximation. Map approximations are a caveat that belongs next to the chart.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-3 rounded-md border border-emerald-200 bg-emerald-50/70 p-3">
+          <div className="flex items-center gap-2">
+            <ModeBadge mode="Decide" />
+            <p className="text-xs font-semibold text-emerald-900">Next test, not a verdict</p>
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-emerald-900/90">
+            The dashboard shows countercyclical pricing that varies by region. It cannot prove price caused the volume drop.
+            The decision it earns is the next one: estimate elasticity with a design that separates price from seasonal demand,
+            and run it region by region where the share levels differ most.
+          </p>
+        </div>
       </div>
-      <div className="rounded-md border border-slate-200 bg-slate-950 p-4 text-white shadow-sm">
+
+      {/* ---- Critique narrative: each current panel gets a job + upgrade ---- */}
+      <div>
+        <h3 className="mb-2 text-sm font-semibold text-slate-900">Critique: each panel gets a job, each job gets an upgrade</h3>
+        <div className="grid gap-3 md:grid-cols-2">
+          {data.currentDashboard.map(panel => (
+            <div key={panel.panel} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-start justify-between gap-3">
+                <h4 className="text-sm font-semibold text-slate-900">{panel.panel}</h4>
+                <ModeBadge mode={panel.mode} />
+              </div>
+              <p className="mt-2 text-xs leading-relaxed text-slate-600">{panel.current_job}</p>
+              <p className="mt-3 border-l-2 border-sky-400 pl-3 text-xs leading-relaxed text-slate-700">{panel.upgrade}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ---- Redesigned monitor→diagnose→decide sequence ---- */}
+      <div className="rounded-md border border-slate-800 bg-slate-900 p-4 text-white shadow-sm">
         <h3 className="text-sm font-semibold">Redesigned dashboard sequence</h3>
         <div className="mt-4 grid gap-3 lg:grid-cols-3">
           {data.redesignedSequence.map(step => (
@@ -594,11 +1303,13 @@ export function SoupDashboardCritique({
               <h4 className="mt-1 text-sm font-semibold">{step.title}</h4>
               <p className="mt-2 text-xs leading-relaxed text-slate-300">{step.question}</p>
               <p className="mt-2 text-xs leading-relaxed text-slate-100">{step.visual}</p>
-              <p className="mt-2 text-xs leading-relaxed text-[#f8d7a6]">{step.decision}</p>
+              <p className="mt-2 text-xs leading-relaxed text-amber-200">{step.decision}</p>
             </div>
           ))}
         </div>
       </div>
+
+      {/* ---- Reusable rules ---- */}
       <div className="grid gap-2 sm:grid-cols-2">
         {data.dashboardRules.map(rule => (
           <div key={rule} className="rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-700">{rule}</div>

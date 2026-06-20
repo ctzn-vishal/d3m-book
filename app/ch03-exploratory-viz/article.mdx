@@ -7,6 +7,15 @@ import { Callout } from '@/components/Book/Callout';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
+import {
+  DashboardArc,
+  KpiTile,
+  TrendLine,
+  RegionBreakdown,
+  DaypartDrilldown,
+  RecommendedAction,
+  BuffetVsMemo,
+} from '@/components/Book/part2/DashboardArc';
 import questionMapRaw from './data/question-chart-map.json';
 
 export const questionMap = questionMapRaw.dataPoints;
@@ -62,11 +71,19 @@ One number, large, with a comparison. Last quarter's revenue against the quarter
   change="+0.7% vs Q4 2023"
 />
 
+<div className="not-prose my-4">
+  <KpiTile />
+</div>
+
 </Step>
 
 <Step number={3} title="The trend — put the headline in context">
 
 A line chart of the same metric over the last 8–12 periods. Without the trend, "+0.7%" reads as steady; with the trend, it reads as the first non-growth quarter after a year of 4–6% gains. The chart in this position is almost always a line chart, almost always with the most recent point flagged, and almost always *bare* — no clutter, no second metric, no overlaid bar chart. The trend's whole job is to give context for the KPI above.
+
+<div className="not-prose my-4">
+  <TrendLine />
+</div>
 
 </Step>
 
@@ -74,11 +91,19 @@ A line chart of the same metric over the last 8–12 periods. Without the trend,
 
 Once the trend establishes that something interesting happened, the next panel decomposes it. Revenue by region. Revenue by product category. Revenue by store cohort. The right breakdown is the one whose variance explains the trend — usually two or three breakdowns are tried, and the one where the differences are largest stays on the dashboard. The chart is almost always a sorted bar, sometimes a small-multiples grid if there are too many groups.
 
+<div className="not-prose my-4">
+  <RegionBreakdown />
+</div>
+
 </Step>
 
 <Step number={5} title="The drilldown — segment to the actionable level">
 
 The breakdown identifies the *where*; the drilldown finds the *what*. If the regional breakdown surfaces Suburban as the breakout (Chapter 2's lesson made concrete), the drilldown digs into Suburban: customer segments, hour-of-day patterns, product mix. This is where exploratory visualization lives — scatterplots, small multiples, anything that admits *new information* into the analysis. Most viewers do not need this panel every day. Analysts do.
+
+<div className="not-prose my-4">
+  <DaypartDrilldown />
+</div>
 
 </Step>
 
@@ -86,7 +111,15 @@ The breakdown identifies the *where*; the drilldown finds the *what*. If the reg
 
 The last panel is the only one that is not a chart. It is a paragraph — sometimes two — that translates the four chart panels into a recommendation. *"Suburban grew on weekday-morning commuter traffic. Recommend doubling weekday-morning staffing and piloting a 7am promo at the Campus store, where commuter foot traffic is comparable but conversion lags by 11 points."* This is the panel most dashboards omit. It is also the only panel that turns the dashboard from a status report into a decision document.
 
+<div className="not-prose my-4">
+  <RecommendedAction />
+</div>
+
 </Step>
+
+Here is the whole arc on one page — the executive question on top, then the five panels reading straight down to the recommended action. Hover any chart for the underlying numbers. Notice that each panel answers the question the panel above it raises.
+
+<DashboardArc />
 
 The six steps above are not specific to a particular tool. They work in Looker, in Tableau, in a printed PDF, in a one-pager taped to a wall. What makes the dashboard work is not the platform; it is the *sequence*. Without a sequence, the same six panels are a buffet; with a sequence, they are a memo.
 
@@ -97,6 +130,10 @@ The [Presidential Election Atlas](/studios/presidential-election-atlas) is a com
 <Pitfall title="The buffet dashboard">
 Twelve tiles, no order, no hierarchy — every chart the same size, every metric presented as if equally important — forces the viewer to do the prioritization the dashboard was supposed to do. **Pick one executive question per page; if there are three questions, build three pages.**
 </Pitfall>
+
+The difference is entirely in the ordering. Toggle below between the *buffet* (the same four panels as equal tiles, no obvious place to start) and the *memo* (the arc). The data never changes — only whether the page does the prioritizing for you.
+
+<BuffetVsMemo />
 
 <Pitfall title="Vanity metrics on top">
 Total page views, total accounts, total impressions — large, growing, and connected to no decision. **A KPI tile should answer a question the manager would otherwise ask; a number nobody would ever act on does not belong on the headline row.**

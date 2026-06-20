@@ -4,9 +4,9 @@ import { book, findArticle } from '@/lib/book-toc';
 import Article from './article.mdx';
 
 export const metadata: Metadata = {
-  title: `§10 Capstone: Growth Diagnostic | ${book.title}`,
+  title: `§4.6 Visual Decision Brief Studio | ${book.title}`,
   description:
-    'Bean & Basket Coffee: revenue is up 2% chain-wide, but store performance is diverging. Apply Part I — grain, structure, joins, metrics, quality, dashboards — to diagnose where growth is coming from.',
+    'A Part II studio that sequences the Progresso soup visuals — indexes, small multiples, uncertainty, and dashboards — into a one-page executive pricing brief, then marks the line the charts cannot cross into causal claims.',
 };
 
 export default function Page() {

@@ -153,6 +153,20 @@ export async function getArticleItems(): Promise<GalleryItem[]> {
   }
 }
 
+/**
+ * Tigris data stories paired to a chapter's articles (via the `teaching` field,
+ * set in content/gallery.json `curate`). Used to render a per-chapter
+ * "Featured data stories" rail. Async (reads the bucket manifest, ISR-cached);
+ * returns [] if unreachable.
+ */
+export async function getArticlesForChapter(articleSlugs: string[]): Promise<GalleryItem[]> {
+  const set = new Set(articleSlugs);
+  const articles = await getArticleItems();
+  return articles
+    .filter(a => a.teaching && set.has(a.teaching))
+    .sort((a, b) => a.title.localeCompare(b.title));
+}
+
 export type DatasetColumn = {
   name: string;
   dtype: string;

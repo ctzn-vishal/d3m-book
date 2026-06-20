@@ -93,6 +93,23 @@
     "share-of-wallet": { "featured": true },
     "southwest-regression": { "featured": true },
     "gdelt-media-agenda-lab": { "featured": true },
-    "religious-composition-dashboard": { "featured": true }
+    "religious-composition-dashboard": { "featured": true },
+
+    "the-purple-county-is-a-lie": { "teaching": "ch03-chart-atlas" },
+    "loneliness-geography": { "teaching": "ch03-chart-atlas" },
+    "stress_decade": { "teaching": "ch03-exploratory-viz" },
+    "american_evenings": { "teaching": "ch03-exploratory-viz" },
+    "company-you-keep": { "teaching": "ch03-concentration-case" },
+    "born-rich-premium": { "teaching": "ch03-concentration-case" },
+    "index-autopsy": { "teaching": "ch04-baselines" },
+    "flat-line": { "teaching": "ch04-baselines" },
+    "slope-factory": { "teaching": "ch04-small-multiples" },
+    "south-convergence-or-apart": { "teaching": "ch04-small-multiples" },
+    "eight-americas": { "teaching": "ch04-small-multiples" },
+    "plateau_in_the_tail": { "teaching": "ch04-uncertainty" },
+    "coefficient-zoo": { "teaching": "ch04-statistical-charts" },
+    "smiles_and_ladders": { "teaching": "ch04-statistical-charts" },
+    "flip_counties": { "teaching": "ch04-dashboards" },
+    "deadliest-to-be-poor": { "teaching": "ch04-dashboards" }
   }
 }

@@ -474,7 +474,7 @@ export const articleBlurbs: Record<string, string> = {
   'ch04-dashboards':
     'Redesigns the soup dashboard into a monitor–diagnose–decide system that ends by naming the next pricing test, not a verdict.',
   'ch04-studio-visual-brief':
-    'Bean & Basket capstone chaining grain, joins, metrics, and reshaping into a board memo that states its causal limits.',
+    'Sequences the Progresso soup visuals — indexes, small multiples, uncertainty, dashboards — into a one-page executive pricing brief that ends in a decision and names its causal limits.',
   'ch05-metrics-to-decisions':
     'Introduces the six-line Decision Question Card that ties a metric to a lever, unit, horizon, counterfactual, and act-or-not threshold.',
   'ch05-counterfactual':

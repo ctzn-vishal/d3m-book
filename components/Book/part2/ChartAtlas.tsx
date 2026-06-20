@@ -1,4 +1,14 @@
+'use client';
+
 import * as React from 'react';
+import * as Plot from '@observablehq/plot';
+import { PlotFigure } from '@/components/Book/charts/PlotFigure';
+import { ChoroplethMap } from '@/components/Book/charts/ChoroplethMap';
+import { withBookTheme, CHART, CATEGORICAL } from '@/lib/chart-theme';
+
+/* ------------------------------------------------------------------ */
+/* Types (unchanged public shape)                                      */
+/* ------------------------------------------------------------------ */
 
 type AtlasCard = {
   id: string;
@@ -27,19 +37,24 @@ type AtlasData = {
   charts: Record<string, any>;
 };
 
+type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
+
+/* ------------------------------------------------------------------ */
+/* Theme tokens                                                        */
+/* ------------------------------------------------------------------ */
+
 const SOURCE_COLORS: Record<string, string> = {
-  Soup: '#1f3a5f',
-  County: '#7c3aed',
-  Zillow: '#0f766e',
-  Teaching: '#c87c2a',
+  Soup: CHART.skyDark,
+  County: CHART.violet,
+  Zillow: CHART.teal,
+  Teaching: CHART.amber,
 };
 
-const SERIES_COLORS = ['#1f3a5f', '#c87c2a', '#0f766e', '#7c3aed', '#dc2626', '#2563eb', '#b45309', '#475569'];
 const REGION_COLORS: Record<string, string> = {
-  East: '#2563eb',
-  Midwest: '#7c3aed',
-  South: '#dc2626',
-  West: '#0f766e',
+  East: CHART.sky,
+  Midwest: CHART.violet,
+  South: CHART.rose,
+  West: CHART.teal,
 };
 
 const FAMILY_NOTES: Record<string, string> = {
@@ -53,501 +68,1507 @@ const FAMILY_NOTES: Record<string, string> = {
   'Business Bridge': 'Managerial decomposition from components to action.',
 };
 
-function extent<T>(items: T[], accessor: (item: T) => number): [number, number] {
-  const values = items.map(accessor).filter(Number.isFinite);
-  return [Math.min(...values), Math.max(...values)];
+const FAMILY_ORDER = [
+  'Distribution',
+  'Comparison',
+  'Time',
+  'Relationship',
+  'Geography',
+  'Multivariate',
+  'Uncertainty',
+  'Business Bridge',
+];
+
+const CHART_H = 260;
+
+/* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
+
+const usd = (v: number) => '$' + new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 0 }).format(v);
+const usdFull = (v: number) => '$' + Math.round(v).toLocaleString('en-US');
+const pct = (v: number) => `${v.toFixed(1)}%`;
+
+/** Convert a "YYYY-MM" string into a Date for time scales. */
+function toDate(ym: string): Date {
+  const [y, m] = ym.split('-').map(Number);
+  return new Date(y, (m ?? 1) - 1, 1);
 }
 
-function padded([min, max]: [number, number], pad = 0.08): [number, number] {
-  if (!Number.isFinite(min) || !Number.isFinite(max)) return [0, 1];
-  if (min === max) return [min - 1, max + 1];
-  const span = max - min;
-  return [min - span * pad, max + span * pad];
-}
+/* ------------------------------------------------------------------ */
+/* Illustrative datasets for the ADDED forms (small, typed consts)     */
+/* ------------------------------------------------------------------ */
 
-function scale(domain: [number, number], range: [number, number]) {
-  const [d0, d1] = domain;
-  const [r0, r1] = range;
-  const denom = d1 - d0 || 1;
-  return (value: number) => r0 + ((value - d0) / denom) * (r1 - r0);
-}
+// Soup category sales by quarter — for stacked / 100%-stacked / grouped / area.
+type SeasonRow = { quarter: string; category: string; units: number };
+const SEASON_DATA: SeasonRow[] = [
+  { quarter: 'Q1', category: 'Core soups', units: 480 },
+  { quarter: 'Q1', category: 'Premium soups', units: 220 },
+  { quarter: 'Q1', category: 'Broths', units: 140 },
+  { quarter: 'Q2', category: 'Core soups', units: 300 },
+  { quarter: 'Q2', category: 'Premium soups', units: 180 },
+  { quarter: 'Q2', category: 'Broths', units: 90 },
+  { quarter: 'Q3', category: 'Core soups', units: 260 },
+  { quarter: 'Q3', category: 'Premium soups', units: 170 },
+  { quarter: 'Q3', category: 'Broths', units: 80 },
+  { quarter: 'Q4', category: 'Core soups', units: 540 },
+  { quarter: 'Q4', category: 'Premium soups', units: 290 },
+  { quarter: 'Q4', category: 'Broths', units: 165 },
+];
+const SEASON_CATS = ['Core soups', 'Premium soups', 'Broths'];
 
-function dateValue(date: string) {
-  const [year, month] = date.split('-').map(Number);
-  return year + ((month ?? 1) - 1) / 12;
-}
+// Slopegraph: region county vote share, two elections.
+type SlopeRow = { region: string; year: string; value: number };
+const SLOPE_DATA: SlopeRow[] = [
+  { region: 'Midwest', year: '2016', value: 66.0 },
+  { region: 'Midwest', year: '2020', value: 69.2 },
+  { region: 'South', year: '2016', value: 64.8 },
+  { region: 'South', year: '2020', value: 67.4 },
+  { region: 'West', year: '2016', value: 60.1 },
+  { region: 'West', year: '2020', value: 61.4 },
+  { region: 'East', year: '2016', value: 52.9 },
+  { region: 'East', year: '2020', value: 51.8 },
+];
 
-function groupBy<T>(items: T[], key: (item: T) => string): Record<string, T[]> {
-  return items.reduce<Record<string, T[]>>((acc, item) => {
-    const value = key(item);
-    acc[value] = acc[value] ?? [];
-    acc[value].push(item);
-    return acc;
-  }, {});
-}
+// Treemap: revenue share by product family (reuses the Pareto framing).
+type TreeRow = { name: string; value: number };
+const TREE_DATA: TreeRow[] = [
+  { name: 'Core soups', value: 42 },
+  { name: 'Premium soups', value: 24 },
+  { name: 'Meal kits', value: 13 },
+  { name: 'Broths', value: 9 },
+  { name: 'Seasonal', value: 7 },
+  { name: 'Other', value: 5 },
+];
 
-function interpolateColor(low: string, high: string, value: number) {
-  const parse = (hex: string) => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
-  const [r0, g0, b0] = parse(low);
-  const [r1, g1, b1] = parse(high);
-  const t = Math.max(0, Math.min(1, value));
-  const channel = (a: number, b: number) => Math.round(a + (b - a) * t).toString(16).padStart(2, '0');
-  return `#${channel(r0, r1)}${channel(g0, g1)}${channel(b0, b1)}`;
-}
+// True choropleth: state home-value growth since 2020 (FIPS-keyed).
+type StateGeoRow = { id: string; value: number; label: string };
+const STATE_GROWTH: StateGeoRow[] = [
+  { id: '39', value: 56.2, label: 'Ohio' },
+  { id: '26', value: 51.4, label: 'Michigan' },
+  { id: '04', value: 49.7, label: 'Arizona' },
+  { id: '12', value: 49.2, label: 'Florida' },
+  { id: '36', value: 46.7, label: 'New York' },
+  { id: '32', value: 43.7, label: 'Nevada' },
+  { id: '06', value: 38.8, label: 'California' },
+  { id: '48', value: 35.6, label: 'Texas' },
+  { id: '17', value: 41.0, label: 'Illinois' },
+  { id: '42', value: 44.5, label: 'Pennsylvania' },
+  { id: '13', value: 47.8, label: 'Georgia' },
+  { id: '37', value: 50.3, label: 'North Carolina' },
+  { id: '53', value: 40.2, label: 'Washington' },
+  { id: '08', value: 39.1, label: 'Colorado' },
+  { id: '25', value: 45.9, label: 'Massachusetts' },
+  { id: '47', value: 52.0, label: 'Tennessee' },
+  { id: '18', value: 48.6, label: 'Indiana' },
+  { id: '29', value: 49.0, label: 'Missouri' },
+  { id: '55', value: 50.7, label: 'Wisconsin' },
+  { id: '21', value: 48.1, label: 'Kentucky' },
+];
 
-function divergingColor(value: number, min: number, max: number, negative = '#2563eb', neutral = '#f8fafc', positive = '#dc2626') {
-  const bound = Math.max(Math.abs(min), Math.abs(max), 1);
-  if (value < 0) return interpolateColor(negative, neutral, (value + bound) / bound);
-  return interpolateColor(neutral, positive, value / bound);
-}
-
-function compactNumber(value: number) {
-  return new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(value);
-}
-
-function fitLine(rows: Array<{ x: number; y: number }>) {
-  if (rows.length < 2) return null;
-  const xMean = rows.reduce((sum, row) => sum + row.x, 0) / rows.length;
-  const yMean = rows.reduce((sum, row) => sum + row.y, 0) / rows.length;
-  const denom = rows.reduce((sum, row) => sum + (row.x - xMean) ** 2, 0);
-  if (!Number.isFinite(denom) || denom === 0) return null;
-  const slope = rows.reduce((sum, row) => sum + (row.x - xMean) * (row.y - yMean), 0) / denom;
-  const intercept = yMean - slope * xMean;
-  const [x1, x2] = extent(rows, row => row.x);
-  return { x1, y1: intercept + slope * x1, x2, y2: intercept + slope * x2 };
-}
-
-function MiniFrame({ children, label }: { children: React.ReactNode; label: string }) {
-  return (
-    <svg viewBox="0 0 300 180" className="h-auto w-full" role="img" aria-label={label}>
-      <rect x="0" y="0" width="300" height="180" rx="6" fill="#f8fafc" />
-      {children}
-    </svg>
-  );
-}
-
-function HistogramChart({ rows }: { rows: Array<{ x0: number; x1: number; count: number }> }) {
-  const W = 300; const H = 180; const m = { top: 24, right: 18, bottom: 28, left: 34 };
-  const x = scale([rows[0].x0, rows[rows.length - 1].x1], [m.left, W - m.right]);
-  const maxCount = Math.max(...rows.map(d => d.count));
-  const y = scale([0, maxCount], [H - m.bottom, m.top]);
-  return (
-    <MiniFrame label="Histogram">
-      {[0, maxCount / 2, maxCount].map(t => (
-        <g key={t}>
-          <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-slate-400 text-[8px]">{compactNumber(t)}</text>
-        </g>
-      ))}
-      {rows.map(d => (
-        <rect key={`${d.x0}-${d.x1}`} x={x(d.x0) + 1} y={y(d.count)} width={Math.max(1, x(d.x1) - x(d.x0) - 2)} height={H - m.bottom - y(d.count)} fill="#1f3a5f" opacity="0.82" />
-      ))}
-      <text x="150" y="166" textAnchor="middle" className="fill-slate-500 text-[10px]">store-month volume bins</text>
-    </MiniFrame>
-  );
-}
-
-function DensityChart({ rows }: { rows: Array<{ x: number; density: number }> }) {
-  const W = 300; const H = 180; const m = { top: 24, right: 20, bottom: 28, left: 34 };
-  const x = scale(extent(rows, d => d.x), [m.left, W - m.right]);
-  const y = scale([0, Math.max(...rows.map(d => d.density))], [H - m.bottom, m.top]);
-  const line = rows.map((d, i) => `${i === 0 ? 'M' : 'L'} ${x(d.x).toFixed(1)} ${y(d.density).toFixed(1)}`).join(' ');
-  const area = `${line} L ${x(rows[rows.length - 1].x).toFixed(1)} ${H - m.bottom} L ${x(rows[0].x).toFixed(1)} ${H - m.bottom} Z`;
-  return (
-    <MiniFrame label="Density curve">
-      <path d={area} fill="#7c3aed" opacity="0.18" />
-      <path d={line} fill="none" stroke="#7c3aed" strokeWidth="3" />
-      <line x1={m.left} x2={W - m.right} y1={H - m.bottom} y2={H - m.bottom} stroke="#cbd5e1" />
-      {[0, 50, 100].map(t => (
-        <text key={t} x={x(t)} y="166" textAnchor="middle" className="fill-slate-500 text-[9px]">{t}</text>
-      ))}
-    </MiniFrame>
-  );
-}
-
-function BoxPlotChart({ rows }: { rows: Array<{ group: string; min: number; q1: number; median: number; q3: number; max: number }> }) {
-  const W = 300; const H = 180; const m = { top: 24, right: 18, bottom: 26, left: 70 };
-  const x = scale([0, 100], [m.left, W - m.right]);
-  const rowGap = (H - m.top - m.bottom) / rows.length;
-  return (
-    <MiniFrame label="Box plots">
-      {rows.map((row, i) => {
-        const y = m.top + rowGap * i + rowGap / 2;
-        return (
-          <g key={row.group}>
-            <text x={m.left - 8} y={y + 3} textAnchor="end" className="fill-slate-600 text-[9px]">{row.group}</text>
-            <line x1={x(row.min)} x2={x(row.max)} y1={y} y2={y} stroke="#475569" strokeWidth="1.5" />
-            <rect x={x(row.q1)} y={y - 8} width={x(row.q3) - x(row.q1)} height="16" fill="#ede9fe" stroke="#7c3aed" />
-            <line x1={x(row.median)} x2={x(row.median)} y1={y - 10} y2={y + 10} stroke="#7c3aed" strokeWidth="2" />
-          </g>
-        );
-      })}
-    </MiniFrame>
-  );
-}
-
-function BarChart({ rows }: { rows: Array<{ group: string; value: number }> }) {
-  const W = 300; const H = 180; const m = { top: 24, right: 28, bottom: 22, left: 74 };
-  const x = scale([0, 100], [m.left, W - m.right]);
-  const rowGap = (H - m.top - m.bottom) / rows.length;
-  return (
-    <MiniFrame label="Sorted bar chart">
-      {[50, 100].map(t => (
-        <g key={t}>
-          <line x1={x(t)} x2={x(t)} y1={m.top - 4} y2={H - m.bottom + 2} stroke="#e2e8f0" />
-          <text x={x(t)} y="166" textAnchor="middle" className="fill-slate-400 text-[8px]">{t}%</text>
-        </g>
-      ))}
-      {rows.map((row, i) => {
-        const y = m.top + i * rowGap + 6;
-        return (
-          <g key={row.group}>
-            <text x={m.left - 8} y={y + 11} textAnchor="end" className="fill-slate-600 text-[10px]">{row.group}</text>
-            <rect x={m.left} y={y} width={x(row.value) - m.left} height="18" fill="#0f766e" opacity="0.82" />
-            <text x={x(row.value) + 4} y={y + 12} className="fill-slate-600 text-[9px]">{row.value}%</text>
-          </g>
-        );
-      })}
-    </MiniFrame>
-  );
-}
-
-function DotPlot({ rows }: { rows: Array<{ state: string; pct_change: number }> }) {
-  const W = 300; const H = 180; const m = { top: 18, right: 28, bottom: 26, left: 74 };
-  const x = scale(padded(extent(rows, d => d.pct_change), 0.02), [m.left, W - m.right]);
-  const rowGap = (H - m.top - m.bottom) / rows.length;
-  return (
-    <MiniFrame label="Dot plot">
-      {rows.map((row, i) => {
-        const y = m.top + i * rowGap + rowGap / 2;
-        return (
-          <g key={row.state}>
-            <text x={m.left - 8} y={y + 3} textAnchor="end" className="fill-slate-600 text-[8.5px]">{row.state}</text>
-            <line x1={m.left} x2={x(row.pct_change)} y1={y} y2={y} stroke="#cbd5e1" strokeWidth="1.5" />
-            <circle cx={x(row.pct_change)} cy={y} r="4" fill="#c87c2a" />
-            <text x={x(row.pct_change) + 7} y={y + 3} className="fill-slate-600 text-[8px]">{row.pct_change}%</text>
-          </g>
-        );
-      })}
-    </MiniFrame>
-  );
-}
-
-function MultiLineChart({ rows, valueKey, indexed = false }: { rows: Array<{ state: string; date: string; value?: number; index?: number }>; valueKey: 'value' | 'index'; indexed?: boolean }) {
-  const W = 300; const H = 180; const m = { top: 20, right: 58, bottom: 28, left: 42 };
-  const groups = groupBy(rows, d => d.state);
-  const xDomain = extent(rows, d => dateValue(d.date));
-  const yDomain = padded(extent(rows, d => Number(d[valueKey])), 0.05);
-  const x = scale(xDomain, [m.left, W - m.right]);
-  const y = scale(yDomain, [H - m.bottom, m.top]);
-  return (
-    <MiniFrame label={indexed ? 'Indexed time series' : 'Line chart'}>
-      {Object.entries(groups).map(([state, points], i) => {
-        const sorted = [...points].sort((a, b) => dateValue(a.date) - dateValue(b.date));
-        const path = sorted.map((d, j) => `${j === 0 ? 'M' : 'L'} ${x(dateValue(d.date)).toFixed(1)} ${y(Number(d[valueKey])).toFixed(1)}`).join(' ');
-        const last = sorted[sorted.length - 1];
-        return (
-          <g key={state}>
-            <path d={path} fill="none" stroke={SERIES_COLORS[i % SERIES_COLORS.length]} strokeWidth="2.2" opacity="0.9" />
-            <text x={W - m.right + 5} y={y(Number(last[valueKey])) + 3} className="fill-slate-600 text-[7.5px]">{state}</text>
-          </g>
-        );
-      })}
-      {indexed && <line x1={m.left} x2={W - m.right} y1={y(100)} y2={y(100)} stroke="#94a3b8" strokeDasharray="4 4" />}
-      <text x="150" y="166" textAnchor="middle" className="fill-slate-500 text-[10px]">{indexed ? 'Jan 2020 = 100' : 'time'}</text>
-    </MiniFrame>
-  );
-}
-
-function SmallMultiples({ rows }: { rows: Array<{ state: string; date: string; value: number }> }) {
-  const W = 300; const H = 180;
-  const groups = Object.entries(groupBy(rows, d => d.state)).slice(0, 4);
-  const yDomain = padded(extent(rows, d => d.value), 0.04);
-  const xDomain = extent(rows, d => dateValue(d.date));
-  return (
-    <MiniFrame label="Small multiples">
-      {groups.map(([state, points], i) => {
-        const col = i % 2; const row = Math.floor(i / 2);
-        const ox = 20 + col * 140; const oy = 18 + row * 78;
-        const x = scale(xDomain, [ox + 14, ox + 126]);
-        const y = scale(yDomain, [oy + 56, oy + 10]);
-        const sorted = [...points].sort((a, b) => dateValue(a.date) - dateValue(b.date));
-        const path = sorted.map((d, j) => `${j === 0 ? 'M' : 'L'} ${x(dateValue(d.date)).toFixed(1)} ${y(d.value).toFixed(1)}`).join(' ');
-        return (
-          <g key={state}>
-            <text x={ox + 14} y={oy + 9} className="fill-slate-600 text-[9px]">{state}</text>
-            <rect x={ox + 14} y={oy + 12} width="112" height="46" fill="#ffffff" stroke="#e2e8f0" />
-            <path d={path} fill="none" stroke={SERIES_COLORS[i]} strokeWidth="2" />
-          </g>
-        );
-      })}
-    </MiniFrame>
-  );
-}
-
-function ScatterChart({ rows, bubble = false }: { rows: Array<{ x: number; y: number; size?: number; group: string }>; bubble?: boolean }) {
-  const W = 300; const H = 180; const m = { top: 20, right: 18, bottom: 30, left: 38 };
-  const xDomain = padded(extent(rows, d => d.x), 0.05);
-  const yDomain = padded(extent(rows, d => d.y), 0.05);
-  const x = scale(xDomain, [m.left, W - m.right]);
-  const y = scale(yDomain, [H - m.bottom, m.top]);
-  const trend = fitLine(rows);
-  return (
-    <MiniFrame label={bubble ? 'Bubble plot' : 'Scatterplot'}>
-      {[xDomain[0], (xDomain[0] + xDomain[1]) / 2, xDomain[1]].map(t => (
-        <line key={`x-${t}`} x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke="#eef2f7" />
-      ))}
-      {[yDomain[0], (yDomain[0] + yDomain[1]) / 2, yDomain[1]].map(t => (
-        <line key={`y-${t}`} x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-      ))}
-      {rows.map((row, i) => (
-        <circle
-          key={i}
-          cx={x(row.x)}
-          cy={y(row.y)}
-          r={bubble ? Math.max(2, Math.min(12, row.size ?? 4)) : 2.1}
-          fill={REGION_COLORS[row.group] ?? '#1f3a5f'}
-          opacity={bubble ? 0.35 : 0.32}
-        />
-      ))}
-      {trend && !bubble && <line x1={x(trend.x1)} x2={x(trend.x2)} y1={y(trend.y1)} y2={y(trend.y2)} stroke="#0f172a" strokeWidth="2.2" opacity="0.75" />}
-      <text x="150" y="166" textAnchor="middle" className="fill-slate-500 text-[10px]">{bubble ? 'x-y plus size' : 'x-y relationship'}</text>
-    </MiniFrame>
-  );
-}
-
-function TileMap({ tiles }: { tiles: Array<{ abbr: string; row: number; col: number; value: number }> }) {
-  const values = extent(tiles, d => d.value);
-  const color = scale(values, [0, 1]);
-  return (
-    <MiniFrame label="Tile map">
-      {tiles.map(tile => {
-        const x = 18 + tile.col * 22;
-        const y = 14 + tile.row * 18;
-        return (
-          <g key={tile.abbr}>
-            <rect x={x} y={y} width="19" height="15" rx="2" fill={interpolateColor('#2563eb', '#dc2626', color(tile.value))} />
-            <text x={x + 9.5} y={y + 10.5} textAnchor="middle" className="fill-white text-[7px] font-semibold">{tile.abbr}</text>
-          </g>
-        );
-      })}
-    </MiniFrame>
-  );
-}
-
-function MatrixChart({ labels, cells }: { labels: string[]; cells: Array<{ row: string; col: string; value: number }> }) {
-  const W = 300; const H = 180; const cell = 13.2; const x0 = 96; const y0 = 22;
-  return (
-    <MiniFrame label="Correlation matrix">
-      {labels.map((label, i) => (
-        <React.Fragment key={label}>
-          <text x={x0 - 6} y={y0 + i * cell + 9} textAnchor="end" className="fill-slate-600 text-[7px]">{label}</text>
-          <text x={x0 + i * cell + 6} y={y0 - 5} textAnchor="middle" className="fill-slate-600 text-[7px]" transform={`rotate(-45 ${x0 + i * cell + 6} ${y0 - 5})`}>{label}</text>
-        </React.Fragment>
-      ))}
-      {cells.map(cellData => {
-        const row = labels.indexOf(cellData.row);
-        const col = labels.indexOf(cellData.col);
-        return (
-          <rect
-            key={`${cellData.row}-${cellData.col}`}
-            x={x0 + col * cell}
-            y={y0 + row * cell}
-            width={cell - 1}
-            height={cell - 1}
-            fill={divergingColor(cellData.value, -1, 1)}
-          />
-        );
-      })}
-      <text x={x0} y="166" className="fill-slate-500 text-[8px]">-1</text>
-      <text x={x0 + labels.length * cell - 2} y="166" textAnchor="end" className="fill-slate-500 text-[8px]">+1</text>
-    </MiniFrame>
-  );
-}
-
-function HeatmapChart({ states, years, cells }: { states: string[]; years: string[]; cells: Array<{ state: string; year: string; change: number }> }) {
-  const cellW = 21; const cellH = 13; const x0 = 84; const y0 = 24;
-  const domain = extent(cells, d => d.change);
-  return (
-    <MiniFrame label="Heatmap">
-      {states.map((state, i) => <text key={state} x={x0 - 6} y={y0 + i * cellH + 9} textAnchor="end" className="fill-slate-600 text-[7px]">{state}</text>)}
-      {years.map((year, i) => <text key={year} x={x0 + i * cellW + 10} y={y0 - 6} textAnchor="middle" className="fill-slate-600 text-[7px]">{year.slice(2)}</text>)}
-      {cells.map(d => {
-        const row = states.indexOf(d.state);
-        const col = years.indexOf(d.year);
-        return <rect key={`${d.state}-${d.year}`} x={x0 + col * cellW} y={y0 + row * cellH} width={cellW - 1} height={cellH - 1} fill={divergingColor(d.change, domain[0], domain[1], '#2563eb', '#f8fafc', '#f97316')} />;
-      })}
-      <text x={x0} y="166" className="fill-slate-500 text-[8px]">cool</text>
-      <text x={x0 + years.length * cellW} y="166" textAnchor="end" className="fill-slate-500 text-[8px]">hot</text>
-    </MiniFrame>
-  );
-}
-
-function IntervalChart({ rows }: { rows: Array<{ group: string; mean: number; ci_low: number; ci_high: number }> }) {
-  const W = 300; const H = 180; const m = { top: 20, right: 18, bottom: 34, left: 38 };
-  const yDomain = padded([Math.min(...rows.map(d => d.ci_low)), Math.max(...rows.map(d => d.ci_high))], 0.05);
-  const y = scale(yDomain, [H - m.bottom, m.top]);
-  const x = scale([0, rows.length - 1], [m.left, W - m.right]);
-  const meanPath = rows.map((row, i) => `${i === 0 ? 'M' : 'L'} ${x(i).toFixed(1)} ${y(row.mean).toFixed(1)}`).join(' ');
-  return (
-    <MiniFrame label="Interval plot">
-      {[50, 60, 70, 80].filter(t => t >= yDomain[0] && t <= yDomain[1]).map(t => (
-        <g key={t}>
-          <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-slate-400 text-[8px]">{t}</text>
-        </g>
-      ))}
-      <path d={meanPath} fill="none" stroke="#94a3b8" strokeWidth="1.5" />
-      {rows.map((row, i) => (
-        <g key={row.group}>
-          <line x1={x(i)} x2={x(i)} y1={y(row.ci_low)} y2={y(row.ci_high)} stroke="#1f3a5f" strokeWidth="2" />
-          <circle cx={x(i)} cy={y(row.mean)} r="4" fill="#1f3a5f" />
-          <text x={x(i)} y="162" textAnchor="middle" className="fill-slate-500 text-[8px]">{row.group}</text>
-        </g>
-      ))}
-    </MiniFrame>
-  );
-}
-
-function CoefficientChart({ rows }: { rows: Array<{ label: string; estimate: number; ci_low: number; ci_high: number }> }) {
-  const W = 300; const H = 180; const m = { top: 18, right: 20, bottom: 24, left: 98 };
-  const x = scale(padded([Math.min(...rows.map(d => d.ci_low), 0), Math.max(...rows.map(d => d.ci_high), 0)], 0.06), [m.left, W - m.right]);
-  const rowGap = (H - m.top - m.bottom) / rows.length;
-  return (
-    <MiniFrame label="Coefficient plot">
-      <line x1={x(0)} x2={x(0)} y1={m.top} y2={H - m.bottom} stroke="#94a3b8" strokeDasharray="4 4" />
-      {rows.map((row, i) => {
-        const y = m.top + i * rowGap + rowGap / 2;
-        return (
-          <g key={row.label}>
-            <text x={m.left - 7} y={y + 3} textAnchor="end" className="fill-slate-600 text-[7.5px]">{row.label}</text>
-            <line x1={x(row.ci_low)} x2={x(row.ci_high)} y1={y} y2={y} stroke={row.estimate >= 0 ? '#dc2626' : '#2563eb'} strokeWidth="2" />
-            <circle cx={x(row.estimate)} cy={y} r="3.5" fill={row.estimate >= 0 ? '#dc2626' : '#2563eb'} />
-          </g>
-        );
-      })}
-    </MiniFrame>
-  );
-}
-
-function ParetoChart({ rows }: { rows: Array<{ category: string; value: number }> }) {
-  const W = 300; const H = 180; const m = { top: 20, right: 28, bottom: 36, left: 34 };
-  const sorted = [...rows].sort((a, b) => b.value - a.value);
-  const total = sorted.reduce((sum, row) => sum + row.value, 0);
-  let running = 0;
-  const x = scale([0, sorted.length], [m.left, W - m.right]);
-  const yBar = scale([0, Math.max(...sorted.map(d => d.value))], [H - m.bottom, m.top]);
-  const yCum = scale([0, 100], [H - m.bottom, m.top]);
-  const points = sorted.map((row, i) => {
-    running += row.value;
-    return { x: x(i + 0.5), y: yCum((running / total) * 100) };
-  });
-  return (
-    <MiniFrame label="Pareto chart">
-      <line x1={m.left} x2={W - m.right} y1={yCum(80)} y2={yCum(80)} stroke="#94a3b8" strokeDasharray="4 4" />
-      <text x={W - m.right} y={yCum(80) - 4} textAnchor="end" className="fill-slate-500 text-[8px]">80%</text>
-      {sorted.map((row, i) => (
-        <rect key={row.category} x={x(i) + 2} y={yBar(row.value)} width={Math.max(2, x(i + 1) - x(i) - 4)} height={H - m.bottom - yBar(row.value)} fill="#0f766e" opacity="0.75" />
-      ))}
-      <path d={points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ')} fill="none" stroke="#c87c2a" strokeWidth="3" />
-      {points.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3" fill="#c87c2a" />)}
-    </MiniFrame>
-  );
-}
-
-function WaterfallChart({ rows }: { rows: Array<{ label: string; value: number; kind: string }> }) {
-  const W = 300; const H = 180; const m = { top: 22, right: 18, bottom: 34, left: 34 };
-  let cursor = 0;
-  const spans = rows.map(row => {
-    if (row.kind === 'start') {
-      cursor = row.value;
-      return { ...row, y0: 0, y1: row.value };
+// Strip / jitter: store-month volume sampled across four regions (distribution at scale).
+type StripRow = { region: string; volume: number };
+const STRIP_DATA: StripRow[] = (() => {
+  // Deterministic pseudo-random sample so the chart is stable across renders.
+  const rows: StripRow[] = [];
+  const regions: Array<[string, number, number]> = [
+    ['Northeast', 720, 1.0],
+    ['Midwest', 980, 1.35],
+    ['South', 880, 1.5],
+    ['West', 1120, 1.7],
+  ];
+  let seed = 7;
+  const rnd = () => {
+    seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+    return seed / 0x7fffffff;
+  };
+  for (const [region, base, spread] of regions) {
+    for (let i = 0; i < 70; i++) {
+      // log-normal-ish skew to echo the real store-month tail
+      const u = rnd();
+      const volume = Math.round(base * Math.exp(spread * (u - 0.45)));
+      rows.push({ region, volume });
     }
-    if (row.kind === 'end') return { ...row, y0: 0, y1: cursor };
-    const y0 = cursor;
-    cursor += row.value;
-    return { ...row, y0, y1: cursor };
-  });
-  const y = scale(padded([Math.min(...spans.map(d => Math.min(d.y0, d.y1))), Math.max(...spans.map(d => Math.max(d.y0, d.y1)))], 0.05), [H - m.bottom, m.top]);
-  const x = scale([0, rows.length], [m.left, W - m.right]);
-  return (
-    <MiniFrame label="Waterfall chart">
-      {spans.map((row, i) => {
-        const top = y(Math.max(row.y0, row.y1));
-        const bottom = y(Math.min(row.y0, row.y1));
-        const color = row.kind === 'start' || row.kind === 'end' ? '#1f3a5f' : row.value >= 0 ? '#0f766e' : '#dc2626';
-        return (
-          <g key={row.label}>
-            <rect x={x(i) + 4} y={top} width={Math.max(4, x(i + 1) - x(i) - 8)} height={Math.max(2, bottom - top)} fill={color} opacity="0.82" />
-            {(row.kind === 'start' || row.kind === 'end') && <text x={x(i + 0.5)} y={top - 5} textAnchor="middle" className="fill-slate-600 text-[8px]">{Math.round(row.y1)}</text>}
-          </g>
-        );
-      })}
-      <line x1={m.left} x2={W - m.right} y1={y(0)} y2={y(0)} stroke="#94a3b8" />
-    </MiniFrame>
-  );
-}
-
-function ChartVisual({ id, charts }: { id: string; charts: AtlasData['charts'] }) {
-  switch (id) {
-    case 'histogram': return <HistogramChart rows={charts.histogram.bins} />;
-    case 'density': return <DensityChart rows={charts.density.points} />;
-    case 'boxplot': return <BoxPlotChart rows={charts.boxplot.rows} />;
-    case 'bar': return <BarChart rows={charts.bar.rows} />;
-    case 'dot': return <DotPlot rows={charts.dot.rows} />;
-    case 'line': return <MultiLineChart rows={charts.line.rows} valueKey="value" />;
-    case 'indexedLine': return <MultiLineChart rows={charts.indexedLine.rows} valueKey="index" indexed />;
-    case 'smallMultiples': return <SmallMultiples rows={charts.smallMultiples.rows} />;
-    case 'scatter': return <ScatterChart rows={charts.scatter.points} />;
-    case 'bubble': return <ScatterChart rows={charts.bubble.points} bubble />;
-    case 'tileMap': return <TileMap tiles={charts.tileMap.tiles} />;
-    case 'correlation': return <MatrixChart labels={charts.correlation.labels} cells={charts.correlation.cells} />;
-    case 'heatmap': return <HeatmapChart states={charts.heatmap.states} years={charts.heatmap.years} cells={charts.heatmap.cells} />;
-    case 'interval': return <IntervalChart rows={charts.interval.rows} />;
-    case 'coefficient': return <CoefficientChart rows={charts.coefficient.rows} />;
-    case 'pareto': return <ParetoChart rows={charts.pareto.rows} />;
-    case 'waterfall': return <WaterfallChart rows={charts.waterfall.rows} />;
-    default: return null;
   }
-}
+  return rows;
+})();
 
-function AtlasCardView({ card, charts }: { card: AtlasCard; charts: AtlasData['charts'] }) {
+// Funnel: pricing-decision pipeline (teaching data).
+type FunnelRow = { stage: string; value: number };
+const FUNNEL_DATA: FunnelRow[] = [
+  { stage: 'Stores reviewed', value: 2042 },
+  { stage: 'Price-eligible', value: 1480 },
+  { stage: 'Test launched', value: 760 },
+  { stage: 'Lift confirmed', value: 410 },
+  { stage: 'Rolled out', value: 240 },
+];
+
+// Pie (bad-by-design Trap) — same revenue mix as the treemap.
+const PIE_DATA = TREE_DATA;
+
+/* ------------------------------------------------------------------ */
+/* Card framing                                                        */
+/* ------------------------------------------------------------------ */
+
+function CardShell({
+  family,
+  title,
+  source,
+  finding,
+  useWhen,
+  managerQuestion,
+  avoid,
+  caseExample,
+  badge,
+  children,
+}: {
+  family: string;
+  title: string;
+  source: string;
+  finding: string;
+  useWhen: string;
+  managerQuestion: string;
+  avoid: string;
+  caseExample: string;
+  badge?: string;
+  children: React.ReactNode;
+}) {
+  const accent = SOURCE_COLORS[source] ?? CHART.slate;
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
       <div className="border-b border-slate-100 bg-slate-50/80 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{card.family}</p>
-            <h3 className="mt-1 text-base font-semibold text-slate-950">{card.title}</h3>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{family}</p>
+            <h3 className="mt-1 text-base font-semibold text-slate-950">{title}</h3>
           </div>
-          <span className="rounded-full px-2 py-1 text-[10px] font-semibold text-white" style={{ background: SOURCE_COLORS[card.dataSource] ?? '#475569' }}>
-            {card.dataSource}
+          <span className="rounded-full px-2 py-1 text-[10px] font-semibold text-white" style={{ background: accent }}>
+            {badge ?? source}
           </span>
         </div>
       </div>
-      <div className="p-3">
-        <ChartVisual id={card.id} charts={charts} />
-      </div>
-      <div className="mx-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700">
-        <span className="font-semibold text-slate-950">Finding in this data: </span>{card.finding}
+      <div className="px-3 pt-3">{children}</div>
+      <div className="mx-4 mt-3 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700">
+        <span className="font-semibold text-slate-950">Finding in this data: </span>
+        {finding}
       </div>
       <div className="mt-auto space-y-2 border-t border-slate-100 p-4 text-xs leading-relaxed">
-        <p><span className="font-semibold text-slate-900">Use:</span> <span className="text-slate-600">{card.useWhen}</span></p>
-        <p><span className="font-semibold text-slate-900">Question:</span> <span className="text-slate-600">{card.managerQuestion}</span></p>
-        <p><span className="font-semibold text-slate-900">Trap:</span> <span className="text-slate-600">{card.avoid}</span></p>
-        <p className="border-l-2 pl-2 text-slate-700" style={{ borderColor: SOURCE_COLORS[card.dataSource] ?? '#cbd5e1' }}>{card.caseExample}</p>
+        <p>
+          <span className="font-semibold text-slate-900">Use:</span> <span className="text-slate-600">{useWhen}</span>
+        </p>
+        <p>
+          <span className="font-semibold text-slate-900">Question:</span>{' '}
+          <span className="text-slate-600">{managerQuestion}</span>
+        </p>
+        <p>
+          <span className="font-semibold text-slate-900">Trap:</span> <span className="text-slate-600">{avoid}</span>
+        </p>
+        <p className="border-l-2 pl-2 text-slate-700" style={{ borderColor: accent }}>
+          {caseExample}
+        </p>
       </div>
     </article>
   );
 }
 
+/** Small inline toggle pill group used inside cards. */
+function Toggle<T extends string>({
+  value,
+  options,
+  onChange,
+}: {
+  value: T;
+  options: Array<{ value: T; label: string }>;
+  onChange: (v: T) => void;
+}) {
+  return (
+    <div className="mb-2 inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5 text-[11px] font-medium">
+      {options.map(opt => (
+        <button
+          key={opt.value}
+          type="button"
+          onClick={() => onChange(opt.value)}
+          className={`rounded px-2.5 py-1 transition-colors ${
+            value === opt.value ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+          }`}
+          aria-pressed={value === opt.value}
+        >
+          {opt.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Chart builders — each returns a PlotFigure                          */
+/* ------------------------------------------------------------------ */
+
+/* === Distribution === */
+
+function HistogramFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const bins: Array<{ x0: number; x1: number; count: number }> = charts.histogram.bins;
+  return (
+    <PlotFigure
+      ariaLabel="Histogram of store-month volume"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 52,
+          marginBottom: 36,
+          x: { label: 'store-month units →', tickFormat: '~s' },
+          y: { grid: true, label: 'store-months' },
+          marks: [
+            Plot.rectY(bins, {
+              x1: 'x0',
+              x2: 'x1',
+              y: 'count',
+              fill: CHART.skyDark,
+              fillOpacity: 0.85,
+              tip: true,
+              title: (d: any) => `${Math.round(d.x0)}–${Math.round(d.x1)} units\n${d.count.toLocaleString()} store-months`,
+            }),
+            Plot.ruleY([0]),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function DistributionToggleFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const [mode, setMode] = React.useState<'count' | 'density'>('count');
+  const bins: Array<{ x0: number; x1: number; count: number }> = charts.histogram.bins;
+  const density: Array<{ x: number; density: number }> = charts.density.points;
+  return (
+    <div>
+      <Toggle
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: 'count', label: 'Counts' },
+          { value: 'density', label: 'Density' },
+        ]}
+      />
+      {mode === 'count' ? (
+        <PlotFigure
+          ariaLabel="Histogram counts of store-month volume"
+          options={width =>
+            withBookTheme({
+              width,
+              height: CHART_H - 28,
+              marginLeft: 52,
+              marginBottom: 32,
+              x: { label: 'units →', tickFormat: '~s' },
+              y: { grid: true, label: 'store-months' },
+              marks: [
+                Plot.rectY(bins, {
+                  x1: 'x0',
+                  x2: 'x1',
+                  y: 'count',
+                  fill: CHART.skyDark,
+                  fillOpacity: 0.85,
+                  tip: true,
+                  title: (d: any) => `${Math.round(d.x0)}–${Math.round(d.x1)}\n${d.count.toLocaleString()} store-months`,
+                }),
+                Plot.ruleY([0]),
+              ],
+            })
+          }
+        />
+      ) : (
+        <PlotFigure
+          ariaLabel="Smoothed density of the distribution"
+          options={width =>
+            withBookTheme({
+              width,
+              height: CHART_H - 28,
+              marginLeft: 52,
+              marginBottom: 32,
+              x: { label: 'value →' },
+              y: { grid: true, label: 'density', tickFormat: '.3f' },
+              marks: [
+                Plot.areaY(density, { x: 'x', y: 'density', fill: CHART.violet, fillOpacity: 0.16 }),
+                Plot.lineY(density, {
+                  x: 'x',
+                  y: 'density',
+                  stroke: CHART.violet,
+                  strokeWidth: 2.4,
+                  tip: true,
+                  title: (d: any) => `value ${d.x.toFixed(1)}\ndensity ${d.density.toFixed(4)}`,
+                }),
+                Plot.ruleY([0]),
+              ],
+            })
+          }
+        />
+      )}
+    </div>
+  );
+}
+
+function BoxplotFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ group: string; min: number; q1: number; median: number; q3: number; max: number; n: number }> =
+    charts.boxplot.rows;
+  return (
+    <PlotFigure
+      ariaLabel="Box plots of county vote share by region"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 70,
+          marginBottom: 32,
+          x: { grid: true, label: 'county Trump vote share (%) →', domain: [20, 95] },
+          y: { label: null },
+          color: { domain: rows.map(r => r.group), range: rows.map(r => REGION_COLORS[r.group] ?? CHART.slate) },
+          marks: [
+            Plot.ruleY(rows, { y: 'group', x1: 'min', x2: 'max', stroke: CHART.faint }),
+            Plot.barX(rows, {
+              y: 'group',
+              x1: 'q1',
+              x2: 'q3',
+              fill: 'group',
+              fillOpacity: 0.25,
+              stroke: 'group',
+              tip: true,
+              title: (d: any) =>
+                `${d.group} (n=${d.n})\nmin ${d.min}  Q1 ${d.q1}\nmedian ${d.median}\nQ3 ${d.q3}  max ${d.max}`,
+            }),
+            Plot.tickX(rows, { y: 'group', x: 'median', stroke: 'group', strokeWidth: 2.5 }),
+            Plot.dot(rows, { y: 'group', x: 'median', fill: 'group', r: 3 }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function StripFigure() {
+  const regions = ['Northeast', 'Midwest', 'South', 'West'];
+  return (
+    <PlotFigure
+      ariaLabel="Strip plot of store-month volume by region"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 78,
+          marginBottom: 34,
+          x: { grid: true, label: 'store-month units →' },
+          fy: { label: null, domain: regions },
+          marks: [
+            Plot.dot(
+              STRIP_DATA,
+              Plot.dodgeY('middle', {
+                x: 'volume',
+                fy: 'region',
+                fill: CHART.skyDark,
+                fillOpacity: 0.5,
+                r: 3,
+                tip: true,
+                title: (d: any) => `${d.region}\n${d.volume.toLocaleString()} units`,
+              })
+            ),
+          ],
+        })
+      }
+    />
+  );
+}
+
+/* === Comparison === */
+
+function BarFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ group: string; value: number; n: number }> = charts.bar.rows;
+  return (
+    <PlotFigure
+      ariaLabel="Sorted bar chart of average county vote share by region"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 72,
+          marginBottom: 32,
+          x: { grid: true, label: 'avg county Trump vote (%) →', domain: [0, 80] },
+          y: { label: null, domain: [...rows].sort((a, b) => b.value - a.value).map(r => r.group) },
+          marks: [
+            Plot.barX(rows, {
+              x: 'value',
+              y: 'group',
+              fill: CHART.teal,
+              fillOpacity: 0.85,
+              tip: true,
+              title: (d: any) => `${d.group} (n=${d.n})\n${d.value}% avg`,
+            }),
+            Plot.text(rows, { x: 'value', y: 'group', text: (d: any) => `${d.value}%`, dx: 6, textAnchor: 'start', fill: CHART.body, fontSize: 11 }),
+            Plot.ruleX([0]),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function LollipopFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ state: string; pct_change: number }> = charts.dot.rows;
+  const sorted = [...rows].sort((a, b) => b.pct_change - a.pct_change);
+  return (
+    <PlotFigure
+      ariaLabel="Lollipop chart of state home-value growth since 2020"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 74,
+          marginBottom: 32,
+          x: { grid: true, label: 'home-value change since Jan 2020 (%) →', domain: [0, 65] },
+          y: { label: null, domain: sorted.map(r => r.state) },
+          marks: [
+            Plot.ruleY(sorted, { y: 'state', x1: 0, x2: 'pct_change', stroke: CHART.border, strokeWidth: 2 }),
+            Plot.dot(sorted, {
+              y: 'state',
+              x: 'pct_change',
+              fill: CHART.orange,
+              r: 5,
+              tip: true,
+              title: (d: any) => `${d.state}\n+${d.pct_change}% since Jan 2020`,
+            }),
+            Plot.text(sorted, { y: 'state', x: 'pct_change', text: (d: any) => `${d.pct_change}%`, dx: 10, textAnchor: 'start', fill: CHART.body, fontSize: 10 }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function StackedBarFigure({ pct }: { pct: boolean }) {
+  return (
+    <PlotFigure
+      ariaLabel={pct ? '100% stacked bar of category mix by quarter' : 'Stacked bar of units by quarter'}
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 48,
+          marginBottom: 32,
+          x: { label: null },
+          y: { grid: true, label: pct ? 'share of quarter' : 'units', percent: pct, tickFormat: pct ? undefined : '~s' },
+          color: { domain: SEASON_CATS, range: [CHART.skyDark, CHART.orange, CHART.teal], legend: true },
+          marks: [
+            Plot.barY(SEASON_DATA, {
+              x: 'quarter',
+              y: 'units',
+              fill: 'category',
+              offset: pct ? 'normalize' : undefined,
+              order: SEASON_CATS,
+              tip: true,
+              title: (d: any) => `${d.quarter} · ${d.category}\n${d.units} units`,
+            }),
+            Plot.ruleY([0]),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function StackedBarToggleFigure() {
+  const [mode, setMode] = React.useState<'absolute' | 'share'>('absolute');
+  return (
+    <div>
+      <Toggle
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: 'absolute', label: 'Stacked (units)' },
+          { value: 'share', label: '100% (share)' },
+        ]}
+      />
+      <StackedBarFigure pct={mode === 'share'} />
+    </div>
+  );
+}
+
+function GroupedBarFigure() {
+  return (
+    <PlotFigure
+      ariaLabel="Grouped bar of category units by quarter"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 48,
+          marginBottom: 32,
+          x: { label: null, axis: null },
+          fx: { label: null },
+          y: { grid: true, label: 'units', tickFormat: '~s' },
+          color: { domain: SEASON_CATS, range: [CHART.skyDark, CHART.orange, CHART.teal], legend: true },
+          marks: [
+            Plot.barY(SEASON_DATA, {
+              fx: 'quarter',
+              x: 'category',
+              y: 'units',
+              fill: 'category',
+              tip: true,
+              title: (d: any) => `${d.quarter} · ${d.category}\n${d.units} units`,
+            }),
+            Plot.ruleY([0]),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function SlopegraphFigure() {
+  const colorFor = (r: string) => REGION_COLORS[r] ?? CHART.slate;
+  return (
+    <PlotFigure
+      ariaLabel="Slopegraph of regional vote share across two elections"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 36,
+          marginRight: 64,
+          marginBottom: 32,
+          x: { label: null, domain: ['2016', '2020'], padding: 0.5, axis: 'top' as any },
+          y: { label: 'avg county Trump vote (%)', grid: true },
+          color: { domain: Object.keys(REGION_COLORS), range: Object.values(REGION_COLORS), legend: false },
+          marks: [
+            Plot.line(SLOPE_DATA, {
+              x: 'year',
+              y: 'value',
+              z: 'region',
+              stroke: 'region',
+              strokeWidth: 2.2,
+              tip: true,
+              title: (d: any) => `${d.region} ${d.year}\n${d.value}%`,
+            }),
+            Plot.dot(SLOPE_DATA, { x: 'year', y: 'value', fill: 'region', r: 4 }),
+            Plot.text(
+              SLOPE_DATA.filter(d => d.year === '2020'),
+              { x: 'year', y: 'value', text: (d: any) => `${d.region}`, dx: 8, textAnchor: 'start', fill: (d: any) => colorFor(d.region), fontSize: 10 }
+            ),
+          ],
+        })
+      }
+    />
+  );
+}
+
+/* === Time === */
+
+function LineToggleFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const [mode, setMode] = React.useState<'raw' | 'index'>('raw');
+  const raw: Array<{ state: string; date: string; value: number }> = charts.line.rows;
+  const indexed: Array<{ state: string; date: string; index: number }> = charts.indexedLine.rows;
+  const rawData = React.useMemo(() => raw.map(d => ({ ...d, dt: toDate(d.date) })), [raw]);
+  const idxData = React.useMemo(() => indexed.map(d => ({ ...d, dt: toDate(d.date) })), [indexed]);
+  const states = mode === 'raw' ? ['California', 'Texas', 'Florida', 'New York'] : ['California', 'Texas', 'Florida', 'New York', 'Arizona'];
+  return (
+    <div>
+      <Toggle
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: 'raw', label: 'Dollars' },
+          { value: 'index', label: 'Index = 100' },
+        ]}
+      />
+      {mode === 'raw' ? (
+        <PlotFigure
+          ariaLabel="Line chart of state home values in dollars"
+          options={width =>
+            withBookTheme({
+              width,
+              height: CHART_H - 28,
+              marginLeft: 54,
+              marginBottom: 30,
+              x: { label: null },
+              y: { grid: true, label: 'home value', tickFormat: '~s' },
+              color: { domain: states, range: CATEGORICAL, legend: true },
+              marks: [
+                Plot.lineY(rawData, {
+                  x: 'dt',
+                  y: 'value',
+                  z: 'state',
+                  stroke: 'state',
+                  strokeWidth: 1.8,
+                  tip: true,
+                  title: (d: any) => `${d.state} · ${d.date}\n${usdFull(d.value)}`,
+                }),
+              ],
+            })
+          }
+        />
+      ) : (
+        <PlotFigure
+          ariaLabel="Indexed line chart, January 2020 equals 100"
+          options={width =>
+            withBookTheme({
+              width,
+              height: CHART_H - 28,
+              marginLeft: 44,
+              marginBottom: 30,
+              x: { label: null },
+              y: { grid: true, label: 'index (Jan 2020 = 100)' },
+              color: { domain: states, range: CATEGORICAL, legend: true },
+              marks: [
+                Plot.ruleY([100], { stroke: CHART.faint, strokeDasharray: '4 4' }),
+                Plot.lineY(idxData, {
+                  x: 'dt',
+                  y: 'index',
+                  z: 'state',
+                  stroke: 'state',
+                  strokeWidth: 1.8,
+                  tip: true,
+                  title: (d: any) => `${d.state} · ${d.date}\nindex ${d.index}`,
+                }),
+              ],
+            })
+          }
+        />
+      )}
+    </div>
+  );
+}
+
+function AreaToggleFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const [mode, setMode] = React.useState<'single' | 'stacked'>('single');
+  const raw: Array<{ state: string; date: string; value: number }> = charts.line.rows;
+  const data = React.useMemo(() => raw.map(d => ({ ...d, dt: toDate(d.date) })), [raw]);
+  const ca = React.useMemo(() => data.filter(d => d.state === 'California'), [data]);
+  return (
+    <div>
+      <Toggle
+        value={mode}
+        onChange={setMode}
+        options={[
+          { value: 'single', label: 'Area (one)' },
+          { value: 'stacked', label: 'Stacked area' },
+        ]}
+      />
+      {mode === 'single' ? (
+        <PlotFigure
+          ariaLabel="Area chart of California home value over time"
+          options={width =>
+            withBookTheme({
+              width,
+              height: CHART_H - 28,
+              marginLeft: 54,
+              marginBottom: 30,
+              x: { label: null },
+              y: { grid: true, label: 'home value', tickFormat: '~s' },
+              marks: [
+                Plot.areaY(ca, { x: 'dt', y: 'value', fill: CHART.skyDark, fillOpacity: 0.18 }),
+                Plot.lineY(ca, {
+                  x: 'dt',
+                  y: 'value',
+                  stroke: CHART.skyDark,
+                  strokeWidth: 2,
+                  tip: true,
+                  title: (d: any) => `California · ${d.date}\n${usdFull(d.value)}`,
+                }),
+                Plot.ruleY([0]),
+              ],
+            })
+          }
+        />
+      ) : (
+        <PlotFigure
+          ariaLabel="Stacked area chart of state home values"
+          options={width =>
+            withBookTheme({
+              width,
+              height: CHART_H - 28,
+              marginLeft: 54,
+              marginBottom: 30,
+              x: { label: null },
+              y: { grid: true, label: 'stacked home value', tickFormat: '~s' },
+              color: { domain: ['California', 'Texas', 'Florida', 'New York'], range: CATEGORICAL, legend: true },
+              marks: [
+                Plot.areaY(data, {
+                  x: 'dt',
+                  y: 'value',
+                  z: 'state',
+                  fill: 'state',
+                  fillOpacity: 0.85,
+                  order: ['New York', 'Florida', 'Texas', 'California'],
+                  tip: true,
+                  title: (d: any) => `${d.state} · ${d.date}\n${usdFull(d.value)}`,
+                }),
+                Plot.ruleY([0]),
+              ],
+            })
+          }
+        />
+      )}
+    </div>
+  );
+}
+
+function SmallMultiplesFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const raw: Array<{ state: string; date: string; value: number }> = charts.smallMultiples.rows;
+  const data = React.useMemo(() => raw.map(d => ({ ...d, dt: toDate(d.date) })), [raw]);
+  return (
+    <PlotFigure
+      ariaLabel="Small multiples of state home-value paths"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H + 20,
+          marginLeft: 50,
+          marginBottom: 28,
+          x: { label: null, ticks: 3 },
+          y: { grid: true, label: 'home value', tickFormat: '~s' },
+          fx: { label: null },
+          fy: { label: null },
+          marks: [
+            Plot.lineY(data, {
+              x: 'dt',
+              y: 'value',
+              fx: 'state',
+              stroke: CHART.skyDark,
+              strokeWidth: 1.6,
+              tip: true,
+              title: (d: any) => `${d.state} · ${d.date}\n${usdFull(d.value)}`,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+/* === Relationship === */
+
+function ScatterFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const points: Array<{ x: number; y: number; group: string }> = charts.scatter.points;
+  return (
+    <PlotFigure
+      ariaLabel="Scatterplot of college share versus county vote share"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 48,
+          marginBottom: 36,
+          x: { grid: true, label: 'county college share (%) →' },
+          y: { grid: true, label: 'Trump vote (%)' },
+          color: { domain: Object.keys(REGION_COLORS), range: Object.values(REGION_COLORS), legend: true },
+          marks: [
+            Plot.dot(points, {
+              x: 'x',
+              y: 'y',
+              fill: 'group',
+              fillOpacity: 0.35,
+              r: 2.4,
+              tip: true,
+              title: (d: any) => `${d.group}\ncollege ${d.x}% · vote ${d.y}%`,
+            }),
+            Plot.linearRegressionY(points, { x: 'x', y: 'y', stroke: CHART.ink, strokeWidth: 2 }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function BubbleFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const points: Array<{ x: number; y: number; size: number; group: string }> = charts.bubble.points;
+  return (
+    <PlotFigure
+      ariaLabel="Bubble plot of density, vote, and vote count"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 48,
+          marginBottom: 36,
+          x: { grid: true, label: 'log population density →' },
+          y: { grid: true, label: 'Trump vote (%)' },
+          r: { range: [2, 16] },
+          color: { domain: Object.keys(REGION_COLORS), range: Object.values(REGION_COLORS), legend: true },
+          marks: [
+            Plot.dot(points, {
+              x: 'x',
+              y: 'y',
+              r: 'size',
+              fill: 'group',
+              fillOpacity: 0.35,
+              stroke: 'group',
+              strokeOpacity: 0.5,
+              tip: true,
+              title: (d: any) => `${d.group}\ndensity ${d.x} · vote ${d.y}%\nsize ${Math.round(d.size)}`,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+/* === Geography === */
+
+function ChoroplethFigure() {
+  return (
+    <div className="pb-1">
+      <ChoroplethMap
+        data={STATE_GROWTH}
+        level="states"
+        scheme="blues"
+        valueLabel="Home-value growth since 2020"
+        valueFormat={(v: number) => `${v.toFixed(1)}%`}
+        ariaLabel="US choropleth of state home-value growth since 2020"
+      />
+    </div>
+  );
+}
+
+/* === Multivariate === */
+
+function CorrelationFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const labels: string[] = charts.correlation.labels;
+  const cells: Array<{ row: string; col: string; value: number }> = charts.correlation.cells;
+  return (
+    <PlotFigure
+      ariaLabel="Correlation matrix heatmap of county demographics"
+      options={width =>
+        withBookTheme({
+          width,
+          height: width,
+          marginLeft: 92,
+          marginTop: 88,
+          marginBottom: 8,
+          x: { domain: labels, label: null, tickRotate: -45, axis: 'top' as any },
+          y: { domain: labels, label: null },
+          color: {
+            type: 'linear',
+            scheme: 'rdbu',
+            domain: [1, -1],
+            legend: true,
+            label: 'correlation',
+          } as PlotOptions['color'],
+          marks: [
+            Plot.cell(cells, {
+              x: 'col',
+              y: 'row',
+              fill: 'value',
+              tip: true,
+              title: (d: any) => `${d.row} × ${d.col}\nr = ${d.value.toFixed(2)}`,
+            }),
+            Plot.text(cells, {
+              x: 'col',
+              y: 'row',
+              text: (d: any) => d.value.toFixed(1),
+              fill: (d: any) => (Math.abs(d.value) > 0.6 ? '#fff' : CHART.body),
+              fontSize: 9,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function HeatmapFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const states: string[] = charts.heatmap.states;
+  const years: string[] = charts.heatmap.years;
+  const cells: Array<{ state: string; year: string; change: number }> = charts.heatmap.cells;
+  return (
+    <PlotFigure
+      ariaLabel="Heatmap of annual home-value change by state and year"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H + 10,
+          marginLeft: 78,
+          marginTop: 28,
+          marginBottom: 30,
+          x: { domain: years, label: null, axis: 'top' as any },
+          y: { domain: states, label: null },
+          color: {
+            type: 'linear',
+            scheme: 'rdylbu',
+            domain: [-30, 30],
+            reverse: true,
+            legend: true,
+            label: 'annual change (%)',
+          } as PlotOptions['color'],
+          marks: [
+            Plot.cell(cells, {
+              x: 'year',
+              y: 'state',
+              fill: 'change',
+              inset: 0.5,
+              tip: true,
+              title: (d: any) => `${d.state} ${d.year}\n${d.change > 0 ? '+' : ''}${d.change}%`,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+/* === Uncertainty === */
+
+function IntervalFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ group: string; mean: number; ci_low: number; ci_high: number; n: number }> = charts.interval.rows;
+  return (
+    <PlotFigure
+      ariaLabel="Interval plot of mean vote share by density decile"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 44,
+          marginBottom: 34,
+          x: { label: 'population-density decile →', domain: rows.map(r => r.group) },
+          y: { grid: true, label: 'mean Trump vote (%)' },
+          marks: [
+            Plot.ruleX(rows, { x: 'group', y1: 'ci_low', y2: 'ci_high', stroke: CHART.skyDark, strokeWidth: 2 }),
+            Plot.line(rows, { x: 'group', y: 'mean', stroke: CHART.faint, strokeWidth: 1 }),
+            Plot.dot(rows, {
+              x: 'group',
+              y: 'mean',
+              fill: CHART.skyDark,
+              r: 4,
+              tip: true,
+              title: (d: any) => `${d.group} (n=${d.n})\nmean ${d.mean}%\n95% CI [${d.ci_low}, ${d.ci_high}]`,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function CoefficientFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ label: string; estimate: number; ci_low: number; ci_high: number }> = charts.coefficient.rows;
+  const sorted = [...rows].sort((a, b) => a.estimate - b.estimate);
+  return (
+    <PlotFigure
+      ariaLabel="Coefficient plot of standardized county predictors"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 110,
+          marginBottom: 32,
+          x: { grid: true, label: 'standardized association (points) →' },
+          y: { label: null, domain: sorted.map(r => r.label) },
+          marks: [
+            Plot.ruleX([0], { stroke: CHART.faint, strokeDasharray: '4 4' }),
+            Plot.ruleY(sorted, {
+              y: 'label',
+              x1: 'ci_low',
+              x2: 'ci_high',
+              stroke: (d: any) => (d.estimate >= 0 ? CHART.rose : CHART.sky),
+              strokeWidth: 2,
+            }),
+            Plot.dot(sorted, {
+              y: 'label',
+              x: 'estimate',
+              fill: (d: any) => (d.estimate >= 0 ? CHART.rose : CHART.sky),
+              r: 4,
+              tip: true,
+              title: (d: any) => `${d.label}\n${d.estimate >= 0 ? '+' : ''}${d.estimate}\n95% CI [${d.ci_low}, ${d.ci_high}]`,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+/* === Business Bridge === */
+
+function ParetoFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ category: string; value: number }> = charts.pareto.rows;
+  const sorted = [...rows].sort((a, b) => b.value - a.value);
+  const total = sorted.reduce((s, r) => s + r.value, 0);
+  let running = 0;
+  const withCum = sorted.map(r => {
+    running += r.value;
+    return { ...r, cum: (running / total) * 100 };
+  });
+  return (
+    <PlotFigure
+      ariaLabel="Pareto chart of revenue concentration by product family"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 40,
+          marginRight: 44,
+          marginBottom: 50,
+          x: { label: null, domain: sorted.map(r => r.category), tickRotate: -25 },
+          y: { grid: true, label: 'share (%)', domain: [0, 100] },
+          marks: [
+            Plot.ruleY([80], { stroke: CHART.faint, strokeDasharray: '4 4' }),
+            Plot.barY(withCum, {
+              x: 'category',
+              y: 'value',
+              fill: CHART.teal,
+              fillOpacity: 0.8,
+              tip: true,
+              title: (d: any) => `${d.category}\n${d.value}% of total`,
+            }),
+            Plot.line(withCum, { x: 'category', y: 'cum', stroke: CHART.orange, strokeWidth: 2.5, curve: 'catmull-rom' }),
+            Plot.dot(withCum, {
+              x: 'category',
+              y: 'cum',
+              fill: CHART.orange,
+              r: 3.5,
+              tip: true,
+              title: (d: any) => `${d.category}\ncumulative ${d.cum.toFixed(0)}%`,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function WaterfallFigure({ charts }: { charts: AtlasData['charts'] }) {
+  const rows: Array<{ label: string; value: number; kind: string }> = charts.waterfall.rows;
+  let cursor = 0;
+  const bars = rows.map(r => {
+    if (r.kind === 'start') {
+      cursor = r.value;
+      return { ...r, y1: 0, y2: r.value };
+    }
+    if (r.kind === 'end') {
+      return { ...r, y1: 0, y2: cursor };
+    }
+    const y1 = cursor;
+    cursor += r.value;
+    return { ...r, y1, y2: cursor };
+  });
+  const fillFor = (r: any) =>
+    r.kind === 'start' || r.kind === 'end' ? CHART.slate : r.value >= 0 ? CHART.teal : CHART.rose;
+  return (
+    <PlotFigure
+      ariaLabel="Waterfall chart from list price to net revenue"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 40,
+          marginBottom: 50,
+          x: { label: null, domain: rows.map(r => r.label), tickRotate: -25 },
+          y: { grid: true, label: 'index (list = 100)' },
+          marks: [
+            Plot.ruleY([0]),
+            Plot.barY(bars, {
+              x: 'label',
+              y1: 'y1',
+              y2: 'y2',
+              fill: fillFor,
+              fillOpacity: 0.85,
+              tip: true,
+              title: (d: any) =>
+                `${d.label}\n${d.kind === 'start' || d.kind === 'end' ? `level ${Math.round(d.y2)}` : `${d.value > 0 ? '+' : ''}${d.value}`}`,
+            }),
+            Plot.text(bars, {
+              x: 'label',
+              y: (d: any) => Math.max(d.y1, d.y2),
+              text: (d: any) => (d.kind === 'start' || d.kind === 'end' ? `${Math.round(d.y2)}` : `${d.value > 0 ? '+' : ''}${d.value}`),
+              dy: -6,
+              fontSize: 10,
+              fill: CHART.body,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function TreemapFigure() {
+  // Simple slice-and-dice treemap computed inline (Plot has no treemap mark).
+  const total = TREE_DATA.reduce((s, r) => s + r.value, 0);
+  const W = 100;
+  const H = 62;
+  // Row-based squarified-lite: pack into rows that fill the width.
+  type Tile = { name: string; value: number; x1: number; y1: number; x2: number; y2: number };
+  const tiles: Tile[] = [];
+  const sorted = [...TREE_DATA].sort((a, b) => b.value - a.value);
+  // Two-column layout: big tile left, remainder stacked right (legible at card size).
+  const colSplit = 0.56;
+  const leftItems = sorted.slice(0, 2);
+  const rightItems = sorted.slice(2);
+  const leftTotal = leftItems.reduce((s, r) => s + r.value, 0);
+  const rightTotal = rightItems.reduce((s, r) => s + r.value, 0);
+  let yc = 0;
+  for (const it of leftItems) {
+    const h = (it.value / leftTotal) * H;
+    tiles.push({ name: it.name, value: it.value, x1: 0, y1: yc, x2: W * colSplit, y2: yc + h });
+    yc += h;
+  }
+  yc = 0;
+  for (const it of rightItems) {
+    const h = (it.value / rightTotal) * H;
+    tiles.push({ name: it.name, value: it.value, x1: W * colSplit, y1: yc, x2: W, y2: yc + h });
+    yc += h;
+  }
+  const palette = [CHART.skyDark, CHART.violet, CHART.teal, CHART.orange, CHART.amber, CHART.slate];
+  const colorByName = new Map(sorted.map((d, i) => [d.name, palette[i % palette.length]]));
+  return (
+    <PlotFigure
+      ariaLabel="Treemap of revenue share by product family"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 0,
+          marginRight: 0,
+          marginTop: 0,
+          marginBottom: 0,
+          x: { axis: null, domain: [0, W] },
+          y: { axis: null, domain: [H, 0] },
+          marks: [
+            Plot.rect(tiles, {
+              x1: 'x1',
+              x2: 'x2',
+              y1: 'y1',
+              y2: 'y2',
+              fill: (d: any) => colorByName.get(d.name),
+              fillOpacity: 0.88,
+              stroke: '#fff',
+              strokeWidth: 1.5,
+              tip: true,
+              title: (d: any) => `${d.name}\n${d.value}% of revenue`,
+            }),
+            Plot.text(tiles, {
+              x: (d: any) => (d.x1 + d.x2) / 2,
+              y: (d: any) => (d.y1 + d.y2) / 2,
+              text: (d: any) => `${d.name}\n${d.value}%`,
+              fill: '#fff',
+              fontSize: (d: any) => (d.value >= 13 ? 12 : 10),
+              lineHeight: 1.1,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function FunnelFigure() {
+  const top = FUNNEL_DATA[0].value;
+  const bars = FUNNEL_DATA.map(d => ({ ...d, half: d.value / 2, share: (d.value / top) * 100 }));
+  return (
+    <PlotFigure
+      ariaLabel="Funnel of the pricing-test pipeline"
+      options={width =>
+        withBookTheme({
+          width,
+          height: CHART_H,
+          marginLeft: 96,
+          marginBottom: 30,
+          x: { label: 'stores →', domain: [-top, top], tickFormat: (d: number) => Math.abs(d).toLocaleString() },
+          y: { label: null, domain: FUNNEL_DATA.map(d => d.stage) },
+          marks: [
+            Plot.barX(bars, {
+              y: 'stage',
+              x1: (d: any) => -d.half,
+              x2: (d: any) => d.half,
+              fill: CHART.skyDark,
+              fillOpacity: 0.85,
+              tip: true,
+              title: (d: any) => `${d.stage}\n${d.value.toLocaleString()} stores (${d.share.toFixed(0)}% of top)`,
+            }),
+            Plot.text(bars, {
+              y: 'stage',
+              x: 0,
+              text: (d: any) => `${d.value.toLocaleString()}`,
+              fill: '#fff',
+              fontSize: 11,
+              fontWeight: 600,
+            }),
+          ],
+        })
+      }
+    />
+  );
+}
+
+function PieTrapFigure() {
+  // Deliberately-bad pie chart, drawn with hand-computed arc paths to make the
+  // "hard to compare slices" point. Rendered as inline SVG (not Plot) on purpose.
+  const total = PIE_DATA.reduce((s, r) => s + r.value, 0);
+  const palette = [CHART.skyDark, CHART.violet, CHART.teal, CHART.orange, CHART.amber, CHART.slate];
+  const cx = 130;
+  const cy = 130;
+  const r = 110;
+  let angle = -Math.PI / 2;
+  const arcs = PIE_DATA.map((d, i) => {
+    const frac = d.value / total;
+    const start = angle;
+    const end = angle + frac * Math.PI * 2;
+    angle = end;
+    const x1 = cx + r * Math.cos(start);
+    const y1 = cy + r * Math.sin(start);
+    const x2 = cx + r * Math.cos(end);
+    const y2 = cy + r * Math.sin(end);
+    const large = end - start > Math.PI ? 1 : 0;
+    const mid = (start + end) / 2;
+    const lx = cx + r * 0.62 * Math.cos(mid);
+    const ly = cy + r * 0.62 * Math.sin(mid);
+    return {
+      path: `M ${cx} ${cy} L ${x1.toFixed(1)} ${y1.toFixed(1)} A ${r} ${r} 0 ${large} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z`,
+      fill: palette[i % palette.length],
+      name: d.name,
+      value: d.value,
+      lx,
+      ly,
+      showLabel: frac > 0.08,
+    };
+  });
+  return (
+    <div>
+      <svg viewBox="0 0 260 260" className="mx-auto h-auto w-full max-w-[260px]" role="img" aria-label="Pie chart (anti-pattern)">
+        {arcs.map(a => (
+          <g key={a.name}>
+            <path d={a.path} fill={a.fill} fillOpacity={0.88} stroke="#fff" strokeWidth={1.5}>
+              <title>{`${a.name}: ${a.value}%`}</title>
+            </path>
+            {a.showLabel && (
+              <text x={a.lx} y={a.ly} textAnchor="middle" fontSize={11} fill="#fff" fontWeight={600}>
+                {a.value}%
+              </text>
+            )}
+          </g>
+        ))}
+      </svg>
+      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-slate-600">
+        {PIE_DATA.map((d, i) => (
+          <span key={d.name} className="inline-flex items-center gap-1">
+            <span className="inline-block h-2 w-2 rounded-sm" style={{ background: palette[i % palette.length] }} />
+            {d.name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Card registry                                                       */
+/* ------------------------------------------------------------------ */
+
+type ExtraCard = AtlasCard & { badge?: string };
+
+/** Render the visual for a card by id (existing ids reuse atlas data). */
+function ChartVisual({ id, charts }: { id: string; charts: AtlasData['charts'] }) {
+  switch (id) {
+    // existing forms
+    case 'histogram':
+      return <HistogramFigure charts={charts} />;
+    case 'density':
+      return <DistributionToggleFigure charts={charts} />;
+    case 'boxplot':
+      return <BoxplotFigure charts={charts} />;
+    case 'bar':
+      return <BarFigure charts={charts} />;
+    case 'dot':
+      return <LollipopFigure charts={charts} />;
+    case 'line':
+      return <LineToggleFigure charts={charts} />;
+    case 'indexedLine':
+      return <LineToggleFigure charts={charts} />;
+    case 'smallMultiples':
+      return <SmallMultiplesFigure charts={charts} />;
+    case 'scatter':
+      return <ScatterFigure charts={charts} />;
+    case 'bubble':
+      return <BubbleFigure charts={charts} />;
+    case 'tileMap':
+      return <ChoroplethFigure />;
+    case 'correlation':
+      return <CorrelationFigure charts={charts} />;
+    case 'heatmap':
+      return <HeatmapFigure charts={charts} />;
+    case 'interval':
+      return <IntervalFigure charts={charts} />;
+    case 'coefficient':
+      return <CoefficientFigure charts={charts} />;
+    case 'pareto':
+      return <ParetoFigure charts={charts} />;
+    case 'waterfall':
+      return <WaterfallFigure charts={charts} />;
+    // added forms
+    case 'strip':
+      return <StripFigure />;
+    case 'lollipop':
+      return <LollipopFigure charts={charts} />;
+    case 'stackedBar':
+      return <StackedBarToggleFigure />;
+    case 'groupedBar':
+      return <GroupedBarFigure />;
+    case 'slopegraph':
+      return <SlopegraphFigure />;
+    case 'area':
+      return <AreaToggleFigure charts={charts} />;
+    case 'choropleth':
+      return <ChoroplethFigure />;
+    case 'treemap':
+      return <TreemapFigure />;
+    case 'funnel':
+      return <FunnelFigure />;
+    case 'pie':
+      return <PieTrapFigure />;
+    default:
+      return null;
+  }
+}
+
+/** Extra cards added to round out a complete viz reference. */
+const EXTRA_CARDS: ExtraCard[] = [
+  {
+    id: 'strip',
+    family: 'Distribution',
+    title: 'Strip / Jitter Plot',
+    useWhen: 'Show every observation when the distribution itself is the point and groups are few.',
+    managerQuestion: 'How spread out are store-month volumes within each region, not just the average?',
+    avoid: 'Do not jitter thousands of points into an ink-blob; sample or switch to a box plot at scale.',
+    caseExample: 'Soup: a regional sample of store-month volume, one dot per store-month.',
+    finding: 'Western store-months spread widest and carry the longest right tail; the Northeast is tighter.',
+    dataSource: 'Soup',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'stackedBar',
+    family: 'Comparison',
+    title: 'Stacked & 100% Bar',
+    useWhen: 'Show part-to-whole composition across a few ordered groups.',
+    managerQuestion: 'Does the soup category mix shift across quarters, in units or in share?',
+    avoid: 'Do not stack many categories; only the bottom segment is easy to compare across bars.',
+    caseExample: 'Soup: category units by quarter, toggled between absolute and 100% share.',
+    finding: 'Core soups dominate every quarter, but premium and broth share rises noticeably in Q4.',
+    dataSource: 'Soup',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'groupedBar',
+    family: 'Comparison',
+    title: 'Grouped Bar Chart',
+    useWhen: 'Compare a few categories within each group side by side.',
+    managerQuestion: 'How do core, premium, and broth units compare within each quarter?',
+    avoid: 'Do not group so many series that bars become too thin to read.',
+    caseExample: 'Soup: the same quarterly category data shown as clustered bars instead of stacked.',
+    finding: 'Side-by-side bars make Q4 the clear peak for every category, which stacking can hide.',
+    dataSource: 'Soup',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'slopegraph',
+    family: 'Comparison',
+    title: 'Slopegraph',
+    useWhen: 'Compare two points in time across categories and emphasize who moved.',
+    managerQuestion: 'Which regions shifted between the two elections, and in which direction?',
+    avoid: 'Do not use it for more than two time points; it stops being a slope.',
+    caseExample: 'County: average regional vote share in two elections, connected by a line per region.',
+    finding: 'Most regions edged up, but the East slipped slightly — a divergence a bar chart buries.',
+    dataSource: 'County',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'area',
+    family: 'Time',
+    title: 'Area / Stacked Area',
+    useWhen: 'Emphasize magnitude over time, or composition over time when totals matter.',
+    managerQuestion: 'How large did each state market get, and how do they sum over time?',
+    avoid: 'Do not stack area when readers need each series read precisely; only the bottom is honest.',
+    caseExample: 'Zillow: California alone as a filled area, then four states stacked.',
+    finding: 'The stacked view shows the combined four-state market roughly tripling since 2000.',
+    dataSource: 'Zillow',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'choropleth',
+    family: 'Geography',
+    title: 'True Choropleth Map',
+    useWhen: 'Location is part of the decision and the geographic shape itself carries meaning.',
+    managerQuestion: 'Where did home values grow fastest since 2020, on a real US map?',
+    avoid: 'Do not map raw counts on a choropleth; area distorts them — map rates or changes.',
+    caseExample: 'Zillow: state home-value growth since 2020 on an albers-usa projection.',
+    finding: 'Growth concentrates across the Midwest and Southeast, not the highest-priced coasts.',
+    dataSource: 'Zillow',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'treemap',
+    family: 'Multivariate',
+    title: 'Treemap',
+    useWhen: 'Show part-to-whole for many categories where rank and rough share matter.',
+    managerQuestion: 'How is revenue split across product families at a glance?',
+    avoid: 'Do not expect precise comparisons; area is read far less accurately than length.',
+    caseExample: 'Teaching data: revenue share across six product families as nested rectangles.',
+    finding: 'Core and premium soups fill two-thirds of the canvas; the long tail is visibly small.',
+    dataSource: 'Teaching',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'funnel',
+    family: 'Business Bridge',
+    title: 'Funnel Chart',
+    useWhen: 'Show sequential drop-off through an ordered pipeline.',
+    managerQuestion: 'Where does the pricing-test pipeline lose the most stores?',
+    avoid: 'Do not use a funnel for non-sequential categories; the narrowing implies an order.',
+    caseExample: 'Teaching data: stores moving from review to a confirmed price rollout.',
+    finding: 'The biggest drop is from price-eligible to test-launched — roughly half are filtered out there.',
+    dataSource: 'Teaching',
+    badge: 'Illustrative',
+  },
+  {
+    id: 'pie',
+    family: 'Business Bridge',
+    title: 'Pie Chart (Trap exemplar)',
+    useWhen: 'Almost never for analysis; at most a single two-to-three slice part-to-whole.',
+    managerQuestion: 'Which product family is biggest — and can you rank the rest by eye?',
+    avoid: 'Do not ask readers to compare angles; rank and small differences are nearly unreadable.',
+    caseExample: 'Teaching data: the same revenue mix as the treemap, shown as six pie slices.',
+    finding: 'Try to order Broths, Seasonal, and Other by eye — the pie makes it a guess; a bar would not.',
+    dataSource: 'Teaching',
+    badge: 'Anti-pattern',
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Main component (same export, same props)                            */
+/* ------------------------------------------------------------------ */
+
 export function ChartAtlas({ data }: { data: AtlasData }) {
-  const families = Array.from(new Set(data.cards.map(card => card.family)));
+  const allCards: ExtraCard[] = [...data.cards, ...EXTRA_CARDS];
+  const families = FAMILY_ORDER.filter(f => allCards.some(c => c.family === f));
+
   const metrics = [
-    { label: 'Soup panel', value: `${data.metadata.soup_rows.toLocaleString()} rows`, detail: `${data.metadata.soup_stores.toLocaleString()} stores, ${data.metadata.soup_date_range}` },
-    { label: 'County cross-section', value: `${data.metadata.county_rows.toLocaleString()} counties`, detail: 'Demographics, votes, density, region, and state geography' },
-    { label: 'Zillow time series', value: `${data.metadata.zillow_states.toLocaleString()} states`, detail: data.metadata.zillow_date_range },
-    { label: 'Atlas scope', value: `${data.cards.length} chart forms`, detail: `${families.length} evidence families` },
+    {
+      label: 'Soup panel',
+      value: `${data.metadata.soup_rows.toLocaleString()} rows`,
+      detail: `${data.metadata.soup_stores.toLocaleString()} stores, ${data.metadata.soup_date_range}`,
+    },
+    {
+      label: 'County cross-section',
+      value: `${data.metadata.county_rows.toLocaleString()} counties`,
+      detail: 'Demographics, votes, density, region, and state geography',
+    },
+    {
+      label: 'Zillow time series',
+      value: `${data.metadata.zillow_states.toLocaleString()} states`,
+      detail: data.metadata.zillow_date_range,
+    },
+    {
+      label: 'Atlas scope',
+      value: `${allCards.length} chart forms`,
+      detail: `${families.length} evidence families, several interactive`,
+    },
   ];
 
   return (
@@ -558,7 +1579,8 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">How to read the atlas</p>
             <h3 className="mt-1 text-xl font-semibold">Start from the comparison, then choose the chart.</h3>
             <p className="mt-3 text-sm leading-relaxed text-slate-300">
-              Each card moves from business question to visual form to misuse risk. The miniature chart is evidence from the teaching data, not filler art.
+              Each card moves from business question to visual form to misuse risk. Charts are live: hover for values,
+              and where two forms answer the same question, toggle between them.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -576,29 +1598,48 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
       <div className="grid gap-3 md:grid-cols-4">
         {data.sourceNotes.map(note => (
           <div key={note.case} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-            <p className="text-sm font-semibold" style={{ color: SOURCE_COLORS[note.case] ?? '#0f172a' }}>{note.case}</p>
+            <p className="text-sm font-semibold" style={{ color: SOURCE_COLORS[note.case] ?? CHART.ink }}>
+              {note.case}
+            </p>
             <p className="mt-1 text-xs leading-relaxed text-slate-600">{note.role}</p>
           </div>
         ))}
       </div>
-      {families.map(family => (
-        <section key={family}>
-          <div className="mb-3 flex items-end justify-between gap-3 border-b border-slate-200 pb-2">
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">{family}</h3>
-              <p className="mt-1 text-xs text-slate-500">{FAMILY_NOTES[family]}</p>
+
+      {families.map(family => {
+        const cards = allCards.filter(c => c.family === family);
+        return (
+          <section key={family}>
+            <div className="mb-3 flex items-end justify-between gap-3 border-b border-slate-200 pb-2">
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">{family}</h3>
+                <p className="mt-1 text-xs text-slate-500">{FAMILY_NOTES[family]}</p>
+              </div>
+              <p className="text-xs text-slate-500">
+                {cards.length} chart{cards.length === 1 ? '' : 's'}
+              </p>
             </div>
-            <p className="text-xs text-slate-500">
-              {data.cards.filter(card => card.family === family).length} chart{data.cards.filter(card => card.family === family).length === 1 ? '' : 's'}
-            </p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {data.cards.filter(card => card.family === family).map(card => (
-              <AtlasCardView key={card.id} card={card} charts={data.charts} />
-            ))}
-          </div>
-        </section>
-      ))}
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {cards.map(card => (
+                <CardShell
+                  key={card.id}
+                  family={card.family}
+                  title={card.title}
+                  source={card.dataSource}
+                  badge={card.badge}
+                  finding={card.finding}
+                  useWhen={card.useWhen}
+                  managerQuestion={card.managerQuestion}
+                  avoid={card.avoid}
+                  caseExample={card.caseExample}
+                >
+                  <ChartVisual id={card.id} charts={data.charts} />
+                </CardShell>
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

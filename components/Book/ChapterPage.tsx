@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen } from 'lucide-react';
 import type { Book, Chapter, Part } from '@/lib/book-types';
 import { getChapterContent, getArticleBlurb } from '@/lib/book-content';
 import { resolveIcon, partColor } from '@/lib/book-visuals';
 import { studiosForChapter } from '@/lib/book-studios';
+import { getArticlesForChapter } from '@/lib/gallery';
 import { BookFrame } from '@/components/Book/BookFrame';
 
 interface ChapterPageProps {
@@ -15,11 +17,12 @@ interface ChapterPageProps {
   next: { chapter: Chapter } | null;
 }
 
-export function ChapterPage({ book, chapter, part, partIndex, prev, next }: ChapterPageProps) {
+export async function ChapterPage({ book, chapter, part, partIndex, prev, next }: ChapterPageProps) {
   const content = getChapterContent(chapter.number);
   const Icon = resolveIcon(content?.icon);
   const color = partColor(partIndex);
   const related = studiosForChapter(chapter);
+  const dataStories = await getArticlesForChapter(chapter.articles.map(a => a.slug));
   const firstArticle = chapter.articles[0];
 
   return (
@@ -151,6 +154,52 @@ export function ChapterPage({ book, chapter, part, partIndex, prev, next }: Chap
                     {s.title}
                   </span>
                   <span className="mt-1 text-[13px] leading-relaxed text-muted">{s.blurb}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Featured data stories from the gallery */}
+        {dataStories.length > 0 && (
+          <section className="mt-10">
+            <h2 className="font-display text-lg font-semibold text-body">Featured data stories</h2>
+            <p className="mt-1 text-[13.5px] leading-relaxed text-muted">
+              Interactive D3 pieces from the gallery that put this chapter&rsquo;s chart ideas to work — each opens in a new tab.
+            </p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {dataStories.map(story => (
+                <a
+                  key={story.id}
+                  href={story.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex flex-col overflow-hidden rounded-lg border border-border bg-surface no-underline transition-colors hover:border-border-strong"
+                >
+                  <span className="relative block aspect-[16/10] overflow-hidden bg-card">
+                    {story.thumbnail ? (
+                      <Image
+                        src={story.thumbnail}
+                        alt=""
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                      />
+                    ) : (
+                      <span className="flex h-full items-center justify-center font-display text-sm text-muted">
+                        Data story
+                      </span>
+                    )}
+                  </span>
+                  <span className="flex flex-1 flex-col p-3.5">
+                    <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-muted">
+                      {story.topic ?? 'Data story'}
+                      <ArrowUpRight size={11} />
+                    </span>
+                    <span className="mt-1 font-display text-[14.5px] font-semibold leading-snug text-body transition-colors group-hover:text-link">
+                      {story.title}
+                    </span>
+                  </span>
                 </a>
               ))}
             </div>
