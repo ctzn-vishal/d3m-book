@@ -207,12 +207,19 @@ const url = process.env.TURSO_DATABASE_URL;
 if (!url) { console.error('TURSO_DATABASE_URL missing — aborting.'); process.exit(1); }
 const db = await connectTurso(url, process.env.TURSO_AUTH_TOKEN);
 
+// CHECK constraints keep the table CMS-safe (only valid types/status/flags). An
+// existing table is upgraded to these constraints by `pnpm migrate-gallery`.
 await db.execute(`CREATE TABLE IF NOT EXISTS gallery (
-  id TEXT PRIMARY KEY, type TEXT NOT NULL, title TEXT NOT NULL, description TEXT,
+  id TEXT PRIMARY KEY,
+  type TEXT NOT NULL CHECK (type IN ('App','Teaching','Blog','Dataset')),
+  title TEXT NOT NULL, description TEXT,
   domain TEXT, topic TEXT, tags TEXT, teaching TEXT, href TEXT NOT NULL,
-  external INTEGER NOT NULL DEFAULT 0, open_in_new_tab INTEGER NOT NULL DEFAULT 0,
-  thumbnail TEXT, accent TEXT, featured INTEGER NOT NULL DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'published', sort INTEGER NOT NULL DEFAULT 0
+  external INTEGER NOT NULL DEFAULT 0 CHECK (external IN (0,1)),
+  open_in_new_tab INTEGER NOT NULL DEFAULT 0 CHECK (open_in_new_tab IN (0,1)),
+  thumbnail TEXT, accent TEXT,
+  featured INTEGER NOT NULL DEFAULT 0 CHECK (featured IN (0,1)),
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft')),
+  sort INTEGER NOT NULL DEFAULT 0
 )`);
 
 const existingRows = (await db.execute('SELECT * FROM gallery')).rows as any[];

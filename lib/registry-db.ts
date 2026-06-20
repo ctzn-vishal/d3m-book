@@ -49,7 +49,13 @@ async function readTurso(): Promise<RegistryItem[] | null> {
   } catch (e) {
     if (!warned) {
       warned = true;
-      console.warn(`[registry] Turso unreachable — serving committed snapshot. (${(e as Error).message})`);
+      const msg = (e as Error).message ?? '';
+      const isAuth = /401|unauthor/i.test(msg);
+      console.warn(
+        isAuth
+          ? '[registry] Turso auth failed (401) — TURSO_AUTH_TOKEN looks like a platform token, not a DB-scoped one. Run `pnpm mint-db-token` and set the result in Vercel. Serving committed snapshot.'
+          : `[registry] Turso unreachable — serving committed snapshot. (${msg})`
+      );
     }
     return null;
   }
