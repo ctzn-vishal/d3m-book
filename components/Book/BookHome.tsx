@@ -91,10 +91,10 @@ export function BookHome({ book, kicker = DEFAULT_KICKER, attribution = DEFAULT_
                 {book.parts.length} parts. {broadChapterCount} broad chapters. {totalCount} articles.
               </div>
               <Link
-                href="/studios"
+                href="/"
                 className="mt-2 inline-flex items-center gap-2 rounded-md bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-brand-primary/20 hover:bg-link-hover transition-colors"
               >
-                Case study &amp; dashboard gallery
+                Interactive gallery
                 <span aria-hidden="true">→</span>
               </Link>
             </div>

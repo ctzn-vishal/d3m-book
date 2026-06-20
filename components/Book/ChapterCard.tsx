@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Chapter } from '@/lib/book-types';
 import { getChapterContent } from '@/lib/book-content';
 import { resolveIcon, type PartColor } from '@/lib/book-visuals';
-import { studiosForChapter } from '@/lib/book-studios';
+import { itemsForChapter } from '@/lib/registry';
 
 /**
  * A chapter on the contents page and on part pages. The header links to the
@@ -12,7 +12,7 @@ import { studiosForChapter } from '@/lib/book-studios';
  */
 export function ChapterCard({ chapter, color }: { chapter: Chapter; color: PartColor }) {
   const content = getChapterContent(chapter.number);
-  const related = studiosForChapter(chapter);
+  const related = itemsForChapter(chapter.articles.map(a => a.slug)).filter(i => i.type === 'Teaching');
   const Icon = resolveIcon(content?.icon);
 
   return (
@@ -54,8 +54,8 @@ export function ChapterCard({ chapter, color }: { chapter: Chapter; color: PartC
           <span className="font-mono text-[10px] uppercase tracking-wider text-muted">Studios</span>
           {related.map(s => (
             <a
-              key={s.slug}
-              href={`/studios/${s.slug}/index.html`}
+              key={s.id}
+              href={s.href}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded border border-border bg-card px-2 py-0.5 text-[10.5px] text-subtle transition-colors hover:border-border-strong hover:text-link"

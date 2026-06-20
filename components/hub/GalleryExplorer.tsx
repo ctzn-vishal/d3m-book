@@ -5,14 +5,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, Search, X } from 'lucide-react';
-import type { GalleryItem, GalleryFacets, GalleryType } from '@/lib/gallery';
-import { TYPE_LABEL } from '@/lib/gallery';
+import {
+  TYPE_LABEL,
+  type RegistryItem,
+  type RegistryFacets,
+  type RegistryType,
+} from '@/lib/registry-types';
 
 type SortKey = 'featured' | 'az' | 'type';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-function GalleryCard({ item }: { item: GalleryItem }) {
+function GalleryCard({ item }: { item: RegistryItem }) {
   const newTab = item.external || item.openInNewTab;
   const inner = (
     <>
@@ -88,22 +92,15 @@ function GalleryCard({ item }: { item: GalleryItem }) {
   );
 }
 
-function TopicChip({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
+/** Prominent primary filter — the four artifact types. */
+function TypeTab({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 rounded-full border px-3 py-1.5 font-plex text-[11.5px] uppercase tracking-[0.06em] transition-colors ${
+      className={`shrink-0 rounded-full border px-4 py-2 font-plex text-[12.5px] font-medium uppercase tracking-[0.06em] transition-colors ${
         active
-          ? 'border-hub-teal bg-hub-teal-soft text-hub-teal'
+          ? 'border-hub-teal bg-hub-teal text-white shadow-hub'
           : 'border-hub-line bg-hub-card text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink'
       }`}
     >
@@ -112,9 +109,26 @@ function TopicChip({
   );
 }
 
-export function GalleryExplorer({ items, facets }: { items: GalleryItem[]; facets: GalleryFacets }) {
+/** Secondary filter — subject topics, sorted by frequency. */
+function TopicChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`shrink-0 rounded-full border px-3 py-1 font-plex text-[11px] uppercase tracking-[0.06em] transition-colors ${
+        active
+          ? 'border-hub-amber bg-hub-amber-soft text-hub-amber'
+          : 'border-hub-line bg-hub-card text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
+export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; facets: RegistryFacets }) {
   const [query, setQuery] = useState('');
-  const [type, setType] = useState<GalleryType | 'all'>('all');
+  const [type, setType] = useState<RegistryType | 'all'>('all');
   const [topic, setTopic] = useState<string | 'all'>('all');
   const [sort, setSort] = useState<SortKey>('featured');
 
@@ -141,8 +155,20 @@ export function GalleryExplorer({ items, facets }: { items: GalleryItem[]; facet
 
   return (
     <div>
-      {/* Toolbar: search + type + sort */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      {/* Primary filter: artifact type (prominent) */}
+      <div className="flex flex-wrap items-center gap-2">
+        <TypeTab active={type === 'all'} onClick={() => setType('all')}>
+          All · {facets.total}
+        </TypeTab>
+        {facets.types.map(t => (
+          <TypeTab key={t.type} active={type === t.type} onClick={() => setType(t.type)}>
+            {t.label} · {t.count}
+          </TypeTab>
+        ))}
+      </div>
+
+      {/* Search + sort */}
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
         <div className="relative flex-grow">
           <Search
             size={15}
@@ -151,7 +177,7 @@ export function GalleryExplorer({ items, facets }: { items: GalleryItem[]; facet
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder="Search dashboards, data stories, apps…"
+            placeholder="Search studios, data stories, apps, datasets…"
             className="w-full rounded-full border border-hub-line bg-hub-card py-2.5 pl-10 pr-9 text-[14px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
           />
           {query && (
@@ -166,44 +192,36 @@ export function GalleryExplorer({ items, facets }: { items: GalleryItem[]; facet
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <select
-            value={type}
-            onChange={e => setType(e.target.value as GalleryType | 'all')}
-            aria-label="Filter by type"
-            className="rounded-md border border-hub-line bg-hub-card px-2.5 py-2 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
-          >
-            <option value="all">All types</option>
-            {facets.types.map(t => (
-              <option key={t.type} value={t.type}>
-                {t.label} ({t.count})
-              </option>
-            ))}
-          </select>
-          <select
-            value={sort}
-            onChange={e => setSort(e.target.value as SortKey)}
-            aria-label="Sort"
-            className="rounded-md border border-hub-line bg-hub-card px-2.5 py-2 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
-          >
-            <option value="featured">Featured</option>
-            <option value="az">A–Z</option>
-            <option value="type">By type</option>
-          </select>
-        </div>
+        <select
+          value={sort}
+          onChange={e => setSort(e.target.value as SortKey)}
+          aria-label="Sort"
+          className="rounded-md border border-hub-line bg-hub-card px-2.5 py-2 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
+        >
+          <option value="featured">Featured</option>
+          <option value="az">A–Z</option>
+          <option value="type">By type</option>
+        </select>
       </div>
 
-      {/* Topic chips */}
-      <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1">
-        <TopicChip active={topic === 'all'} onClick={() => setTopic('all')}>
-          All · {facets.total}
-        </TopicChip>
-        {facets.topics.map(t => (
-          <TopicChip key={t.topic} active={topic === t.topic} onClick={() => setTopic(t.topic)}>
-            {t.topic} · {t.count}
-          </TopicChip>
-        ))}
-      </div>
+      {/* Secondary filter: topic chips (by frequency) */}
+      {facets.topics.length > 0 && (
+        <div className="mt-4 flex items-center gap-2">
+          <span className="hidden shrink-0 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:inline">
+            Topic
+          </span>
+          <div className="flex gap-1.5 overflow-x-auto pb-1">
+            <TopicChip active={topic === 'all'} onClick={() => setTopic('all')}>
+              All
+            </TopicChip>
+            {facets.topics.map(t => (
+              <TopicChip key={t.topic} active={topic === t.topic} onClick={() => setTopic(t.topic)}>
+                {t.topic} · {t.count}
+              </TopicChip>
+            ))}
+          </div>
+        </div>
+      )}
 
       <p className="mb-5 mt-4 font-plex text-[11.5px] uppercase tracking-[0.06em] text-hub-ink-faint">
         {filtered.length} {filtered.length === 1 ? 'result' : 'results'}

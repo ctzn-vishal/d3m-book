@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next';
 import createMDX from '@next/mdx';
 
+// Public origin for Tigris-hosted content (studios + data stories + datasets).
+const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
+
 const nextConfig: NextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
@@ -101,29 +104,13 @@ const nextConfig: NextConfig = {
       { source: '/ch47-semantic-search', destination: '/ch14-embeddings', permanent: true },
       { source: '/ch50b-prompting', destination: '/ch16-llm-capabilities', permanent: true },
 
-      // legacy studio slugs from the first politics batch → the renamed studio's HTML:
-      {
-        source: '/studios/negative-partisanship-anes',
-        destination: '/studios/out-party-hate-not-in-party-love/index.html',
-        permanent: true,
-      },
-      {
-        source: '/studios/unsorted-voters-switched',
-        destination: '/studios/sorting-was-conversion-not-replacement/index.html',
-        permanent: true,
-      },
-      {
-        source: '/studios/partisans-finally-got-constraint',
-        destination: '/studios/partisans-got-constraint/index.html',
-        permanent: true,
-      },
-
-      // Studios viewer retired (2026-06): the gallery (/) lists every studio, and
-      // each studio is a self-contained HTML file in public/studios/<slug>/. Send
-      // the old pretty paths to the gallery / the raw file. Order matters — the
-      // three specific legacy slugs above resolve before this catch-all.
+      // Studios MOVED to the Tigris bucket (content.vishalsingh.org/studios/*) and
+      // are retired from public/. The gallery (/) lists them; legacy hub paths 301
+      // to the content origin. Order matters: the bare gallery path and the pretty
+      // single-segment slug resolve before the asset catch-all.
       { source: '/studios', destination: '/', permanent: true },
-      { source: '/studios/:slug', destination: '/studios/:slug/index.html', permanent: true },
+      { source: '/studios/:slug', destination: `${CONTENT}/studios/:slug/index.html`, permanent: true },
+      { source: '/studios/:path*', destination: `${CONTENT}/studios/:path*`, permanent: true },
     ];
   },
 

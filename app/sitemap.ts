@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/share-metadata';
 import { allArticles, getAllPartNumerals, getAllChapterNumbers } from '@/lib/book-toc';
-import { studios } from '@/lib/studios';
 import { getDatasetItems } from '@/lib/gallery';
 
 export const revalidate = 86400;
@@ -46,15 +45,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
-  // Studios are self-contained HTML; the served file is the canonical URL.
-  const studioPages: MetadataRoute.Sitemap = studios.map(
-    (s): MetadataRoute.Sitemap[number] => ({
-      url: `${SITE_URL}/studios/${s.slug}/index.html`,
-      lastModified: now,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    })
-  );
+  // Studios now live in the Tigris bucket (content.vishalsingh.org/studios/*) and
+  // are listed in the content sitemap, not this hub sitemap.
 
   // Datasets come from the bucket manifest (graceful empty if unreachable at build).
   let datasetPages: MetadataRoute.Sitemap = [];
@@ -71,5 +63,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     datasetPages = [];
   }
 
-  return [...corePages, ...teachingNav, ...bookPages, ...studioPages, ...datasetPages];
+  return [...corePages, ...teachingNav, ...bookPages, ...datasetPages];
 }

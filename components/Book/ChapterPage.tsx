@@ -4,8 +4,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen } from 'lucide-react';
 import type { Book, Chapter, Part } from '@/lib/book-types';
 import { getChapterContent, getArticleBlurb } from '@/lib/book-content';
 import { resolveIcon, partColor } from '@/lib/book-visuals';
-import { studiosForChapter } from '@/lib/book-studios';
-import { getArticlesForChapter } from '@/lib/gallery';
+import { itemsForChapter } from '@/lib/registry';
 import { BookFrame } from '@/components/Book/BookFrame';
 
 interface ChapterPageProps {
@@ -21,8 +20,9 @@ export async function ChapterPage({ book, chapter, part, partIndex, prev, next }
   const content = getChapterContent(chapter.number);
   const Icon = resolveIcon(content?.icon);
   const color = partColor(partIndex);
-  const related = studiosForChapter(chapter);
-  const dataStories = await getArticlesForChapter(chapter.articles.map(a => a.slug));
+  const paired = itemsForChapter(chapter.articles.map(a => a.slug));
+  const related = paired.filter(i => i.type === 'Teaching');
+  const dataStories = paired.filter(i => i.type === 'Blog');
   const firstArticle = chapter.articles[0];
 
   return (
@@ -135,15 +135,15 @@ export async function ChapterPage({ book, chapter, part, partIndex, prev, next }
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {related.map(s => (
                 <a
-                  key={s.slug}
-                  href={`/studios/${s.slug}/index.html`}
+                  key={s.id}
+                  href={s.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group flex flex-col rounded-lg border border-border bg-surface p-4 transition-colors hover:border-border-strong"
                 >
                   <span className="flex items-center justify-between gap-2">
                     <span className="font-mono text-[10.5px] uppercase tracking-wider text-muted">
-                      {s.domain} · {s.kind === 'exercise' ? 'Hands-on' : 'Explore'}
+                      {s.domain ?? s.topic ?? 'Studio'}
                     </span>
                     <ArrowUpRight
                       size={14}
@@ -153,7 +153,7 @@ export async function ChapterPage({ book, chapter, part, partIndex, prev, next }
                   <span className="mt-1.5 font-display text-[15.5px] font-semibold leading-snug text-body transition-colors group-hover:text-link">
                     {s.title}
                   </span>
-                  <span className="mt-1 text-[13px] leading-relaxed text-muted">{s.blurb}</span>
+                  <span className="mt-1 text-[13px] leading-relaxed text-muted">{s.description}</span>
                 </a>
               ))}
             </div>

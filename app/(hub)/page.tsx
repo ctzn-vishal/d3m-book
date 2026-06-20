@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { GalleryExplorer } from '@/components/hub/GalleryExplorer';
-import { getGalleryItems, getArticleItems, getDatasetItems, getGalleryFacets } from '@/lib/gallery';
+import { getRegistry } from '@/lib/registry-db';
+import { getRegistryFacets } from '@/lib/registry';
 import { SITE_URL } from '@/lib/share-metadata';
 import { JsonLd } from '@/components/JsonLd';
 
@@ -29,11 +30,8 @@ const homeLd = [
 export const revalidate = 600;
 
 export default async function HomeGallery() {
-  const [articles, datasets] = await Promise.all([getArticleItems(), getDatasetItems()]);
-  const items = [...getGalleryItems(), ...articles, ...datasets].sort(
-    (a, b) => Number(b.featured) - Number(a.featured)
-  );
-  const facets = getGalleryFacets(items);
+  const items = await getRegistry();
+  const facets = getRegistryFacets(items);
 
   return (
     <div>
@@ -47,8 +45,8 @@ export default async function HomeGallery() {
             Interactive evidence, built from real data.
           </h1>
           <p className="mt-4 max-w-2xl text-[16.5px] leading-relaxed text-hub-ink-soft">
-            Dashboards, data stories, and apps spanning public health, politics, pricing, and
-            markets. Search or filter below — studios open in place; live apps open in a new tab.
+            Teaching studios, data stories, apps, and datasets spanning public health, politics,
+            pricing, and markets. Filter by type or topic below — each piece opens in a new tab.
           </p>
         </div>
       </header>
