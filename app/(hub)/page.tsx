@@ -1,12 +1,28 @@
 import type { Metadata } from 'next';
 import { GalleryExplorer } from '@/components/hub/GalleryExplorer';
 import { getGalleryItems, getArticleItems, getDatasetItems, getGalleryFacets } from '@/lib/gallery';
+import { SITE_URL } from '@/lib/share-metadata';
+import { JsonLd } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Vishal Singh — Interactive Data Gallery',
   description:
     'A gallery of interactive dashboards, data stories, and apps built from real datasets across public health, politics, pricing, and markets — by Vishal Singh, NYU Stern.',
+  alternates: { canonical: `${SITE_URL}/` },
 };
+
+const homeLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: 'Vishal Singh', url: `${SITE_URL}/` },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Vishal Singh',
+    jobTitle: 'Professor of Marketing',
+    affiliation: { '@type': 'CollegeOrUniversity', name: 'New York University, Stern School of Business' },
+    url: `${SITE_URL}/`,
+    sameAs: ['http://www.linkedin.com/in/visualsingh'],
+  },
+];
 
 // ISR: re-read the Tigris article manifest periodically so new data stories
 // appear in the gallery without a redeploy (pair with /api/revalidate for instant).
@@ -21,6 +37,7 @@ export default async function HomeGallery() {
 
   return (
     <div>
+      <JsonLd data={homeLd} />
       <header className="hub-hero border-b border-hub-line">
         <div className="mx-auto max-w-6xl px-5 py-11 sm:px-7 sm:py-14">
           <div className="font-plex text-[12px] uppercase tracking-[0.16em] text-hub-amber">

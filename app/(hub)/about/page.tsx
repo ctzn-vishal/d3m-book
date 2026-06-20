@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { SITE_URL } from '@/lib/share-metadata';
 
 export const metadata: Metadata = {
   title: 'About — Vishal Singh',
   description:
     'About Vishal Singh, Professor of Marketing at NYU Stern — research, teaching, and interactive data work.',
+  alternates: { canonical: `${SITE_URL}/about` },
 };
 
 export default function AboutPage() {

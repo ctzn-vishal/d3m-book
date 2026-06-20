@@ -1,0 +1,25 @@
+# Vishal Singh — vishalsingh.org
+
+> Vishal Singh is a Professor of Marketing at NYU's Stern School of Business. This site is a hub for interactive data work (dashboards, data stories, and apps), the "Data Driven Decision Making" teaching book, and research publications.
+
+## Gallery
+- [Interactive Data Gallery](https://vishalsingh.org/): The home page — a searchable, filterable gallery of dashboards, data stories, interactive apps, and teaching datasets spanning public health, politics, pricing, markets, demographics, and well-being.
+
+## Teaching
+- [Data Driven Decision Making](https://vishalsingh.org/teaching): An online MBA textbook — 18 chapters, ~78 articles — moving from business questions to visual evidence, causal estimates, machine learning, and modern AI workflows, paired with hands-on interactive studios.
+
+## Datasets
+- [Teaching datasets](https://vishalsingh.org/): 16 curated datasets (pricing, elections, public health, NLP corpora, housing, brand perception) each with a column profile, teaching use-cases, and a direct download. Individual pages live at https://vishalsingh.org/datasets/<id>.
+
+## Data stories
+- Standalone interactive data stories (D3-based, self-contained) are hosted at https://content.vishalsingh.org/articles/<slug>.html — topics include well-being, financial wellbeing, political sorting and polarization, economic mobility, religion, and public health.
+
+## Research
+- [Research & publications](https://vishalsingh.org/research): Peer-reviewed and working papers on pricing and competition, public health, retail markets, and the politics of consumption (Marketing Science, Journal of Marketing Research, Management Science, Psychological Science, Journal of Consumer Research, and others).
+
+## Author
+- Vishal Singh, Professor of Marketing, NYU Stern. Contact: vsingh@stern.nyu.edu.
+
+## Maps
+- Full URL list (hub): https://vishalsingh.org/sitemap.xml
+- Full URL list (data stories): https://content.vishalsingh.org/sitemap.xml

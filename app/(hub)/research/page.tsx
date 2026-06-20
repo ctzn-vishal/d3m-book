@@ -11,11 +11,26 @@ import {
   service,
   type Publication,
 } from '@/lib/research';
+import { SITE_URL } from '@/lib/share-metadata';
+import { JsonLd } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Research — Vishal Singh',
   description:
     'Peer-reviewed and working papers by Vishal Singh, Professor of Marketing at NYU Stern — pricing, public health, retail competition, and the politics of consumption.',
+  alternates: { canonical: `${SITE_URL}/research` },
+};
+
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: profile.title,
+  affiliation: { '@type': 'CollegeOrUniversity', name: profile.affiliation },
+  email: `mailto:${profile.email}`,
+  url: `${SITE_URL}/research`,
+  sameAs: profile.links.map(l => l.href),
+  knowsAbout: interests,
 };
 
 function PubItem({ pub }: { pub: Publication }) {
@@ -66,6 +81,7 @@ export default function ResearchPage() {
 
   return (
     <div>
+      <JsonLd data={personLd} />
       <header className="hub-hero border-b border-hub-line">
         <div className="mx-auto max-w-3xl px-5 py-14 sm:px-7">
           <div className="font-plex text-[12px] uppercase tracking-[0.16em] text-hub-amber">

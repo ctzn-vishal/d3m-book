@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, Download } from 'lucide-react';
 import { getDataset, getDatasetItems, contentUrl } from '@/lib/gallery';
+import { SITE_URL } from '@/lib/share-metadata';
+import { JsonLd } from '@/components/JsonLd';
 
 export const revalidate = 600;
 
@@ -19,7 +21,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const d = await getDataset(id);
   if (!d) return { title: 'Dataset' };
-  return { title: `${d.title} — Dataset`, description: d.description };
+  return {
+    title: `${d.title} — Dataset`,
+    description: d.description,
+    alternates: { canonical: `${SITE_URL}/datasets/${d.id}` },
+  };
 }
 
 function fmtBytes(b: number | null): string {
@@ -39,8 +45,31 @@ export default async function DatasetPage({ params }: Props) {
   const d = await getDataset(id);
   if (!d) notFound();
 
+  const datasetLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: d.title,
+    description: d.description || d.grain || d.title,
+    url: `${SITE_URL}/datasets/${d.id}`,
+    ...(d.sha256 ? { identifier: d.sha256 } : {}),
+    keywords: d.tags,
+    isAccessibleForFree: true,
+    creator: {
+      '@type': 'Person',
+      name: 'Vishal Singh',
+      affiliation: { '@type': 'Organization', name: 'NYU Stern School of Business' },
+    },
+    ...(d.columns.length ? { variableMeasured: d.columns.map(c => c.name) } : {}),
+    distribution: {
+      '@type': 'DataDownload',
+      encodingFormat: d.format,
+      contentUrl: contentUrl(d.file),
+    },
+  };
+
   return (
     <div>
+      <JsonLd data={datasetLd} />
       <header className="hub-hero border-b border-hub-line">
         <div className="mx-auto max-w-4xl px-5 py-12 sm:px-7">
           <Link

@@ -6,7 +6,10 @@ export const ogImageSize = {
   height: 630,
 } as const;
 
-const fallbackSiteUrl = 'https://d3m.vercel.app';
+// The hub's canonical origin. Vercel's project URL (d3m-book.vercel.app) is NOT
+// the public domain, so we anchor on vishalsingh.org for canonicals/sitemaps/OG;
+// override with NEXT_PUBLIC_SITE_URL if ever needed.
+const fallbackSiteUrl = 'https://vishalsingh.org';
 
 function withProtocol(hostOrUrl: string): string {
   if (/^https?:\/\//i.test(hostOrUrl)) return hostOrUrl;
@@ -14,14 +17,17 @@ function withProtocol(hostOrUrl: string): string {
 }
 
 export function getMetadataBase(): URL {
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    process.env.VERCEL_PROJECT_PRODUCTION_URL ??
-    process.env.VERCEL_URL ??
-    fallbackSiteUrl;
-
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? fallbackSiteUrl;
   return new URL(withProtocol(siteUrl));
 }
+
+/** Canonical site origin as a string with no trailing slash, e.g. https://vishalsingh.org */
+export const SITE_URL = getMetadataBase().toString().replace(/\/$/, '');
+
+/** Public Tigris content origin (article/dataset host). */
+export const CONTENT_ORIGIN = (
+  process.env.NEXT_PUBLIC_CONTENT_URL ?? 'https://content.vishalsingh.org'
+).replace(/\/$/, '');
 
 export function createPreviewMetadata({
   title,
