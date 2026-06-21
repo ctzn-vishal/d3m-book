@@ -4,7 +4,17 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Search, X } from 'lucide-react';
+import {
+  ArrowUpRight,
+  Search,
+  X,
+  GraduationCap,
+  Newspaper,
+  AppWindow,
+  Database,
+  Shapes,
+  type LucideIcon,
+} from 'lucide-react';
 import {
   TYPE_LABEL,
   type RegistryItem,
@@ -16,8 +26,21 @@ type SortKey = 'featured' | 'az' | 'type';
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
+/**
+ * Per-type icon + accent (hub palette) — the visual key shared by the type
+ * filter chips and the cards, so each of the four artifact classes reads at a
+ * glance. `active` = solid-fill chip classes; `tone` = the idle icon/label color.
+ */
+const TYPE_META: Record<RegistryType, { Icon: LucideIcon; active: string; tone: string }> = {
+  Teaching: { Icon: GraduationCap, active: 'border-hub-teal bg-hub-teal text-white', tone: 'text-hub-teal' },
+  Blog: { Icon: Newspaper, active: 'border-hub-plum bg-hub-plum text-white', tone: 'text-hub-plum' },
+  App: { Icon: AppWindow, active: 'border-hub-blue bg-hub-blue text-white', tone: 'text-hub-blue' },
+  Dataset: { Icon: Database, active: 'border-hub-amber bg-hub-amber text-white', tone: 'text-hub-amber' },
+};
+
 function GalleryCard({ item }: { item: RegistryItem }) {
   const newTab = item.external || item.openInNewTab;
+  const { Icon: TypeIcon, tone } = TYPE_META[item.type];
   const inner = (
     <>
       <div className="relative aspect-[16/10] overflow-hidden bg-hub-paper2">
@@ -30,10 +53,9 @@ function GalleryCard({ item }: { item: RegistryItem }) {
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-hub-paper2">
-            <span className="font-serif text-2xl font-semibold tracking-tight" style={{ color: item.accent }}>
-              {TYPE_LABEL[item.type]}
-            </span>
+          <div className={`flex h-full w-full flex-col items-center justify-center gap-2 bg-hub-paper2 ${tone}`}>
+            <TypeIcon size={30} strokeWidth={1.6} />
+            <span className="font-serif text-xl font-semibold tracking-tight">{TYPE_LABEL[item.type]}</span>
           </div>
         )}
         <span className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: item.accent }} />
@@ -46,7 +68,8 @@ function GalleryCard({ item }: { item: RegistryItem }) {
 
       <div className="flex flex-grow flex-col p-4">
         <div className="flex items-center gap-2">
-          <span className="font-plex text-[10px] uppercase tracking-[0.05em]" style={{ color: item.accent }}>
+          <span className={`flex items-center gap-1 font-plex text-[10px] uppercase tracking-[0.05em] ${tone}`}>
+            <TypeIcon size={12} strokeWidth={2.3} />
             {TYPE_LABEL[item.type]}
           </span>
           {item.topic && (
@@ -92,18 +115,34 @@ function GalleryCard({ item }: { item: RegistryItem }) {
   );
 }
 
-/** Prominent primary filter — the four artifact types. */
-function TypeTab({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+/** Prominent primary filter — the four artifact types, each with its own icon
+ *  and accent. `Icon` inherits the chip's text color when active, else `toneClass`. */
+function TypeTab({
+  Icon,
+  active,
+  activeClass,
+  toneClass,
+  onClick,
+  children,
+}: {
+  Icon: LucideIcon;
+  active: boolean;
+  activeClass: string;
+  toneClass: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={`shrink-0 rounded-full border px-4 py-2 font-plex text-[12.5px] font-medium uppercase tracking-[0.06em] transition-colors ${
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-2 font-plex text-[12.5px] font-medium uppercase tracking-[0.06em] transition-colors ${
         active
-          ? 'border-hub-teal bg-hub-teal text-white shadow-hub'
+          ? `${activeClass} shadow-hub`
           : 'border-hub-line bg-hub-card text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink'
       }`}
     >
+      <Icon size={14} strokeWidth={2.2} className={active ? undefined : toneClass} />
       {children}
     </button>
   );
@@ -155,73 +194,93 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
 
   return (
     <div>
-      {/* Primary filter: artifact type (prominent) */}
-      <div className="flex flex-wrap items-center gap-2">
-        <TypeTab active={type === 'all'} onClick={() => setType('all')}>
-          All · {facets.total}
-        </TypeTab>
-        {facets.types.map(t => (
-          <TypeTab key={t.type} active={type === t.type} onClick={() => setType(t.type)}>
-            {t.label} · {t.count}
+      {/* Sticky filter bar — type, search, and topic controls stay in reach as
+          the gallery scrolls. Sits just below the sticky hub header. */}
+      <div className="sticky top-14 z-30 -mx-5 border-b border-hub-line bg-hub-paper/95 px-5 pb-3 pt-3 backdrop-blur-md sm:-mx-7 sm:px-7">
+        {/* Primary filter: artifact type (prominent) */}
+        <div className="flex flex-wrap items-center gap-2">
+          <TypeTab
+            Icon={Shapes}
+            active={type === 'all'}
+            activeClass="border-hub-ink bg-hub-ink text-hub-paper"
+            toneClass="text-hub-ink-faint"
+            onClick={() => setType('all')}
+          >
+            All · {facets.total}
           </TypeTab>
-        ))}
-      </div>
-
-      {/* Search + sort */}
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="relative flex-grow">
-          <Search
-            size={15}
-            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-hub-ink-faint"
-          />
-          <input
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search studios, data stories, apps, datasets…"
-            className="w-full rounded-full border border-hub-line bg-hub-card py-2.5 pl-10 pr-9 text-[14px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
-          />
-          {query && (
-            <button
-              type="button"
-              onClick={() => setQuery('')}
-              aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-hub-ink-faint hover:text-hub-ink"
-            >
-              <X size={15} />
-            </button>
-          )}
+          {facets.types.map(t => {
+            const meta = TYPE_META[t.type];
+            return (
+              <TypeTab
+                key={t.type}
+                Icon={meta.Icon}
+                active={type === t.type}
+                activeClass={meta.active}
+                toneClass={meta.tone}
+                onClick={() => setType(t.type)}
+              >
+                {t.label} · {t.count}
+              </TypeTab>
+            );
+          })}
         </div>
 
-        <select
-          value={sort}
-          onChange={e => setSort(e.target.value as SortKey)}
-          aria-label="Sort"
-          className="rounded-md border border-hub-line bg-hub-card px-2.5 py-2 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
-        >
-          <option value="featured">Featured</option>
-          <option value="az">A–Z</option>
-          <option value="type">By type</option>
-        </select>
-      </div>
-
-      {/* Secondary filter: topic chips (by frequency) */}
-      {facets.topics.length > 0 && (
-        <div className="mt-4 flex items-center gap-2">
-          <span className="hidden shrink-0 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:inline">
-            Topic
-          </span>
-          <div className="flex gap-1.5 overflow-x-auto pb-1">
-            <TopicChip active={topic === 'all'} onClick={() => setTopic('all')}>
-              All
-            </TopicChip>
-            {facets.topics.map(t => (
-              <TopicChip key={t.topic} active={topic === t.topic} onClick={() => setTopic(t.topic)}>
-                {t.topic} · {t.count}
-              </TopicChip>
-            ))}
+        {/* Search + sort */}
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-grow">
+            <Search
+              size={15}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-hub-ink-faint"
+            />
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search studios, data stories, apps, datasets…"
+              className="w-full rounded-full border border-hub-line bg-hub-card py-2.5 pl-10 pr-9 text-[14px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-hub-ink-faint hover:text-hub-ink"
+              >
+                <X size={15} />
+              </button>
+            )}
           </div>
+
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value as SortKey)}
+            aria-label="Sort"
+            className="rounded-md border border-hub-line bg-hub-card px-2.5 py-2 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
+          >
+            <option value="featured">Featured</option>
+            <option value="az">A–Z</option>
+            <option value="type">By type</option>
+          </select>
         </div>
-      )}
+
+        {/* Secondary filter: topic chips (by frequency) */}
+        {facets.topics.length > 0 && (
+          <div className="mt-3 flex items-center gap-2">
+            <span className="hidden shrink-0 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:inline">
+              Topic
+            </span>
+            <div className="flex gap-1.5 overflow-x-auto pb-1">
+              <TopicChip active={topic === 'all'} onClick={() => setTopic('all')}>
+                All
+              </TopicChip>
+              {facets.topics.map(t => (
+                <TopicChip key={t.topic} active={topic === t.topic} onClick={() => setTopic(t.topic)}>
+                  {t.topic} · {t.count}
+                </TopicChip>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
       <p className="mb-5 mt-4 font-plex text-[11.5px] uppercase tracking-[0.06em] text-hub-ink-faint">
         {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
