@@ -2,6 +2,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import type { Article, Book, ArticleLookup } from '@/lib/book-types';
 import { ChapterTocDrawer } from '@/components/Book/ChapterTocDrawer';
+import { BookSidebar } from '@/components/Book/BookSidebar';
 import { OnThisPage } from '@/components/Book/OnThisPage';
 import { ReadingProgress } from '@/components/Book/ReadingProgress';
 import { KeyboardNav } from '@/components/Book/KeyboardNav';
@@ -36,12 +37,12 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
       <ReadingProgress />
       <BookTopBar title={book.title} />
 
-      <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-10 xl:grid xl:grid-cols-[minmax(8rem,1fr)_minmax(0,48rem)_13rem] xl:gap-9 2xl:grid-cols-[minmax(12rem,1fr)_minmax(0,48rem)_13rem]">
-        {/* Left spacer — balances the right TOC rail so the prose column
-            stays optically centered on wide screens. */}
-        <div className="hidden xl:block" aria-hidden="true" />
+      <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-8 xl:px-10 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[16rem_minmax(0,1fr)_13rem] xl:gap-10">
+        {/* Persistent chapter navigation — fixed-open on lg+ screens; below lg
+            the floating ChapterTocDrawer takes over. */}
+        <BookSidebar book={book} currentSlug={slug} />
 
-        <div className="mx-auto w-full max-w-3xl xl:mx-0 xl:max-w-none">
+        <div className="mx-auto w-full max-w-3xl lg:max-w-[44rem]">
           <nav className="pt-8 text-sm text-muted" aria-label="Breadcrumb">
             <Link href="/teaching" className="hover:text-link">
               {book.title}
