@@ -158,14 +158,14 @@ body {
    article reading pages keep their own (fixed) theme.
    ============================================================ */
 :root {
-  --hub-paper: 250 247 242;
-  --hub-paper2: 243 238 229;
+  --hub-paper: 255 255 255;
+  --hub-paper2: 247 248 250;
   --hub-card: 255 255 255;
-  --hub-ink: 28 26 23;
-  --hub-ink-soft: 74 69 64;
-  --hub-ink-faint: 122 115 108;
-  --hub-line: 228 220 208;
-  --hub-line-strong: 210 199 184;
+  --hub-ink: 24 24 27;
+  --hub-ink-soft: 71 75 82;
+  --hub-ink-faint: 122 126 134;
+  --hub-line: 228 230 235;
+  --hub-line-strong: 205 209 217;
   --hub-teal: 47 111 107;
   --hub-teal-soft: 230 240 238;
   --hub-amber: 185 118 42;
@@ -197,9 +197,6 @@ body {
 .hub-scope {
   background-color: rgb(var(--hub-paper));
   color: rgb(var(--hub-ink));
-  background-image:
-    radial-gradient(1100px 360px at 82% -6%, rgba(47, 111, 107, 0.07), transparent 60%),
-    radial-gradient(820px 300px at 6% 2%, rgba(185, 118, 42, 0.07), transparent 62%);
 }
 .dark .hub-scope {
   background-image:
@@ -207,17 +204,14 @@ body {
     radial-gradient(820px 300px at 6% 2%, rgba(216, 156, 82, 0.05), transparent 62%);
 }
 
+/* Header band — clean white with a faint blueprint grid behind the title.
+   Theme-aware via --hub-line (flips in dark mode). */
 .hub-hero {
+  background-color: rgb(var(--hub-paper));
   background-image:
-    radial-gradient(1200px 380px at 78% -8%, rgba(47, 111, 107, 0.10), transparent 60%),
-    radial-gradient(900px 320px at 8% 4%, rgba(185, 118, 42, 0.10), transparent 62%),
-    linear-gradient(180deg, rgb(var(--hub-paper2)), rgb(var(--hub-paper)));
-}
-.dark .hub-hero {
-  background-image:
-    radial-gradient(1200px 380px at 78% -8%, rgba(95, 188, 180, 0.07), transparent 60%),
-    radial-gradient(900px 320px at 8% 4%, rgba(216, 156, 82, 0.06), transparent 62%),
-    linear-gradient(180deg, rgb(var(--hub-card)), rgb(var(--hub-paper)));
+    linear-gradient(to right, rgb(var(--hub-line) / 0.6) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--hub-line) / 0.6) 1px, transparent 1px);
+  background-size: 80px 80px;
 }
 
 /* Part divider banners — one tint per part (light) */
