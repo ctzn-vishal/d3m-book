@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
 import { allArticles } from '@/lib/book-toc';
@@ -6,15 +7,13 @@ import { studios } from '@/lib/studios';
 import { getPartContent } from '@/lib/book-content';
 import { resolveIcon, partColor } from '@/lib/book-visuals';
 import { BookFrame } from '@/components/Book/BookFrame';
-import { ChapterCard } from '@/components/Book/ChapterCard';
 
 /**
- * The book's contents page. A light, editorial masthead (in the same white
- * reading theme + chrome as the articles — no warm hub palette) introduces the
- * book, followed by "the arc of the book": the seven parts as a connected
- * journey from raw business questions to AI workflows. Below, the full table of
- * contents reads like front matter — one ruled section per part, each with a
- * grid of chapter cards. Each part carries its own accent color.
+ * The book's contents page. A full-width hero image carries the title, then the
+ * book's table of contents is presented as "the arc of the book": one card per
+ * part (in reading order, 0 → VI), each linking to its overview and listing its
+ * chapters. Same white reading theme + chrome as the articles; each part carries
+ * its own accent color.
  */
 
 /** Per-part accent hex (matches the 600-shade in book-visuals PART_COLORS),
@@ -38,48 +37,25 @@ export function TeachingCover({ book }: { book: Book }) {
 
   return (
     <BookFrame book={book}>
-      {/* ── Masthead ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden border-b border-border bg-surface">
-        {/* Faint dotted-grid texture + a soft accent wash along the top edge —
-            kept light and cheap so the page reads as the white book theme (not
-            the warm hub gallery) and rasterizes without heavy blur passes. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-72 opacity-50"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(15,23,42,0.05) 1px, transparent 0)',
-            backgroundSize: '22px 22px',
-          }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-40"
-          style={{ background: 'linear-gradient(180deg, rgba(14,165,233,0.06), transparent)' }}
-        />
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden border-b border-border bg-slate-950">
+        <Image src="/hero.webp" alt="" fill priority sizes="100vw" className="object-cover brightness-[1.08]" />
+        {/* Light scrims so the collage stays visible; a drop-shadow on the text
+            keeps the white type legible without a heavy overlay. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/65 via-slate-950/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
 
-        <div className="relative mx-auto max-w-5xl px-5 py-16 sm:px-6 sm:py-20 lg:px-10">
-          {/* Seven-part color spine — the journey, in miniature */}
-          <div className="mb-7 flex items-center gap-1.5" aria-hidden>
-            {book.parts.map((p, i) => (
-              <span
-                key={p.numeral}
-                className="h-1.5 flex-1 rounded-full"
-                style={{ background: partHex(i), opacity: 0.85 }}
-              />
-            ))}
-          </div>
-
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-muted">
+        <div className="relative mx-auto max-w-5xl px-5 py-16 drop-shadow-[0_2px_16px_rgba(2,6,23,0.75)] sm:px-6 sm:py-24 lg:px-10">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/70">
             An interactive textbook · Vishal Singh · NYU Stern
           </p>
-          <h1 className="mt-4 max-w-3xl font-display text-[clamp(34px,6vw,58px)] font-semibold leading-[1.05] tracking-tight text-body">
+          <h1 className="mt-3 max-w-3xl font-display text-[clamp(32px,5.5vw,54px)] font-semibold leading-[1.07] tracking-tight text-white">
             {book.title}
           </h1>
-          <p className="mt-4 max-w-2xl font-display text-[clamp(17px,2.4vw,23px)] font-medium leading-snug text-subtle">
+          <p className="mt-3 max-w-2xl font-display text-[clamp(17px,2.4vw,22px)] font-medium leading-snug text-white/90">
             {book.subtitle}
           </p>
-          <p className="mt-5 max-w-2xl text-[15.5px] leading-relaxed text-muted">
+          <p className="mt-5 max-w-2xl text-[15.5px] leading-relaxed text-white/80">
             An expandable online book that moves from raw business questions to visual evidence,
             causal estimates, machine-learning models, and modern AI agents — each chapter paired
             with real datasets and hands-on interactive studios.
@@ -89,7 +65,7 @@ export function TeachingCover({ book }: { book: Book }) {
             {firstSlug && (
               <Link
                 href={`/${firstSlug}`}
-                className="inline-flex items-center gap-2 rounded-md bg-brand-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-link-hover"
+                className="inline-flex items-center gap-2 rounded-md bg-brand-primary px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-sky-950/30 transition-colors hover:bg-link-hover"
               >
                 <BookOpen size={16} strokeWidth={2} /> Start reading
                 <ArrowRight size={15} />
@@ -97,20 +73,19 @@ export function TeachingCover({ book }: { book: Book }) {
             )}
             <Link
               href="/"
-              className="inline-flex items-center gap-2 rounded-md border border-border bg-surface px-4 py-2.5 text-sm font-medium text-subtle transition-colors hover:border-border-strong hover:text-link"
+              className="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
               <LayoutGrid size={15} strokeWidth={2} /> Browse the gallery
             </Link>
           </div>
 
-          {/* Stats */}
-          <dl className="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+          <dl className="mt-9 flex flex-wrap gap-x-8 gap-y-3 text-white">
             {stats.map(s => (
               <div key={s.label}>
                 <dt className="sr-only">{s.label}</dt>
-                <dd className="font-display text-2xl font-semibold text-body">
+                <dd className="font-display text-2xl font-semibold">
                   {s.value}
-                  <span className="ml-1.5 align-baseline text-[13px] font-normal uppercase tracking-wider text-muted">
+                  <span className="ml-1.5 align-baseline text-[12.5px] font-normal uppercase tracking-wider text-white/65">
                     {s.label}
                   </span>
                 </dd>
@@ -120,89 +95,78 @@ export function TeachingCover({ book }: { book: Book }) {
         </div>
       </section>
 
-      {/* ── The arc of the book ──────────────────────────────────────── */}
-      <section className="mx-auto max-w-5xl px-5 pt-12 sm:px-6 lg:px-10">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">The arc of the book</p>
-        <h2 className="mt-1.5 font-display text-[clamp(20px,3vw,28px)] font-semibold leading-tight text-body">
-          From business questions to AI workflows
-        </h2>
-        <p className="mt-2 max-w-2xl text-[14.5px] leading-relaxed text-muted">
-          Seven parts, each building on the last. Jump in anywhere — or follow the path end to end.
-        </p>
+      {/* ── The arc of the book — card TOC ───────────────────────────── */}
+      <section className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16 lg:px-10">
+        <div className="max-w-2xl">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">The arc of the book</p>
+          <h2 className="mt-1.5 font-display text-[clamp(22px,3.2vw,30px)] font-semibold leading-tight text-body">
+            From business questions to AI workflows
+          </h2>
+          <p className="mt-2 text-[15px] leading-relaxed text-muted">
+            Seven parts, each building on the last. Pick a part to see its chapters — or start at the
+            beginning and follow the path end to end.
+          </p>
+        </div>
 
-        <div className="relative mt-8">
-          {/* Connecting line — visible only on lg, where the parts sit in one row */}
-          <div
-            aria-hidden
-            className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-transparent via-border to-transparent lg:block"
-          />
-          <ol className="relative grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-4 lg:grid-cols-7">
-            {book.parts.map((part, i) => {
-              const content = getPartContent(part.numeral);
-              const PartIcon = resolveIcon(content?.icon);
-              const hex = partHex(i);
-              return (
-                <li key={part.numeral}>
-                  <Link href={`/teaching/part/${part.numeral}`} className="group flex flex-col items-center text-center">
-                    <span
-                      className="relative z-10 flex h-12 w-12 items-center justify-center rounded-xl border-2 bg-surface transition-transform duration-200 group-hover:-translate-y-0.5"
-                      style={{ borderColor: hex }}
-                    >
-                      <PartIcon size={20} strokeWidth={1.8} style={{ color: hex }} />
+        <ol className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {book.parts.map((part, i) => {
+            const content = getPartContent(part.numeral);
+            const PartIcon = resolveIcon(content?.icon);
+            const color = partColor(i);
+            const hex = partHex(i);
+
+            return (
+              <li key={part.numeral} className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md">
+                <span aria-hidden className="h-1 w-full shrink-0" style={{ background: hex }} />
+
+                <div className="flex flex-1 flex-col p-5">
+                  <Link href={`/teaching/part/${part.numeral}`} className="flex items-start gap-3">
+                    <span className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${color.chip} ${color.icon} transition-transform duration-200 group-hover:scale-105`}>
+                      <PartIcon size={20} strokeWidth={1.8} />
                     </span>
-                    <span className="mt-2.5 font-mono text-[10px] uppercase tracking-wider text-muted">
-                      Part {part.numeral}
-                    </span>
-                    <span className="mt-0.5 text-[12.5px] font-medium leading-snug text-subtle transition-colors group-hover:text-link">
-                      {content?.tagline ?? part.title}
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-mono text-[10.5px] uppercase tracking-wider text-muted">
+                        Part {part.numeral} · {part.chapters.length} {part.chapters.length === 1 ? 'chapter' : 'chapters'}
+                      </span>
+                      <span className="mt-0.5 block font-display text-[16.5px] font-semibold leading-snug text-body transition-colors group-hover:text-link">
+                        {part.title}
+                      </span>
                     </span>
                   </Link>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
 
-      {/* ── Full contents ────────────────────────────────────────────── */}
-      <div className="mx-auto max-w-5xl px-5 pb-24 sm:px-6 lg:px-10">
-        {book.parts.map((part, i) => {
-          const content = getPartContent(part.numeral);
-          const PartIcon = resolveIcon(content?.icon);
-          const color = partColor(i);
-
-          return (
-            <section key={part.numeral} className="mt-14 scroll-mt-20 first:mt-12" id={`part-${part.numeral}`}>
-              <Link href={`/teaching/part/${part.numeral}`} className="group flex items-start gap-3 border-b border-border pb-4">
-                <span className={`mt-0.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${color.chip} ${color.icon}`}>
-                  <PartIcon size={20} strokeWidth={1.8} />
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-mono text-[11px] uppercase tracking-wider text-muted">
-                    Part {part.numeral} · {part.chapters.length} {part.chapters.length === 1 ? 'chapter' : 'chapters'}
-                  </span>
-                  <span className="mt-0.5 flex items-center gap-2 font-display text-[clamp(20px,2.6vw,26px)] font-semibold leading-tight text-body transition-colors group-hover:text-link">
-                    {part.title}
-                    <ArrowRight
-                      size={18}
-                      className="hidden shrink-0 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 sm:inline"
-                    />
-                  </span>
                   {content?.tagline && (
-                    <span className="mt-1 block text-[14px] text-muted">{content.tagline}</span>
+                    <p className="mt-2.5 text-[13px] leading-snug text-muted">{content.tagline}</p>
                   )}
-                </span>
-              </Link>
 
-              <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {part.chapters.map(ch => (
-                  <ChapterCard key={ch.number} chapter={ch} color={color} />
-                ))}
-              </div>
-            </section>
-          );
-        })}
-      </div>
+                  <ul className="mt-4 flex flex-1 flex-col gap-0.5 border-t border-border pt-3">
+                    {part.chapters.map(ch => (
+                      <li key={ch.number}>
+                        <Link
+                          href={`/teaching/ch/${ch.number}`}
+                          className="-mx-2 flex items-baseline gap-2.5 rounded-md px-2 py-1.5 text-[13.5px] leading-snug text-subtle transition-colors hover:bg-card hover:text-link"
+                        >
+                          <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">
+                            {String(ch.number).padStart(2, '0')}
+                          </span>
+                          <span>{ch.title}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link
+                    href={`/teaching/part/${part.numeral}`}
+                    className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-medium text-muted transition-colors hover:text-link"
+                  >
+                    Explore Part {part.numeral}
+                    <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+                  </Link>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
     </BookFrame>
   );
 }
