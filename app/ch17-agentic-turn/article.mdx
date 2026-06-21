@@ -1,0 +1,95 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
+import { Cite, SourceList } from '@/components/Book/part6/Sources';
+import { WorkflowVsAgent, AgentAnatomy, AutonomyLadder, AdoptionGap } from '@/components/Book/part6/AgentTurnDiagrams';
+
+export const sources = [
+  { id: 'anthropic-agents', title: 'Building Effective Agents', publisher: 'Anthropic', year: '2024', url: 'https://www.anthropic.com/research/building-effective-agents' },
+  { id: 'openai-guide', title: 'A Practical Guide to Building Agents', publisher: 'OpenAI', year: '2025', url: 'https://openai.com/business/guides-and-resources/a-practical-guide-to-building-ai-agents/' },
+  { id: 'snowflake-agent', title: 'Your Enterprise Data Needs an Agent: AI Data Agents in Snowflake Cortex', publisher: 'Snowflake', year: '2025', url: 'https://www.snowflake.com/en/blog/ai-data-agents-snowflake-cortex/' },
+  { id: 'mckinsey', title: 'The State of AI in 2025: Agents, innovation, and transformation', publisher: 'McKinsey & Company (QuantumBlack)', year: '2025', url: 'https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai' },
+  { id: 'gartner-apps', title: 'Gartner Predicts 40% of Enterprise Apps Will Feature Task-Specific AI Agents by 2026', publisher: 'Gartner', year: '2025', url: 'https://www.gartner.com/en/newsroom/press-releases/2025-08-26-gartner-predicts-40-percent-of-enterprise-apps-will-feature-task-specific-ai-agents-by-2026-up-from-less-than-5-percent-in-2025' },
+  { id: 'gartner-cancel', title: 'Gartner Predicts Over 40% of Agentic AI Projects Will Be Canceled by End of 2027', publisher: 'Gartner', year: '2025', url: 'https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027' },
+  { id: 'snowflake-intel', title: 'Snowflake Intelligence Brings Agentic AI to the Enterprise', publisher: 'Snowflake', year: '2025', url: 'https://www.snowflake.com/en/news/press-releases/snowflake-intelligence-brings-agentic-AI-to-the-enterprise/' },
+  { id: 'deloitte', title: 'Autonomous generative AI agents: Under development', publisher: 'Deloitte Insights', year: '2024', url: 'https://www.deloitte.com/us/en/insights/industry/technology/technology-media-and-telecom-predictions/2025/autonomous-generative-ai-agents-still-under-development.html' },
+];
+
+<div className="not-prose mb-6">
+  <LadderPosition compact current={6} caption="Part VI — the data-to-decision loop, now operated by AI agents." />
+</div>
+
+<DropCap>
+
+Every chapter so far has assumed a human at the controls. A person framed the question, wrote the SQL, fit the model, read the chart, and signed the memo. The methods changed; the operator did not. This final part asks what changes when the operator is an AI agent — when a system can pull data from the warehouse, run an analysis, watch a model for drift, and draft the recommendation, calling on the human only at the moments that matter. This is not science fiction. By 2026 it ships as product. The job of Part VI is to survey what is real, what is hype, and what it means for how a data-driven organization is run.
+
+</DropCap>
+
+The word *agent* has been stretched to cover everything from a chatbot to a science-fiction android, so the first task is to pin it down. The distinction that has held up — and that the major labs now share — is about who controls the workflow.
+
+## Workflow or agent?
+
+Anthropic's widely cited guidance draws the line cleanly: a **workflow** is a system where models and tools are orchestrated through predefined code paths, while an **agent** is a system where the model dynamically directs its own process and tool use, keeping control over how it accomplishes the task.<Cite id="anthropic-agents" sources={sources} /> OpenAI's framing agrees from the other side — an agent is a system that *independently accomplishes tasks on your behalf*; an app that calls a model but does not let it control execution (a simple chatbot, a single-turn classifier) is not an agent at all.<Cite id="openai-guide" sources={sources} />
+
+<Figure caption="Figure 1. The dividing line is who chooses the next step. In a workflow the developer fixes the path; in an agent the model discovers it at run time.">
+  <div className="not-prose">
+    <WorkflowVsAgent />
+  </div>
+</Figure>
+
+The difference matters for managers because it changes what you are buying and what can go wrong. A workflow is bounded and testable: it does the same five steps every time. An agent is flexible and open-ended: it can handle a question you didn't anticipate — and it can also wander somewhere you didn't intend. Most production systems are still workflows with a little agency sprinkled in. The frontier is moving toward genuine agents, and the rest of this part is about that frontier.
+
+## What a data agent is made of
+
+Strip away the marketing and a data agent has a recognizable anatomy. At the center is a language model — the reasoning core. Around it sit four augmentations: **tools** (the ability to run SQL, search, or execute code), **memory** (state that persists across turns), **retrieval** (access to documents and the firm's semantic layer), and **planning** (the ability to decompose a goal and reflect on progress). What turns these parts into an agent is the *loop*: the model plans, acts on the world through a tool, observes the result as ground truth, reflects, and decides what to do next — stopping when the goal is met or when it is time to ask a human.<Cite id="anthropic-agents" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 2. A data agent is an augmented model running a control loop. Snowflake describes its Cortex data agents with exactly this shape — a model plus tools, running plan → act → observe → reflect — operating inside the warehouse's governance perimeter.">
+  <div className="not-prose">
+    <AgentAnatomy />
+  </div>
+</Figure>
+
+This is not a hypothetical diagram. Snowflake describes its Cortex data agents in precisely these terms: a model (Anthropic's Claude) combined with a text-to-SQL tool and a search tool, running a four-step *planning → tool use → reflection → monitor-and-iterate* loop inside the data platform's existing security boundary.<Cite id="snowflake-agent" sources={sources} /> The remaining chapters of this part take the four augmentations in turn — querying data ([§17.2](/ch17-text-to-sql)), running predictive workflows ([§17.3](/ch17-predictive-workflows)), connecting to tools ([§17.4](/ch17-mcp-orchestration)), and governing the whole thing ([§17.5](/ch17-agent-governance)).
+
+## The autonomy dial
+
+The most important managerial idea in this part is that *autonomy is a setting, not a property*. The same model can be deployed to merely suggest, to draft-and-wait, to act only after a human approves, or to run a routine loop unsupervised. Autonomy is co-determined by the model, the human oversight wrapped around it, and the product design — which means it is something you choose, deliberately, per task.
+
+<Figure caption="Figure 3. The autonomy dial. A pricing change might sit at rung 2; a nightly data refresh at rung 4. The dial is set by the deploying team, not by the model.">
+  <div className="not-prose">
+    <AutonomyLadder />
+  </div>
+</Figure>
+
+<Callout variant="finding" title="The reframe">
+For thirty years, &ldquo;more automation&rdquo; meant writing more rules. With agents it means turning a dial — and the dial's setting is a risk decision, not a technical one. Low-stakes, reversible, frequently-run tasks earn more autonomy; high-stakes, irreversible, one-off decisions earn less.
+</Callout>
+
+## Where the market actually is
+
+It is easy to mistake the volume of agent announcements for the volume of agent deployment. The honest picture is a wide experiment-to-scale gap. McKinsey's 2025 survey found that while 88% of organizations use AI regularly and 62% are at least experimenting with agents, only 23% are scaling an agent in even one function — and fewer than 10% are scaling agents in any single function. Just 39% report enterprise-level profit impact.<Cite id="mckinsey" sources={sources} />
+
+<Figure caption="Figure 4. Almost everyone is experimenting; almost no one is running agents at scale. The shape of every credible 2025 survey.">
+  <div className="not-prose">
+    <AdoptionGap />
+  </div>
+</Figure>
+
+The trajectory, though, is steep. Gartner expects 40% of enterprise applications to embed task-specific AI agents by the end of 2026, up from under 5% a year earlier;<Cite id="gartner-apps" sources={sources} /> Deloitte projected the share of generative-AI adopters running agentic pilots to climb from a quarter in 2025 toward half by 2027.<Cite id="deloitte" sources={sources} /> And the data platforms are already reporting scale: within three months of launch, Snowflake said more than a thousand customers had deployed over fifteen thousand AI agents on its Intelligence product.<Cite id="snowflake-intel" sources={sources} />
+
+<Pitfall title="Agent washing and autonomy theater">
+Because &ldquo;agent&rdquo; sells, vendors slap the label on ordinary workflows and dashboards. Gartner went so far as to estimate that of thousands of vendors claiming agentic AI, only about 130 offer the real thing. **Before believing an &ldquo;agent,&rdquo; ask the workflow-or-agent question: does the model actually choose its own steps and tools, or is it filling blanks in a fixed script?** The honest answer is usually the latter — which is fine, as long as you are not paying agent prices for workflow capability.
+</Pitfall>
+
+The same forces that drive adoption also drive disappointment: Gartner forecasts that more than 40% of agentic-AI projects will be canceled by the end of 2027, undone by cost, unclear value, and weak controls.<Cite id="gartner-cancel" sources={sources} /> That is not a reason to stay out. It is a reason to bring discipline — the kind this book has spent seventeen chapters building.
+
+<Takeaway label="The frame for Part VI">
+
+An agent is a model that controls its own workflow; a data agent is that model augmented with tools, memory, retrieval, and planning, running a loop over the firm's data. The capability is real and arriving fast, but it is shallow in production and surrounded by hype. The manager's job is not to chase autonomy but to set it deliberately — task by task, on a dial whose position is a risk decision. The chapters that follow survey the four capabilities that make agentic analytics work, and the governance that keeps it safe.
+
+</Takeaway>
+
+<SourceList sources={sources} note="Verified June 2026" />

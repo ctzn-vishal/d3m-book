@@ -28,7 +28,7 @@ export const PART_COLORS: PartColor[] = [
   { icon: 'text-orange-600', chip: 'bg-orange-50' }, // Part III — Quantifying Effects
   { icon: 'text-indigo-600', chip: 'bg-indigo-50' }, // Part IV — Language of Algorithms
   { icon: 'text-rose-600', chip: 'bg-rose-50' }, // Part V  — Unstructured / GenAI
-  { icon: 'text-teal-600', chip: 'bg-teal-50' }, // Part VI — Operating the System
+  { icon: 'text-teal-600', chip: 'bg-teal-50' }, // Part VI — D3M with AI Agents
 ];
 
 export function partColor(index: number): PartColor {

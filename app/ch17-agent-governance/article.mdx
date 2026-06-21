@@ -1,0 +1,89 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { Cite, SourceList } from '@/components/Book/part6/Sources';
+import { LethalTrifecta, GovernanceQuadrants, AgentTraceTree, EuAiActTimeline } from '@/components/Book/part6/PlumbingGovernanceDiagrams';
+
+export const sources = [
+  { id: 'anthropic-evals', title: 'Demystifying Evals for AI Agents', publisher: 'Anthropic (Engineering)', year: '2026', url: 'https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents' },
+  { id: 'eval-survey', title: 'Survey on Evaluation of LLM-based Agents', publisher: 'arXiv 2503.16416 (Yehudai et al.)', year: '2025', url: 'https://arxiv.org/abs/2503.16416' },
+  { id: 'otel', title: 'Inside the LLM Call: GenAI Observability with OpenTelemetry', publisher: 'OpenTelemetry', year: '2026', url: 'https://opentelemetry.io/blog/2026/genai-observability/' },
+  { id: 'langsmith', title: 'LangSmith: AI Agent & LLM Observability Platform', publisher: 'LangChain', year: '2026', url: 'https://www.langchain.com/langsmith/observability' },
+  { id: 'phoenix', title: 'arize-ai/phoenix: AI Observability & Evaluation', publisher: 'Arize AI (GitHub)', year: '2026', url: 'https://github.com/arize-ai/phoenix' },
+  { id: 'trifecta', title: 'The Lethal Trifecta for AI Agents: Private Data, Untrusted Content, and External Communication', publisher: "Simon Willison's Weblog", year: '2025', url: 'https://simonwillison.net/2025/Jun/16/the-lethal-trifecta/' },
+  { id: 'owasp', title: 'OWASP Top 10 for LLM Applications 2025', publisher: 'OWASP Gen AI Security Project', year: '2025', url: 'https://genai.owasp.org/resource/owasp-top-10-for-llm-applications-2025/' },
+  { id: 'echoleak', title: 'EchoLeak: The First Real-World Zero-Click Prompt Injection Exploit in a Production LLM System', publisher: 'arXiv 2509.10540', year: '2025', url: 'https://arxiv.org/abs/2509.10540' },
+  { id: 'nvd', title: 'CVE-2025-32711 Detail (EchoLeak, CVSS 9.3)', publisher: 'NIST National Vulnerability Database', year: '2025', url: 'https://nvd.nist.gov/vuln/detail/CVE-2025-32711' },
+  { id: 'openai-guardrails', title: 'Guardrails and Human Review (Agents Guide)', publisher: 'OpenAI Developer Platform', year: '2026', url: 'https://developers.openai.com/api/docs/guides/agents/guardrails-approvals' },
+  { id: 'eu-act', title: 'EU AI Act Implementation Timeline', publisher: 'EU AI Act information hub', year: '2025', url: 'https://artificialintelligenceact.eu/implementation-timeline/' },
+  { id: 'nist', title: 'Artificial Intelligence Risk Management Framework: Generative AI Profile (NIST AI 600-1)', publisher: 'NIST (U.S. Dept. of Commerce)', year: '2024', url: 'https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf' },
+  { id: 'iso', title: 'ISO/IEC 42001:2023 — Artificial intelligence — Management system', publisher: 'ISO', year: '2023', url: 'https://www.iso.org/standard/42001' },
+];
+
+<DropCap>
+
+Once a data agent is in production, the interesting question is no longer &ldquo;can it reason?&rdquo; but &ldquo;can we trust, measure, watch, and govern what it does?&rdquo; An agent that writes its own SQL, calls its own tools, and acts on the firm's data is a new kind of operational risk: capable, fast, occasionally confidently wrong, and reachable by anyone who can get text in front of it. This chapter is the discipline that makes the previous four chapters safe to deploy. It rests on four pillars — evaluate, observe, secure, govern — and a working data team needs all four.
+
+</DropCap>
+
+<Figure width="page-outset" caption="Figure 1. The four questions every production data agent must answer. The tools and standards under each are the current state of the art.">
+  <div className="not-prose">
+    <GovernanceQuadrants />
+  </div>
+</Figure>
+
+## The transcript can lie
+
+Evaluation is harder for agents than for models, and for a reason worth internalizing. As Anthropic puts it, a flight-booking agent might end its transcript with &ldquo;Your flight has been booked&rdquo; — but the only outcome that matters is whether a reservation actually exists in the environment's database.<Cite id="anthropic-evals" sources={sources} /> The transcript is what the agent *says*; the outcome is what the agent *did*, and the two can diverge. So practitioners separate **trajectory evals** (were the tool choices and reasoning steps sound?) from **outcome evals** (did the world end up in the right state?), and grade them with calibrated LLM-as-judge rubrics checked against a human gold set — giving the judge permission to answer &ldquo;Unknown&rdquo; rather than guess.<Cite id="anthropic-evals" sources={sources} /> Academic surveys confirm the gaps: evaluation of cost, safety, and robustness remains immature.<Cite id="eval-survey" sources={sources} />
+
+<Callout variant="finding" title="Evals are CI for agents">
+The mature teams treat evals the way software teams treat tests: run them early and often, localize a failure to one behavior, change one thing, re-run. An agent without an eval suite is a deploy without tests — it works until the day it spectacularly doesn't.
+</Callout>
+
+## You can't govern what you can't see
+
+Because an agent's path is discovered at run time, you cannot reason about it from the code alone — you have to record what actually happened. **Observability** for agents has standardized fast around OpenTelemetry's GenAI conventions: every run becomes a span tree with a top-level `invoke_agent` and child `chat` and `execute_tool` spans, capturing the model, the token counts, and the tool calls.<Cite id="otel" sources={sources} /> Platforms like LangSmith and the open-source Arize Phoenix render that tree so a human can see exactly which query the agent ran and where it went wrong.<Cite id="langsmith" sources={sources} /><Cite id="phoenix" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 2. One agent run as an OpenTelemetry trace. This is how you catch the run that claimed it answered the question but silently retried a failed query — or never wrote the row it said it wrote.">
+  <div className="not-prose">
+    <AgentTraceTree />
+  </div>
+</Figure>
+
+## The lethal trifecta
+
+The security failure mode unique to agents is **prompt injection**: because an agent treats the data it reads as potentially containing instructions, a hostile string hidden in a document or a database field can hijack it. The security researcher Simon Willison names the dangerous condition the &ldquo;lethal trifecta&rdquo;: access to private data, exposure to untrusted content, and the ability to communicate externally. Any one is fine; all three together let an attacker exfiltrate data through the agent itself.<Cite id="trifecta" sources={sources} /> Prompt injection is the number-one risk in the OWASP Top 10 for LLM Applications,<Cite id="owasp" sources={sources} /> and it is not theoretical: Microsoft's 2025 &ldquo;EchoLeak&rdquo; flaw (CVE-2025-32711, scored a critical 9.3) let a single crafted email exfiltrate data from Microsoft 365 Copilot with no user interaction.<Cite id="echoleak" sources={sources} /><Cite id="nvd" sources={sources} />
+
+<Figure caption="Figure 3. The lethal trifecta. The defense is architectural — break one of the three circles — because, as the originator stresses, guardrails that block 95% of attacks still leave a determined adversary a way in.">
+  <div className="not-prose">
+    <LethalTrifecta />
+  </div>
+</Figure>
+
+## Guardrails and the human gate
+
+The practical controls are layered. **Input guardrails** reject disallowed requests before the agent runs; **output guardrails** validate or redact what the agent produces before it leaves the system; and the most important control of all is the **human approval gate**. OpenAI's agent tooling lets any tool be flagged so that, instead of executing, it pauses the run into a resumable state for a person to approve or reject.<Cite id="openai-guardrails" sources={sources} /> For any action that touches money, customers, or production data, that gate is the difference between a useful agent and an unbounded liability.
+
+## The compliance backdrop
+
+None of this happens in a vacuum. Three frameworks now anchor enterprise AI governance: the U.S. **NIST AI Risk Management Framework**, whose Generative AI Profile enumerates a dozen risk areas and hundreds of suggested actions;<Cite id="nist" sources={sources} /> the European Union's **AI Act**, whose obligations for general-purpose models began applying in August 2025 with most high-risk rules following in 2026;<Cite id="eu-act" sources={sources} /> and **ISO/IEC 42001**, the first certifiable management-system standard for AI, against which an organization can be independently audited.<Cite id="iso" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 4. The EU AI Act arrives in phases through 2027. Together with the voluntary NIST framework and the certifiable ISO 42001 standard, it is the regulatory backdrop for any data agent deployed in or serving the EU.">
+  <div className="not-prose">
+    <EuAiActTimeline />
+  </div>
+</Figure>
+
+<Pitfall title="Believing the guardrail is enough">
+Vendors love to advertise that their filter blocks 95% of prompt-injection attacks. As Willison points out, against a determined adversary a 95% block rate is a *failing grade* — the attacker simply tries until the 1-in-20 gets through. **Do not treat guardrails as a solved boundary. Reduce the blast radius architecturally: deny the trifecta by limiting what the agent can access, isolating untrusted content, and cutting the outbound path — and keep a human gate on irreversible actions.**
+</Pitfall>
+
+<Takeaway label="The operating discipline">
+
+A production data agent demands four things at once: evaluate it (outcome and trajectory, with evals run like CI); observe it (trace every step so you can see what it actually did); secure it (break the lethal trifecta architecturally, because guardrails alone won't hold); and govern it (human gates, audit trails, and alignment to NIST, the EU AI Act, and ISO 42001). The throughline of this book — name the claim, trace it to evidence, know what could be wrong — is exactly the posture an agent needs applied to it. The agent does not relax the discipline; it raises the stakes on it.
+
+</Takeaway>
+
+<SourceList sources={sources} note="Verified June 2026" />

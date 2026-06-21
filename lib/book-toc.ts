@@ -218,16 +218,18 @@ export const book: Book = {
     },
     {
       numeral: 'VI',
-      title: 'Operating the D3M System',
+      title: 'D3M with AI Agents',
       chapters: [
         {
           number: 17,
-          title: 'Operating the D3M System',
+          title: 'D3M with AI Agents',
           articles: [
-            { slug: 'ch17-data-product', number: '17.1', title: 'The Data Product View', status: 'published' },
-            { slug: 'ch17-decision-memos', number: '17.2', title: 'Decision Memos', status: 'published' },
-            { slug: 'ch17-learning-loops', number: '17.3', title: 'Monitoring, Feedback, and Learning Loops', status: 'published' },
-            { slug: 'ch17-studio-final-case', number: '17.4', title: 'Final Integrative Case: The Bean & Basket Expansion', status: 'published' },
+            { slug: 'ch17-agentic-turn', number: '17.1', title: 'The Agentic Turn', status: 'published' },
+            { slug: 'ch17-text-to-sql', number: '17.2', title: 'Talking to the Warehouse: Text-to-SQL and the Semantic Layer', status: 'published' },
+            { slug: 'ch17-predictive-workflows', number: '17.3', title: 'Automated, Agent-Driven Predictive Workflows', status: 'published' },
+            { slug: 'ch17-mcp-orchestration', number: '17.4', title: 'MCP, Tools, and Orchestration', status: 'published' },
+            { slug: 'ch17-agent-governance', number: '17.5', title: 'Trust, Evaluation, and Governance of Data Agents', status: 'published' },
+            { slug: 'ch17-horizon', number: '17.6', title: 'The Horizon: Where Agent-Operated Analytics Is Headed', status: 'published' },
           ],
         },
       ],

@@ -96,10 +96,17 @@ const nextConfig: NextConfig = {
       { source: '/ch51-agents-tools', destination: '/ch16-agents-tools', permanent: true },
       { source: '/ch52-ai-governance', destination: '/ch16-ai-governance', permanent: true },
       { source: '/ch53-capstone-customer-voice', destination: '/ch16-studio-customer-voice', permanent: true },
-      { source: '/ch54-data-product-view', destination: '/ch17-data-product', permanent: true },
-      { source: '/ch55-decision-memos', destination: '/ch17-decision-memos', permanent: true },
-      { source: '/ch56-monitoring-feedback', destination: '/ch17-learning-loops', permanent: true },
-      { source: '/ch57-final-integrative-case', destination: '/ch17-studio-final-case', permanent: true },
+      // Part VI was rewritten as "D3M with AI Agents" (2026-06): the four former
+      // ch17-* "operating the system" articles are retired and 301 to the closest
+      // new survey article. Legacy marketing slugs chain straight to the new slugs.
+      { source: '/ch54-data-product-view', destination: '/ch17-agentic-turn', permanent: true },
+      { source: '/ch55-decision-memos', destination: '/ch17-text-to-sql', permanent: true },
+      { source: '/ch56-monitoring-feedback', destination: '/ch17-predictive-workflows', permanent: true },
+      { source: '/ch57-final-integrative-case', destination: '/ch17-horizon', permanent: true },
+      { source: '/ch17-data-product', destination: '/ch17-agentic-turn', permanent: true },
+      { source: '/ch17-decision-memos', destination: '/ch17-text-to-sql', permanent: true },
+      { source: '/ch17-learning-loops', destination: '/ch17-predictive-workflows', permanent: true },
+      { source: '/ch17-studio-final-case', destination: '/ch17-horizon', permanent: true },
       // legacy (pre-consolidation) merges, chained forward:
       { source: '/ch47-semantic-search', destination: '/ch14-embeddings', permanent: true },
       { source: '/ch50b-prompting', destination: '/ch16-llm-capabilities', permanent: true },

@@ -1,0 +1,94 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Cite, SourceList } from '@/components/Book/part6/Sources';
+import { TextToSqlFlow, SqlAccuracyChart, SemanticLayerDiagram } from '@/components/Book/part6/DataAgentDiagrams';
+
+export const sources = [
+  { id: 'bird', title: 'BIRD-bench: a Big Benchmark for Large-scale Database Grounded Text-to-SQL Evaluation (leaderboard)', publisher: 'BIRD-bench', year: '2025', url: 'https://bird-bench.github.io/' },
+  { id: 'spider2', title: 'Spider 2.0: Evaluating Language Models on Real-World Enterprise Text-to-SQL Workflows', publisher: 'arXiv 2411.07763 (ICLR 2025)', year: '2025', url: 'https://arxiv.org/abs/2411.07763' },
+  { id: 'chase', title: 'CHASE-SQL: Multi-Path Reasoning and Preference-Optimized Candidate Selection in Text-to-SQL', publisher: 'Google Cloud / Stanford (MarkTechPost summary)', year: '2024', url: 'https://www.marktechpost.com/2024/10/12/google-cloud-and-stanford-researchers-propose-chase-sql-an-ai-framework-for-multi-path-reasoning-and-preference-optimized-candidate-selection-in-text-to-sql/' },
+  { id: 'cortex-bi', title: 'Cortex Analyst: Evaluating Text-to-SQL Accuracy for Real-World BI', publisher: 'Snowflake Engineering Blog', year: '2024', url: 'https://www.snowflake.com/en/blog/engineering/cortex-analyst-text-to-sql-accuracy-bi/' },
+  { id: 'cortex-docs', title: 'Cortex Analyst — semantic model documentation', publisher: 'Snowflake', year: '2025', url: 'https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-analyst' },
+  { id: 'genie', title: 'AI/BI Genie is now Generally Available', publisher: 'Databricks', year: '2025', url: 'https://www.databricks.com/blog/aibi-genie-now-generally-available' },
+  { id: 'looker', title: 'Conversational Analytics in Looker — overview', publisher: 'Google Cloud Documentation', year: '2025', url: 'https://docs.cloud.google.com/looker/docs/conversational-analytics-overview' },
+  { id: 'amazon-q', title: 'General availability of Amazon Q generative SQL for Amazon Redshift', publisher: 'AWS', year: '2024', url: 'https://aws.amazon.com/about-aws/whats-new/2024/09/amazon-q-generative-sql-amazon-redshift/' },
+  { id: 'snowflake-mcp', title: 'Introducing Snowflake Managed MCP Servers for Secure, Governed Data Agents', publisher: 'Snowflake', year: '2025', url: 'https://www.snowflake.com/en/blog/managed-mcp-servers-secure-data-agents/' },
+  { id: 'osi', title: 'Open Semantic Interchange Initiative', publisher: 'Snowflake / Salesforce / dbt Labs', year: '2025', url: 'https://www.snowflake.com/en/news/press-releases/snowflake-salesforce-dbt-labs-and-more-revolutionize-data-readiness-for-ai-with-open-semantic-interchange-initiative/' },
+  { id: 'uber', title: 'QueryGPT — Natural Language to SQL Using Generative AI', publisher: 'Uber Engineering Blog', year: '2024', url: 'https://www.uber.com/en-CA/blog/query-gpt/' },
+  { id: 'rsl', title: 'RSL-SQL: Robust Schema Linking in Text-to-SQL Generation', publisher: 'arXiv 2411.00073', year: '2024', url: 'https://arxiv.org/abs/2411.00073' },
+  { id: 'promethium', title: 'Enterprise Text-to-SQL: What Accuracy Benchmarks Really Mean', publisher: 'Promethium (practitioner guide)', year: '2025', url: 'https://promethium.ai/guides/enterprise-text-to-sql-accuracy-benchmarks-2/' },
+];
+
+<DropCap>
+
+The oldest dream in business intelligence is to ask the database a question in plain English and get the right answer back. For decades it failed, because translating &ldquo;what was revenue by city last quarter?&rdquo; into correct SQL requires knowing the schema, the joins, and what *revenue* even means at this company. Large language models cracked the easy version of this problem almost overnight — and then ran straight into the hard version. This chapter is about both: how good text-to-SQL has actually become, why it still breaks on real databases, and the one architectural idea — the semantic layer — that separates a demo from a system you can trust.
+
+</DropCap>
+
+Querying production data in natural language is the most immediately useful thing a data agent does, and the most dangerous to get subtly wrong. A chart that is 90% right looks exactly like a chart that is 100% right. So the question is not &ldquo;can the model write SQL?&rdquo; — it obviously can — but &ldquo;how often is it right on *your* database, and how would you know?&rdquo;
+
+## What the benchmarks really say
+
+The headline numbers are a tale of two worlds. On Spider 1.0, the sanitized academic benchmark, the best systems exceed 91% execution accuracy — the problem looks solved.<Cite id="spider2" sources={sources} /> On BIRD, which uses larger, messier real databases, the top system reaches about 82% against a human-expert baseline of 93% — close, but with a persistent gap.<Cite id="bird" sources={sources} /> Then comes Spider 2.0, built deliberately from real enterprise workflows with thousand-column databases and vendor SQL dialects, and the floor drops out: the best agent solved only 21.3% of tasks, and a raw frontier model managed about 10%.<Cite id="spider2" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 1. The same capability, measured three ways. Execution accuracy looks near-solved on clean academic schemas and collapses on realistic enterprise ones. The dashed line is the human-expert baseline.">
+  <div className="not-prose">
+    <SqlAccuracyChart />
+  </div>
+</Figure>
+
+<Callout variant="caveat" title="Why the spread is the point">
+A vendor demo runs on a curated schema and hits the high bar. Your warehouse, with its 1,400 columns and three different definitions of &ldquo;active customer,&rdquo; lives closer to the low bar. The gap between the two is not a rounding error — it is the difference between a tool you can deploy and one that quietly invents answers.
+</Callout>
+
+## Why it breaks: the schema, not the SQL
+
+When text-to-SQL fails on a real database, it usually fails in one of two ways, and neither is about SQL syntax. First, **hallucinated schema**: faced with hundreds of cryptically named tables, the model invents a plausible-but-nonexistent column or joins on the wrong key. Second, **ambiguous business definitions**: ask for &ldquo;revenue&rdquo; and the model has no way to know whether you mean booked, recognized, gross, or net — so it guesses, and produces SQL that runs cleanly and answers the wrong question.<Cite id="promethium" sources={sources} /> The model generates from patterns, not from an understanding of your business. The error is invisible precisely because the query executes.
+
+## The fix that works: the semantic layer
+
+The breakthrough idea is not a better model — it is giving the model a *contract*. A **semantic layer** is a governed set of definitions sitting between the question and the warehouse: certified metrics (`net_revenue` means exactly this), the join paths between tables, and the access rules. The agent no longer writes raw SQL against bare tables; it composes queries from definitions a human has already vetted.
+
+<Figure width="page-outset" caption="Figure 2. The semantic layer is the contract between natural language and SQL. It is where 'revenue' is pinned to one definition, where joins are pre-declared, and where row- and column-level security live.">
+  <div className="not-prose">
+    <SemanticLayerDiagram />
+  </div>
+</Figure>
+
+The effect is large and well-documented. Snowflake reports that routing questions through a semantic model lifted its Cortex Analyst from the 51% a raw model scored on bare tables to over 90% accuracy on real BI questions — the model unchanged, the context transformed.<Cite id="cortex-bi" sources={sources} /><Cite id="cortex-docs" sources={sources} />
+
+<KeyNumber value="51 → 90" unit="%" label="Text-to-SQL accuracy on real BI questions, raw model vs. the same model grounded in a governed semantic model (Snowflake Cortex Analyst)." align="center" change="+39 points from context alone" />
+
+This is why the semantic layer has become the industry's center of gravity. In September 2025 a coalition including Snowflake, Salesforce, and dbt Labs launched the Open Semantic Interchange to make metric definitions portable across BI tools and AI agents — an attempt to standardize the contract itself, so the same definition of &ldquo;churn&rdquo; works everywhere.<Cite id="osi" sources={sources} />
+
+## How an agent actually queries
+
+Underneath a good text-to-SQL agent is a small pipeline, not a single prompt. It links the question to the relevant tables and metrics (schema linking), generates several candidate queries rather than one, runs them, reads the database's own error messages, and self-corrects — a frontier traceable to research like CHASE-SQL, whose multi-candidate approach reached 73% on BIRD, and to schema-linking-and-self-correction work like RSL-SQL.<Cite id="chase" sources={sources} /><Cite id="rsl" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 3. The pipeline behind a reliable answer: ground the question in the semantic layer, generate candidate SQL, execute, and let the database's errors drive correction.">
+  <div className="not-prose">
+    <TextToSqlFlow />
+  </div>
+</Figure>
+
+Crucially, the agent reaches the warehouse through a *governed* path. Snowflake's managed MCP servers, in preview since October 2025, expose the text-to-SQL tool to agents while reusing the warehouse's existing role-based access control, masking, and policies — so an agent can answer questions without becoming a way around security.<Cite id="snowflake-mcp" sources={sources} />
+
+## The shipping state of the art
+
+This is no longer a research topic; it is a product category. Snowflake's Cortex Analyst, Databricks' AI/BI Genie (generally available since June 2025, after 4,000-plus customers used the preview), Google's Conversational Analytics grounded in the Looker semantic model, and Amazon Q generative SQL for Redshift all ship the same essential design: natural language in, governed SQL out, with an explanation of how the answer was derived.<Cite id="genie" sources={sources} /><Cite id="looker" sources={sources} /><Cite id="amazon-q" sources={sources} /> And the payoff in practice is real: Uber's internal QueryGPT cut typical query authoring from about ten minutes to three, with roughly 300 daily users across a platform handling more than a million interactive queries a month.<Cite id="uber" sources={sources} />
+
+<Pitfall title="Trusting the answer because it has a chart">
+The single biggest failure mode is treating a fluent answer as a correct one. An agent that returns a clean bar chart from wrong SQL is more dangerous than one that errors out. **Demand that the agent show its query and its assumptions, ground it in a semantic layer you own, and keep a human in the loop for any number that drives a decision.** &ldquo;90% accurate&rdquo; means one in ten board slides is wrong — know which governance turns that into one in a hundred.
+</Pitfall>
+
+<Takeaway label="What to ship">
+
+Text-to-SQL has crossed from demo to product, but its reliability is a property of the *context*, not the model. On clean schemas it is nearly solved; on real enterprise databases the best agents still trail human experts badly. The durable fix is the semantic layer — the governed contract that pins down what every metric means and routes every query through vetted definitions and existing security. Buy or build the agent if you like, but the asset that makes it trustworthy is the semantic layer, and that asset has an owner.
+
+</Takeaway>
+
+<SourceList sources={sources} note="Verified June 2026" />

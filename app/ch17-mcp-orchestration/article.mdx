@@ -1,0 +1,79 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { Cite, SourceList } from '@/components/Book/part6/Sources';
+import { McpHub, AgentStack } from '@/components/Book/part6/PlumbingGovernanceDiagrams';
+
+export const sources = [
+  { id: 'mcp-anthropic', title: 'Introducing the Model Context Protocol', publisher: 'Anthropic', year: '2024', url: 'https://www.anthropic.com/news/model-context-protocol' },
+  { id: 'mcp-intro', title: 'What is the Model Context Protocol (MCP)? — Introduction', publisher: 'modelcontextprotocol.io', year: '2025', url: 'https://modelcontextprotocol.io/introduction' },
+  { id: 'openai-mcp', title: "OpenAI Adopts Rival Anthropic's Standard for Connecting AI Models to Data", publisher: 'TechCrunch', year: '2025', url: 'https://techcrunch.com/2025/03/26/openai-adopts-rival-anthropics-standard-for-connecting-ai-models-to-data/' },
+  { id: 'mcp-year', title: 'One Year of MCP: November 2025 Spec Release', publisher: 'Model Context Protocol Blog', year: '2025', url: 'https://blog.modelcontextprotocol.io/posts/2025-11-25-first-mcp-anniversary/' },
+  { id: 'google-mcp', title: 'Announcing Official MCP Support for Google Services', publisher: 'Google Cloud Blog', year: '2025', url: 'https://cloud.google.com/blog/products/ai-machine-learning/announcing-official-mcp-support-for-google-services' },
+  { id: 'a2a', title: 'Linux Foundation Launches the Agent2Agent Protocol Project', publisher: 'The Linux Foundation', year: '2025', url: 'https://www.linuxfoundation.org/press/linux-foundation-launches-the-agent2agent-protocol-project-to-enable-secure-intelligent-communication-between-ai-agents' },
+  { id: 'openai-sdk', title: 'New Tools for Building Agents (Agents SDK and Responses API)', publisher: 'OpenAI', year: '2025', url: 'https://openai.com/index/new-tools-for-building-agents/' },
+  { id: 'ms-agent', title: 'Introducing Microsoft Agent Framework: The Open-Source Engine for Agentic AI Apps', publisher: 'Microsoft Foundry Blog', year: '2025', url: 'https://devblogs.microsoft.com/foundry/introducing-microsoft-agent-framework-the-open-source-engine-for-agentic-ai-apps/' },
+  { id: 'google-adk', title: 'Agent Development Kit: Making It Easy to Build Multi-Agent Applications', publisher: 'Google Developers Blog', year: '2025', url: 'https://developers.googleblog.com/en/agent-development-kit-easy-to-build-multi-agent-applications/' },
+  { id: 'crewai', title: 'CrewAI: Multi-Agent Platform Raises $18 Million (Series A)', publisher: 'Pulse 2.0', year: '2024', url: 'https://pulse2.com/crewai-multi-agent-platform-raises-18-million-series-a/' },
+  { id: 'langgraph', title: 'LangGraph: Agent Orchestration Framework for Reliable AI Agents', publisher: 'LangChain', year: '2025', url: 'https://www.langchain.com/langgraph' },
+  { id: 'temporal-d', title: 'Temporal Raises $300M Series D at a $5B Valuation', publisher: 'Temporal / Business Wire', year: '2026', url: 'https://temporal.io/blog/temporal-raises-usd300m-series-d-at-a-usd5b-valuation' },
+  { id: 'willison-mcp', title: 'Model Context Protocol Has Prompt Injection Security Problems', publisher: "Simon Willison's Weblog", year: '2025', url: 'https://simonwillison.net/2025/Apr/9/mcp-prompt-injection/' },
+];
+
+<DropCap>
+
+An agent is only as capable as the things it can reach. A model that can reason brilliantly but cannot run a query, read a document, or post a message is a very expensive autocomplete. So the real engineering of agentic analytics is plumbing: how the agent connects to the firm's data and tools, how multiple agents coordinate, and how the whole thing keeps running when something fails. In barely eighteen months this plumbing went from a tangle of one-off integrations to a recognizable, layered stack — and understanding that stack is how a manager tells a durable platform decision from a fad.
+
+</DropCap>
+
+## Tool use: the atom
+
+At the bottom of everything is **tool use**, also called function calling. The developer describes a tool to the model — a name, a description, and a JSON schema for its inputs — and the model, when it decides the tool is needed, emits a structured call that the surrounding code executes. &ldquo;Run this SQL,&rdquo; &ldquo;search these docs,&rdquo; &ldquo;send this message&rdquo; are all tool calls. Everything above is a way of organizing tool calls at scale.
+
+## MCP: the USB-C moment
+
+The problem with tool use was that every assistant needed a custom connector for every system — an `N×M` explosion of bespoke integrations. Anthropic's **Model Context Protocol (MCP)**, open-sourced in November 2024, standardized that connection. Its own documentation offers the analogy that stuck: MCP is &ldquo;a USB-C port for AI applications&rdquo; — build a tool once, and any MCP-speaking client can use it.<Cite id="mcp-anthropic" sources={sources} /><Cite id="mcp-intro" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 1. One agent, many governed connections. MCP turns an N-by-M integration mess into a single standard interface — the reason a Postgres or Snowflake connector built once now works across Claude, ChatGPT, and the rest.">
+  <div className="not-prose">
+    <McpHub />
+  </div>
+</Figure>
+
+What turned a single vendor's proposal into infrastructure was adoption. OpenAI embraced MCP in March 2025 — Sam Altman wrote, &ldquo;People love MCP and we are excited to add support across our products&rdquo;<Cite id="openai-mcp" sources={sources} /> — followed by Google and Microsoft. By its first anniversary the MCP registry held close to 2,000 servers, with adopters spanning GitHub, OpenAI, Microsoft, AWS, and Google Cloud,<Cite id="mcp-year" sources={sources} /> and Google had begun shipping fully managed remote MCP servers for BigQuery and other services.<Cite id="google-mcp" sources={sources} /> A standard that every major lab supports is no longer a bet; it is a foundation.
+
+## Above the wire: A2A and orchestration
+
+If MCP is how an agent reaches *tools and data*, the **Agent2Agent (A2A) protocol** is how agents reach *each other*: a standard, contributed to the Linux Foundation in June 2025 with more than a hundred supporting companies, that lets independent agents from different vendors discover one another and delegate work.<Cite id="a2a" sources={sources} /> Above the protocols sit **orchestration frameworks** that sequence multi-step, multi-agent work — LangGraph, OpenAI's Agents SDK (launched March 2025 with tools, handoffs, guardrails, and tracing), Google's Agent Development Kit, Microsoft's Agent Framework, and CrewAI among them.<Cite id="openai-sdk" sources={sources} /><Cite id="google-adk" sources={sources} /><Cite id="ms-agent" sources={sources} /><Cite id="langgraph" sources={sources} /><Cite id="crewai" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 2. The connection stack, bottom to top. Each layer solves a different problem; together they turn a clever model into a system that can operate the firm's data safely.">
+  <div className="not-prose">
+    <AgentStack />
+  </div>
+</Figure>
+
+<Callout variant="aside">
+The pattern to notice is *consolidation*. Microsoft folded its experimental AutoGen and enterprise Semantic Kernel into one Agent Framework; OpenAI's Agents SDK superseded its experimental Swarm; MCP and A2A both moved under neutral foundation governance. The frantic fragmentation of 2024 is settling into a shared stack — which is exactly what makes it safe to build on.
+</Callout>
+
+## Durable execution: why agents need it
+
+Agent runs are long, branchy, and failure-prone: a model can be probabilistic, a tool can time out, a human approval can take a day. Ordinary retry logic does not survive that. **Durable-execution** engines — Temporal, Inngest, Restate, Vercel's Workflow Development Kit — solve it by persisting workflow state at every step and replaying after a crash, so a multi-day agentic pipeline resumes exactly where it stopped. The market is voting with capital: Temporal raised a $300 million round at a $5 billion valuation in early 2026, explicitly to &ldquo;make agentic AI real for companies,&rdquo; with OpenAI and Block among its named customers.<Cite id="temporal-d" sources={sources} /> Durable execution is becoming table stakes for any agent that touches production.
+
+## The catch: every tool is an attack surface
+
+The same property that makes MCP powerful — agents can be handed new tools freely — makes it dangerous. A tool's description is text the model trusts, which means it is a place to hide malicious instructions; an over-permissioned agent connected to private data and the open internet is a breach waiting to happen.<Cite id="willison-mcp" sources={sources} /> The plumbing chapter ends where the next one begins: connectivity without governance is a liability, not a feature.
+
+<Pitfall title="Connecting an agent to everything">
+The easiest way to make an agent useful is to give it broad access; the easiest way to cause an incident is the same move. **Scope each MCP connection to the minimum data and actions the task requires, treat tool descriptions as untrusted input, and never wire an agent to private data and an outbound channel without a human gate in between.** Convenience and least-privilege pull in opposite directions — and on a system that touches the warehouse, least-privilege has to win.
+</Pitfall>
+
+<Takeaway label="What to build on">
+
+The agentic stack has stabilized into layers: tool use is the atom; MCP standardizes governed access to data and tools; A2A lets agents collaborate; orchestration frameworks sequence the work; and durable execution keeps it alive through the real world's failures. For a platform decision, favor the layers that the whole industry now shares — MCP, A2A, a major orchestration framework, a durable-execution engine — because interoperability is what protects you from lock-in. And remember that every connection you add is also an attack surface, which is why governance ([§17.5](/ch17-agent-governance)) is not optional.
+
+</Takeaway>
+
+<SourceList sources={sources} note="Verified June 2026" />

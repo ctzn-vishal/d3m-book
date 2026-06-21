@@ -1,0 +1,81 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { Cite, SourceList } from '@/components/Book/part6/Sources';
+import { PredictiveAgentLoop, DsAgentScorecard } from '@/components/Book/part6/DataAgentDiagrams';
+
+export const sources = [
+  { id: 'mle-bench', title: 'MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering', publisher: 'OpenAI / arXiv 2410.07095 (ICLR 2025)', year: '2024', url: 'https://arxiv.org/abs/2410.07095' },
+  { id: 'dsbench', title: 'DSBench: How Far Are Data Science Agents from Becoming Data Science Experts?', publisher: 'arXiv 2409.07703', year: '2024', url: 'https://arxiv.org/abs/2409.07703' },
+  { id: 'bixbench', title: 'BixBench: A Comprehensive Benchmark for LLM-based Agents in Computational Biology', publisher: 'FutureHouse', year: '2025', url: 'https://www.futurehouse.org/research-announcements/bixbench' },
+  { id: 'infiagent', title: 'InfiAgent-DABench: Evaluating Agents on Data Analysis Tasks', publisher: 'arXiv 2401.05507 (ICML 2024)', year: '2024', url: 'https://arxiv.org/abs/2401.05507' },
+  { id: 'gdpval', title: 'GDPval: Measuring the Performance of Our Models on Real-World Economically Valuable Tasks', publisher: 'OpenAI / arXiv 2510.04374', year: '2025', url: 'https://openai.com/index/gdpval/' },
+  { id: 'sakana', title: 'The AI Scientist: Towards Fully Automated AI Research, Now Published in Nature', publisher: 'Sakana AI', year: '2026', url: 'https://sakana.ai/ai-scientist-nature/' },
+  { id: 'google-dsa', title: 'Data Science Agent in Colab: The Future of Data Analysis with Gemini', publisher: 'Google Developers Blog', year: '2025', url: 'https://developers.googleblog.com/en/data-science-agent-in-colab-with-gemini/' },
+  { id: 'google-bq', title: 'Google Unveils Enterprise Data Science and Engineering AI Agents', publisher: 'SiliconANGLE', year: '2025', url: 'https://siliconangle.com/2025/08/05/google-unveils-enterprise-data-science-engineering-ai-agents-provide-real-time-analysis/' },
+  { id: 'datarobot', title: 'DataRobot Announces Agent Workforce Platform, Built with NVIDIA', publisher: 'DataRobot', year: '2025', url: 'https://www.datarobot.com/newsroom/press/datarobot-announces-agent-workforce-platform-built-with-nvidia/' },
+  { id: 'temporal', title: 'Temporal for AI — Durable Execution for Long-Running Workflows', publisher: 'Temporal Technologies', year: '2025', url: 'https://temporal.io/solutions/ai' },
+  { id: 'airflow', title: 'Apache Airflow 3.1 — Human-in-the-Loop operators', publisher: 'Apache Airflow', year: '2025', url: 'https://airflow.apache.org/blog/airflow-3.1.0/' },
+  { id: 'vercel', title: 'Built-in Durability: Introducing the Workflow Development Kit', publisher: 'Vercel', year: '2025', url: 'https://vercel.com/blog/introducing-workflow' },
+  { id: 'gartner-cancel', title: 'Gartner Predicts Over 40% of Agentic AI Projects Will Be Canceled by End of 2027', publisher: 'Gartner', year: '2025', url: 'https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027' },
+];
+
+<DropCap>
+
+Part IV built predictive models the slow way: a human framed the task, engineered the features, fit the model, read the metrics, and shipped it. Every step was a place where judgment — and labor — was required. The promise of agentic AI is to automate the labor while keeping the judgment: an agent that can do the exploratory analysis, propose features, train and compare models, and then watch the deployed model and retrain it when the world shifts. How much of that is real today, and how much is still a research demo, is the subject of this chapter.
+
+</DropCap>
+
+The honest answer is that agents are genuinely useful for parts of the predictive lifecycle and genuinely unreliable for the whole of it. Both halves of that sentence are backed by hard benchmark numbers, and a manager needs to hold both at once.
+
+## Can an agent do data science?
+
+The most rigorous measurement is OpenAI's MLE-bench, which drops agents into 75 real Kaggle competitions. The best setup — a strong reasoning model with purpose-built scaffolding — earned at least a bronze medal in just 16.9% of competitions on a single attempt, roughly doubling to 34.1% when allowed eight tries.<Cite id="mle-bench" sources={sources} /> Other benchmarks tell the same story from different angles: on DSBench's realistic analysis tasks the best agent solved about a third;<Cite id="dsbench" sources={sources} /> on BixBench's open-ended bioinformatics work, frontier models scored in the teens.<Cite id="bixbench" sources={sources} /> Yet on *closed-form* analysis questions — a clean CSV, a specific question — the same class of model answers correctly about three-quarters of the time.<Cite id="infiagent" sources={sources} />
+
+<Figure width="page-outset" caption="Figure 1. The same agents, graded on different tasks. Strong on narrow, well-specified questions; weak on open-ended, end-to-end modeling. The bars measure different benchmarks and are not directly comparable — but the gradient is the lesson.">
+  <div className="not-prose">
+    <DsAgentScorecard />
+  </div>
+</Figure>
+
+The pattern is consistent: the more an answer is pinned down, the better agents do; the more the task is open-ended judgment, the worse. And capability is climbing fast. On OpenAI's GDPval, which rates model output against human experts on real economically valuable work, the strongest model matched or beat experts 47.6% of the time — up roughly fourfold from about 12% a year earlier.<Cite id="gdpval" sources={sources} />
+
+## The research-grade frontier
+
+The ceiling is rising in ways that would have seemed implausible in 2023. Sakana AI's automated &ldquo;AI Scientist&rdquo; generated a machine-learning paper — hypothesis, experiments, and write-up — that passed peer review at an ICLR 2025 workshop, scoring above the acceptance threshold and higher than roughly 55% of human-authored submissions; the work was documented in *Nature* in 2026.<Cite id="sakana" sources={sources} /> It is a milestone worth taking seriously and not over-reading: one accepted workshop paper out of several attempts, in a venue chosen for the experiment. The direction is unmistakable; the reliability is not yet there.
+
+## What is actually shipping
+
+For everyday analytics, the agents are already in the tools. Google's Gemini-powered Data Science Agent has been free inside Colab since March 2025, autonomously writing and running notebook code for exploratory analysis, cleaning, feature work, and prediction;<Cite id="google-dsa" sources={sources} /> in August 2025 Google extended data-science and data-engineering agents into BigQuery, where a plain-English request becomes a working pipeline.<Cite id="google-bq" sources={sources} /> On the predictive-modeling side, vendors like DataRobot and H2O.ai have fused classic AutoML with agents, so a single system can build a model and then monitor, explain, and act on it.<Cite id="datarobot" sources={sources} />
+
+## The loop that matters
+
+For a manager, the exciting capability is not one-shot model-building — it is closing the operating loop that Part IV opened. A deployed model decays as the world drifts; the discipline is to monitor it, detect the drift with statistical tests, retrain, validate, and roll out carefully. An agent can run every station of that loop. What it should *not* do is decide unsupervised that a new model is good enough to replace the old one.
+
+<Figure width="page-outset" caption="Figure 2. The predict → monitor → drift → retrain loop, now agent-driven. The agent turns the cranks; the human keeps an approval gate on the one step that changes what customers experience — promoting a new model to production.">
+  <div className="not-prose">
+    <PredictiveAgentLoop />
+  </div>
+</Figure>
+
+<Callout variant="finding" title="Above the loop, not in it">
+The mature pattern is not lights-out autonomy. It is an agent that handles the watching, the testing, and the retraining, while a human stays &ldquo;above the loop&rdquo; — approving the model promotions that actually move money. The agent removes the toil; the human keeps the accountability.
+</Callout>
+
+## The reliability layer
+
+A loop that runs for days and survives crashes needs more than a cron job. This is where **durable execution** engines come in — Temporal, Apache Airflow, Vercel's Workflow Development Kit — which persist a workflow's state at every step and resume exactly where they left off after a failure, letting a single run span minutes to months.<Cite id="temporal" sources={sources} /><Cite id="vercel" sources={sources} /> They are also where human checkpoints get built in: Airflow's 3.1 release in late 2025 added first-class human-in-the-loop operators so a pipeline can pause for an approval before continuing.<Cite id="airflow" sources={sources} /> An agentic pipeline without this substrate is a science project; with it, it is infrastructure.
+
+<Pitfall title="Mistaking a benchmark win for production reliability">
+A 34% Kaggle-medal rate makes headlines but hides two costs. First, *reproducibility*: MLE-bench runs are enormous — thousands of GPU-hours and tens of thousands of dollars per evaluation, with results that vary run to run. Second, *robustness*: an agent that medals on a clean competition can fail on a messy production dataset with the same nominal task. **Pilot agentic modeling on a low-stakes, reversible workflow first, measure it against a human baseline, and budget for the compute — before you let it near a revenue model.** Gartner's forecast that over 40% of agentic projects will be canceled by 2027 is, in large part, this lesson learned the expensive way.<Cite id="gartner-cancel" sources={sources} />
+</Pitfall>
+
+<Takeaway label="The bottom line">
+
+Agents can already do meaningful parts of the predictive pipeline — exploratory analysis, feature work, even drafting research — and they are improving quickly. But on open-ended, end-to-end modeling they still trail experts, and benchmark wins do not equal production reliability. The highest-value use today is not autonomous model-building; it is closing the monitor-and-retrain loop, with the agent doing the toil on a durable-execution substrate and a human approving the promotions. Automate the labor; keep the judgment.
+
+</Takeaway>
+
+<SourceList sources={sources} note="Verified June 2026" />

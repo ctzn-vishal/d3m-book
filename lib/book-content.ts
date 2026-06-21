@@ -91,17 +91,17 @@ export const partContent: Record<string, PartContent> = {
     icon: 'FileText',
   },
   VI: {
-    tagline: 'Turning analyses into durable infrastructure',
+    tagline: 'When the analyst is an agent',
     summary:
-      'This closing part is about ownership rather than technique. Every earlier part produced something — a chart, a causal estimate, a churn score, an extraction pipeline — but analyses left lying around decay the moment their author moves on. It reframes every card, memo, dashboard, and case pack as a data product with a name, an owner, a version, a contract, and a refresh cadence, then routes them into the one-page decision memo a sponsor can sign, and scales monitoring from a single model to the whole portfolio. The part — and the book — lands on the Bean & Basket expansion case, which runs one strategic question down the full decision ladder so that data, visual evidence, causal effects, algorithms, and AI converge on a memo that ships.',
+      "This closing part surveys the frontier the rest of the book leads to: a data-to-decision loop operated by AI agents rather than by hand. It is a grounded, citation-backed survey of the state of the art in mid-2026 — what is real, what is hype, and where it is headed. It defines what a data agent actually is, then takes the four capabilities that make agentic analytics work in turn: querying production databases in natural language through a governed semantic layer, running automated predictive workflows, connecting agents to the data stack through MCP and orchestration, and the evaluation, security, and governance that keep all of it safe. It closes not on a tidy capstone but on a contradiction — bold forecasts beside sober failure rates — and the argument that the discipline this book teaches matters more in the agentic era, not less.",
     whatYoullLearn: [
-      'Repackage any analysis as a governed data product with an owner, version, contract, and refresh cadence',
-      'Compress a body of evidence into a one-page decision memo a sponsor can read and sign',
-      'Scale monitoring from a single model to a portfolio, catching drift and silent decay before stakeholders do',
-      'Diagnose the learning-loop failures that let an analytics system censor its own training data',
-      'Drive a real strategic question down the full decision ladder, integrating every prior part into one shippable recommendation',
+      'Tell a genuine agent from a workflow, and read the anatomy and autonomy dial of a data agent',
+      'Judge text-to-SQL honestly — why it is near-solved on clean schemas yet fragile on real ones, and why the semantic layer is the fix',
+      'See how far data-science agents have come on real benchmarks, and where the monitor-and-retrain loop pays off',
+      'Map the agentic stack — tool use, MCP, A2A, orchestration, durable execution — and connect agents to data safely',
+      'Evaluate, observe, secure, and govern a production data agent against the lethal trifecta, NIST, the EU AI Act, and ISO 42001',
     ],
-    icon: 'Recycle',
+    icon: 'Bot',
   },
 };
 
@@ -411,20 +411,20 @@ export const chapterContent: Record<number, ChapterContent> = {
     icon: 'Bot',
   },
   17: {
-    throughLine: 'Turning a stack of analyses into an operating system that compounds instead of decays.',
+    throughLine: 'What changes when AI agents — not analysts — operate the data-to-decision loop.',
     summary:
-      'This closing chapter focuses on turning the artefacts analytics leaves behind — cards, memos, dashboards, and case packs — into infrastructure that compounds instead of rotting when the analyst rotates off. It treats each artefact as a data product with a name, owner role, version, contract, and refresh cadence, then funnels them into the one-page decision memo a sponsor can actually sign. From there it scales monitoring to the whole portfolio, names the learning failures that let an analytics system censor its own training data, and ends with a full Bean & Basket expansion case that walks the entire decision ladder against one question: which fifty new cities to enter, in what sequence, on what conditions.',
+      'This closing chapter is a grounded, citation-backed survey of agent-operated analytics as it stands in mid-2026. It defines what separates a genuine agent from a workflow and lays out the anatomy and autonomy dial of a data agent, then takes the four capabilities that make agentic analytics work: querying production databases in natural language through a governed semantic layer (and why text-to-SQL is near-solved on clean schemas yet fragile on real ones), running automated and agent-driven predictive workflows, connecting agents to the data stack through the Model Context Protocol and orchestration, and the evaluation, observability, security, and governance that make any of it safe to deploy. It ends on the horizon — bold forecasts beside sober failure rates — and the case that the discipline of data-driven decision-making matters more in the agentic era, not less.',
     topics: [
-      'the data product view (name, owner, version, contract, cadence)',
-      'the artefact catalog and case-pack architecture',
-      'the eleven-section decision memo',
-      'counterfactual and reversal thresholds',
-      'portfolio monitoring and status roll-ups',
-      'drift, decay, and re-investment cadences',
-      'closed-loop targeting and exploration budgets',
-      'decision retrospectives and kill switches',
+      'workflows vs. agents; the anatomy of a data agent',
+      'the autonomy dial and human-in-the-loop',
+      'text-to-SQL benchmarks (Spider, BIRD) and the semantic layer',
+      'automated predictive workflows and data-science agents',
+      'Model Context Protocol, A2A, and durable execution',
+      'agent evaluation and OpenTelemetry observability',
+      'the lethal trifecta, prompt injection, and guardrails',
+      'NIST AI RMF, the EU AI Act, and ISO/IEC 42001',
     ],
-    icon: 'Workflow',
+    icon: 'Bot',
   },
 };
 
@@ -577,14 +577,18 @@ export const articleBlurbs: Record<string, string> = {
     'Provides the eight-dimension evaluation rubric, risk-control map, and one-page AI Workflow Card that make a workflow auditable.',
   'ch16-studio-customer-voice':
     'Wires every Part V method into one monitored Bean & Basket customer-voice loop: classify, measure, cluster, retrieve, act, monitor.',
-  'ch17-data-product':
-    'Reframes every analytics artefact as a product with a name, owner role, version, contract, and refresh cadence, indexed in a shared catalog.',
-  'ch17-decision-memos':
-    'Builds the one-page, eleven-section decision memo that fuses all evidence into a signable recommendation, with a worked Bean & Basket retention example.',
-  'ch17-learning-loops':
-    'Scales monitoring to the portfolio and exposes learning failures like closed-loop targeting, fixed by exploration budgets, retrospectives, and kill switches.',
-  'ch17-studio-final-case':
-    'An integrative Bean & Basket expansion case walking the full ladder to recommend which fifty markets to enter, in what phased sequence.',
+  'ch17-agentic-turn':
+    'Defines what separates a genuine agent from a workflow, lays out the anatomy of a data agent and the autonomy dial, and surveys where enterprise adoption really stands.',
+  'ch17-text-to-sql':
+    'Surveys natural-language querying of production databases: what Spider and BIRD benchmarks really show, why it breaks on real schemas, and how the semantic layer becomes the contract that makes it trustworthy.',
+  'ch17-predictive-workflows':
+    'Measures how far data-science agents have come (MLE-bench, DSBench, GDPval), what ships today, and where the agent-driven monitor-and-retrain loop pays off on a durable-execution substrate.',
+  'ch17-mcp-orchestration':
+    'Maps the agentic stack from tool use up through the Model Context Protocol, the Agent2Agent protocol, orchestration frameworks, and the durable-execution engines that keep pipelines alive.',
+  'ch17-agent-governance':
+    'The discipline that makes data agents safe: outcome vs. trajectory evals, OpenTelemetry observability, the lethal trifecta and prompt injection, human approval gates, and the NIST / EU AI Act / ISO 42001 backdrop.',
+  'ch17-horizon':
+    'A grounded forward look — bold forecasts beside sober failure rates, why most deployments fail and which succeed, the semantic layer as the durable contract, and the analyst’s new job above the loop.',
 };
 
 export function getPartContent(numeral: string): PartContent | undefined {
