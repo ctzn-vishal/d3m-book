@@ -120,18 +120,18 @@ export default function ResearchPage() {
       </header>
 
       <div className="mx-auto max-w-3xl px-5 pb-24 sm:px-7">
-        <Section title="Refereed Publications" count={published.length}>
-          <ul>
-            {publishedNewestFirst.map(p => (
-              <PubItem key={`${p.title}-${p.year}`} pub={p} />
-            ))}
-          </ul>
-        </Section>
-
         <Section title="Working Papers & Under Review" count={working.length}>
           <ul>
             {working.map(p => (
               <PubItem key={p.title} pub={p} />
+            ))}
+          </ul>
+        </Section>
+
+        <Section title="Refereed Publications" count={published.length}>
+          <ul>
+            {publishedNewestFirst.map(p => (
+              <PubItem key={`${p.title}-${p.year}`} pub={p} />
             ))}
           </ul>
         </Section>
