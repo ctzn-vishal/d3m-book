@@ -18,7 +18,8 @@
     "mint-db-token": "node --env-file=../.env scripts/mint-db-token.mjs",
     "studio": "drizzle-kit studio",
     "inject-chrome": "node --env-file=../.env scripts/inject-chrome.mjs",
-    "gen-story-sitemap": "node --env-file=../.env scripts/gen-story-sitemap.mjs"
+    "gen-story-sitemap": "node --env-file=../.env scripts/gen-story-sitemap.mjs",
+    "verify-content": "node --env-file=../.env scripts/verify-content.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.957.0",
