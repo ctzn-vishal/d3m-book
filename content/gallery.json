@@ -133,10 +133,26 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published"
+    },
+    {
+      "id": "political-history",
+      "type": "app",
+      "title": "The American Political Almanac · 1976–2024",
+      "description": "An interactive atlas of U.S. presidential elections, 1976–2024 — national, state, and county returns, demographics, and ANES survey shifts.",
+      "domain": "Politics",
+      "topic": "Politics & Elections",
+      "tags": ["politics", "elections", "interactive", "maps"],
+      "href": "https://content.vishalsingh.org/apps/political-history/index.html",
+      "external": true,
+      "openInNewTab": true,
+      "accent": "#46688f",
+      "featured": false,
+      "status": "published",
+      "sort": 0
     }
   ],
   "curate": {
-    "presidential-election-atlas": { "featured": true },
+    "presidential-election-atlas": { "featured": true, "type": "Blog" },
     "nyc-airbnb-atlas": { "featured": true },
     "share-of-wallet": { "featured": true },
     "southwest-regression": { "featured": true },

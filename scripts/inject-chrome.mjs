@@ -1,5 +1,6 @@
-// Inject hub chrome into the self-contained HTML in the vishal bucket — BOTH
-// the data stories (articles/*.html) and the studios (studios/**/*.html):
+// Inject hub chrome into the self-contained HTML in the vishal bucket — the
+// data stories (articles/*.html), the studios (studios/**/*.html), and the
+// self-hosted apps (apps/**/*.html):
 //   1. a fixed "↖︎ Vishal Singh" home pill (reads ?from=<chapter-slug> → "← Back
 //      to the book"), and
 //   2. social/SEO <head> tags — og:*, twitter:*, and <link rel="canonical"> —
@@ -20,7 +21,7 @@ const client = new S3Client({
   forcePathStyle: false,
 });
 const DST = 'vishal';
-const PREFIXES = ['articles', 'studios'];
+const PREFIXES = ['articles', 'studios', 'apps'];
 const HOME = 'https://vishalsingh.org/';
 const MARKER = 'data-vs-chrome';   // home pill
 const OGM = 'data-vs-og';          // social/SEO head tags

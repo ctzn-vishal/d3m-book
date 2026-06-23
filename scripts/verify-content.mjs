@@ -22,7 +22,7 @@ const client = new S3Client({
   forcePathStyle: false,
 });
 const DST = 'vishal';
-const PREFIXES = ['articles', 'studios'];
+const PREFIXES = ['articles', 'studios', 'apps'];
 const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
 
 async function listAll(Prefix) {
