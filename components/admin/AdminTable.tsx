@@ -13,12 +13,21 @@ import {
 import {
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
+  rectSortingStrategy,
   useSortable,
   arrayMove,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Star, ArrowUpRight, Search, X } from 'lucide-react';
+import {
+  GripVertical,
+  Star,
+  ArrowUpRight,
+  Search,
+  X,
+  ArrowUpToLine,
+  ArrowDownToLine,
+  Pencil,
+} from 'lucide-react';
 import type { RegistryType, RegistryStatus } from '@/lib/registry-types';
 import { updateRow, reorder } from '@/app/admin/actions';
 import {
@@ -29,13 +38,32 @@ import {
   type RowPatch,
 } from '@/app/admin/types';
 
+type OrderMode = 'saved' | 'featured' | 'az' | 'updated' | 'type';
+const ORDER_LABELS: Record<OrderMode, string> = {
+  saved: 'Saved order (drag)',
+  featured: 'Featured first',
+  az: 'A–Z',
+  updated: 'Recently updated',
+  type: 'By type',
+};
+
 const selectCls =
   'rounded-md border border-hub-line bg-hub-paper px-2 py-1 font-plex text-[11px] uppercase tracking-[0.04em] text-hub-ink focus:border-hub-teal focus:outline-none';
+
+/** Splice a reordered VISIBLE subset back into the full saved order: non-visible
+ *  rows keep their slots; visible rows fill the visible slots in their new order. */
+function spliceVisibleOrder(full: AdminRow[], newVisibleIds: string[]): AdminRow[] {
+  const visible = new Set(newVisibleIds);
+  const byId = new Map(full.map(r => [r.id, r]));
+  let qi = 0;
+  return full.map(r => (visible.has(r.id) ? byId.get(newVisibleIds[qi++])! : r));
+}
 
 export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
   const [rows, setRows] = useState<AdminRow[]>(initialRows);
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | RegistryType>('all');
+  const [orderMode, setOrderMode] = useState<OrderMode>('saved');
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -58,13 +86,27 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
       ),
     [rows, q, typeFilter]
   );
-  // Reorder only makes sense over the full, unfiltered list.
-  const dragEnabled = q === '' && typeFilter === 'all';
+
+  // `saved` keeps the canonical order (drag maps to it); other modes are view-only.
+  const displayed = useMemo(() => {
+    switch (orderMode) {
+      case 'featured':
+        return [...filtered].sort((a, b) => Number(b.featured) - Number(a.featured));
+      case 'az':
+        return [...filtered].sort((a, b) => a.title.localeCompare(b.title));
+      case 'updated':
+        return [...filtered].sort((a, b) => (b.updatedAt ?? '').localeCompare(a.updatedAt ?? ''));
+      case 'type':
+        return [...filtered].sort((a, b) => a.type.localeCompare(b.type) || a.title.localeCompare(b.title));
+      default:
+        return filtered;
+    }
+  }, [filtered, orderMode]);
+
+  const dragEnabled = orderMode === 'saved';
 
   function applyPatch(id: string, patch: RowPatch) {
     setError(null);
-    // Capture the prior values of ONLY the patched fields, so a failed save
-    // reverts those fields on the latest state (never clobbering a concurrent edit).
     const prevRow = rows.find(r => r.id === id);
     const inverse: RowPatch = {};
     for (const k of Object.keys(patch) as (keyof RowPatch)[]) (inverse as Record<string, unknown>)[k] = prevRow?.[k];
@@ -79,45 +121,49 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
     });
   }
 
-  function handleDragEnd(e: DragEndEvent) {
-    const { active, over } = e;
-    if (!over || active.id === over.id) return;
-    const oldIndex = rows.findIndex(r => r.id === active.id);
-    const newIndex = rows.findIndex(r => r.id === over.id);
-    if (oldIndex < 0 || newIndex < 0) return;
-    // Apply the move, then re-group featured-first — the SAME order the gallery
-    // (sortItems) and the /admin reload (ORDER BY featured DESC, sort ASC) use — so
-    // the optimistic UI matches what will be served and a cross-boundary drag can't
-    // silently "snap back" only after reload. `sort` is then written over THIS order.
-    const moved = arrayMove(rows, oldIndex, newIndex);
-    const display = moved
-      .map((r, i) => ({ r, i }))
-      .sort((a, b) => Number(b.r.featured) - Number(a.r.featured) || a.i - b.i)
-      .map(({ r }) => r);
+  // Persist a new order for the VISIBLE subset (splice into the full saved order).
+  function commitOrder(newVisibleIds: string[]) {
     const prevOrder = rows.map(r => r.id);
-    setRows(display);
+    const newFull = spliceVisibleOrder(rows, newVisibleIds);
+    setRows(newFull);
     setError(null);
-    const orderedIds = display.map(r => r.id);
+    const orderedIds = newFull.map(r => r.id);
     startTransition(async () => {
       try {
         await reorder(orderedIds);
-      } catch (err) {
-        // Revert order over the LATEST state (preserve any field edits) by sorting
-        // current rows back into the pre-drag id order.
+      } catch (e) {
+        // Revert order over the latest state (keep any concurrent field edits).
         setRows(rs => {
           const pos = new Map(prevOrder.map((id, i) => [id, i]));
           return [...rs].sort((a, b) => (pos.get(a.id) ?? 0) - (pos.get(b.id) ?? 0));
         });
-        setError(`Reorder failed: ${(err as Error).message}`);
+        setError(`Reorder failed: ${(e as Error).message}`);
       }
     });
+  }
+
+  function handleDragEnd(e: DragEndEvent) {
+    if (!dragEnabled) return;
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    const ids = displayed.map(r => r.id);
+    const oldIndex = ids.indexOf(active.id as string);
+    const newIndex = ids.indexOf(over.id as string);
+    if (oldIndex < 0 || newIndex < 0) return;
+    commitOrder(arrayMove(ids, oldIndex, newIndex));
+  }
+
+  function moveTo(id: string, where: 'top' | 'bottom') {
+    const ids = displayed.map(r => r.id);
+    const rest = ids.filter(x => x !== id);
+    commitOrder(where === 'top' ? [id, ...rest] : [...rest, id]);
   }
 
   return (
     <div className="mt-5">
       {/* Toolbar */}
       <div className="sticky top-0 z-20 -mx-2 flex flex-wrap items-center gap-2 bg-hub-paper/95 px-2 py-2 backdrop-blur">
-        <div className="relative min-w-[220px] flex-grow">
+        <div className="relative min-w-[200px] flex-grow">
           <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-hub-ink-faint" />
           <input
             value={query}
@@ -126,31 +172,27 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
             className="w-full rounded-full border border-hub-line bg-hub-card py-2 pl-9 pr-8 text-[13px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
           />
           {query && (
-            <button
-              type="button"
-              onClick={() => setQuery('')}
-              aria-label="Clear filter"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-hub-ink-faint hover:text-hub-ink"
-            >
+            <button type="button" onClick={() => setQuery('')} aria-label="Clear filter" className="absolute right-3 top-1/2 -translate-y-1/2 text-hub-ink-faint hover:text-hub-ink">
               <X size={14} />
             </button>
           )}
         </div>
-        <select
-          value={typeFilter}
-          onChange={e => setTypeFilter(e.target.value as 'all' | RegistryType)}
-          aria-label="Filter by type"
-          className={selectCls}
-        >
+        <select value={typeFilter} onChange={e => setTypeFilter(e.target.value as 'all' | RegistryType)} aria-label="Filter by type" className={selectCls}>
           <option value="all">All types</option>
           {TYPE_OPTIONS.map(t => (
-            <option key={t} value={t}>
-              {t}
-            </option>
+            <option key={t} value={t}>{t}</option>
           ))}
         </select>
+        <label className="flex items-center gap-1.5 font-plex text-[10px] uppercase tracking-[0.06em] text-hub-ink-faint">
+          Order
+          <select value={orderMode} onChange={e => setOrderMode(e.target.value as OrderMode)} aria-label="Order by" className={selectCls}>
+            {(Object.keys(ORDER_LABELS) as OrderMode[]).map(m => (
+              <option key={m} value={m}>{ORDER_LABELS[m]}</option>
+            ))}
+          </select>
+        </label>
         <span className="font-plex text-[11px] uppercase tracking-[0.06em] text-hub-ink-faint">
-          {filtered.length}/{rows.length}
+          {displayed.length}/{rows.length}
           {pending && <span className="ml-2 text-hub-teal">saving…</span>}
         </span>
       </div>
@@ -158,23 +200,23 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
       {error && (
         <p className="mt-2 rounded-lg border border-red-300 bg-red-50 px-3 py-2 text-[12.5px] text-red-700">{error}</p>
       )}
-      {!dragEnabled && (
-        <p className="mt-2 font-plex text-[11px] uppercase tracking-[0.05em] text-hub-ink-faint">
-          Clear filters to drag-reorder.
-        </p>
-      )}
+      <p className="mt-2 font-plex text-[11px] uppercase tracking-[0.05em] text-hub-ink-faint">
+        {dragEnabled
+          ? '⭐ floats to the top of the live gallery · drag or use ⤒/⤓ to set order (works inside a filter)'
+          : `View-only order — switch to “${ORDER_LABELS.saved}” to drag/reorder`}
+      </p>
 
       <div className="mt-3">
         <DndContext id="admin-gallery-dnd" sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={filtered.map(r => r.id)} strategy={verticalListSortingStrategy}>
-            <ul className="flex flex-col gap-2">
-              {filtered.map(row => (
-                <SortableRow key={row.id} row={row} dragEnabled={dragEnabled} onPatch={applyPatch} />
+          <SortableContext items={displayed.map(r => r.id)} strategy={rectSortingStrategy}>
+            <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {displayed.map(row => (
+                <SortableCard key={row.id} row={row} dragEnabled={dragEnabled} onPatch={applyPatch} onMove={moveTo} />
               ))}
             </ul>
           </SortableContext>
         </DndContext>
-        {filtered.length === 0 && (
+        {displayed.length === 0 && (
           <p className="rounded-2xl border border-dashed border-hub-line-strong bg-hub-card p-8 text-center text-[13px] text-hub-ink-soft">
             No rows match.
           </p>
@@ -184,19 +226,22 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
   );
 }
 
-function SortableRow({
+function SortableCard({
   row,
   dragEnabled,
   onPatch,
+  onMove,
 }: {
   row: AdminRow;
   dragEnabled: boolean;
   onPatch: (id: string, patch: RowPatch) => void;
+  onMove: (id: string, where: 'top' | 'bottom') => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: row.id,
     disabled: !dragEnabled,
   });
+  const [expanded, setExpanded] = useState(false);
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -210,101 +255,87 @@ function SortableRow({
       ref={setNodeRef}
       style={style}
       data-id={row.id}
-      className={`rounded-xl border border-hub-line bg-hub-card p-3 shadow-hub ${dimmed ? 'opacity-60' : ''}`}
+      className={`flex flex-col overflow-hidden rounded-xl border border-hub-line bg-hub-card shadow-hub ${dimmed ? 'opacity-60' : ''}`}
     >
-      <div className="flex items-start gap-2">
-        {/* Drag handle */}
+      {/* Thumbnail strip with drag handle + featured toggle */}
+      <div className="relative aspect-[16/8] bg-hub-paper2">
+        {row.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={row.thumbnail} alt="" loading="lazy" className="h-full w-full object-cover" />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center font-plex text-[11px] uppercase tracking-[0.08em] text-hub-ink-faint">
+            {row.type}
+          </div>
+        )}
+        <span className="absolute inset-x-0 top-0 h-1" style={{ backgroundColor: row.accent ?? '#46688f' }} />
         <button
           type="button"
           aria-label="Drag to reorder"
           {...attributes}
           {...(dragEnabled ? listeners : {})}
-          className={`mt-1 shrink-0 rounded p-1 text-hub-ink-faint ${
-            dragEnabled ? 'cursor-grab hover:text-hub-ink active:cursor-grabbing' : 'cursor-not-allowed opacity-40'
+          className={`absolute left-1.5 top-1.5 rounded bg-hub-card/90 p-1 shadow-hub backdrop-blur ${
+            dragEnabled ? 'cursor-grab text-hub-ink-soft hover:text-hub-ink active:cursor-grabbing' : 'cursor-not-allowed text-hub-ink-faint opacity-50'
           }`}
         >
-          <GripVertical size={16} />
+          <GripVertical size={14} />
         </button>
-
-        {/* Featured */}
         <button
           type="button"
           aria-label={row.featured ? 'Unfeature' : 'Feature'}
           aria-pressed={row.featured}
           onClick={() => onPatch(row.id, { featured: !row.featured })}
-          className={`mt-1 shrink-0 rounded p-1 transition-colors ${
+          className={`absolute right-1.5 top-1.5 rounded bg-hub-card/90 p-1 shadow-hub backdrop-blur transition-colors ${
             row.featured ? 'text-hub-amber' : 'text-hub-ink-faint hover:text-hub-ink'
           }`}
         >
-          <Star size={16} fill={row.featured ? 'currentColor' : 'none'} />
+          <Star size={14} fill={row.featured ? 'currentColor' : 'none'} />
         </button>
+      </div>
 
-        {/* Main editable block */}
-        <div className="min-w-0 flex-grow">
-          {/* Title + selects + view */}
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              key={`title-${row.title}`}
-              defaultValue={row.title}
-              onBlur={e => {
-                const v = e.target.value.trim();
-                if (!v) e.target.value = row.title;
-                else if (v !== row.title) onPatch(row.id, { title: v });
-              }}
-              aria-label="Title"
-              className="min-w-[200px] flex-grow rounded-md border border-transparent bg-transparent px-1.5 py-1 font-serif text-[16px] font-semibold text-hub-ink hover:border-hub-line focus:border-hub-teal focus:bg-hub-paper focus:outline-none"
-            />
-            <select
-              value={row.type}
-              onChange={e => onPatch(row.id, { type: e.target.value as RegistryType })}
-              aria-label="Type"
-              className={selectCls}
-            >
-              {TYPE_OPTIONS.map(t => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-            <select
-              value={row.status}
-              onChange={e => onPatch(row.id, { status: e.target.value as RegistryStatus })}
-              aria-label="Status"
-              className={selectCls}
-            >
-              {STATUS_OPTIONS.map(s => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            {row.href && (
-              <a
-                href={row.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-md border border-hub-line px-2 py-1 font-plex text-[10px] uppercase tracking-[0.06em] text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink"
-              >
-                View <ArrowUpRight size={11} />
-              </a>
-            )}
-          </div>
+      {/* Body */}
+      <div className="flex flex-grow flex-col gap-2 p-3">
+        <input
+          key={`title-${row.title}`}
+          defaultValue={row.title}
+          onBlur={e => {
+            const v = e.target.value.trim();
+            if (!v) e.target.value = row.title;
+            else if (v !== row.title) onPatch(row.id, { title: v });
+          }}
+          aria-label="Title"
+          className="w-full rounded-md border border-transparent bg-transparent px-1 py-0.5 font-serif text-[15px] font-semibold leading-snug text-hub-ink hover:border-hub-line focus:border-hub-teal focus:bg-hub-paper focus:outline-none"
+        />
 
-          {/* Topic + tags */}
-          <div className="mt-2 flex flex-wrap items-center gap-2">
-            <select
-              value={row.topic ?? ''}
-              onChange={e => onPatch(row.id, { topic: e.target.value || null })}
-              aria-label="Topic"
-              className={selectCls}
-            >
-              <option value="">— topic —</option>
-              {TOPIC_OPTIONS.map(t => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <select value={row.type} onChange={e => onPatch(row.id, { type: e.target.value as RegistryType })} aria-label="Type" className={selectCls}>
+            {TYPE_OPTIONS.map(t => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+          <select value={row.status} onChange={e => onPatch(row.id, { status: e.target.value as RegistryStatus })} aria-label="Status" className={selectCls}>
+            {STATUS_OPTIONS.map(s => (
+              <option key={s} value={s}>{s}</option>
+            ))}
+          </select>
+        </div>
+
+        <select value={row.topic ?? ''} onChange={e => onPatch(row.id, { topic: e.target.value || null })} aria-label="Topic" className={`${selectCls} w-full`}>
+          <option value="">— topic —</option>
+          {TOPIC_OPTIONS.map(t => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+
+        {/* Expandable text editing (keeps cards compact) */}
+        <button
+          type="button"
+          onClick={() => setExpanded(v => !v)}
+          className="flex items-center gap-1 self-start font-plex text-[10px] uppercase tracking-[0.06em] text-hub-ink-faint hover:text-hub-ink"
+        >
+          <Pencil size={11} /> {expanded ? 'hide text' : 'edit text'}
+        </button>
+        {expanded && (
+          <div className="flex flex-col gap-2">
             <input
               key={`tags-${row.tags.join(',')}`}
               defaultValue={row.tags.join(', ')}
@@ -314,27 +345,43 @@ function SortableRow({
               }}
               placeholder="tags, comma, separated"
               aria-label="Tags"
-              className="min-w-[180px] flex-grow rounded-md border border-hub-line bg-hub-paper px-2 py-1 font-plex text-[11px] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
+              className="w-full rounded-md border border-hub-line bg-hub-paper px-2 py-1 font-plex text-[11px] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
+            />
+            <textarea
+              key={`desc-${row.description}`}
+              defaultValue={row.description}
+              onBlur={e => {
+                if (e.target.value !== row.description) onPatch(row.id, { description: e.target.value });
+              }}
+              rows={3}
+              aria-label="Description"
+              className="w-full resize-y rounded-md border border-hub-line bg-hub-paper px-2 py-1.5 text-[12.5px] leading-relaxed text-hub-ink-soft focus:border-hub-teal focus:outline-none"
             />
           </div>
+        )}
 
-          {/* Description */}
-          <textarea
-            key={`desc-${row.description}`}
-            defaultValue={row.description}
-            onBlur={e => {
-              if (e.target.value !== row.description) onPatch(row.id, { description: e.target.value });
-            }}
-            rows={2}
-            aria-label="Description"
-            className="mt-2 w-full resize-y rounded-md border border-hub-line bg-hub-paper px-2 py-1.5 text-[12.5px] leading-relaxed text-hub-ink-soft focus:border-hub-teal focus:outline-none"
-          />
-
-          {/* Footer meta */}
-          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 font-plex text-[10px] uppercase tracking-[0.05em] text-hub-ink-faint">
-            <span>{row.id}</span>
-            {row.updatedAt && <span>updated {row.updatedAt}</span>}
+        {/* Footer */}
+        <div className="mt-auto flex items-center justify-between gap-2 pt-1">
+          <div className="flex items-center gap-1">
+            {dragEnabled && (
+              <>
+                <button type="button" aria-label="Move to top" title="Move to top of this view" onClick={() => onMove(row.id, 'top')} className="rounded border border-hub-line p-1 text-hub-ink-faint hover:border-hub-line-strong hover:text-hub-ink">
+                  <ArrowUpToLine size={13} />
+                </button>
+                <button type="button" aria-label="Move to bottom" title="Move to bottom of this view" onClick={() => onMove(row.id, 'bottom')} className="rounded border border-hub-line p-1 text-hub-ink-faint hover:border-hub-line-strong hover:text-hub-ink">
+                  <ArrowDownToLine size={13} />
+                </button>
+              </>
+            )}
+            {row.href && (
+              <a href={row.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded border border-hub-line px-1.5 py-1 font-plex text-[10px] uppercase tracking-[0.05em] text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink">
+                View <ArrowUpRight size={11} />
+              </a>
+            )}
           </div>
+          <span className="truncate font-plex text-[9.5px] uppercase tracking-[0.04em] text-hub-ink-faint" title={`${row.id}${row.updatedAt ? ` · updated ${row.updatedAt}` : ''}`}>
+            {row.id}
+          </span>
         </div>
       </div>
     </li>

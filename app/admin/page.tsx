@@ -33,7 +33,7 @@ export default async function AdminPage() {
   let connected = false;
   if (db) {
     try {
-      const r = await db.execute('SELECT * FROM gallery ORDER BY featured DESC, sort ASC, title ASC');
+      const r = await db.execute('SELECT * FROM gallery ORDER BY sort ASC, title ASC');
       rows = (r.rows as unknown as Record<string, any>[]).map(toAdminRow);
       connected = true;
     } catch {
@@ -52,9 +52,10 @@ export default async function AdminPage() {
             Curate the gallery
           </h1>
           <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-hub-ink-soft">
-            Drag to set order, toggle featured, and edit type / status / topic / text. Changes
-            write to <strong>live Turso</strong> and show on the site within seconds. The committed
-            snapshot fallback syncs nightly.
+            Drag cards (or use ⤒/⤓) to set order — works inside a filter too, so you can order just
+            the Apps. ⭐ floats an item to the top of the live gallery. Edit type / status / topic /
+            text inline. Changes write to <strong>live Turso</strong> and show within seconds; the
+            committed snapshot syncs nightly.
           </p>
         </div>
         <form action="/api/admin/logout" method="post">
