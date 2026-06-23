@@ -42,10 +42,10 @@ export default async function HomeGallery() {
             Vishal Singh · NYU Stern
           </div>
           <h1 className="mt-3 max-w-3xl font-serif text-[clamp(34px,5.8vw,56px)] font-semibold leading-[1.05] tracking-tight text-hub-ink">
-            Explore Interactive apps, data-stories, and case studies..
+            Explore Interactive apps, data-stories, and case studies.
           </h1>
           <p className="mt-4 max-w-2xl text-[16.5px] leading-relaxed text-hub-ink-soft">
-            Teaching studios, data stories, apps, and datasets spanning public health, politics,
+            Teaching studios, apps, and data stories spanning public health, politics,
             business, and other public data. Filter by type or topic below — each piece opens in a new tab.
           </p>
         </div>
