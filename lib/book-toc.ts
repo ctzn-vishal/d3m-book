@@ -1,4 +1,4 @@
-import type { Article, Book } from '@/lib/book-types';
+import type { Article, Book, Chapter } from '@/lib/book-types';
 
 export const book: Book = {
   title: 'Data Driven Decision Making',
@@ -295,6 +295,17 @@ export function findChapter(number: number) {
 
 export function getAllPartNumerals(): string[] {
   return book.parts.map(p => p.numeral);
+}
+
+/**
+ * Landing path for a chapter: its first published article. Every chapter has at
+ * least one article, so this always resolves to a real article route. Chapters
+ * no longer have a dedicated overview page — every chapter link in the nav
+ * (cover, part page, sidebar, breadcrumb) opens directly at the first section.
+ */
+export function chapterHref(chapter: Chapter): string {
+  const first = chapter.articles.find(a => a.status === 'published') ?? chapter.articles[0];
+  return `/${first.slug}`;
 }
 
 export function getAllChapterNumbers(): number[] {

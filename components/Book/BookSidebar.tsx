@@ -4,6 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
+import { chapterHref } from '@/lib/book-toc';
 
 export interface BookSidebarProps {
   book: Book;
@@ -106,7 +107,7 @@ export function BookSidebar({ book, currentSlug }: BookSidebarProps) {
                     {part.chapters.map(chapter => (
                       <li key={chapter.number}>
                         <Link
-                          href={`/teaching/ch/${chapter.number}`}
+                          href={chapterHref(chapter)}
                           className="flex gap-1.5 px-1 text-[11.5px] font-medium leading-snug text-subtle transition-colors hover:text-link"
                         >
                           <span className="font-mono tabular-nums text-muted">

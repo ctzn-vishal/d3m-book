@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
-import { allArticles } from '@/lib/book-toc';
+import { allArticles, chapterHref } from '@/lib/book-toc';
 import { studios } from '@/lib/studios';
 import { getPartContent } from '@/lib/book-content';
 import { resolveIcon, partColor } from '@/lib/book-visuals';
@@ -72,7 +72,7 @@ export function TeachingCover({ book }: { book: Book }) {
               </Link>
             )}
             <Link
-              href="/"
+              href="/?type=Teaching"
               className="inline-flex items-center gap-2 rounded-md border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-white/20"
             >
               <LayoutGrid size={15} strokeWidth={2} /> Browse the gallery
@@ -142,7 +142,7 @@ export function TeachingCover({ book }: { book: Book }) {
                     {part.chapters.map(ch => (
                       <li key={ch.number}>
                         <Link
-                          href={`/teaching/ch/${ch.number}`}
+                          href={chapterHref(ch)}
                           className="-mx-2 flex items-baseline gap-2.5 rounded-md px-2 py-1.5 text-[13.5px] leading-snug text-subtle transition-colors hover:bg-card hover:text-link"
                         >
                           <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted">

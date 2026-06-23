@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import type { Article, Book, ArticleLookup } from '@/lib/book-types';
+import { chapterHref } from '@/lib/book-toc';
 import { ChapterTocDrawer } from '@/components/Book/ChapterTocDrawer';
 import { BookSidebar } from '@/components/Book/BookSidebar';
 import { OnThisPage } from '@/components/Book/OnThisPage';
@@ -42,6 +43,11 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
             the floating ChapterTocDrawer takes over. */}
         <BookSidebar book={book} currentSlug={slug} />
 
+        {/* Content column (col2 of the grid). Marked as a size container so wide
+            <Figure> zones can size against THIS column (via cqw units) and fill
+            it — growing rightward into available space rather than sliding left
+            under the sticky sidebar. */}
+        <div className="min-w-0 [container-type:inline-size]">
         <div className="mx-auto w-full max-w-3xl lg:max-w-[44rem]">
           <nav className="pt-8 text-sm text-muted" aria-label="Breadcrumb">
             <Link href="/teaching" className="hover:text-link">
@@ -58,14 +64,14 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
             {chapter && (
               <>
                 <span className="mx-2 text-subtle">/</span>
-                <Link href={`/teaching/ch/${chapter.number}`} className="text-subtle hover:text-link">
+                <Link href={chapterHref(chapter)} className="text-subtle hover:text-link">
                   {chapter.title}
                 </Link>
               </>
             )}
           </nav>
 
-          <article className="w-full min-w-0 py-10 prose prose-neutral prose-headings:font-display prose-headings:tracking-normal prose-h2:mt-12 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h3:mt-8 prose-h3:text-[1.2rem] prose-h3:leading-snug prose-p:leading-7 prose-li:leading-7">
+          <article className="mx-auto w-full min-w-0 py-10 prose prose-neutral prose-headings:font-display prose-headings:tracking-normal prose-h2:mt-12 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h3:mt-8 prose-h3:text-[1.2rem] prose-h3:leading-snug prose-p:leading-7 prose-li:leading-7">
             <header className="mb-9 not-prose">
               <p className="text-xs uppercase tracking-wider text-muted">
                 {formatArticleNumber(article.number)}
@@ -76,6 +82,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
             </header>
             {children}
           </article>
+        </div>
         </div>
 
         {/* Right rail — in-page "On this page" TOC, sticky under the book bar. */}

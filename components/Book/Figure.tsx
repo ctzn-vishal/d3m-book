@@ -38,46 +38,32 @@ export interface FigureProps {
 }
 
 /**
- * Per-zone escape classes. Gated to `lg:` (1024px) and up — below that
- * the prose column already fills most of the viewport, so there's no
- * horizontal room to outset into. Sub-`lg:` everything collapses to
- * body width (= prose column width).
+ * Per-zone escape classes. Gated to `lg:` (1024px) and up — below that the
+ * reading column already fills most of the viewport, so there's no room to
+ * outset into and every zone collapses to body width.
  *
- * Up to `lg`, the escape uses the standard "negative-margin to
- * viewport-edge" trick:
+ * Width is sized against the CONTENT COLUMN, not the viewport: the book shell
+ * (BookShell) marks col2 as a size container, so `100cqw` resolves to the
+ * column's width. Each zone fills the column up to a pixel ceiling and centers
+ * within it via a symmetric margin — `(100% - W) / 2`, where `100%` is the prose
+ * column the figure sits in. Because the figure can never exceed the content
+ * column, it never slides under the sticky left sidebar; it grows rightward into
+ * the available space instead.
  *
- *   margin-left  = 50% - 50vw + Xrem
- *   max-width    = 100vw - 2*Xrem
- *
- * Where X is the inset distance from the viewport edge. The `mx-`
- * arbitrary-value class sets *both* horizontal margins to that
- * negative value, which (combined with `max-w-[100vw-2*Xrem]`)
- * produces a centered figure with `Xrem` of breathing room from each
- * viewport edge.
- *
- * Inset choices:
- *   body-outset   — 8rem inset (light escape; ~880px on a 1280 screen)
- *   page-outset   — 4rem inset (substantial escape; ~1152px on 1280)
- *   screen-inset  — 2rem inset (near-bleed; ~1216px on 1280)
- *
- * At `xl:` and up the book shell also renders a sticky right rail, so
- * wide figures switch to an asymmetric escape: they grow left into the
- * balancing column while the right edge stays inside the article lane.
- * That preserves room for the in-page menu.
+ * The pixel ceilings keep the three zones distinct on wide screens (where the
+ * column is wider than any single figure needs):
+ *   body-outset   — up to 51rem (light breathing room past prose)
+ *   page-outset   — up to 60rem (wide tables / 4-up small multiples)
+ *   screen-inset  — up to 80rem (fills the column; punctuation moments)
  */
-// Hard pixel ceilings: on very wide displays (>1440px-ish) the calc-based
-// width keeps growing toward the viewport edge, which makes charts and
-// figures feel sprawled. `min(calc(...), Npx)` lets the calc win on
-// laptops (~1280px) where the inset is the binding constraint, and the
-// pixel cap win on desktops/ultrawides where it isn't.
 const WIDTH_CLASS: Record<FigureWidth, string> = {
   body: '',
   'body-outset':
-    'lg:mx-[max(calc(50%-50vw+8rem),calc(50%-460px))] lg:max-w-[min(calc(100vw-16rem),920px)] xl:ml-[-3rem] xl:mr-0 xl:max-w-[calc(100%+3rem)] 2xl:ml-[-4rem] 2xl:max-w-[calc(100%+4rem)]',
+    'lg:w-[min(100cqw,51rem)] lg:mx-[calc((100%_-_min(100cqw,51rem))_/_2)]',
   'page-outset':
-    'lg:mx-[max(calc(50%-50vw+4rem),calc(50%-550px))] lg:max-w-[min(calc(100vw-8rem),1100px)] xl:ml-[-6rem] xl:mr-0 xl:max-w-[calc(100%+6rem)] 2xl:ml-[-8rem] 2xl:max-w-[calc(100%+8rem)]',
+    'lg:w-[min(100cqw,60rem)] lg:mx-[calc((100%_-_min(100cqw,60rem))_/_2)]',
   'screen-inset':
-    'lg:mx-[max(calc(50%-50vw+2rem),calc(50%-640px))] lg:max-w-[min(calc(100vw-4rem),1280px)] xl:ml-[-9rem] xl:mr-0 xl:max-w-[calc(100%+9rem)] 2xl:ml-[-11rem] 2xl:max-w-[calc(100%+11rem)]',
+    'lg:w-[min(100cqw,80rem)] lg:mx-[calc((100%_-_min(100cqw,80rem))_/_2)]',
 };
 
 /**

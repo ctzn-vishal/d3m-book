@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/share-metadata';
-import { allArticles, getAllPartNumerals, getAllChapterNumbers } from '@/lib/book-toc';
+import { allArticles, getAllPartNumerals } from '@/lib/book-toc';
 import { getDatasetItems } from '@/lib/gallery';
 
 export const revalidate = 86400;
@@ -15,25 +15,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
   ];
 
-  // Teaching section + chapter landing pages.
-  const teachingNav: MetadataRoute.Sitemap = [
-    ...getAllPartNumerals().map(
-      (n): MetadataRoute.Sitemap[number] => ({
-        url: `${SITE_URL}/teaching/part/${n}`,
-        lastModified: now,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-      })
-    ),
-    ...getAllChapterNumbers().map(
-      (n): MetadataRoute.Sitemap[number] => ({
-        url: `${SITE_URL}/teaching/ch/${n}`,
-        lastModified: now,
-        changeFrequency: 'monthly',
-        priority: 0.6,
-      })
-    ),
-  ];
+  // Teaching part landing pages. (Chapters no longer have their own page — they
+  // redirect to the first article — so they're intentionally not listed here.)
+  const teachingNav: MetadataRoute.Sitemap = getAllPartNumerals().map(
+    (n): MetadataRoute.Sitemap[number] => ({
+      url: `${SITE_URL}/teaching/part/${n}`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    })
+  );
 
   // Book articles live at root-level chNN-keyword slugs.
   const bookPages: MetadataRoute.Sitemap = allArticles

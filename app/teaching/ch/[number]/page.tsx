@@ -1,8 +1,5 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { ChapterPage } from '@/components/Book/ChapterPage';
-import { book, findChapter, getAllChapterNumbers } from '@/lib/book-toc';
-import { getChapterContent } from '@/lib/book-content';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { findChapter, getAllChapterNumbers, chapterHref } from '@/lib/book-toc';
 
 interface Props {
   params: Promise<{ number: string }>;
@@ -12,31 +9,14 @@ export function generateStaticParams() {
   return getAllChapterNumbers().map(number => ({ number: String(number) }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { number } = await params;
-  const found = findChapter(Number(number));
-  if (!found) return { title: 'Not found' };
-  const content = getChapterContent(found.chapter.number);
-  const title = `Chapter ${found.chapter.number}: ${found.chapter.title} — ${book.title}`;
-  return {
-    title,
-    description: content?.throughLine ?? content?.summary ?? `Chapter ${number} of ${book.title}.`,
-  };
-}
-
-export default async function TeachingChapterPage({ params }: Props) {
+/**
+ * The chapter overview page was removed — a chapter now opens directly at its
+ * first article. This route is kept only as a permanent (308) redirect so old
+ * /teaching/ch/N links, bookmarks, and search results land on the right article.
+ */
+export default async function TeachingChapterRedirect({ params }: Props) {
   const { number } = await params;
   const found = findChapter(Number(number));
   if (!found) notFound();
-
-  return (
-    <ChapterPage
-      book={book}
-      chapter={found.chapter}
-      part={found.part}
-      partIndex={found.partIndex}
-      prev={found.prev}
-      next={found.next}
-    />
-  );
+  permanentRedirect(chapterHref(found.chapter));
 }

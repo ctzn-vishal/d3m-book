@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import {
+  REGISTRY_TYPES,
   TYPE_LABEL,
   type RegistryItem,
   type RegistryFacets,
@@ -170,6 +171,14 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
   const [type, setType] = useState<RegistryType | 'all'>('all');
   const [topic, setTopic] = useState<string | 'all'>('all');
   const [sort, setSort] = useState<SortKey>('featured');
+
+  // Honor a ?type= filter from the URL on load (e.g. the book's "Browse the
+  // gallery" button links to /?type=Teaching). Read client-side after mount so
+  // the page stays statically cached and there's no hydration mismatch.
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get('type');
+    if (t && (REGISTRY_TYPES as string[]).includes(t)) setType(t as RegistryType);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
