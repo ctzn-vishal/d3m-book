@@ -304,3 +304,66 @@ High → `/admin`.
   `/admin` (if frequent / mobile / drag-reorder)?
 - **Re-upload fragility:** adopt the `src/`→published split (B1, recommended) or edge
   injection (B2), or rely on `verify-content` for now?
+
+---
+
+## 8. Decisions made (2026-06-23) + `/admin` v1 spec
+
+**Shipped this session:** the full *American Political Almanac* is live as an **App**
+(`vishal:apps/political-history/index.html`; data stays at
+`ontopic-public-data/political-history/v1`). A first-class **`apps/` bucket prefix** was
+added to `inject-chrome` + `verify-content`; sitemap/sync-registry needed no change
+(they key off the snapshot href, which must be the `content.vishalsingh.org` bucket URL).
+`presidential-election-atlas` was reclassified **App → Blog**. This is the reference
+implementation of the §2 data-app pattern — follow it for the next data-heavy app.
+
+**Resolved (was §7):**
+- **CMS:** build an internal **`/admin`** (frequent edits + growing catalog justify it
+  over Studio/scripts).
+- **v1 scope:** **metadata curation of existing rows only** — order (`sort`), hide/publish
+  (`status`), `featured`, `type`, `topic`, `title`, `description`, `tags`. No content
+  editing; no row create/delete. **Booklets deferred to v2.**
+- **Booklets:** **collection overlay + iframe** (a `collection` + `collection_items(order)`
+  table over existing rows, rendered at `/report/[slug]` with each member in an iframe).
+  **Do NOT add a 5th `report` type** — a booklet is a container, not an artifact class, so
+  the 4-way `type` enum stays as-is.
+- **Auth:** **shared password** (a secret checked in `middleware.ts`, or Vercel Password
+  Protection on `/admin`). Upgrade to NextAuth later only if multiple editors appear.
+- **Data bucket:** keep the dedicated public data bucket (layout B) — `political-history`
+  already proves it.
+
+### `/admin` v1 — build outline (metadata-only)
+1. **Server-side DB token (prerequisite — also fixes §5.1).** `/admin` must WRITE to Turso,
+   and the live read currently 401s on a platform token. Add `lib/turso-admin.ts`
+   (server-only) that connects with a **DB-scoped** token — reuse the platform→DB minting in
+   `scripts/_turso.mjs` so a platform token self-mints, or require a non-expiring DB token in
+   Vercel. Use it for both `/admin` writes and (ideally) `lib/registry-db.ts` reads.
+2. **Auth.** `middleware.ts` guards `/admin` + `/api/admin/*`: a tiny login form posts
+   `ADMIN_SECRET`, set an httpOnly cookie, verify it in middleware. (Or enable Vercel
+   Password Protection on the path and skip the form.)
+3. **Route.** `app/admin/page.tsx` (server component) reads ALL rows (incl. hidden/draft)
+   via the admin connection → passes to a client table.
+4. **Client UI.** A sortable list (`@dnd-kit/sortable`) grouped by `featured`; per row:
+   `status` dropdown, `featured` checkbox, `type` dropdown (App/Teaching/Blog/Dataset),
+   `topic` dropdown (`lib/taxonomy` `TOPICS`), inline `title`/`description`/`tags` edit.
+   Dropdown vocabularies come from the same lists the CHECK constraints enforce.
+5. **Mutations.** Server actions (or `app/api/admin/route.ts`) write Turso, validating against
+   the CHECK vocabulary; on success `revalidatePath('/')` (+ gallery routes) and/or POST the
+   existing `/api/revalidate` so edits show in seconds, not the 10-min ISR window.
+6. **Snapshot caveat.** Serverless can't `git commit`, so `/admin` updates **live Turso**
+   only; the committed `registry.snapshot.json` fallback is still refreshed by
+   `pnpm sync-registry` + commit (run locally or via a scheduled GH Action — §5.3). Document
+   that distinction in the admin UI ("changes are live; snapshot syncs nightly").
+
+### `/admin` v2 — booklets (deferred)
+- Tables: `collection(id, slug, title, description, accent, featured, status, sort,
+  created_at, updated_at)` + `collection_items(collection_id, item_id REFERENCES gallery(id),
+  position, label?)` with `UNIQUE(collection_id, item_id)`; add CHECK constraints, mirror in
+  `db/schema.ts`, serialize into the snapshot, extend `sync-registry` + `registry-db`.
+- Route `app/report/[slug]/page.tsx`: ordered TOC + each member in an `<iframe>` (relative
+  paths/CSS/JS resolve against the member's own URL — no rewriting) + prev/next + progress.
+- Admin: a booklet editor (create collection, drag members into order). Open question to
+  settle then: whether some members should be report-only (needs an `unlisted`/`member`
+  status so they resolve in the booklet but stay out of the main gallery grid).
+- Keep the **pre-stitched single HTML** approach (§ playlist Option B) in reserve ONLY for a
+  future "export booklet to PDF/print" feature.
