@@ -427,6 +427,14 @@ reverted clean). v2 booklets remain deferred.
   (§8); the topic-vocabulary edge (`domainToTopic` → non-canonical) is latent (all current
   studio domains map).
 
-**Known follow-up (out of scope, flagged):** `verify-content` fails on a pre-existing stray
-studio `studios/business_reviews_demo/site/index.html` (nested path, unregistered, non-kebab) —
-register it in `lib/studios.ts` with a kebab slug, or delete the abandoned upload.
+**Known follow-up — RESOLVED (2026-06-23):** the stray `studios/business_reviews_demo/`
+upload that failed `verify-content` was an abandoned foreign-pipeline artifact (a GABRIEL
+text-as-data case-builder demo: self-contained `site/index.html` with data inlined, a nested
+`site/`+`data/` layout, synthetic SaaS-review corpus, never in `lib/studios.ts` or the
+snapshot). A sibling `studios/business_reviews_full/` from the same upload batch was also
+present. Both prefixes were **deleted** from the `vishal` bucket and `verify-content` now
+exits 0. Lesson for next time: that text-as-data case-builder writes to
+`studios/<case>/site/index.html` + `studios/<case>/data/…`, which is NOT the gallery's studio
+layout (`studios/<slug>/index.html`) — point its output at a scratch/staging bucket, not the
+public `vishal` gallery bucket. (Note: Tigris `ListObjectsV2` lagged badly during cleanup;
+per-object `HeadObject`/`GetObject` are the strongly-consistent source of truth.)
