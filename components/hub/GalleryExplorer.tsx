@@ -13,6 +13,8 @@ import {
   AppWindow,
   Database,
   Shapes,
+  Tag,
+  ChevronDown,
   type LucideIcon,
 } from 'lucide-react';
 import {
@@ -22,6 +24,18 @@ import {
   type RegistryFacets,
   type RegistryType,
 } from '@/lib/registry-types';
+import { TAG_VOCABULARY, type TagFacet } from '@/lib/tag-vocabulary';
+
+/** Facet display order + labels for the grouped tag panel. */
+const TAG_FACET_LABEL: Record<TagFacet | 'other', string> = {
+  method: 'Method',
+  chart: 'Chart',
+  data: 'Data',
+  other: 'Other',
+};
+const TAG_FACET_ORDER: TagFacet[] = ['method', 'chart', 'data'];
+/** tag → facet, from the controlled vocabulary (lib/tag-vocabulary.ts). */
+const TAG_FACET_OF = new Map(TAG_VOCABULARY.map(t => [t.tag, t.facet]));
 
 type SortKey = 'featured' | 'az' | 'type';
 
@@ -166,19 +180,55 @@ function TopicChip({ active, onClick, children }: { active: boolean; onClick: ()
   );
 }
 
+/** Tertiary filter — tags. Ink-fill when active (distinct from the amber topic
+ *  chips); multi-select with AND semantics. Not uppercased since the controlled
+ *  vocabulary tags are proper names ("Choropleth", "Survey data"). */
+function TagChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`shrink-0 rounded-full border px-2.5 py-1 font-plex text-[11px] tracking-[0.02em] transition-colors ${
+        active
+          ? 'border-hub-ink bg-hub-ink text-hub-paper'
+          : 'border-hub-line bg-hub-card text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink'
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; facets: RegistryFacets }) {
   const [query, setQuery] = useState('');
   const [type, setType] = useState<RegistryType | 'all'>('all');
   const [topic, setTopic] = useState<string | 'all'>('all');
+  const [tags, setTags] = useState<string[]>([]);
+  const [showTags, setShowTags] = useState(false);
   const [sort, setSort] = useState<SortKey>('featured');
 
-  // Honor a ?type= filter from the URL on load (e.g. the book's "Browse the
-  // gallery" button links to /?type=Teaching). Read client-side after mount so
-  // the page stays statically cached and there's no hydration mismatch.
+  // Honor ?type= and ?tag= (comma-separated) filters from the URL on load. Read
+  // client-side after mount so the page stays statically cached and there's no
+  // hydration mismatch (e.g. the book's "Browse the gallery" → /?type=Teaching).
   useEffect(() => {
-    const t = new URLSearchParams(window.location.search).get('type');
+    const params = new URLSearchParams(window.location.search);
+    const t = params.get('type');
     if (t && (REGISTRY_TYPES as string[]).includes(t)) setType(t as RegistryType);
+    const tg = params.get('tag');
+    if (tg) {
+      const valid = new Set(facets.tags.map(x => x.tag));
+      const picked = tg.split(',').map(s => s.trim()).filter(s => valid.has(s));
+      if (picked.length) {
+        setTags(picked);
+        setShowTags(true);
+      }
+    }
+    // facets is stable for the page's lifetime — read once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const toggleTag = (tag: string) =>
+    setTags(prev => (prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]));
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -186,6 +236,7 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
       i =>
         (type === 'all' || i.type === type) &&
         (topic === 'all' || i.topic === topic) &&
+        (tags.length === 0 || tags.every(t => i.tags.includes(t))) &&
         (q === '' ||
           i.title.toLowerCase().includes(q) ||
           i.description.toLowerCase().includes(q) ||
@@ -197,9 +248,24 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
     if (sort === 'type')
       return [...out].sort((a, b) => a.type.localeCompare(b.type) || a.title.localeCompare(b.title));
     return [...out].sort((a, b) => Number(b.featured) - Number(a.featured));
-  }, [items, query, type, topic, sort]);
+  }, [items, query, type, topic, tags, sort]);
 
-  const hasFilters = query !== '' || type !== 'all' || topic !== 'all';
+  // Tags grouped by vocabulary facet (method/chart/data); any non-vocab tags
+  // still on older non-Blog items fall under "Other". Only tags present in the
+  // catalog show, each with its global count (facets.tags is frequency-sorted).
+  const tagGroups = useMemo(() => {
+    const groups: { facet: TagFacet | 'other'; label: string; tags: { tag: string; count: number }[] }[] =
+      TAG_FACET_ORDER.map(facet => ({
+        facet,
+        label: TAG_FACET_LABEL[facet],
+        tags: facets.tags.filter(t => TAG_FACET_OF.get(t.tag) === facet),
+      }));
+    const other = facets.tags.filter(t => !TAG_FACET_OF.has(t.tag));
+    if (other.length) groups.push({ facet: 'other', label: TAG_FACET_LABEL.other, tags: other });
+    return groups.filter(g => g.tags.length);
+  }, [facets.tags]);
+
+  const hasFilters = query !== '' || type !== 'all' || topic !== 'all' || tags.length > 0;
 
   return (
     <div>
@@ -289,6 +355,64 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
             </div>
           </div>
         )}
+
+        {/* Tertiary filter: tags — collapsible, grouped by facet, multi-select (AND) */}
+        {facets.tags.length > 0 && (
+          <div className="mt-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setShowTags(s => !s)}
+                aria-expanded={showTags}
+                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-hub-line bg-hub-card px-3 py-1 font-plex text-[11px] uppercase tracking-[0.06em] text-hub-ink-soft transition-colors hover:border-hub-line-strong hover:text-hub-ink"
+              >
+                <Tag size={12} strokeWidth={2.2} />
+                Tags{tags.length > 0 ? ` · ${tags.length}` : ''}
+                <ChevronDown size={13} className={`transition-transform ${showTags ? 'rotate-180' : ''}`} />
+              </button>
+              {/* active tag pills — visible even when the panel is collapsed */}
+              {tags.map(t => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => toggleTag(t)}
+                  aria-label={`Remove tag ${t}`}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-full border border-hub-ink bg-hub-ink px-2.5 py-1 font-plex text-[11px] text-hub-paper"
+                >
+                  {t} <X size={11} strokeWidth={2.5} />
+                </button>
+              ))}
+              {tags.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setTags([])}
+                  className="font-plex text-[11px] text-hub-teal hover:underline"
+                >
+                  clear tags
+                </button>
+              )}
+            </div>
+
+            {showTags && (
+              <div className="mt-2.5 max-h-[42vh] space-y-2.5 overflow-y-auto rounded-xl border border-hub-line bg-hub-card/50 p-3">
+                {tagGroups.map(g => (
+                  <div key={g.facet} className="flex flex-col gap-1.5 sm:flex-row sm:gap-2">
+                    <span className="shrink-0 pt-1 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:w-12">
+                      {g.label}
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {g.tags.map(t => (
+                        <TagChip key={t.tag} active={tags.includes(t.tag)} onClick={() => toggleTag(t.tag)}>
+                          {t.tag} · {t.count}
+                        </TagChip>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <p className="mb-5 mt-4 font-plex text-[11.5px] uppercase tracking-[0.06em] text-hub-ink-faint">
@@ -300,6 +424,7 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
               setQuery('');
               setType('all');
               setTopic('all');
+              setTags([]);
             }}
             className="ml-3 text-hub-teal hover:underline"
           >

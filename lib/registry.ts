@@ -54,9 +54,11 @@ export function itemsForChapter(articleSlugs: string[]): RegistryItem[] {
 export function getRegistryFacets(items: RegistryItem[]): RegistryFacets {
   const typeCounts = new Map<RegistryType, number>();
   const topicCounts = new Map<string, number>();
+  const tagCounts = new Map<string, number>();
   for (const it of items) {
     typeCounts.set(it.type, (typeCounts.get(it.type) ?? 0) + 1);
     if (it.topic) topicCounts.set(it.topic, (topicCounts.get(it.topic) ?? 0) + 1);
+    for (const tag of it.tags ?? []) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
   }
   return {
     types: REGISTRY_TYPES.filter(t => typeCounts.has(t)).map(t => ({ type: t, label: TYPE_LABEL[t], count: typeCounts.get(t)! })),
@@ -64,6 +66,10 @@ export function getRegistryFacets(items: RegistryItem[]): RegistryFacets {
     topics: [...topicCounts.entries()]
       .map(([topic, count]) => ({ topic, count }))
       .sort((a, b) => b.count - a.count || a.topic.localeCompare(b.topic)),
+    // Tertiary filter: tags (the client groups these by vocabulary facet).
+    tags: [...tagCounts.entries()]
+      .map(([tag, count]) => ({ tag, count }))
+      .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag)),
     total: items.length,
   };
 }

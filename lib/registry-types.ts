@@ -51,5 +51,6 @@ export type RegistryItem = {
 export type RegistryFacets = {
   types: { type: RegistryType; label: string; count: number }[];
   topics: { topic: string; count: number }[];
+  tags: { tag: string; count: number }[];
   total: number;
 };
