@@ -20,6 +20,7 @@
     "studio": "drizzle-kit studio",
     "inject-chrome": "node --env-file=../.env scripts/inject-chrome.mjs",
     "gen-story-sitemap": "node --env-file=../.env scripts/gen-story-sitemap.mjs",
+    "gen-thumbnails": "node --env-file=../.env scripts/gen-thumbnails.mjs",
     "verify-content": "node --env-file=../.env scripts/verify-content.mjs",
     "publish-content": "pnpm rebuild-manifest && pnpm sync-registry && pnpm inject-chrome && pnpm gen-story-sitemap && pnpm verify-content"
   },
@@ -66,7 +67,9 @@
     "drizzle-orm": "^0.45.2",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "playwright": "^1.61.0",
     "postcss": "^8.4.49",
+    "sharp": "^0.35.2",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.22.4",
     "typescript": "^5",

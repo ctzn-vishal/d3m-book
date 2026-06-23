@@ -33,6 +33,9 @@ dev-render.*.log
 # vercel
 .vercel
 
+# generated thumbnail scratch (scripts/gen-thumbnails.mjs)
+scripts/.thumbs/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

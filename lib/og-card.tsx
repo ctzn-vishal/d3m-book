@@ -247,6 +247,69 @@ function Pattern({ accent }: { accent: string }) {
   );
 }
 
+/**
+ * Clean 16:10 card for GALLERY THUMBNAILS (items with no real preview image —
+ * e.g. datasets). Title + type + accent, legible at small sizes. Distinct from
+ * renderD3mOgImage (the busy 1.91:1 social card).
+ */
+const THUMB_SIZE = { width: 1000, height: 625 };
+export function renderGalleryThumb({
+  type,
+  title,
+  accent = palette.green,
+  topic,
+}: {
+  type: string;
+  title: string;
+  accent?: string;
+  topic?: string;
+}): ImageResponse {
+  const t = clampText(title, 96) ?? title;
+  const titleSize = t.length > 64 ? 50 : t.length > 38 ? 62 : 74;
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          background: '#FBFCFE',
+          color: palette.ink,
+          padding: '66px 64px 56px',
+          fontFamily: 'Inter, Arial, sans-serif',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 12, background: accent }} />
+        <div style={{ position: 'absolute', right: -120, bottom: -170, width: 430, height: 430, borderRadius: 999, border: `56px solid ${accent}`, opacity: 0.08 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ width: 16, height: 16, borderRadius: 999, background: accent }} />
+          <div style={{ display: 'flex', color: accent, fontSize: 26, fontWeight: 800, letterSpacing: 2, textTransform: 'uppercase' }}>
+            {type}
+          </div>
+        </div>
+        <div style={{ display: 'flex', fontSize: titleSize, fontWeight: 900, lineHeight: 1.04, letterSpacing: -0.5, maxWidth: 850 }}>
+          {t}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', color: palette.muted, fontSize: 24, fontWeight: 700 }}>
+            {topic || 'vishalsingh.org'}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 62 }}>
+            {[30, 50, 36, 64, 44].map((h, i) => (
+              <div key={i} style={{ width: 16, height: h, borderRadius: 4, background: i % 2 ? accent : palette.line }} />
+            ))}
+          </div>
+        </div>
+      </div>
+    ),
+    THUMB_SIZE
+  );
+}
+
 export function renderD3mOgImage({
   eyebrow = 'D3M',
   title,

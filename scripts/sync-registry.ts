@@ -152,7 +152,8 @@ async function fromDatasets(): Promise<RegistryItem[]> {
     href: `/datasets/${d.id}`,
     external: false,
     openInNewTab: false,
-    thumbnail: undefined,
+    // Datasets have no preview image → a generated branded card (next/og).
+    thumbnail: d.thumbnail ?? `/api/card/${d.id}`,
     accent: d.accent ?? '#46688f',
     featured: !!d.featured,
     status: (d.status ?? 'published') as RegistryItem['status'],
