@@ -43,6 +43,9 @@ export type RegistryItem = {
   featured: boolean;
   status: RegistryStatus;
   sort?: number;
+  /** 'YYYY-MM-DD HH:MM:SS' (UTC) — from the Turso row; absent in older snapshots. */
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type RegistryFacets = {

@@ -33,4 +33,7 @@ export const gallery = sqliteTable('gallery', {
   status: text('status', { enum: ['published', 'hidden', 'draft'] }).notNull().default('published'),
   /** Lower sorts earlier (within the same featured group). */
   sort: integer('sort').notNull().default(0),
+  /** ISO-ish 'YYYY-MM-DD HH:MM:SS' (UTC) timestamps — set by datetime('now'). */
+  createdAt: text('created_at'),
+  updatedAt: text('updated_at'),
 });

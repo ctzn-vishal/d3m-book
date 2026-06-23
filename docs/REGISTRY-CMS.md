@@ -33,7 +33,46 @@ the boolean flags reject anything off-list, so a typo can't break the gallery.
 
 ---
 
-## Editing with dropdowns — Drizzle Studio (recommended)
+## Editing with `/admin` (the built-in CMS — recommended)
+
+The app ships a password-protected admin at **`/admin`** (e.g.
+`https://vishalsingh.org/admin`) — the primary curation surface. It lists every
+row (including `hidden`/`draft`) and lets you, with no code:
+
+- **Drag to reorder** (writes `sort`). Clear any filter first — reordering applies
+  to the full list.
+- **⭐ Feature / unfeature** (floats an item to the top of the live gallery).
+- Change **type**, **status**, and **topic** from dropdowns (the same vocabularies
+  the DB CHECK constraints enforce, so you can't pick an invalid value).
+- Edit **title**, **description**, and **tags** (comma-separated) inline.
+- Filter by title / id / topic / tag, or by type, to find a row fast.
+
+Every edit writes **live Turso** and revalidates the gallery, so changes show in
+**seconds** (not the 10-min ISR window). The committed snapshot fallback is *not*
+touched by `/admin` (serverless can't `git commit`) — it's refreshed by
+`pnpm sync-registry` + commit, or the nightly GitHub Action
+(`.github/workflows/sync-snapshot.yml`). v1 is **metadata-only**: no content
+editing and no create/delete of rows.
+
+### Setup (one-time)
+
+1. **`ADMIN_SECRET`** — the shared admin password. Set it in `book-template/.env.local`
+   (local) **and** Vercel → Settings → Environment Variables (Production). With it
+   unset, `/admin` is **locked** (fails closed) and sign-in always fails.
+2. **A working `TURSO_AUTH_TOKEN`** — `/admin` must *write* to Turso. The server
+   self-heals a platform token into a DB-scoped one (`lib/turso-admin.ts`), but a
+   non-expiring DB-scoped token (`pnpm mint-db-token`) is the robust choice. The
+   admin page shows a green **“Live Turso · N rows”** badge when connected, or a red
+   banner if it can't write.
+3. Visit `/admin`, enter the password, curate. Use **Sign out** to clear the cookie.
+
+> Health check: `GET /api/registry-source` returns `{"source":"live"}` when the
+> site is reading live Turso, or `"snapshot"` when it has fallen back (token bad /
+> DB down) — a quick way to tell whether your edits are reaching the site.
+
+---
+
+## Editing with dropdowns — Drizzle Studio (alternative)
 
 The Turso web dashboard (app.turso.tech) is fine for quick boolean toggles and ad-hoc
 SQL, but it shows `type`/`status` as **free-text** cells. For real **dropdowns** use

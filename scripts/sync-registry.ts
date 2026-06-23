@@ -34,6 +34,8 @@ type RegistryItem = {
   featured: boolean;
   status: 'published' | 'hidden' | 'draft';
   sort: number;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
@@ -56,8 +58,14 @@ async function bucketJson<T>(key: string): Promise<T | null> {
     const r = await s3.send(new GetObjectCommand({ Bucket: 'vishal', Key: key }));
     return JSON.parse(await r.Body!.transformToString()) as T;
   } catch (e) {
-    console.warn(`  ! could not read vishal:${key} — ${(e as Error).message}`);
-    return null;
+    const err = e as any;
+    const status = err?.$metadata?.httpStatusCode;
+    const missing = err?.name === 'NoSuchKey' || err?.Code === 'NoSuchKey' || status === 404;
+    if (missing) { console.warn(`  ! vishal:${key} not found — treating as empty.`); return null; }
+    // Any OTHER failure (network, 5xx, throttle, malformed JSON) is NOT "gone".
+    // Throw so the sync aborts BEFORE the orphan sweep — otherwise a transient
+    // Tigris hiccup would empty a source and auto-hide the whole catalog.
+    throw new Error(`failed to read vishal:${key} — ${err?.message ?? err}`);
   }
 }
 
@@ -158,7 +166,13 @@ function applyCurate(it: RegistryItem): RegistryItem {
   return c ? { ...it, ...c, tags: c.tags ?? it.tags } : it;
 }
 
-const sources = [...fromStudios(), ...fromApps(), ...(await fromArticles()), ...(await fromDatasets())];
+let sources: RegistryItem[];
+try {
+  sources = [...fromStudios(), ...fromApps(), ...(await fromArticles()), ...(await fromDatasets())];
+} catch (e) {
+  console.error(`Aborting sync — a content source failed to load (NOT treating as deletions): ${(e as Error).message}`);
+  process.exit(1);
+}
 const seen = new Set<string>();
 const derived: RegistryItem[] = [];
 for (const it of sources) {
@@ -219,14 +233,51 @@ await db.execute(`CREATE TABLE IF NOT EXISTS gallery (
   thumbnail TEXT, accent TEXT,
   featured INTEGER NOT NULL DEFAULT 0 CHECK (featured IN (0,1)),
   status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft')),
-  sort INTEGER NOT NULL DEFAULT 0
+  sort INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
 )`);
+// Older tables predate the timestamp columns — add them if missing (mirrors
+// `pnpm migrate-timestamps`; SQLite ADD COLUMN can't take a non-constant default,
+// so add nullable then backfill).
+const cols = new Set((await db.execute('PRAGMA table_info(gallery)')).rows.map((r: any) => r.name));
+for (const col of ['created_at', 'updated_at']) {
+  if (!cols.has(col)) await db.execute(`ALTER TABLE gallery ADD COLUMN ${col} TEXT`);
+}
+// A single timestamp for this run, in the DB's datetime('now') format (UTC,
+// 'YYYY-MM-DD HH:MM:SS') so JS-set and SQL-default values are consistent.
+const NOW = (await db.execute("SELECT datetime('now') AS now")).rows[0].now as string;
 
 const existingRows = (await db.execute('SELECT * FROM gallery')).rows as any[];
 const existing = new Map<string, any>(existingRows.map(r => [r.id as string, r]));
+await db.execute("UPDATE gallery SET created_at = datetime('now') WHERE created_at IS NULL");
+await db.execute("UPDATE gallery SET updated_at = datetime('now') WHERE updated_at IS NULL");
 
 // CURATED columns (kept from Turso if the row exists) vs DERIVED (refreshed from source).
-let inserted = 0, refreshed = 0;
+// `updated_at` only bumps when a persisted column actually changes, so it stays a
+// meaningful "last content change" rather than "last sync".
+const norm = (v: any) => (v === undefined ? null : v);
+function rowChanged(prev: any, m: RegistryItem): boolean {
+  return (
+    prev.type !== m.type ||
+    prev.title !== m.title ||
+    (prev.description ?? '') !== (m.description ?? '') ||
+    norm(prev.domain) !== norm(m.domain ?? null) ||
+    norm(prev.topic) !== norm(m.topic ?? null) ||
+    (prev.tags ?? '[]') !== JSON.stringify(m.tags ?? []) ||
+    norm(prev.teaching) !== norm(m.teaching ?? null) ||
+    prev.href !== m.href ||
+    (prev.external ? 1 : 0) !== (m.external ? 1 : 0) ||
+    (prev.open_in_new_tab ? 1 : 0) !== (m.openInNewTab ? 1 : 0) ||
+    norm(prev.thumbnail) !== norm(m.thumbnail ?? null) ||
+    norm(prev.accent) !== norm(m.accent ?? null) ||
+    (prev.featured ? 1 : 0) !== (m.featured ? 1 : 0) ||
+    prev.status !== m.status ||
+    (prev.sort ?? 0) !== (m.sort ?? 0)
+  );
+}
+
+let inserted = 0, refreshed = 0, touched = 0;
 for (const d of derived) {
   const prev = existing.get(d.id);
   const merged: RegistryItem = prev
@@ -243,27 +294,51 @@ for (const d of derived) {
         sort: prev.sort ?? d.sort,
       }
     : d;
+  const changed = !prev || rowChanged(prev, merged);
+  const createdAt = prev?.created_at ?? NOW;
+  const updatedAt = changed ? NOW : (prev?.updated_at ?? NOW);
   await db.execute({
     sql: `INSERT INTO gallery
-      (id,type,title,description,domain,topic,tags,teaching,href,external,open_in_new_tab,thumbnail,accent,featured,status,sort)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      (id,type,title,description,domain,topic,tags,teaching,href,external,open_in_new_tab,thumbnail,accent,featured,status,sort,created_at,updated_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET
         type=excluded.type, title=excluded.title, description=excluded.description,
         domain=excluded.domain, topic=excluded.topic, tags=excluded.tags, teaching=excluded.teaching,
         href=excluded.href, external=excluded.external, open_in_new_tab=excluded.open_in_new_tab,
         thumbnail=excluded.thumbnail, accent=excluded.accent, featured=excluded.featured,
-        status=excluded.status, sort=excluded.sort`,
+        status=excluded.status, sort=excluded.sort,
+        created_at=excluded.created_at, updated_at=excluded.updated_at`,
     args: [
       merged.id, merged.type, merged.title, merged.description ?? '', merged.domain ?? null,
       merged.topic ?? null, JSON.stringify(merged.tags ?? []), merged.teaching ?? null, merged.href,
       merged.external ? 1 : 0, merged.openInNewTab ? 1 : 0, merged.thumbnail ?? null, merged.accent,
-      merged.featured ? 1 : 0, merged.status, merged.sort ?? 0,
+      merged.featured ? 1 : 0, merged.status, merged.sort ?? 0, createdAt, updatedAt,
     ],
   });
-  if (prev) refreshed++; else inserted++;
+  if (prev) { refreshed++; if (changed) touched++; } else inserted++;
 }
-const orphans = existingRows.filter(r => !seen.has(r.id as string)).map(r => r.id);
-console.log(`Turso: ${inserted} inserted, ${refreshed} refreshed${orphans.length ? `, ${orphans.length} orphan rows kept (not in sources): ${orphans.join(', ')}` : ''}.`);
+
+// ── Auto-hide orphans (source file gone) so a deleted item can't leave a 404
+// card. Soft-delete (status='hidden') preserves the row + its curation; restore
+// by re-adding the source or flipping status back in /admin.
+const orphanRows = existingRows.filter(r => !seen.has(r.id as string));
+const orphans = orphanRows.map(r => r.id);
+// Safety valve: refuse to auto-hide an implausibly large batch in one run — a
+// belt-and-suspenders guard in case a source silently returned nothing despite
+// the abort above. A real deletion touches one or two rows.
+const MASS_HIDE_LIMIT = Math.max(5, Math.ceil(existingRows.length * 0.25));
+let hidden = 0;
+if (orphans.length > MASS_HIDE_LIMIT) {
+  console.warn(`  ! REFUSING to auto-hide ${orphans.length} orphan(s) (limit ${MASS_HIDE_LIMIT}) — a content source likely failed to load. Nothing hidden. Orphans: ${orphans.join(', ')}`);
+} else {
+  for (const r of orphanRows) {
+    if (r.status !== 'hidden') {
+      await db.execute({ sql: "UPDATE gallery SET status='hidden', updated_at=datetime('now') WHERE id=?", args: [r.id] });
+      hidden++;
+    }
+  }
+}
+console.log(`Turso: ${inserted} inserted, ${refreshed} refreshed (${touched} content-changed)${orphans.length ? `, ${orphans.length} orphan row(s) [${hidden} newly hidden]: ${orphans.join(', ')}` : ''}.`);
 
 // ── Read back Turso → write committed snapshot ─────────────────────────────
 const rows = (await db.execute('SELECT * FROM gallery ORDER BY featured DESC, sort ASC, title ASC')).rows as any[];
@@ -274,6 +349,7 @@ const items: RegistryItem[] = rows.map(r => ({
   href: r.href, external: !!r.external, openInNewTab: !!r.open_in_new_tab,
   thumbnail: r.thumbnail ?? undefined, accent: r.accent ?? '#46688f',
   featured: !!r.featured, status: r.status, sort: r.sort ?? 0,
+  createdAt: r.created_at ?? undefined, updatedAt: r.updated_at ?? undefined,
 }));
 const out = fileURLToPath(new URL('../content/registry.snapshot.json', import.meta.url));
 await writeFile(out, JSON.stringify({

@@ -367,3 +367,66 @@ implementation of the §2 data-app pattern — follow it for the next data-heavy
   status so they resolve in the booklet but stay out of the main gallery grid).
 - Keep the **pre-stitched single HTML** approach (§ playlist Option B) in reserve ONLY for a
   future "export booklet to PDF/print" feature.
+
+---
+
+## 9. BUILT (2026-06-23 session) — §3, §5, §8 v1 shipped
+
+Everything below is implemented, typechecked, `next build`-clean, run against prod, and
+verified locally (login → live read of 114 rows → write persists + bumps `updated_at` →
+reverted clean). v2 booklets remain deferred.
+
+**§3 Pipeline hardening**
+- **§3.1** `pnpm publish-content` orchestrator added to `package.json` (aborts on failure).
+- **§3.2** `sync-registry.ts` now **auto-hides orphans** (soft-delete `status='hidden'`,
+  curation preserved).
+- **§3.3** `rebuild-manifest.mjs` **validates slugs**: skips reserved (`index`/`manifest`),
+  warns on non-kebab, warns on duplicate `<title>` (mis-named re-upload).
+- **§3.5** Topic guesser **removed** — new articles get no topic; set once in `/admin`.
+- **§3.6** `created_at`/`updated_at` added (idempotent `pnpm migrate-timestamps`; mirrored in
+  `db/schema.ts`, `migrate-gallery.mjs`, `sync-registry.ts` CREATE + ALTER guard, snapshot,
+  `RegistryItem`). `updated_at` only bumps on a **real** content change (JS `rowChanged()`),
+  not on every sync.
+
+**§5 Live reliability**
+- **§5.1** `lib/turso-admin.ts` — server-only connection that **self-mints** a DB-scoped token
+  from a platform token; `lib/registry-db.ts` now reads through it (so live reads self-heal),
+  bounded to 4 s with snapshot fallback. Health probe **`GET /api/registry-source`** →
+  `live|snapshot`.
+- **§5.2** `/admin` writes call `revalidatePath('/')` for instant updates.
+- **§5.3** Nightly snapshot sync GitHub Action (`.github/workflows/sync-snapshot.yml`) — needs
+  the repo secrets it documents.
+
+**§8 `/admin` v1 (metadata-only CMS)**
+- Auth: shared-password (`ADMIN_SECRET`) → httpOnly cookie, verified in `middleware.ts`
+  (guards `/admin` + `/api/admin/*`, fails closed). `lib/admin-auth.ts` (Web-Crypto, edge-safe),
+  `app/api/admin/login|logout`, `app/admin/login/page.tsx`.
+- UI: `app/admin/page.tsx` (server, reads all rows) + `components/admin/AdminTable.tsx` (client):
+  `@dnd-kit` drag-reorder, ⭐ feature toggle, type/status/topic dropdowns, inline
+  title/description/tags, filter. Mutations: `app/admin/actions.ts` server actions (re-check
+  auth, validate against the CHECK vocabulary, write Turso, revalidate). Vocab/types in
+  `app/admin/types.ts`.
+
+**Hardening from an adversarial review (same session, 14 confirmed findings fixed):**
+- **`sync-registry` mass-blackout (HIGH):** a transient Tigris read used to return an empty
+  source → the orphan sweep would hide the whole Blog+Dataset catalog and the nightly Action
+  would commit it. `bucketJson` now throws on real failures (only a genuine 404 = "gone") so the
+  sync **aborts before** the sweep; plus a **mass-hide safety valve** (refuse > max(5, 25%)).
+- **Drag reorder vs featured-first (MED):** the optimistic list now re-groups featured-first
+  (the same order the gallery/reload use), so cross-boundary drags don't silently snap back.
+- **Token self-heal (MED):** `turso-admin` re-mints on a 12 h TTL and on auth error (`withDb`
+  retry), so a warm instance never sticks on an expired 1-day token.
+- **Optimistic revert (MED):** field edits revert per-field on the latest state; inputs are
+  value-keyed so a failed save reseeds the DOM; reorder revert preserves concurrent edits.
+- **Live-vs-snapshot (LOW):** an all-unpublished live DB no longer falls back to the snapshot
+  (null = unreachable vs `[]` = empty-but-live now distinguished).
+- **Nightly Action churn (LOW):** the commit step ignores the date-only `generated` line.
+- **Auth hygiene (LOW):** login compares fixed-length hashes (no length leak); login/logout
+  reject cross-origin POSTs (CSRF). Slug dup-detection now also catches same-batch new-vs-new.
+- *Noted, not changed:* the shared-password cookie is an intentional single-curator design
+  (§8); the topic-vocabulary edge (`domainToTopic` → non-canonical) is latent (all current
+  studio domains map).
+
+**Known follow-up (out of scope, flagged):** `verify-content` fails on a pre-existing stray
+studio `studios/business_reviews_demo/site/index.html` (nested path, unregistered, non-kebab) —
+register it in `lib/studios.ts` with a kebab slug, or delete the abandoned upload.

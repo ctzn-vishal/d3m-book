@@ -112,6 +112,15 @@ Notes:
 All commands run from `book-template/`. They use the S3 + Turso creds in the
 repo-root `.env` (and `.env.local` for the DB token — see [REGISTRY-CMS.md](./REGISTRY-CMS.md)).
 
+> **One command:** `pnpm publish-content` runs the whole chain in the correct order
+> and aborts on the first failure (`rebuild-manifest → sync-registry → inject-chrome
+> → gen-story-sitemap → verify-content`), so no step gets skipped. Use it after any
+> upload; the per-step commands below are for when you need to run one in isolation.
+>
+> New articles are created with **no topic** (the old slug-keyword guesser was
+> removed — it mis-filed pieces). `rebuild-manifest` lists the new slugs that need a
+> topic; set it once in **`/admin`** (it's a curated column, so it sticks).
+
 ### A new data story (Blog)
 1. Upload `articles/<slug>.html` (+ `articles/<slug>/_thumb.webp`) to the bucket.
 2. `pnpm rebuild-manifest` — adds it to `articles/manifest.json`, auto-extracting the

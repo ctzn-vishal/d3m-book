@@ -15,17 +15,10 @@ const client = new S3Client({
 const DST = 'vishal';
 const PREFIX = 'articles';
 
-const TOPICS = { health: 'Public Health', politics: 'Politics & Elections', finance: 'Finance', demo: 'Demographics', opinion: 'Public Opinion' };
-function guessTopic(s) {
-  const t = s.toLowerCase();
-  const has = (...w) => w.some(x => t.includes(x));
-  if (has('overdose', 'mental-health', 'children', 'child', 'deadliest', 'surveillance', 'vanishing-cradle', 'wear-and-tear', 'loneliness', 'despair', 'stress', 'health')) return TOPICS.health;
-  if (has('happiness', 'well-being', 'wellbeing', 'optimism', 'thriving', 'u-curve', 'u_curve', 'cushion', 'smiles', 'ladder', 'evening', 'two_clocks', 'unwinding', 'paradox', 'price-of-a-year')) return TOPICS.health;
-  if (has('county', 'election', 'vote', 'voting', 'partisan', 'sort', 'diploma', 'purple', 'flip', 'swing', 'abortion', 'thermometer', 'censor', 'grain', 'defection', 'race-attitude', 'knowledge-sharpens', 'almanac')) return TOPICS.politics;
-  if (has('rich', 'poor', 'income', 'mobility', 'born-rich', 'opportunity', 'financial', 'starting-line', 'locked-up', 'compensation', 'office-ladder', 'beat-the-model', 'residual', 'keeping-up', 'company-you-keep')) return TOPICS.finance;
-  if (has('religion', 'devotion', 'denomination', 'generosity', 'dividend', 'marriage', 'ring', 'lgbt', 'girls-country', 'eight-americas', 'five-subway', 'geography', 'map', 'south-convergence')) return TOPICS.demo;
-  return TOPICS.opinion;
-}
+// Topic is no longer guessed from the slug (the old keyword heuristic only knew a
+// few of the canonical topics and mis-filed pieces). New articles are created with
+// NO topic; set it once in /admin (it's a curated column, so it sticks). See
+// lib/taxonomy.ts for the controlled vocabulary.
 function titleCase(slug) { return slug.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()); }
 function decodeEntities(s) {
   return s
@@ -61,13 +54,27 @@ async function listAll(Bucket, Prefix) {
 async function getText(Bucket, Key) { const r = await client.send(new GetObjectCommand({ Bucket, Key })); return r.Body.transformToString(); }
 
 const keys = await listAll(DST, `${PREFIX}/`);
-const htmlSlugs = keys.filter(k => new RegExp(`^${PREFIX}/[^/]+\\.html$`).test(k)).map(k => k.slice(PREFIX.length + 1, -5)).sort();
+const allHtmlSlugs = keys.filter(k => new RegExp(`^${PREFIX}/[^/]+\\.html$`).test(k)).map(k => k.slice(PREFIX.length + 1, -5)).sort();
 const thumbSlugs = new Set(keys.filter(k => k.endsWith('/_thumb.webp')).map(k => k.slice(PREFIX.length + 1).replace(/\/_thumb\.webp$/, '')));
+
+// ── Slug / filename validation (catches the ways a mis-named upload breaks the gallery) ──
+// 1. Skip reserved filenames (index.html, manifest.html) — they aren't stories.
+const RESERVED = new Set(['index', 'manifest']);
+const reserved = allHtmlSlugs.filter(s => RESERVED.has(s.toLowerCase()));
+const htmlSlugs = allHtmlSlugs.filter(s => !RESERVED.has(s.toLowerCase()));
+if (reserved.length) console.warn(`  ! skipped reserved filename(s): ${reserved.map(s => `${PREFIX}/${s}.html`).join(', ')}`);
+// 2. Warn on non-kebab slugs (underscores / uppercase drift from the URL convention).
+const nonKebab = htmlSlugs.filter(s => /[^a-z0-9-]/.test(s));
+if (nonKebab.length) console.warn(`  ! non-kebab slug(s) (rename to lowercase-kebab): ${nonKebab.join(', ')}`);
 
 let existing = {};
 try { const m = JSON.parse(await getText(DST, `${PREFIX}/manifest.json`)); (m.items || []).forEach(it => { existing[it.id] = it; }); } catch { /* first run */ }
+// 3. Existing title → id, to flag a brand-new file that duplicates an existing title
+//    (the signature of a mis-named re-upload of content that's already in the gallery).
+const titleToId = new Map();
+for (const it of Object.values(existing)) if (it.title) titleToId.set(String(it.title).trim().toLowerCase(), it.id);
 
-const items = []; let added = 0;
+const items = []; let added = 0; const needTopic = [];
 for (const slug of htmlSlugs) {
   const thumb = thumbSlugs.has(slug) ? `${PREFIX}/${slug}/_thumb.webp` : null;
   if (existing[slug]) {
@@ -75,10 +82,16 @@ for (const slug of htmlSlugs) {
   } else {
     added++;
     let meta; try { meta = extractMeta(await getText(DST, `${PREFIX}/${slug}.html`), slug); } catch { meta = { title: titleCase(slug), description: '' }; }
-    items.push({ id: slug, type: 'article', title: meta.title, description: meta.description, topic: guessTopic(slug), tags: ['data story'], file: `${PREFIX}/${slug}.html`, thumb, accent: '#46688f', featured: false, status: 'published' });
+    const norm = meta.title.trim().toLowerCase();
+    const dupOf = titleToId.get(norm);
+    if (dupOf && dupOf !== slug) console.warn(`  ! "${slug}" has the same <title> as "${dupOf}" — possible mis-named re-upload?`);
+    if (norm) titleToId.set(norm, slug); // so a later new file with the same title is flagged against this one too
+    needTopic.push(slug);
+    items.push({ id: slug, type: 'article', title: meta.title, description: meta.description, tags: ['data story'], file: `${PREFIX}/${slug}.html`, thumb, accent: '#46688f', featured: false, status: 'published' });
   }
 }
 const removed = Object.keys(existing).filter(id => !htmlSlugs.includes(id));
+if (needTopic.length) console.warn(`  · ${needTopic.length} new article(s) created with no topic — set it in /admin: ${needTopic.join(', ')}`);
 
 const manifest = { _README: existing.__readme || 'Article registry for the vishalsingh.org gallery. Edit to curate (status: published|hidden, featured, topic, tags, title, description). Hub reads via ISR; paths relative to the content base URL.', generated: new Date().toISOString().slice(0, 10), count: items.length, items };
 await client.send(new PutObjectCommand({ Bucket: DST, Key: `${PREFIX}/manifest.json`, Body: JSON.stringify(manifest, null, 2), ContentType: 'application/json', CacheControl: 'public, max-age=60' }));

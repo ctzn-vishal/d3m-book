@@ -6,7 +6,9 @@
 // Run: pnpm migrate-gallery   (node --env-file=../.env scripts/migrate-gallery.mjs)
 import { connectTurso } from './_turso.mjs';
 
-const COLS = 'id, type, title, description, domain, topic, tags, teaching, href, external, open_in_new_tab, thumbnail, accent, featured, status, sort';
+// Full target schema (incl. the timestamp columns from `pnpm migrate-timestamps`).
+// created_at/updated_at carry a datetime('now') default — allowed in CREATE TABLE
+// (unlike ALTER ADD COLUMN), so a fresh recreate stamps any rows that lacked them.
 const CREATE_WITH_CHECKS = `CREATE TABLE gallery_new (
   id TEXT PRIMARY KEY,
   type TEXT NOT NULL CHECK (type IN ('App','Teaching','Blog','Dataset')),
@@ -23,7 +25,9 @@ const CREATE_WITH_CHECKS = `CREATE TABLE gallery_new (
   accent TEXT,
   featured INTEGER NOT NULL DEFAULT 0 CHECK (featured IN (0,1)),
   status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft')),
-  sort INTEGER NOT NULL DEFAULT 0
+  sort INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now')),
+  updated_at TEXT DEFAULT (datetime('now'))
 )`;
 
 const db = await connectTurso(process.env.TURSO_DATABASE_URL, process.env.TURSO_AUTH_TOKEN);
@@ -35,10 +39,17 @@ if (String(existing.sql).toUpperCase().includes('CHECK')) {
   process.exit(0);
 }
 
+// Copy only columns the OLD table actually has (timestamps may not exist yet); the
+// rest fall back to the new table's defaults.
+const oldCols = new Set((await db.execute('PRAGMA table_info(gallery)')).rows.map(r => r.name));
+const COPY = ['id', 'type', 'title', 'description', 'domain', 'topic', 'tags', 'teaching', 'href',
+  'external', 'open_in_new_tab', 'thumbnail', 'accent', 'featured', 'status', 'sort', 'created_at', 'updated_at']
+  .filter(c => oldCols.has(c)).join(', ');
+
 const before = (await db.execute('SELECT COUNT(*) n FROM gallery')).rows[0].n;
 await db.batch([
   CREATE_WITH_CHECKS,
-  `INSERT INTO gallery_new (${COLS}) SELECT ${COLS} FROM gallery`,
+  `INSERT INTO gallery_new (${COPY}) SELECT ${COPY} FROM gallery`,
   'DROP TABLE gallery',
   'ALTER TABLE gallery_new RENAME TO gallery',
 ], 'write');

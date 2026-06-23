@@ -1,0 +1,57 @@
+# §5.3 — Nightly registry snapshot sync.
+#
+# Curation happens in the live Turso `gallery` table (via /admin). The committed
+# fallback content/registry.snapshot.json only refreshes when `sync-registry` runs
+# + the result is committed. This job does that nightly so the fallback never
+# drifts far from live. Edits still show on the site within the ISR window (or
+# instantly via /api/revalidate); this only keeps the *committed* copy fresh.
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#   TURSO_DATABASE_URL, TURSO_AUTH_TOKEN  (a DB-scoped or platform token),
+#   TIGRIS_ENDPOINT, TIGRIS_CLIENT_ID, TIGRIS_CLIENT_SECRET, AWS_REGION
+# Note: pnpm scripts hardcode `--env-file=../.env` (absent in CI), so this runs the
+# underlying node script directly with env from secrets instead.
+name: Nightly registry snapshot sync
+
+on:
+  schedule:
+    - cron: '17 7 * * *' # 07:17 UTC daily
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+      TIGRIS_ENDPOINT: ${{ secrets.TIGRIS_ENDPOINT }}
+      TIGRIS_CLIENT_ID: ${{ secrets.TIGRIS_CLIENT_ID }}
+      TIGRIS_CLIENT_SECRET: ${{ secrets.TIGRIS_CLIENT_SECRET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Sync registry snapshot from Turso
+        run: node --import tsx scripts/sync-registry.ts
+      - name: Commit snapshot if changed
+        run: |
+          # Ignore the date-only `generated` line so a no-content-change night
+          # doesn't produce a noise commit (and a needless Vercel rebuild).
+          if git diff --quiet -I '"generated"' -- content/registry.snapshot.json; then
+            echo "Snapshot unchanged (ignoring generated date) — nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add content/registry.snapshot.json
+            git commit -m "chore: nightly registry snapshot sync"
+            git push
+          fi

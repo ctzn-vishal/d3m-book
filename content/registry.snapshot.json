@@ -23,7 +23,9 @@
       "accent": "#F43F5E",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "gdelt-media-agenda-lab",
@@ -45,7 +47,9 @@
       "accent": "#187C78",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "nyc-airbnb-atlas",
@@ -67,7 +71,9 @@
       "accent": "#0EA5E9",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "presidential-election-atlas",
@@ -89,7 +95,9 @@
       "accent": "#287D67",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "religious-composition-dashboard",
@@ -111,7 +119,9 @@
       "accent": "#6F6B2F",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "southwest-regression",
@@ -133,7 +143,9 @@
       "accent": "#10B981",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "well-being-atlas",
@@ -155,7 +167,9 @@
       "accent": "#2f6f6b",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "world-trade-atlas",
@@ -177,7 +191,9 @@
       "accent": "#46688f",
       "featured": true,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "2020-the-world-s-worst-year",
@@ -195,7 +211,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:44:10"
     },
     {
       "id": "childrens-health",
@@ -212,7 +230,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "ai-models",
@@ -234,7 +254,9 @@
       "accent": "#b9762a",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "unsorted-voters-switched",
@@ -256,7 +278,9 @@
       "accent": "#6B7F3A",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "one-national-election-county-swing-uniformity",
@@ -278,7 +302,9 @@
       "accent": "#445E88",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "negative-partisanship-anes",
@@ -300,7 +326,9 @@
       "accent": "#A35F3D",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "index-autopsy",
@@ -319,7 +347,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "bav-fastfood-brands",
@@ -339,7 +369,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "beer-acquisition-tweets",
@@ -359,7 +391,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "cfpb-crisis-monitor",
@@ -381,7 +415,9 @@
       "accent": "#28527A",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "colorado-legalization-housing",
@@ -401,7 +437,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "progresso-dashboard",
@@ -423,7 +461,9 @@
       "accent": "#F97316",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "county-demographics",
@@ -443,7 +483,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "felt_despair",
@@ -461,7 +503,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "community_compensation",
@@ -479,7 +523,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "does-generosity-pay-everywhere",
@@ -497,7 +543,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "does-the-ring-still-matter",
@@ -515,7 +563,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "doing-okay-shed",
@@ -537,7 +587,9 @@
       "accent": "#8A5A44",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "president-state-by-candidate",
@@ -557,7 +609,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "fal-case-studies",
@@ -579,7 +633,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "fast-food-perceptual-map",
@@ -601,7 +657,9 @@
       "accent": "#2A9D8F",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "feeling-rich-is-not-the-same-as-being-rich",
@@ -619,7 +677,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "american_evenings",
@@ -638,7 +698,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "five-subway-stops",
@@ -656,7 +718,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "from-denomination-to-devotion",
@@ -674,7 +738,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "sliver-of-the-map",
@@ -692,7 +758,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "happiness_borders",
@@ -710,7 +778,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "zip-health",
@@ -732,7 +802,9 @@
       "accent": "#7a4a6e",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "ad-spend-explorer",
@@ -754,7 +826,9 @@
       "accent": "#2F8F7B",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "knowledge-sharpens-sorting",
@@ -772,7 +846,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "insight-digest",
@@ -794,7 +870,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "keeping-up-with-the-county",
@@ -812,7 +890,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "llm-predict",
@@ -834,7 +914,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "lottery-zip-psychographics",
@@ -856,7 +938,9 @@
       "accent": "#C85B47",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "milk-field-experiment",
@@ -876,7 +960,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "nyc-zip-health-segments",
@@ -898,7 +984,9 @@
       "accent": "#4E79A7",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "nyc-taxi-covid-emergency",
@@ -920,7 +1008,9 @@
       "accent": "#2563A6",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "nyc-zip-health",
@@ -940,7 +1030,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "south-convergence-or-apart",
@@ -959,7 +1051,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "out-of-place-the-geography-of-the-lgbt-well-being-gap",
@@ -977,7 +1071,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "partisans-finally-got-constraint",
@@ -999,7 +1095,9 @@
       "accent": "#5E548E",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "partisanship-ate-the-thermometers",
@@ -1017,7 +1115,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "political-book-reviews",
@@ -1037,7 +1137,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "progresso-pricing-workbook",
@@ -1057,7 +1159,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "progresso-soup-scanner",
@@ -1077,7 +1181,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "raised-poor-locked-up",
@@ -1095,7 +1201,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "girls-country",
@@ -1113,7 +1221,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "mental-health-ed-surveillance",
@@ -1130,7 +1240,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "southwest-regression-exercise",
@@ -1152,7 +1264,9 @@
       "accent": "#8B5CF6",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "regulation-demand-guns",
@@ -1174,7 +1288,9 @@
       "accent": "#6F5D4B",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "religion-s-conditional-dividend",
@@ -1192,7 +1308,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "renthop-listings",
@@ -1212,7 +1330,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "scrc-data",
@@ -1233,7 +1353,9 @@
       "accent": "#2f6f6b",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "merchant-right-county-residuals",
@@ -1255,7 +1377,9 @@
       "accent": "#9C4F3B",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "smiles_and_ladders",
@@ -1274,7 +1398,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-abortion-sort",
@@ -1292,7 +1418,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "political-history",
@@ -1313,7 +1441,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "born-rich-premium",
@@ -1332,7 +1462,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "coefficient-zoo",
@@ -1351,7 +1483,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "company-you-keep",
@@ -1370,7 +1504,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "overdose-deaths-2018-2024",
@@ -1387,7 +1523,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "diploma-divide-is-cultural",
@@ -1405,7 +1543,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "partisan-economic-perceptions",
@@ -1423,7 +1563,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "eight-americas",
@@ -1442,7 +1584,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "flat-line",
@@ -1461,7 +1605,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "flip_counties",
@@ -1480,7 +1626,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "gen-z-gender-war-overstated",
@@ -1502,7 +1650,9 @@
       "accent": "#2E7D8A",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "political-identity-divergence",
@@ -1524,7 +1674,9 @@
       "accent": "#B08935",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "political-identification-us",
@@ -1546,7 +1698,9 @@
       "accent": "#9F4A4A",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "great_unwinding",
@@ -1564,7 +1718,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "income-ladder-flipped",
@@ -1586,7 +1742,9 @@
       "accent": "#7C6A3D",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "loneliness-geography",
@@ -1605,7 +1763,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "ninety-year-old-map",
@@ -1623,7 +1783,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-office-ladder-of-defection",
@@ -1641,7 +1803,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-optimism-gap",
@@ -1659,7 +1823,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-paradox-that-didn-t-hold",
@@ -1677,7 +1843,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "science-trust-flip",
@@ -1694,7 +1862,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "american-financial-wellbeing",
@@ -1711,7 +1881,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "beat-the-model",
@@ -1729,7 +1901,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "plateau_in_the_tail",
@@ -1748,7 +1922,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-purple-county-is-a-lie",
@@ -1767,7 +1943,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-shape-of-development",
@@ -1784,7 +1962,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "slope-factory",
@@ -1803,7 +1983,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "starting-line",
@@ -1821,7 +2003,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "stress_decade",
@@ -1840,7 +2024,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "thin_cushion",
@@ -1858,7 +2044,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "two_clocks",
@@ -1876,7 +2064,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "broken_u_curve",
@@ -1894,7 +2084,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "u-curve",
@@ -1912,7 +2104,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "the-unpacking",
@@ -1930,7 +2124,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "vanishing-cradle",
@@ -1948,7 +2144,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "trump-tweet-device",
@@ -1968,7 +2166,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "race-attitudes-shocks",
@@ -1986,7 +2186,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "us-election-state-county-1972-2016",
@@ -2006,7 +2208,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "us-president-state-1976-2024",
@@ -2026,7 +2230,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "voting-against-the-grain",
@@ -2044,7 +2250,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "wear-and-tear",
@@ -2062,7 +2270,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "price-of-a-year",
@@ -2080,7 +2290,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "deadliest-to-be-poor",
@@ -2099,7 +2311,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "where-the-stranded-live",
@@ -2116,7 +2330,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "who-censors-whom",
@@ -2134,7 +2350,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "thriving_by_party",
@@ -2152,7 +2370,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "drug-availability-teens",
@@ -2174,7 +2394,9 @@
       "accent": "#C47A2C",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "party-beats-place-seven-to-one",
@@ -2196,7 +2418,9 @@
       "accent": "#4E7A58",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "zip-psychographic-baseline",
@@ -2216,7 +2440,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     },
     {
       "id": "zillow-state-zhvi-panel",
@@ -2235,7 +2461,9 @@
       "accent": "#46688f",
       "featured": false,
       "status": "published",
-      "sort": 0
+      "sort": 0,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-06-23 01:11:24"
     }
   ]
 }
