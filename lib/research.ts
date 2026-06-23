@@ -25,7 +25,8 @@ export type Publication = {
 
 export const profile = {
   name: 'Vishal Singh',
-  title: 'Professor of Marketing & Director, Stern Center of Research & Computing (SCRC)',
+  title: 'Professor of Marketing',
+  role: 'Director, Stern Center of Research & Computing (SCRC)',
   affiliation: 'Stern School of Business, New York University',
   email: 'vsingh@stern.nyu.edu',
   links: [
@@ -46,6 +47,7 @@ export const interests = [
 
 /** Refereed publications, chronological (the page renders newest-first). */
 export const published: Publication[] = [
+  { authors: 'Singh, V.P., J.-P. Gervais, C.P. Baumel', year: '1998', title: 'Consumer Willingness to Purchase Factory-Production Ethanol Cars: A Contingent Valuation Approach', venue: 'Journal of the Transportation Research Forum', detail: '37(2)' },
   { authors: 'Chintagunta, P., J.P. Dube, V. Singh', year: '2002', title: 'Market Structure Across Stores: An Application of a Random Coefficients Model with Store-Level Data', venue: 'Advances in Econometrics: Econometric Models in Marketing (JAI Press)', detail: 'eds. P. H. Franses & A. Montgomery', url: 'https://doi.org/10.1016/S0731-9053(02)16009-9' },
   { authors: 'Chintagunta, P., J.P. Dube, V. Singh', year: '2003', title: 'Balancing Profitability and Customer Welfare in a Supermarket Chain', venue: 'Quantitative Marketing and Economics', detail: 'Inaugural Issue, 1(1)', url: 'https://doi.org/10.1023/A:1023534028314' },
   { authors: 'Singh, V., K. Hansen, S. Gupta', year: '2005', title: 'Modeling Preferences for Common Attributes in Multi-category Choice', venue: 'Journal of Marketing Research', detail: '42(2), 195–209', note: 'Nominated, Paul Green Award', url: 'https://doi.org/10.1509/jmkr.42.2.195.62282' },
@@ -61,11 +63,14 @@ export const published: Publication[] = [
   { authors: 'Zhu, T., V. Singh', year: '2009', title: 'Spatial Competition with Endogenous Location Choices — An Application to Discount Retailing', venue: 'Quantitative Marketing and Economics', detail: '7, 1–35', url: 'https://doi.org/10.1007/s11129-008-9048-6' },
   { authors: 'Khan, R., M. Lewis, V. Singh', year: '2009', title: 'Dynamic Customer Management and the Value of One-to-One Marketing', venue: 'Marketing Science', detail: '28(6), 1063–1079', url: 'https://doi.org/10.1287/mksc.1090.0497' },
   { authors: 'Meyer, R.J., J. Vosgerau, V. Singh, et al.', year: '2010', title: 'Behavioral Research and Empirical Modeling of Marketing Channels: Implications for Both Fields and a Call for Future Research', venue: 'Marketing Letters', detail: '21(3), 301–315', url: 'https://doi.org/10.1007/s11002-010-9109-y' },
+  { authors: 'Singh, V., K.T. Hansen, R.C. Blattberg', year: '2010', title: 'Market Entry & Consumer Behavior', venue: 'Perspectives on Promotion and Database Marketing: The Collected Works of Robert C. Blattberg (World Scientific)', detail: 'p. 297' },
+  { authors: 'Singh, V.', year: '2010', title: 'Contributions Using Micro Consumer Models to Address Macro Marketing Problems', venue: 'Perspectives on Promotion and Database Marketing (World Scientific)', detail: '261–264' },
   { authors: 'Zhu, T., V. Singh, A. Dukes', year: '2011', title: 'Local Competition, Entry, and Agglomeration', venue: 'Quantitative Marketing and Economics', detail: '9, 129–154', url: 'https://doi.org/10.1007/s11129-011-9097-0' },
   { authors: 'Khan, R., K. Misra, V. Singh', year: '2013', title: 'Ideology and Brand Consumption', venue: 'Psychological Science', detail: '24(3), 326–333', url: 'https://doi.org/10.1177/0956797612457379' },
   { authors: 'Hansen, K., R. Khan, V. Singh', year: '2014', title: 'Hierarchical Modeling of Choice Concentration of US Households', venue: 'Bayesian Inference in the Social Sciences (Wiley)', detail: 'eds. I. Jeliazkov & X. Yang, 249–268', url: 'https://doi.org/10.1002/9781118771051.ch10' },
   { authors: 'Khan, R., K. Misra, V. Singh', year: '2015', title: 'Will a Fat Tax Work?', venue: 'Marketing Science', detail: '35(1), 10–26', note: 'Finalist, Best Paper in Marketing Science', url: 'https://doi.org/10.1287/mksc.2015.0917' },
   { authors: 'Wang, Y., M. Lewis, V. Singh', year: '2015', title: 'The Complex Consequences of Counter-Marketing: The Case of Cigarettes', venue: 'Marketing Science', detail: '35(1), 52–73', url: 'https://doi.org/10.1287/mksc.2015.0910' },
+  { authors: 'Khan, R., K. Misra, V. Singh', year: '2016', title: 'Even a 14-Cent Food Tax Could Lead to Healthier Choices', venue: 'Harvard Business Review' },
   { authors: 'Kim, B.J., V. Singh, R.S. Winer', year: '2017', title: 'The 80-20 Rule in Marketing: An Empirical Generalization', venue: 'Marketing Letters', detail: '28 (December), 491–507', url: 'https://doi.org/10.1007/s11002-017-9442-5' },
   { authors: 'Jost, J., M. Langer, V. Singh', year: '2017', title: 'The Politics of Buying, Boycotting, Complaining, and Disputing', venue: 'Journal of Consumer Research', detail: '44(3)', url: 'https://doi.org/10.1093/jcr/ucx084' },
   { authors: 'Thomadsen, R., V. Singh, et al.', year: '2018', title: 'How Context Affects Choices', venue: 'Customer Needs and Solutions', detail: '5(1–2), 3–14', url: 'https://doi.org/10.1007/s40547-017-0084-9' },
@@ -88,13 +93,6 @@ export const working: Publication[] = [
   { authors: 'Chen, M., V. Singh', title: 'Poverty & Consumption', venue: 'Working paper' },
   { authors: 'Kim, J.Y., M. Ishihara, V. Singh', title: 'Health Insurance and Dynamics of Patient Decision Making', venue: 'Working paper', url: 'https://www.dropbox.com/scl/fi/uo1emdb3j4gx6zg8lfij2/Health_Insurance_Project.pdf?rlkey=eohsktsq6lj4r9l79wefk8mm3&dl=1' },
   { authors: 'Duhachek, A., V. Singh', title: 'The Midlife Mental-Health Trough Is Concentrated Among Lower-Income Adults', venue: 'Working paper', url: 'https://www.dropbox.com/scl/fi/insgl0ds86ltypnh340x2/happy_midlife.pdf?rlkey=nyrusef0s5hughorws2gwxvae&dl=1' },
-];
-
-export const otherWriting: Publication[] = [
-  { authors: 'Khan, R., K. Misra, V. Singh', year: '2016', title: 'Even a 14-Cent Food Tax Could Lead to Healthier Choices', venue: 'Harvard Business Review' },
-  { authors: 'Singh, V., K.T. Hansen, R.C. Blattberg', year: '2010', title: 'Market Entry & Consumer Behavior', venue: 'Perspectives on Promotion and Database Marketing: The Collected Works of Robert C. Blattberg (World Scientific)', detail: 'p. 297' },
-  { authors: 'Singh, V.', year: '2010', title: 'Contributions Using Micro Consumer Models to Address Macro Marketing Problems', venue: 'Perspectives on Promotion and Database Marketing (World Scientific)', detail: '261–264' },
-  { authors: 'Singh, V.P., J.-P. Gervais, C.P. Baumel', year: '1998', title: 'Consumer Willingness to Purchase Factory-Production Ethanol Cars: A Contingent Valuation Approach', venue: 'Journal of the Transportation Research Forum', detail: '37(2)' },
 ];
 
 

@@ -5,7 +5,6 @@ import {
   interests,
   published,
   working,
-  otherWriting,
   type Publication,
 } from '@/lib/research';
 import { SITE_URL } from '@/lib/share-metadata';
@@ -22,7 +21,7 @@ const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: profile.name,
-  jobTitle: profile.title,
+  jobTitle: `${profile.title}, ${profile.role}`,
   affiliation: { '@type': 'CollegeOrUniversity', name: profile.affiliation },
   email: `mailto:${profile.email}`,
   url: `${SITE_URL}/research`,
@@ -87,9 +86,11 @@ export default function ResearchPage() {
           <h1 className="mt-3 font-serif text-[clamp(32px,5.4vw,52px)] font-semibold leading-[1.06] tracking-tight text-hub-ink">
             {profile.name}
           </h1>
-          <p className="mt-2 text-[16px] text-hub-ink-soft">
-            {profile.title}, {profile.affiliation}
-          </p>
+          <div className="mt-2 space-y-0.5 text-[16px] leading-snug text-hub-ink-soft">
+            <p>{profile.title}</p>
+            <p>{profile.role}</p>
+            <p>{profile.affiliation}</p>
+          </div>
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-plex text-[12px] text-hub-ink-soft">
             <a href={`mailto:${profile.email}`} className="hover:text-hub-teal">
               {profile.email}
@@ -132,14 +133,6 @@ export default function ResearchPage() {
           <ul>
             {publishedNewestFirst.map(p => (
               <PubItem key={`${p.title}-${p.year}`} pub={p} />
-            ))}
-          </ul>
-        </Section>
-
-        <Section title="Other Writing" count={otherWriting.length}>
-          <ul>
-            {otherWriting.map(p => (
-              <PubItem key={p.title} pub={p} />
             ))}
           </ul>
         </Section>
