@@ -10,7 +10,12 @@
       "description": "Within a single American county, life expectancy at birth can differ by more than two decades. A tract-level tour of New York and Chicago.",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Choropleth",
+        "Health / mortality data",
+        "Geospatial analysis",
+        "Inequality analysis",
+        "Ranking",
+        "Census / ACS"
       ],
       "href": "https://content.vishalsingh.org/articles/five-subway-stops.html",
       "external": true,
@@ -21,7 +26,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:47:46"
+      "updatedAt": "2026-06-23 20:17:58"
     },
     {
       "id": "zip-health",
@@ -55,9 +60,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
+        "Survey analysis",
+        "Trend analysis",
+        "Decomposition",
         "Time series",
-        "Exploratory viz"
+        "Survey data",
+        "Ranking"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/political-identity-divergence/index.html",
@@ -69,7 +77,7 @@
       "status": "published",
       "sort": 2,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:48:24"
+      "updatedAt": "2026-06-23 20:17:58"
     },
     {
       "id": "2020-the-world-s-worst-year",
@@ -78,7 +86,12 @@
       "description": "Gallup World Poll, 93 countries: in 2020 daily worry, sadness and stress hit their highest recorded levels, while the world’s rating of its own life barely moved.",
       "topic": "Public Opinion",
       "tags": [
-        "data story"
+        "Shock analysis",
+        "Survey analysis",
+        "Scatter plot",
+        "Ranking",
+        "Survey data",
+        "Correlation"
       ],
       "href": "https://content.vishalsingh.org/articles/2020-the-world-s-worst-year.html",
       "external": true,
@@ -89,7 +102,7 @@
       "status": "published",
       "sort": 4,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:15:22"
+      "updatedAt": "2026-06-23 20:17:58"
     },
     {
       "id": "share-of-wallet",
@@ -195,9 +208,12 @@
       "domain": "Politics",
       "topic": "Politics & Elections",
       "tags": [
+        "Choropleth",
+        "Election returns",
         "Dashboard",
-        "Maps",
-        "Exploratory viz"
+        "Trend analysis",
+        "Geospatial analysis",
+        "Time series"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/presidential-election-atlas/index.html",
@@ -209,7 +225,7 @@
       "status": "published",
       "sort": 41,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:58"
     },
     {
       "id": "insight-digest",
@@ -243,9 +259,12 @@
       "domain": "Demographics",
       "topic": "Demographics",
       "tags": [
+        "Forecasting",
+        "Choropleth",
         "Dashboard",
-        "Demographics",
-        "Forecasts"
+        "Trend analysis",
+        "Time series",
+        "Survey data"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/religious-composition-dashboard/index.html",
@@ -257,7 +276,7 @@
       "status": "published",
       "sort": 76,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:07:01"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "southwest-regression",
@@ -291,10 +310,12 @@
       "domain": "Well-being",
       "topic": "Public Health",
       "tags": [
-        "well-being",
-        "gallup",
-        "global",
-        "data story"
+        "Survey analysis",
+        "Choropleth",
+        "Survey data",
+        "Inequality analysis",
+        "Time series",
+        "Trend analysis"
       ],
       "href": "https://well-being-atlas.vercel.app/",
       "external": true,
@@ -305,7 +326,7 @@
       "status": "published",
       "sort": 88,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "world-trade-atlas",
@@ -362,7 +383,12 @@
       "description": "Since 1974 the GSS has asked the same four questions: how often do you spend an evening with relatives, with friends, with neighbors — or at a bar? The answers trace a half-century in which company grew rarer, screens grew brighter, and…",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Trend analysis",
+        "Time series",
+        "Survey data",
+        "Correlation",
+        "Small multiples"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/articles/american_evenings.html",
@@ -374,7 +400,7 @@
       "status": "published",
       "sort": 3,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "beat-the-model",
@@ -383,7 +409,12 @@
       "description": "A five-variable model predicts neighborhood mobility with R² = 0.44. The residuals are the interesting part: the counties that out-perform their demographics, and the boomtowns that don",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Benchmarking",
+        "Regression",
+        "Scatter plot",
+        "Choropleth",
+        "Census / ACS",
+        "Geographic data"
       ],
       "href": "https://content.vishalsingh.org/articles/beat-the-model.html",
       "external": true,
@@ -394,7 +425,7 @@
       "status": "published",
       "sort": 5,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "index-autopsy",
@@ -448,7 +479,12 @@
       "description": "Case and Deaton mapped where Americans die of suicide, drugs, and alcohol. Gallup spent a decade asking Americans how yesterday felt. Lay the feelings over the deaths, and the measure that tracks the mortality map best is not sadness, no…",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Choropleth",
+        "Correlation",
+        "Health / mortality data",
+        "Survey data",
+        "Geospatial analysis",
+        "Scatter plot"
       ],
       "href": "https://content.vishalsingh.org/articles/felt_despair.html",
       "external": true,
@@ -459,7 +495,7 @@
       "status": "published",
       "sort": 8,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "unsorted-voters-switched",
@@ -469,9 +505,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
+        "Decomposition",
+        "Survey analysis",
+        "Survey data",
+        "Trend analysis",
         "Time series",
-        "Survey data"
+        "Correlation"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/unsorted-voters-switched/index.html",
@@ -483,7 +522,7 @@
       "status": "published",
       "sort": 9,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:07:07"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "does-generosity-pay-everywhere",
@@ -492,7 +531,12 @@
       "description": "Across 155 countries, people who give — money, time, or a hand to a stranger — rate their lives higher and feel better day to day. The link is remarkably stubborn: it holds in rich countries and poor ones alike, and it is strongest for g…",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Regression",
+        "Survey analysis",
+        "Survey data",
+        "Ranking",
+        "Benchmarking",
+        "Correlation"
       ],
       "href": "https://content.vishalsingh.org/articles/does-generosity-pay-everywhere.html",
       "external": true,
@@ -503,7 +547,7 @@
       "status": "published",
       "sort": 10,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "does-the-ring-still-matter",
@@ -512,7 +556,12 @@
       "description": "For fifty years, married Americans have reported being happier than everyone else. The gap has barely budged — and most of it survives even after you account for who tends to marry.",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Survey data",
+        "Decomposition",
+        "Regression",
+        "Trend analysis",
+        "Time series",
+        "Survey analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/does-the-ring-still-matter.html",
       "external": true,
@@ -523,7 +572,7 @@
       "status": "published",
       "sort": 11,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "one-national-election-county-swing-uniformity",
@@ -533,9 +582,12 @@
       "domain": "Elections",
       "topic": "Politics & Elections",
       "tags": [
-        "Dashboard",
-        "Maps",
-        "Time series"
+        "Choropleth",
+        "Election returns",
+        "Trend analysis",
+        "Distribution",
+        "Correlation",
+        "Panel data"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/one-national-election-county-swing-uniformity/index.html",
@@ -547,7 +599,7 @@
       "status": "published",
       "sort": 12,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "fast-food-perceptual-map",
@@ -581,9 +633,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
+        "Decomposition",
+        "Survey data",
+        "Distribution",
+        "Trend analysis",
         "Time series",
-        "Survey data"
+        "Survey analysis"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/negative-partisanship-anes/index.html",
@@ -595,7 +650,7 @@
       "status": "published",
       "sort": 15,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:07:12"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "community_compensation",
@@ -604,7 +659,12 @@
       "description": "Putnam's heirs promised that civic fabric lifts everyone. Three and a half million Gallup interviews ask the sharper question: does it lift the people who need it most?",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Index construction",
+        "Regression",
+        "Survey data",
+        "Distribution",
+        "Survey analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/community_compensation.html",
       "external": true,
@@ -615,7 +675,7 @@
       "status": "published",
       "sort": 16,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "feeling-rich-is-not-the-same-as-being-rich",
@@ -624,7 +684,12 @@
       "description": "Across 147 countries, money reliably buys the feeling of financial sufficiency — and the feeling never tops out, across countries or within them. But whole regions feel far richer, or poorer, than their income says they should.",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Regression",
+        "Survey data",
+        "Scatter plot",
+        "Benchmarking",
+        "Financial data"
       ],
       "href": "https://content.vishalsingh.org/articles/feeling-rich-is-not-the-same-as-being-rich.html",
       "external": true,
@@ -635,7 +700,7 @@
       "status": "published",
       "sort": 18,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "from-denomination-to-devotion",
@@ -644,7 +709,12 @@
       "description": "Across the ANES 1948-2024, the religious cleavage in American presidential voting rotated from a denominational axis (Catholic Democrats vs Protestant Republicans) to a devotional one (frequent attenders vs seculars) that cuts across eve…",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Trend analysis",
+        "Inequality analysis",
+        "Survey data",
+        "Small multiples",
+        "Time series",
+        "Panel data"
       ],
       "href": "https://content.vishalsingh.org/articles/from-denomination-to-devotion.html",
       "external": true,
@@ -655,7 +725,7 @@
       "status": "published",
       "sort": 19,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "ad-spend-explorer",
@@ -688,7 +758,12 @@
       "description": "Half of America",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Geospatial analysis",
+        "Choropleth",
+        "Health / mortality data",
+        "Census / ACS",
+        "Index construction"
       ],
       "href": "https://content.vishalsingh.org/articles/sliver-of-the-map.html",
       "external": true,
@@ -699,7 +774,7 @@
       "status": "published",
       "sort": 22,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "scrc-data",
@@ -731,7 +806,12 @@
       "description": "Gallup World Poll, 2006–2019: the world got happier and nations grew more alike, while the gap between each country’s happiest and unhappiest people widened.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Decomposition",
+        "Inequality analysis",
+        "Distribution",
+        "Trend analysis",
+        "Survey data",
+        "Panel data"
       ],
       "href": "https://content.vishalsingh.org/articles/happiness_borders.html",
       "external": true,
@@ -742,7 +822,7 @@
       "status": "published",
       "sort": 24,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "ai-models",
@@ -893,7 +973,12 @@
       "description": "Across the ANES 1972-2024, the partisan gap on policy and racial attitudes is widest among the most politically knowledgeable Americans -- every year, and by a growing margin, even net of education. Information sorts; it does not depolar…",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey data",
+        "Inequality analysis",
+        "Distribution",
+        "Time series",
+        "Index construction",
+        "Trend analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/knowledge-sharpens-sorting.html",
       "external": true,
@@ -904,7 +989,7 @@
       "status": "published",
       "sort": 32,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "keeping-up-with-the-county",
@@ -913,7 +998,12 @@
       "description": "Same paycheck, richer neighbors: across 2.1 million Gallup interviews, living among wealthier people lowers life evaluation for the middle and barely touches the rich — while the poor are unbothered or slightly lifted. Who feels the comp…",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Regression",
+        "Inequality analysis",
+        "Survey data",
+        "Census / ACS",
+        "Ranking",
+        "Time series"
       ],
       "href": "https://content.vishalsingh.org/articles/keeping-up-with-the-county.html",
       "external": true,
@@ -924,7 +1014,7 @@
       "status": "published",
       "sort": 33,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "south-convergence-or-apart",
@@ -933,7 +1023,12 @@
       "description": "ANES, GSS, and county returns show the American South did three things at once: it realigned on party and the vote, converged on economics, and grew more distinct on religion and culture.",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Trend analysis",
+        "Survey data",
+        "Election returns",
+        "Time series",
+        "Survey analysis"
       ],
       "teaching": "ch04-small-multiples",
       "href": "https://content.vishalsingh.org/articles/south-convergence-or-apart.html",
@@ -945,7 +1040,7 @@
       "status": "published",
       "sort": 34,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "out-of-place-the-geography-of-the-lgbt-well-being-gap",
@@ -954,7 +1049,12 @@
       "description": "Across 62,193 Gallup respondents who said they were LGBT, daily worry, sadness and stress run high everywhere — but how poorly people rate their lives widens as the county turns Republican and rural. And in those same hostile places, far…",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Index construction",
+        "Inequality analysis",
+        "Choropleth",
+        "Geospatial analysis",
+        "Regression",
+        "Survey data"
       ],
       "href": "https://content.vishalsingh.org/articles/out-of-place-the-geography-of-the-lgbt-well-being-gap.html",
       "external": true,
@@ -965,7 +1065,7 @@
       "status": "published",
       "sort": 35,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:17:59"
     },
     {
       "id": "political-book-reviews",
@@ -998,8 +1098,11 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
         "Correlation",
+        "Heatmap",
+        "Decomposition",
+        "Trend analysis",
+        "Time series",
         "Survey data"
       ],
       "teaching": "ch03-exploratory-viz",
@@ -1012,7 +1115,7 @@
       "status": "published",
       "sort": 37,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:07:28"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "progresso-pricing-workbook",
@@ -1067,7 +1170,12 @@
       "description": "Across sixty years of ANES feeling thermometers, party ID has replaced race as the cleavage that best organizes how Americans feel about non-political social groups.",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Decomposition",
+        "Survey data",
+        "Time series",
+        "Trend analysis",
+        "Panel data"
       ],
       "href": "https://content.vishalsingh.org/articles/partisanship-ate-the-thermometers.html",
       "external": true,
@@ -1078,7 +1186,7 @@
       "status": "published",
       "sort": 40,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "raised-poor-locked-up",
@@ -1087,7 +1195,12 @@
       "description": "For boys raised by poor families, the odds of growing up incarcerated rise with neighborhood deprivation — and, on the very same streets, fall heavily by race.",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Correlation",
+        "Scatter plot",
+        "Census / ACS",
+        "Administrative data",
+        "Time series"
       ],
       "href": "https://content.vishalsingh.org/articles/raised-poor-locked-up.html",
       "external": true,
@@ -1098,7 +1211,7 @@
       "status": "published",
       "sort": 42,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "southwest-regression-exercise",
@@ -1155,7 +1268,12 @@
       "description": "Across 12,360 school districts, girls out-read boys in 99.9 percent. Math is contested ground — and which side wins tracks the district",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Choropleth",
+        "Correlation",
+        "Distribution",
+        "Geospatial analysis",
+        "Administrative data"
       ],
       "href": "https://content.vishalsingh.org/articles/girls-country.html",
       "external": true,
@@ -1166,7 +1284,7 @@
       "status": "published",
       "sort": 45,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "renthop-listings",
@@ -1198,7 +1316,12 @@
       "description": "What 88 months of syndromic surveillance data reveal about mental health at the emergency department — and how to read a rate without being fooled by it.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Index construction",
+        "Small multiples",
+        "Health / mortality data",
+        "Trend analysis",
+        "Time series",
+        "Administrative data"
       ],
       "href": "https://content.vishalsingh.org/articles/mental-health-ed-surveillance.html",
       "external": true,
@@ -1209,7 +1332,7 @@
       "status": "published",
       "sort": 48,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:36:11"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "religion-s-conditional-dividend",
@@ -1218,7 +1341,12 @@
       "description": "Across 143 countries, people who call religion important rate their lives higher and feel better day to day — but mainly where life is hard. As nations grow richer and safer, the religious advantage bends toward zero, and in the wealthie…",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Survey data",
+        "Scatter plot",
+        "Regression",
+        "Benchmarking",
+        "Correlation"
       ],
       "href": "https://content.vishalsingh.org/articles/religion-s-conditional-dividend.html",
       "external": true,
@@ -1229,7 +1357,7 @@
       "status": "published",
       "sort": 49,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "merchant-right-county-residuals",
@@ -1239,9 +1367,12 @@
       "domain": "Elections",
       "topic": "Politics & Elections",
       "tags": [
-        "Dashboard",
-        "Maps",
-        "Regression"
+        "Regression",
+        "Choropleth",
+        "Election returns",
+        "Scatter plot",
+        "Census / ACS",
+        "Decomposition"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/merchant-right-county-residuals/index.html",
@@ -1253,7 +1384,7 @@
       "status": "published",
       "sort": 50,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:07:43"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "llm-predict",
@@ -1286,7 +1417,11 @@
       "description": "Rwanda has some of the world's best days and its worst self-rated lives. Lithuania, the reverse. A map of where good days and good lives come apart.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Correlation",
+        "Index construction",
+        "Scatter plot",
+        "Survey data",
+        "Inequality analysis"
       ],
       "teaching": "ch04-statistical-charts",
       "href": "https://content.vishalsingh.org/articles/smiles_and_ladders.html",
@@ -1298,7 +1433,7 @@
       "status": "published",
       "sort": 52,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "coefficient-zoo",
@@ -1328,7 +1463,12 @@
       "description": "Across the ANES 1980-2024, abortion travelled from a cross-cutting issue on which the parties were statistically tied to the clearest single marker of party: the Dem-Rep gap on",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Survey data",
+        "Correlation",
+        "Trend analysis",
+        "Time series",
+        "Inequality analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/the-abortion-sort.html",
       "external": true,
@@ -1339,7 +1479,7 @@
       "status": "published",
       "sort": 54,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "born-rich-premium",
@@ -1348,7 +1488,12 @@
       "description": "What does a rich birth buy? The Opportunity Atlas prices the class premium neighborhood by neighborhood — and it varies twofold across America.",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Regression",
+        "Choropleth",
+        "Inequality analysis",
+        "Scatter plot",
+        "Panel data",
+        "Administrative data"
       ],
       "teaching": "ch03-concentration-case",
       "href": "https://content.vishalsingh.org/articles/born-rich-premium.html",
@@ -1360,7 +1505,7 @@
       "status": "published",
       "sort": 55,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "company-you-keep",
@@ -1369,7 +1514,12 @@
       "description": "Twenty-one billion Facebook friendships, one question: which kind of social capital actually predicts whether poor children rise? Cross-class friendship does. Volunteering, clubs, and tight-knit networks barely register.",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Decomposition",
+        "Scatter plot",
+        "Choropleth",
+        "Correlation",
+        "Census / ACS",
+        "Regression"
       ],
       "teaching": "ch03-concentration-case",
       "href": "https://content.vishalsingh.org/articles/company-you-keep.html",
@@ -1381,7 +1531,7 @@
       "status": "published",
       "sort": 56,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "overdose-deaths-2018-2024",
@@ -1390,7 +1540,12 @@
       "description": "A data narrative on U.S. drug overdose mortality from 2018 to 2024: the fentanyl-driven climb, the uneven toll, and the historic 2024 reversal. Built from CDC / NCHS National Vital Statistics System data.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Health / mortality data",
+        "Trend analysis",
+        "Time series",
+        "Small multiples",
+        "Administrative data"
       ],
       "href": "https://content.vishalsingh.org/articles/overdose-deaths-2018-2024.html",
       "external": true,
@@ -1401,7 +1556,7 @@
       "status": "published",
       "sort": 57,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:36:11"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "diploma-divide-is-cultural",
@@ -1410,7 +1565,12 @@
       "description": "Across the ANES 1972-2024, the college education gap on economic redistribution attitudes has collapsed to near zero while the gap on cultural attitudes held -- by 2008-24 the cultural education gap is about three times the economic one.…",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Inequality analysis",
+        "Survey data",
+        "Trend analysis",
+        "Time series",
+        "Ranking"
       ],
       "href": "https://content.vishalsingh.org/articles/diploma-divide-is-cultural.html",
       "external": true,
@@ -1421,7 +1581,7 @@
       "status": "published",
       "sort": 58,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "partisan-economic-perceptions",
@@ -1430,7 +1590,11 @@
       "description": "Across the ANES 1980-2024, Americans",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey data",
+        "Survey analysis",
+        "Time series",
+        "Trend analysis",
+        "Inequality analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/partisan-economic-perceptions.html",
       "external": true,
@@ -1441,7 +1605,7 @@
       "status": "published",
       "sort": 59,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "eight-americas",
@@ -1450,7 +1614,12 @@
       "description": "A k-means clustering of 81,000 census tracts sorts the country into eight kinds of neighborhood — and a child",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Clustering",
+        "Segmentation",
+        "Choropleth",
+        "Health / mortality data",
+        "Census / ACS",
+        "Scatter plot"
       ],
       "teaching": "ch04-small-multiples",
       "href": "https://content.vishalsingh.org/articles/eight-americas.html",
@@ -1462,7 +1631,7 @@
       "status": "published",
       "sort": 60,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "flat-line",
@@ -1471,7 +1640,12 @@
       "description": "In deprived neighborhoods people see the doctor just as often — and get far less prevention. The health system manages disease where it could prevent it.",
       "topic": "Public Opinion",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Health / mortality data",
+        "Small multiples",
+        "Geographic data",
+        "Correlation",
+        "Ranking"
       ],
       "teaching": "ch04-baselines",
       "href": "https://content.vishalsingh.org/articles/flat-line.html",
@@ -1483,7 +1657,7 @@
       "status": "published",
       "sort": 61,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "flip_counties",
@@ -1492,7 +1666,12 @@
       "description": "In the places that voted for Barack Obama and then Donald Trump, people rated their lives about like everyone else's. What sagged, years before 2016, was where they thought their lives were headed.",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Causal inference",
+        "Election returns",
+        "Survey data",
+        "Time series",
+        "Map",
+        "Trend analysis"
       ],
       "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/articles/flip_counties.html",
@@ -1504,7 +1683,7 @@
       "status": "published",
       "sort": 62,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "gen-z-gender-war-overstated",
@@ -1514,9 +1693,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
+        "Survey analysis",
+        "Inequality analysis",
         "Survey data",
-        "Group comparison"
+        "Trend analysis",
+        "Small multiples",
+        "Time series"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/gen-z-gender-war-overstated/index.html",
@@ -1528,7 +1710,7 @@
       "status": "published",
       "sort": 63,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:07:48"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "political-identification-us",
@@ -1538,9 +1720,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
+        "Survey analysis",
+        "Trend analysis",
+        "Survey data",
         "Time series",
-        "Survey data"
+        "Decomposition",
+        "Small multiples"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/political-identification-us/index.html",
@@ -1552,7 +1737,7 @@
       "status": "published",
       "sort": 64,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:08:04"
+      "updatedAt": "2026-06-23 20:18:00"
     },
     {
       "id": "great_unwinding",
@@ -1561,7 +1746,10 @@
       "description": "Between 55 and 70, the emotional weather of American life transforms: stress collapses, worry recedes, enjoyment returns. Stress, it turns out, is the only emotion that gets a retirement party.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey data",
+        "Survey analysis",
+        "Trend analysis",
+        "Time series"
       ],
       "href": "https://content.vishalsingh.org/articles/great_unwinding.html",
       "external": true,
@@ -1572,7 +1760,7 @@
       "status": "published",
       "sort": 65,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "income-ladder-flipped",
@@ -1582,9 +1770,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
         "Survey data",
-        "Realignment"
+        "Slopegraph",
+        "Inequality analysis",
+        "Survey analysis",
+        "Trend analysis",
+        "Election returns"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/income-ladder-flipped/index.html",
@@ -1596,7 +1787,7 @@
       "status": "published",
       "sort": 66,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:08:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "loneliness-geography",
@@ -1605,7 +1796,12 @@
       "description": "Loneliness and depression have opposite geographies: one is young, single, and urban; the other is rural and deprived. A ZIP-code-level map of American isolation.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Geospatial analysis",
+        "Correlation",
+        "Map",
+        "Health / mortality data",
+        "Distribution",
+        "Census / ACS"
       ],
       "teaching": "ch03-chart-atlas",
       "href": "https://content.vishalsingh.org/articles/loneliness-geography.html",
@@ -1617,7 +1813,7 @@
       "status": "published",
       "sort": 67,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "ninety-year-old-map",
@@ -1626,7 +1822,12 @@
       "description": "Federal appraisers graded American neighborhoods A through D in the late 1930s. Lay the grades over today",
       "topic": "Demographics",
       "tags": [
-        "data story"
+        "Geospatial analysis",
+        "Choropleth",
+        "Health / mortality data",
+        "Inequality analysis",
+        "Distribution",
+        "Census / ACS"
       ],
       "href": "https://content.vishalsingh.org/articles/ninety-year-old-map.html",
       "external": true,
@@ -1637,7 +1838,7 @@
       "status": "published",
       "sort": 68,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "the-office-ladder-of-defection",
@@ -1646,7 +1847,12 @@
       "description": "ANES vote choice 1952-2024 shows partisan defection by office: the split-ticket ladder opened in the 1980s-90s then collapsed under nationalization; cross-pressured partisans still split most, down-ballot.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Trend analysis",
+        "Time series",
+        "Survey data",
+        "Election returns",
+        "Ranking"
       ],
       "href": "https://content.vishalsingh.org/articles/the-office-ladder-of-defection.html",
       "external": true,
@@ -1657,7 +1863,7 @@
       "status": "published",
       "sort": 69,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "the-optimism-gap",
@@ -1666,7 +1872,12 @@
       "description": "Across 2.46 million Gallup interviews, Black Americans expect their lives to rise far more than white Americans do at every income level — and the gap is widest among the poor, even though white Americans rate their current lives higher.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Survey data",
+        "Scatter plot",
+        "Correlation",
+        "Health / mortality data",
+        "Survey analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/the-optimism-gap.html",
       "external": true,
@@ -1677,7 +1888,7 @@
       "status": "published",
       "sort": 70,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "the-paradox-that-didn-t-hold",
@@ -1686,7 +1897,12 @@
       "description": "In the 1970s American women called themselves happier than men. A famous study watched that lead vanish. Extend the data eighteen more years and the decline doesn't continue — it dissolves into noise.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Decomposition",
+        "Trend analysis",
+        "Survey analysis",
+        "Time series",
+        "Survey data",
+        "Inequality analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/the-paradox-that-didn-t-hold.html",
       "external": true,
@@ -1697,7 +1913,7 @@
       "status": "published",
       "sort": 71,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "science-trust-flip",
@@ -1706,7 +1922,12 @@
       "description": "Fifty years of General Social Survey data show Republicans went from the most science-confident party to the least — and the Supreme Court, the last consensus institution, finally broke too.",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Inequality analysis",
+        "Trend analysis",
+        "Small multiples",
+        "Time series",
+        "Survey data"
       ],
       "href": "https://content.vishalsingh.org/articles/science-trust-flip.html",
       "external": true,
@@ -1717,7 +1938,7 @@
       "status": "published",
       "sort": 72,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:36:11"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "american-financial-wellbeing",
@@ -1726,7 +1947,12 @@
       "description": "For a decade, Americans felt steadily better about their money. Then 2022 took it back — and the recovery never came.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Trend analysis",
+        "Inequality analysis",
+        "Time series",
+        "Survey data",
+        "Shock analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/american-financial-wellbeing.html",
       "external": true,
@@ -1737,7 +1963,7 @@
       "status": "published",
       "sort": 73,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:36:11"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "plateau_in_the_tail",
@@ -1746,7 +1972,12 @@
       "description": "The legend that money stops buying happiness at $75,000 was computed on this very survey. Plot the whole distribution of well-being instead of its average, and the plateau moves: it belongs to the unhappiest Americans — and to feelings,…",
       "topic": "Public Opinion",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Survey analysis",
+        "Distribution",
+        "Small multiples",
+        "Survey data",
+        "Correlation"
       ],
       "teaching": "ch04-uncertainty",
       "href": "https://content.vishalsingh.org/articles/plateau_in_the_tail.html",
@@ -1758,7 +1989,7 @@
       "status": "published",
       "sort": 74,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "the-purple-county-is-a-lie",
@@ -1767,7 +1998,12 @@
       "description": "Precinct returns &middot; 2024 presidential &middot; MIT Election Lab",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Choropleth",
+        "Inequality analysis",
+        "Election returns",
+        "Geospatial analysis",
+        "Distribution",
+        "Scatter plot"
       ],
       "teaching": "ch03-chart-atlas",
       "href": "https://content.vishalsingh.org/articles/the-purple-county-is-a-lie.html",
@@ -1779,7 +2015,7 @@
       "status": "published",
       "sort": 75,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "the-shape-of-development",
@@ -1829,7 +2065,12 @@
       "description": "A baby",
       "topic": "Finance",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Correlation",
+        "Scatter plot",
+        "Health / mortality data",
+        "Ranking",
+        "Census / ACS"
       ],
       "href": "https://content.vishalsingh.org/articles/starting-line.html",
       "external": true,
@@ -1840,7 +2081,7 @@
       "status": "published",
       "sort": 80,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "stress_decade",
@@ -1849,7 +2090,12 @@
       "description": "Between 2008 and 2019 — before anyone had heard of COVID-19 — the share of humanity reporting a stressful day rose by ten percentage points. Enjoyment never moved.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Trend analysis",
+        "Heatmap",
+        "Survey data",
+        "Time series",
+        "Inequality analysis"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/articles/stress_decade.html",
@@ -1861,7 +2107,7 @@
       "status": "published",
       "sort": 81,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "thin_cushion",
@@ -1870,7 +2116,12 @@
       "description": "Fifty years of American survey data say wealth softens remarkably few of life's blows — and for some, the well-off fall further.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Slopegraph",
+        "Inequality analysis",
+        "Regression",
+        "Survey data",
+        "Ranking"
       ],
       "href": "https://content.vishalsingh.org/articles/thin_cushion.html",
       "external": true,
@@ -1881,7 +2132,7 @@
       "status": "published",
       "sort": 82,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "two_clocks",
@@ -1890,7 +2141,12 @@
       "description": "Gallup World Poll, 2005–2020, 2.3 million interviews in 165 countries: as people age, the mind’s agitations — stress, anger — fall to lifetime lows, while pain, sadness and the body’s limits climb. And whether old age is calm or anxious…",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Inequality analysis",
+        "Survey data",
+        "Small multiples",
+        "Time series",
+        "Benchmarking"
       ],
       "href": "https://content.vishalsingh.org/articles/two_clocks.html",
       "external": true,
@@ -1901,7 +2157,7 @@
       "status": "published",
       "sort": 83,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "broken_u_curve",
@@ -1910,7 +2166,12 @@
       "description": "For two generations, happiness sagged in midlife and recovered with age. In the 2020s the curve snapped at its left end: the young are now the unhappiest Americans.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Trend analysis",
+        "Survey data",
+        "Time series",
+        "Health / mortality data",
+        "Inequality analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/broken_u_curve.html",
       "external": true,
@@ -1921,7 +2182,7 @@
       "status": "published",
       "sort": 84,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "u-curve",
@@ -1930,7 +2191,12 @@
       "description": "Gallup World Poll, 2005–2020, 2.2 million interviews in 156 countries: the famous U-shaped happiness curve — high in youth, low at midlife, rising again in old age — is real, but mostly a privilege of the rich Anglosphere. Across much of…",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Small multiples",
+        "Scatter plot",
+        "Survey analysis",
+        "Benchmarking",
+        "Survey data",
+        "Trend analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/u-curve.html",
       "external": true,
@@ -1941,7 +2207,7 @@
       "status": "published",
       "sort": 85,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "the-unpacking",
@@ -1950,7 +2216,12 @@
       "description": "For a generation the Big Sort ran one way: Americans piling into landslide neighborhoods where they never met the other side. Below the county line, between 2016 and 2024, it went briefly into reverse — and the Democratic city, the most…",
       "topic": "Public Opinion",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Trend analysis",
+        "Election returns",
+        "Distribution",
+        "Panel data",
+        "Map"
       ],
       "href": "https://content.vishalsingh.org/articles/the-unpacking.html",
       "external": true,
@@ -1961,7 +2232,7 @@
       "status": "published",
       "sort": 86,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "vanishing-cradle",
@@ -1970,7 +2241,12 @@
       "description": "America",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Panel data",
+        "Health / mortality data",
+        "Trend analysis",
+        "Time series",
+        "Choropleth"
       ],
       "href": "https://content.vishalsingh.org/articles/vanishing-cradle.html",
       "external": true,
@@ -1981,7 +2257,7 @@
       "status": "published",
       "sort": 87,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:01"
     },
     {
       "id": "trump-tweet-device",
@@ -2013,7 +2289,12 @@
       "description": "Did Obama",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Shock analysis",
+        "Survey analysis",
+        "Survey data",
+        "Time series",
+        "Trend analysis",
+        "Inequality analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/race-attitudes-shocks.html",
       "external": true,
@@ -2024,7 +2305,7 @@
       "status": "published",
       "sort": 90,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "us-election-state-county-1972-2016",
@@ -2079,7 +2360,12 @@
       "description": "",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey data",
+        "Survey analysis",
+        "Choropleth",
+        "Correlation",
+        "Time series",
+        "Trend analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/voting-against-the-grain.html",
       "external": true,
@@ -2090,7 +2376,7 @@
       "status": "published",
       "sort": 93,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "wear-and-tear",
@@ -2099,7 +2385,12 @@
       "description": "The geography of disability looks like it should be a map of where old people live. It isn",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Scatter plot",
+        "Correlation",
+        "Choropleth",
+        "Health / mortality data",
+        "Census / ACS"
       ],
       "href": "https://content.vishalsingh.org/articles/wear-and-tear.html",
       "external": true,
@@ -2110,7 +2401,7 @@
       "status": "published",
       "sort": 94,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "price-of-a-year",
@@ -2119,7 +2410,12 @@
       "description": "The housing market already prices life expectancy. In Cincinnati, ZIP codes one year of life apart differ by about $18,000 in median home value; in San Francisco, $141,000.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Regression",
+        "Health / mortality data",
+        "Scatter plot",
+        "Correlation",
+        "Distribution",
+        "Prices"
       ],
       "href": "https://content.vishalsingh.org/articles/price-of-a-year.html",
       "external": true,
@@ -2130,7 +2426,7 @@
       "status": "published",
       "sort": 95,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "deadliest-to-be-poor",
@@ -2139,7 +2435,12 @@
       "description": "Rich Americans live about as long everywhere. Poor Americans",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Inequality analysis",
+        "Health / mortality data",
+        "Choropleth",
+        "Scatter plot",
+        "Correlation",
+        "Administrative data"
       ],
       "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/articles/deadliest-to-be-poor.html",
@@ -2151,7 +2452,7 @@
       "status": "published",
       "sort": 96,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "where-the-stranded-live",
@@ -2160,7 +2461,12 @@
       "description": "Cooperative Election Study &middot; county returns &middot; 2020–2024",
       "topic": "Public Opinion",
       "tags": [
-        "data story"
+        "Choropleth",
+        "Survey analysis",
+        "Geospatial analysis",
+        "Election returns",
+        "Survey data",
+        "Trend analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/where-the-stranded-live.html",
       "external": true,
@@ -2171,7 +2477,7 @@
       "status": "published",
       "sort": 97,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:36:11"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "who-censors-whom",
@@ -2180,7 +2486,12 @@
       "description": "GSS tolerance data 1976-2024 show the partisan free-speech divide reorganized by target: the modern left will deny a platform to a racist while easing toward other speakers.",
       "topic": "Politics & Elections",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Trend analysis",
+        "Survey data",
+        "Small multiples",
+        "Time series",
+        "Inequality analysis"
       ],
       "href": "https://content.vishalsingh.org/articles/who-censors-whom.html",
       "external": true,
@@ -2191,7 +2502,7 @@
       "status": "published",
       "sort": 98,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "thriving_by_party",
@@ -2200,7 +2511,12 @@
       "description": "Ten years and 3.5 million interviews show partisans' life evaluations crossing twice — once when Barack Obama took office, and again, in the opposite direction, when Donald Trump did.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Trend analysis",
+        "Survey analysis",
+        "Index construction",
+        "Shock analysis",
+        "Time series",
+        "Survey data"
       ],
       "href": "https://content.vishalsingh.org/articles/thriving_by_party.html",
       "external": true,
@@ -2211,7 +2527,7 @@
       "status": "published",
       "sort": 99,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "drug-availability-teens",
@@ -2221,9 +2537,12 @@
       "domain": "Public Health",
       "topic": "Public Health",
       "tags": [
-        "Dashboard",
+        "Survey analysis",
+        "Trend analysis",
+        "Heatmap",
+        "Survey data",
         "Time series",
-        "Survey data"
+        "Shock analysis"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/drug-availability-teens/index.html",
@@ -2235,7 +2554,7 @@
       "status": "published",
       "sort": 100,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "party-beats-place-seven-to-one",
@@ -2245,9 +2564,12 @@
       "domain": "Public Opinion",
       "topic": "Public Opinion",
       "tags": [
-        "Dashboard",
+        "Survey analysis",
+        "Inequality analysis",
+        "Regression",
+        "Trend analysis",
         "Survey data",
-        "Group comparison"
+        "Election returns"
       ],
       "teaching": "ch03-exploratory-viz",
       "href": "https://content.vishalsingh.org/studios/party-beats-place-seven-to-one/index.html",
@@ -2259,7 +2581,7 @@
       "status": "published",
       "sort": 102,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 02:08:28"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "zip-psychographic-baseline",
@@ -2452,7 +2774,12 @@
       "description": "What 5,610 survey records reveal about how young Americans eat, drink, move, and grow — and the quiet inequalities hidden inside the averages.",
       "topic": "Public Health",
       "tags": [
-        "data story"
+        "Survey analysis",
+        "Inequality analysis",
+        "Choropleth",
+        "Small multiples",
+        "Survey data",
+        "Health / mortality data"
       ],
       "href": "https://content.vishalsingh.org/articles/childrens-health.html",
       "external": true,
@@ -2463,7 +2790,7 @@
       "status": "published",
       "sort": 112,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 11:36:11"
+      "updatedAt": "2026-06-23 20:18:02"
     },
     {
       "id": "doing-okay-shed",
@@ -2473,9 +2800,12 @@
       "domain": "Household Finance",
       "topic": "Finance",
       "tags": [
+        "Survey analysis",
+        "Inequality analysis",
         "Dashboard",
         "Time series",
-        "Survey data"
+        "Survey data",
+        "Trend analysis"
       ],
       "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/doing-okay-shed/index.html",
@@ -2487,7 +2817,7 @@
       "status": "published",
       "sort": 113,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-23 01:11:24"
+      "updatedAt": "2026-06-23 20:18:02"
     }
   ]
 }
