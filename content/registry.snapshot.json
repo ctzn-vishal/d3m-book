@@ -393,12 +393,13 @@
       "href": "https://content.vishalsingh.org/articles/alone-together.html",
       "external": true,
       "openInNewTab": true,
+      "thumbnail": "https://content.vishalsingh.org/articles/alone-together/_thumb.webp",
       "accent": "#46688f",
       "featured": false,
       "status": "published",
       "sort": 0,
       "createdAt": "2026-06-23 23:46:50",
-      "updatedAt": "2026-06-24 01:11:12"
+      "updatedAt": "2026-06-24 01:39:56"
     },
     {
       "id": "toll-booth",
@@ -417,12 +418,13 @@
       "href": "https://content.vishalsingh.org/articles/toll-booth.html",
       "external": true,
       "openInNewTab": true,
+      "thumbnail": "https://content.vishalsingh.org/articles/toll-booth/_thumb.webp",
       "accent": "#46688f",
       "featured": false,
       "status": "published",
       "sort": 0,
       "createdAt": "2026-06-23 23:46:50",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-06-24 01:39:56"
     },
     {
       "id": "american_evenings",
