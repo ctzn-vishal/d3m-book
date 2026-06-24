@@ -1,42 +1,47 @@
 /**
- * Canonical gallery topics. Keeping a controlled vocabulary (rather than
- * free-form per item) stops the topic filter from sprawling into near-duplicates
- * as the catalog grows. Studios map their `domain` → a topic via DOMAIN_TO_TOPIC;
- * anything you want to re-topic, override in content/gallery.json (`curate`).
+ * Canonical gallery topics — the SUBJECT facet (what a piece is about), distinct
+ * from tags (how it's done; see lib/tag-vocabulary.ts).
+ *
+ * A controlled list, but designed to GROW: as the catalog fills out in themed
+ * batches, a recurring sub-theme graduates to its own topic once it crosses
+ * ~8–10 items (Religion and Consumer & Household Finance are seeded ahead of
+ * their incoming batches). `pnpm curate-new` surfaces candidate new topics when
+ * an item fits none of these well, so the list tracks the corpus instead of
+ * sprawling into near-duplicates. Studios map their `domain` → a topic via
+ * DOMAIN_TO_TOPIC; per-item overrides live in Turso (the curated `topic` column).
  */
 export const TOPICS = [
-  'Politics & Elections',
-  'Public Opinion',
-  'Public Health',
-  'Finance',
-  'Pricing & CPG',
-  'Markets & Industry',
-  'Media & Advertising',
-  'Demographics',
-  'Mobility',
-  'Trade',
-  'AI & Data',
+  'Elections & Voting',
+  'Polarization & Public Opinion',
+  'Happiness & Well-Being',
+  'Health & Mortality',
+  'Religion & Belief',
+  'Demographics & Society',
+  'Consumer & Household Finance',
+  'Inequality & Mobility',
+  'Business & Markets',
+  'Methods, AI & Data',
 ] as const;
 
 export type Topic = (typeof TOPICS)[number];
 
 const DOMAIN_TO_TOPIC: Record<string, string> = {
-  'Global Media': 'Media & Advertising',
-  Advertising: 'Media & Advertising',
-  'Consumer Finance': 'Finance',
-  'Household Finance': 'Finance',
-  'Public Finance': 'Finance',
-  'Public Safety': 'Politics & Elections',
-  Politics: 'Politics & Elections',
-  Elections: 'Politics & Elections',
-  'Public Opinion': 'Public Opinion',
-  'Public Health': 'Public Health',
-  Demographics: 'Demographics',
-  Mobility: 'Mobility',
-  Marketplaces: 'Markets & Industry',
-  'CPG & Pricing': 'Pricing & CPG',
-  Airlines: 'Markets & Industry',
-  Restaurants: 'Markets & Industry',
+  Politics: 'Elections & Voting',
+  Elections: 'Elections & Voting',
+  'Public Opinion': 'Polarization & Public Opinion',
+  'Public Health': 'Health & Mortality',
+  'Public Safety': 'Health & Mortality',
+  Demographics: 'Demographics & Society',
+  'Consumer Finance': 'Consumer & Household Finance',
+  'Household Finance': 'Consumer & Household Finance',
+  'Public Finance': 'Inequality & Mobility',
+  'Global Media': 'Business & Markets',
+  Advertising: 'Business & Markets',
+  Marketplaces: 'Business & Markets',
+  'CPG & Pricing': 'Business & Markets',
+  Airlines: 'Business & Markets',
+  Restaurants: 'Business & Markets',
+  Mobility: 'Business & Markets',
 };
 
 export function domainToTopic(domain?: string): string {

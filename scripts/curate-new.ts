@@ -37,7 +37,7 @@ interface Row { id: string; type: string; title: string; topic: string | null; t
 interface Proposal {
   id: string; title: string; href: string;
   currentTopic: string | null; currentTags: string[];
-  topic: string; tags: string[]; confidence: string; rationale: string;
+  topic: string; tags: string[]; confidence: string; rationale: string; newTopicSuggestion?: string;
 }
 
 function parseTags(raw: unknown): string[] {
@@ -100,6 +100,7 @@ const CURATION_TOOL: Anthropic.Tool = {
       tags: { type: 'array', items: { type: 'string', enum: ALL_TAGS }, description: '3–6 tags from the vocabulary, most distinctive first, spanning method/chart/data. Do NOT restate the subject.' },
       confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
       rationale: { type: 'string', description: 'One sentence, grounded in the text.' },
+      newTopicSuggestion: { type: 'string', description: 'If NONE of the listed topics fit well, a short proposed NEW subject topic (1–3 words). Omit when an existing topic fits.' },
     },
     required: ['topic', 'tags', 'confidence', 'rationale'],
   },
@@ -118,6 +119,7 @@ async function propose(row: Row, text: string): Promise<Proposal> {
 ITEM TITLE: ${row.title}
 
 SUBJECT TOPICS — pick exactly ONE: ${TOPICS.join(', ')}
+(If none truly fit, still pick the closest AND set newTopicSuggestion to a short proposed new subject — the topic list is meant to grow.)
 
 TAG VOCABULARY — pick 3–6, exactly as written, spanning facets (do NOT restate the subject as a tag):
 ${TAG_LIST_TEXT}
@@ -129,10 +131,10 @@ Call propose_curation with the single best-fit topic and the tags.`,
     }],
   });
   const block = msg.content.find(b => b.type === 'tool_use');
-  const out = (block && block.type === 'tool_use' ? block.input : {}) as { topic?: string; tags?: string[]; confidence?: string; rationale?: string };
+  const out = (block && block.type === 'tool_use' ? block.input : {}) as { topic?: string; tags?: string[]; confidence?: string; rationale?: string; newTopicSuggestion?: string };
   const topic = out.topic && TOPIC_SET.has(out.topic) ? out.topic : 'Other';
   const tags = (out.tags ?? []).filter(t => TAG_SET.has(t)).slice(0, 6);
-  return { id: row.id, title: row.title, href: row.href, currentTopic: row.topic, currentTags: row.tags, topic, tags, confidence: out.confidence ?? 'low', rationale: out.rationale ?? '' };
+  return { id: row.id, title: row.title, href: row.href, currentTopic: row.topic, currentTags: row.tags, topic, tags, confidence: out.confidence ?? 'low', rationale: out.rationale ?? '', newTopicSuggestion: out.newTopicSuggestion };
 }
 
 async function applyProposals(db: Client): Promise<void> {
@@ -174,7 +176,7 @@ async function dryRun(db: Client): Promise<void> {
       const text = await fetchArticleText(row.href);
       const p = await propose(row, text);
       proposals.push(p);
-      console.log(`• ${p.id}\n    topic: ${p.currentTopic ?? '—'} → ${p.topic}\n    tags:  ${p.tags.join(' · ')}   [${p.confidence}]`);
+      console.log(`• ${p.id}\n    topic: ${p.currentTopic ?? '—'} → ${p.topic}${p.newTopicSuggestion ? `   (✦ suggests new topic: ${p.newTopicSuggestion})` : ''}\n    tags:  ${p.tags.join(' · ')}   [${p.confidence}]`);
     } catch (e) { console.warn(`  ! ${row.id}: ${(e as Error).message}`); }
   }
   await mkdir(fileURLToPath(new URL('./.curate/', import.meta.url)), { recursive: true });

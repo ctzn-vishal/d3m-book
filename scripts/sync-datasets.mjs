@@ -37,12 +37,12 @@ const ID_MAP = {
   'zillow/State_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month (11).csv': 'zillow-state-zhvi-panel',
 };
 const TOPIC_MAP = {
-  'county-demographics': 'Demographics', 'milk-field-experiment': 'Pricing & CPG',
-  'beer-acquisition-tweets': 'AI & Data', 'political-book-reviews': 'AI & Data', 'trump-tweet-device': 'AI & Data',
-  'bav-fastfood-brands': 'Markets & Industry', 'nyc-zip-health': 'Public Health', 'zip-psychographic-baseline': 'Demographics',
-  'renthop-listings': 'Markets & Industry', 'progresso-pricing-workbook': 'Pricing & CPG', 'progresso-soup-scanner': 'Pricing & CPG',
-  'us-president-state-1976-2024': 'Politics & Elections', 'president-state-by-candidate': 'Politics & Elections', 'us-election-state-county-1972-2016': 'Politics & Elections',
-  'colorado-legalization-housing': 'Finance', 'zillow-state-zhvi-panel': 'Finance',
+  'county-demographics': 'Demographics & Society', 'milk-field-experiment': 'Business & Markets',
+  'beer-acquisition-tweets': 'Methods, AI & Data', 'political-book-reviews': 'Methods, AI & Data', 'trump-tweet-device': 'Methods, AI & Data',
+  'bav-fastfood-brands': 'Business & Markets', 'nyc-zip-health': 'Health & Mortality', 'zip-psychographic-baseline': 'Demographics & Society',
+  'renthop-listings': 'Business & Markets', 'progresso-pricing-workbook': 'Business & Markets', 'progresso-soup-scanner': 'Business & Markets',
+  'us-president-state-1976-2024': 'Elections & Voting', 'president-state-by-candidate': 'Elections & Voting', 'us-election-state-county-1972-2016': 'Elections & Voting',
+  'colorado-legalization-housing': 'Consumer & Household Finance', 'zillow-state-zhvi-panel': 'Consumer & Household Finance',
 };
 const CT = { csv: 'text/csv', parquet: 'application/vnd.apache.parquet', xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' };
 
