@@ -36,6 +36,9 @@ dev-render.*.log
 # generated thumbnail scratch (scripts/gen-thumbnails.mjs)
 scripts/.thumbs/
 
+# curation proposals scratch (scripts/curate-new.ts)
+scripts/.curate/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
