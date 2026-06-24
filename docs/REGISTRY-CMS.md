@@ -19,7 +19,7 @@ Turso (lib/registry-db.ts) and falls back to the snapshot.
 | `featured` | `true` floats the item to the **top** of the gallery. (checkbox) |
 | `sort` | Lower number = earlier, *within* the same featured group. Use it to order the first few. |
 | `status` | `published` (visible), `hidden` (soft-removed), `draft`. (dropdown) |
-| `topic` | Secondary filter chip (e.g. "Public Health"). Keep to the existing topic vocabulary. |
+| `topic` | Secondary filter chip (e.g. "Health & Mortality"). Keep to the controlled list in `lib/taxonomy.ts` (10 subjects; `pnpm curate-new` proposes candidate new ones as the catalog grows). |
 | `teaching` | Paired book chapter/article slug — makes it show in that chapter's "Featured" rail. |
 | `title` / `description` / `tags` | Card text. `tags` is a JSON array string, e.g. `["data story","politics"]`. |
 | `href` / `thumbnail` / `accent` / `domain` | Usually leave as-is (set from the content source). |
@@ -95,7 +95,7 @@ In Studio, open the `gallery` table:
 
 ## One-time setup: the DB-scoped token
 
-The `TURSO_AUTH_TOKEN` in the repo `.env` is an **org/platform** token — the database
+The `TURSO_AUTH_TOKEN` in the repo-root `.env` is an **org/platform** token (scripts now read `book-template/.env.local`, which can hold a direct DB token) — the database
 rejects it (401). Drizzle Studio **and** the live site on Vercel need a **DB-scoped**
 token. Generate one:
 
