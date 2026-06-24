@@ -6,6 +6,7 @@
 // no HTML is rewritten here (chrome/OG injection is a separate pass).
 // Run: pnpm sync-studios   (node --env-file=../.env scripts/sync-studios.mjs)
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 import { readdir, readFile } from 'node:fs/promises';
 import { join, relative, sep, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -16,7 +17,7 @@ const client = new S3Client({
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const ROOT = fileURLToPath(new URL('../public/studios', import.meta.url));
 
 const CT = {

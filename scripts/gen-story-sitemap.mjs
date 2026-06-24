@@ -4,6 +4,7 @@
 // (run `pnpm sync-registry` first), so it stays in lockstep with the gallery.
 // Run: pnpm gen-story-sitemap
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -13,7 +14,7 @@ const client = new S3Client({
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
 
 // Every published item whose canonical URL is bucket-hosted HTML — Blog stories

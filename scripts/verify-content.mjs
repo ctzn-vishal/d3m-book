@@ -12,6 +12,7 @@
 // Exits 1 if any hard problem (1-3) is found, else 0 — safe for CI / pre-deploy.
 // Run: pnpm verify-content   (node --env-file=../.env scripts/verify-content.mjs)
 import { S3Client, ListObjectsV2Command, GetObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET, LEGACY_NONKEBAB_SLUGS } from './pipeline-config.mjs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -21,7 +22,7 @@ const client = new S3Client({
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const PREFIXES = ['articles', 'studios', 'apps'];
 const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
 
@@ -56,7 +57,7 @@ await pool(keys, 8, async (key) => {
   const base = key.split('/').pop();
   if (base === 'index.html' && key.startsWith('articles/')) reserved.push(key);
   const slug = key.startsWith('articles/') ? key.slice('articles/'.length, -5) : key.split('/')[1];
-  if (/_/.test(slug)) nonKebab.push(slug);
+  if (/_/.test(slug) && !LEGACY_NONKEBAB_SLUGS.has(slug)) nonKebab.push(slug);
 });
 
 // Dangling: snapshot rows whose bucket file is gone

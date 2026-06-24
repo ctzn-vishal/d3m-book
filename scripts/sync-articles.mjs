@@ -2,6 +2,7 @@
 // metadata, and write vishal:articles/manifest.json (the hub's article registry).
 // Run: node --env-file=../.env scripts/sync-articles.mjs   (creds via env; never printed)
 import { S3Client, ListObjectsV2Command, GetObjectCommand, CopyObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 
 const client = new S3Client({
   region: process.env.AWS_REGION || 'auto',
@@ -11,7 +12,7 @@ const client = new S3Client({
 });
 
 const SRC = 'ctzn-articles';
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const PREFIX = 'articles';
 
 const STUDIOS = new Set([

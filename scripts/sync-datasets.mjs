@@ -5,6 +5,7 @@
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 
 const client = new S3Client({
   region: process.env.AWS_REGION || 'auto',
@@ -12,7 +13,7 @@ const client = new S3Client({
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const PREFIX = 'datasets';
 const BUNDLE = new URL('../../case/_tigris_data_bundle/', import.meta.url);
 const bpath = rel => fileURLToPath(new URL(rel, BUNDLE));

@@ -5,6 +5,7 @@
 // is PRESERVED; only brand-new files get auto-extracted metadata.
 // Run: pnpm rebuild-manifest   (node --env-file=../.env scripts/rebuild-manifest.mjs)
 import { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET, LEGACY_NONKEBAB_SLUGS } from './pipeline-config.mjs';
 
 const client = new S3Client({
   region: process.env.AWS_REGION || 'auto',
@@ -12,7 +13,7 @@ const client = new S3Client({
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const PREFIX = 'articles';
 
 // Topic is no longer guessed from the slug (the old keyword heuristic only knew a
@@ -64,7 +65,7 @@ const reserved = allHtmlSlugs.filter(s => RESERVED.has(s.toLowerCase()));
 const htmlSlugs = allHtmlSlugs.filter(s => !RESERVED.has(s.toLowerCase()));
 if (reserved.length) console.warn(`  ! skipped reserved filename(s): ${reserved.map(s => `${PREFIX}/${s}.html`).join(', ')}`);
 // 2. Warn on non-kebab slugs (underscores / uppercase drift from the URL convention).
-const nonKebab = htmlSlugs.filter(s => /[^a-z0-9-]/.test(s));
+const nonKebab = htmlSlugs.filter(s => /[^a-z0-9-]/.test(s) && !LEGACY_NONKEBAB_SLUGS.has(s));
 if (nonKebab.length) console.warn(`  ! non-kebab slug(s) (rename to lowercase-kebab): ${nonKebab.join(', ')}`);
 
 let existing = {};
@@ -87,7 +88,7 @@ for (const slug of htmlSlugs) {
     if (dupOf && dupOf !== slug) console.warn(`  ! "${slug}" has the same <title> as "${dupOf}" — possible mis-named re-upload?`);
     if (norm) titleToId.set(norm, slug); // so a later new file with the same title is flagged against this one too
     needTopic.push(slug);
-    items.push({ id: slug, type: 'article', title: meta.title, description: meta.description, tags: ['data story'], file: `${PREFIX}/${slug}.html`, thumb, accent: '#46688f', featured: false, status: 'published' });
+    items.push({ id: slug, type: 'article', title: meta.title, description: meta.description, tags: [], file: `${PREFIX}/${slug}.html`, thumb, accent: '#46688f', featured: false, status: 'published' });
   }
 }
 const removed = Object.keys(existing).filter(id => !htmlSlugs.includes(id));

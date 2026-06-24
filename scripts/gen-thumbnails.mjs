@@ -12,6 +12,7 @@
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -86,7 +87,7 @@ for (const item of targets) {
       const body = format === 'webp'
         ? await sharp(png).webp({ quality: 82 }).toBuffer()
         : await sharp(png).jpeg({ quality: 86 }).toBuffer();
-      await s3.send(new PutObjectCommand({ Bucket: 'vishal', Key: key, Body: body, ContentType: `image/${format}`, CacheControl: 'public, max-age=3600' }));
+      await s3.send(new PutObjectCommand({ Bucket: CONTENT_BUCKET, Key: key, Body: body, ContentType: `image/${format}`, CacheControl: 'public, max-age=3600' }));
       results[results.length - 1].uploaded = key;
     }
   } catch (e) {

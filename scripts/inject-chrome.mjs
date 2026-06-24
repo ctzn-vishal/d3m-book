@@ -11,6 +11,7 @@
 // can add a newly-available concern (e.g. OG) to a file that already has the pill.
 // Run: pnpm inject-chrome   (node --env-file=../.env scripts/inject-chrome.mjs)
 import { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -20,7 +21,7 @@ const client = new S3Client({
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
-const DST = 'vishal';
+const DST = CONTENT_BUCKET;
 const PREFIXES = ['articles', 'studios', 'apps'];
 const HOME = 'https://vishalsingh.org/';
 const MARKER = 'data-vs-chrome';   // home pill

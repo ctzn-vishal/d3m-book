@@ -10,6 +10,7 @@
 // Run: pnpm sync-registry   (tsx, env from ../.env)
 import { createClient } from '@libsql/client';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { CONTENT_BUCKET } from './pipeline-config.mjs';
 import { writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { studios } from '../lib/studios';
@@ -55,7 +56,7 @@ const s3 = new S3Client({
 });
 async function bucketJson<T>(key: string): Promise<T | null> {
   try {
-    const r = await s3.send(new GetObjectCommand({ Bucket: 'vishal', Key: key }));
+    const r = await s3.send(new GetObjectCommand({ Bucket: CONTENT_BUCKET, Key: key }));
     return JSON.parse(await r.Body!.transformToString()) as T;
   } catch (e) {
     const err = e as any;
@@ -128,7 +129,7 @@ async function fromArticles(): Promise<RegistryItem[]> {
     title: a.title,
     description: a.description ?? '',
     topic: a.topic,
-    tags: a.tags?.length ? a.tags : ['data story'],
+    tags: a.tags ?? [],
     href: `${CONTENT}/${a.file}`,
     external: true,
     openInNewTab: true,
