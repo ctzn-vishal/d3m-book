@@ -23,7 +23,8 @@
     "gen-thumbnails": "node --env-file=.env.local scripts/gen-thumbnails.mjs",
     "verify-content": "node --env-file=.env.local scripts/verify-content.mjs",
     "curate-new": "node --env-file=.env.local --import tsx scripts/curate-new.ts",
-    "publish-content": "pnpm rebuild-manifest && pnpm sync-registry && pnpm inject-chrome && pnpm gen-story-sitemap && pnpm verify-content"
+    "publish-content": "pnpm rebuild-manifest && pnpm sync-registry && pnpm inject-chrome && pnpm gen-story-sitemap && pnpm verify-content",
+    "ship": "pnpm publish-content && pnpm curate-new"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.957.0",

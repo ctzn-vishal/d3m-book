@@ -46,7 +46,9 @@ vishal (bucket, public, served at content.vishalsingh.org)
 
 Slugs are lowercase-kebab (`loneliness-geography`). Upload with the Tigris CLI
 (`tigris`/`t3`), the Tigris dashboard, or any S3 tool pointed at the `vishal` bucket
-(the repo scripts use the S3 creds in the repo-root `.env`).
+(the repo scripts read creds from `book-template/.env.local`; the bucket name is
+centralized in `scripts/pipeline-config.mjs`). Bulk drops of many files at once are
+fine — the pipeline ingests them all in one pass.
 
 ---
 
@@ -109,17 +111,28 @@ Notes:
 
 ## 4. Publish pipeline
 
-All commands run from `book-template/`. They use the S3 + Turso creds in the
-repo-root `.env` (and `.env.local` for the DB token — see [REGISTRY-CMS.md](./REGISTRY-CMS.md)).
+All commands run from `book-template/` and read creds from **`book-template/.env.local`**
+(Tigris S3 + Turso, plus `ANTHROPIC_API_KEY` for curation — see [REGISTRY-CMS.md](./REGISTRY-CMS.md)).
 
-> **One command:** `pnpm publish-content` runs the whole chain in the correct order
-> and aborts on the first failure (`rebuild-manifest → sync-registry → inject-chrome
-> → gen-story-sitemap → verify-content`), so no step gets skipped. Use it after any
-> upload; the per-step commands below are for when you need to run one in isolation.
+> **One command — `pnpm ship`:** runs the whole ingest chain and then proposes
+> curation. It is `publish-content` (`rebuild-manifest → sync-registry → inject-chrome
+> → gen-story-sitemap → verify-content`, aborting on the first failure) followed by
+> `pnpm curate-new` (DRY). Then you review, apply, and commit — the two human gates:
 >
-> New articles are created with **no topic** (the old slug-keyword guesser was
-> removed — it mis-filed pieces). `rebuild-manifest` lists the new slugs that need a
-> topic; set it once in **`/admin`** (it's a curated column, so it sticks).
+> ```
+> pnpm ship                                         # ingest a (bulk) drop + propose topic/tags
+> #   → review scripts/.curate/proposals.json
+> APPLY=1 pnpm curate-new && pnpm sync-registry      # write the approved curation
+> git add content/registry.snapshot.json && git commit -m "…" && git push   # deploy
+> ```
+>
+> **Curation is automated.** New articles come in with **empty tags and no topic**;
+> `pnpm curate-new` reads each one and proposes a **topic** (from the 10-topic subject
+> list in `lib/taxonomy.ts`) and **tags** (from the 38-tag method/chart/data vocabulary
+> in `lib/tag-vocabulary.ts`), constrained to those controlled lists, and flags a
+> candidate **new** topic when none fit (the topic list is meant to grow). Review the
+> `proposals.json`, then `APPLY=1`. You can still hand-edit any row in **`/admin`**.
+> Defaults to the cheap `claude-haiku-4-5` model; override with `CURATE_MODEL`.
 
 ### A new data story (Blog)
 1. Upload `articles/<slug>.html` (+ `articles/<slug>/_thumb.webp`) to the bucket.
@@ -129,8 +142,9 @@ repo-root `.env` (and `.env.local` for the DB token — see [REGISTRY-CMS.md](./
    and rewrites `content/registry.snapshot.json`.
 4. `pnpm inject-chrome` — adds the nav pill + OG/canonical to the new HTML.
 5. `pnpm gen-story-sitemap` — refreshes `content.vishalsingh.org/sitemap.xml`.
-6. (optional) Curate in Turso — set `featured`, `topic`, `teaching` (paired chapter)
-   — see [REGISTRY-CMS.md](./REGISTRY-CMS.md).
+6. `pnpm curate-new` — proposes a **topic + tags** from the controlled vocabularies;
+   review `scripts/.curate/proposals.json`, then `APPLY=1 pnpm curate-new && pnpm
+   sync-registry`. Set `featured` / `teaching` (paired chapter) in `/admin`.
 7. Commit the updated `content/registry.snapshot.json` and push to `main` (deploys).
    If Vercel has a DB-scoped Turso token, the new row also appears via ISR (≤10 min)
    without a redeploy.
@@ -158,6 +172,6 @@ repo-root `.env` (and `.env.local` for the DB token — see [REGISTRY-CMS.md](./
 - [ ] No hard-coded site nav / no hand-written `og:`/`canonical` (inject adds them).
 - [ ] Data-backed story → `Dataset` JSON-LD added (`name` + 50–5000-char `description`).
 - [ ] Thumbnail uploaded (`_thumb.webp` for stories, `preview.*` for studios).
-- [ ] Ran: rebuild-manifest *(stories)* / edited `studios.ts` *(studios)* → `sync-registry`
-      → `inject-chrome` → `gen-story-sitemap`.
+- [ ] Ran `pnpm ship` (or the per-step chain; studios also need a `lib/studios.ts` entry).
+- [ ] Reviewed `scripts/.curate/proposals.json` → `APPLY=1 pnpm curate-new` → `pnpm sync-registry`.
 - [ ] Committed the updated `content/registry.snapshot.json` and deployed.

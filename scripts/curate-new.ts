@@ -24,7 +24,7 @@ import { TAG_VOCABULARY } from '../lib/tag-vocabulary';
 const APPLY = process.env.APPLY === '1';
 const ONLY = (process.env.ONLY || '').split(',').map(s => s.trim()).filter(Boolean);
 const LIMIT = Number(process.env.LIMIT || '0') || Infinity;
-const MODEL = process.env.CURATE_MODEL || 'claude-sonnet-4-6';
+const MODEL = process.env.CURATE_MODEL || 'claude-haiku-4-5-20251001';
 const PROPOSALS = fileURLToPath(new URL('./.curate/proposals.json', import.meta.url));
 
 const ALL_TAGS = TAG_VOCABULARY.map(t => t.tag);
