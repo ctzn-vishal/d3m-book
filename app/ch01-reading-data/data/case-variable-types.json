@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "title": "Variable type examples from real Part I case data"
+  },
+  "variables": [
+    {
+      "variable": "Store_ID",
+      "case": "Soup",
+      "example": "200485",
+      "type": "Identifier / key",
+      "sensible_use": "join, count distinct, group by store",
+      "bad_use": "average store IDs"
+    },
+    {
+      "variable": "Price.Progresso",
+      "case": "Soup",
+      "example": "$1.64",
+      "type": "Numeric",
+      "sensible_use": "mean, median, trend, log price",
+      "bad_use": "compare without units or promotion context"
+    },
+    {
+      "variable": "Date",
+      "case": "Soup",
+      "example": "2001-06-01",
+      "type": "Date/time",
+      "sensible_use": "extract month, define season, lag, trend",
+      "bad_use": "sort as plain text"
+    },
+    {
+      "variable": "RegionName",
+      "case": "Zillow",
+      "example": "California",
+      "type": "Categorical unit",
+      "sensible_use": "group, facet, filter, join to state metadata",
+      "bad_use": "treat state names as a numeric axis"
+    },
+    {
+      "variable": "2026-04-30",
+      "case": "Zillow",
+      "example": "$350,891",
+      "type": "Wide time-value column",
+      "sensible_use": "reshape into a month column and a value column",
+      "bad_use": "add a new schema column every month forever"
+    },
+    {
+      "variable": "Per_college",
+      "case": "County",
+      "example": "17.9%",
+      "type": "Rate / proportion",
+      "sensible_use": "compare shares, scatter, standardize",
+      "bad_use": "sum percentages across counties"
+    },
+    {
+      "variable": "FIPS1",
+      "case": "County",
+      "example": "01001",
+      "type": "Geographic identifier",
+      "sensible_use": "join to maps, group by state/county",
+      "bad_use": "drop leading zeroes or average codes"
+    }
+  ]
+}

@@ -26,9 +26,7 @@ export const book: Book = {
           number: 1,
           title: 'Reading Data as Business Evidence',
           articles: [
-            { slug: 'ch01-dataset', number: '1.1', title: 'What Is a Dataset?', status: 'published' },
-            { slug: 'ch01-data-structures', number: '1.2', title: 'Data Structures', status: 'published' },
-            { slug: 'ch01-variable-types', number: '1.3', title: 'Variable Types and Measurement', status: 'published' },
+            { slug: 'ch01-reading-data', number: '1.1', title: 'Grain, Structure, and Measurement', status: 'published' },
           ],
         },
         {
@@ -308,4 +306,4 @@ export function chapterHref(chapter: Chapter): string {
 export function getAllChapterNumbers(): number[] {
   return allChapters.map(c => c.chapter.number);
 }
-                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      

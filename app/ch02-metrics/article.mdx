@@ -16,6 +16,8 @@ The CFO at Bean & Basket asks for "customer lifetime value" by region. Three ana
 
 ## The executive question: *which business metric are we actually measuring?*
 
+### Transformations and metrics
+
 There are two operations that turn raw transaction columns into the numbers managers actually look at. The first is the **transformation**: a mechanical recipe that converts a raw value into a more interpretable one. Logs flatten skew, ratios normalize for scale, lags carry a previous period's behavior into the current row, rolling averages smooth daily noise. The second is the **metric**: a business definition built out of transformations and aggregations. Churn rate, conversion rate, average order value, gross margin, market share — none of these is a column anyone collects. They are all derived, and the derivation is full of decisions.
 
 Both operations look bureaucratic. Both quietly shape every report downstream. The first time a team agrees, in writing, on what "active customer" means, the next quarter's churn number stops swinging between meetings. The first time someone writes `log(revenue)` instead of `revenue` in a regression, the elasticity coefficient becomes interpretable in percentage terms. These are not statistical gestures. They are managerial judgments. Figure 1 is the catalog of transformations every Bean & Basket analyst should be able to apply on demand; Figure 2 is the catalog of metrics every Bean & Basket dashboard should report.
@@ -30,7 +32,9 @@ Both operations look bureaucratic. Both quietly shape every report downstream. T
   rows={transforms}
 />
 
-Figure 1 names eight transformations, but two deserve a sentence of additional attention because they appear in almost every chapter that follows. The **log** transform is the one tool that converts a *multiplicative* business statement into an *additive* statistical one. When a manager says "this region is twice as big as that one," the log of the two revenues differs by `log(2) ≈ 0.69`. That is why log-log regressions appear in pricing (Chapter 16): the coefficient is the percentage change in quantity for a one-percent change in price — elasticity reads directly off the model. The **rolling average** is the small workhorse of executive dashboards. Daily sales are too noisy to interpret; the seven-day rolling mean is the same series with the weekday-cycle smoothed out, and the trend becomes visible.
+### Two transformations worth a closer look
+
+Figure 1 names eight transformations, but two deserve a sentence of additional attention because they appear in almost every chapter that follows. The **log** transform is the one tool that converts a *multiplicative* business statement into an *additive* statistical one. When a manager says "this region is twice as big as that one," the log of the two revenues differs by `log(2) ≈ 0.69`. That is why log-log regressions appear in pricing (Chapter 8): the coefficient is the percentage change in quantity for a one-percent change in price — elasticity reads directly off the model. The **rolling average** is the small workhorse of executive dashboards. Daily sales are too noisy to interpret; the seven-day rolling mean is the same series with the weekday-cycle smoothed out, and the trend becomes visible.
 
 The transformations in Figure 1 are inputs to the metrics in Figure 2. A churn *rate* is the boolean churn flag aggregated over a customer-month panel. Revenue per customer is revenue (a sum) divided by active customers (a count of customers passing some flag). Lifetime value is AOV times frequency times retention, three numbers each of which is a transformation of raw orders.
 
@@ -54,10 +58,12 @@ The most insidious error is to call a transformation "cleaning" and stop thinkin
 </Pitfall>
 
 <Pitfall title="Double-counting in a metric">
-Reporting "total revenue + total tax + total tip" as one revenue figure inflates the number; reporting "completed orders + abandoned carts" as conversions silently rewrites the metric. The defense is the same as for grain (Chapter 1) and joins (Chapter 3): **before computing, write down what one unit of the metric represents.**
+Reporting "total revenue + total tax + total tip" as one revenue figure inflates the number; reporting "completed orders + abandoned carts" as conversions silently rewrites the metric. The defense is the same as for grain (Chapter 1) and joins (Chapter 2): **before computing, write down what one unit of the metric represents.**
 </Pitfall>
 
-There is a more general failure mode in this chapter worth flagging once. **A metric is a contract.** When a CMO sees "conversion rate: 4.2%" on a slide, she is reading a number that depends on a chain of definitional decisions — what is a visitor, what is a conversion, what is the window, how are bots excluded, are returning visitors deduplicated. Each link in the chain was made by someone, at some point, often without writing it down. The next time the metric is recomputed — by a different analyst, on a different data warehouse, with a slightly different filter — the answer will be different, and the disagreement will be invisible. Treating metric definitions as *governance artifacts*, not as engineering details, is the only way a multi-year dashboard remains comparable to itself.
+### A metric is a contract
+
+There is a more general failure mode in this chapter worth flagging once. **A metric is a contract.** When a CMO sees "conversion rate: 4.2%" on a slide, she is reading a number that depends on a chain of definitional decisions — what is a visitor, what is a conversion, what is the window, how are bots excluded, are returning visitors deduplicated. Each link in the chain was made by someone, at some point, often without writing it down. The next time the metric is recomputed — by a different analyst, on a different data warehouse, with a slightly different filter — the answer will be different, and the disagreement will be invisible. Treating metric definitions as *governance artifacts*, not as engineering details, is the only way a multi-year dashboard remains comparable to itself. This is exactly the role of the **metric card** in the artifact family from Part 0: a one-page, versioned definition that travels with the number wherever it is reported, so a CMO and a data engineer reading the same word mean the same thing.
 
 <Takeaway label="What to ship">
 

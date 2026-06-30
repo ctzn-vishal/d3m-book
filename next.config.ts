@@ -35,9 +35,15 @@ const nextConfig: NextConfig = {
       { source: '/ch00-data-storage', destination: '/ch00-data-system', permanent: true },
       { source: '/ch00-data-uses', destination: '/ch00-data-system', permanent: true },
       { source: '/ch00-decision-loop', destination: '/ch00-data-system', permanent: true },
-      { source: '/ch01-what-is-a-dataset', destination: '/ch01-dataset', permanent: true },
-      { source: '/ch02-data-structures', destination: '/ch01-data-structures', permanent: true },
-      { source: '/ch03-variable-types', destination: '/ch01-variable-types', permanent: true },
+      // Chapter 1 sections (What Is a Dataset? / Data Structures / Variable Types
+      // and Measurement) were merged into one chapter, /ch01-reading-data. The
+      // pre-consolidation slugs and the three per-section slugs all 301 to it.
+      { source: '/ch01-what-is-a-dataset', destination: '/ch01-reading-data', permanent: true },
+      { source: '/ch02-data-structures', destination: '/ch01-reading-data', permanent: true },
+      { source: '/ch03-variable-types', destination: '/ch01-reading-data', permanent: true },
+      { source: '/ch01-dataset', destination: '/ch01-reading-data', permanent: true },
+      { source: '/ch01-data-structures', destination: '/ch01-reading-data', permanent: true },
+      { source: '/ch01-variable-types', destination: '/ch01-reading-data', permanent: true },
       { source: '/ch04-sql-like-excel', destination: '/ch02-sql', permanent: true },
       { source: '/ch05-joining-data', destination: '/ch02-joins', permanent: true },
       { source: '/ch06-reshaping-data', destination: '/ch02-reshaping', permanent: true },
@@ -144,15 +150,4 @@ const nextConfig: NextConfig = {
       // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
       // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
       // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
-      // { source: '/apps/ai-models/:path*',   destination: 'https://v0-interactive-table-lac.vercel.app/apps/ai-models/:path*' },
-      // { source: '/apps/scrc/:path*',        destination: 'https://scrc-data.vercel.app/apps/scrc/:path*' },
-    ];
-  },
-};
-
-// remark-gfm enables GitHub-flavored markdown extensions: pipe tables,
-// task lists, strikethrough, autolinks. Required for the comparison tables
-// across Part 3.
-//
-// rehype-slug stamps a stable `id` on every heading so the in-page
-// "On this page" rail (components/Book/OnThisPage.tsx) can scroll-spy
+      // { source: '/apps/ai-models/:path*',  

@@ -433,12 +433,8 @@ export const articleBlurbs: Record<string, string> = {
     "Lays out the book's wager, audience, reading paths, the Bean & Basket through-line, and the standalone cases that ground later parts.",
   'ch00-data-system':
     'The whole system map in one chapter: where business data comes from, how it is stored, how it is used, and how source, storage, evidence, action, and feedback close into one data-to-decision loop.',
-  'ch01-dataset':
-    "Defines a dataset's grain — what one row means — and shows how transaction- vs. store-week views answer different questions and break joins.",
-  'ch01-data-structures':
-    'Distinguishes cross-section, time-series, panel, geo-spatial, and network shapes, proving the panel is the only view that reveals where growth comes from.',
-  'ch01-variable-types':
-    'Separates storage type from measurement type across seven variable kinds, showing why averaging IDs, ZIPs, or 1-to-5 ratings misleads.',
+  'ch01-reading-data':
+    "Reads a business table on three levels — grain (what one row means), structure (cross-section, time-series, panel, geo, network), and variable type (what each column measures) — so the panel reveals where growth comes from and IDs, ZIPs, and ratings never get averaged.",
   'ch02-sql':
     'Maps nine everyday Excel actions to identical SQL, dplyr, and pandas code, then runs one revenue-by-city question four ways.',
   'ch02-joins':
@@ -596,4 +592,4 @@ export function getChapterContent(num: number): ChapterContent | undefined {
 export function getArticleBlurb(slug: string): string | undefined {
   return articleBlurbs[slug];
 }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       

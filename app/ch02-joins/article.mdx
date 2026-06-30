@@ -55,7 +55,11 @@ The regional manager at Bean & Basket needs to know how the new loyalty program 
 
 A raw transaction is six numbers and an ID — a date, a customer reference, a store, an amount. By itself it tells you almost nothing about the business. The loyalty tier of the buyer, the margin of the product, the region of the store, the campaign exposure of the customer — none of that lives in the transactions table. Each lives in its own master table, and the operation that connects them is the **join**. A join is how business context enters a dataset. It is also, by the same mechanism, how duplicate explosions and missing matches enter the dashboard.
 
+### Four kinds of join
+
 Four join flavors cover almost every business case. A **left join** keeps every row of the left table and attaches matching rows from the right, leaving blanks where nothing matched — this is the default for "enrich my transactions with whatever customer info we have." An **inner join** keeps only rows where both sides matched — useful when missing matches mean the row should be excluded entirely. An **anti-join** keeps only rows where *no* match was found — the right way to find data quality problems ("which transactions came from customer IDs we have never heard of?"). A **full outer join** keeps everything from both sides, matched or not. The four are not interchangeable. Choosing the wrong one is the most common silent error in business analytics.
+
+### Joins change the grain
 
 The deeper rule, the one we already wrote down in Chapter 1, is about **grain**. A join multiplies rows. If the left table has six rows and the right table has, for each left-side key, exactly one matching row, the result has six rows. If the right table has, on average, three rows per left-side key, the result has eighteen. The join engine does this without complaint. It is the analyst's responsibility to know what the grain of each input is, and what the grain of the output will be. Figure 1 makes the three most common outcomes concrete on the same Bean & Basket data.
 
@@ -163,6 +167,8 @@ The deeper rule, the one we already wrote down in Chapter 1, is about **grain**.
   </TabSet>
 </Figure>
 
+### Reading the three outcomes
+
 Read Figure 1 from left to right. The first tab is the join most managers actually want: every transaction kept, customer attributes attached when available, blanks made visible when not. The second tab is the join most managers should run *next*: the anti-join is the cheapest data-quality check in analytics. A single row in this table is one entry on the data-quality triage list — a transaction whose customer ID is unknown to the master file, which usually means a deleted account, a typo, or a sync gap with the loyalty system. The third tab is the join most managers should *never* run unaggregated. The inflated revenue total is not a calculation error; the SQL is correct. The error is conceptual: the joined table no longer has one row per transaction, and any column summed across that table is being double-counted by however many campaign rows attach to each customer.
 
 The fix on the third tab is to **aggregate before joining**. Roll the campaigns table down to one row per customer first — for example, a single flag `was_exposed_to_any_campaign` — and then join. The resulting table has six rows, the revenue total is right, and the campaign-exposure information is preserved. The general rule is to match grains before joining: if you want a result with one row per transaction, every table you join in must contribute exactly one row per transaction's join key.
@@ -179,7 +185,7 @@ A `LEFT JOIN` keeps unmatched rows with blanks; an `INNER JOIN` drops them silen
 Joining a customer-level table to transactions on `customer_id` correctly duplicates customer attributes across that customer's transactions. But joining a store-week table on `store_id` *alone* — without `week` — duplicates every store-week's attributes across every transaction at that store, which is almost never intended. **Match on the full key the grain requires, not just the part that happens to align.**
 </Pitfall>
 
-A subtler version, worth flagging once: **joining future information into a historical row**. If the customer master file has been updated to reflect today's loyalty tier, and you join it to a transaction from six months ago, the resulting row attributes the *current* loyalty tier to a *past* purchase. For descriptive reports this is usually harmless. For causal analysis — Chapter 12 onward — it is fatal: the model will learn that "Gold tier" predicts purchase behavior, but the Gold tier was assigned *because* of subsequent purchase behavior. We will come back to this trap several times; the name for it is **leakage**, and the defense is to use the customer attributes *as they were at the time of the transaction*, not as they are now.
+A subtler version, worth flagging once: **joining future information into a historical row**. If the customer master file has been updated to reflect today's loyalty tier, and you join it to a transaction from six months ago, the resulting row attributes the *current* loyalty tier to a *past* purchase. For descriptive reports this is usually harmless. For causal analysis — Chapter 5 onward — it is fatal: the model will learn that "Gold tier" predicts purchase behavior, but the Gold tier was assigned *because* of subsequent purchase behavior. We will come back to this trap several times; the name for it is **leakage**, and the defense is to use the customer attributes *as they were at the time of the transaction*, not as they are now.
 
 <Takeaway label="The call">
 

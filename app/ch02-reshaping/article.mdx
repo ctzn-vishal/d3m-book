@@ -1,5 +1,4 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
@@ -17,6 +16,8 @@ The regional manager has a single spreadsheet on her desk. Across the top, three
 </DropCap>
 
 ## The executive question: *why does the same data need different shapes for spreadsheets, dashboards, and models?*
+
+### Two shapes: wide and long
 
 The same numbers live in two canonical shapes. **Wide** format puts one row per *unit* and spreads time, category, or measurement across the columns. **Long** format puts one row per *unit-period* (or unit-category, or unit-measurement) and uses a small fixed set of columns. Either shape can describe the same business reality. Neither is more correct than the other. They are useful for different things.
 
@@ -89,6 +90,8 @@ Long is the natural shape for almost everything that is not a human reading a sp
 
 Figure 1 makes the trade-off concrete. The wide tab is easy for the eye. The long tab is easy for the machine — by which we mean the chart engine, the statistical model, the dashboard filter, the join to another time-indexed table. In R, the verbs that move between these shapes are `pivot_wider()` and `pivot_longer()`; in Python's pandas they are `.pivot()` and `.melt()`; in SQL they are sometimes `PIVOT` / `UNPIVOT` and more often a `UNION ALL` of one query per column. The mechanics differ; the conceptual move is the same: take information that is encoded as column position and turn it into information encoded as cell value, or vice versa.
 
+### Store it long, display it wide
+
 The rule of thumb is to **store data in long form, display it in wide form**. The long form is the database-friendly shape: it is extensible (adding a period is a row, not a schema change), it is the natural input to plotting and modeling, and it is the format that joins cleanly to other long-form tables. The wide form is the presentation-friendly shape: at the very end of an analysis, when a manager wants to see a grid on a slide, you pivot the long form wider. The work of analysis happens in long; the work of communication happens in wide.
 
 <Pitfall title="Wide storage is a schema trap">
@@ -100,43 +103,6 @@ If Store C did not exist in January, its wide row carries a blank or zero for `s
 </Pitfall>
 
 The opposite mistake — long when wide is wanted — is much rarer and almost always cheap to fix. A manager who wants to see the three months side by side, with stores down the side, is asking for a wide presentation table. Pivoting nine long rows back to three wide rows is one verb in any modern data tool. The cost of starting from long and pivoting wider when needed is essentially zero. The cost of starting from wide and pivoting longer every time something downstream needs it is paid every analysis.
-
-<QuizBlock
-  title="Concept check"
-  intro="These three questions span a one-to-many join that silently double-counts revenue, the choice between long and wide shape for a given downstream tool, and the discipline of matching grains before you join."
-  questions={[
-    {
-      prompt: <>An analyst at Bean and Basket joins the six-row <code>transactions</code> table to a <code>campaigns</code> table to study whether campaign-exposed customers spend more. One loyal customer was sent three separate campaigns this month, so each of her transactions matches all three campaign rows, and the joined table now has more rows than the original six. She then computes total revenue as the SUM of the <code>amount</code> column on the joined table and reports it up the chain. What has actually happened to that revenue figure?</>,
-      options: [
-        { label: <>Nothing is wrong with the total; the join only added campaign columns, and summing a numeric column is unaffected by how many descriptive columns sit beside it.</> },
-        { label: <>The total is inflated, because the join changed the grain from one-row-per-transaction to one-row-per-transaction-campaign, so each repeated transaction's amount is summed once per campaign attached to that customer.</> },
-        { label: <>The total is understated, because an inner join drops the transaction whose customer ID is missing from the master file, so its amount never enters the sum.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The SQL ran without error, but the joined table no longer has one row per transaction. The loyal customer's purchases each appear on three rows — one per campaign — so their amounts are counted three times in the SUM, pushing the reported total above true revenue. The first option is the trap of assuming a numeric SUM is immune to row duplication, but SUM aggregates rows and the join created extra rows. The third option points at a real but separate issue (an inner join does drop an unmatched transaction); that would nudge the total down by one small purchase, not explain the inflation. The defense is to aggregate the campaigns table to one row per customer before joining, or to sum from the original transaction grain.</>,
-    },
-    {
-      prompt: <>A regional director hands you last quarter's revenue file as a grid: one row per store, with separate columns <code>sales_2024_01</code>, <code>sales_2024_02</code>, and <code>sales_2024_03</code>. She wants a single line chart with one trend line per store, and she warns you that April's numbers land next week. Before plotting, what should you do, and why?</>,
-      options: [
-        { label: <>Reshape the grid to long form (one row per store-month, with month and revenue as values) before plotting, because a line chart needs month to be a column of values to map to the x-axis, and a long table also absorbs April as new rows rather than forcing a schema change.</> },
-        { label: <>Plot directly from the wide grid, since it already holds all nine numbers, and pivot to long only afterward if the chart looks wrong, because reshaping first risks adding or dropping data.</> },
-        { label: <>Keep the data wide and add the April column when it arrives, because wide is the database-friendly shape that downstream charts, filters, and joins all prefer.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>A chart engine needs the month to be a value it can map to an axis, not a column header, so the three lines are impossible to draw until the grid is unpivoted to one row per store-month. Reshaping is a rearrangement, not a transformation, so the worry in the second option that it adds or drops data is unfounded, and the wide grid cannot feed the chart as-is. The third option inverts the rule: long is the database-friendly, extensible shape that absorbs April as rows and joins cleanly, while wide is the presentation shape you pivot to only at the end. Long form here also handles a store that did not exist in January as a missing row, drawn as a gap, rather than a zero that makes the store look like it earned nothing.</>,
-    },
-    {
-      prompt: <>You need one row per transaction, enriched with the store's promotional flag for the week of each sale. The store attributes live in a <code>store_week</code> table keyed by store and week. A teammate proposes joining it to transactions on <code>store_id</code> alone, reasoning that store is the natural identifier and it keeps the join simple. What is the risk of joining on store only?</>,
-      options: [
-        { label: <>No real risk; joining on <code>store_id</code> correctly attaches each store's attributes to its transactions, the way a customer-level table attaches cleanly to transactions on customer ID.</> },
-        { label: <>The join will silently drop any transaction whose store had no promotion that week, understating the transaction count.</> },
-        { label: <>Every one of that store's weekly rows will match each transaction, so a single transaction is duplicated across all the store's weeks, inflating the row count and double-counting any summed metric.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>The store_week table has many rows per store (one per week), so matching on store_id alone makes every weekly row attach to every transaction at that store. One transaction explodes into as many rows as the store has weeks, and any later SUM is inflated. The fix is to join on the full key the grain requires, store and week together, so exactly one store-week row matches each transaction. The first option draws a false analogy: a customer-level table has one row per customer and so attaches cleanly, but store_week has multiple rows per store, which is the whole problem. The second option describes a different failure mode (an inner join dropping unmatched rows); the issue here is too many matches, not too few.</>,
-    },
-  ]}
-/>
 
 <Takeaway label="Bottom line for the business">
 

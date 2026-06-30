@@ -1,5 +1,4 @@
 import { DropCap } from '@/components/Book/DropCap';
-import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
@@ -17,6 +16,8 @@ A junior analyst at Bean & Basket exports last week's transactions to investigat
 </DropCap>
 
 ## The executive question: *is this a data problem, a business process problem, or both?*
+
+### Three kinds of quality problem
 
 Most data quality problems fall into one of three categories. Some are **definitional** — the column means something different than the analyst assumed, or the same field is encoded inconsistently across systems. Some are **operational** — the upstream process produces wrong values, missing values, or duplicates; the data faithfully records what the process did. Some are **interpretive** — the row is technically correct but represents a business event (a return, a corporate order, a system test) that doesn't belong in the next sum without a flag. The first kind is fixed in code. The second is fixed in process. The third is fixed in the metric definition. Conflating them is how analytics teams end up writing patches that mask the real problem.
 
@@ -67,6 +68,8 @@ Figure 1 is a small sample of what real Bean & Basket transaction data looks lik
   </div>
 </Figure>
 
+### Triage, don't bulk-clean
+
 Look at row T05 in Figure 1, the negative amount. The naive cleaning rule — "drop rows where `amount < 0`" — would erase a return event. The naive *correction* rule — "set the amount to its absolute value" — would silently double the revenue at that store for the day, since the return is now indistinguishable from a sale. The right answer is to keep the row, add a `transaction_type` column with values like `sale` and `return`, and let every downstream metric explicitly choose whether to include returns. The work is to make the business event *visible in the schema*, not to make the row *go away*.
 
 The same pattern repeats throughout the table. T04's impossible date (month 13) is an ingestion bug; reject it at the boundary and log the source. T07's $99,999 amount is almost certainly a misplaced decimal; quarantine the row and ask the store. T08's lowercase `a` is a categorical encoding issue; normalize at ingestion and add a uniqueness check on the store dimension. Each row in Figure 1 wants a different response, and Figure 2 organizes those responses into a standing triage list.
@@ -82,6 +85,8 @@ The same pattern repeats throughout the table. T04's impossible date (month 13) 
   rows={checks}
 />
 
+### A living checklist
+
 Figure 2 is meant to be a living document, not a one-time audit. The nine checks here are the most common at a retail business of Bean & Basket's shape; a financial services firm or a software company would have its own variants. What stays constant is the structure: every check has a name, a severity that reflects *business* impact (not row count), a description of what the bad rows actually break, and a response. A team that runs Figure 2 weekly and reviews any failed check in the Monday meeting will catch every problem in Figure 1 within twenty-four hours of it arriving in the data.
 
 <Pitfall title="Silent imputation">
@@ -95,43 +100,6 @@ When a churned customer is removed from the master file, every retention metric 
 <Pitfall title="Mistaking outliers for errors">
 A single $9,500 order looks like an obvious typo but is a catering order for a corporate client. The naive "remove outliers beyond three standard deviations" rule deletes it, the customer vanishes from lifetime-value analyses, and the high-value B2B segment becomes invisible. **Investigate outliers, do not delete them — most of the time they are exactly the rows worth paying attention to.**
 </Pitfall>
-
-<QuizBlock
-  title="Concept check"
-  intro="These three questions span a derived-metric trap (averaging ratios versus computing the ratio of totals), a data-quality decision (how silent imputation of missing or negative values rewrites a conclusion), and a definitional validation check (why a shrinking denominator can manufacture a trend that isn't real)."
-  questions={[
-    {
-      prompt: <>Bean and Basket has three stores. Store A earned 50,000 dollars on 1,000 square feet, Store B earned 60,000 dollars on 2,000 square feet, and Store C earned 40,000 dollars on 1,000 square feet. An analyst wants a single chain-wide "revenue per square foot" figure for the quarterly review. She computes each store's revenue per square foot, then averages those three numbers, and reports about 40 dollars per square foot. The CFO instead divides total revenue by total square footage and gets about 37.50 dollars per square foot. Who is right, and why does it matter?</>,
-      options: [
-        { label: <>The analyst is right: averaging the per-store ratios gives every store an equal vote, which is the fairer way to summarize productivity across the chain.</> },
-        { label: <>Both are equally valid; the gap is just rounding, and either number is fine to put on the slide as long as it is labeled.</> },
-        { label: <>The CFO is right for a chain-wide productivity figure: an average of ratios silently weights each store equally regardless of size, so the small high-density stores get the same vote as the large one. The ratio of the totals is the actual revenue the chain earns per square foot it operates.</> },
-      ],
-      correctIndex: 2,
-      explanation: <>This is the average-of-ratios versus ratio-of-averages trap. The analyst's number answers "what is the typical store's density, weighting each store equally," while the CFO's number answers "across all the square footage we operate, how much revenue does each foot generate." For a chain-wide productivity statement the CFO's ratio-of-totals is correct, because the small dense stores should not count as much as the large store that occupies most of the floor space. Option A states the bias as if it were a virtue, and the gap is not rounding (40.00 versus 37.50) so option B is wrong. The deeper lesson is that a ratio like revenue per square foot encodes a business judgment about what comparison is meaningful, and "average the per-unit ratios" and "divide the totals" are two different metrics that happen to share a name.</>,
-    },
-    {
-      prompt: <>An analyst is preparing the weekly revenue-by-store report. Some rows have a missing (null) amount because of a point-of-sale sync failure, and a handful of rows have negative amounts that are genuine returns. To get the dashboard to run without errors, a colleague suggests one cleanup pass: replace every null amount with zero, and take the absolute value of every negative amount so all the numbers are positive and the totals add up. What is the most important objection?</>,
-      options: [
-        { label: <>Both moves corrupt the conclusion: zero-filling the nulls hides a broken sync process and understates true revenue as if those sales never happened, while absolute-valuing the returns turns refunds into sales and overstates revenue at exactly the stores with the most returns. The fix is to keep missing visible and add a return flag, not to force every value positive.</> },
-        { label: <>The objection is purely performance: imputing values row by row is slow on a large table, so it is better to filter the bad rows out in a single query before aggregating.</> },
-        { label: <>There is no real objection — zero is the natural default for a missing amount, and a return is just negative revenue, so flipping its sign restores the true sale that was originally rung up.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>This combines the silent-imputation and return-row lessons. A missing amount is not zero: zero-filling makes a sync outage look like real zero-dollar activity, suppresses the signal that the pipeline is broken, and understates revenue. A negative amount is not noise to be cleaned: it is a return, and taking the absolute value makes a refund indistinguishable from a sale, inflating revenue precisely where returns cluster. Option C repeats both fallacies as if they were common sense; option B treats a correctness problem as a speed problem, and filtering the bad rows out would also erase the legitimate returns. The correct posture is to let missing stay missing and make the business event visible in the schema with a return flag, so each downstream metric chooses explicitly whether to include returns.</>,
-    },
-    {
-      prompt: <>A retention dashboard shows the 12-month repeat-purchase rate climbing steadily for three straight quarters, and the team is ready to credit a new loyalty program. Before celebrating, you learn that the data engineering team recently started hard-deleting customer records 12 months after a customer's last purchase, to keep the master table small. What single check would most directly tell you whether the rising retention rate is real?</>,
-      options: [
-        { label: <>Re-run the numerator on a larger machine to rule out a memory limit silently truncating the count of repeat customers.</> },
-        { label: <>Reconstruct the denominator from an append-only history (or a soft-delete flag) so churned customers are still counted, then recompute the rate; if the trend flattens or reverses, the "improvement" was survivorship bias from the deletions shrinking the base, not a real lift.</> },
-        { label: <>Recompute the rate with a stricter definition of "repeat" — three or more orders instead of two — to confirm the loyalty program is driving genuinely loyal behavior.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Hard-deleting customers 12 months after their last purchase removes exactly the people who did not come back, so the denominator of the repeat-purchase rate quietly collapses to "customers who were still around," and any survival rate computed on it is overstated and trends upward as more lapsed customers are purged. The targeted validation is to restore the missing churned customers from an append-only or soft-deleted history and recompute: if the rate flattens, the rise was an artifact of the deletions. Option A misreads a definitional bias as a compute limit. Option C changes the metric's definition rather than testing the suspected cause, and tightening "repeat" on an already-biased base would not reveal the deletion problem. The lesson is that a rate is only as honest as its denominator, and a denominator that drops the cases of interest can manufacture a trend the business never actually experienced.</>,
-    },
-  ]}
-/>
 
 <Takeaway label="For the manager">
 

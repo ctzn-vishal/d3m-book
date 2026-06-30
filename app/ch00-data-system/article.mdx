@@ -3,7 +3,6 @@ import { Figure } from '@/components/Book/Figure';
 import { DataTable } from '@/components/Book/DataTable';
 import { Callout } from '@/components/Book/Callout';
 import { Pitfall } from '@/components/Book/Pitfall';
-import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Takeaway } from '@/components/Book/Takeaway';
 import {
   DataGenerationMap,
@@ -413,43 +412,6 @@ Optimization turns predictions, rules, and business constraints into an action p
 
 Optimization is often where analytics becomes real. It also exposes hidden objectives. Are we optimizing revenue, margin, customer satisfaction, utilization, fairness, retention, or risk? If the objective is wrong, the optimized answer is wrong with confidence.
 
-<QuizBlock
-  title="Concept check"
-  intro="Three routing questions. Pick the workflow before picking the method."
-  questions={[
-    {
-      prompt: <>A dashboard shows that Southeast revenue fell last week. The team wants to know whether the decline came from a specific product family, store type, or customer segment. What workflow is this?</>,
-      options: [
-        { label: <>Monitoring only.</> },
-        { label: <>Diagnosis through drilldown and segmentation.</> },
-        { label: <>Causal inference.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The dashboard noticed the movement; now the team is asking where it happened. That is diagnostic work. It can suggest causal hypotheses, but it does not prove cause by itself.</>,
-    },
-    {
-      prompt: <>A churn model ranks customers by risk, but no retention team owns the action attached to the score. What is missing?</>,
-      options: [
-        { label: <>A larger training set.</> },
-        { label: <>A workflow that connects score to action, threshold, owner, and monitoring.</> },
-        { label: <>A causal estimate of every feature.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>Prediction creates value only when a decision workflow uses the score. Without an owner, threshold, action, and monitoring plan, the model can be accurate and still operationally useless.</>,
-    },
-    {
-      prompt: <>A support AI summarizes policy documents for agents. The key managerial concern is:</>,
-      options: [
-        { label: <>Whether the summary is fluent.</> },
-        { label: <>Whether the workflow is evaluated for grounding, source use, escalation, and failure monitoring.</> },
-        { label: <>Whether the model can answer any question in the business.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>For business use, fluency is not enough. The AI workflow must be evaluated against source evidence and governed with escalation paths and monitoring.</>,
-    },
-  ]}
-/>
-
 <Takeaway label="Managerial habit">
 
 Before asking "what tool should we use?", finish this sentence:
@@ -582,43 +544,6 @@ The purpose of the cases is not to decorate chapters. It is to make the loop con
 ### Where Part I begins
 
 Part I now begins after the full system is visible. We zoom in from the operating loop to the basic object inside it: a dataset. The first question becomes almost physical: *what does one row mean?* That question sounds small, but it controls everything that follows. Grain, structure, variable type, joins, reshaping, metrics, and data quality are the mechanics that make the larger loop trustworthy.
-
-<QuizBlock
-  title="Concept check"
-  intro="Three questions about the loop and the evidence language it requires."
-  questions={[
-    {
-      prompt: <>A dashboard shows that customers who received a marketing email spent more than customers who did not. The team wants to roll out the email nationally. What is missing?</>,
-      options: [
-        { label: <>A better chart color palette.</> },
-        { label: <>A counterfactual comparison: what those customers would have spent without the email.</> },
-        { label: <>A vector database.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The action is named, but the causal comparison is not. Email recipients may have been better customers before the email. The team needs a credible counterfactual before calling the campaign incremental.</>,
-    },
-    {
-      prompt: <>A customer-facing AI assistant answers from policy documents. Which artifact is most natural?</>,
-      options: [
-        { label: <>A metric card only.</> },
-        { label: <>An AI workflow card with source documents, evals, human review, risk controls, and monitoring.</> },
-        { label: <>A price elasticity table.</> },
-      ],
-      correctIndex: 1,
-      explanation: <>The workflow uses unstructured documents and model outputs. It needs evaluation, grounding, escalation, and monitoring, not just a metric definition.</>,
-    },
-    {
-      prompt: <>Why does Part I begin with rows, columns, and grain after the broader Part 0 map?</>,
-      options: [
-        { label: <>Because low-level data structure determines what the higher-level workflow can truthfully claim.</> },
-        { label: <>Because business context is no longer relevant after storage is explained.</> },
-        { label: <>Because all later methods ignore source systems.</> },
-      ],
-      correctIndex: 0,
-      explanation: <>The broad loop shows why the details matter. Grain, structure, and measurement type determine whether dashboards, causal estimates, predictions, and AI workflows rest on trustworthy evidence.</>,
-    },
-  ]}
-/>
 
 <Takeaway label="The loop">
 
