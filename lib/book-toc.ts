@@ -13,10 +13,7 @@ export const book: Book = {
           title: 'From Data Traces to Decisions',
           articles: [
             { slug: 'ch00-foreword', number: '0.0', title: 'Foreword: How to Read This Book', status: 'published' },
-            { slug: 'ch00-data-origins', number: '0.1', title: 'Where Data Comes From', status: 'published' },
-            { slug: 'ch00-data-storage', number: '0.2', title: 'How Data Is Stored', status: 'published' },
-            { slug: 'ch00-data-uses', number: '0.3', title: 'How Data Is Used', status: 'published' },
-            { slug: 'ch00-decision-loop', number: '0.4', title: 'The Data-to-Decision Loop', status: 'published' },
+            { slug: 'ch00-data-system', number: '0.1', title: 'Data, Storage, Use, and the Decision Loop', status: 'published' },
           ],
         },
       ],
@@ -311,3 +308,4 @@ export function chapterHref(chapter: Chapter): string {
 export function getAllChapterNumbers(): number[] {
   return allChapters.map(c => c.chapter.number);
 }
+                                                                                                                                                                                                                                                                                                                    

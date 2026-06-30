@@ -23,6 +23,21 @@ five 301 redirects added. **Zero loss.**
 | ch00-3-how-data-is-used | ch00-data-uses | 0.3 |
 | ch00-4-data-to-decision-loop | ch00-decision-loop | 0.4 |
 
+### Later update — §0.1–§0.4 merged into one chapter
+The four section articles below were combined into a single chapter, **`ch00-data-system`**
+(§0.1, "Data, Storage, Use, and the Decision Loop"), with the four titles preserved as `##`
+sections in reading order. Prose preserved verbatim; figures/tables renumbered sequentially;
+the cross-section framing was trimmed to short bridges. **Zero teaching content lost.** The
+Foreword (`ch00-foreword`, §0.0) stays separate. Eight 301 redirects point the old paths at
+the merged chapter (the four `chNN-keyword` slugs plus the four pre-consolidation slugs).
+
+| Merged-away slug | § (old) | Now redirects to |
+|---|---|---|
+| ch00-data-origins | 0.1 | ch00-data-system |
+| ch00-data-storage | 0.2 | ch00-data-system |
+| ch00-data-uses | 0.3 | ch00-data-system |
+| ch00-decision-loop | 0.4 | ch00-data-system |
+
 ---
 
 ## Parts I–VI → new Ch 1–17 — full renumber + chapter consolidation
@@ -53,12 +68,4 @@ and cross-references changed, and thin chapters merged so their articles became 
 Pre-existing semantic errors flagged by `audit/flow.md`, corrected (these were wrong *before* the renumber):
 - **§1.3** (`ch01-variable-types`): "Text … treated in Part **IV**" → **Part V** (where text-as-data actually lives).
 - **§13.4** (`ch13-text-classification`): the Goose Island case was pointed at the GPT-as-measurement article; retargeted to the **§14.2** case study (the §14.4 reference one line up, to GPT-as-measurement, is correct and was left).
-- **§5.1** & **§10.5**: the "artefact / card family map" was cited at **§0.2** (How Data Is Stored); the family actually lives at **§0.4** (The Data-to-Decision Loop, "Figure 4. The artifact family") — both refs retargeted.
-
-Foreword (`ch00-foreword`, "A note on cases"), per PROPOSAL §6:
-- Normalized the through-line brand `Bean &amp; Basket` → **Bean & Basket** across all articles (book-toc string already clean). 5 non-brand `&amp;` left as-is (render as `&` in MDX).
-- Rewrote the standalone-cases paragraph to **name the six cases that actually run** (market-concentration/ad-spend, RentHop, NY Lottery ZIP, Trump tweets, Goose Island, Amazon reviews) alongside Progresso/Milk/Zillow.
-- **BAV repointed, not dropped:** the foreword now states the BAV brand-survey data powers the Fast-Food Perceptual Map studio.
-- Added an explicit step-off note: the Part III causal chapters deliberately leave Bean & Basket (clean identification needs field data a coffee chain can't supply).
-
-**Final production build: compiles, typecheck clean, all 78 routes + 80 redirects generate.**
+- **§5.1** & **§10.5**: the "artefact / card family map" was cited at **§0.2** (How Data Is Stored); the family actually lives at **§0.4** (The Data-to-Decision Loop, "Figure 4. The artifact family") — both refs retarge

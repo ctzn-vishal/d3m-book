@@ -6,13 +6,9 @@ import Article from './article.mdx';
 export const metadata: Metadata = {
   title: `Foreword: How to Read This Book | ${book.title}`,
   description:
-    'A short note on the modern data operating system frame, who the book is for, and how to use it.',
+    "The book's wager, who it is for, how to read it, the Bean & Basket through-line and standalone cases, a note on the AI chapters, and what you will have at the end.",
 };
 
 export default function Page() {
   return (
-    <BookShell slug="ch00-foreword" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+    <BookShell slug="ch00-foreword" book={book} f

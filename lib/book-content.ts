@@ -431,14 +431,8 @@ export const chapterContent: Record<number, ChapterContent> = {
 export const articleBlurbs: Record<string, string> = {
   'ch00-foreword':
     "Lays out the book's wager, audience, reading paths, the Bean & Basket through-line, and the standalone cases that ground later parts.",
-  'ch00-data-origins':
-    'Reframes every dataset as a trace of specific business activity, with a customer-morning example and three generation traps to guard against.',
-  'ch00-data-storage':
-    'Maps the storage stack by job, separating transactional from analytical systems and matching data freshness to the cadence of the decision.',
-  'ch00-data-uses':
-    'Sorts data work into recurring workflow families and routes a business question to monitoring, diagnosis, causal, prediction, or AI evidence.',
-  'ch00-decision-loop':
-    'Connects source, storage, evidence, action, and feedback into one loop, distinguishing data-driven decisions from merely data-decorated ones.',
+  'ch00-data-system':
+    'The whole system map in one chapter: where business data comes from, how it is stored, how it is used, and how source, storage, evidence, action, and feedback close into one data-to-decision loop.',
   'ch01-dataset':
     "Defines a dataset's grain — what one row means — and shows how transaction- vs. store-week views answer different questions and break joins.",
   'ch01-data-structures':
@@ -602,3 +596,4 @@ export function getChapterContent(num: number): ChapterContent | undefined {
 export function getArticleBlurb(slug: string): string | undefined {
   return articleBlurbs[slug];
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                          

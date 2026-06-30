@@ -14,7 +14,7 @@ The economics of machine-learning work have shifted. A decade ago, a churn proje
 
 This article maps that shift. We look briefly at what an AutoML leaderboard does (and doesn't) tell a manager; we work through the two interpretability tools — feature importance and partial dependence — that survive into production; and we land on the **model card**, the one-page document that should accompany every shipped model.
 
-The Model Card is the third entry in the artefact family introduced at [§0.4](/ch00-decision-loop). The Decision Question Card ([§5.1](/ch05-metrics-to-decisions)) frames the original action; the Predictive Task Contract ([§9.2](/ch09-supervised-setup)) specifies the prediction; the Model Card describes the system that ships. Each one extends the discipline of the last. The chain continues into [§16.4](/ch16-ai-governance) (AI Workflow Card) and lands at the decision memo that ships.
+The Model Card is the third entry in the artefact family introduced at [§0.1](/ch00-data-system#the-data-to-decision-loop). The Decision Question Card ([§5.1](/ch05-metrics-to-decisions)) frames the original action; the Predictive Task Contract ([§9.2](/ch09-supervised-setup)) specifies the prediction; the Model Card describes the system that ships. Each one extends the discipline of the last. The chain continues into [§16.4](/ch16-ai-governance) (AI Workflow Card) and lands at the decision memo that ships.
 
 ---
 
@@ -180,7 +180,4 @@ A model that ships with those five steps documented is operational. A model that
         { label: <>Importance and causal effect are the same thing.</> },
       ],
       correctIndex: 1,
-      explanation: <>Importance is a property of the model. Effects of intervention are properties of the world. They can agree, disagree, or have opposite signs. The campaign needs a test, not a permutation chart.</>,
-    },
-  ]}
-/>
+      explanation: <>Importance is a property of the model. Effects of intervention are properties of the world. They can agree, disagree, or have opposite signs. The campaign needs a test, not a permutation ch
