@@ -146,8 +146,37 @@ const nextConfig: NextConfig = {
   // Keep the hub pinned to a current Next 16.2.x patch — this proxy path is the
   // surface the rewrite/middleware advisories touched.
   async rewrites() {
-    return [
-      // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
-      // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
-      // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
-      // { source: '/apps/ai-models/:path*',  
+    return {
+      beforeFiles: [
+        // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
+        // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
+        // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
+        // { source: '/apps/ai-models/:path*',   destination: 'https://v0-interactive-table-lac.vercel.app/apps/ai-models/:path*' },
+        // { source: '/apps/scrc/:path*',        destination: 'https://scrc-data.vercel.app/apps/scrc/:path*' },
+      ],
+    };
+  },
+};
+
+// remark-gfm enables GitHub-flavored markdown extensions: pipe tables,
+// task lists, strikethrough, autolinks. Required for the comparison tables
+// across Part 3.
+//
+// rehype-slug stamps a stable `id` on every heading so the in-page
+// "On this page" rail (components/Book/OnThisPage.tsx) can scroll-spy and
+// deep-link to sections. Passed in string form (not an imported function)
+// so Turbopack can serialize the loader options — see Next 16 MDX + Turbopack.
+//
+// Note: remark-math/rehype-katex were evaluated but conflict with prose currency
+// like "$3.50" across Part 3. Inline and display math are handled by the custom
+// $...$ / $$...$$ parser in mdx-components.tsx plus the <Equation> and <M>
+// components, all of which render with KaTeX. See mdx-components.tsx and
+// components/Book/M.tsx.
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [['remark-gfm', {}]],
+    rehypePlugins: [['rehype-slug', {}]],
+  },
+});
+
+export default withMDX(nextConfig);
