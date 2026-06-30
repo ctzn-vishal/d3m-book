@@ -68,4 +68,38 @@ and cross-references changed, and thin chapters merged so their articles became 
 Pre-existing semantic errors flagged by `audit/flow.md`, corrected (these were wrong *before* the renumber):
 - **§1.3** (`ch01-variable-types`): "Text … treated in Part **IV**" → **Part V** (where text-as-data actually lives).
 - **§13.4** (`ch13-text-classification`): the Goose Island case was pointed at the GPT-as-measurement article; retargeted to the **§14.2** case study (the §14.4 reference one line up, to GPT-as-measurement, is correct and was left).
-- **§5.1** & **§10.5**: the "artefact / card family map" was cited at **§0.2** (How Data Is Stored); the family actually lives at **§0.4** (The Data-to-Decision Loop, "Figure 4. The artifact family") — both refs retarge
+- **§5.1** & **§10.5**: the "artefact / card family map" was cited at **§0.2** (How Data Is Stored); the family actually lives at **§0.4** (The Data-to-Decision Loop, "Figure 4. The artifact family") — both refs retargeted.
+
+Foreword (`ch00-foreword`, "A note on cases"), per PROPOSAL §6:
+- Normalized the through-line brand `Bean &amp; Basket` → **Bean & Basket** across all articles (book-toc string already clean). 5 non-brand `&amp;` left as-is (render as `&` in MDX).
+- Rewrote the standalone-cases paragraph to **name the six cases that actually run** (market-concentration/ad-spend, RentHop, NY Lottery ZIP, Trump tweets, Goose Island, Amazon reviews) alongside Progresso/Milk/Zillow.
+- **BAV repointed, not dropped:** the foreword now states the BAV brand-survey data powers the Fast-Food Perceptual Map studio.
+- Added an explicit step-off note: the Part III causal chapters deliberately leave Bean & Basket (clean identification needs field data a coffee chain can't supply).
+
+**Final production build: compiles, typecheck clean, all 78 routes + 80 redirects generate.**
+
+---
+
+## Later pass — Part I consolidation + concept-check removal
+
+**Chapter 1 merged.** §1.1 (`ch01-dataset`, "What Is a Dataset?"), §1.2 (`ch01-data-structures`,
+"Data Structures"), and §1.3 (`ch01-variable-types`, "Variable Types and Measurement") were
+combined into one chapter, **`ch01-reading-data`** (§1.1, "Grain, Structure, and Measurement"),
+with the three titles preserved as `##` sections and the per-topic "executive question" demoted
+to `###`. Figures renumbered 1–3; prose preserved verbatim. The §1.3 concept-check quiz was
+dropped (see below). Data JSON (including the `case-*.json`) copied into the new folder. Six 301
+redirects point the old paths (three `chNN-keyword` legacy slugs + the three per-section slugs)
+at `/ch01-reading-data`. `book-toc.ts` + `articleBlurbs` updated; `chapterContent[1]` already
+describes the merged chapter and was left as-is.
+
+**Concept-check quizzes removed** (per decision, for a cleaner read): the two `QuizBlock`
+"Concept check" modules in **`ch00-data-system`**, plus the ones in **`ch01-variable-types`**
+(during the merge), **`ch02-reshaping`**, and **`ch02-data-quality`**. Surrounding prose and
+Takeaways kept; unused `QuizBlock` imports removed.
+
+**Chapter 2 polished (kept granular, 6 articles).** Added `###` subheadings for in-page
+navigation — joins (+3), reshaping (+2), metrics (+3), data-quality (+3); `ch02-sql`/studio
+already multi-`##`. Fixed three stale prose cross-references (pre-consolidation numbers):
+`ch02-metrics` "pricing (Chapter 16)" → **Chapter 8** and "joins (Chapter 3)" → **Chapter 2**;
+`ch02-joins` "causal analysis — Chapter 12 onward" → **Chapter 5 onward**. Added a `metric card`
+tie-in (Part 0 artifact family) to `ch02-metrics`. No teaching content removed beyond the quizzes.

@@ -11,4 +11,8 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <BookShell slug="ch00-foreword" book={book} f
+    <BookShell slug="ch00-foreword" book={book} findArticle={findArticle}>
+      <Article />
+    </BookShell>
+  );
+}
