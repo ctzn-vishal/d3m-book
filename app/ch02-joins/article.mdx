@@ -66,9 +66,7 @@ The deeper rule, the one we already wrote down in Chapter 1, is about **grain**.
 <Figure caption="Figure 1. Three joins, three outcomes. Tab through to see the same week of transactions enriched correctly, diagnosed for data quality, and exploded by a too-eager campaign join. The 'inflated total revenue' on the third tab is the kind of number that ends up in a board deck.">
   <TabSet ariaLabel="Three join scenarios on the same week of Bean & Basket data">
     <Tab label={`Left join: transactions + customers (${leftJoined.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        Every transaction is kept. T06 has no matching customer, so the customer columns are blank — a visible signal that something is wrong with the data, not a row to silently drop.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">Every transaction is kept. T06 has no matching customer, so the customer columns are blank — a visible signal that something is wrong with the data, not a row to silently drop.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -95,9 +93,7 @@ The deeper rule, the one we already wrote down in Chapter 1, is about **grain**.
       </div>
     </Tab>
     <Tab label={`Anti-join: data quality check (${antiJoinRows.length} row)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        Only the unmatched. This is the diagnostic — every row here is a transaction whose customer ID does not exist in the master file. One row in this table is one entry on the Monday-morning data-quality triage list.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">Only the unmatched. This is the diagnostic — every row here is a transaction whose customer ID does not exist in the master file. One row in this table is one entry on the Monday-morning data-quality triage list.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -124,9 +120,7 @@ The deeper rule, the one we already wrote down in Chapter 1, is about **grain**.
       </div>
     </Tab>
     <Tab label={`Duplicate explosion: transactions × campaigns (${innerJoinedCampaigns.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        The campaign table has multiple rows per customer (three rows for Maria Reyes alone). A naive inner join on <code className="text-[12px]">customer_id</code> multiplies every matched transaction by the customer's campaign count. Six transactions become {innerJoinedCampaigns.length} rows. If anyone sums <code className="text-[12px]">amount</code> on this table, the answer will be wrong by close to a factor of two.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">The campaign table has multiple rows per customer (three rows for Maria Reyes alone). A naive inner join on <code className="text-[12px]">customer_id</code> multiplies every matched transaction by the customer's campaign count. Six transactions become {innerJoinedCampaigns.length} rows. If anyone sums <code className="text-[12px]">amount</code> on this table, the answer will be wrong by close to a factor of two.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>

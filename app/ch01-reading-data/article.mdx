@@ -35,9 +35,7 @@ Almost every analytical confusion a manager will encounter — incompatible join
 <Figure caption="Figure 1. The same week of Bean & Basket sales at two grains. Toggle the tabs: the per-transaction view lets you trace what individual customers bought; the per-store-week view lets you compare stores at a glance. Neither answers the other's questions cleanly.">
   <TabSet ariaLabel="Two grains of the same week of Bean & Basket sales">
     <Tab label={`Per-transaction grain (${transactionsData.dataPoints.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row = one purchase. Customer C12 visited Downtown twice; customer C66 visited Suburban twice. The customer ID makes those repeat visits visible.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row = one purchase. Customer C12 visited Downtown twice; customer C66 visited Suburban twice. The customer ID makes those repeat visits visible.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -66,9 +64,7 @@ Almost every analytical confusion a manager will encounter — incompatible join
       </div>
     </Tab>
     <Tab label={`Per-store-week grain (${storeWeekData.dataPoints.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row = one store-week. The same twelve transactions, rolled up. The customer IDs are gone; the store ranking is now obvious.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row = one store-week. The same twelve transactions, rolled up. The customer IDs are gone; the store ranking is now obvious.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -140,9 +136,7 @@ Figure 2 shows the same eight weeks of Bean & Basket sales arranged three ways. 
 <Figure caption="Figure 2. Three structures, one business. Toggle between the panel (24 rows, 3 stores × 8 weeks), the cross-section (just last week's 3 rows), and the time-series (the chain-wide weekly trend). Each view answers the question 'which store is doing best?' differently — only one of them answers it correctly.">
   <TabSet ariaLabel="Three data structures derived from the same business">
     <Tab label={`Cross-section (${crossSectionData.dataPoints.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row per store, snapshot at week 8 only. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Downtown is winning by a wide margin; Suburban is the runner-up; Campus is a distant third." Time has been thrown away.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row per store, snapshot at week 8 only. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Downtown is winning by a wide margin; Suburban is the runner-up; Campus is a distant third." Time has been thrown away.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -167,9 +161,7 @@ Figure 2 shows the same eight weeks of Bean & Basket sales arranged three ways. 
       </div>
     </Tab>
     <Tab label={`Time-series (${timeSeriesData.dataPoints.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row per week, chain-wide totals. <strong className="font-semibold not-italic text-body">Reads as:</strong> "The chain is growing — from $260 in week 1 to $295 in week 8, a 13% lift over two months." Stores have been collapsed; you cannot tell whether one store is carrying the others.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row per week, chain-wide totals. <strong className="font-semibold not-italic text-body">Reads as:</strong> "The chain is growing — from $260 in week 1 to $295 in week 8, a 13% lift over two months." Stores have been collapsed; you cannot tell whether one store is carrying the others.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -194,9 +186,7 @@ Figure 2 shows the same eight weeks of Bean & Basket sales arranged three ways. 
       </div>
     </Tab>
     <Tab label={`Panel (${panelData.dataPoints.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row per store per week. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Downtown is the largest store but flat. Campus is shrinking. Suburban started smallest and has nearly tripled. Suburban is the story." The panel is the only structure that lets you say both things at once.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row per store per week. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Downtown is the largest store but flat. Campus is shrinking. Suburban started smallest and has nearly tripled. Suburban is the story." The panel is the only structure that lets you say both things at once.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>

@@ -28,9 +28,7 @@ Long is the natural shape for almost everything that is not a human reading a sp
 <Figure caption="Figure 1. The same nine numbers in wide and long shape. Tab between them. The wide table reads more easily; the long table connects to everything downstream — charts, regressions, dashboard filters, joins to other long tables.">
   <TabSet ariaLabel="Wide and long shapes of the same monthly revenue">
     <Tab label={`Wide format (${wide.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row per store, one column per month. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Store A grew, peaked in February, dipped slightly in March. Store C is the smallest but growing every month."
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row per store, one column per month. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Store A grew, peaked in February, dipped slightly in March. Store C is the smallest but growing every month."</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -53,14 +51,10 @@ Long is the natural shape for almost everything that is not a human reading a sp
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-muted italic mt-3 leading-snug">
-        Adding April means adding a column. Plotting the three stores as three lines is impossible without first unpivoting — a chart engine needs the month to be a value, not a column name.
-      </p>
+      <p className="text-xs text-muted italic mt-3 leading-snug">Adding April means adding a column. Plotting the three stores as three lines is impossible without first unpivoting — a chart engine needs the month to be a value, not a column name.</p>
     </Tab>
     <Tab label={`Long format (${long.length} rows)`}>
-      <p className="text-xs text-muted italic mb-3 leading-snug">
-        One row per store-month. <strong className="font-semibold not-italic text-body">Reads as:</strong> Three columns, fixed forever: store, month, revenue. Adding April is one row, not a column. The line chart asks for exactly this shape.
-      </p>
+      <p className="text-xs text-muted italic mb-3 leading-snug">One row per store-month. <strong className="font-semibold not-italic text-body">Reads as:</strong> Three columns, fixed forever: store, month, revenue. Adding April is one row, not a column. The line chart asks for exactly this shape.</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm tabular-nums border-collapse">
           <thead>
@@ -81,9 +75,7 @@ Long is the natural shape for almost everything that is not a human reading a sp
           </tbody>
         </table>
       </div>
-      <p className="text-xs text-muted italic mt-3 leading-snug">
-        Adding April is one row per store. Plotting is direct: <code className="text-[12px]">x = month, y = revenue, color = store</code>. Filtering to Q1 is a <code className="text-[12px]">WHERE</code> clause on the month column. Joining to a customer-month table is a clean key match.
-      </p>
+      <p className="text-xs text-muted italic mt-3 leading-snug">Adding April is one row per store. Plotting is direct: <code className="text-[12px]">x = month, y = revenue, color = store</code>. Filtering to Q1 is a <code className="text-[12px]">WHERE</code> clause on the month column. Joining to a customer-month table is a clean key match.</p>
     </Tab>
   </TabSet>
 </Figure>
