@@ -312,9 +312,11 @@ export function renderGalleryThumb({
 
 /**
  * Main-site (hub) share card — vishalsingh.org, not the book. Full-bleed hero
- * photo with the favicon glyph + name over a legibility scrim. Deliberately
- * spare (no book chrome) so it reads as a personal site card, not a chapter
- * preview; see renderD3mOgImage for the teaching/book card.
+ * photo with just the favicon glyph + domain mark; no name/title overlay, so
+ * the platform's own title/description (see app/(hub)/page.tsx metadata)
+ * carries the text and the image stays a clean photo. Deliberately spare (no
+ * book chrome) so it reads as a personal site card, not a chapter preview;
+ * see renderD3mOgImage for the teaching/book card.
  */
 export function renderHeroOgImage({ imageDataUri }: { imageDataUri: string }): ImageResponse {
   return new ImageResponse(
@@ -382,15 +384,6 @@ export function renderHeroOgImage({ imageDataUri }: { imageDataUri: string }): I
             }}
           >
             vishalsingh.org
-          </div>
-        </div>
-
-        <div style={{ position: 'absolute', left: 64, bottom: 66, display: 'flex', flexDirection: 'column', maxWidth: 820 }}>
-          <div style={{ display: 'flex', color: '#FFFFFF', fontSize: 92, fontWeight: 800, letterSpacing: -1.5, lineHeight: 1.02 }}>
-            Vishal Singh
-          </div>
-          <div style={{ marginTop: 18, display: 'flex', color: 'rgba(255,255,255,0.85)', fontSize: 28, fontWeight: 600 }}>
-            NYU Stern · Interactive Data Gallery
           </div>
         </div>
       </div>

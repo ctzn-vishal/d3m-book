@@ -6,10 +6,14 @@ import { SITE_URL } from '@/lib/share-metadata';
 import { JsonLd } from '@/components/JsonLd';
 
 export const metadata: Metadata = {
-  title: 'Vishal Singh — Interactive Data Gallery',
+  title: 'Vishal Singh, NYU Stern',
   description:
     'Explore data apps, interactive articles, and dashboards for public health, politics, business, and more.',
   alternates: { canonical: `${SITE_URL}/` },
+  // Override the root layout's `siteName: 'D3M'` (the book's brand) — on the
+  // main site, link previews should read as a personal site, with the actual
+  // favicon carrying the identity mark instead of a text badge.
+  openGraph: { siteName: 'vishalsingh.org' },
 };
 
 const homeLd = [

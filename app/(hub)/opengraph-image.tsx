@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { renderHeroOgImage } from '@/lib/og-card';
 import { ogImageSize } from '@/lib/share-metadata';
 
-export const alt = 'Vishal Singh — Interactive Data Gallery';
+export const alt = 'Vishal Singh, NYU Stern';
 export const size = ogImageSize;
 export const contentType = 'image/png';
 
