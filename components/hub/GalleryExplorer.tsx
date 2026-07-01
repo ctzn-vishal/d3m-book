@@ -14,6 +14,7 @@ import {
   Database,
   Shapes,
   Tag,
+  Layers,
   ChevronDown,
   type LucideIcon,
 } from 'lucide-react';
@@ -199,11 +200,61 @@ function TagChip({ active, onClick, children }: { active: boolean; onClick: () =
   );
 }
 
+/** Disclosure trigger shared by the Topic and Tags filter groups — collapsed by
+ *  default so the filter bar stays compact (especially on mobile); expands to
+ *  reveal the chip panel below it. `count` badges how many are active. */
+function FilterToggle({
+  icon: Icon,
+  label,
+  count,
+  expanded,
+  onClick,
+}: {
+  icon: LucideIcon;
+  label: string;
+  count: number;
+  expanded: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-expanded={expanded}
+      className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 font-plex text-[11px] uppercase tracking-[0.06em] transition-colors ${
+        count > 0
+          ? 'border-hub-line-strong bg-hub-card text-hub-ink'
+          : 'border-hub-line bg-hub-card text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink'
+      }`}
+    >
+      <Icon size={12} strokeWidth={2.2} />
+      {label}
+      {count > 0 ? ` · ${count}` : ''}
+      <ChevronDown size={13} className={`transition-transform ${expanded ? 'rotate-180' : ''}`} />
+    </button>
+  );
+}
+
+/** A single active-filter value shown next to its (possibly collapsed) toggle,
+ *  removable without expanding the panel. */
+function RemovableChip({ onRemove, children }: { onRemove: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onRemove}
+      className="inline-flex shrink-0 items-center gap-1 rounded-full border border-hub-ink bg-hub-ink px-2.5 py-1 font-plex text-[11px] text-hub-paper"
+    >
+      {children} <X size={11} strokeWidth={2.5} />
+    </button>
+  );
+}
+
 export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; facets: RegistryFacets }) {
   const [query, setQuery] = useState('');
   const [type, setType] = useState<RegistryType | 'all'>('all');
   const [topic, setTopic] = useState<string | 'all'>('all');
   const [tags, setTags] = useState<string[]>([]);
+  const [showTopics, setShowTopics] = useState(false);
   const [showTags, setShowTags] = useState(false);
   const [sort, setSort] = useState<SortKey>('featured');
 
@@ -270,39 +321,42 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
   return (
     <div>
       {/* Sticky filter bar — type, search, and topic controls stay in reach as
-          the gallery scrolls. Sits just below the sticky hub header. */}
+          the gallery scrolls. Sits just below the sticky hub header. Two compact
+          rows by default (type+search, then the Topic/Tags/Sort controls);
+          Topic and Tags each disclose their full chip list on demand instead of
+          taking permanent vertical space — this matters most on mobile, where
+          every always-visible row costs a full line. */}
       <div className="sticky top-14 z-30 -mx-5 border-b border-hub-line bg-hub-paper/95 px-5 pb-3 pt-3 backdrop-blur-md sm:-mx-7 sm:px-7">
-        {/* Primary filter: artifact type (prominent) */}
-        <div className="flex flex-wrap items-center gap-2">
-          <TypeTab
-            Icon={Shapes}
-            active={type === 'all'}
-            activeClass="border-hub-ink bg-hub-ink text-hub-paper"
-            toneClass="text-hub-ink-faint"
-            onClick={() => setType('all')}
-          >
-            All · {facets.total}
-          </TypeTab>
-          {facets.types.map(t => {
-            const meta = TYPE_META[t.type];
-            return (
-              <TypeTab
-                key={t.type}
-                Icon={meta.Icon}
-                active={type === t.type}
-                activeClass={meta.active}
-                toneClass={meta.tone}
-                onClick={() => setType(t.type)}
-              >
-                {t.label} · {t.count}
-              </TypeTab>
-            );
-          })}
-        </div>
+        {/* Row 1 — primary filter (type) + search, side by side */}
+        <div className="flex items-center gap-2">
+          <div className="flex max-w-[52%] shrink-0 gap-1.5 overflow-x-auto no-scrollbar sm:max-w-none">
+            <TypeTab
+              Icon={Shapes}
+              active={type === 'all'}
+              activeClass="border-hub-ink bg-hub-ink text-hub-paper"
+              toneClass="text-hub-ink-faint"
+              onClick={() => setType('all')}
+            >
+              All · {facets.total}
+            </TypeTab>
+            {facets.types.map(t => {
+              const meta = TYPE_META[t.type];
+              return (
+                <TypeTab
+                  key={t.type}
+                  Icon={meta.Icon}
+                  active={type === t.type}
+                  activeClass={meta.active}
+                  toneClass={meta.tone}
+                  onClick={() => setType(t.type)}
+                >
+                  {t.label} · {t.count}
+                </TypeTab>
+              );
+            })}
+          </div>
 
-        {/* Search + sort */}
-        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <div className="relative flex-grow">
+          <div className="relative min-w-0 flex-1">
             <Search
               size={15}
               className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-hub-ink-faint"
@@ -310,7 +364,7 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
             <input
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Search studios, data stories, apps, datasets…"
+              placeholder="Search…"
               className="w-full rounded-full border border-hub-line bg-hub-card py-2.5 pl-10 pr-9 text-[14px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
             />
             {query && (
@@ -324,12 +378,59 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
               </button>
             )}
           </div>
+        </div>
+
+        {/* Row 2 — Topic + Tags disclosures (with any active values pinned next
+            to their toggle) and Sort, pushed to the far end. */}
+        <div className="mt-2.5 flex flex-wrap items-center gap-2">
+          {facets.topics.length > 0 && (
+            <>
+              <FilterToggle
+                icon={Layers}
+                label="Topic"
+                count={topic === 'all' ? 0 : 1}
+                expanded={showTopics}
+                onClick={() => setShowTopics(s => !s)}
+              />
+              {topic !== 'all' && <RemovableChip onRemove={() => setTopic('all')}>{topic}</RemovableChip>}
+            </>
+          )}
+
+          {facets.tags.length > 0 && (
+            <>
+              <FilterToggle
+                icon={Tag}
+                label="Tags"
+                count={tags.length}
+                expanded={showTags}
+                onClick={() => setShowTags(s => !s)}
+              />
+              {tags.map(t => (
+                <RemovableChip key={t} onRemove={() => toggleTag(t)}>
+                  {t}
+                </RemovableChip>
+              ))}
+            </>
+          )}
+
+          {(topic !== 'all' || tags.length > 0) && (
+            <button
+              type="button"
+              onClick={() => {
+                setTopic('all');
+                setTags([]);
+              }}
+              className="font-plex text-[11px] text-hub-teal hover:underline"
+            >
+              clear
+            </button>
+          )}
 
           <select
             value={sort}
             onChange={e => setSort(e.target.value as SortKey)}
             aria-label="Sort"
-            className="rounded-md border border-hub-line bg-hub-card px-2.5 py-2 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
+            className="ml-auto rounded-md border border-hub-line bg-hub-card px-2.5 py-1.5 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
           >
             <option value="featured">Featured</option>
             <option value="az">A–Z</option>
@@ -337,80 +438,37 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
           </select>
         </div>
 
-        {/* Secondary filter: topic chips (by frequency) */}
-        {facets.topics.length > 0 && (
-          <div className="mt-3 flex items-center gap-2">
-            <span className="hidden shrink-0 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:inline">
-              Topic
-            </span>
-            <div className="flex gap-1.5 overflow-x-auto pb-1">
-              <TopicChip active={topic === 'all'} onClick={() => setTopic('all')}>
-                All
+        {/* Topic panel — single-select, disclosed on demand */}
+        {showTopics && facets.topics.length > 0 && (
+          <div className="mt-2.5 flex flex-wrap gap-1.5 rounded-xl border border-hub-line bg-hub-card/50 p-3">
+            <TopicChip active={topic === 'all'} onClick={() => setTopic('all')}>
+              All
+            </TopicChip>
+            {facets.topics.map(t => (
+              <TopicChip key={t.topic} active={topic === t.topic} onClick={() => setTopic(t.topic)}>
+                {t.topic} · {t.count}
               </TopicChip>
-              {facets.topics.map(t => (
-                <TopicChip key={t.topic} active={topic === t.topic} onClick={() => setTopic(t.topic)}>
-                  {t.topic} · {t.count}
-                </TopicChip>
-              ))}
-            </div>
+            ))}
           </div>
         )}
 
-        {/* Tertiary filter: tags — collapsible, grouped by facet, multi-select (AND) */}
-        {facets.tags.length > 0 && (
-          <div className="mt-3">
-            <div className="flex flex-wrap items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setShowTags(s => !s)}
-                aria-expanded={showTags}
-                className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-hub-line bg-hub-card px-3 py-1 font-plex text-[11px] uppercase tracking-[0.06em] text-hub-ink-soft transition-colors hover:border-hub-line-strong hover:text-hub-ink"
-              >
-                <Tag size={12} strokeWidth={2.2} />
-                Tags{tags.length > 0 ? ` · ${tags.length}` : ''}
-                <ChevronDown size={13} className={`transition-transform ${showTags ? 'rotate-180' : ''}`} />
-              </button>
-              {/* active tag pills — visible even when the panel is collapsed */}
-              {tags.map(t => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => toggleTag(t)}
-                  aria-label={`Remove tag ${t}`}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-full border border-hub-ink bg-hub-ink px-2.5 py-1 font-plex text-[11px] text-hub-paper"
-                >
-                  {t} <X size={11} strokeWidth={2.5} />
-                </button>
-              ))}
-              {tags.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setTags([])}
-                  className="font-plex text-[11px] text-hub-teal hover:underline"
-                >
-                  clear tags
-                </button>
-              )}
-            </div>
-
-            {showTags && (
-              <div className="mt-2.5 max-h-[42vh] space-y-2.5 overflow-y-auto rounded-xl border border-hub-line bg-hub-card/50 p-3">
-                {tagGroups.map(g => (
-                  <div key={g.facet} className="flex flex-col gap-1.5 sm:flex-row sm:gap-2">
-                    <span className="shrink-0 pt-1 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:w-12">
-                      {g.label}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {g.tags.map(t => (
-                        <TagChip key={t.tag} active={tags.includes(t.tag)} onClick={() => toggleTag(t.tag)}>
-                          {t.tag} · {t.count}
-                        </TagChip>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+        {/* Tags panel — grouped by facet, multi-select (AND), disclosed on demand */}
+        {showTags && facets.tags.length > 0 && (
+          <div className="mt-2.5 max-h-[42vh] space-y-2.5 overflow-y-auto rounded-xl border border-hub-line bg-hub-card/50 p-3">
+            {tagGroups.map(g => (
+              <div key={g.facet} className="flex flex-col gap-1.5 sm:flex-row sm:gap-2">
+                <span className="shrink-0 pt-1 font-plex text-[10px] uppercase tracking-[0.1em] text-hub-ink-faint sm:w-12">
+                  {g.label}
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  {g.tags.map(t => (
+                    <TagChip key={t.tag} active={tags.includes(t.tag)} onClick={() => toggleTag(t.tag)}>
+                      {t.tag} · {t.count}
+                    </TagChip>
+                  ))}
+                </div>
               </div>
-            )}
+            ))}
           </div>
         )}
       </div>

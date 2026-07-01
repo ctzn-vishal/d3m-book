@@ -35,6 +35,17 @@ article :where(.not-prose svg:not(.recharts-surface), .not-prose img) {
   animation: book-toc-pill-pulse 2.4s ease-in-out 1.2s 2;
 }
 
+/* Horizontally-scrollable chip rows (gallery filter bar) keep their native
+   swipe/drag scrolling but hide the scrollbar chrome so they read as a single
+   clean row instead of a visible scroll pane. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 body {
   background-color: #FFFFFF;
   color: #1A1A1A;
