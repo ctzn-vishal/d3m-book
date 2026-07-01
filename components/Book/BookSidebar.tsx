@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
 import { chapterHref } from '@/lib/book-toc';
+import { getPartContent } from '@/lib/book-content';
+import { resolveIcon, partColor } from '@/lib/book-visuals';
 
 export interface BookSidebarProps {
   book: Book;
@@ -75,9 +77,11 @@ export function BookSidebar({ book, currentSlug, activePartNumeral: activePartNu
         </Link>
 
         <ol className="space-y-0.5">
-          {book.parts.map(part => {
+          {book.parts.map((part, index) => {
             const isOpen = open.has(part.numeral);
             const partActive = part.numeral === activePartNumeral;
+            const PartIcon = resolveIcon(getPartContent(part.numeral)?.icon);
+            const color = partColor(index);
             return (
               <li key={part.numeral}>
                 <div className="flex w-full items-start gap-1.5 rounded-md px-1 py-1.5 transition-colors hover:bg-card">
@@ -97,17 +101,27 @@ export function BookSidebar({ book, currentSlug, activePartNumeral: activePartNu
                     />
                   </button>
                   {/* Navigates to the part's overview page; does not toggle. */}
-                  <Link href={`/teaching/part/${part.numeral}`} className="min-w-0 flex-1 text-left">
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
-                      Part {part.numeral}
-                    </span>
+                  <Link
+                    href={`/teaching/part/${part.numeral}`}
+                    className="flex min-w-0 flex-1 items-start gap-2 text-left"
+                  >
                     <span
-                      className={[
-                        'block font-display text-[12.5px] font-semibold leading-snug',
-                        partActive ? 'text-body' : 'text-subtle',
-                      ].join(' ')}
+                      className={`mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${color.chip} ${color.icon}`}
                     >
-                      {part.title}
+                      <PartIcon size={13} strokeWidth={2} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
+                        Part {part.numeral}
+                      </span>
+                      <span
+                        className={[
+                          'block font-display text-[12.5px] font-semibold leading-snug',
+                          partActive ? 'text-body' : 'text-subtle',
+                        ].join(' ')}
+                      >
+                        {part.title}
+                      </span>
                     </span>
                   </Link>
                 </div>
