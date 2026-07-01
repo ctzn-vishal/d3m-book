@@ -47,8 +47,8 @@ article :where(.not-prose svg:not(.recharts-surface), .not-prose img) {
 }
 
 body {
-  background-color: #FFFFFF;
-  color: #1A1A1A;
+  background-color: rgb(var(--book-surface));
+  color: rgb(var(--book-body));
   font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   -webkit-font-smoothing: antialiased;
 }
@@ -66,11 +66,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F8F9FA;
+  background: rgb(var(--book-card));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DEE2E6;
+  background: rgb(var(--book-border));
   border-radius: 4px;
 }
 
@@ -150,6 +150,71 @@ body {
   user-select: none;
 }
 
+/* Syntax highlighting - dark theme (brighter shade per hue, same groupings) */
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-title,
+.dark .hljs-section,
+.dark .hljs-doctag,
+.dark .hljs-name,
+.dark .hljs-strong {
+  color: #38BDF8; /* sky-400 */
+}
+
+.dark .hljs-string,
+.dark .hljs-title.class_,
+.dark .hljs-tag .hljs-attr,
+.dark .hljs-template-tag,
+.dark .hljs-template-variable,
+.dark .hljs-type,
+.dark .hljs-variable.language_ {
+  color: #FB923C; /* orange-400 */
+}
+
+.dark .hljs-comment {
+  color: #94A3B8; /* slate-400 */
+}
+
+.dark .hljs-attr,
+.dark .hljs-attribute,
+.dark .hljs-literal,
+.dark .hljs-meta,
+.dark .hljs-number,
+.dark .hljs-operator,
+.dark .hljs-variable,
+.dark .hljs-selector-attr,
+.dark .hljs-selector-class,
+.dark .hljs-selector-id {
+  color: #34D399; /* emerald-400 */
+}
+
+.dark .hljs-regexp,
+.dark .hljs-meta .hljs-string,
+.dark .hljs-link {
+  color: #A78BFA; /* violet-400 */
+}
+
+.dark .hljs-built_in,
+.dark .hljs-symbol,
+.dark .hljs-code,
+.dark .hljs-params,
+.dark .hljs-property {
+  color: #F1F5F9; /* slate-100 */
+}
+
+.dark .hljs-bullet,
+.dark .hljs-deletion {
+  color: #FB923C;
+}
+
+.dark .hljs-addition {
+  color: #34D399;
+}
+
+.dark .hljs-ln-numbers {
+  color: #94A3B8;
+}
+
 /* Prose styles for markdown */
 .prose-brand {
   --tw-prose-body: #495057;
@@ -159,6 +224,50 @@ body {
   --tw-prose-code: #0EA5E9;
   --tw-prose-quotes: #6C757D;
   --tw-prose-quote-borders: #0EA5E9;
+}
+.dark .prose-brand {
+  --tw-prose-body: #CBD5E1;
+  --tw-prose-headings: #F1F5F9;
+  --tw-prose-links: #38BDF8;
+  --tw-prose-bold: #F1F5F9;
+  --tw-prose-code: #38BDF8;
+  --tw-prose-quotes: #94A3B8;
+  --tw-prose-quote-borders: #38BDF8;
+}
+
+/* ============================================================
+   Book reading surfaces — theme-aware (light + dark).
+   Tailwind `surface`/`card`/`body`/`border`/`link`/etc. colors
+   (and the `brand-*` aliases) reference these RGB-channel vars, so they
+   flip with the .dark class while still supporting opacity modifiers
+   (e.g. bg-card/60). Charts, maps, and hand-drawn diagram components are
+   NOT themed here — they keep their light-only palettes by design.
+   ============================================================ */
+:root {
+  --book-surface: 255 255 255;
+  --book-card: 248 249 250;
+  --book-card-hover: 233 236 239;
+  --book-code-bg: 241 243 245;
+  --book-body: 26 26 26;
+  --book-subtle: 55 65 81;
+  --book-muted: 108 117 125;
+  --book-border: 222 226 230;
+  --book-border-strong: 156 163 175;
+  --book-link: 14 165 233;
+  --book-link-hover: 2 132 199;
+}
+.dark {
+  --book-surface: 15 23 42;      /* slate-900 */
+  --book-card: 30 41 59;         /* slate-800 */
+  --book-card-hover: 51 65 85;   /* slate-700 */
+  --book-code-bg: 30 41 59;      /* slate-800 */
+  --book-body: 241 245 249;      /* slate-100 */
+  --book-subtle: 203 213 225;    /* slate-300 */
+  --book-muted: 148 163 184;     /* slate-400 */
+  --book-border: 51 65 85;       /* slate-700 */
+  --book-border-strong: 71 85 105; /* slate-600 */
+  --book-link: 56 189 248;       /* sky-400 */
+  --book-link-hover: 125 211 252; /* sky-300 */
 }
 
 /* ============================================================

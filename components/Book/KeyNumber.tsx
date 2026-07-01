@@ -24,10 +24,10 @@ export interface KeyNumberProps {
 
 function changeColor(change: string): string {
   const trimmed = change.trim();
-  if (trimmed.startsWith('+')) return 'text-green-700 bg-green-50';
+  if (trimmed.startsWith('+')) return 'text-green-700 bg-green-50 dark:text-green-300 dark:bg-green-950/40';
   if (trimmed.startsWith('-') || trimmed.startsWith('−'))
-    return 'text-red-700 bg-red-50';
-  return 'text-gray-700 bg-gray-100';
+    return 'text-red-700 bg-red-50 dark:text-red-300 dark:bg-red-950/40';
+  return 'text-gray-700 bg-gray-100 dark:text-gray-300 dark:bg-gray-800/60';
 }
 
 /**
@@ -47,7 +47,7 @@ export function KeyNumber({
   return (
     <div
       className={[
-        'not-prose my-7 rounded-md border border-slate-200 bg-slate-50/70 px-4 py-4',
+        'not-prose my-7 rounded-md border border-slate-200 bg-slate-50/70 px-4 py-4 dark:border-slate-700 dark:bg-slate-800/40',
         align === 'center' ? 'text-center' : 'text-left',
       ].join(' ')}
     >

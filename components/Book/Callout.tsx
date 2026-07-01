@@ -20,23 +20,23 @@ interface VariantSpec {
 const VARIANTS: Record<CalloutVariant, VariantSpec> = {
   caveat: {
     container:
-      'rounded-md border border-amber-200 bg-amber-50/70 px-4 py-3.5 text-sm text-amber-950 shadow-sm shadow-amber-100/60',
+      'rounded-md border border-amber-200 bg-amber-50/70 px-4 py-3.5 text-sm text-amber-950 shadow-sm shadow-amber-100/60 dark:border-amber-800/50 dark:bg-amber-950/30 dark:text-amber-100 dark:shadow-none',
     defaultTitle: 'Methodological note',
   },
   definition: {
     container:
-      'rounded-md border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800',
+      'rounded-md border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-200',
     defaultTitle: null,
   },
   finding: {
     container:
-      'rounded-md border border-sky-200 bg-sky-50/80 px-4 py-3.5 text-sm text-sky-950 shadow-sm shadow-sky-100/60',
+      'rounded-md border border-sky-200 bg-sky-50/80 px-4 py-3.5 text-sm text-sky-950 shadow-sm shadow-sky-100/60 dark:border-sky-800/50 dark:bg-sky-950/30 dark:text-sky-100 dark:shadow-none',
     defaultTitle: 'Key finding',
   },
   aside: {
     // No background, no rounded card — feels conversational.
     container:
-      'border-l-2 border-slate-200 pl-5 italic text-slate-700 text-[0.95em]',
+      'border-l-2 border-slate-200 pl-5 italic text-slate-700 text-[0.95em] dark:border-slate-700 dark:text-slate-300',
     defaultTitle: null,
   },
 };

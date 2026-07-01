@@ -71,7 +71,7 @@ export function BookShell({ slug, book, findArticle, children }: BookShellProps)
             )}
           </nav>
 
-          <article className="mx-auto w-full min-w-0 py-10 prose prose-neutral prose-headings:font-display prose-headings:tracking-normal prose-h2:mt-12 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h3:mt-8 prose-h3:text-[1.2rem] prose-h3:leading-snug prose-p:leading-7 prose-li:leading-7">
+          <article className="mx-auto w-full min-w-0 py-10 prose prose-brand prose-headings:font-display prose-headings:tracking-normal prose-h2:mt-12 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h3:mt-8 prose-h3:text-[1.2rem] prose-h3:leading-snug prose-p:leading-7 prose-li:leading-7">
             <header className="mb-9 not-prose">
               <p className="text-xs uppercase tracking-wider text-muted">
                 {formatArticleNumber(article.number)}

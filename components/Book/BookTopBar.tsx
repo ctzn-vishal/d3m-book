@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { SearchTrigger } from '@/components/Book/CommandPalette';
+import { ThemeToggle } from '@/components/hub/ThemeToggle';
 
 /**
  * The book's sticky top bar — shared by every reading surface (the cover, part
@@ -19,6 +20,7 @@ export function BookTopBar({ title }: { title: string }) {
         </Link>
         <div className="flex shrink-0 items-center gap-2">
           <SearchTrigger />
+          <ThemeToggle variant="book" />
           <Link
             href="/"
             className="hidden rounded-md px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-card hover:text-body sm:inline-block"

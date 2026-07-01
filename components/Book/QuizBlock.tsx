@@ -65,23 +65,23 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
   };
 
   return (
-    <section className="not-prose my-9 rounded-md border border-slate-200 bg-slate-50/80 p-4 shadow-sm sm:p-5">
+    <section className="not-prose my-9 rounded-md border border-slate-200 bg-slate-50/80 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/50 dark:shadow-none sm:p-5">
       <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-700">
+        <h3 className="text-sm font-semibold uppercase tracking-[0.14em] text-slate-700 dark:text-slate-300">
           {title}
         </h3>
         <div className="flex gap-2 text-xs">
           <button
             type="button"
             onClick={revealAll}
-            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 transition-colors hover:bg-slate-100"
+            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
             Reveal all
           </button>
           <button
             type="button"
             onClick={reset}
-            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 transition-colors hover:bg-slate-100"
+            className="rounded-md border border-slate-300 bg-white px-2.5 py-1.5 font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
             Reset
           </button>
@@ -89,7 +89,7 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
       </header>
 
       {intro && (
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">{intro}</p>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{intro}</p>
       )}
 
       <ol className="mt-4 space-y-4">
@@ -99,10 +99,10 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
           return (
             <li
               key={qi}
-              className="rounded-md border border-slate-200 bg-white p-3.5"
+              className="rounded-md border border-slate-200 bg-white p-3.5 dark:border-slate-700 dark:bg-slate-800/40"
             >
-              <div className="flex gap-2 text-sm font-medium text-slate-900">
-                <span className="text-slate-500">{qi + 1}.</span>
+              <div className="flex gap-2 text-sm font-medium text-slate-900 dark:text-slate-100">
+                <span className="text-slate-500 dark:text-slate-400">{qi + 1}.</span>
                 <div className="flex-1">{q.prompt}</div>
               </div>
 
@@ -110,14 +110,14 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
                 {q.options.map((opt, oi) => {
                   const picked = pickIndex === oi;
                   const correct = oi === q.correctIndex;
-                  let stateClass = 'border-slate-200 bg-white hover:bg-slate-50';
+                  let stateClass = 'border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800/40 dark:hover:bg-slate-700/50';
                   if (isRevealed) {
                     if (correct) {
-                      stateClass = 'border-emerald-400 bg-emerald-50 text-emerald-900';
+                      stateClass = 'border-emerald-400 bg-emerald-50 text-emerald-900 dark:border-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-200';
                     } else if (picked) {
-                      stateClass = 'border-rose-400 bg-rose-50 text-rose-900';
+                      stateClass = 'border-rose-400 bg-rose-50 text-rose-900 dark:border-rose-600 dark:bg-rose-950/40 dark:text-rose-200';
                     } else {
-                      stateClass = 'border-slate-200 bg-white text-slate-500';
+                      stateClass = 'border-slate-200 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800/40 dark:text-slate-500';
                     }
                   }
                   const letter = String.fromCharCode(65 + oi);
@@ -131,10 +131,10 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
                         <span className="mt-px font-semibold">{letter}.</span>
                         <span className="flex-1">{opt.label}</span>
                         {isRevealed && correct && (
-                          <span aria-hidden className="text-emerald-600">✓</span>
+                          <span aria-hidden className="text-emerald-600 dark:text-emerald-400">✓</span>
                         )}
                         {isRevealed && picked && !correct && (
-                          <span aria-hidden className="text-rose-600">✗</span>
+                          <span aria-hidden className="text-rose-600 dark:text-rose-400">✗</span>
                         )}
                       </button>
                     </li>
@@ -143,8 +143,8 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
               </ul>
 
               {isRevealed && (
-                <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700">
-                  <strong className="font-semibold text-slate-900">Why:</strong>{' '}
+                <div className="mt-3 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
+                  <strong className="font-semibold text-slate-900 dark:text-slate-100">Why:</strong>{' '}
                   {q.explanation}
                 </div>
               )}

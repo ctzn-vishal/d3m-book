@@ -74,7 +74,7 @@ export function DecisionBriefBuilder({ data }: DecisionBriefBuilderProps) {
   const ActiveIcon = iconFor(active.id);
 
   return (
-    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-white shadow-sm">
+    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-white shadow-sm dark:bg-slate-800/40 dark:shadow-none">
       <div className="grid lg:grid-cols-[300px_1fr]">
         <div className="border-b border-border bg-card p-4 lg:border-b-0 lg:border-r">
           <div className="mb-4">
@@ -98,11 +98,11 @@ export function DecisionBriefBuilder({ data }: DecisionBriefBuilderProps) {
                   className={[
                     'flex w-full gap-3 rounded-md border px-3 py-3 text-left transition-colors',
                     selected
-                      ? 'border-body bg-white text-body shadow-sm'
-                      : 'border-transparent text-subtle hover:border-border hover:bg-white',
+                      ? 'border-body bg-white text-body shadow-sm dark:bg-slate-800/60'
+                      : 'border-transparent text-subtle hover:border-border hover:bg-white dark:hover:bg-slate-800/60',
                   ].join(' ')}
                 >
-                  <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white text-xs font-semibold tabular-nums text-body ring-1 ring-border">
+                  <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white text-xs font-semibold tabular-nums text-body ring-1 ring-border dark:bg-slate-800/60">
                     {index + 1}
                   </span>
                   <span className="min-w-0">
@@ -122,7 +122,7 @@ export function DecisionBriefBuilder({ data }: DecisionBriefBuilderProps) {
 
         <div className="p-4 md:p-6">
           <div className="flex items-start gap-3">
-            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-orange-50 text-orange-700">
+            <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-orange-50 text-orange-700 dark:bg-orange-950/30 dark:text-orange-200">
               <ActiveIcon className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
@@ -153,18 +153,18 @@ export function DecisionBriefBuilder({ data }: DecisionBriefBuilderProps) {
                   {activeSection.evidence_standard}
                 </p>
               </div>
-              <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-amber-800">
+              <div className="rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-800/50 dark:bg-amber-950/30">
+                <div className="text-[11px] font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-200">
                   Red flag
                 </div>
-                <p className="mt-1 text-sm leading-snug text-amber-900">
+                <p className="mt-1 text-sm leading-snug text-amber-900 dark:text-amber-100">
                   {active.red_flag}
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="mt-5 rounded-md border border-border bg-white p-4">
+          <div className="mt-5 rounded-md border border-border bg-white p-4 dark:bg-slate-800/40">
             <div className="mb-3 text-[11px] font-semibold uppercase tracking-wide text-muted">
               Done means
             </div>

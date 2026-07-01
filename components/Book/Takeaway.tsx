@@ -16,11 +16,11 @@ export interface TakeawayProps {
  */
 export function Takeaway({ label = 'Managerial takeaway', children }: TakeawayProps) {
   return (
-    <aside className="my-9 not-prose rounded-md border border-sky-200 bg-sky-50/60 px-4 py-4 shadow-sm shadow-sky-100/60 sm:px-5">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-700">
+    <aside className="my-9 not-prose rounded-md border border-sky-200 bg-sky-50/60 px-4 py-4 shadow-sm shadow-sky-100/60 dark:border-sky-800/50 dark:bg-sky-950/30 dark:shadow-none sm:px-5">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-sky-700 dark:text-sky-300">
         {label}
       </p>
-      <div className="mt-2 text-[14.5px] leading-relaxed text-slate-900 [&_a]:text-link [&_a]:underline [&_em]:italic [&_strong]:font-semibold [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5">
+      <div className="mt-2 text-[14.5px] leading-relaxed text-slate-900 dark:text-slate-100 [&_a]:text-link [&_a]:underline [&_em]:italic [&_strong]:font-semibold [&_ul]:mt-2 [&_ul]:list-disc [&_ul]:space-y-1.5 [&_ul]:pl-5">
         {children}
       </div>
     </aside>

@@ -13,30 +13,33 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          bg: '#FFFFFF',
-          card: '#F8F9FA',
-          cardHover: '#E9ECEF',
-          border: '#DEE2E6',
+          bg: 'rgb(var(--book-surface) / <alpha-value>)',
+          card: 'rgb(var(--book-card) / <alpha-value>)',
+          cardHover: 'rgb(var(--book-card-hover) / <alpha-value>)',
+          border: 'rgb(var(--book-border) / <alpha-value>)',
           primary: '#0EA5E9',
           secondary: '#F97316',
-          text: '#1A1A1A',
-          muted: '#6C757D',
-          subtle: '#F1F3F5',
+          text: 'rgb(var(--book-body) / <alpha-value>)',
+          muted: 'rgb(var(--book-muted) / <alpha-value>)',
+          subtle: 'rgb(var(--book-code-bg) / <alpha-value>)',
         },
-        // Article design tokens — alias to brand palette so the
-        // Distill-style components ("bg-surface", "text-body", etc.)
-        // inherit the brand without per-component rewrites.
-        surface: '#FFFFFF',
-        card: '#F8F9FA',
-        'code-bg': '#F1F3F5',
-        body: '#1A1A1A',
-        subtle: '#374151',
-        muted: '#6C757D',
-        link: '#0EA5E9',
-        'link-hover': '#0284C7',
+        // Article design tokens — theme-aware via CSS vars in globals.css
+        // (:root + .dark), same pattern as the hub tokens below, so
+        // "bg-surface", "text-body", etc. flip with the theme and still
+        // support opacity modifiers (e.g. bg-card/60). brand-primary and
+        // brand-secondary stay constant hex — they're filled-button/accent
+        // colors, not surface/text colors, so they don't need to invert.
+        surface: 'rgb(var(--book-surface) / <alpha-value>)',
+        card: 'rgb(var(--book-card) / <alpha-value>)',
+        'code-bg': 'rgb(var(--book-code-bg) / <alpha-value>)',
+        body: 'rgb(var(--book-body) / <alpha-value>)',
+        subtle: 'rgb(var(--book-subtle) / <alpha-value>)',
+        muted: 'rgb(var(--book-muted) / <alpha-value>)',
+        link: 'rgb(var(--book-link) / <alpha-value>)',
+        'link-hover': 'rgb(var(--book-link-hover) / <alpha-value>)',
         border: {
-          DEFAULT: '#DEE2E6',
-          strong: '#9CA3AF',
+          DEFAULT: 'rgb(var(--book-border) / <alpha-value>)',
+          strong: 'rgb(var(--book-border-strong) / <alpha-value>)',
         },
         // Hub editorial surfaces — warm-paper system (Fraunces/Plex) used by
         // the new hub pages (home, gallery, research, teaching cover). Kept in

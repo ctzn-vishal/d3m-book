@@ -22,13 +22,13 @@ export function resolveIcon(name: string | undefined | null): LucideIcon {
 export type PartColor = { icon: string; chip: string };
 
 export const PART_COLORS: PartColor[] = [
-  { icon: 'text-sky-600', chip: 'bg-sky-50' }, // Part 0  — Modern Data OS
-  { icon: 'text-emerald-600', chip: 'bg-emerald-50' }, // Part I  — Language of Data
-  { icon: 'text-violet-600', chip: 'bg-violet-50' }, // Part II — Visual Evidence
-  { icon: 'text-orange-600', chip: 'bg-orange-50' }, // Part III — Quantifying Effects
-  { icon: 'text-indigo-600', chip: 'bg-indigo-50' }, // Part IV — Language of Algorithms
-  { icon: 'text-rose-600', chip: 'bg-rose-50' }, // Part V  — Unstructured / GenAI
-  { icon: 'text-teal-600', chip: 'bg-teal-50' }, // Part VI — D3M with AI Agents
+  { icon: 'text-sky-600 dark:text-sky-400', chip: 'bg-sky-50 dark:bg-sky-950/40' }, // Part 0  — Modern Data OS
+  { icon: 'text-emerald-600 dark:text-emerald-400', chip: 'bg-emerald-50 dark:bg-emerald-950/40' }, // Part I  — Language of Data
+  { icon: 'text-violet-600 dark:text-violet-400', chip: 'bg-violet-50 dark:bg-violet-950/40' }, // Part II — Visual Evidence
+  { icon: 'text-orange-600 dark:text-orange-400', chip: 'bg-orange-50 dark:bg-orange-950/40' }, // Part III — Quantifying Effects
+  { icon: 'text-indigo-600 dark:text-indigo-400', chip: 'bg-indigo-50 dark:bg-indigo-950/40' }, // Part IV — Language of Algorithms
+  { icon: 'text-rose-600 dark:text-rose-400', chip: 'bg-rose-50 dark:bg-rose-950/40' }, // Part V  — Unstructured / GenAI
+  { icon: 'text-teal-600 dark:text-teal-400', chip: 'bg-teal-50 dark:bg-teal-950/40' }, // Part VI — D3M with AI Agents
 ];
 
 export function partColor(index: number): PartColor {

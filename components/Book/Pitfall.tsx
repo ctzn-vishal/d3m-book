@@ -17,12 +17,12 @@ export interface PitfallProps {
  */
 export function Pitfall({ title, children }: PitfallProps) {
   return (
-    <aside className="my-6 not-prose rounded-md border border-rose-200 bg-rose-50/70 px-4 py-3.5 shadow-sm shadow-rose-100/50">
-      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-rose-700">
+    <aside className="my-6 not-prose rounded-md border border-rose-200 bg-rose-50/70 px-4 py-3.5 shadow-sm shadow-rose-100/50 dark:border-rose-800/50 dark:bg-rose-950/30 dark:shadow-none">
+      <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-rose-700 dark:text-rose-300">
         <AlertTriangle size={14} strokeWidth={2.5} aria-hidden="true" />
-        <span>Pitfall{title ? <span className="normal-case font-medium text-rose-900">: {title}</span> : null}</span>
+        <span>Pitfall{title ? <span className="normal-case font-medium text-rose-900 dark:text-rose-200">: {title}</span> : null}</span>
       </p>
-      <div className="mt-2 text-sm leading-relaxed text-rose-950/85 [&_a]:underline [&_strong]:font-semibold [&_strong]:text-rose-950">
+      <div className="mt-2 text-sm leading-relaxed text-rose-950/85 dark:text-rose-100/90 [&_a]:underline [&_strong]:font-semibold [&_strong]:text-rose-950 dark:[&_strong]:text-rose-100">
         {children}
       </div>
     </aside>

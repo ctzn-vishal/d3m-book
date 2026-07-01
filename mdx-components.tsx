@@ -32,7 +32,7 @@ function parseMath(text: string): (string | React.JSX.Element)[] {
           );
         } catch (err) {
           results.push(
-            <code key={`display-err-${start}`} className="block text-center font-mono text-sm text-slate-900">
+            <code key={`display-err-${start}`} className="block text-center font-mono text-sm text-slate-900 dark:text-slate-100">
               {text.slice(start, close + 2)}
             </code>
           );
@@ -83,7 +83,7 @@ function parseMath(text: string): (string | React.JSX.Element)[] {
             );
           } catch (err) {
             results.push(
-              <code key={`inline-err-${start}`} className="font-mono text-xs text-slate-900">
+              <code key={`inline-err-${start}`} className="font-mono text-xs text-slate-900 dark:text-slate-100">
                 {text.slice(start, close + 1)}
               </code>
             );

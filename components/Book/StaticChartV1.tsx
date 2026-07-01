@@ -62,7 +62,7 @@ export interface StaticChartV1Props {
  */
 export function StaticChartV1({ svgUrl, alt, source, title, subtitle }: StaticChartV1Props) {
   return (
-    <div className="w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm md:px-5 md:pt-4">
+    <div className="w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm dark:border-slate-700 dark:shadow-none md:px-5 md:pt-4">
       {(title || subtitle) && (
         <div className="mb-3 border-b border-slate-100 pb-2">
           {title && (
