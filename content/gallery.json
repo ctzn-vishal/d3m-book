@@ -150,6 +150,23 @@
       "featured": false,
       "status": "published",
       "sort": 0
+    },
+    {
+      "id": "chat-fred",
+      "type": "app",
+      "title": "Chat FRED",
+      "description": "Chat with the Federal Reserve Economic Data API. Explore economic indicators, time series, and datasets through natural conversation—powered by cached data for instant responses.",
+      "domain": "Economics",
+      "topic": "Business & Markets",
+      "tags": ["FRED", "API", "economics", "chat", "federal-reserve", "data-exploration"],
+      "href": "https://chatfred7.vercel.app/",
+      "external": true,
+      "openInNewTab": true,
+      "thumbnail": "/fred_chat.png",
+      "accent": "#2563eb",
+      "featured": true,
+      "status": "published",
+      "sort": 0
     }
   ],
   "curate": {
