@@ -8,7 +8,7 @@ import { JsonLd } from '@/components/JsonLd';
 export const metadata: Metadata = {
   title: 'Vishal Singh — Interactive Data Gallery',
   description:
-    'A gallery of interactive dashboards, data stories, and apps built from real datasets across public health, politics, pricing, and markets — by Vishal Singh, NYU Stern.',
+    'Explore data apps, interactive articles, and dashboards for public health, politics, business, and more.',
   alternates: { canonical: `${SITE_URL}/` },
 };
 
