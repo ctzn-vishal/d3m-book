@@ -2,10 +2,10 @@ import { HubHeader } from '@/components/hub/HubHeader';
 import { HubFooter } from '@/components/hub/HubFooter';
 
 /**
- * Layout for the hub surfaces (home, gallery, research, about, teaching cover).
+ * Layout for the hub surfaces (home, gallery, research, about).
  * Wraps them in the warm-paper editorial scope with the shared header/footer.
- * The book's article reading pages live outside this route group and keep
- * their own (white) theme + per-article shell.
+ * The book (cover, part pages, and article reading pages) lives outside this
+ * route group and keeps its own (white) theme + book chrome.
  */
 export default function HubLayout({ children }: { children: React.ReactNode }) {
   return (

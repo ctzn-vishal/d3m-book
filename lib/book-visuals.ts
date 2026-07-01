@@ -34,3 +34,22 @@ export const PART_COLORS: PartColor[] = [
 export function partColor(index: number): PartColor {
   return PART_COLORS[index] ?? PART_COLORS[0];
 }
+
+/**
+ * Hex equivalents of each PART_COLORS icon shade, for the rare spot (e.g. an
+ * inline-styled accent bar) where Tailwind's JIT can't see a class built from
+ * a runtime value and a literal hex is needed instead.
+ */
+export const PART_HEX: string[] = [
+  '#0284c7', // sky-600
+  '#059669', // emerald-600
+  '#7c3aed', // violet-600
+  '#ea580c', // orange-600
+  '#4f46e5', // indigo-600
+  '#e11d48', // rose-600
+  '#0d9488', // teal-600
+];
+
+export function partHex(index: number): string {
+  return PART_HEX[index] ?? PART_HEX[0];
+}

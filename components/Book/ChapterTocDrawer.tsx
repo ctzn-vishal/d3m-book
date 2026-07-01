@@ -8,8 +8,8 @@ import type { Book } from '@/lib/book-types';
 
 export interface ChapterTocDrawerProps {
   book: Book;
-  /** Slug of the article currently being read; highlighted in the TOC. */
-  currentSlug: string;
+  /** Slug of the article currently being read; highlighted in the TOC. Omitted on non-article pages. */
+  currentSlug?: string;
 }
 
 function formatArticleNumber(num: string): string {
@@ -22,7 +22,7 @@ function formatArticleNumber(num: string): string {
  * tree. Current article is highlighted. Esc / outside-click / clicking a
  * link closes the drawer.
  */
-export function ChapterTocDrawer({ book, currentSlug }: ChapterTocDrawerProps) {
+export function ChapterTocDrawer({ book, currentSlug = '' }: ChapterTocDrawerProps) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {

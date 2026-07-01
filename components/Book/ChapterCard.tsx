@@ -7,9 +7,10 @@ import { itemsForChapter } from '@/lib/registry';
 
 /**
  * A chapter on the contents page and on part pages. The header links to the
- * chapter overview; each article links to the article; studios open in a new
- * tab. Styled in the book's reading theme (white card, Space Grotesk title,
- * sky-blue links). The icon carries its part's color.
+ * chapter's first article (via chapterHref); each article links to the
+ * article; studios open in a new tab. Styled in the book's reading theme
+ * (white card, Space Grotesk title, sky-blue links). The icon carries its
+ * part's color.
  */
 export function ChapterCard({ chapter, color }: { chapter: Chapter; color: PartColor }) {
   const content = getChapterContent(chapter.number);

@@ -33,7 +33,7 @@ export function PartPage({ book, part, index, prev, next }: PartPageProps) {
   const dataStories = paired.filter(i => i.type === 'Blog');
 
   return (
-    <BookFrame book={book}>
+    <BookFrame book={book} activePartNumeral={part.numeral}>
       <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6 lg:px-10">
         {/* Breadcrumb */}
         <nav className="text-sm text-muted" aria-label="Breadcrumb">

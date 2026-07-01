@@ -9,7 +9,9 @@ import { chapterHref } from '@/lib/book-toc';
 export interface BookSidebarProps {
   book: Book;
   /** Slug of the article currently being read; highlighted and auto-scrolled into view. */
-  currentSlug: string;
+  currentSlug?: string;
+  /** Part to expand/highlight when there's no current article (cover, part-landing pages). */
+  activePartNumeral?: string;
 }
 
 function formatArticleNumber(num: string): string {
@@ -24,16 +26,20 @@ function formatArticleNumber(num: string): string {
  * area on load (never touching window scroll). Fixed-open on lg+ screens; below
  * lg the floating ChapterTocDrawer takes over.
  */
-export function BookSidebar({ book, currentSlug }: BookSidebarProps) {
+export function BookSidebar({ book, currentSlug, activePartNumeral: activePartNumeralProp }: BookSidebarProps) {
   const activePartNumeral = React.useMemo(() => {
-    const part = book.parts.find(p =>
+    const bySlug = book.parts.find(p =>
       p.chapters.some(c => c.articles.some(a => a.slug === currentSlug))
     );
-    return part?.numeral ?? book.parts[0]?.numeral ?? '';
-  }, [book, currentSlug]);
+    // An article's part takes precedence; otherwise fall back to the explicit
+    // part prop (part-landing pages); otherwise nothing is active (bare cover).
+    return bySlug?.numeral ?? activePartNumeralProp ?? '';
+  }, [book, currentSlug, activePartNumeralProp]);
 
   // Only the active part is open on load; the reader can expand others.
-  const [open, setOpen] = React.useState<Set<string>>(() => new Set([activePartNumeral]));
+  const [open, setOpen] = React.useState<Set<string>>(
+    () => new Set(activePartNumeral ? [activePartNumeral] : [])
+  );
 
   const toggle = (numeral: string) =>
     setOpen(prev => {
@@ -74,20 +80,24 @@ export function BookSidebar({ book, currentSlug }: BookSidebarProps) {
             const partActive = part.numeral === activePartNumeral;
             return (
               <li key={part.numeral}>
-                <button
-                  type="button"
-                  onClick={() => toggle(part.numeral)}
-                  aria-expanded={isOpen}
-                  className="group flex w-full items-start gap-1.5 rounded-md px-1 py-1.5 text-left transition-colors hover:bg-card"
-                >
-                  <ChevronRight
-                    size={14}
-                    className={[
-                      'mt-[3px] shrink-0 text-muted transition-transform duration-200',
-                      isOpen ? 'rotate-90' : '',
-                    ].join(' ')}
-                  />
-                  <span className="min-w-0 flex-1">
+                <div className="flex w-full items-start gap-1.5 rounded-md px-1 py-1.5 transition-colors hover:bg-card">
+                  {/* Toggle-only: expands/collapses without navigating, so a
+                      reader can peek at another part's chapters without
+                      leaving the article they're on. */}
+                  <button
+                    type="button"
+                    onClick={() => toggle(part.numeral)}
+                    aria-expanded={isOpen}
+                    aria-label={`${isOpen ? 'Collapse' : 'Expand'} Part ${part.numeral}`}
+                    className="-m-1.5 shrink-0 rounded p-1.5 text-muted transition-colors hover:text-body"
+                  >
+                    <ChevronRight
+                      size={14}
+                      className={['transition-transform duration-200', isOpen ? 'rotate-90' : ''].join(' ')}
+                    />
+                  </button>
+                  {/* Navigates to the part's overview page; does not toggle. */}
+                  <Link href={`/teaching/part/${part.numeral}`} className="min-w-0 flex-1 text-left">
                     <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
                       Part {part.numeral}
                     </span>
@@ -99,8 +109,8 @@ export function BookSidebar({ book, currentSlug }: BookSidebarProps) {
                     >
                       {part.title}
                     </span>
-                  </span>
-                </button>
+                  </Link>
+                </div>
 
                 {isOpen && (
                   <ol className="mb-3 mt-1.5 space-y-3 pl-2.5">
