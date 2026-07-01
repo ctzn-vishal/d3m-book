@@ -310,6 +310,95 @@ export function renderGalleryThumb({
   );
 }
 
+/**
+ * Main-site (hub) share card — vishalsingh.org, not the book. Full-bleed hero
+ * photo with the favicon glyph + name over a legibility scrim. Deliberately
+ * spare (no book chrome) so it reads as a personal site card, not a chapter
+ * preview; see renderD3mOgImage for the teaching/book card.
+ */
+export function renderHeroOgImage({ imageDataUri }: { imageDataUri: string }): ImageResponse {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative',
+          display: 'flex',
+          background: '#0f172a',
+          fontFamily: 'Inter, Arial, sans-serif',
+        }}
+      >
+        <img
+          src={imageDataUri}
+          width={ogImageSize.width}
+          height={ogImageSize.height}
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            background:
+              'linear-gradient(90deg, rgba(2,6,23,0.85) 0%, rgba(2,6,23,0.45) 55%, rgba(2,6,23,0.18) 100%)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            display: 'flex',
+            background: 'linear-gradient(0deg, rgba(2,6,23,0.5) 0%, rgba(2,6,23,0) 40%)',
+          }}
+        />
+
+        <div style={{ position: 'absolute', left: 64, top: 56, display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 14,
+              background: '#2f6f6b',
+              display: 'flex',
+              alignItems: 'flex-end',
+              gap: 5,
+              padding: '0 10px 9px',
+            }}
+          >
+            <div style={{ width: 7, height: 13, borderRadius: 3, background: '#f4efe4' }} />
+            <div style={{ width: 7, height: 20, borderRadius: 3, background: '#f4efe4' }} />
+            <div style={{ width: 7, height: 27, borderRadius: 3, background: '#f4efe4' }} />
+            <div style={{ width: 7, height: 34, borderRadius: 3, background: '#e8a64d' }} />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              color: 'rgba(255,255,255,0.82)',
+              fontSize: 22,
+              fontWeight: 700,
+              letterSpacing: 1.5,
+              textTransform: 'uppercase',
+            }}
+          >
+            vishalsingh.org
+          </div>
+        </div>
+
+        <div style={{ position: 'absolute', left: 64, bottom: 66, display: 'flex', flexDirection: 'column', maxWidth: 820 }}>
+          <div style={{ display: 'flex', color: '#FFFFFF', fontSize: 92, fontWeight: 800, letterSpacing: -1.5, lineHeight: 1.02 }}>
+            Vishal Singh
+          </div>
+          <div style={{ marginTop: 18, display: 'flex', color: 'rgba(255,255,255,0.85)', fontSize: 28, fontWeight: 600 }}>
+            NYU Stern · Interactive Data Gallery
+          </div>
+        </div>
+      </div>
+    ),
+    ogImageSize
+  );
+}
+
 export function renderD3mOgImage({
   eyebrow = 'D3M',
   title,
