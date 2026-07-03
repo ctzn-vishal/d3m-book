@@ -1,5 +1,66 @@
-import * as LucideIcons from 'lucide-react';
-import { BookOpen, type LucideIcon } from 'lucide-react';
+import {
+  BarChart3,
+  BookOpen,
+  Bot,
+  Boxes,
+  BrainCircuit,
+  Compass,
+  Database,
+  DollarSign,
+  FileText,
+  Filter,
+  FlaskConical,
+  Gauge,
+  GitCompareArrows,
+  LayoutDashboard,
+  LineChart,
+  ListChecks,
+  MessageSquareText,
+  Network,
+  Rows3,
+  ScanEye,
+  Split,
+  Table2,
+  Target,
+  Workflow,
+  type LucideIcon,
+} from 'lucide-react';
+
+/**
+ * Every icon name used by lib/book-content.ts's partContent/chapterContent
+ * `icon` fields, as explicit named imports rather than `import * as
+ * LucideIcons` — a namespace import can't be tree-shaken, so it used to pull
+ * the entire ~1500-icon package (a ~150KB gzipped chunk) into every article
+ * page via BookSidebar's per-part icon. Named imports let the bundler keep
+ * only the ~20 icons actually used.
+ *
+ * Add a new icon here (import + map entry) when adding one to book-content.ts.
+ */
+const ICONS: Record<string, LucideIcon> = {
+  BarChart3,
+  Bot,
+  Boxes,
+  BrainCircuit,
+  Compass,
+  Database,
+  DollarSign,
+  FileText,
+  Filter,
+  FlaskConical,
+  Gauge,
+  GitCompareArrows,
+  LayoutDashboard,
+  LineChart,
+  ListChecks,
+  MessageSquareText,
+  Network,
+  Rows3,
+  ScanEye,
+  Split,
+  Table2,
+  Target,
+  Workflow,
+};
 
 /**
  * Resolve a lucide-react icon by name with a safe fallback. Drafted icon names
@@ -8,8 +69,7 @@ import { BookOpen, type LucideIcon } from 'lucide-react';
  */
 export function resolveIcon(name: string | undefined | null): LucideIcon {
   if (!name) return BookOpen;
-  const icons = LucideIcons as unknown as Record<string, LucideIcon | undefined>;
-  return icons[name] ?? BookOpen;
+  return ICONS[name] ?? BookOpen;
 }
 
 /**
