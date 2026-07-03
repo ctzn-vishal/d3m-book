@@ -30,3 +30,12 @@ export type AdminRow = {
 export type RowPatch = Partial<
   Pick<AdminRow, 'type' | 'status' | 'featured' | 'topic' | 'title' | 'description' | 'tags'>
 >;
+
+/**
+ * Server actions return this instead of throwing. Next.js redacts thrown
+ * Server Action error messages in production builds (replaced with a
+ * generic "An error occurred..." + digest), so a validation message like
+ * "invalid type: Foo" would never reach the curator — returning it instead
+ * passes it through untouched.
+ */
+export type ActionResult = { ok: true } | { ok: false; error: string };

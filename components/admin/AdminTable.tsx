@@ -113,7 +113,11 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
     setRows(rs => rs.map(r => (r.id === id ? { ...r, ...patch } : r)));
     startTransition(async () => {
       try {
-        await updateRow(id, patch);
+        const result = await updateRow(id, patch);
+        if (!result.ok) {
+          setRows(rs => rs.map(r => (r.id === id ? { ...r, ...inverse } : r)));
+          setError(`Save failed: ${result.error}`);
+        }
       } catch (e) {
         setRows(rs => rs.map(r => (r.id === id ? { ...r, ...inverse } : r)));
         setError(`Save failed: ${(e as Error).message}`);
@@ -129,15 +133,19 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
     setError(null);
     const orderedIds = newFull.map(r => r.id);
     startTransition(async () => {
-      try {
-        await reorder(orderedIds);
-      } catch (e) {
+      const revert = (message: string) => {
         // Revert order over the latest state (keep any concurrent field edits).
         setRows(rs => {
           const pos = new Map(prevOrder.map((id, i) => [id, i]));
           return [...rs].sort((a, b) => (pos.get(a.id) ?? 0) - (pos.get(b.id) ?? 0));
         });
-        setError(`Reorder failed: ${(e as Error).message}`);
+        setError(`Reorder failed: ${message}`);
+      };
+      try {
+        const result = await reorder(orderedIds);
+        if (!result.ok) revert(result.error);
+      } catch (e) {
+        revert((e as Error).message);
       }
     });
   }

@@ -37,7 +37,9 @@ export default async function AdminLogin({
           className="mt-1.5 w-full rounded-lg border border-hub-line bg-hub-paper px-3 py-2.5 text-[14px] text-hub-ink focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
         />
 
-        {error ? (
+        {error === 'rate_limited' ? (
+          <p className="mt-3 text-[13px] text-red-600">Too many attempts. Try again in a few minutes.</p>
+        ) : error ? (
           <p className="mt-3 text-[13px] text-red-600">Incorrect password.</p>
         ) : null}
         {noSecret ? (

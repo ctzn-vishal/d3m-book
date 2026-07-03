@@ -14,6 +14,17 @@ import type { RegistryItem, RegistryType } from '@/lib/registry-types';
  */
 const READ_TIMEOUT_MS = 4000; // allows a cold-start mint; cached after first success
 
+function parseTags(id: string, raw: unknown): string[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw as string);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    console.warn(`[registry] row "${id}" has malformed tags JSON — treating as []`);
+    return [];
+  }
+}
+
 function mapRows(rows: Record<string, any>[]): RegistryItem[] {
   return rows.map(r => ({
     id: r.id,
@@ -22,7 +33,7 @@ function mapRows(rows: Record<string, any>[]): RegistryItem[] {
     description: r.description ?? '',
     domain: r.domain ?? undefined,
     topic: r.topic ?? undefined,
-    tags: r.tags ? JSON.parse(r.tags) : [],
+    tags: parseTags(r.id, r.tags),
     teaching: r.teaching ?? undefined,
     href: r.href,
     external: !!r.external,
@@ -42,13 +53,22 @@ function mapRows(rows: Record<string, any>[]): RegistryItem[] {
 // no creds. Callers distinguish null (fall back to snapshot) from [] (serve empty).
 async function readTurso(where: string): Promise<RegistryItem[] | null> {
   let timer: ReturnType<typeof setTimeout> | undefined;
+  // Race the connect+query against the timeout. Promise.race doesn't cancel the
+  // loser: if the timeout wins, this query promise keeps running and would
+  // reject/resolve later, unobserved — attach a catch here (not on the raced
+  // promise itself) so a late rejection can't become an unhandled rejection.
+  const query = (async () => {
+    const db = await getDbClient();
+    if (!db) return null;
+    return db.execute(`SELECT * FROM gallery${where}`);
+  })();
+  query.catch(e => {
+    if (/401|unauthor|expired|jwt|token/i.test((e as Error)?.message ?? '')) resetDbClient();
+  });
+
   try {
     const result = await Promise.race([
-      (async () => {
-        const db = await getDbClient();
-        if (!db) return null;
-        return db.execute(`SELECT * FROM gallery${where}`);
-      })(),
+      query,
       new Promise<null>(resolve => { timer = setTimeout(() => resolve(null), READ_TIMEOUT_MS); }),
     ]);
     if (!result) return null;
