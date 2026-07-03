@@ -18,7 +18,7 @@ export function M({ children }: { children: string }) {
       });
     } catch (err) {
       console.error('KaTeX inline rendering error:', err);
-      return `<code class="font-mono text-xs text-slate-900 dark:text-slate-100">${children}</code>`;
+      return `<code class="font-mono text-xs text-body">${children}</code>`;
     }
   }, [children]);
 

@@ -53,9 +53,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Focus visible styles for accessibility */
+/* Focus visible styles for accessibility. Uses --book-link (the same
+   theme-aware accent as in-text links) rather than a literal hex, so the
+   ring brightens in dark mode (sky-400) instead of staying pinned to the
+   light-mode blue against a dark surface. */
 *:focus-visible {
-  outline: 2px solid #0EA5E9;
+  outline: 2px solid rgb(var(--book-link));
   outline-offset: 2px;
 }
 
@@ -75,7 +78,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0EA5E9;
+  background: rgb(var(--book-link));
 }
 
 /* Syntax highlighting - light theme */

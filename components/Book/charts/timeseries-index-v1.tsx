@@ -12,6 +12,7 @@ import {
     ResponsiveContainer,
     ReferenceLine,
 } from 'recharts';
+import { CATEGORICAL, CHART } from "@/lib/chart-theme";
 
 // --- Type Definitions ---
 //
@@ -72,9 +73,9 @@ interface TimeseriesIndexProps {
     sharedYDomain?: [number, number];
 }
 
-// Same palette as timeseries-line-v1 so a chapter that mixes the two
-// keeps consistent demographic colors.
-const COLORS = ['#2196f3', '#f44336', '#4caf50', '#ff9800', '#9c27b0', '#795548', '#607d8b'];
+// Same palette as timeseries-line-v1 (sourced from lib/chart-theme.ts) so a
+// chapter that mixes the two keeps consistent demographic colors.
+const COLORS = CATEGORICAL;
 
 // --- Helpers ---
 const generateTicks = (start: number, end: number, interval: number): number[] => {
@@ -279,7 +280,7 @@ export default function TimeseriesIndexV1({
                                 iconSize={10} wrapperStyle={{ paddingTop: '10px' }}
                                 formatter={(value) => {
                                     const isVisible = visibleGroups.has(value);
-                                    return (<span style={{ color: isVisible ? '#333' : '#aaa', cursor: 'pointer', marginLeft: '4px', fontSize: '12px' }}>{value}</span>);
+                                    return (<span style={{ color: isVisible ? CHART.ink : CHART.faint, cursor: 'pointer', marginLeft: '4px', fontSize: '12px' }}>{value}</span>);
                                 }} />
                         )}
 

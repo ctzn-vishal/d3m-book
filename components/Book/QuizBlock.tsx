@@ -131,10 +131,16 @@ export function QuizBlock({ title = 'Concept check', intro, questions }: QuizBlo
                         <span className="mt-px font-semibold">{letter}.</span>
                         <span className="flex-1">{opt.label}</span>
                         {isRevealed && correct && (
-                          <span aria-hidden className="text-emerald-600 dark:text-emerald-400">✓</span>
+                          <>
+                            <span aria-hidden className="text-emerald-600 dark:text-emerald-400">✓</span>
+                            <span className="sr-only"> (correct answer)</span>
+                          </>
                         )}
                         {isRevealed && picked && !correct && (
-                          <span aria-hidden className="text-rose-600 dark:text-rose-400">✗</span>
+                          <>
+                            <span aria-hidden className="text-rose-600 dark:text-rose-400">✗</span>
+                            <span className="sr-only"> (your answer — incorrect)</span>
+                          </>
                         )}
                       </button>
                     </li>

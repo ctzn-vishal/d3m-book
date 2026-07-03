@@ -92,7 +92,7 @@ export function ChoroplethMap({
           scheme,
           label: valueLabel,
           legend: true,
-          unknown: '#F1F3F5',
+          unknown: CHART.unknown,
         } as PlotOptions['color'],
         marks: [
           Plot.geo(features, {

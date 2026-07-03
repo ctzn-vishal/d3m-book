@@ -14,6 +14,8 @@ export const CHART = {
   faint: '#9CA3AF',
   grid: '#E9ECEF',
   border: '#DEE2E6',
+  /** Fill for a choropleth region with no data (Plot's `color.unknown`). */
+  unknown: '#F1F3F5',
   // Accents (match the per-part section palette + book brand)
   sky: '#0EA5E9',
   skyDark: '#0284C7',

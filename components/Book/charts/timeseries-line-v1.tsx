@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { Label } from "@/viz/ui/label";
 import { Switch } from "@/viz/ui/switch";
+import { CATEGORICAL, CHART } from "@/lib/chart-theme";
 
 // --- Type Definitions ---
 interface DataPoint {
@@ -104,8 +105,11 @@ interface TimeTrendDemoChartProps {
 
 // --- Constants ---
 // Positional fallback palette — used for series whose group name has no
-// established editorial color convention.
-const COLORS = ['#2196f3', '#f44336', '#4caf50', '#ff9800', '#9c27b0', '#795548', '#607d8b'];
+// established editorial color convention. Sourced from the book's shared
+// chart theme (lib/chart-theme.ts) rather than an unrelated Material Design
+// palette, so a chart's fallback colors match the sky/orange/emerald accents
+// used everywhere else in the book.
+const COLORS = CATEGORICAL;
 
 // Identity-coded color map. When a demographic group's name matches a key
 // here, use this color instead of the positional fallback. This keeps party
@@ -424,7 +428,7 @@ export default function TimeTrendDemoChart({
                                 iconSize={10} wrapperStyle={{ paddingTop: '10px' }}
                                 formatter={(value) => {
                                     const isVisible = visibleGroups.has(value);
-                                    return (<span style={{ color: isVisible ? '#333' : '#aaa', cursor: 'pointer', marginLeft: '4px', fontSize: '12px' }}>{value}</span>);
+                                    return (<span style={{ color: isVisible ? CHART.ink : CHART.faint, cursor: 'pointer', marginLeft: '4px', fontSize: '12px' }}>{value}</span>);
                                 }} />
                         )}
 
