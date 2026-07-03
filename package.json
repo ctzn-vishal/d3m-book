@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "pnpm verify-book && next build",
     "start": "next start",
     "lint": "next lint",
+    "verify-book": "node --import tsx scripts/verify-book.ts",
     "fetch-data": "node --env-file=.env.local scripts/fetch-article-data.mjs",
     "sync-articles": "node --env-file=.env.local scripts/sync-articles.mjs",
     "rebuild-manifest": "node --env-file=.env.local scripts/rebuild-manifest.mjs",

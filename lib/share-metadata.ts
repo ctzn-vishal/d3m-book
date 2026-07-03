@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { book } from '@/lib/book-toc';
+import { book, findArticle } from '@/lib/book-toc';
 
 export const ogImageSize = {
   width: 1200,
@@ -65,5 +65,31 @@ export function createPreviewMetadata({
       ...(description ? { description } : {}),
       images: [twitterImagePath ?? imagePath.replace('opengraph-image', 'twitter-image')],
     },
+  };
+}
+
+/**
+ * Metadata for a single book article: title/§-number from the TOC, the given
+ * description, a canonical link (resolved against metadataBase in the root
+ * layout), and the per-slug OG/Twitter card already served by
+ * app/[slug]/opengraph-image.tsx for every chapter path.
+ */
+export function createArticleMetadata(slug: string, description: string): Metadata {
+  const found = findArticle(slug);
+  if (!found) {
+    return { title: 'Not found' };
+  }
+  const title = `§${found.article.number} ${found.article.title} | ${book.title}`;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/${slug}` },
+    ...createPreviewMetadata({
+      title,
+      description,
+      type: 'article',
+      imagePath: `/${slug}/opengraph-image`,
+      imageAlt: `${found.article.title} preview card`,
+    }),
   };
 }

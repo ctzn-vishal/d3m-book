@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§15.2 Computer Vision Fundamentals | ${book.title}`,
-  description:
-    'What CNNs and vision transformers actually do, the four output shapes that matter, and where vision AI ships in business.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch15-vision" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch15-vision', Article);
+export { metadata };
+export default Page;

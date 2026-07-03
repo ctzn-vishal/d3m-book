@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§9.2 The Supervised Learning Setup | ${book.title}`,
-  description:
-    'Target, features, unit of prediction, and label timing — the vocabulary every supervised model relies on.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch09-supervised-setup" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch09-supervised-setup', Article);
+export { metadata };
+export default Page;

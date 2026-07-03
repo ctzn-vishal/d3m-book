@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§13.1 From Structured to Unstructured Data | ${book.title}`,
-  description:
-    'Why text, images, and documents require a representation layer before algorithms can use them.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch13-structured-to-unstructured" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch13-structured-to-unstructured', Article);
+export { metadata };
+export default Page;

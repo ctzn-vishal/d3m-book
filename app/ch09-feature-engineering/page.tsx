@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§9.4 Feature Engineering | ${book.title}`,
-  description:
-    'Feature engineering is where business knowledge becomes model input — and where, in the AutoML era, most managerial value concentrates.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch09-feature-engineering" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch09-feature-engineering', Article);
+export { metadata };
+export default Page;

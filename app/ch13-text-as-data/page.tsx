@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§13.2 Text as Data | ${book.title}`,
-  description:
-    'Document, corpus, token, vocabulary — the vocabulary that every text method in the book relies on.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch13-text-as-data" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch13-text-as-data', Article);
+export { metadata };
+export default Page;

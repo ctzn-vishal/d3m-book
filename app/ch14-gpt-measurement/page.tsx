@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§14.4 GPT-as-Measurement | ${book.title}`,
-  description:
-    'From surface features to measured constructs — the bridge between classical NLP and the language-model age.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch14-gpt-measurement" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch14-gpt-measurement', Article);
+export { metadata };
+export default Page;

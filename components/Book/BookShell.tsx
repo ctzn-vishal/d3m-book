@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Link from 'next/link';
-import type { Article, Book, ArticleLookup } from '@/lib/book-types';
-import { chapterHref } from '@/lib/book-toc';
+import type { Article } from '@/lib/book-types';
+import { book, findArticle, chapterHref } from '@/lib/book-toc';
 import { ChapterTocDrawer } from '@/components/Book/ChapterTocDrawer';
 import { BookSidebar } from '@/components/Book/BookSidebar';
 import { OnThisPage } from '@/components/Book/OnThisPage';
@@ -12,8 +12,6 @@ import { BookTopBar } from '@/components/Book/BookTopBar';
 
 export interface BookShellProps {
   slug: string;
-  book: Book;
-  findArticle: (slug: string) => ArticleLookup;
   children: React.ReactNode;
 }
 
@@ -21,7 +19,7 @@ function formatArticleNumber(num: string): string {
   return num.includes('.') ? `§${num}` : `Ch. ${num}`;
 }
 
-export function BookShell({ slug, book, findArticle, children }: BookShellProps) {
+export function BookShell({ slug, children }: BookShellProps) {
   const found = findArticle(slug);
   if (!found) {
     throw new Error(`BookShell: no article found for slug "${slug}"`);

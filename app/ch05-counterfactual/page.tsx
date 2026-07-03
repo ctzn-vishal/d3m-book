@@ -1,18 +1,6 @@
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§5.2 Causality and the Counterfactual | ${book.title}`,
-  description:
-    'Potential outcomes, counterfactuals, and why the missing comparison is the core object of causal analysis.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="ch05-counterfactual" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('ch05-counterfactual', Article);
+export { metadata };
+export default Page;

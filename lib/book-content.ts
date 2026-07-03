@@ -592,3 +592,161 @@ export function getChapterContent(num: number): ChapterContent | undefined {
 export function getArticleBlurb(slug: string): string | undefined {
   return articleBlurbs[slug];
 }
+
+// ── articleDescriptions (codemod-generated; see docs) ──────────────────────
+export const articleDescriptions: Record<string, string> = {
+  'ch00-data-system':
+    'The modern data operating system in one chapter: where business data comes from, how it is stored, how it is used, and how the data-to-decision loop connects to the rest of the book.',
+  'ch00-foreword':
+    'The book\'s wager, who it is for, how to read it, the Bean & Basket through-line and standalone cases, a note on the AI chapters, and what you will have at the end.',
+  'ch01-reading-data':
+    'Reading a business table on three levels: what one row means (grain), how the rows are arranged (cross-section, time-series, panel, geo, network), and what each column measures (variable types).',
+  'ch02-data-quality':
+    'A data quality problem is usually a business process problem in disguise. The cheapest defense is to treat data hygiene as governance, not engineering.',
+  'ch02-joins':
+    'Joins are how business context enters a table. They are also how duplicate explosions and missing matches enter the dashboard. The defense is the grain.',
+  'ch02-metrics':
+    'Transformations are not cosmetic — they encode business judgment. Metrics are not raw data — they are definitions. Both decisions are quiet, both shape every report downstream.',
+  'ch02-reshaping':
+    'Wide is comfortable for spreadsheets. Long is what charts and models need. The same data; two shapes; one analytic difference that matters.',
+  'ch02-sql':
+    'SQL is a structured way to do what spreadsheets already do — filter, sort, group, summarize, look up. Every Excel mental model has a SQL equivalent.',
+  'ch02-studio-data-language':
+    'A Part I studio for turning raw tables into a reusable data and metric brief.',
+  'ch03-chart-atlas':
+    'A visual vocabulary for managers: common chart types, when to use them, what question they answer, and what can go wrong.',
+  'ch03-concentration-case':
+    'An advertising-spend case study on CR1, CR4, HHI, ownership hierarchy, threshold sensitivity, and market-concentration visualization.',
+  'ch03-exploratory-viz':
+    'A dashboard is not a collection of charts. It is a sequence of business questions. Every panel should answer one question and lead to the next.',
+  'ch04-baselines':
+    'Baseline choices decide what a manager sees first. The soup case shows how indexing reveals seasonality while hiding business scale.',
+  'ch04-dashboards':
+    'Dashboards should move from monitoring to diagnosis to decision. The soup dashboard becomes a critique and redesign case.',
+  'ch04-small-multiples':
+    'Small multiples show whether the national soup pattern is broad-based or region-specific, then preview elasticity intuition with log-log scatterplots.',
+  'ch04-statistical-charts':
+    'Raw and log distributions, coefficient intervals, and log-log scatterplots as intuitive bridges to later pricing regressions.',
+  'ch04-studio-visual-brief':
+    'A Part II studio that sequences the Progresso soup visuals — indexes, small multiples, uncertainty, and dashboards — into a one-page executive pricing brief, then marks the line the charts cannot cross into causal claims.',
+  'ch04-uncertainty':
+    'Confidence intervals, store coverage, and uncertainty language for managers using the Progresso soup case.',
+  'ch05-counterfactual':
+    'Potential outcomes, counterfactuals, and why the missing comparison is the core object of causal analysis.',
+  'ch05-experiments':
+    'Random assignment, balance, placebo thinking, lift, uncertainty, and business thresholds for experiments.',
+  'ch05-historical-data':
+    'Confounding, seasonality, reverse causality, omitted variables, and the traps in historical business data.',
+  'ch05-metrics-to-decisions':
+    'A decision-first opening to causal analysis: treatment, outcome, unit, timing, comparison, and the counterfactual question.',
+  'ch06-fixed-effects':
+    'Panel data and fixed effects: comparing stores to themselves over time to sharpen pricing estimates.',
+  'ch06-identification':
+    'Identification as the business argument that makes a comparison credible enough to interpret causally.',
+  'ch06-regression':
+    'Regression as a visual and statistical ladder from raw association to adjusted comparison in the soup pricing panel.',
+  'ch07-did':
+    'Difference-in-differences as a comparison of changes, with parallel trends as the key identifying assumption.',
+  'ch07-heterogeneous-effects':
+    'Average effects, segment effects, interactions, and why the milk price response is strongest in lower-income ZIP codes.',
+  'ch07-synthetic-control':
+    'Synthetic control for one treated market, using Colorado housing prices and a weighted donor pool counterfactual.',
+  'ch08-cross-price-elasticity':
+    'Cross-price elasticity, substitution, complements, cannibalization, and regional competitive response in soup.',
+  'ch08-price-elasticity':
+    'Price elasticity, log-log regression, interpretation, and why percentage response matters for pricing decisions.',
+  'ch08-pricing-decisions':
+    'From elasticity estimates to revenue, margin, guardrails, and an interactive optimal-pricing formula.',
+  'ch08-studio-pricing':
+    'A Part III studio brief that combines counterfactuals, identification, regression, elasticity, and pricing action.',
+  'ch09-feature-engineering':
+    'Feature engineering is where business knowledge becomes model input — and where, in the AutoML era, most managerial value concentrates.',
+  'ch09-generalization':
+    'Why a model that ranks the past perfectly may not survive the future — and the leakage traps that hide in plain sight.',
+  'ch09-rules-to-algorithms':
+    'Algorithms as repeatable rules learned from data, not magic — the bridge from manager intuition to scored decisions.',
+  'ch09-supervised-setup':
+    'Target, features, unit of prediction, and label timing — the vocabulary every supervised model relies on.',
+  'ch10-automl-explainability':
+    'When algorithm selection is automated, what is left for managers — and how to ship a model with its own one-page contract.',
+  'ch10-classification-eval':
+    'Confusion matrix, ROC/PR, calibration, lift, and the threshold–profit curve — the language for grading a classifier on business cost.',
+  'ch10-logistic-churn':
+    'From log-odds to a sortable probability score — how logistic regression turns a binary outcome into a managerial dial.',
+  'ch10-numeric-prediction':
+    'Predicting a number rather than a class — RMSE, MAE, residuals, and the business cost of being off.',
+  'ch10-renthop-case':
+    'A RentHop marketplace prediction case study: feature engineering, location segments, model comparison, and a held-out queue of Hot listing prospects.',
+  'ch10-trees-ensembles':
+    'Decision trees as readable rule sets; random forests and gradient boosting as committees that average out the idiosyncrasies of any one tree.',
+  'ch11-clustering':
+    'No labels, only similarity — turning a customer feature space into named segments managers can act on.',
+  'ch11-lottery-case':
+    'A rigorous non-causal case study using NY Lottery ZIP-level behavior to explore PCA, clustering, group-by heterogeneity, and demographic interactions.',
+  'ch11-pca':
+    'Compressing many correlated variables into a few interpretable dimensions — and what brand managers do with the result.',
+  'ch11-tsne-umap':
+    'When clusters are clear but axes lose meaning — and how to read a nonlinear map without overstating it.',
+  'ch12-deployment-monitoring':
+    'Once the model ships, what changes — and how to tell when the world has moved away from the model.',
+  'ch12-recommenders':
+    'From co-purchase patterns to ranked lists — how recommenders translate similarity and prediction into customer-facing decisions.',
+  'ch12-studio-customer-intel':
+    'Integrating Part IV — score, segment, target, act, monitor — into a single decision loop, with the artefacts an executive sponsor should expect.',
+  'ch12-targeting':
+    'How analytic segments become operational targeting on an ad platform — and what a lookalike audience really is under the hood.',
+  'ch13-classical-nlp-limits':
+    'Sarcasm, negation, polysemy, idiom, and context — the gallery of failure modes that motivates embeddings and LLMs.',
+  'ch13-preprocessing-tfidf':
+    'Cleaning text into tokens, counting them honestly, and weighting them by how informative they are.',
+  'ch13-structured-to-unstructured':
+    'Why text, images, and documents require a representation layer before algorithms can use them.',
+  'ch13-text-as-data':
+    'Document, corpus, token, vocabulary — the vocabulary that every text method in the book relies on.',
+  'ch13-text-classification':
+    'Supervised learning on text — ticket routing, complaint categorization, sentiment, and aspect-based sentiment.',
+  'ch13-topic-models':
+    'Discovering themes in a corpus without labels — and turning those themes into a dashboard a manager can read.',
+  'ch14-embeddings':
+    'Embeddings as a coordinate system for meaning — and the first thing you build on them: search, clustering, and brand positioning by meaning rather than vocabulary.',
+  'ch14-goose-island-case':
+    'A standalone NLP case study using Goose Island tweets around the 2011 acquisition to separate product sentiment, event vocabulary, and social-media noise.',
+  'ch14-gpt-measurement':
+    'From surface features to measured constructs — the bridge between classical NLP and the language-model age.',
+  'ch14-trump-case':
+    'A standalone NLP case study using tweet text and metadata to classify Android versus iPhone source labels.',
+  'ch15-multimodal':
+    'Text, images, audio, and video in one shared meaning space — and the business workflows that uses it.',
+  'ch15-ocr-document-ai':
+    'Reading scanned invoices, contracts, forms, and receipts — where layout understanding and structured extraction meet.',
+  'ch15-rag':
+    'How language models answer using internal company knowledge — chunk, embed, retrieve, ground, cite.',
+  'ch15-vision':
+    'What CNNs and vision transformers actually do, the four output shapes that matter, and where vision AI ships in business.',
+  'ch16-agents-tools':
+    'When an LLM becomes a workflow component — tools, memory, planning, and the human-approval gate.',
+  'ch16-ai-governance':
+    'The eight evaluation dimensions, the risk-control map, and the AI workflow card every shipped system needs.',
+  'ch16-llm-capabilities':
+    'Language models as language interfaces for workflows — the eight capabilities every manager should know, and how to brief the model with a six-slot prompt.',
+  'ch16-structured-outputs':
+    'From free text to validated JSON — the bridge that lets LLMs feed downstream systems without manual cleanup.',
+  'ch16-studio-customer-voice':
+    'A capstone that integrates every method in Part V into one Bean & Basket customer-voice loop.',
+  'ch17-agent-governance':
+    'Making data agents safe to deploy: outcome vs. trajectory evals, OpenTelemetry observability, the lethal trifecta and prompt injection, human approval gates, and the NIST / EU AI Act / ISO 42001 governance backdrop.',
+  'ch17-agentic-turn':
+    'What changes when an AI agent — not an analyst — operates the data-to-decision loop. The workflow-vs-agent distinction, the anatomy of a data agent, the autonomy dial, and where enterprise adoption really stands.',
+  'ch17-horizon':
+    'Where agent-operated analytics is headed: the bull case beside the failure rates, why most deployments fail and which succeed, the semantic layer as the durable contract, the reliability ceiling, and the analyst’s new job above the loop.',
+  'ch17-mcp-orchestration':
+    'How AI agents connect to the data stack: tool use, the Model Context Protocol, the Agent2Agent protocol, orchestration frameworks, and the durable-execution engines that keep agentic pipelines alive.',
+  'ch17-predictive-workflows':
+    'How far data-science agents can take the predictive lifecycle: benchmark evidence (MLE-bench, DSBench, GDPval), what ships today, the agent-driven monitor-and-retrain loop, and the durable-execution layer underneath.',
+  'ch17-text-to-sql':
+    'Querying production databases in natural language: what text-to-SQL benchmarks really show, why it breaks on real schemas, and how the semantic layer becomes the contract that makes agentic analytics trustworthy.',
+};
+
+export function getArticleDescription(slug: string): string | undefined {
+  return articleDescriptions[slug];
+}

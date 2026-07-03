@@ -71,10 +71,14 @@ app/
   layout.tsx                Root layout — fonts, MainArea wrapper.
   page.tsx                  Book home page (renders BookHome).
   globals.css               Tailwind + page-chrome rules.
-  [slug]/page.tsx           Fallback route for any TOC entry without a
-                            dedicated page.tsx (renders a placeholder).
+  [slug]/page.tsx           Fallback route for draft/planned TOC entries
+                            without a dedicated page.tsx (renders a
+                            placeholder). A published entry with no
+                            directory fails the build (scripts/verify-book.ts)
+                            rather than falling through to this route.
   <slug>/                   One folder per article.
-    page.tsx                Imports the MDX, wraps in <BookShell>.
+    page.tsx                Four lines: chapterPage(slug, Article) — see
+                            lib/chapter-page.tsx.
     article.mdx             The article itself.
     data/                   Optional: JSON the article imports into figures.
 
@@ -99,6 +103,19 @@ components/Book/part6/      ArtefactCatalog, PortfolioMonitoring,
 lib/book-toc.ts             Single source of truth — parts, chapters,
                             article order, slugs, status.
 lib/book-types.ts           TypeScript types.
+lib/book-content.ts         Editorial content layered on the TOC: part/
+                            chapter summaries, articleBlurbs (TOC UI),
+                            articleDescriptions (SEO meta description —
+                            keyed by slug, may differ from the blurb).
+lib/chapter-page.tsx        chapterPage(slug, Article) factory — builds
+                            metadata (title/canonical/OG from book-toc +
+                            book-content) and the BookShell-wrapped page.
+lib/share-metadata.ts       createArticleMetadata(), createPreviewMetadata(),
+                            metadataBase/canonical-origin helpers.
+scripts/verify-book.ts      Build-time check: every published TOC entry has
+                            a directory + article.mdx + description, and
+                            every chapter directory has a TOC entry. Runs
+                            via `pnpm build` (pnpm verify-book && next build).
 ```
 
 ## The artefact family
@@ -147,7 +164,7 @@ not one quiz per article.
 
 ## Authoring a new article
 
-Three steps. None touch component code.
+Four steps. None touch component code.
 
 ### 1. Add a TOC entry
 
@@ -159,40 +176,47 @@ right broad chapter:
 ```
 
 `status` is `'planned' | 'draft' | 'published'`. Only `'published'`
-articles are linked from the home page; all three render.
+articles are linked from the home page. `'planned'`/`'draft'` entries with
+no `app/<slug>/` directory render the `app/[slug]` placeholder; a
+`'published'` entry with no directory fails `pnpm build`
+(`scripts/verify-book.ts`) instead.
 
-### 2. Create the folder
+### 2. Register the SEO description
+
+Add one entry to `articleDescriptions` in
+[`lib/book-content.ts`](lib/book-content.ts):
+
+```ts
+'my-new-article': 'A one-line description of the article, for <title>/OG/meta.',
+```
+
+This is deliberately a separate record from `articleBlurbs` — blurbs feed
+the in-book TOC UI and may read differently than an SEO description.
+
+### 3. Create the folder
 
 ```bash
 mkdir -p app/my-new-article
 ```
 
-Add a `page.tsx` mirroring the existing chapters:
+`page.tsx` is four lines — the `chapterPage()` factory
+([`lib/chapter-page.tsx`](lib/chapter-page.tsx)) builds the title (from
+`book-toc`), canonical URL, and OG/Twitter card (served by the existing
+`app/[slug]/opengraph-image.tsx` route) from the slug alone:
 
 ```tsx
-import type { Metadata } from 'next';
-import { BookShell } from '@/components/Book/BookShell';
-import { book, findArticle } from '@/lib/book-toc';
+import { chapterPage } from '@/lib/chapter-page';
 import Article from './article.mdx';
 
-export const metadata: Metadata = {
-  title: `§6.3 My New Article | ${book.title}`,
-  description: 'A one-line description of the article.',
-};
-
-export default function Page() {
-  return (
-    <BookShell slug="my-new-article" book={book} findArticle={findArticle}>
-      <Article />
-    </BookShell>
-  );
-}
+const { metadata, Page } = chapterPage('my-new-article', Article);
+export { metadata };
+export default Page;
 ```
 
-### 3. Write the MDX
+### 4. Write the MDX
 
 Open `app/my-new-article/article.mdx`. Copy the import block from any
-existing article (e.g. `app/ch11-from-metrics-to-decisions/article.mdx`).
+existing article (e.g. `app/ch05-experiments/article.mdx`).
 
 ## License
 
