@@ -22,9 +22,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
-dev-server.*.log
-dev-render.*.log
+dev-*.log
 .edge-atlas-profile/
+
+# one-off scratch scripts (see docs/PIPELINE-DESIGN.md for the durable pipeline)
+scripts/_*.mjs
+scripts/_*.json
 
 # local env files
 .env

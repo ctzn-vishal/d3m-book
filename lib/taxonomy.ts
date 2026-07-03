@@ -44,7 +44,14 @@ const DOMAIN_TO_TOPIC: Record<string, string> = {
   Mobility: 'Business & Markets',
 };
 
-export function domainToTopic(domain?: string): string {
-  if (!domain) return 'Other';
-  return DOMAIN_TO_TOPIC[domain] ?? domain;
+/**
+ * Maps a studio's `domain` to a canonical topic. Returns `undefined` (not the
+ * raw domain string) when there's no match — `topic` has no CHECK constraint
+ * in Turso, so writing an uncontrolled value would silently escape the
+ * vocabulary. An unmatched domain gets the same treatment as a new article
+ * with no topic: `null` in Turso, set by the curator in /admin.
+ */
+export function domainToTopic(domain?: string): string | undefined {
+  if (!domain) return undefined;
+  return DOMAIN_TO_TOPIC[domain];
 }
