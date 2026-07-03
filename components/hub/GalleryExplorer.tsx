@@ -38,8 +38,6 @@ const TAG_FACET_ORDER: TagFacet[] = ['method', 'chart', 'data'];
 /** tag → facet, from the controlled vocabulary (lib/tag-vocabulary.ts). */
 const TAG_FACET_OF = new Map(TAG_VOCABULARY.map(t => [t.tag, t.facet]));
 
-type SortKey = 'featured' | 'az' | 'type';
-
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
@@ -256,7 +254,6 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
   const [tags, setTags] = useState<string[]>([]);
   const [showTopics, setShowTopics] = useState(false);
   const [showTags, setShowTags] = useState(false);
-  const [sort, setSort] = useState<SortKey>('featured');
 
   // Honor ?type= and ?tag= (comma-separated) filters from the URL on load. Read
   // client-side after mount so the page stays statically cached and there's no
@@ -295,11 +292,10 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
           (i.domain ?? '').toLowerCase().includes(q) ||
           i.tags.some(t => t.toLowerCase().includes(q)))
     );
-    if (sort === 'az') return [...out].sort((a, b) => a.title.localeCompare(b.title));
-    if (sort === 'type')
-      return [...out].sort((a, b) => a.type.localeCompare(b.type) || a.title.localeCompare(b.title));
+    // Featured items float to the top — an editorial/curation choice, not a
+    // user-facing sort option (the Featured/A–Z/By-type selector was removed).
     return [...out].sort((a, b) => Number(b.featured) - Number(a.featured));
-  }, [items, query, type, topic, tags, sort]);
+  }, [items, query, type, topic, tags]);
 
   // Tags grouped by vocabulary facet (method/chart/data); any non-vocab tags
   // still on older non-Blog items fall under "Other". Only tags present in the
@@ -322,66 +318,41 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
     <div>
       {/* Sticky filter bar — type, search, and topic controls stay in reach as
           the gallery scrolls. Sits just below the sticky hub header. Two compact
-          rows by default (type+search, then the Topic/Tags/Sort controls);
-          Topic and Tags each disclose their full chip list on demand instead of
-          taking permanent vertical space — this matters most on mobile, where
-          every always-visible row costs a full line. */}
+          rows by default (type only, then Topic/Tags + search); Topic and Tags
+          each disclose their full chip list on demand instead of taking
+          permanent vertical space — this matters most on mobile, where every
+          always-visible row costs a full line. */}
       <div className="sticky top-14 z-30 -mx-5 border-b border-hub-line bg-hub-paper/95 px-5 pb-3 pt-3 backdrop-blur-md sm:-mx-7 sm:px-7">
-        {/* Row 1 — primary filter (type) + search, side by side */}
-        <div className="flex items-center gap-2">
-          <div className="flex max-w-[52%] shrink-0 gap-1.5 overflow-x-auto no-scrollbar sm:max-w-none">
-            <TypeTab
-              Icon={Shapes}
-              active={type === 'all'}
-              activeClass="border-hub-ink bg-hub-ink text-hub-paper"
-              toneClass="text-hub-ink-faint"
-              onClick={() => setType('all')}
-            >
-              All · {facets.total}
-            </TypeTab>
-            {facets.types.map(t => {
-              const meta = TYPE_META[t.type];
-              return (
-                <TypeTab
-                  key={t.type}
-                  Icon={meta.Icon}
-                  active={type === t.type}
-                  activeClass={meta.active}
-                  toneClass={meta.tone}
-                  onClick={() => setType(t.type)}
-                >
-                  {t.label} · {t.count}
-                </TypeTab>
-              );
-            })}
-          </div>
-
-          <div className="relative min-w-0 flex-1">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-hub-ink-faint"
-            />
-            <input
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="Search…"
-              className="w-full rounded-full border border-hub-line bg-hub-card py-2.5 pl-10 pr-9 text-[14px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
-            />
-            {query && (
-              <button
-                type="button"
-                onClick={() => setQuery('')}
-                aria-label="Clear search"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-hub-ink-faint hover:text-hub-ink"
+        {/* Row 1 — primary filter (type) */}
+        <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+          <TypeTab
+            Icon={Shapes}
+            active={type === 'all'}
+            activeClass="border-hub-ink bg-hub-ink text-hub-paper"
+            toneClass="text-hub-ink-faint"
+            onClick={() => setType('all')}
+          >
+            All · {facets.total}
+          </TypeTab>
+          {facets.types.map(t => {
+            const meta = TYPE_META[t.type];
+            return (
+              <TypeTab
+                key={t.type}
+                Icon={meta.Icon}
+                active={type === t.type}
+                activeClass={meta.active}
+                toneClass={meta.tone}
+                onClick={() => setType(t.type)}
               >
-                <X size={15} />
-              </button>
-            )}
-          </div>
+                {t.label} · {t.count}
+              </TypeTab>
+            );
+          })}
         </div>
 
         {/* Row 2 — Topic + Tags disclosures (with any active values pinned next
-            to their toggle) and Sort, pushed to the far end. */}
+            to their toggle), and search, pushed to the far end. */}
         <div className="mt-2.5 flex flex-wrap items-center gap-2">
           {facets.topics.length > 0 && (
             <>
@@ -426,16 +397,28 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
             </button>
           )}
 
-          <select
-            value={sort}
-            onChange={e => setSort(e.target.value as SortKey)}
-            aria-label="Sort"
-            className="ml-auto rounded-md border border-hub-line bg-hub-card px-2.5 py-1.5 font-plex text-[12px] uppercase tracking-[0.06em] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
-          >
-            <option value="featured">Featured</option>
-            <option value="az">A–Z</option>
-            <option value="type">By type</option>
-          </select>
+          <div className="relative min-w-[180px] flex-1 sm:ml-auto sm:max-w-[240px] sm:flex-none">
+            <Search
+              size={15}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-hub-ink-faint"
+            />
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search…"
+              className="w-full rounded-full border border-hub-line bg-hub-card py-2 pl-10 pr-9 text-[14px] text-hub-ink placeholder:text-hub-ink-faint focus:border-hub-teal focus:outline-none focus:ring-2 focus:ring-hub-teal/30"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-hub-ink-faint hover:text-hub-ink"
+              >
+                <X size={15} />
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Topic panel — single-select, disclosed on demand */}

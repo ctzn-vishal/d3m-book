@@ -1619,7 +1619,7 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
                 {cards.length} chart{cards.length === 1 ? '' : 's'}
               </p>
             </div>
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2">
               {cards.map(card => (
                 <CardShell
                   key={card.id}
