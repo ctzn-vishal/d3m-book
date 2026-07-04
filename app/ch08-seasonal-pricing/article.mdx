@@ -1,0 +1,110 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Callout } from '@/components/Book/Callout';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { SeasonalOptimalPriceCompare } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+In the real scanner data behind this book — visible firsthand in the <CaseRef id="progresso-dashboard" from="ch08-seasonal-pricing">Progresso pricing dashboard</CaseRef> — Progresso does something that looks, at first glance, like a mistake. Category soup demand is highest in winter and falls off in the warmer months — yet Progresso's *own* price tends to go *up* in that quieter off-season, while Campbell's holds a comparatively flat price all year. The intuitive move is the opposite: discount when demand is weak to defend volume, and hold price when demand is strong and customers are buying anyway. Is Progresso's pricing team getting this backwards, or is there an elasticity-based argument that makes the countercyclical move correct?
+
+</DropCap>
+
+The Lerner rule derived in the previous article gives a direct way to answer this. It does not care about intuitions or seasonal folklore — it only cares about one number, own-price elasticity, and it returns a markup. Split that number by season, run the formula twice, and the question stops being a matter of instinct.
+
+---
+
+## The Executive Question
+
+> *Progresso raises price in the off-season, when the category is at its seasonal trough. Campbell's does not. Is Progresso's behavior a pricing error, or does the elasticity data justify it?*
+
+Answering this requires exactly two ingredients: an elasticity estimate for winter, an elasticity estimate for everything else, and one formula applied twice.
+
+---
+
+## Splitting Demand by Season
+
+The same log-log specification from Chapter 8.1 — <M>{String.raw`\ln Q = \beta_0 + \beta_1 \ln P + \cdots`}</M> — is re-estimated separately on winter weeks and non-winter weeks, both with store fixed effects. The two samples are large and the two estimates are precise:
+
+| Season | Elasticity <M>{String.raw`\hat\epsilon`}</M> | Std. error | 95% CI | R² | n |
+| --- | --- | --- | --- | --- | --- |
+| Non-winter | −2.486 | 0.028 | [−2.542, −2.431] | 0.445 | 44,731 |
+| Winter | −2.820 | 0.021 | [−2.861, −2.780] | 0.533 | 43,678 |
+
+Both estimates sit comfortably in the elastic zone (<M>{String.raw`\epsilon < -1`}</M>), so the pricing formula from Chapter 8.2 applies cleanly to each. The confidence intervals do not overlap: winter demand for Progresso is measurably, not just numerically, more elastic than non-winter demand. That is the opposite of what a "discount when demand is weak" instinct would assume — it is not that off-season shoppers are indifferent to price and winter shoppers are price-sensitive; the data says the reverse.
+
+A quick intuition for why: in winter, soup is a category everyone is buying, private label and competing brands included, so a shopper who finds Progresso pricier than usual has the easiest possible substitution sitting right next to it on the shelf. In the off-season, soup buyers are a smaller, more specific group — closer to a habitual purchase than an impulse comparison — and that selection makes remaining demand less sensitive to price.
+
+---
+
+## Applying the Lerner Rule, Twice
+
+Recall the constant-elasticity optimal pricing rule derived last chapter:
+
+<Equation
+  label="Constant-elasticity optimal pricing rule"
+  latex={String.raw`P^* \;=\; \frac{MC}{1 + \dfrac{1}{\epsilon}}`}
+/>
+
+Holding marginal cost fixed at <M>{String.raw`MC = \$1.00`}</M> — the same assumption used throughout this chapter — plug in each season's elasticity separately:
+
+<Equation
+  label="Optimal price, non-winter"
+  latex={String.raw`P^*_{\text{non-winter}} \;=\; \frac{\$1.00}{1 + 1/(-2.486)} \;\approx\; \$1.67`}
+/>
+
+<Equation
+  label="Optimal price, winter"
+  latex={String.raw`P^*_{\text{winter}} \;=\; \frac{\$1.00}{1 + 1/(-2.820)} \;\approx\; \$1.55`}
+/>
+
+<div className="not-prose">
+  <SeasonalOptimalPriceCompare data={data.soup} />
+</div>
+
+The formula recommends a **higher** price in the non-winter months and a **lower** price in winter — roughly a 12-cent swing on a dollar of marginal cost, or about an 8% seasonal price differential.
+
+---
+
+## Reading the Result: Does the Real Strategy Hold Up?
+
+The mechanism is the Lerner index working exactly as designed: less elastic demand means a smaller <M>{String.raw`1/|\epsilon|`}</M>, which means a bigger markup survives before volume erodes it away. Non-winter demand is the less elastic of the two seasons, so the formula assigns it the bigger markup — a higher optimal price — and winter, the more elastic season, gets the smaller markup and the lower optimal price.
+
+That is precisely the shape of Progresso's real pricing behavior: raise price in the off-season, hold it lower when the category is at its winter peak. Run through the logic plainly and it stops looking backwards:
+
+- Winter demand is *more* elastic, not less — shoppers stocking up on soup in peak season have the most substitutes conveniently in view, and Progresso's volume is more exposed to a price increase precisely when everyone is buying.
+- Non-winter demand is *less* elastic — the shoppers still buying soup in July are a more captive, less price-comparing group, and Progresso can carry a higher markup without losing them.
+
+On this evidence, Progresso's countercyclical habit is not an error to be corrected — it is what the inverse-elasticity rule would recommend if you ran it by season instead of once a year. Campbell's flat, un-seasonalized pricing is the more suspect strategy by comparison: if its own elasticity swings similarly by season (this analysis does not establish that — it would take the identical split re-run on Campbell's data), a flat price is leaving exactly the seasonal margin on the table that Progresso is capturing.
+
+<Callout variant="finding" title="The countercyclical price is not backwards — it's the formula">
+  Winter elasticity (−2.82) exceeds non-winter elasticity (−2.49) in magnitude, and the Lerner rule maps the less elastic season to the higher optimal price. Progresso's real habit of raising price in the off-season is exactly what that maps to. The apparent contradiction with "discount when demand is weak" dissolves once elasticity, not raw demand volume, is the thing being priced against.
+</Callout>
+
+---
+
+## From a Quarterly Recalculation to Continuous Repricing
+
+Nothing about this exercise is conceptually different from what a ride-hailing app does when it raises fares during a Friday-night surge, or what an e-commerce repricer does dozens of times a day on a single SKU. The economics are the same Lerner logic: elasticity is not a single number belonging to a product, it is a number that shifts with context — time of day, season, local competition, even the specific customer being priced. Surge pricing is, structurally, the seasonal split in this article carried to its limit: instead of re-estimating elasticity once a quarter and setting a price for the season, an algorithmic pricing engine re-estimates (or approximates) elasticity continuously and recomputes <M>{String.raw`P^*`}</M> in real time.
+
+What changes moving from this chapter's hand calculation to an automated system is not the formula — it is the frequency of re-estimation, the granularity of the segment the elasticity is computed on, and the speed of the feedback loop that catches a bad estimate. The economic logic taught here is the same logic running, largely invisibly, behind every dynamic price a customer sees today.
+
+---
+
+<Pitfall title="Seasonal co-movement is not automatically causal">
+The winter/non-winter split is still an estimate of how price and quantity moved together within each season, not a designed experiment. If a retailer runs other seasonal promotions — end-cap placement, bundled soup-and-crackers deals, holiday circulars — alongside its own seasonal price changes, those omitted seasonal actions can bias the within-season elasticity the same way the original naive, non-seasonal estimate was biased in Chapter 8.1. The store and week fixed effects in this specification absorb a great deal of that risk, but "estimated separately by season" is not a substitute for "identified causally" — the same identification questions from earlier chapters still apply, just inside a narrower window.
+</Pitfall>
+
+<Takeaway label="The seasonal pricing call">
+
+- Winter demand for Progresso is measurably more elastic than non-winter demand (−2.82 vs. −2.49, non-overlapping confidence intervals) — this is an empirical finding, not an assumption.
+- Applying the Lerner rule to each season separately recommends a higher price in the off-season and a lower price in winter, which matches Progresso's actual countercyclical pricing behavior in the data.
+- The same rule, recomputed continuously instead of once a season, is the economic logic underneath modern dynamic and algorithmic pricing.
+- Seasonal elasticity still needs the same identification scrutiny as any other elasticity estimate — a season is a context, not a randomized experiment.
+
+</Takeaway>

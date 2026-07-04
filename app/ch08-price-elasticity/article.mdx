@@ -2,6 +2,7 @@ import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
+import { DataTable } from '@/components/Book/DataTable';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { ElasticityZones } from '@/components/Book/part3/ConceptDiagrams';
@@ -16,7 +17,7 @@ Pricing is the most leveraged decision a firm makes. A one-percent price increas
 
 </DropCap>
 
-This article defines own-price elasticity, walks through why we estimate it with a log-log regression rather than a linear one, names the three pricing zones every elasticity value sits in, and ends with a data case showing how a confounded estimate of elasticity can lead a pricing decision badly astray.
+This article starts with the plainest possible regression — volume on price, in raw units — then defines own-price elasticity, walks through why we re-estimate it with a log-log regression rather than a linear one, names the three pricing zones every elasticity value sits in, and ends with a data case showing how a confounded estimate of elasticity can lead a pricing decision badly astray.
 
 ---
 
@@ -27,6 +28,46 @@ A category manager weighs a 10% price increase on lattes. Two things will happen
 The right question is not *will price increase revenue?* — it is *how price-sensitive is the segment of customers we serve, and will the volume we lose outweigh the margin we gain on the cups we keep selling?*
 
 The unit of measurement that makes this question quantitative is the **price elasticity of demand**.
+
+---
+
+## First Pass: What Does a Plain Regression Predict?
+
+Before we reach for percentages, it's worth asking the more basic question a first-year regression class would ask: if we regress volume on price and a handful of controls, what comes out?
+
+Take the Progresso soup panel and run an ordinary multiple linear regression, no logs anywhere:
+
+<Equation
+  label="Plain linear demand model"
+  latex={String.raw`\text{Volume.Progresso} = \beta_0 + \beta_1\,\text{Price.Progresso} + \beta_2\,\text{Price.Campbell} + \beta_3\,\text{Price.PL} + \text{Month} + \text{Region} + u`}
+/>
+
+Fit on {data.soup.linearModel.n.toLocaleString()} store-weeks, the model returns an intercept of {Math.round(data.soup.linearModel.coefficients.intercept).toLocaleString()} units and three price coefficients: Progresso's own price carries {Math.round(data.soup.linearModel.coefficients.price_progresso).toLocaleString()} units of volume per dollar, Campbell's price carries +{Math.round(data.soup.linearModel.coefficients.price_campbell).toLocaleString()}, and the private-label price carries +{Math.round(data.soup.linearModel.coefficients.price_pl).toLocaleString()} — signs that already tell the demand story in miniature: Progresso's own price moves volume down, competitor prices move it up. The model explains {Math.round(data.soup.linearModel.r2 * 100)}% of the variance in raw volume (<M>{String.raw`R^2 = `}</M>{data.soup.linearModel.r2}).
+
+Plug in two concrete scenarios — a baseline shelf price and a promotional price cut on Progresso alone, everything else held fixed — and the regression turns into a forecast:
+
+<DataTable
+  caption={`Table 1. Cutting Progresso's price from $1.80 to $1.25 is predicted to lift weekly volume by about ${Math.round(data.soup.linearModel.scenarios[1].predicted_volume - data.soup.linearModel.scenarios[0].predicted_volume).toLocaleString()} units, holding competitor prices, month, and region fixed.`}
+  columns={[
+    { key: 'label', label: 'Scenario', align: 'left' },
+    { key: 'progresso', label: 'Price: Progresso', align: 'right' },
+    { key: 'campbell', label: 'Price: Campbell', align: 'right' },
+    { key: 'pl', label: 'Price: Private Label', align: 'right' },
+    { key: 'volume', label: 'Predicted Volume', align: 'right' },
+  ]}
+  rows={data.soup.linearModel.scenarios.map((s) => ({
+    label: s.label,
+    progresso: `$${s.price_progresso.toFixed(2)}`,
+    campbell: `$${s.price_campbell.toFixed(2)}`,
+    pl: `$${s.price_pl.toFixed(2)}`,
+    volume: Math.round(s.predicted_volume).toLocaleString(),
+  }))}
+  highlightRow={1}
+/>
+
+Holding January, East region, and both competitors' prices at their baseline levels, dropping Progresso from $1.80 to $1.25 moves predicted volume from {Math.round(data.soup.linearModel.scenarios[0].predicted_volume).toLocaleString()} to {Math.round(data.soup.linearModel.scenarios[1].predicted_volume).toLocaleString()} units — a promotional lift of roughly {Math.round(data.soup.linearModel.scenarios[1].predicted_volume - data.soup.linearModel.scenarios[0].predicted_volume).toLocaleString()} units, straight out of the fitted coefficients times the $0.55 price change. As a quick gut-check on fit, the correlation between this model's fitted values and actual observed volume is {data.soup.linearModel.actual_vs_predicted_correlation} — respectable for a specification this simple, and good enough to trust the *direction* and rough *scale* of the promotional lift above.
+
+This is a perfectly legitimate way to answer a single, concretely specified question: *at these exact prices, in this exact month and region, how many units do we expect to move?* But notice what the answer cost us. The coefficient <M>{String.raw`-2{,}358`}</M> is denominated in units-per-dollar, which only means something at the price level we plugged in — it does not tell you what happens if Progresso's price were $3 instead of $1.80, and it says nothing directly transferable to a different product with a different volume base. Most pricing conversations are not phrased in dollars-per-unit; they are phrased in percentages — *"what if we cut price 10%?"* applies equally whether the base price is $1.25 or $12.50. Getting from a raw-units regression to a percentage-denominated, transportable measure of price sensitivity is exactly what the log-log form below is built for.
 
 ---
 

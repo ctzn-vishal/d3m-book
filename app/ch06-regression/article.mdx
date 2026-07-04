@@ -13,11 +13,11 @@ export const data = part3;
 
 <DropCap>
 
-When several business variables move at once, a simple two-variable correlation is rarely the answer to a strategic question. Multiple regression is the workhorse that lets managers ask a sharper question: how does the outcome respond to a *single* lever, holding other observable factors constant? This article explains what that "holding constant" actually does — it is residualization, not real-world control — and why understanding the mechanics changes how you read every regression coefficient you will ever see.
+The Southwest regression review showed you how to add a control and watch a coefficient move — that is standard practice. What it did not show you is what "holding other things constant" actually *computes*. It is not a real-world intervention; it is a specific mathematical operation called residualization, and understanding that operation changes how you read every regression coefficient you will ever see.
 
 </DropCap>
 
-We will work through the regression model, walk through the Frisch–Waugh–Lovell view of what it computes, and end with a data case that climbs a "regression ladder" on real scanner data — adding controls one at a time and watching the price coefficient settle as confounders are stripped out.
+We will make that operation precise with the Frisch–Waugh–Lovell view of what multiple regression computes, then end with a data case that climbs a "regression ladder" on real scanner data — adding controls one at a time and watching the price coefficient settle as confounders are stripped out.
 
 ---
 

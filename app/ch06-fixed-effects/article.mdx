@@ -18,7 +18,7 @@ Across stores, customers, and markets, business units differ permanently in ways
 
 </DropCap>
 
-This article builds the within-unit-vs-across-unit distinction visually first, then derives the demeaning transformation that makes fixed effects mechanically equivalent to a simple regression on within-unit deviations, and ends with a data case on store fixed effects in soup pricing.
+This article builds the within-unit-vs-across-unit distinction visually first, then derives the demeaning transformation that makes fixed effects mechanically equivalent to a simple regression on within-unit deviations, walks through the alternative — random effects — and the practical rule for choosing between them, and ends with a data case on store fixed effects in soup pricing.
 
 ---
 
@@ -150,9 +150,57 @@ The centered view is what the fixed-effects regression "sees." That visual lens 
 
 ---
 
+## The Alternative: Random Effects
+
+Fixed effects buys its identification guarantee by brute force: it throws away *all* across-unit information and estimates the treatment effect from within-unit movement alone. That guarantee is not free. It costs precision — the across-unit variation it discards is variance a more efficient estimator could have used — and it costs the ability to say anything at all about a variable that never changes within a unit. Store square footage, urban-vs-suburban format, whether the store has a drive-through: fixed effects demeans every one of them to exactly zero. Ask a fixed-effects model "does format explain lower price sensitivity?" and it cannot answer, by construction.
+
+**Random effects (RE)** is the model that tries to buy back both of those losses. Instead of estimating a separate intercept <M>{String.raw`\alpha_i`}</M> for each store — a fixed, unit-specific number to be absorbed — RE treats <M>{String.raw`\alpha_i`}</M> as a *random draw* from a distribution, typically <M>{String.raw`\alpha_i \sim \mathcal{N}(0, \sigma_\alpha^2)`}</M>, uncorrelated with the regressors:
+
+<Equation
+  label="Random effects (RE)"
+  latex={String.raw`Y_{it} = \beta_1 X_{it} + \beta_2 W_{it} + \delta S_i + \alpha_i + u_{it}, \qquad \operatorname{Cov}(\alpha_i, X_{it}) = 0`}
+/>
+
+Because the store intercept is now treated as random noise rather than something to be swept away, RE can keep a time-invariant store characteristic <M>{String.raw`S_i`}</M> (format, footprint, drive-through) directly in the equation and estimate <M>{String.raw`\delta`}</M>. And because RE uses a weighted blend of the within-store variation *and* the across-store variation — rather than discarding the latter entirely — its standard errors on <M>{String.raw`\beta_1`}</M> are smaller than fixed effects' whenever the underlying assumption is actually true.
+
+That "whenever" is the whole story. The RE assumption — that the store-level intercept is statistically unrelated to price — is precisely the assumption fixed effects was invented to avoid needing. If unmeasured store characteristics (local competition, neighborhood income, manager pricing habits) are correlated with the store's own pricing behavior, <M>{String.raw`\operatorname{Cov}(\alpha_i, X_{it}) \neq 0`}</M>, and RE's efficiency gain comes at the cost of the same omitted-variable bias a pooled cross-store regression has. RE is not a free upgrade over FE — it is a bet that a specific, checkable assumption holds.
+
+<Callout variant="definition" title="Random effects, in one sentence">
+  RE trades an *identification* assumption (unit effects uncorrelated with the regressors) for *efficiency* (smaller standard errors, plus estimable coefficients on time-invariant variables). Fixed effects makes no such assumption, at the cost of discarding across-unit variation and time-invariant variables entirely.
+</Callout>
+
+### The practical decision rule
+
+A manager does not need the asymptotic theory to make this call sensibly. Three questions do most of the work:
+
+1.  **Is there a plausible story where unmeasured unit differences correlate with the regressor of interest?** In pricing, staffing, and most operational panels, the answer is almost always yes — stores with wealthier catchment areas tend to both price differently and perform differently for reasons that have nothing to do with the lever being tested. When that story is plausible, fixed effects is the safe default.
+2.  **Do you need the coefficient on a time-invariant variable?** If the deliverable *is* "how much does drive-through format change customer response," fixed effects cannot answer that question at all, since format never varies within a store. Random effects (or a hybrid/Mundlak approach) is the only way to get that number — but only if the uncorrelatedness assumption is defensible for this specific variable.
+3.  **How many time periods do you have, relative to the number of units?** Fixed effects estimates a separate intercept per unit, which is only supportable when there are enough repeated observations per unit to make within-unit demeaning informative. With very short panels (few periods per unit) relative to a large number of units, RE's borrowing of across-unit information becomes more attractive, provided the correlation concern in point 1 is genuinely weak.
+
+| | Fixed effects | Random effects |
+| --- | --- | --- |
+| Unit intercept | Estimated freely per unit; absorbed via demeaning | Modeled as a random draw, assumed uncorrelated with regressors |
+| Identifying assumption | None on the unit effect — robust to any stable confounder | Unit effect uncorrelated with regressors (strong, often implausible in pricing) |
+| Time-invariant regressors | Cannot be estimated (demeaned to zero) | Can be estimated |
+| Efficiency | Lower (discards across-unit variation) | Higher, *if* the uncorrelatedness assumption holds |
+| Safe default when... | Unit-level differences plausibly correlate with the treatment (most business panels) | Few periods per unit, a time-invariant variable is the target, or correlation is genuinely implausible |
+
+### Checking the choice: the Hausman intuition
+
+There is a formal Hausman test for this, but the intuition a manager needs is simpler than the derivation: **run both models and compare the coefficient on the variable you care about.**
+
+- If the FE and RE estimates are close, RE's uncorrelatedness assumption was not doing much work in this dataset — the extra efficiency is a legitimate bonus, and reporting the RE (or pooled) estimate with its tighter confidence interval is defensible.
+- If the FE and RE estimates diverge substantially, that divergence *is* the evidence that RE's assumption is violated — the unit effects are correlated with the regressor, RE is biased, and fixed effects is the number to trust, even though its standard errors are wider.
+
+The question to bring to a review meeting is not "which model has smaller standard errors" but **"does it matter which one I use, and if it does, why would I expect the random-effects assumption to hold here?"** A large FE-vs-RE gap that nobody can explain is itself a finding — it says the unit-level story (demographics, competition, management) is doing real work in the data.
+
+For the Progresso panel, this is not a hypothetical. Store fixed effects were adopted earlier in this article precisely because unmeasured store-level demographics and local competitive intensity plausibly correlate with a store's own pricing pattern — high-income, low-competition stores both price differently and sell differently for reasons that have nothing to do with the price coefficient we want. That is exactly the condition under which random effects would return a biased answer: the "efficiency" it offers would be efficiently estimating the wrong number. Fixed effects being less efficient but assumption-free is not a compromise in this setting — it is the correct call, and it is why the chapter reached for it in the first place.
+
+---
+
 ## Data Case: Store Fixed Effects in the Progresso Panel
 
-We climb the same regression ladder as Chapter 6.1 — bivariate, then with seasonality, then with competitor price, then with regional dummies, then with store fixed effects. The final rung is the within-store estimate that the previous article promised.
+We climb the same regression ladder built in the previous article — bivariate, then with seasonality, then with competitor price, then with regional dummies, then with store fixed effects. The final rung is the within-store estimate that the previous article promised.
 
 <Figure width="screen-inset" caption="Figure 3. The Progresso regression ladder, ending in store fixed effects. The store-FE specification explains a much larger share of variance because it absorbs the stable across-store differences. The coefficient on price settles near −2.23.">
   <div className="not-prose">
@@ -186,6 +234,7 @@ Fixed effects are the cheapest, highest-value identification step a corporate an
 
 - Default to two-way fixed effects (entity + time) for any panel pricing or rollout analysis. The cost is one line of code; the benefit is the absorption of every stable unit difference and every common time shock.
 - Read the FE coefficient as a within-unit response. Always state the conditioning explicitly: "within a store, across weeks, holding ___ constant."
+- Reach for random effects only when you have a specific reason to — a time-invariant variable you must estimate, a short panel, or a genuine argument that unit effects are uncorrelated with the treatment — and check that reason against a fixed-effects run of the same model. A large gap between the two is a red flag, not a nuisance to average away.
 - After absorbing stable unit and time effects, name the time-varying, unit-specific shocks that could still confound the treatment. That residual list is the heart of a professional identification memo for a panel design.
 
 The next chapter takes one further step: when fixed effects are not enough — when there is a specific event we want to evaluate — we move to designs that build the counterfactual from the comparison group's trajectory.

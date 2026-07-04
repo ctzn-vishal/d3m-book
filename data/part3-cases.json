@@ -5,86 +5,98 @@
   },
   "articlePlan": [
     {
-      "number": "9.1",
-      "slug": "ch11-from-metrics-to-decisions",
+      "number": "5.1",
+      "slug": "ch05-metrics-to-decisions",
       "case": "Milk + soup + Zillow",
       "artifact": "decision-question card"
     },
     {
-      "number": "9.2",
-      "slug": "ch12-causality-counterfactual",
+      "number": "5.2",
+      "slug": "ch05-counterfactual",
       "case": "Zillow",
       "artifact": "counterfactual sketch"
     },
     {
-      "number": "10.1",
-      "slug": "ch13-experiments-ab-testing",
-      "case": "Bean & Basket + milk",
+      "number": "5.3",
+      "slug": "ch05-experiments",
+      "case": "Milk",
       "artifact": "experiment readout"
     },
     {
-      "number": "10.2",
-      "slug": "ch14-why-historical-data-is-hard",
+      "number": "5.4",
+      "slug": "ch05-historical-data",
       "case": "Soup",
       "artifact": "bias triage"
     },
     {
-      "number": "11.1",
-      "slug": "ch15-regression-effect-isolation",
+      "number": "6.1",
+      "slug": "ch06-regression-review",
+      "case": "Southwest Airlines",
+      "artifact": "regression review ladder"
+    },
+    {
+      "number": "6.2",
+      "slug": "ch06-regression",
       "case": "Soup",
       "artifact": "regression ladder"
     },
     {
-      "number": "11.2",
-      "slug": "ch16-identification",
+      "number": "6.3",
+      "slug": "ch06-identification",
       "case": "Milk",
       "artifact": "identification memo"
     },
     {
-      "number": "11.3",
-      "slug": "ch17-panel-fixed-effects",
+      "number": "6.4",
+      "slug": "ch06-fixed-effects",
       "case": "Soup",
-      "artifact": "fixed-effect interpretation"
+      "artifact": "fixed vs. random effects"
     },
     {
-      "number": "12.1",
-      "slug": "ch18-difference-in-differences",
+      "number": "7.1",
+      "slug": "ch07-did",
       "case": "Zillow",
       "artifact": "before-after comparison"
     },
     {
-      "number": "12.2",
-      "slug": "ch19-synthetic-control",
+      "number": "7.2",
+      "slug": "ch07-synthetic-control",
       "case": "Zillow",
       "artifact": "synthetic-control chart"
     },
     {
-      "number": "12.3",
-      "slug": "ch20-heterogeneous-effects",
+      "number": "7.3",
+      "slug": "ch07-heterogeneous-effects",
       "case": "Milk",
       "artifact": "segment-effect plot"
     },
     {
-      "number": "13.1",
-      "slug": "ch21-price-elasticity",
+      "number": "8.1",
+      "slug": "ch08-price-elasticity",
       "case": "Soup",
       "artifact": "elasticity coefficient plot"
     },
     {
-      "number": "13.2",
-      "slug": "ch22-cross-price-elasticity",
-      "case": "Soup",
-      "artifact": "cross-price heatmap"
-    },
-    {
-      "number": "13.3",
-      "slug": "ch23-elasticity-to-pricing",
+      "number": "8.2",
+      "slug": "ch08-pricing-decisions",
       "case": "Soup",
       "artifact": "optimal-pricing widget"
     },
     {
-      "number": "13.4",
-      "slug": "ch24-capstone-pricing-promotion",
+      "number": "8.3",
+      "slug": "ch08-seasonal-pricing",
+      "case": "Soup",
+      "artifact": "seasonal pricing comparison"
+    },
+    {
+      "number": "8.4",
+      "slug": "ch08-cross-price-elasticity",
+      "case": "Soup",
+      "artifact": "cross-price heatmap"
+    },
+    {
+      "number": "8.5",
+      "slug": "ch08-studio-pricing",
       "case": "All three",
       "artifact": "executive decision brief"
     }
@@ -1127,6 +1139,17 @@
       "avg_post_gap_pct": 0.2023,
       "last_gap_pct": 0.2479,
       "top_donor": "Kansas"
+    },
+    "naiveDid": {
+      "control_group": "simple unweighted average of all donor states",
+      "colorado_pre_avg": 215192.0,
+      "colorado_post_avg": 344321.0,
+      "donor_avg_pre_avg": 173780.0,
+      "donor_avg_post_avg": 232596.0,
+      "colorado_growth_pct": 0.6001,
+      "donor_growth_pct": 0.3385,
+      "naive_did_pct": 0.2616,
+      "synthetic_control_pct": 0.2023
     }
   },
   "soup": {
@@ -1186,6 +1209,38 @@
         "n": 88409
       }
     ],
+    "linearModel": {
+      "formula": "Volume.Progresso ~ Price.Progresso + Price.Campbell + Price.PL + Month + Region",
+      "coefficients": {
+        "intercept": 5069.7238,
+        "price_progresso": -2358.2248,
+        "price_campbell": 1109.1971,
+        "price_pl": 789.347
+      },
+      "r2": 0.3985,
+      "n": 88409,
+      "actual_vs_predicted_correlation": 0.6312,
+      "scenarios": [
+        {
+          "label": "Baseline",
+          "price_progresso": 1.8,
+          "price_campbell": 1.5,
+          "price_pl": 1.5,
+          "month": "January",
+          "region": "East",
+          "predicted_volume": 3672.7353
+        },
+        {
+          "label": "Promotion ($1.25)",
+          "price_progresso": 1.25,
+          "price_campbell": 1.5,
+          "price_pl": 1.5,
+          "month": "January",
+          "region": "East",
+          "predicted_volume": 4969.7589
+        }
+      ]
+    },
     "crossPrice": [
       {
         "region": "East",
@@ -8502,7 +8557,3056 @@
       "optimal_price": 1.8151,
       "raw_elasticity": -3.2087,
       "raw_optimal_price": 1.4528,
-      "store_fe_optimal_price": 1.8151
+      "store_fe_optimal_price": 1.8151,
+      "seasonal": {
+        "non_winter": {
+          "elasticity": -2.4861,
+          "optimal_price": 1.6729
+        },
+        "winter": {
+          "elasticity": -2.8204,
+          "optimal_price": 1.5493
+        }
+      }
     }
+  },
+  "southwest": {
+    "metadata": {
+      "title": "Southwest Airlines route fares",
+      "rows": 598,
+      "unit": "route",
+      "source": "southwest_regression_data.csv"
+    },
+    "ladder": [
+      {
+        "model": "Raw comparison",
+        "estimate": -142.3385,
+        "std_error": 21.2108,
+        "ci_low": -183.9117,
+        "ci_high": -100.7653,
+        "r2": 0.0703,
+        "n": 598
+      },
+      {
+        "model": "+ Distance",
+        "estimate": -53.6149,
+        "std_error": 18.0781,
+        "ci_low": -89.048,
+        "ci_high": -18.1818,
+        "r2": 0.3803,
+        "n": 598
+      },
+      {
+        "model": "+ Distance + Airlines",
+        "estimate": -49.3715,
+        "std_error": 17.5749,
+        "ci_low": -83.8183,
+        "ci_high": -14.9246,
+        "r2": 0.4162,
+        "n": 598
+      }
+    ],
+    "logModel": {
+      "model": "Log-linear",
+      "estimate": -0.2749,
+      "std_error": 0.0401,
+      "ci_low": -0.3536,
+      "ci_high": -0.1962,
+      "r2": 0.3272,
+      "n": 598,
+      "pct_effect": -24.04
+    },
+    "scatter": [
+      {
+        "distance": 569,
+        "fare": 220.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1118,
+        "fare": 309.67,
+        "southwest": 0
+      },
+      {
+        "distance": 328,
+        "fare": 91.0,
+        "southwest": 1
+      },
+      {
+        "distance": 143,
+        "fare": 789.0,
+        "southwest": 0
+      },
+      {
+        "distance": 576,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1199,
+        "fare": 240.67,
+        "southwest": 0
+      },
+      {
+        "distance": 732,
+        "fare": 194.0,
+        "southwest": 0
+      },
+      {
+        "distance": 745,
+        "fare": 192.0,
+        "southwest": 0
+      },
+      {
+        "distance": 4502,
+        "fare": 1919.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1946,
+        "fare": 274.0,
+        "southwest": 0
+      },
+      {
+        "distance": 906,
+        "fare": 197.25,
+        "southwest": 0
+      },
+      {
+        "distance": 425,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 545,
+        "fare": 162.0,
+        "southwest": 0
+      },
+      {
+        "distance": 247,
+        "fare": 298.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1587,
+        "fare": 616.0,
+        "southwest": 0
+      },
+      {
+        "distance": 526,
+        "fare": 184.0,
+        "southwest": 1
+      },
+      {
+        "distance": 272,
+        "fare": 143.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1891,
+        "fare": 991.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2116,
+        "fare": 409.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1919,
+        "fare": 334.0,
+        "southwest": 0
+      },
+      {
+        "distance": 445,
+        "fare": 174.0,
+        "southwest": 0
+      },
+      {
+        "distance": 793,
+        "fare": 869.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1541,
+        "fare": 929.0,
+        "southwest": 0
+      },
+      {
+        "distance": 148,
+        "fare": 118.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1090,
+        "fare": 236.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1241,
+        "fare": 272.0,
+        "southwest": 0
+      },
+      {
+        "distance": 978,
+        "fare": 204.0,
+        "southwest": 0
+      },
+      {
+        "distance": 872,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 872,
+        "fare": 315.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1504,
+        "fare": 773.0,
+        "southwest": 1
+      },
+      {
+        "distance": 597,
+        "fare": 339.0,
+        "southwest": 0
+      },
+      {
+        "distance": 631,
+        "fare": 405.0,
+        "southwest": 0
+      },
+      {
+        "distance": 670,
+        "fare": 218.0,
+        "southwest": 1
+      },
+      {
+        "distance": 670,
+        "fare": 218.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1797,
+        "fare": 242.0,
+        "southwest": 1
+      },
+      {
+        "distance": 616,
+        "fare": 196.0,
+        "southwest": 1
+      },
+      {
+        "distance": 675,
+        "fare": 246.5,
+        "southwest": 1
+      },
+      {
+        "distance": 632,
+        "fare": 698.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1237,
+        "fare": 209.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2381,
+        "fare": 264.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1121,
+        "fare": 162.0,
+        "southwest": 0
+      },
+      {
+        "distance": 861,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 867,
+        "fare": 271.75,
+        "southwest": 0
+      },
+      {
+        "distance": 1197,
+        "fare": 242.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2704,
+        "fare": 406.4,
+        "southwest": 0
+      },
+      {
+        "distance": 1231,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 223,
+        "fare": 169.0,
+        "southwest": 1
+      },
+      {
+        "distance": 223,
+        "fare": 169.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 93.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 93.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 937,
+        "fare": 284.33,
+        "southwest": 0
+      },
+      {
+        "distance": 576,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1217,
+        "fare": 214.0,
+        "southwest": 0
+      },
+      {
+        "distance": 408,
+        "fare": 579.0,
+        "southwest": 1
+      },
+      {
+        "distance": 925,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1246,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1246,
+        "fare": 219.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2106,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2106,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 787,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 621,
+        "fare": 150.75,
+        "southwest": 0
+      },
+      {
+        "distance": 1998,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1998,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1998,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 737,
+        "fare": 214.0,
+        "southwest": 1
+      },
+      {
+        "distance": 842,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 842,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 448,
+        "fare": 158.0,
+        "southwest": 1
+      },
+      {
+        "distance": 307,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 168,
+        "fare": 859.67,
+        "southwest": 0
+      },
+      {
+        "distance": 1917,
+        "fare": 292.0,
+        "southwest": 0
+      },
+      {
+        "distance": 590,
+        "fare": 251.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1774,
+        "fare": 1083.0,
+        "southwest": 1
+      },
+      {
+        "distance": 592,
+        "fare": 303.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1678,
+        "fare": 871.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2036,
+        "fare": 821.0,
+        "southwest": 0
+      },
+      {
+        "distance": 239,
+        "fare": 94.0,
+        "southwest": 1
+      },
+      {
+        "distance": 239,
+        "fare": 114.0,
+        "southwest": 1
+      },
+      {
+        "distance": 239,
+        "fare": 114.0,
+        "southwest": 1
+      },
+      {
+        "distance": 432,
+        "fare": 164.0,
+        "southwest": 0
+      },
+      {
+        "distance": 313,
+        "fare": 545.0,
+        "southwest": 1
+      },
+      {
+        "distance": 759,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 601,
+        "fare": 162.0,
+        "southwest": 0
+      },
+      {
+        "distance": 814,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1619,
+        "fare": 303.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1619,
+        "fare": 282.75,
+        "southwest": 0
+      },
+      {
+        "distance": 1545,
+        "fare": 375.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1062,
+        "fare": 517.0,
+        "southwest": 0
+      },
+      {
+        "distance": 804,
+        "fare": 307.25,
+        "southwest": 0
+      },
+      {
+        "distance": 1506,
+        "fare": 348.0,
+        "southwest": 0
+      },
+      {
+        "distance": 732,
+        "fare": 194.0,
+        "southwest": 1
+      },
+      {
+        "distance": 190,
+        "fare": 123.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1562,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1231,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1217,
+        "fare": 214.0,
+        "southwest": 0
+      },
+      {
+        "distance": 927,
+        "fare": 409.0,
+        "southwest": 0
+      },
+      {
+        "distance": 592,
+        "fare": 303.0,
+        "southwest": 0
+      },
+      {
+        "distance": 3784,
+        "fare": 2350.0,
+        "southwest": 0
+      },
+      {
+        "distance": 247,
+        "fare": 116.67,
+        "southwest": 0
+      },
+      {
+        "distance": 1172,
+        "fare": 249.5,
+        "southwest": 0
+      },
+      {
+        "distance": 919,
+        "fare": 224.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1055,
+        "fare": 215.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1235,
+        "fare": 234.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1389,
+        "fare": 260.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1220,
+        "fare": 242.0,
+        "southwest": 0
+      },
+      {
+        "distance": 797,
+        "fare": 247.0,
+        "southwest": 0
+      },
+      {
+        "distance": 468,
+        "fare": 268.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1121,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 852,
+        "fare": 255.67,
+        "southwest": 1
+      },
+      {
+        "distance": 175,
+        "fare": 121.0,
+        "southwest": 0
+      },
+      {
+        "distance": 583,
+        "fare": 362.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1616,
+        "fare": 396.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1302,
+        "fare": 280.67,
+        "southwest": 0
+      },
+      {
+        "distance": 1068,
+        "fare": 234.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1062,
+        "fare": 234.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1345,
+        "fare": 335.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1171,
+        "fare": 360.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1660,
+        "fare": 345.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1464,
+        "fare": 349.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2165,
+        "fare": 555.0,
+        "southwest": 0
+      },
+      {
+        "distance": 988,
+        "fare": 345.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1431,
+        "fare": 351.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1205,
+        "fare": 239.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1205,
+        "fare": 239.0,
+        "southwest": 0
+      },
+      {
+        "distance": 929,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 813,
+        "fare": 347.0,
+        "southwest": 0
+      },
+      {
+        "distance": 987,
+        "fare": 552.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1127,
+        "fare": 310.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1979,
+        "fare": 469.5,
+        "southwest": 1
+      },
+      {
+        "distance": 957,
+        "fare": 315.67,
+        "southwest": 0
+      },
+      {
+        "distance": 229,
+        "fare": 110.0,
+        "southwest": 0
+      },
+      {
+        "distance": 229,
+        "fare": 110.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1145,
+        "fare": 276.67,
+        "southwest": 1
+      },
+      {
+        "distance": 528,
+        "fare": 706.0,
+        "southwest": 0
+      },
+      {
+        "distance": 235,
+        "fare": 125.8,
+        "southwest": 0
+      },
+      {
+        "distance": 1927,
+        "fare": 1184.5,
+        "southwest": 0
+      },
+      {
+        "distance": 2079,
+        "fare": 1120.0,
+        "southwest": 0
+      },
+      {
+        "distance": 347,
+        "fare": 91.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1086,
+        "fare": 172.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2133,
+        "fare": 315.25,
+        "southwest": 0
+      },
+      {
+        "distance": 977,
+        "fare": 355.0,
+        "southwest": 0
+      },
+      {
+        "distance": 925,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1127,
+        "fare": 310.0,
+        "southwest": 0
+      },
+      {
+        "distance": 318,
+        "fare": 133.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1076,
+        "fare": 177.25,
+        "southwest": 0
+      },
+      {
+        "distance": 178,
+        "fare": 123.25,
+        "southwest": 1
+      },
+      {
+        "distance": 197,
+        "fare": 127.8,
+        "southwest": 1
+      },
+      {
+        "distance": 197,
+        "fare": 127.8,
+        "southwest": 1
+      },
+      {
+        "distance": 644,
+        "fare": 174.0,
+        "southwest": 0
+      },
+      {
+        "distance": 279,
+        "fare": 128.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1020,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 4502,
+        "fare": 2179.0,
+        "southwest": 0
+      },
+      {
+        "distance": 4433,
+        "fare": 1639.5,
+        "southwest": 1
+      },
+      {
+        "distance": 3784,
+        "fare": 2350.0,
+        "southwest": 0
+      },
+      {
+        "distance": 3904,
+        "fare": 2118.0,
+        "southwest": 0
+      },
+      {
+        "distance": 3972,
+        "fare": 1404.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2677,
+        "fare": 806.25,
+        "southwest": 0
+      },
+      {
+        "distance": 759,
+        "fare": 198.0,
+        "southwest": 1
+      },
+      {
+        "distance": 696,
+        "fare": 189.0,
+        "southwest": 0
+      },
+      {
+        "distance": 148,
+        "fare": 118.0,
+        "southwest": 1
+      },
+      {
+        "distance": 239,
+        "fare": 114.0,
+        "southwest": 1
+      },
+      {
+        "distance": 239,
+        "fare": 114.0,
+        "southwest": 1
+      },
+      {
+        "distance": 247,
+        "fare": 116.67,
+        "southwest": 0
+      },
+      {
+        "distance": 276,
+        "fare": 117.0,
+        "southwest": 1
+      },
+      {
+        "distance": 359,
+        "fare": 118.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1235,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1235,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1390,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 666,
+        "fare": 219.0,
+        "southwest": 1
+      },
+      {
+        "distance": 848,
+        "fare": 178.0,
+        "southwest": 1
+      },
+      {
+        "distance": 848,
+        "fare": 198.0,
+        "southwest": 1
+      },
+      {
+        "distance": 303,
+        "fare": 136.0,
+        "southwest": 1
+      },
+      {
+        "distance": 303,
+        "fare": 136.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1642,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1642,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1020,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1020,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1020,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1312,
+        "fare": 620.0,
+        "southwest": 1
+      },
+      {
+        "distance": 192,
+        "fare": 117.0,
+        "southwest": 1
+      },
+      {
+        "distance": 687,
+        "fare": 219.0,
+        "southwest": 1
+      },
+      {
+        "distance": 453,
+        "fare": 188.0,
+        "southwest": 1
+      },
+      {
+        "distance": 276,
+        "fare": 117.0,
+        "southwest": 1
+      },
+      {
+        "distance": 228,
+        "fare": 378.5,
+        "southwest": 0
+      },
+      {
+        "distance": 2066,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 229,
+        "fare": 235.75,
+        "southwest": 0
+      },
+      {
+        "distance": 810,
+        "fare": 123.0,
+        "southwest": 0
+      },
+      {
+        "distance": 201,
+        "fare": 118.0,
+        "southwest": 0
+      },
+      {
+        "distance": 224,
+        "fare": 96.67,
+        "southwest": 1
+      },
+      {
+        "distance": 964,
+        "fare": 229.0,
+        "southwest": 0
+      },
+      {
+        "distance": 925,
+        "fare": 199.0,
+        "southwest": 0
+      },
+      {
+        "distance": 925,
+        "fare": 199.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1825,
+        "fare": 620.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1303,
+        "fare": 620.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1347,
+        "fare": 332.0,
+        "southwest": 0
+      },
+      {
+        "distance": 341,
+        "fare": 439.0,
+        "southwest": 0
+      },
+      {
+        "distance": 359,
+        "fare": 118.0,
+        "southwest": 1
+      },
+      {
+        "distance": 270,
+        "fare": 143.0,
+        "southwest": 0
+      },
+      {
+        "distance": 329,
+        "fare": 212.0,
+        "southwest": 0
+      },
+      {
+        "distance": 919,
+        "fare": 224.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1391,
+        "fare": 260.0,
+        "southwest": 0
+      },
+      {
+        "distance": 228,
+        "fare": 378.5,
+        "southwest": 0
+      },
+      {
+        "distance": 2248,
+        "fare": 302.67,
+        "southwest": 0
+      },
+      {
+        "distance": 944,
+        "fare": 201.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1028,
+        "fare": 161.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2153,
+        "fare": 323.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2446,
+        "fare": 262.0,
+        "southwest": 0
+      },
+      {
+        "distance": 163,
+        "fare": 422.5,
+        "southwest": 0
+      },
+      {
+        "distance": 487,
+        "fare": 179.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1090,
+        "fare": 236.0,
+        "southwest": 1
+      },
+      {
+        "distance": 223,
+        "fare": 169.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2106,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2106,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2106,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2106,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1825,
+        "fare": 189.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1917,
+        "fare": 292.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1678,
+        "fare": 871.0,
+        "southwest": 0
+      },
+      {
+        "distance": 584,
+        "fare": 181.67,
+        "southwest": 1
+      },
+      {
+        "distance": 2174,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2762,
+        "fare": 480.5,
+        "southwest": 0
+      },
+      {
+        "distance": 2762,
+        "fare": 516.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1235,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1235,
+        "fare": 223.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2248,
+        "fare": 302.67,
+        "southwest": 0
+      },
+      {
+        "distance": 2039,
+        "fare": 222.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2039,
+        "fare": 222.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2175,
+        "fare": 284.0,
+        "southwest": 0
+      },
+      {
+        "distance": 407,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 407,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 197,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1515,
+        "fare": 215.2,
+        "southwest": 0
+      },
+      {
+        "distance": 762,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 256,
+        "fare": 281.0,
+        "southwest": 1
+      },
+      {
+        "distance": 256,
+        "fare": 286.0,
+        "southwest": 1
+      },
+      {
+        "distance": 256,
+        "fare": 286.0,
+        "southwest": 1
+      },
+      {
+        "distance": 345,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 345,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 258,
+        "fare": 103.0,
+        "southwest": 1
+      },
+      {
+        "distance": 258,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 258,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 866,
+        "fare": 214.67,
+        "southwest": 1
+      },
+      {
+        "distance": 866,
+        "fare": 214.67,
+        "southwest": 1
+      },
+      {
+        "distance": 414,
+        "fare": 198.0,
+        "southwest": 0
+      },
+      {
+        "distance": 386,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 368,
+        "fare": 158.25,
+        "southwest": 1
+      },
+      {
+        "distance": 397,
+        "fare": 182.0,
+        "southwest": 1
+      },
+      {
+        "distance": 397,
+        "fare": 182.0,
+        "southwest": 1
+      },
+      {
+        "distance": 226,
+        "fare": 128.0,
+        "southwest": 1
+      },
+      {
+        "distance": 226,
+        "fare": 128.0,
+        "southwest": 1
+      },
+      {
+        "distance": 365,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1241,
+        "fare": 262.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1797,
+        "fare": 242.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1390,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1363,
+        "fare": 321.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2217,
+        "fare": 256.6,
+        "southwest": 0
+      },
+      {
+        "distance": 2217,
+        "fare": 265.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2217,
+        "fare": 273.8,
+        "southwest": 0
+      },
+      {
+        "distance": 337,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 47,
+        "fare": 591.0,
+        "southwest": 1
+      },
+      {
+        "distance": 370,
+        "fare": 110.5,
+        "southwest": 1
+      },
+      {
+        "distance": 370,
+        "fare": 110.5,
+        "southwest": 1
+      },
+      {
+        "distance": 370,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 370,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 390,
+        "fare": 202.0,
+        "southwest": 1
+      },
+      {
+        "distance": 390,
+        "fare": 202.0,
+        "southwest": 1
+      },
+      {
+        "distance": 308,
+        "fare": 164.67,
+        "southwest": 0
+      },
+      {
+        "distance": 308,
+        "fare": 164.67,
+        "southwest": 0
+      },
+      {
+        "distance": 308,
+        "fare": 164.67,
+        "southwest": 0
+      },
+      {
+        "distance": 373,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 373,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 36,
+        "fare": 366.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1593,
+        "fare": 282.33,
+        "southwest": 0
+      },
+      {
+        "distance": 451,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1619,
+        "fare": 303.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1389,
+        "fare": 260.0,
+        "southwest": 0
+      },
+      {
+        "distance": 725,
+        "fare": 229.0,
+        "southwest": 0
+      },
+      {
+        "distance": 887,
+        "fare": 339.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1220,
+        "fare": 242.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2447,
+        "fare": 1493.0,
+        "southwest": 0
+      },
+      {
+        "distance": 436,
+        "fare": 386.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1044,
+        "fare": 244.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1048,
+        "fare": 204.0,
+        "southwest": 1
+      },
+      {
+        "distance": 787,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 787,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 759,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 957,
+        "fare": 319.0,
+        "southwest": 0
+      },
+      {
+        "distance": 848,
+        "fare": 178.0,
+        "southwest": 1
+      },
+      {
+        "distance": 944,
+        "fare": 140.0,
+        "southwest": 0
+      },
+      {
+        "distance": 944,
+        "fare": 161.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2217,
+        "fare": 265.6,
+        "southwest": 0
+      },
+      {
+        "distance": 989,
+        "fare": 186.0,
+        "southwest": 1
+      },
+      {
+        "distance": 989,
+        "fare": 191.0,
+        "southwest": 1
+      },
+      {
+        "distance": 550,
+        "fare": 147.0,
+        "southwest": 1
+      },
+      {
+        "distance": 861,
+        "fare": 158.33,
+        "southwest": 1
+      },
+      {
+        "distance": 1848,
+        "fare": 212.0,
+        "southwest": 1
+      },
+      {
+        "distance": 880,
+        "fare": 141.0,
+        "southwest": 1
+      },
+      {
+        "distance": 590,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 861,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 307,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 601,
+        "fare": 162.0,
+        "southwest": 0
+      },
+      {
+        "distance": 895,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 797,
+        "fare": 247.0,
+        "southwest": 0
+      },
+      {
+        "distance": 229,
+        "fare": 110.0,
+        "southwest": 1
+      },
+      {
+        "distance": 711,
+        "fare": 231.0,
+        "southwest": 0
+      },
+      {
+        "distance": 725,
+        "fare": 229.0,
+        "southwest": 0
+      },
+      {
+        "distance": 989,
+        "fare": 186.0,
+        "southwest": 1
+      },
+      {
+        "distance": 989,
+        "fare": 186.0,
+        "southwest": 1
+      },
+      {
+        "distance": 989,
+        "fare": 191.0,
+        "southwest": 1
+      },
+      {
+        "distance": 349,
+        "fare": 168.5,
+        "southwest": 0
+      },
+      {
+        "distance": 290,
+        "fare": 151.33,
+        "southwest": 1
+      },
+      {
+        "distance": 595,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1258,
+        "fare": 204.0,
+        "southwest": 1
+      },
+      {
+        "distance": 920,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1121,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1145,
+        "fare": 276.67,
+        "southwest": 1
+      },
+      {
+        "distance": 1086,
+        "fare": 172.0,
+        "southwest": 0
+      },
+      {
+        "distance": 964,
+        "fare": 229.0,
+        "southwest": 0
+      },
+      {
+        "distance": 674,
+        "fare": 210.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1197,
+        "fare": 214.0,
+        "southwest": 0
+      },
+      {
+        "distance": 700,
+        "fare": 210.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2585,
+        "fare": 337.67,
+        "southwest": 0
+      },
+      {
+        "distance": 853,
+        "fare": 274.5,
+        "southwest": 1
+      },
+      {
+        "distance": 984,
+        "fare": 238.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1524,
+        "fare": 313.0,
+        "southwest": 0
+      },
+      {
+        "distance": 67,
+        "fare": 337.5,
+        "southwest": 0
+      },
+      {
+        "distance": 906,
+        "fare": 197.25,
+        "southwest": 1
+      },
+      {
+        "distance": 930,
+        "fare": 849.0,
+        "southwest": 1
+      },
+      {
+        "distance": 680,
+        "fare": 223.67,
+        "southwest": 0
+      },
+      {
+        "distance": 680,
+        "fare": 240.17,
+        "southwest": 0
+      },
+      {
+        "distance": 528,
+        "fare": 706.0,
+        "southwest": 0
+      },
+      {
+        "distance": 3972,
+        "fare": 1404.0,
+        "southwest": 0
+      },
+      {
+        "distance": 349,
+        "fare": 168.5,
+        "southwest": 0
+      },
+      {
+        "distance": 297,
+        "fare": 465.67,
+        "southwest": 0
+      },
+      {
+        "distance": 1426,
+        "fare": 919.5,
+        "southwest": 0
+      },
+      {
+        "distance": 1518,
+        "fare": 876.0,
+        "southwest": 0
+      },
+      {
+        "distance": 425,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 303,
+        "fare": 136.0,
+        "southwest": 1
+      },
+      {
+        "distance": 303,
+        "fare": 146.0,
+        "southwest": 1
+      },
+      {
+        "distance": 550,
+        "fare": 147.0,
+        "southwest": 1
+      },
+      {
+        "distance": 674,
+        "fare": 210.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1642,
+        "fare": 199.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2408,
+        "fare": 639.33,
+        "southwest": 0
+      },
+      {
+        "distance": 407,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 407,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 337,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 543,
+        "fare": 184.0,
+        "southwest": 1
+      },
+      {
+        "distance": 543,
+        "fare": 194.0,
+        "southwest": 1
+      },
+      {
+        "distance": 646,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 671,
+        "fare": 225.67,
+        "southwest": 1
+      },
+      {
+        "distance": 588,
+        "fare": 204.0,
+        "southwest": 1
+      },
+      {
+        "distance": 371,
+        "fare": 161.67,
+        "southwest": 1
+      },
+      {
+        "distance": 583,
+        "fare": 362.0,
+        "southwest": 0
+      },
+      {
+        "distance": 819,
+        "fare": 415.5,
+        "southwest": 0
+      },
+      {
+        "distance": 197,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 197,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 47,
+        "fare": 591.0,
+        "southwest": 1
+      },
+      {
+        "distance": 325,
+        "fare": 111.0,
+        "southwest": 1
+      },
+      {
+        "distance": 325,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 325,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 956,
+        "fare": 291.33,
+        "southwest": 1
+      },
+      {
+        "distance": 888,
+        "fare": 235.25,
+        "southwest": 0
+      },
+      {
+        "distance": 802,
+        "fare": 423.67,
+        "southwest": 1
+      },
+      {
+        "distance": 1182,
+        "fare": 184.4,
+        "southwest": 0
+      },
+      {
+        "distance": 1515,
+        "fare": 204.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1723,
+        "fare": 218.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1721,
+        "fare": 290.5,
+        "southwest": 0
+      },
+      {
+        "distance": 1829,
+        "fare": 275.67,
+        "southwest": 0
+      },
+      {
+        "distance": 2072,
+        "fare": 365.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1012,
+        "fare": 148.25,
+        "southwest": 0
+      },
+      {
+        "distance": 585,
+        "fare": 254.5,
+        "southwest": 0
+      },
+      {
+        "distance": 1437,
+        "fare": 202.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1437,
+        "fare": 202.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1213,
+        "fare": 242.0,
+        "southwest": 0
+      },
+      {
+        "distance": 717,
+        "fare": 423.0,
+        "southwest": 1
+      },
+      {
+        "distance": 545,
+        "fare": 162.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1197,
+        "fare": 252.0,
+        "southwest": 0
+      },
+      {
+        "distance": 590,
+        "fare": 251.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1028,
+        "fare": 161.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1035,
+        "fare": 161.0,
+        "southwest": 0
+      },
+      {
+        "distance": 951,
+        "fare": 148.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1616,
+        "fare": 396.0,
+        "southwest": 0
+      },
+      {
+        "distance": 279,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1730,
+        "fare": 620.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1426,
+        "fare": 769.0,
+        "southwest": 0
+      },
+      {
+        "distance": 543,
+        "fare": 184.0,
+        "southwest": 1
+      },
+      {
+        "distance": 569,
+        "fare": 174.0,
+        "southwest": 1
+      },
+      {
+        "distance": 479,
+        "fare": 119.67,
+        "southwest": 1
+      },
+      {
+        "distance": 247,
+        "fare": 298.0,
+        "southwest": 0
+      },
+      {
+        "distance": 280,
+        "fare": 128.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1302,
+        "fare": 280.67,
+        "southwest": 0
+      },
+      {
+        "distance": 2401,
+        "fare": 256.33,
+        "southwest": 1
+      },
+      {
+        "distance": 290,
+        "fare": 151.33,
+        "southwest": 1
+      },
+      {
+        "distance": 2075,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 267,
+        "fare": 133.0,
+        "southwest": 1
+      },
+      {
+        "distance": 238,
+        "fare": 151.33,
+        "southwest": 1
+      },
+      {
+        "distance": 336,
+        "fare": 133.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2369,
+        "fare": 248.0,
+        "southwest": 1
+      },
+      {
+        "distance": 328,
+        "fare": 91.0,
+        "southwest": 0
+      },
+      {
+        "distance": 328,
+        "fare": 91.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1587,
+        "fare": 616.0,
+        "southwest": 0
+      },
+      {
+        "distance": 369,
+        "fare": 93.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 93.0,
+        "southwest": 1
+      },
+      {
+        "distance": 369,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1998,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1998,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 602,
+        "fare": 141.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1671,
+        "fare": 206.25,
+        "southwest": 0
+      },
+      {
+        "distance": 347,
+        "fare": 91.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2153,
+        "fare": 323.0,
+        "southwest": 0
+      },
+      {
+        "distance": 256,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 256,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 256,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 256,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 370,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 370,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1848,
+        "fare": 212.0,
+        "southwest": 1
+      },
+      {
+        "distance": 646,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 646,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 646,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 325,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 325,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1440,
+        "fare": 204.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1009,
+        "fare": 263.4,
+        "southwest": 0
+      },
+      {
+        "distance": 1009,
+        "fare": 263.4,
+        "southwest": 0
+      },
+      {
+        "distance": 2075,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 304,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 304,
+        "fare": 113.0,
+        "southwest": 1
+      },
+      {
+        "distance": 304,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 304,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1107,
+        "fare": 267.4,
+        "southwest": 1
+      },
+      {
+        "distance": 651,
+        "fare": 260.0,
+        "southwest": 1
+      },
+      {
+        "distance": 621,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 621,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 507,
+        "fare": 203.0,
+        "southwest": 1
+      },
+      {
+        "distance": 507,
+        "fare": 220.0,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 338,
+        "fare": 128.0,
+        "southwest": 0
+      },
+      {
+        "distance": 338,
+        "fare": 128.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1262,
+        "fare": 224.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1262,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1262,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1910,
+        "fare": 218.25,
+        "southwest": 0
+      },
+      {
+        "distance": 773,
+        "fare": 214.0,
+        "southwest": 1
+      },
+      {
+        "distance": 431,
+        "fare": 357.0,
+        "southwest": 1
+      },
+      {
+        "distance": 267,
+        "fare": 133.0,
+        "southwest": 1
+      },
+      {
+        "distance": 272,
+        "fare": 143.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1062,
+        "fare": 234.0,
+        "southwest": 0
+      },
+      {
+        "distance": 379,
+        "fare": 620.0,
+        "southwest": 1
+      },
+      {
+        "distance": 700,
+        "fare": 210.0,
+        "southwest": 0
+      },
+      {
+        "distance": 336,
+        "fare": 133.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1891,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 804,
+        "fare": 307.25,
+        "southwest": 0
+      },
+      {
+        "distance": 345,
+        "fare": 103.0,
+        "southwest": 1
+      },
+      {
+        "distance": 345,
+        "fare": 103.0,
+        "southwest": 1
+      },
+      {
+        "distance": 345,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 345,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 390,
+        "fare": 194.0,
+        "southwest": 1
+      },
+      {
+        "distance": 564,
+        "fare": 174.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1171,
+        "fare": 360.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1312,
+        "fare": 620.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1303,
+        "fare": 620.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2446,
+        "fare": 222.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2446,
+        "fare": 262.0,
+        "southwest": 0
+      },
+      {
+        "distance": 258,
+        "fare": 103.0,
+        "southwest": 1
+      },
+      {
+        "distance": 258,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 109,
+        "fare": 359.0,
+        "southwest": 0
+      },
+      {
+        "distance": 109,
+        "fare": 359.0,
+        "southwest": 0
+      },
+      {
+        "distance": 109,
+        "fare": 359.0,
+        "southwest": 0
+      },
+      {
+        "distance": 109,
+        "fare": 359.0,
+        "southwest": 0
+      },
+      {
+        "distance": 109,
+        "fare": 359.0,
+        "southwest": 0
+      },
+      {
+        "distance": 304,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 304,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 417,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 417,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 417,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 417,
+        "fare": 204.0,
+        "southwest": 0
+      },
+      {
+        "distance": 192,
+        "fare": 117.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1069,
+        "fare": 222.0,
+        "southwest": 1
+      },
+      {
+        "distance": 937,
+        "fare": 284.33,
+        "southwest": 0
+      },
+      {
+        "distance": 1660,
+        "fare": 345.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1927,
+        "fare": 1184.5,
+        "southwest": 0
+      },
+      {
+        "distance": 224,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2677,
+        "fare": 755.75,
+        "southwest": 0
+      },
+      {
+        "distance": 954,
+        "fare": 253.67,
+        "southwest": 1
+      },
+      {
+        "distance": 671,
+        "fare": 225.67,
+        "southwest": 1
+      },
+      {
+        "distance": 129,
+        "fare": 238.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1107,
+        "fare": 267.4,
+        "southwest": 1
+      },
+      {
+        "distance": 564,
+        "fare": 174.0,
+        "southwest": 1
+      },
+      {
+        "distance": 697,
+        "fare": 227.33,
+        "southwest": 1
+      },
+      {
+        "distance": 605,
+        "fare": 244.0,
+        "southwest": 1
+      },
+      {
+        "distance": 605,
+        "fare": 244.0,
+        "southwest": 1
+      },
+      {
+        "distance": 2704,
+        "fare": 380.2,
+        "southwest": 0
+      },
+      {
+        "distance": 2704,
+        "fare": 406.4,
+        "southwest": 0
+      },
+      {
+        "distance": 2036,
+        "fare": 821.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2079,
+        "fare": 1120.0,
+        "southwest": 0
+      },
+      {
+        "distance": 451,
+        "fare": 390.0,
+        "southwest": 0
+      },
+      {
+        "distance": 414,
+        "fare": 198.0,
+        "southwest": 0
+      },
+      {
+        "distance": 414,
+        "fare": 198.0,
+        "southwest": 0
+      },
+      {
+        "distance": 337,
+        "fare": 177.75,
+        "southwest": 1
+      },
+      {
+        "distance": 1854,
+        "fare": 302.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1854,
+        "fare": 302.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2585,
+        "fare": 337.67,
+        "southwest": 0
+      },
+      {
+        "distance": 1589,
+        "fare": 280.5,
+        "southwest": 0
+      },
+      {
+        "distance": 1846,
+        "fare": 419.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2300,
+        "fare": 620.0,
+        "southwest": 1
+      },
+      {
+        "distance": 386,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 386,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 386,
+        "fare": 201.0,
+        "southwest": 1
+      },
+      {
+        "distance": 386,
+        "fare": 201.0,
+        "southwest": 1
+      },
+      {
+        "distance": 308,
+        "fare": 167.33,
+        "southwest": 0
+      },
+      {
+        "distance": 308,
+        "fare": 167.33,
+        "southwest": 0
+      },
+      {
+        "distance": 308,
+        "fare": 167.33,
+        "southwest": 0
+      },
+      {
+        "distance": 1576,
+        "fare": 1098.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1829,
+        "fare": 275.67,
+        "southwest": 0
+      },
+      {
+        "distance": 569,
+        "fare": 174.0,
+        "southwest": 1
+      },
+      {
+        "distance": 569,
+        "fare": 180.0,
+        "southwest": 1
+      },
+      {
+        "distance": 621,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 621,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 621,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 417,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 417,
+        "fare": 184.0,
+        "southwest": 0
+      },
+      {
+        "distance": 585,
+        "fare": 192.0,
+        "southwest": 1
+      },
+      {
+        "distance": 342,
+        "fare": 163.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1674,
+        "fare": 413.33,
+        "southwest": 0
+      },
+      {
+        "distance": 2165,
+        "fare": 555.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1046,
+        "fare": 304.0,
+        "southwest": 0
+      },
+      {
+        "distance": 988,
+        "fare": 345.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1213,
+        "fare": 229.0,
+        "southwest": 1
+      },
+      {
+        "distance": 507,
+        "fare": 203.0,
+        "southwest": 1
+      },
+      {
+        "distance": 689,
+        "fare": 264.0,
+        "southwest": 1
+      },
+      {
+        "distance": 599,
+        "fare": 418.33,
+        "southwest": 0
+      },
+      {
+        "distance": 910,
+        "fare": 390.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1431,
+        "fare": 351.0,
+        "southwest": 0
+      },
+      {
+        "distance": 397,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 397,
+        "fare": 182.0,
+        "southwest": 0
+      },
+      {
+        "distance": 373,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 373,
+        "fare": 164.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1518,
+        "fare": 876.0,
+        "southwest": 0
+      },
+      {
+        "distance": 479,
+        "fare": 119.67,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 647,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 605,
+        "fare": 244.0,
+        "southwest": 1
+      },
+      {
+        "distance": 86,
+        "fare": 328.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1919,
+        "fare": 334.0,
+        "southwest": 0
+      },
+      {
+        "distance": 846,
+        "fare": 390.25,
+        "southwest": 0
+      },
+      {
+        "distance": 1205,
+        "fare": 239.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1205,
+        "fare": 239.0,
+        "southwest": 0
+      },
+      {
+        "distance": 226,
+        "fare": 128.0,
+        "southwest": 1
+      },
+      {
+        "distance": 226,
+        "fare": 128.0,
+        "southwest": 1
+      },
+      {
+        "distance": 36,
+        "fare": 366.0,
+        "southwest": 1
+      },
+      {
+        "distance": 36,
+        "fare": 366.0,
+        "southwest": 1
+      },
+      {
+        "distance": 371,
+        "fare": 161.67,
+        "southwest": 1
+      },
+      {
+        "distance": 1726,
+        "fare": 374.0,
+        "southwest": 0
+      },
+      {
+        "distance": 338,
+        "fare": 128.0,
+        "southwest": 0
+      },
+      {
+        "distance": 338,
+        "fare": 128.0,
+        "southwest": 0
+      },
+      {
+        "distance": 342,
+        "fare": 163.0,
+        "southwest": 1
+      },
+      {
+        "distance": 445,
+        "fare": 174.0,
+        "southwest": 0
+      },
+      {
+        "distance": 483,
+        "fare": 479.0,
+        "southwest": 0
+      },
+      {
+        "distance": 880,
+        "fare": 141.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1068,
+        "fare": 184.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1262,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1262,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1156,
+        "fare": 224.0,
+        "southwest": 1
+      },
+      {
+        "distance": 793,
+        "fare": 869.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1111,
+        "fare": 123.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1185,
+        "fare": 164.0,
+        "southwest": 0
+      },
+      {
+        "distance": 842,
+        "fare": 123.0,
+        "southwest": 1
+      },
+      {
+        "distance": 1506,
+        "fare": 348.0,
+        "southwest": 0
+      },
+      {
+        "distance": 929,
+        "fare": 244.0,
+        "southwest": 0
+      },
+      {
+        "distance": 197,
+        "fare": 123.8,
+        "southwest": 1
+      },
+      {
+        "distance": 810,
+        "fare": 123.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1005,
+        "fare": 162.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2158,
+        "fare": 224.0,
+        "southwest": 0
+      },
+      {
+        "distance": 2158,
+        "fare": 264.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1011,
+        "fare": 282.0,
+        "southwest": 0
+      },
+      {
+        "distance": 1012,
+        "fare": 148.25,
+        "southwest": 0
+      },
+      {
+        "distance": 585,
+        "fare": 254.5,
+        "southwest": 0
+      },
+      {
+        "distance": 1541,
+        "fare": 929.0,
+        "southwest": 0
+      },
+      {
+        "distance": 813,
+        "fare": 347.0,
+        "southwest": 0
+      },
+      {
+        "distance": 879,
+        "fare": 391.0,
+        "southwest": 1
+      },
+      {
+        "distance": 365,
+        "fare": 121.0,
+        "southwest": 1
+      },
+      {
+        "distance": 451,
+        "fare": 121.0,
+        "southwest": 1
+      }
+    ]
   }
 }

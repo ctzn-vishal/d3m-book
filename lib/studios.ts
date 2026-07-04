@@ -432,7 +432,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Regression', 'Dashboard', 'Controls'],
     methods: ['Regression', 'Effect isolation', 'Controls'],
-    relatedSlug: 'ch06-regression',
+    relatedSlug: 'ch06-regression-review',
     kind: 'dashboard',
     preview: {
       src: '/studios/southwest-regression/preview.jpg',
@@ -450,7 +450,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Regression', 'Exercise', 'Data workflow'],
     methods: ['Hands-on regression', 'Coefficient reading', 'Data download'],
-    relatedSlug: 'ch06-regression',
+    relatedSlug: 'ch06-regression-review',
     kind: 'exercise',
     preview: {
       src: '/studios/southwest-regression-exercise/preview.jpg',

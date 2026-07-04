@@ -54,13 +54,13 @@ export const partContent: Record<string, PartContent> = {
   III: {
     tagline: 'From what happened to what to do',
     summary:
-      'This part is about acting on data by asking what would have happened otherwise. Every chapter chases the same object — the counterfactual — and the arc moves from naming it (Chapter 5 reframes any metric as a missing comparison) to identifying it (Chapter 6 makes regression earn the word "causal"), to recovering it from field data no one randomized (Chapter 7\'s difference-in-differences, synthetic control, and heterogeneous effects), to spending it on the firm\'s highest-leverage lever (Chapter 8 turns an elasticity into a price). A single thread of worked evidence — Progresso soup scanner data, a 1,700-store milk experiment, a Zillow-and-cannabis synthetic control — runs through all four, so the same number grows more trustworthy as the design tightens. The discipline it leaves behind is refusing to read a coefficient until you know which counterfactual produced it.',
+      'This part is about acting on data by asking what would have happened otherwise. Every chapter chases the same object — the counterfactual — and the arc moves from naming it (Chapter 5 reframes any metric as a missing comparison) to earning the word "causal" for a regression (Chapter 6 opens with a from-scratch refresher on Southwest Airlines fares before making the identification argument precise), to recovering the counterfactual from field data no one randomized (Chapter 7\'s difference-in-differences, synthetic control, and heterogeneous effects), to spending it on the firm\'s highest-leverage lever (Chapter 8 turns an elasticity into a price, and settles whether Progresso\'s real habit of raising soup prices in the off-season is smart pricing or a mistake). A single thread of worked evidence — Southwest route fares, Progresso soup scanner data, a 1,700-store milk experiment, a Zillow-and-cannabis synthetic control — runs through all four, so the same number grows more trustworthy as the design tightens. The discipline it leaves behind is refusing to read a coefficient until you know which counterfactual produced it.',
     whatYoullLearn: [
       'Translate any business metric into a precise causal question — naming the lever, unit, horizon, comparison, and decision threshold before fitting a model',
-      'Distinguish identification from estimation, and demand the identification memo and diagnostics that separate a causal coefficient from a precisely-wrong one',
+      'Refresh simple and multiple regression on the Southwest Airlines fare data, then distinguish identification from estimation and demand the identification memo and diagnostics that separate a causal coefficient from a precisely-wrong one',
       'Recover treatment effects from unrandomized field data using difference-in-differences, synthetic control, and panel fixed effects, and audit each with balance and placebo checks',
       'Surface heterogeneous effects so a single average lift no longer hides which segments actually pay',
-      'Convert an own-price elasticity into an optimal markup via the Lerner rule, and see in dollars why a naive elasticity hands back the wrong price',
+      "Convert an own-price elasticity into an optimal markup via the Lerner rule, apply it separately by season, and judge in dollars whether Progresso's real countercyclical pricing habit is justified by the data",
     ],
     icon: 'FlaskConical',
   },
@@ -218,17 +218,17 @@ export const chapterContent: Record<number, ChapterContent> = {
   6: {
     throughLine: 'A regression number is only as trustworthy as the comparison it secretly makes.',
     summary:
-      'This chapter focuses on what "holding something constant" actually means and when a regression earns the word causal. It begins with multiple regression as effect isolation, using the Frisch–Waugh–Lovell theorem to show that controlling for a variable is really a two-stage residualization, then climbs a regression ladder on roughly 88,000 store-months of Progresso scanner data as the price elasticity settles from a naive −3.21 to a defensible −2.23. From there it separates identification from estimation, introduces DAGs and the fork–chain–collider patterns, and closes on panel fixed effects, where demeaning absorbs every stable store difference you could never measure. The discipline it leaves behind: insist on the identification memo and the diagnostics before reading the number, because a precise estimate of an unidentified quantity is precisely wrong.',
+      'This chapter opens with the practical regression refresher a rusty MBA needs before any causal claim: does Southwest Airlines\' presence on a route actually lower fares, and by how much once distance and competition are held fixed? Starting from a raw fare gap of roughly $142, adding controls walks the estimate down to about $49 — the same "holding constant" move that recurs through the rest of Part III. From there the chapter formalizes what that move computes, using the Frisch–Waugh–Lovell theorem to show that controlling for a variable is really a two-stage residualization, then climbs a regression ladder on roughly 88,000 store-months of Progresso scanner data as the price elasticity settles from a naive −3.21 to a defensible −2.23. It separates identification from estimation, introduces DAGs and the fork–chain–collider patterns, and closes on panel data — fixed and random effects — where demeaning absorbs every stable store difference you could never measure, and a plain-language Hausman-style check decides which of the two designs to trust. The discipline it leaves behind: insist on the identification memo and the diagnostics before reading the number, because a precise estimate of an unidentified quantity is precisely wrong.',
     topics: [
+      'simple and multiple regression (Southwest Airlines fares)',
       'Frisch–Waugh–Lovell residualization',
       'omitted-variable bias',
       'bad controls and collider bias',
       'the regression ladder on scanner data',
       'identification vs. estimation',
       'directed acyclic graphs (fork, chain, collider)',
-      'the identification memo',
-      'panel fixed effects and the within transformation',
-      'two-way fixed effects (TWFE)',
+      'panel fixed effects vs. random effects',
+      'the Hausman intuition for choosing a panel model',
     ],
     icon: 'Filter',
   },
@@ -251,19 +251,20 @@ export const chapterContent: Record<number, ChapterContent> = {
     icon: 'GitCompareArrows',
   },
   8: {
-    throughLine: 'Turning an identified elasticity into a defensible price, then into a memo a committee can act on.',
+    throughLine:
+      "Turning an identified elasticity into a defensible price — and using it to judge whether Progresso's own countercyclical habit is smart pricing or a mistake.",
     summary:
-      "This chapter turns the causal machinery of Part III into an actual number on a shelf tag. Working the Progresso scanner-data case, it estimates own-price elasticity in log-log space, watches the coefficient walk from a confounded −3.21 to a within-store −2.23 as fixed effects are added, then extends to a regional cross-price matrix that exposes where Campbell's and private label steal volume. The payoff is the Lerner inverse-elasticity rule, which converts a single coefficient into an optimal markup and shows in dollars why feeding a naive elasticity into the formula returns the wrong price. A closing studio reconciles elasticity, heterogeneity, and synthetic control into a one-page strategic pricing memo a committee can act on.",
+      "This chapter turns the causal machinery of Part III into an actual number on a shelf tag, working one continuous case: the Progresso soup scanner panel. It opens with a plain multiple regression of volume on price, competitor prices, month, and region — predicting what happens to sales at a candidate price and at a promotional discount — before moving into log-log space, where the coefficient becomes an elasticity and settles from a confounded −3.21 to a within-store −2.23. The Lerner inverse-elasticity rule converts that coefficient into an optimal markup, and a seasonal split of the same regression — winter against the rest of the year — resolves a real strategic question: Progresso's actual habit of raising prices in the off-season turns out to be justified, because summer demand is measurably less price-sensitive than winter demand, the same logic that powers modern dynamic and algorithmic pricing. A regional cross-price matrix then shows where Campbell's and private label steal volume, and where Progresso's pricing power is strongest. A closing studio reconciles elasticity, heterogeneity, and synthetic control into a one-page strategic pricing memo a committee can act on.",
     topics: [
+      'multiple regression and scenario prediction',
       'own-price elasticity',
       'log-log constant-elasticity demand',
       'elastic vs. inelastic zones',
-      'store fixed-effects regression ladder',
+      'the Lerner inverse-elasticity rule',
+      'seasonal elasticity and countercyclical pricing',
+      'dynamic and algorithmic pricing',
       'cross-price elasticity matrix',
       'substitutes vs. complements',
-      'asymmetric substitution',
-      'the Lerner inverse-elasticity rule',
-      'optimal markup over marginal cost',
     ],
     icon: 'DollarSign',
   },
@@ -473,12 +474,14 @@ export const articleBlurbs: Record<string, string> = {
     'Shows why randomization erases selection bias, why intervals beat point estimates, and how milk-pricing diagnostics rescue quasi-experiments.',
   'ch05-historical-data':
     'Explains the four sources of endogeneity and the omitted-variable-bias formula, visualized in Progresso soup elasticity confounded by season.',
+  'ch06-regression-review':
+    'A from-scratch regression refresher on Southwest Airlines fares — simple regression, adding distance and competition as controls, and reading a coefficient as a controlled comparison before Part III leans on regression for anything causal.',
   'ch06-regression':
     'Shows that multiple regression\'s "holding constant" is Frisch–Waugh–Lovell residualization, then climbs a Progresso price-elasticity ladder from −3.21 to −2.23.',
   'ch06-identification':
     'Separates identification from estimation, teaches DAGs and the fork–chain–collider patterns, and audits a milk-pricing quasi-experiment with balance and placebo checks.',
   'ch06-fixed-effects':
-    'Derives the demeaning transformation behind panel fixed effects, showing how within-store variation absorbs unmeasured stable confounders to flip a misleading price slope.',
+    'Derives the demeaning transformation behind panel fixed effects, contrasts it with random effects and the Hausman logic for choosing between them, and shows how within-store variation absorbs unmeasured stable confounders to flip a misleading price slope.',
   'ch07-did':
     'Derives the difference-in-differences estimator as an interaction coefficient and shows why parallel trends, checked via event-study plots, is everything.',
   'ch07-synthetic-control':
@@ -486,11 +489,13 @@ export const articleBlurbs: Record<string, string> = {
   'ch07-heterogeneous-effects':
     'Splits the average effect into per-segment lifts for targeting, warning against post-treatment colliders, p-hacking, and noisy-subgroup illusions.',
   'ch08-price-elasticity':
-    'Defines own-price elasticity, motivates the log-log specification, and walks the Progresso estimate from a confounded −3.21 to a within-store −2.23.',
-  'ch08-cross-price-elasticity':
-    'Reads the sign of cross-price coefficients to separate substitutes from complements, using a regional Progresso-vs-Campbell\'s matrix that varies by market.',
+    'Opens with a multiple regression that predicts Progresso volume under a candidate price and a promotional discount, then moves to log-log space where the coefficient becomes elasticity, settling from a confounded −3.21 to a within-store −2.23.',
   'ch08-pricing-decisions':
     'Derives the Lerner inverse-elasticity rule and prices out, in dollars, the cost of optimizing on a naive versus an identified elasticity.',
+  'ch08-seasonal-pricing':
+    "Splits the Progresso elasticity by season and reruns the Lerner rule twice, resolving whether the brand's real habit of raising prices in the off-season is justified by measurably less elastic summer demand — and bridges to dynamic and algorithmic pricing.",
+  'ch08-cross-price-elasticity':
+    'Reads the sign of cross-price coefficients to separate substitutes from complements, using a regional Progresso-vs-Campbell\'s matrix to identify where the brand is strongest and most vulnerable.',
   'ch08-studio-pricing':
     'Capstone studio reconciling elasticity, heterogeneity, and synthetic control into a five-section strategic pricing and promotion memo.',
   'ch09-rules-to-algorithms':
@@ -640,11 +645,13 @@ export const articleDescriptions: Record<string, string> = {
   'ch05-metrics-to-decisions':
     'A decision-first opening to causal analysis: treatment, outcome, unit, timing, comparison, and the counterfactual question.',
   'ch06-fixed-effects':
-    'Panel data and fixed effects: comparing stores to themselves over time to sharpen pricing estimates.',
+    'Panel data, fixed effects, and random effects: comparing stores to themselves over time — and to each other — to sharpen pricing estimates and choose the right panel model.',
   'ch06-identification':
     'Identification as the business argument that makes a comparison credible enough to interpret causally.',
   'ch06-regression':
     'Regression as a visual and statistical ladder from raw association to adjusted comparison in the soup pricing panel.',
+  'ch06-regression-review':
+    'A practical regression refresher: simple and multiple regression on Southwest Airlines fares, reading coefficients as controlled comparisons before Part III leans on regression for causal claims.',
   'ch07-did':
     'Difference-in-differences as a comparison of changes, with parallel trends as the key identifying assumption.',
   'ch07-heterogeneous-effects':
@@ -654,9 +661,11 @@ export const articleDescriptions: Record<string, string> = {
   'ch08-cross-price-elasticity':
     'Cross-price elasticity, substitution, complements, cannibalization, and regional competitive response in soup.',
   'ch08-price-elasticity':
-    'Price elasticity, log-log regression, interpretation, and why percentage response matters for pricing decisions.',
+    'Multiple regression, scenario prediction, and log-log elasticity for Progresso soup — from a plain volume forecast to a percentage-response coefficient ready for pricing.',
   'ch08-pricing-decisions':
     'From elasticity estimates to revenue, margin, guardrails, and an interactive optimal-pricing formula.',
+  'ch08-seasonal-pricing':
+    "Winter versus non-winter elasticity and the Lerner rule applied twice — does Progresso's countercyclical pricing habit hold up, and how does the logic extend to dynamic and algorithmic pricing?",
   'ch08-studio-pricing':
     'A Part III studio brief that combines counterfactuals, identification, regression, elasticity, and pricing action.',
   'ch09-feature-engineering':

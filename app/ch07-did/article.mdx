@@ -127,14 +127,71 @@ The most useful pre-treatment plot is the **event study**: align all units to ev
 
 ---
 
+## Data Case: Colorado Legalization, the Naive DiD
+
+The West Coast checkout example was built to teach the mechanics: two groups, two periods, four clean numbers. Real policy questions rarely hand you a matched treated/control pair. Colorado's January 2014 legalization of recreational cannabis — the case that opened Chapter 5 and returns in full in the next article — is a sharper test, because it has only **one treated unit**: Colorado. Every other state is, in principle, a candidate control.
+
+The most naive version of DiD treats "every other state" as if it were a single control group and averages them. The outcome is the Zillow Home Value Index (ZHVI), the treatment date is January 2014, and the pre/post windows are the same ones used throughout this case.
+
+<DataTable
+  caption="Table 2. Naive difference-in-differences on Colorado housing values, using the simple unweighted average of all 49 other states as the control group."
+  columns={[
+    { key: 'group', label: 'Group', align: 'left' },
+    { key: 'pre', label: 'Pre-2014 avg. ZHVI', align: 'left' },
+    { key: 'post', label: 'Post-2014 avg. ZHVI', align: 'left' },
+    { key: 'growth', label: 'Growth', align: 'left' },
+  ]}
+  rows={[
+    { group: 'Colorado (treated)', pre: '$215,192', post: '$344,321', growth: '+60.0%' },
+    { group: 'All other states (simple average)', pre: '$173,780', post: '$232,596', growth: '+33.9%' },
+  ]}
+/>
+
+The DiD arithmetic is the same subtraction-of-subtractions as the checkout example: Colorado's growth rate minus the control group's growth rate.
+
+<Equation
+  label="Naive DiD estimate, Colorado legalization"
+  latex={String.raw`\text{Naive DiD} \;=\; 60.0\% - 33.9\% \;=\; 26.2\%`}
+/>
+
+Read literally, this says legalization lifted Colorado home values by roughly 26 percentage points relative to the rest of the country. That number is real arithmetic, correctly executed — and it is also a design you should not trust.
+
+### Why the naive control group is the wrong comparison
+
+The DiD logic depends on the control group's trend standing in for the treated unit's counterfactual trend. Averaging *all* other 49 states together quietly assumes that this grand average would have tracked Colorado's specific pre-2014 housing trajectory — a state with a distinctive mountain-west, tech-migration, land-constrained housing market. There is no reason a simple average dominated by, say, large Northeast and Midwest states should share Colorado's counterfactual path. The parallel-trends assumption is doing an enormous amount of unexamined work here: it is not one comparison to defend, it is an implicit claim about 49 states at once, most of which look nothing like Colorado on the dimensions that drive home prices.
+
+This is the general failure mode flagged above: **there is only one treated unit, and classical DiD does not naturally pick a "best" comparison.** Naive-averaging is the ad-hoc fallback, and it is fragile in exactly the way the pre-trends check exists to catch — it just happens to look like a fully specified estimate because it produces a clean number.
+
+### The fix: build a weighted twin instead of an averaged one
+
+The next article, Synthetic Control (Chapter 7.2), works this same Colorado case and fixes exactly this weakness. Instead of collapsing 49 states into one flat average, it *optimizes* a weighted combination of donor states chosen so the blend's pre-2014 housing trajectory tracks Colorado's as closely as possible — and lets the post-2014 gap between actual and synthetic Colorado be the estimate.
+
+<DataTable
+  caption="Table 3. Naive DiD versus synthetic control on the same Colorado case. The synthetic control estimate replaces a flat average of 49 states with an optimized weighted twin fit to Colorado's own pre-treatment path."
+  columns={[
+    { key: 'method', label: 'Method', align: 'left' },
+    { key: 'control', label: 'Control group construction', align: 'left' },
+    { key: 'estimate', label: 'Estimated effect', align: 'left' },
+  ]}
+  rows={[
+    { method: 'Naive DiD', control: 'Simple average of all 49 other states', estimate: '+26.2%' },
+    { method: 'Synthetic control', control: "Optimized weighted blend of donor states, fit to Colorado's pre-trend", estimate: '+20.2%' },
+  ]}
+  highlightRow={1}
+/>
+
+The two designs do not agree, and the gap between 26.2% and 20.2% is not noise — it is the naive design's control group failing to reproduce Colorado's actual counterfactual trend. Chapter 7.2 shows the weights behind that second number and the pre-treatment fit that makes it credible.
+
+---
+
 ## When DiD Is Not Enough: Looking Ahead
 
 DiD assumes you have a *group* of control units whose averaged trajectory is a credible counterfactual. Two things stretch that assumption in real settings:
 
-- **There is only one treated unit.** A state passes a unique policy; a firm pilots in a single city. The classical DiD does not naturally pick a "best" comparison — and ad-hoc matching is fragile. Synthetic control (Chapter 7.2) addresses this by building a custom weighted counterfactual.
+- **There is only one treated unit.** A state passes a unique policy; a firm pilots in a single city. The classical DiD does not naturally pick a "best" comparison — and, as the Colorado case just showed, ad-hoc averaging is fragile. Synthetic control (Chapter 7.2) addresses this by building a custom weighted counterfactual in place of the naive average.
 - **Treatment effects vary across units.** The same rollout helps low-income customers a lot and loyal customers not at all. The average effect understates the targeting opportunity. Heterogeneous treatment effects (Chapter 7.3) tackle this directly.
 
-DiD remains the right starting point for most multi-unit rollouts. The next two articles handle the cases where it isn't enough.
+DiD remains the right starting point for most multi-unit rollouts. The next two articles handle the cases where it isn't enough — starting immediately with the single-treated-unit problem this Colorado case just made concrete.
 
 ---
 

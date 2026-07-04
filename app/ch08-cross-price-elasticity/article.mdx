@@ -17,7 +17,7 @@ No product in a modern firm is priced in isolation. Customers do not see a singl
 
 </DropCap>
 
-This article defines cross-price elasticity, shows what the sign of the coefficient tells you about the strategic relationship between two products, gives the multivariate log-log specification used to estimate it, and ends with a regional cross-price matrix that illustrates how competitive structure varies across markets.
+The previous article found that Progresso's off-season price increases are, in the aggregate, justified: demand is measurably less elastic outside winter, so raising price when the category is quiet leaves less money on the table than raising it in the winter peak. But "in the aggregate" is doing a lot of work in that sentence. A national average blends four regions with very different competitive structures, and a countercyclical price hike that looks safe on average can be far riskier in a market where rivals are one shelf-tag away. This article asks the question the seasonal result cannot answer on its own: does the same off-season pricing strategy carry the same risk everywhere, or are some regions more exposed to substitution than others when Progresso raises price? It defines cross-price elasticity, shows what the sign of the coefficient tells you about the strategic relationship between two products, gives the multivariate log-log specification used to estimate it, and ends with a regional cross-price matrix that names, region by region, where Progresso is insulated and where it is exposed.
 
 ---
 
@@ -93,13 +93,14 @@ Cross-price effects are not just product-pair properties — they vary across ma
   </div>
 </Figure>
 
-Three patterns stand out, and each one has a direct strategic implication:
+Four regions, four different exposure profiles — and each one answers the "strongest or most vulnerable" question differently:
 
-- **The South is hyper-competitive.** Progresso's own-price elasticity sits near <M>{String.raw`-2.60`}</M>, and the cross-price elasticity with respect to Campbell's is unusually high at about <M>{String.raw`+1.56`}</M>. A 10% Campbell's price cut would mechanically erode roughly 15% of Progresso's Southern volume. Pricing aggressively in this region is exposed; defensive promotional timing matters as much as the headline price.
-- **The West has elevated private-label vulnerability.** The cross-price elasticity with respect to private label is around <M>{String.raw`+1.12`}</M>, materially higher than with respect to Campbell's. West Coast shoppers view store brands as a closer substitute, so the threat to Progresso pricing power is generic, not branded.
-- **The East is brand-insulated.** Cross-price coefficients to both Campbell's and private label are the lowest in the matrix. Progresso has more pricing room in the East than anywhere else, simply because customers are less willing to defect.
+- **The South is exposed on both fronts, and this is exactly where the seasonal price hike is riskiest.** Progresso's own-price elasticity is <M>{String.raw`-2.93`}</M>, but the number that matters strategically is the cross-price elasticity with respect to Campbell's: <M>{String.raw`+2.30`}</M>, the highest of any region, alongside the highest private-label cross-price elasticity too, at <M>{String.raw`+1.55`}</M>. A 10% Campbell's price cut would mechanically move well over 20% of Progresso's volume in the South alone. Recall that the off-season price increase looked justified because demand overall is less elastic outside winter — but that aggregate result says nothing about *who is standing ready to absorb the switchers*. In the South, both the branded rival and the store brand are, so a countercyclical hike timed for the quiet season is also the hike most likely to hand share to Campbell's exactly where it competes hardest.
+- **The West is exposed to Campbell's, but insulated from private label.** The cross-price elasticity with respect to Campbell's is <M>{String.raw`+1.32`}</M> — the second-highest in the matrix — while the private-label cross-price elasticity is only <M>{String.raw`+0.13`}</M>, the lowest of any region. West Coast customers who leave Progresso trade down to the branded competitor, not the store brand, so the competitive threat here is Campbell's specifically, not genericization.
+- **The Midwest is insulated from Campbell's but exposed to private label.** The Campbell's cross-price elasticity is only <M>{String.raw`+0.38`}</M>, the lowest in the matrix, while the private-label cross-price elasticity is <M>{String.raw`+0.86`}</M>, the second-highest. Progresso's brand-vs-brand pricing power is strong here; its vulnerability is to the store shelf, not the name-brand rival.
+- **The East is the most broadly insulated region.** Both cross-price coefficients — <M>{String.raw`+0.90`}</M> to Campbell's and <M>{String.raw`+0.48`}</M> to private label — sit in the middle-to-low range of the matrix, and Progresso's own-price elasticity here, <M>{String.raw`-2.20`}</M>, is also the least elastic of the four regions. Progresso has more room to move price in the East than anywhere else, simply because fewer customers are poised to defect to *either* kind of substitute.
 
-A category manager who reads only the national average — a single own-price number, a single cross-price number — misses all three of these. Regional matrices are the operational object for strategic pricing.
+A category manager who reads only the national average — a single own-price number, a single cross-price number — misses all four of these profiles, and in particular misses that the region carrying the most seasonal-pricing risk (the South) is not a random one: it is the region where substitution is already the strongest force in the market. Regional matrices, not national averages, are the operational object for deciding where a countercyclical strategy is safe and where it needs a local exception.
 
 ---
 
@@ -125,6 +126,6 @@ Cross-price elasticity is the language of pricing an ecosystem rather than a SKU
 - Use the sign of each coefficient as the strategic readout: positive means competitive vulnerability or substitution opportunity; negative means a complement relationship and basket-level reasoning.
 - Audit regional matrices, not national averages. Pricing power varies dramatically across markets in ways the average hides.
 
-The next chapter takes both elasticities — own and cross — into the optimal pricing formula that turns them into a candidate price.
+The studio that closes this chapter puts both elasticities — own and cross, national and regional — to work in a single pricing and promotion decision.
 
 </Takeaway>

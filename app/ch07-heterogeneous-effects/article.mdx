@@ -76,7 +76,7 @@ and the formal test for "is the response different in this segment" is whether <
 
 ### Trap 1: The post-treatment segment
 
-The single most common HTE error is defining a segment using a variable measured *after* the treatment. "Customers who clicked the email," "users who reached the upgrade page," "stores that hit $10k in monthly sales" — each of these is partly a *consequence* of the treatment. Conditioning on it produces collider bias from Chapter 6.2 and destroys the causal interpretation.
+The single most common HTE error is defining a segment using a variable measured *after* the treatment. "Customers who clicked the email," "users who reached the upgrade page," "stores that hit $10k in monthly sales" — each of these is partly a *consequence* of the treatment. Conditioning on it produces collider bias from Chapter 6.3 and destroys the causal interpretation.
 
 The rule is absolute: **segments must be defined on variables fixed before treatment was assigned.**
 

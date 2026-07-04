@@ -119,6 +119,7 @@ What each case actually argues, with its limitation:
 - **Milk +12.8 pp lift in low-income ZIPs.** Pricing nudges are highly heterogeneous. Action: target by income tier, do not deploy uniformly. Limit: flat pricing was not randomized; corporate pricing rules might correlate with regional preferences.
 - **Zillow +20.2% Colorado gap.** Single-unit interventions can be evaluated when a credible synthetic counterfactual exists. Action: for any single-market launch, demand a synthetic control study before declaring success. Limit: an unmeasured Colorado-specific shock (e.g., a tech boom) could account for part of the gap.
 - **Soup elasticity −2.23 vs. naive −3.21.** Identification matters more than algorithms. Action: never set prices on a naive elasticity; use within-store variation. Limit: weekly prices still co-move with promotions; the elasticity is conditional on the controls included.
+- **Soup demand turns more inelastic in winter (−2.82 vs. −2.49 non-winter).** Category directors can cite this as a reason to test countercyclical pricing — nudging prices up modestly in the season when the volume penalty for doing so is smallest. Action: let the rollout calendar follow the elasticity calendar, not the reverse. Limit: the winter/non-winter split is still a within-sample comparison, not a randomized seasonal experiment.
 
 ---
 
@@ -165,7 +166,7 @@ Each section is exactly one screen. A section that requires more space usually m
 > **DATE:** 2026-05-20
 > **SUBJECT:** Optimization of the premium oat-milk surcharge
 >
-> **1. Recommendation.** Raise the premium oat-milk surcharge from $0.50 to $0.75 (a 5% retail price increase on a standard $5 latte), implemented first as a 30-day staggered pilot in 25 West Coast stores with 25 matched control stores. Projected category margin lift across the 400-store network if validated: roughly $14.5k per week.
+> **1. Recommendation.** Raise the premium oat-milk surcharge from $0.50 to $0.75 (a 5% retail price increase on a standard $5 latte), implemented first as a 30-day staggered pilot in 25 West Coast stores with 25 matched control stores, timed to the winter quarter when the packaged-soup seasonal analysis (Chapter 8.3) suggests demand runs more inelastic and a comparable increase costs the least volume. Projected category margin lift across the 400-store network if validated: roughly $14.5k per week.
 >
 > **2. Causal identification.** Naive historical regressions return an oat-milk elasticity near <M>{String.raw`-2.85`}</M>. This estimate is confounded: oat-milk promotions are concentrated in summer weekends when traffic spikes. We re-estimate with store-week fixed effects on 18 months of scanner data; within-store variation gives an elasticity of <M>{String.raw`-1.85`}</M> with a 95% interval of <M>{String.raw`[-2.10, -1.60]`}</M>. Threat: time-varying local marketing campaigns; we partially address by including a promotion flag.
 >
@@ -179,7 +180,7 @@ Each section is exactly one screen. A section that requires more space usually m
 >
 > **5. Rollout and learning.** 25 treated stores at $5.25, 25 matched control stores at $5.00 for 30 days. KPIs: weekly category contribution profit, pastry attachment rate, loyalty-member 90-day repeat rate. National rollout trigger: per-store contribution lift of at least $25/week without statistically significant degradation in either of the other two KPIs. Retention holdout: 10% of loyalty members retained at $5.00 indefinitely for long-run LTV monitoring.
 
-The memo is one page. Every claim is supported by exactly one piece of evidence from Part III: identification from Chapter 6, elasticity from Chapter 8.1, cross-effects from 13.2, pricing rule from 13.3, rollout discipline from 10.
+The memo is one page. Every claim is supported by exactly one piece of evidence from Part III: identification from Chapter 6, elasticity from Chapter 8.1, the Lerner rule from 8.2, the seasonal pricing resolution from 8.3, cross-effects from 8.4, rollout discipline from 10.
 
 ---
 

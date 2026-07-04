@@ -1,0 +1,127 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
+import { Equation } from '@/components/Book/Equation';
+import { M } from '@/components/Book/M';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { DataTable } from '@/components/Book/DataTable';
+import { SouthwestRegressionLadder } from '@/components/Book/part3/CausalRegressionVisuals';
+import part3 from '@/data/part3-cases.json';
+
+export const data = part3;
+
+<DropCap>
+
+Every MBA program teaches regression once, early, and then moves on as if the machinery were self-evident. It rarely is, three years later, when a pricing deck lands on your desk with a coefficient and a p-value and a confident recommendation attached. Before this book asks regression to do any causal heavy lifting, it is worth rebuilding the plain-language version: what a coefficient means, what R-squared is actually measuring, and what happens — mechanically and intuitively — when you add a control variable to the right-hand side.
+
+</DropCap>
+
+The case is Southwest Airlines. For decades, industry lore held that Southwest's mere presence on a route drags fares down — the "Southwest Effect." We have fare data on 598 U.S. airline routes: whether Southwest flies the route, the distance, the number of competing carriers, and the average fare. That is enough to ask the question properly, and enough to see exactly how a regression coefficient earns its interpretation.
+
+---
+
+## The Executive Question
+
+Does Southwest's presence on a route lower fares, and by how much? A pricing or network-planning executive cannot act on a vague "yes, probably" — they need a number, a sense of how solid it is, and an honest account of what else might be driving it.
+
+---
+
+## Start Naive: The Raw Gap
+
+The simplest possible analysis splits the 598 routes into two groups — the 301 Southwest serves, and the 297 it does not — and compares average fares.
+
+<DataTable
+  caption="Table 1. Southwest-served routes average $142 cheaper — but the two groups are not comparable route sets."
+  columns={[
+    { key: 'group', label: 'Route group' },
+    { key: 'n', label: 'Routes', align: 'right' },
+    { key: 'fare', label: 'Mean fare', align: 'right', format: (r) => `$${r.fare}` },
+  ]}
+  rows={[
+    { group: 'Southwest serves the route', n: 301, fare: '214.20' },
+    { group: 'Southwest does not serve it', n: 297, fare: '356.53' },
+  ]}
+  highlightRow={0}
+/>
+
+A $142 gap is a striking number, and it is exactly the "Raw comparison" rung you will see on the ladder below. But treat it as a headline, not a conclusion. Southwest built its network around short, dense, leisure-oriented routes out of secondary airports — a very different mix of markets than the routes it stays out of. If Southwest-served routes are systematically shorter, some of that $142 is simply "short flights cost less," dressed up as a Southwest discount. The raw comparison mixes the airline's effect on price with every other way its route selection differs from everyone else's.
+
+---
+
+## One Line: Simple Regression
+
+The regression version of that same two-group comparison is a single line fit through the data:
+
+<Equation
+  label="Simple regression: Fare on the Southwest dummy"
+  latex={String.raw`\text{Fare}_i = \beta_0 + \beta_1 \, \text{SouthWest}_i + \varepsilon_i`}
+/>
+
+<M>{String.raw`\text{SouthWest}_i`}</M> is a dummy variable — 1 if Southwest flies route <M>{String.raw`i`}</M>, 0 otherwise — so this "line" only ever touches two points. <M>{String.raw`\beta_0`}</M>, the intercept, is just the mean fare when the dummy is 0: the $356.53 average for non-Southwest routes. <M>{String.raw`\beta_1`}</M> is the *difference* the dummy buys you, so it comes out to exactly <M>{String.raw`214.20 - 356.53 \approx -142.34`}</M> — the same gap as Table 1, now dressed in regression notation. This is the first rung of the ladder below, and its R-squared of 0.07 is a candid confession: knowing whether a route is Southwest-served explains only 7% of the variation in fares across these 598 routes. Almost everything else about why fares differ — how far you are flying, how many airlines compete for your business — is still sitting in the error term.
+
+That last observation is the whole reason to add more variables. R-squared is not a report card on the model's virtue; it is a measure of how much of the outcome's variation the right-hand side accounts for. A low R-squared with a dummy variable like this one usually means the story is incomplete, not that the coefficient is wrong.
+
+---
+
+## Adding Controls: Distance, Then Competition
+
+Multiple regression puts more variables on the right-hand side so that the Southwest coefficient stops absorbing things that have nothing to do with Southwest:
+
+<Equation
+  label="Multiple regression: adding route-level controls"
+  latex={String.raw`\text{Fare}_i = \beta_0 + \beta_1\, \text{SouthWest}_i + \beta_2\, \text{DISTANCE}_i + \beta_3\, \text{Airlines}_i + \varepsilon_i`}
+/>
+
+<M>{String.raw`\text{DISTANCE}_i`}</M> is route length in miles; <M>{String.raw`\text{Airlines}_i`}</M> is the number of carriers competing on the route, a rough proxy for how contested it is. Adding a control does not mean holding the real world still while Southwest flips a switch on some routes — no such experiment happened. It means the comparison narrows to routes that look more alike on the dimensions you added. Once distance is in the model, the Southwest coefficient no longer rewards Southwest for disproportionately serving short hops; it is now measuring the fare gap between Southwest and non-Southwest routes *of similar length*. Add competitor count, and the comparison narrows further, to routes that are similar in both length and how contested they are.
+
+<Figure caption="Figure 1. The Southwest coefficient after each control is added.">
+  <div className="not-prose">
+    <SouthwestRegressionLadder data={data.southwest} />
+  </div>
+</Figure>
+
+Watch what happens as each control lands:
+
+- **Raw comparison:** −$142.34 (R² = 0.07). The headline number, contaminated by route mix.
+- **+ Distance:** −$53.61 (R² = 0.38). Once routes are compared at similar distances, well over half of the naive gap evaporates — Southwest's network really does skew toward shorter routes, and shorter routes are simply cheaper.
+- **+ Distance + Airlines:** −$49.37 (R² = 0.42). Adding competitor count moves the estimate only a little further. Southwest's routes are somewhat more contested than average, but distance was doing most of the confounding.
+
+Notice the R-squared climbing alongside the coefficient's descent: 0.07, then 0.38, then 0.42. Distance alone explains an enormous share of why fares vary — unsurprising, since a five-hour flight and a fifty-minute hop are rarely priced anywhere near each other. That the Southwest coefficient survives this narrowing at a still-sizable −$49 is itself informative: it is not merely an artifact of network selection on length and competition.
+
+---
+
+## Reading the Percentage Version
+
+Dollar gaps are intuitive but distance-dependent — $49 means something different on a $150 route than a $600 one. A common fix is to model the *logarithm* of fare instead:
+
+<Equation
+  label="Log-linear specification"
+  latex={String.raw`\log(\text{Fare}_i) = \beta_0 + \beta_1\, \text{SouthWest}_i + \beta_2 \log(\text{DISTANCE}_i) + \beta_3\, \text{Airlines}_i + \varepsilon_i`}
+/>
+
+Fit to the same 598 routes, this gives <M>{String.raw`\hat\beta_1 = -0.2749`}</M> (s.e. 0.040, R² = 0.33). A coefficient on a plain 0/1 dummy in a log-outcome model reads approximately as a percentage effect: Southwest's presence on a route is associated with roughly a **24.0% lower fare**, holding distance and the number of competing carriers fixed. That percentage framing is often the more useful number for a manager comparing routes of very different lengths, because it does not need to be re-scaled route by route the way a dollar figure does.
+
+---
+
+## The Managerial Memo
+
+*Southwest's presence is associated with a 24% lower average fare on a route, after accounting for the route's distance and the number of competing carriers. Roughly two-thirds of the raw $142 fare gap disappears once distance alone is taken into account — Southwest's network leans toward shorter routes, and short routes are cheaper regardless of carrier. What remains after both controls, about $49 in levels or 24% in logs, is not explained by those two observable differences.*
+
+That memo is honest exactly because of what it does not claim. Southwest was not randomly assigned to routes — the airline chose where to fly based on demand, airport costs, competitive positioning, and dozens of factors this dataset does not contain. A regression with two controls narrows the comparison to routes that are similar on distance and competitor count; it says nothing about whether they are similar on the factors nobody measured. This is a controlled association, not yet a causal claim. Making that leap responsibly is the subject of the rest of Part III.
+
+---
+
+<Pitfall title="Adding controls is not the same as running an experiment">
+"Holding distance and competition constant" describes what the regression's comparison set looks like, not an intervention anyone performed. Southwest did not draw routes at random; it chose them. A control narrows the comparison — it does not manufacture the random assignment that would license a causal reading.
+</Pitfall>
+
+<Takeaway label="What a coefficient earns you">
+
+- A regression coefficient on a dummy variable is just a group-mean difference, expressed as a slope.
+- R-squared tells you how much of the outcome's variation the model accounts for — not how "good" the model is at anything else.
+- Adding a control changes the comparison set to routes (or customers, or weeks) that are more alike on that dimension — it does not hold the world still.
+- A log-linear coefficient on a 0/1 variable is readable, approximately, as a percentage effect on the outcome.
+
+The next article makes "holding other things constant" mathematically precise, via a result called Frisch–Waugh–Lovell — and shows that every multiple-regression coefficient is secretly a simple regression of leftovers on leftovers.
+
+</Takeaway>

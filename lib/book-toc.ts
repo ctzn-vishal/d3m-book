@@ -86,11 +86,12 @@ export const book: Book = {
         },
         {
           number: 6,
-          title: 'Regression and Identification',
+          title: 'Regression Foundations and Identification',
           articles: [
-            { slug: 'ch06-regression', number: '6.1', title: 'Regression as Effect Isolation', status: 'published' },
-            { slug: 'ch06-identification', number: '6.2', title: 'Identification', status: 'published' },
-            { slug: 'ch06-fixed-effects', number: '6.3', title: 'Panel Data and Fixed Effects', status: 'published' },
+            { slug: 'ch06-regression-review', number: '6.1', title: 'Regression Review: Simple and Multiple Regression', status: 'published' },
+            { slug: 'ch06-regression', number: '6.2', title: 'Regression as Effect Isolation', status: 'published' },
+            { slug: 'ch06-identification', number: '6.3', title: 'Identification', status: 'published' },
+            { slug: 'ch06-fixed-effects', number: '6.4', title: 'Panel Data: Fixed and Random Effects', status: 'published' },
           ],
         },
         {
@@ -104,12 +105,13 @@ export const book: Book = {
         },
         {
           number: 8,
-          title: 'Pricing and Managerial Levers',
+          title: 'Elasticity and Pricing Strategy: The Progresso Case',
           articles: [
-            { slug: 'ch08-price-elasticity', number: '8.1', title: 'Price Elasticity', status: 'published' },
-            { slug: 'ch08-cross-price-elasticity', number: '8.2', title: 'Cross-Price Elasticity and Substitution', status: 'published' },
-            { slug: 'ch08-pricing-decisions', number: '8.3', title: 'From Elasticity to Pricing Decisions', status: 'published' },
-            { slug: 'ch08-studio-pricing', number: '8.4', title: 'Pricing and Promotion Strategy Studio', status: 'published' },
+            { slug: 'ch08-price-elasticity', number: '8.1', title: 'Price Elasticity: From Linear Regression to Log-Log', status: 'published' },
+            { slug: 'ch08-pricing-decisions', number: '8.2', title: 'From Elasticity to Optimal Pricing: The Lerner Rule', status: 'published' },
+            { slug: 'ch08-seasonal-pricing', number: '8.3', title: 'Optimal Pricing by Season: Does Countercyclical Pricing Make Sense?', status: 'published' },
+            { slug: 'ch08-cross-price-elasticity', number: '8.4', title: 'Cross-Price Elasticity and Competitive Strategy', status: 'published' },
+            { slug: 'ch08-studio-pricing', number: '8.5', title: 'Pricing and Promotion Strategy Studio', status: 'published' },
           ],
         },
       ],

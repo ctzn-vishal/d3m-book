@@ -72,6 +72,27 @@ type SoupData = {
     end: string;
   };
   regressionLadder: Array<Estimate & { model: string; std_error: number; r2: number; n: number }>;
+  linearModel?: {
+    formula: string;
+    coefficients: {
+      intercept: number;
+      price_progresso: number;
+      price_campbell: number;
+      price_pl: number;
+    };
+    r2: number;
+    n: number;
+    actual_vs_predicted_correlation: number;
+    scenarios: Array<{
+      label: string;
+      price_progresso: number;
+      price_campbell: number;
+      price_pl: number;
+      month: string;
+      region: string;
+      predicted_volume: number;
+    }>;
+  };
   crossPrice: Array<{
     region: string;
     own: number;
@@ -104,7 +125,23 @@ type SoupData = {
     raw_elasticity: number;
     raw_optimal_price: number;
     store_fe_optimal_price: number;
+    seasonal?: {
+      non_winter: { elasticity: number; optimal_price: number };
+      winter: { elasticity: number; optimal_price: number };
+    };
   };
+};
+
+type SouthwestData = {
+  metadata: {
+    rows: number;
+    unit: string;
+    source: string;
+    title: string;
+  };
+  ladder: Array<Estimate & { model: string; std_error: number; r2: number; n: number }>;
+  logModel: Estimate & { model: string; std_error: number; r2: number; n: number; pct_effect: number };
+  scatter: Array<{ distance: number; fare: number; southwest: number }>;
 };
 
 type Part3Data = {
@@ -117,6 +154,7 @@ type Part3Data = {
   milk: MilkData;
   zillow: ZillowData;
   soup: SoupData;
+  southwest: SouthwestData;
 };
 
 const palette = {
@@ -212,11 +250,10 @@ function Legend({ items }: { items: Array<{ label: string; color: string }> }) {
 
 export function Part3EvidencePlan({ data }: { data: Part3Data }) {
   const groups = [
-    { chapter: '9', title: 'Counterfactuals', range: ['9.1', '9.2'] },
-    { chapter: '10', title: 'Experiments and Bias', range: ['10.1', '10.2'] },
-    { chapter: '11', title: 'Regression and Identification', range: ['11.1', '11.3'] },
-    { chapter: '12', title: 'Field Designs', range: ['12.1', '12.3'] },
-    { chapter: '13', title: 'Pricing Levers', range: ['13.1', '13.4'] },
+    { chapter: '5', title: 'Counterfactuals and Experiments', range: ['5.1', '5.4'] },
+    { chapter: '6', title: 'Regression and Identification', range: ['6.1', '6.4'] },
+    { chapter: '7', title: 'Field Designs', range: ['7.1', '7.3'] },
+    { chapter: '8', title: 'Pricing Strategy', range: ['8.1', '8.5'] },
   ];
   return (
     <div className="space-y-4">
@@ -550,6 +587,55 @@ export function SoupRegressionLadder({ data }: { data: SoupData }) {
   );
 }
 
+export function SouthwestRegressionLadder({ data }: { data: SouthwestData }) {
+  const rows = data.ladder;
+  const W = 820;
+  const H = 260;
+  const m = { top: 22, right: 90, bottom: 42, left: 185 };
+  const rawDomain = extent(
+    rows.flatMap(row => [row.ci_low, row.ci_high]),
+    value => value
+  );
+  const [dMin, dMax] = padded(rawDomain, 0.12);
+  const gridStart = Math.floor(dMin / 20) * 20;
+  const gridEnd = Math.ceil(dMax / 20) * 20;
+  const gridSteps: number[] = [];
+  for (let t = gridStart; t <= gridEnd; t += 20) gridSteps.push(t);
+  const x = scaleLinear([dMin, dMax], [m.left, W - m.right]);
+  const yFor = (index: number) => m.top + 34 + index * 52;
+  return (
+    <CardFrame
+      title="The Southwest effect shrinks once distance and competition are held constant"
+      subtitle={`${data.metadata.rows.toLocaleString()} ${data.metadata.unit} pairs. Coefficient is the fare gap associated with a Southwest-served route.`}
+    >
+      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Southwest Airlines regression coefficient ladder.">
+        {gridSteps.map(t => (
+          <g key={t}>
+            <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={t === 0 ? '#94a3b8' : palette.grid} strokeDasharray={t === 0 ? '4 4' : undefined} />
+            <text x={x(t)} y={H - 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtMoney(t, 0)}</text>
+          </g>
+        ))}
+        {rows.map((row, index) => {
+          const y = yFor(index);
+          const color = index === rows.length - 1 ? palette.green : [palette.blue, palette.orange, palette.purple, palette.red][index] ?? palette.blue;
+          return (
+            <g key={row.model}>
+              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-slate-700 text-[12px]">
+                {row.model}
+              </text>
+              <line x1={x(row.ci_low)} x2={x(row.ci_high)} y1={y} y2={y} stroke={color} strokeWidth={3} />
+              <circle cx={x(row.estimate)} cy={y} r={5} fill={color} />
+              <text x={x(row.estimate) + 9} y={y + 4} className="fill-slate-600 text-[11px]">{fmtMoney(row.estimate, 0)}</text>
+              <text x={W - m.right + 8} y={y + 4} className="fill-slate-500 text-[10px]">R2 {fmtNumber(row.r2, 2)}</text>
+            </g>
+          );
+        })}
+        <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-slate-500 text-[10px]">Fare gap versus routes without Southwest</text>
+      </svg>
+    </CardFrame>
+  );
+}
+
 export function SoupSeasonScatter({ data, groupBy = 'season' }: { data: SoupData; groupBy?: 'season' | 'region' }) {
   const groups = groupBy === 'season' ? ['Winter', 'Non-winter'] : ['East', 'MidWest', 'South', 'West'];
   const W = 360;
@@ -738,6 +824,32 @@ export function PricingOptimizer({ data }: { data: SoupData }) {
           />
         </label>
       </div>
+    </div>
+  );
+}
+
+export function SeasonalOptimalPriceCompare({ data }: { data: SoupData }) {
+  const seasonal = data.pricing.seasonal;
+  if (!seasonal) return null;
+  const higherPriceSeason = seasonal.winter.optimal_price >= seasonal.non_winter.optimal_price ? 'Winter' : 'Non-winter';
+  const lessElasticSeason = Math.abs(seasonal.winter.elasticity) <= Math.abs(seasonal.non_winter.elasticity) ? 'Winter' : 'Non-winter';
+  return (
+    <div className="space-y-3">
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="rounded-md border border-slate-200 bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Non-winter</p>
+          <p className="mt-2 text-2xl font-semibold text-slate-950">{fmtMoney(seasonal.non_winter.optimal_price)}</p>
+          <p className="mt-1 text-xs text-slate-600">optimal price at an elasticity of {fmtNumber(seasonal.non_winter.elasticity, 2)}.</p>
+        </div>
+        <div className="rounded-md border border-slate-200 bg-white p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Winter</p>
+          <p className="mt-2 text-2xl font-semibold text-slate-950">{fmtMoney(seasonal.winter.optimal_price)}</p>
+          <p className="mt-1 text-xs text-slate-600">optimal price at an elasticity of {fmtNumber(seasonal.winter.elasticity, 2)}.</p>
+        </div>
+      </div>
+      <p className="text-xs leading-snug text-slate-500">
+        {higherPriceSeason} carries the higher optimal price: demand is less elastic in {lessElasticSeason.toLowerCase()} ({fmtNumber(seasonal[lessElasticSeason === 'Winter' ? 'winter' : 'non_winter'].elasticity, 2)} vs. {fmtNumber(seasonal[lessElasticSeason === 'Winter' ? 'non_winter' : 'winter'].elasticity, 2)}), so a bigger markup still clears at a similar quantity.
+      </p>
     </div>
   );
 }
