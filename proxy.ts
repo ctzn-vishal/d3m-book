@@ -9,7 +9,7 @@ import { ADMIN_COOKIE, isValidSession } from '@/lib/admin-auth';
  */
 const EXEMPT = new Set(['/admin/login', '/api/admin/login', '/api/admin/logout']);
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   if (EXEMPT.has(pathname)) return NextResponse.next();
 

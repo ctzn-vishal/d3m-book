@@ -162,7 +162,7 @@ export function BookSidebar({ book, currentSlug, activePartNumeral: activePartNu
                                   className={[
                                     '-ml-px block border-l-2 py-1 pl-3.5 text-[12.5px] leading-snug transition-colors',
                                     isCurrent
-                                      ? 'border-link bg-sky-50/70 font-semibold text-body'
+                                      ? 'border-link bg-link/10 font-semibold text-body'
                                       : 'border-transparent text-muted hover:border-border-strong hover:text-body',
                                   ].join(' ')}
                                 >

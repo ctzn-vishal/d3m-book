@@ -69,7 +69,8 @@ To deploy a fork:
 ```
 app/
   layout.tsx                Root layout — fonts, MainArea wrapper.
-  page.tsx                  Book home page (renders BookHome).
+  (hub)/page.tsx            Site home — the hub gallery (warm editorial theme).
+  teaching/page.tsx         Book cover (renders TeachingCover).
   globals.css               Tailwind + page-chrome rules.
   [slug]/page.tsx           Fallback route for draft/planned TOC entries
                             without a dedicated page.tsx (renders a
@@ -83,7 +84,7 @@ app/
     data/                   Optional: JSON the article imports into figures.
 
 components/Book/            Editorial component library.
-  BookShell.tsx, BookHome.tsx, ChapterTocDrawer.tsx
+  BookShell.tsx, TeachingCover.tsx, ChapterTocDrawer.tsx
   Figure.tsx, DropCap.tsx, Callout.tsx, KeyNumber.tsx
   SideNote.tsx, PullQuote.tsx, DataTable.tsx, QuizBlock.tsx
   Pitfall.tsx, Takeaway.tsx

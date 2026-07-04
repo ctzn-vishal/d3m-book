@@ -113,7 +113,7 @@ export function TabSet({
                 isActive
                   ? 'font-semibold text-body border-body'
                   : 'font-normal text-muted border-transparent hover:text-subtle',
-                'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-1 rounded-sm',
+                'focus:outline-none focus-visible:ring-2 focus-visible:ring-link focus-visible:ring-offset-1 rounded-sm',
               ].join(' ')}
             >
               {tab.props.label}

@@ -65,7 +65,7 @@ export function DataTable<R extends Record<string, unknown>>({
 }: DataTableProps<R>) {
   return (
     <figure className="not-prose my-9">
-      <figcaption className="mb-2 text-[13px] italic leading-snug text-subtle">
+      <figcaption className="mb-2 text-[13px] italic leading-snug text-muted">
         {caption}
       </figcaption>
       <div className="overflow-x-auto rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800/40 dark:shadow-none">
@@ -142,11 +142,10 @@ export function DeltaCell({ value, suffix = '' }: { value: number; suffix?: stri
   const sign = value > 0 ? '+' : '−';
   const abs = Math.abs(value);
   const arrow = value > 0 ? '↑' : '↓';
-  const color = value > 0 ? 'text-gray-900 dark:text-gray-100' : 'text-gray-900 dark:text-gray-100';
   // Direction-of-change color is the caller's job (via cellClass), since
   // "up" doesn't always mean "good." Here we just render the arrow + sign.
   return (
-    <span className={`tabular-nums ${color}`}>
+    <span className="tabular-nums text-body">
       {arrow} {sign}
       {abs}
       {suffix}
