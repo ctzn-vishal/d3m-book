@@ -167,6 +167,22 @@
       "featured": true,
       "status": "published",
       "sort": 0
+    },
+    {
+      "id": "worldlines",
+      "type": "app",
+      "title": "Worldlines — The World in Numbers",
+      "description": "A cross-country indicators explorer — 85 measures of development, democracy, belief, and wellbeing across 217 countries (1750–2025), with country profiles, rankings, and peer benchmarking.",
+      "domain": "Global development",
+      "topic": "Methods, AI & Data",
+      "tags": ["indicators", "cross-country", "world-bank", "democracy", "wellbeing", "explorer"],
+      "href": "https://wb-app-blush.vercel.app/",
+      "external": true,
+      "openInNewTab": true,
+      "thumbnail": "/world_app.png",
+      "accent": "#2b7a78",
+      "featured": false,
+      "status": "published"
     }
   ],
   "curate": {
