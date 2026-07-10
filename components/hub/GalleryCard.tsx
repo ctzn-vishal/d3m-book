@@ -37,9 +37,14 @@ function relFor(href: string): string {
     : 'noopener noreferrer';
 }
 
-/** True when the registry row was created within the last 30 days. */
+// The catalog's created_at was backfilled in bulk by the 2026-06 timestamp
+// migration — those rows aren't "new", so anything at or before the floor never
+// badges. Real additions after it do.
+const NEW_BADGE_FLOOR = '2026-06-25';
+
+/** True when the registry row was created within the last 30 days (post-migration rows only). */
 function isNew(createdAt?: string): boolean {
-  if (!createdAt) return false;
+  if (!createdAt || createdAt.slice(0, 10) <= NEW_BADGE_FLOOR) return false;
   const t = Date.parse(createdAt.replace(' ', 'T') + 'Z'); // 'YYYY-MM-DD HH:MM:SS' (UTC)
   return Number.isFinite(t) && Date.now() - t < 30 * 86400_000;
 }
