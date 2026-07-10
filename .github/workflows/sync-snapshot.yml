@@ -40,6 +40,17 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Preflight — required secrets present
+        run: |
+          missing=""
+          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TIGRIS_ENDPOINT TIGRIS_CLIENT_ID TIGRIS_CLIENT_SECRET; do
+            [ -z "${!v}" ] && missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions (values are in book-template/.env.local)."
+            exit 1
+          fi
+          echo "All required secrets present."
       - name: Sync registry snapshot from Turso
         run: node --import tsx scripts/sync-registry.ts
       - name: Commit snapshot if changed

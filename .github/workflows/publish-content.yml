@@ -52,6 +52,21 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
+      # Fail fast with a legible message when repo secrets are missing —
+      # otherwise the S3 client falls back to a bogus AWS endpoint and dies
+      # with a cryptic ENOTFOUND.
+      - name: Preflight — required secrets present
+        run: |
+          missing=""
+          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TIGRIS_ENDPOINT TIGRIS_CLIENT_ID TIGRIS_CLIENT_SECRET; do
+            [ -z "${!v}" ] && missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions (values are in book-template/.env.local)."
+            exit 1
+          fi
+          echo "All required secrets present."
+
       - name: Rebuild article manifest from bucket
         run: node scripts/rebuild-manifest.mjs
 
