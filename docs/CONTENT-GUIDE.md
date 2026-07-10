@@ -20,6 +20,16 @@ header into it.
 | `<title>` — concise, descriptive (≤ ~60 chars) | `↖︎ Vishal Singh` nav pill (reads `?from=` → "← Back to the book") |
 | `<meta name="description">` — 1–2 sentences (~120–155 chars) | `og:title` / `og:description` / `og:image` |
 | **Dataset JSON-LD** (data stories with a data source — §3) | `og:url`, `twitter:card`, `<link rel="canonical">` |
+| | **Article JSON-LD** (data stories only) — headline/dates/author from the registry |
+| | **"Related stories" footer** (data stories only) — 4 links picked by shared topic/tags |
+
+The OG, Article-JSON-LD, and related-stories blocks are **upserted**: each
+`inject-chrome` run regenerates them from the current registry (markers
+`data-vs-og` / `data-vs-ld` / `data-vs-related`), so curated title/description
+edits in `/admin`, late-generated thumbnails, and a growing catalog all propagate
+to the bucket HTML on the next run. Files are only rewritten when bytes actually
+change. The transformations live in `scripts/chrome-blocks.mjs` (pure, testable);
+your own `Dataset` JSON-LD block (§3) is separate and never touched.
 
 So you only need to write a good **`<title>`**, a good **`<meta name="description">`**,
 and (for data-backed stories) a **Dataset JSON-LD** block. The title/description feed
@@ -114,6 +124,12 @@ Notes:
 All commands run from `book-template/` and read creds from **`book-template/.env.local`**
 (Tigris S3 + Turso, plus `ANTHROPIC_API_KEY` for curation — see [REGISTRY-CMS.md](./REGISTRY-CMS.md)).
 
+> **No dev machine handy?** The **"Publish content pipeline"** GitHub Action
+> (`.github/workflows/publish-content.yml`, Actions → run workflow) runs the same
+> ingest chain from repo secrets — including auto-generating thumbnails for new
+> stories that lack one — and commits the refreshed snapshot (which deploys).
+> Curation (`curate-new`) still runs locally, or set topic/tags in `/admin`.
+
 > **One command — `pnpm ship`:** runs the whole ingest chain and then proposes
 > curation. It is `publish-content` (`rebuild-manifest → sync-registry → inject-chrome
 > → gen-story-sitemap → verify-content`, aborting on the first failure) followed by
@@ -140,8 +156,10 @@ All commands run from `book-template/` and read creds from **`book-template/.env
    `<title>`/`<meta description>` you wrote (existing curation is preserved).
 3. `pnpm sync-registry` — inserts it into the Turso `gallery` table as a **Blog** row
    and rewrites `content/registry.snapshot.json`.
-4. `pnpm inject-chrome` — adds the nav pill + OG/canonical to the new HTML.
-5. `pnpm gen-story-sitemap` — refreshes `content.vishalsingh.org/sitemap.xml`.
+4. `pnpm inject-chrome` — adds the nav pill + OG/canonical + Article JSON-LD +
+   related-stories footer to the new HTML (and refreshes them everywhere else).
+5. `pnpm gen-story-sitemap` — refreshes `content.vishalsingh.org/sitemap.xml`
+   (real per-item `<lastmod>` from the registry) + `robots.txt`.
 6. `pnpm curate-new` — proposes a **topic + tags** from the controlled vocabularies;
    review `scripts/.curate/proposals.json`, then `APPLY=1 pnpm curate-new && pnpm
    sync-registry`. Set `featured` / `teaching` (paired chapter) in `/admin`.

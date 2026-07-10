@@ -1,31 +1,27 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowUpRight,
   Search,
   X,
-  GraduationCap,
-  Newspaper,
-  AppWindow,
-  Database,
   Shapes,
   Tag,
   Layers,
   ChevronDown,
+  ArrowUpRight,
   type LucideIcon,
 } from 'lucide-react';
 import {
   REGISTRY_TYPES,
-  TYPE_LABEL,
   type RegistryItem,
   type RegistryFacets,
   type RegistryType,
 } from '@/lib/registry-types';
 import { TAG_VOCABULARY, type TagFacet } from '@/lib/tag-vocabulary';
+import { GalleryCard, TYPE_META } from '@/components/hub/GalleryCard';
+import { topicSlug } from '@/lib/taxonomy';
 
 /** Facet display order + labels for the grouped tag panel. */
 const TAG_FACET_LABEL: Record<TagFacet | 'other', string> = {
@@ -39,95 +35,6 @@ const TAG_FACET_ORDER: TagFacet[] = ['method', 'chart', 'data'];
 const TAG_FACET_OF = new Map(TAG_VOCABULARY.map(t => [t.tag, t.facet]));
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-
-/**
- * Per-type icon + accent (hub palette) — the visual key shared by the type
- * filter chips and the cards, so each of the four artifact classes reads at a
- * glance. `active` = solid-fill chip classes; `tone` = the idle icon/label color.
- */
-const TYPE_META: Record<
-  RegistryType,
-  { Icon: LucideIcon; active: string; tone: string; solid: string; soft: string; bar: string }
-> = {
-  Teaching: { Icon: GraduationCap, active: 'border-hub-teal bg-hub-teal text-white', tone: 'text-hub-teal', solid: 'bg-hub-teal text-white', soft: 'bg-hub-teal-soft text-hub-teal', bar: 'bg-hub-teal' },
-  Blog: { Icon: Newspaper, active: 'border-hub-plum bg-hub-plum text-white', tone: 'text-hub-plum', solid: 'bg-hub-plum text-white', soft: 'bg-hub-plum-soft text-hub-plum', bar: 'bg-hub-plum' },
-  App: { Icon: AppWindow, active: 'border-hub-blue bg-hub-blue text-white', tone: 'text-hub-blue', solid: 'bg-hub-blue text-white', soft: 'bg-hub-blue-soft text-hub-blue', bar: 'bg-hub-blue' },
-  Dataset: { Icon: Database, active: 'border-hub-amber bg-hub-amber text-white', tone: 'text-hub-amber', solid: 'bg-hub-amber text-white', soft: 'bg-hub-amber-soft text-hub-amber', bar: 'bg-hub-amber' },
-};
-
-function GalleryCard({ item }: { item: RegistryItem }) {
-  const newTab = item.external || item.openInNewTab;
-  const { Icon: TypeIcon, tone, solid, soft, bar } = TYPE_META[item.type];
-  const inner = (
-    <>
-      <div className="relative aspect-[16/10] overflow-hidden bg-hub-paper2">
-        {item.thumbnail ? (
-          <Image
-            src={item.thumbnail}
-            alt=""
-            fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          />
-        ) : (
-          <div className={`flex h-full w-full flex-col items-center justify-center gap-2 ${soft}`}>
-            <TypeIcon size={32} strokeWidth={1.6} />
-            <span className="font-serif text-xl font-semibold tracking-tight">{TYPE_LABEL[item.type]}</span>
-          </div>
-        )}
-        {/* Type identity: color strip + prominent type pill (reads at a glance) */}
-        <span className={`absolute inset-x-0 top-0 h-1 ${bar}`} />
-        <span className={`absolute left-2.5 top-2.5 inline-flex items-center gap-1 rounded-full ${solid} px-2 py-0.5 font-plex text-[10px] font-medium uppercase tracking-[0.06em] shadow-hub`}>
-          <TypeIcon size={11} strokeWidth={2.5} />
-          {TYPE_LABEL[item.type]}
-        </span>
-        {newTab && (
-          <span className="absolute right-2.5 top-2.5 inline-flex items-center rounded-full bg-hub-card/90 p-1 text-hub-ink-soft shadow-hub backdrop-blur">
-            <ArrowUpRight size={12} strokeWidth={2.5} />
-          </span>
-        )}
-      </div>
-
-      <div className="flex flex-grow flex-col p-4">
-        {item.topic && (
-          <div className={`flex items-center gap-1.5 font-plex text-[10px] uppercase tracking-[0.06em] ${tone}`}>
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
-            <span className="text-hub-ink-faint">{item.topic}</span>
-          </div>
-        )}
-        <h3 className="mt-1.5 font-serif text-[17px] font-semibold leading-snug text-hub-ink">
-          {item.title}
-        </h3>
-        <p className="mt-1.5 line-clamp-2 flex-grow text-[13px] leading-relaxed text-hub-ink-soft">
-          {item.description}
-        </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {item.tags.slice(0, 3).map(t => (
-            <span
-              key={t}
-              className="rounded border border-hub-line bg-hub-paper2 px-1.5 py-0.5 font-plex text-[10px] text-hub-ink-soft"
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-
-  const className =
-    'group flex h-full flex-col overflow-hidden rounded-2xl border border-hub-line bg-hub-card shadow-hub transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-hub-line-strong no-underline';
-
-  return newTab ? (
-    <a href={item.href} target="_blank" rel="noopener noreferrer" className={className}>
-      {inner}
-    </a>
-  ) : (
-    <Link href={item.href} className={className}>
-      {inner}
-    </Link>
-  );
-}
 
 /** Prominent primary filter — the four artifact types, each with its own icon
  *  and accent. `Icon` inherits the chip's text color when active, else `toneClass`. */
@@ -255,13 +162,17 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
   const [showTopics, setShowTopics] = useState(false);
   const [showTags, setShowTags] = useState(false);
 
-  // Honor ?type= and ?tag= (comma-separated) filters from the URL on load. Read
-  // client-side after mount so the page stays statically cached and there's no
-  // hydration mismatch (e.g. the book's "Browse the gallery" → /?type=Teaching).
+  // Honor ?type=, ?topic=, ?tag= (comma-separated), and ?q= filters from the URL
+  // on load. Read client-side after mount so the page stays statically cached and
+  // there's no hydration mismatch (e.g. the book's "Browse the gallery" →
+  // /?type=Teaching).
+  const skipUrlSync = useRef(true);
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const t = params.get('type');
     if (t && (REGISTRY_TYPES as string[]).includes(t)) setType(t as RegistryType);
+    const tp = params.get('topic');
+    if (tp && facets.topics.some(x => x.topic === tp)) setTopic(tp);
     const tg = params.get('tag');
     if (tg) {
       const valid = new Set(facets.tags.map(x => x.tag));
@@ -271,9 +182,33 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
         setShowTags(true);
       }
     }
+    const q = params.get('q');
+    if (q) setQuery(q);
     // facets is stable for the page's lifetime — read once on mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Reflect filter state back into the URL (replaceState — no history spam) so a
+  // filtered view is shareable/bookmarkable. The first run is skipped: it fires
+  // with default state before the mount-read above has applied, and writing then
+  // would wipe the incoming params.
+  useEffect(() => {
+    if (skipUrlSync.current) {
+      skipUrlSync.current = false;
+      return;
+    }
+    const params = new URLSearchParams();
+    if (type !== 'all') params.set('type', type);
+    if (topic !== 'all') params.set('topic', topic);
+    if (tags.length) params.set('tag', tags.join(','));
+    if (query.trim()) params.set('q', query.trim());
+    const qs = params.toString();
+    try {
+      window.history.replaceState(null, '', (qs ? `?${qs}` : window.location.pathname) + window.location.hash);
+    } catch {
+      // Safari rate-limits replaceState — dropping an update is harmless here.
+    }
+  }, [type, topic, tags, query]);
 
   const toggleTag = (tag: string) =>
     setTags(prev => (prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]));
@@ -458,6 +393,14 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
 
       <p className="mb-5 mt-4 font-plex text-[11.5px] uppercase tracking-[0.06em] text-hub-ink-faint">
         {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+        {topic !== 'all' && topicSlug(topic) && (
+          <Link
+            href={`/topic/${topicSlug(topic)}`}
+            className="ml-3 inline-flex items-center gap-0.5 normal-case tracking-normal text-hub-teal hover:underline"
+          >
+            {topic} topic page <ArrowUpRight size={12} strokeWidth={2.5} />
+          </Link>
+        )}
         {hasFilters && (
           <button
             type="button"

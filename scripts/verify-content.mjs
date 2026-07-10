@@ -1,8 +1,9 @@
 // Read-only health check for the Tigris → gallery content pipeline. Catches the
 // ways an upload can silently break the gallery:
-//   1. UN-INJECTED: a bucket HTML file missing the nav pill (data-vs-chrome) or
-//      OG/canonical (data-vs-og) — happens when a file is re-uploaded raw and
-//      `inject-chrome` wasn't re-run.
+//   1. UN-INJECTED: a bucket HTML file missing the nav pill (data-vs-chrome),
+//      OG/canonical (data-vs-og), or — articles only — the Article JSON-LD
+//      (data-vs-ld) / related-stories footer (data-vs-related). Happens when a
+//      file is re-uploaded raw and `inject-chrome` wasn't re-run.
 //   2. UNREGISTERED: a bucket story/studio HTML not present in the committed
 //      snapshot — `rebuild-manifest` + `sync-registry` weren't run after upload.
 //   3. DANGLING: a published registry row whose bucket HTML no longer exists
@@ -50,8 +51,11 @@ for (const it of snap.items ?? []) {
 const unInjected = [], unregistered = [], reserved = [], nonKebab = [];
 await pool(keys, 8, async (key) => {
   const html = await getText(key);
-  if (!html.includes('data-vs-chrome') || !html.includes('data-vs-og')) {
-    unInjected.push(`${key}  [pill:${html.includes('data-vs-chrome') ? '✓' : '✗'} og:${html.includes('data-vs-og') ? '✓' : '✗'}]`);
+  const required = ['data-vs-chrome', 'data-vs-og'];
+  if (key.startsWith('articles/')) required.push('data-vs-ld', 'data-vs-related');
+  const missing = required.filter(m => !html.includes(m));
+  if (missing.length) {
+    unInjected.push(`${key}  [missing: ${missing.join(', ')}]`);
   }
   if (!snapKeys.has(key)) unregistered.push(key);
   const base = key.split('/').pop();

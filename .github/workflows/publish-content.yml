@@ -1,0 +1,98 @@
+# Full content-publish pipeline, runnable on demand (Actions → run workflow).
+# Mirrors `pnpm publish-content` but with env from repo secrets, so new bucket
+# uploads can be ingested without a dev machine:
+#   rebuild-manifest → sync-registry → [gen-thumbnails → rebuild+sync again]
+#   → inject-chrome → gen-story-sitemap (+robots.txt) → verify-content
+#   → commit the refreshed snapshot (which triggers the Vercel deploy).
+#
+# Thumbnails are optional (default on): a headless Chromium screenshots each
+# bucket story that has no thumbnail yet, uploads it, and the second
+# rebuild+sync pass folds the new thumbs into the manifest/snapshot so
+# inject-chrome writes og:image in the same run. Failures there don't abort the
+# pipeline — stories just keep their typed placeholder cards until the next run.
+#
+# Required repo secrets (same set as sync-snapshot.yml):
+#   TURSO_DATABASE_URL, TURSO_AUTH_TOKEN,
+#   TIGRIS_ENDPOINT, TIGRIS_CLIENT_ID, TIGRIS_CLIENT_SECRET, AWS_REGION
+name: Publish content pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      thumbnails:
+        description: 'Generate + upload missing thumbnails (headless Chromium)'
+        type: boolean
+        default: true
+
+concurrency:
+  group: content-pipeline
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    env:
+      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+      TIGRIS_ENDPOINT: ${{ secrets.TIGRIS_ENDPOINT }}
+      TIGRIS_CLIENT_ID: ${{ secrets.TIGRIS_CLIENT_ID }}
+      TIGRIS_CLIENT_SECRET: ${{ secrets.TIGRIS_CLIENT_SECRET }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Rebuild article manifest from bucket
+        run: node scripts/rebuild-manifest.mjs
+
+      - name: Sync registry (Turso + snapshot)
+        run: node --import tsx scripts/sync-registry.ts
+
+      - name: Install Chromium for thumbnails
+        if: ${{ inputs.thumbnails }}
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate + upload missing thumbnails
+        if: ${{ inputs.thumbnails }}
+        continue-on-error: true
+        timeout-minutes: 25
+        run: UPLOAD=1 node scripts/gen-thumbnails.mjs
+
+      - name: Fold new thumbnails into manifest + snapshot
+        if: ${{ inputs.thumbnails }}
+        run: |
+          node scripts/rebuild-manifest.mjs
+          node --import tsx scripts/sync-registry.ts
+
+      - name: Inject chrome (pill, OG, Article JSON-LD, related stories)
+        run: node scripts/inject-chrome.mjs
+
+      - name: Generate content sitemap + robots.txt
+        run: node scripts/gen-story-sitemap.mjs
+
+      - name: Verify content pipeline consistency
+        run: node scripts/verify-content.mjs
+
+      - name: Commit snapshot if changed
+        run: |
+          # Ignore the date-only `generated` line so a no-content-change run
+          # doesn't produce a noise commit (and a needless Vercel rebuild).
+          if git diff --quiet -I '"generated"' -- content/registry.snapshot.json; then
+            echo "Snapshot unchanged (ignoring generated date) — nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add content/registry.snapshot.json
+            git commit -m "chore: publish-content pipeline snapshot sync"
+            git push
+          fi

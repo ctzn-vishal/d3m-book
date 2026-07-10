@@ -427,6 +427,51 @@ reverted clean). v2 booklets remain deferred.
   (§8); the topic-vocabulary edge (`domainToTopic` → non-canonical) is latent (all current
   studio domains map).
 
+---
+
+## 10. BUILT (2026-07-10 session) — SEO + navigation layer
+
+Shipped in one pass (all verified by fixture tests / `next build`):
+
+- **`inject-chrome` grew two article-only concerns**, both sourced from the
+  registry snapshot: **Article JSON-LD** (`data-vs-ld`: headline, datePublished/
+  dateModified from the row timestamps, author/publisher Person) and a
+  **"Related stories" footer** (`data-vs-related`: top-4 by shared topic > shared
+  tags > featured nudge, recency tiebreak, filled to 4 with newest published;
+  theme-neutral inline styles, links to bucket peers + the gallery). This is the
+  internal-link graph the isolated bucket pages lacked.
+- **Upsert semantics**: OG/LD/related are now regenerated each run by replacing
+  the previously injected block in place (position-stable) — so /admin curation
+  edits, late thumbnails, and catalog growth propagate to bucket HTML; files PUT
+  only when bytes change. Pure transformations extracted to
+  `scripts/chrome-blocks.mjs` (tested standalone — idempotence + legacy-format
+  byte-compat verified against the real snapshot before first prod run).
+- **`gen-story-sitemap`**: `<lastmod>` is now the row's real `updated_at` (was:
+  today's date on every run — a lastmod search engines learn to ignore); also
+  writes **`robots.txt`** to the bucket root pointing at the sitemap.
+- **Topic landing pages** `/topic/[slug]` (server-rendered, ISR, live-Turso read):
+  one per canonical topic, with editorial blurb (`TOPIC_META` in `lib/taxonomy.ts`),
+  CollectionPage+ItemList+Breadcrumb JSON-LD, cards grid, cross-topic chips; in the
+  hub sitemap; linked site-wide from the hub footer and from the gallery's active
+  topic filter.
+- **Gallery**: card moved to `components/hub/GalleryCard.tsx` (shared with topic
+  pages); **"New" badge** (created_at < 30 days); filter state (type/topic/tag/q)
+  now **synced to the URL** (shareable filtered views; `?topic=` and `?q=` also
+  honored on load); first-party links keep their referrer (dropped `noreferrer`
+  for own-origin hrefs).
+- **`publish-content` GitHub Action** (`workflow_dispatch`): the full ingest chain
+  from repo secrets — rebuild-manifest → sync-registry → optional gen-thumbnails
+  (headless Chromium, uploads, then a second rebuild+sync pass so og:image lands
+  same-run) → inject-chrome → gen-story-sitemap → verify-content → snapshot
+  commit. Lets a bucket drop be ingested without a dev machine.
+- **`verify-content`** now also requires `data-vs-ld` + `data-vs-related` on
+  `articles/*` (hard check, since the workflow always injects before verifying).
+
+Still open (deliberately): the §3.4 re-upload fragility (src/published split or
+edge injection) and the §8-v2 booklets/collections — the related-stories footer
+covers much of the navigation need; revisit collections when a themed batch
+warrants a curated reading order.
+
 **Known follow-up — RESOLVED (2026-06-23):** the stray `studios/business_reviews_demo/`
 upload that failed `verify-content` was an abandoned foreign-pipeline artifact (a GABRIEL
 text-as-data case-builder demo: self-contained `site/index.html` with data inlined, a nested
