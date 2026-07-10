@@ -23,13 +23,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-      TIGRIS_ENDPOINT: ${{ secrets.TIGRIS_ENDPOINT }}
-      TIGRIS_CLIENT_ID: ${{ secrets.TIGRIS_CLIENT_ID }}
-      TIGRIS_CLIENT_SECRET: ${{ secrets.TIGRIS_CLIENT_SECRET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
       - uses: actions/checkout@v4
       # pnpm version comes from package.json's `packageManager` — action-setup
@@ -40,17 +33,29 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Preflight — required secrets present
+      # Load secrets into the job env, stripping stray CR/LF/whitespace from
+      # copy-pasted values, and fail fast (with names) when any are missing.
+      - name: Load + sanitize secrets
+        env:
+          RAW_TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          RAW_TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          RAW_TIGRIS_ENDPOINT: ${{ secrets.TIGRIS_ENDPOINT }}
+          RAW_TIGRIS_CLIENT_ID: ${{ secrets.TIGRIS_CLIENT_ID }}
+          RAW_TIGRIS_CLIENT_SECRET: ${{ secrets.TIGRIS_CLIENT_SECRET }}
+          RAW_AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           missing=""
-          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TIGRIS_ENDPOINT TIGRIS_CLIENT_ID TIGRIS_CLIENT_SECRET; do
-            [ -z "${!v}" ] && missing="$missing $v"
+          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TIGRIS_ENDPOINT TIGRIS_CLIENT_ID TIGRIS_CLIENT_SECRET AWS_REGION; do
+            raw="RAW_$v"
+            val="$(printf '%s' "${!raw}" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            [ -z "$val" ] && [ "$v" != "AWS_REGION" ] && missing="$missing $v"
+            echo "$v=$val" >> "$GITHUB_ENV"
           done
           if [ -n "$missing" ]; then
-            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions (values are in book-template/.env.local)."
+            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions → Repository secrets (values are in book-template/.env.local)."
             exit 1
           fi
-          echo "All required secrets present."
+          echo "All required secrets present (sanitized)."
       - name: Sync registry snapshot from Turso
         run: node --import tsx scripts/sync-registry.ts
       - name: Commit snapshot if changed

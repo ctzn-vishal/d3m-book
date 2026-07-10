@@ -34,13 +34,6 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: write
-    env:
-      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
-      TIGRIS_ENDPOINT: ${{ secrets.TIGRIS_ENDPOINT }}
-      TIGRIS_CLIENT_ID: ${{ secrets.TIGRIS_CLIENT_ID }}
-      TIGRIS_CLIENT_SECRET: ${{ secrets.TIGRIS_CLIENT_SECRET }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
       - uses: actions/checkout@v4
       # pnpm version comes from package.json's `packageManager` — action-setup
@@ -52,20 +45,32 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
 
-      # Fail fast with a legible message when repo secrets are missing —
-      # otherwise the S3 client falls back to a bogus AWS endpoint and dies
-      # with a cryptic ENOTFOUND.
-      - name: Preflight — required secrets present
+      # Load secrets into the job env, stripping stray CR/LF/whitespace that a
+      # copy-paste can smuggle in (a trailing newline inside TIGRIS_CLIENT_ID
+      # becomes an invalid S3 Authorization header). Also fails fast, with the
+      # names, when a required secret is missing — otherwise the S3 client
+      # falls back to a bogus AWS endpoint and dies with a cryptic ENOTFOUND.
+      - name: Load + sanitize secrets
+        env:
+          RAW_TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          RAW_TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          RAW_TIGRIS_ENDPOINT: ${{ secrets.TIGRIS_ENDPOINT }}
+          RAW_TIGRIS_CLIENT_ID: ${{ secrets.TIGRIS_CLIENT_ID }}
+          RAW_TIGRIS_CLIENT_SECRET: ${{ secrets.TIGRIS_CLIENT_SECRET }}
+          RAW_AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
           missing=""
-          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TIGRIS_ENDPOINT TIGRIS_CLIENT_ID TIGRIS_CLIENT_SECRET; do
-            [ -z "${!v}" ] && missing="$missing $v"
+          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TIGRIS_ENDPOINT TIGRIS_CLIENT_ID TIGRIS_CLIENT_SECRET AWS_REGION; do
+            raw="RAW_$v"
+            val="$(printf '%s' "${!raw}" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            [ -z "$val" ] && [ "$v" != "AWS_REGION" ] && missing="$missing $v"
+            echo "$v=$val" >> "$GITHUB_ENV"
           done
           if [ -n "$missing" ]; then
-            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions (values are in book-template/.env.local)."
+            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions → Repository secrets (values are in book-template/.env.local)."
             exit 1
           fi
-          echo "All required secrets present."
+          echo "All required secrets present (sanitized)."
 
       - name: Rebuild article manifest from bucket
         run: node scripts/rebuild-manifest.mjs
