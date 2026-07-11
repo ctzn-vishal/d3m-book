@@ -69,4 +69,5 @@ jobs:
           name: social-drafts
           path: scripts/.social/*.json
           if-no-files-found: ignore
+          include-hidden-files: true # .social is a dot-dir, excluded by default
           retention-days: 30
