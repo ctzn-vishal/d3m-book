@@ -58,14 +58,22 @@ export default async function AdminPage() {
             committed snapshot syncs nightly.
           </p>
         </div>
-        <form action="/api/admin/logout" method="post">
-          <button
-            type="submit"
+        <div className="flex items-center gap-2">
+          <a
+            href="/admin/social"
             className="rounded-lg border border-hub-line bg-hub-card px-3.5 py-2 font-plex text-[11px] font-medium uppercase tracking-[0.08em] text-hub-ink-soft transition-colors hover:border-hub-line-strong hover:text-hub-ink"
           >
-            Sign out
-          </button>
-        </form>
+            Social queue →
+          </a>
+          <form action="/api/admin/logout" method="post">
+            <button
+              type="submit"
+              className="rounded-lg border border-hub-line bg-hub-card px-3.5 py-2 font-plex text-[11px] font-medium uppercase tracking-[0.08em] text-hub-ink-soft transition-colors hover:border-hub-line-strong hover:text-hub-ink"
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
       </header>
 
       {connected ? (

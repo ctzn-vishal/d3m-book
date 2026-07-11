@@ -1,0 +1,52 @@
+# Weekday delivery of APPROVED X drafts to Typefully (scheduled at the next
+# free slot). Safe to run before Typefully is connected — without
+# TYPEFULLY_API_KEY the script no-ops and just reports what's waiting.
+# LinkedIn/Instagram stay manual by design (Copy in /admin/social).
+#
+# Required repo secrets: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN.
+# Optional: TYPEFULLY_API_KEY.
+name: Social deliver (Typefully)
+
+on:
+  schedule:
+    - cron: '37 13 * * 1-5' # weekdays 13:37 UTC (~09:37 ET)
+  workflow_dispatch: {}
+
+concurrency:
+  group: social-deliver
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Load + sanitize secrets
+        env:
+          RAW_TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          RAW_TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          RAW_TYPEFULLY_API_KEY: ${{ secrets.TYPEFULLY_API_KEY }}
+        run: |
+          missing=""
+          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN TYPEFULLY_API_KEY; do
+            raw="RAW_$v"
+            val="$(printf '%s' "${!raw}" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            [ -z "$val" ] && [ "$v" != "TYPEFULLY_API_KEY" ] && missing="$missing $v"
+            echo "$v=$val" >> "$GITHUB_ENV"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions → Repository secrets."
+            exit 1
+          fi
+          echo "Secrets loaded (TYPEFULLY_API_KEY optional)."
+
+      - name: Deliver approved X drafts
+        run: node scripts/social-deliver.mjs

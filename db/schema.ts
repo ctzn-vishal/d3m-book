@@ -37,3 +37,25 @@ export const gallery = sqliteTable('gallery', {
   createdAt: text('created_at'),
   updatedAt: text('updated_at'),
 });
+
+/**
+ * Social post review queue (Level-2 social pipeline). Rows are created by
+ * scripts/social-drafts.ts and reviewed at /admin/social; scripts/social-deliver.mjs
+ * hands approved X drafts to Typefully. Same caveat as `gallery`: the enums here
+ * are Studio metadata — real validity is the CHECK constraints in the CREATE
+ * TABLE (scripts/social-drafts.ts).
+ */
+export const socialQueue = sqliteTable('social_queue', {
+  id: text('id').primaryKey(), // <item_id>:<platform>:<yyyymmdd>
+  itemId: text('item_id').notNull(),
+  platform: text('platform', { enum: ['x', 'linkedin', 'instagram'] }).notNull(),
+  status: text('status', { enum: ['draft', 'approved', 'posted', 'rejected'] }).notNull().default('draft'),
+  text: text('text').notNull(),
+  linkUrl: text('link_url').notNull(),
+  imageUrl: text('image_url'),
+  /** The core finding all three platform drafts share. */
+  hook: text('hook'),
+  createdAt: text('created_at'),
+  updatedAt: text('updated_at'),
+  postedAt: text('posted_at'),
+});

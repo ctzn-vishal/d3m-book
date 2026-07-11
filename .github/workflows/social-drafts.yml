@@ -1,0 +1,72 @@
+# Weekly social-draft generation — the machine half of the Level-2 social
+# pipeline. Picks a small batch of stories (new first, then evergreen rotation),
+# drafts one X + LinkedIn + Instagram post each via Claude, and queues them as
+# 'draft' in the Turso social_queue. Review + approve at vishalsingh.org/admin/social.
+#
+# Required repo secrets: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, ANTHROPIC_API_KEY.
+name: Social drafts (weekly)
+
+on:
+  schedule:
+    - cron: '7 12 * * 1' # Mondays 12:07 UTC (~08:07 ET)
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'How many stories to draft (3 posts each)'
+        default: '3'
+        type: string
+      only:
+        description: 'Comma-separated item ids (overrides the picker)'
+        default: ''
+        type: string
+
+concurrency:
+  group: social-drafts
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+
+      - name: Load + sanitize secrets
+        env:
+          RAW_TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          RAW_TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          RAW_ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          missing=""
+          for v in TURSO_DATABASE_URL TURSO_AUTH_TOKEN ANTHROPIC_API_KEY; do
+            raw="RAW_$v"
+            val="$(printf '%s' "${!raw}" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+            [ -z "$val" ] && missing="$missing $v"
+            echo "$v=$val" >> "$GITHUB_ENV"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repo secret(s):$missing — add them under Settings → Secrets and variables → Actions → Repository secrets."
+            exit 1
+          fi
+          echo "All required secrets present (sanitized)."
+
+      - name: Generate drafts
+        env:
+          BATCH: ${{ inputs.batch || '3' }}
+          ONLY: ${{ inputs.only || '' }}
+        run: node --import tsx scripts/social-drafts.ts
+
+      - name: Upload drafts JSON (review artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: social-drafts
+          path: scripts/.social/*.json
+          if-no-files-found: ignore
+          retention-days: 30
