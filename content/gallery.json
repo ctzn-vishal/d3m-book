@@ -2,6 +2,21 @@
   "_README": "SEED source for `pnpm sync-registry`. `items` = standalone apps/publications (their canonical row). `curate` = INITIAL per-id overrides (featured/teaching/topic/type/status/title/…) applied when sync first inserts a row; afterwards the Turso `gallery` table is authoritative and editing it (not this file) is how you curate. The app reads the unified registry from Turso (live) / content/registry.snapshot.json (committed fallback) — see lib/registry.ts.",
   "items": [
     {
+      "id": "measure-of-words",
+      "type": "article",
+      "title": "The Measure of Words",
+      "description": "A field booklet on text as data — six data essays, two live studios, and a data shelf, from dictionary word counts to LLM measurement at scale.",
+      "domain": "Text as data",
+      "topic": "Methods, AI & Data",
+      "tags": ["NLP", "text analysis", "LLM measurement", "booklet"],
+      "href": "/nlp",
+      "external": false,
+      "openInNewTab": false,
+      "accent": "#2f6f6b",
+      "featured": false,
+      "status": "published"
+    },
+    {
       "id": "well-being-atlas",
       "type": "article",
       "title": "The Well-Being Atlas",
