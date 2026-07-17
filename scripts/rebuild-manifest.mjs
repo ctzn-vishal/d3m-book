@@ -33,9 +33,13 @@ function decodeEntities(s) {
 }
 function extractMeta(html, slug) {
   let title = (html.match(/<title[^>]*>([^<]*)<\/title>/i) || [])[1]?.trim() || titleCase(slug);
-  let desc =
-    (html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i) || [])[1]?.trim() ||
-    (html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']*)["']/i) || [])[1]?.trim();
+  // Quote-AWARE content matcher: a double-quoted attribute may legitimately
+  // contain ASCII apostrophes ("Google's") — the old ["']([^"']*)["'] pattern
+  // truncated at the first apostrophe inside double quotes.
+  const meta = name =>
+    (html.match(new RegExp(`<meta[^>]+(?:name|property)=["']${name}["'][^>]+content="([^"]*)"`, 'i')) || [])[1]?.trim() ||
+    (html.match(new RegExp(`<meta[^>]+(?:name|property)=["']${name}["'][^>]+content='([^']*)'`, 'i')) || [])[1]?.trim();
+  let desc = meta('description') || meta('og:description');
   if (!desc) {
     const body = html.replace(/<script[\s\S]*?<\/script>/gi, '').replace(/<style[\s\S]*?<\/style>/gi, '');
     for (const m of body.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)) {

@@ -56,7 +56,7 @@
       "id": "the-political-ad-ledger",
       "type": "Blog",
       "title": "The Political Ad Ledger",
-      "description": "A data booklet on what Google",
+      "description": "A data booklet on what Google's public political-ads dataset reveals about political advertising in India, 2019–2026: the money, the machinery, and the government behind it.",
       "topic": "Elections & Voting",
       "tags": [
         "Text analysis",
@@ -75,7 +75,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-07-17 22:19:34"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "political-history",
@@ -607,7 +607,7 @@
       "id": "the-attention-budget",
       "type": "Blog",
       "title": "The Attention Budget That Wasn't",
-      "description": "We expected Congress to have a fixed attention budget that crises reallocate. Across 25 years of hearings, it doesn",
+      "description": "We expected Congress to have a fixed attention budget that crises reallocate. Across 25 years of hearings, it doesn't — the calendar rules, most shocks never register, and only a pandemic emptied the schedule.",
       "topic": "Elections & Voting",
       "tags": [
         "Shock analysis",
@@ -624,7 +624,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "wilmington-coup-order",
@@ -728,7 +728,7 @@
       "id": "govt-second-advertiser",
       "type": "Blog",
       "title": "The Government Is the Second-Biggest Political Advertiser",
-      "description": "On Google",
+      "description": "On Google's platform, the largest political advertiser in India after the ruling party isn't another party. It's the government itself — ₹155 crore of taxpayer-funded publicity that the system files as political, and that surges when ele…",
       "tags": [],
       "href": "https://content.vishalsingh.org/articles/india/govt-second-advertiser.html",
       "external": true,
@@ -739,7 +739,7 @@
       "status": "unlisted",
       "sort": 0,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-07-17 22:19:03"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "the-mainstreaming-clock",
@@ -791,7 +791,7 @@
       "id": "shadow-campaign",
       "type": "Blog",
       "title": "The Shadow Campaign",
-      "description": "Google",
+      "description": "Google's political-ad ledger doesn't just list parties. Hidden in it is the machinery behind them — the consultancies and the governments — and you can read which firm ran which campaign from nothing but where and when the ads were aimed.",
       "tags": [],
       "href": "https://content.vishalsingh.org/articles/india/shadow-campaign.html",
       "external": true,
@@ -802,7 +802,7 @@
       "status": "unlisted",
       "sort": 0,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-07-17 22:19:03"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "the-survivors-curve",
@@ -832,7 +832,7 @@
       "id": "nyu-shaped-by-new-york",
       "type": "Blog",
       "title": "The University Shaped Like New York",
-      "description": "What Wikidata",
+      "description": "What Wikidata's selected archive of notable alumni says—and cannot say—about NYU and 23 U.S. comparison universities.",
       "topic": "Demographics & Society",
       "tags": [
         "Segmentation",
@@ -851,7 +851,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "votes-after-victory",
@@ -891,7 +891,7 @@
       "id": "iowa-russian-vodka",
       "type": "Blog",
       "title": "The Week Russian Vodka Vanished",
-      "description": "A regression-backed Iowa Liquor teaching case on Russia",
+      "description": "A regression-backed Iowa Liquor teaching case on Russia's invasion, product delisting, and what a difference-in-differences estimate actually measures.",
       "topic": "Business & Markets",
       "tags": [
         "Shock analysis",
@@ -910,13 +910,13 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "university-fingerprints",
       "type": "Blog",
       "title": "Twenty-Four Universities, Five Fingerprints",
-      "description": "A clustering case study of occupational fingerprints in Wikidata",
+      "description": "A clustering case study of occupational fingerprints in Wikidata's selected archive of notable university alumni.",
       "topic": "Demographics & Society",
       "tags": [
         "Clustering",
@@ -934,7 +934,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:50"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "ledger-5-what-the-ads-say",
@@ -957,7 +957,7 @@
       "id": "ledger-1-whats-in-the-data",
       "type": "Blog",
       "title": "What's in the Ledger — The Political Ad Ledger",
-      "description": "Before the findings, the source. What Google",
+      "description": "Before the findings, the source. What Google's public political-ads dataset actually records about India — 397,522 ads across eight years — and the things it can and cannot tell us.",
       "tags": [],
       "href": "https://content.vishalsingh.org/articles/india/ledger-1-whats-in-the-data.html",
       "external": true,
@@ -968,7 +968,7 @@
       "status": "unlisted",
       "sort": 0,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-07-17 22:19:03"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "automobile-public-danger",
@@ -1032,7 +1032,7 @@
       "id": "the_data_wont_tell_you_why",
       "type": "Blog",
       "title": "Why the Data Won't Tell You Why — Causal inference for decision-makers",
-      "description": "An interactive essay on causal inference: Simpson",
+      "description": "An interactive essay on causal inference: Simpson's paradox, causal diagrams, confounders and colliders, the difference between seeing and doing, and why every observational causal claim rests on assumptions the data cannot check.",
       "topic": "Methods, AI & Data",
       "tags": [
         "Causal inference",
@@ -1048,7 +1048,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "worldlines",
@@ -1104,7 +1104,7 @@
       "id": "emotional-fingerprints",
       "type": "Blog",
       "title": "Communities Have Emotional Fingerprints",
-      "description": "211,225 human judgments of Reddit comments reveal that communities run on distinct emotions — and that humans can",
+      "description": "211,225 human judgments of Reddit comments reveal that communities run on distinct emotions — and that humans can't agree on what grief looks like.",
       "topic": "Polarization & Public Opinion",
       "tags": [
         "Text analysis",
@@ -1122,7 +1122,7 @@
       "status": "published",
       "sort": 7,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:48"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "09-lake-wobegon-high",
@@ -1175,7 +1175,7 @@
       "id": "byline-economy",
       "type": "Blog",
       "title": "Nine Thousand Bylines",
-      "description": "HuffPost",
+      "description": "HuffPost's author fields record a business model reversing in real time: a 9,000-contributor open platform in 2014 re-concentrates into a staff core writing 42% of bylined output by 2016.",
       "topic": "Business & Markets",
       "tags": [
         "Text analysis",
@@ -1193,7 +1193,7 @@
       "status": "published",
       "sort": 10,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:48"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "10-safer-and-more-afraid",
@@ -1489,7 +1489,7 @@
       "id": "january-echo",
       "type": "Blog",
       "title": "The January Echo",
-      "description": "Amazon",
+      "description": "Amazon's musical-instrument reviews peak in January, not December — the sound of a million gifts being unboxed. Seasonality cleanly separates the instruments people give from the gear working musicians buy.",
       "topic": "Consumer & Household Finance",
       "tags": [
         "Text analysis",
@@ -1506,13 +1506,13 @@
       "status": "published",
       "sort": 23,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:48"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "nobel-pipeline",
       "type": "Blog",
       "title": "The Nobel Pipeline",
-      "description": "A thousand laureates",
+      "description": "A thousand laureates' education records show genius aging, migrating across the Atlantic, and passing through a startlingly small set of doors.",
       "topic": "Demographics & Society",
       "tags": [
         "Trend analysis",
@@ -1531,7 +1531,7 @@
       "status": "published",
       "sort": 24,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:48"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "chicago-rhythms",
@@ -1780,7 +1780,7 @@
       "id": "beat-the-model",
       "type": "Blog",
       "title": "The Places That Beat the Model",
-      "description": "A five-variable model predicts neighborhood mobility with R² = 0.44. The residuals are the interesting part: the counties that out-perform their demographics, and the boomtowns that don",
+      "description": "A five-variable model predicts neighborhood mobility with R² = 0.44. The residuals are the interesting part: the counties that out-perform their demographics, and the boomtowns that don't.",
       "topic": "Inequality & Mobility",
       "tags": [
         "Benchmarking",
@@ -1799,7 +1799,7 @@
       "status": "published",
       "sort": 38,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "index-autopsy",
@@ -2134,7 +2134,7 @@
       "id": "sliver-of-the-map",
       "type": "Blog",
       "title": "Half the Deaths, a Sliver of the Map",
-      "description": "Half of America",
+      "description": "Half of America's gun homicides happen in neighborhoods housing about 9.5 percent of its people. Lorenz curves and a block-level look at Chicago.",
       "topic": "Health & Mortality",
       "tags": [
         "Inequality analysis",
@@ -2153,7 +2153,7 @@
       "status": "published",
       "sort": 54,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:14"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "happiness_borders",
@@ -2620,7 +2620,7 @@
       "id": "girls-country",
       "type": "Blog",
       "title": "Reading Is a Girls' Country",
-      "description": "Across 12,360 school districts, girls out-read boys in 99.9 percent. Math is contested ground — and which side wins tracks the district",
+      "description": "Across 12,360 school districts, girls out-read boys in 99.9 percent. Math is contested ground — and which side wins tracks the district's affluence.",
       "topic": "Demographics & Society",
       "tags": [
         "Inequality analysis",
@@ -2639,7 +2639,7 @@
       "status": "published",
       "sort": 76,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "renthop-listings",
@@ -2794,7 +2794,7 @@
       "id": "coefficient-zoo",
       "type": "Teaching",
       "title": "The Coefficient Zoo",
-      "description": "Fifty-one regressions per health behavior: what doubling a neighborhood",
+      "description": "Fifty-one regressions per health behavior: what doubling a neighborhood's income does to smoking, obesity, and — running the other way in 98% of states — binge drinking.",
       "topic": "Methods, AI & Data",
       "tags": [
         "Regression",
@@ -2813,13 +2813,13 @@
       "status": "published",
       "sort": 84,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:17"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "the-abortion-sort",
       "type": "Blog",
       "title": "The Abortion Sort",
-      "description": "Across the ANES 1980-2024, abortion travelled from a cross-cutting issue on which the parties were statistically tied to the clearest single marker of party: the Dem-Rep gap on",
+      "description": "Across the ANES 1980-2024, abortion travelled from a cross-cutting issue on which the parties were statistically tied to the clearest single marker of party: the Dem-Rep gap on 'always legal' grew from about 3 points to 52, and the pro-l…",
       "topic": "Polarization & Public Opinion",
       "tags": [
         "Survey analysis",
@@ -2838,7 +2838,7 @@
       "status": "published",
       "sort": 85,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:12"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "born-rich-premium",
@@ -2946,7 +2946,7 @@
       "id": "partisan-economic-perceptions",
       "type": "Blog",
       "title": "The Economy Is a Partisan Mirror",
-      "description": "Across the ANES 1980-2024, Americans",
+      "description": "Across the ANES 1980-2024, Americans' judgment of the national economy depends overwhelmingly on whether their party holds the presidency; the partisan gap has doubled and inverts at every inauguration.",
       "topic": "Polarization & Public Opinion",
       "tags": [
         "Survey data",
@@ -2964,13 +2964,13 @@
       "status": "published",
       "sort": 90,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:12"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "eight-americas",
       "type": "Blog",
       "title": "The Eight Americas",
-      "description": "A k-means clustering of 81,000 census tracts sorts the country into eight kinds of neighborhood — and a child",
+      "description": "A k-means clustering of 81,000 census tracts sorts the country into eight kinds of neighborhood — and a child's whole life-course dashboard shifts with the label.",
       "topic": "Demographics & Society",
       "tags": [
         "Clustering",
@@ -2990,7 +2990,7 @@
       "status": "published",
       "sort": 91,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "flat-line",
@@ -3178,7 +3178,7 @@
       "id": "ninety-year-old-map",
       "type": "Blog",
       "title": "The Ninety-Year-Old Map",
-      "description": "Federal appraisers graded American neighborhoods A through D in the late 1930s. Lay the grades over today",
+      "description": "Federal appraisers graded American neighborhoods A through D in the late 1930s. Lay the grades over today's census tracts and life expectancy, child mobility, and homeownership still sort by the colors.",
       "topic": "Health & Mortality",
       "tags": [
         "Geospatial analysis",
@@ -3197,7 +3197,7 @@
       "status": "published",
       "sort": 99,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:14"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "the-office-ladder-of-defection",
@@ -3431,7 +3431,7 @@
       "id": "starting-line",
       "type": "Blog",
       "title": "The Starting Line",
-      "description": "A baby",
+      "description": "A baby's odds of reaching its first birthday are rationed by county. Infant mortality across the deprivation gradient.",
       "topic": "Inequality & Mobility",
       "tags": [
         "Inequality analysis",
@@ -3450,7 +3450,7 @@
       "status": "published",
       "sort": 111,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "stress_decade",
@@ -3607,7 +3607,7 @@
       "id": "vanishing-cradle",
       "type": "Blog",
       "title": "The Vanishing Cradle",
-      "description": "America",
+      "description": "America's birth count fell into the pandemic and never fully came back — and the baby bust was not shared evenly across the deprivation map.",
       "topic": "Demographics & Society",
       "tags": [
         "Inequality analysis",
@@ -3626,7 +3626,7 @@
       "status": "published",
       "sort": 118,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "trump-tweet-device",
@@ -3655,7 +3655,7 @@
       "id": "race-attitudes-shocks",
       "type": "Blog",
       "title": "Two Shocks, One Mirror — Obama, Floyd, and American Racial Opinion",
-      "description": "Did Obama",
+      "description": "Did Obama's 2008 election and the 2020 George Floyd protests change American racial attitudes? Weighted GSS and ANES data show Floyd moved opinion sharply but only among Democrats, and only temporarily, while Obama's election warmed no o…",
       "topic": "Polarization & Public Opinion",
       "tags": [
         "Shock analysis",
@@ -3674,7 +3674,7 @@
       "status": "published",
       "sort": 121,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:12"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "us-election-state-county-1972-2016",
@@ -3751,7 +3751,7 @@
       "id": "wear-and-tear",
       "type": "Blog",
       "title": "Wear and Tear",
-      "description": "The geography of disability looks like it should be a map of where old people live. It isn",
+      "description": "The geography of disability looks like it should be a map of where old people live. It isn't. It is a map of deprivation.",
       "topic": "Health & Mortality",
       "tags": [
         "Inequality analysis",
@@ -3770,7 +3770,7 @@
       "status": "published",
       "sort": 125,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:14"
+      "updatedAt": "2026-07-17 22:23:55"
     },
     {
       "id": "price-of-a-year",
@@ -3801,7 +3801,7 @@
       "id": "deadliest-to-be-poor",
       "type": "Blog",
       "title": "Where It Is Deadliest to Be Poor",
-      "description": "Rich Americans live about as long everywhere. Poor Americans",
+      "description": "Rich Americans live about as long everywhere. Poor Americans' life expectancy depends on their address — a four-year spread across large counties, correlated with local smoking and obesity, not with local health insurance.",
       "topic": "Health & Mortality",
       "tags": [
         "Inequality analysis",
@@ -3821,7 +3821,7 @@
       "status": "published",
       "sort": 127,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:14"
+      "updatedAt": "2026-07-17 22:23:54"
     },
     {
       "id": "where-the-stranded-live",
