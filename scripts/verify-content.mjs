@@ -51,15 +51,24 @@ for (const it of snap.items ?? []) {
 const unInjected = [], unregistered = [], reserved = [], nonKebab = [];
 await pool(keys, 8, async (key) => {
   const html = await getText(key);
-  const required = ['data-vs-chrome', 'data-vs-og'];
-  if (key.startsWith('articles/')) required.push('data-vs-ld', 'data-vs-related');
+  const base = key.split('/').pop();
+  // articles/**/index.html is navigation chrome (e.g. articles/HF/index.html, the
+  // landing page of a sub-collection), not a story — rebuild-manifest skips it by
+  // design, so its absence from the snapshot (and hence from the snapshot-driven
+  // OG/JSON-LD/related injection) is expected. It still gets the nav pill, so
+  // require only that. Hygiene warn, not a fail.
+  const reservedIndex = base === 'index.html' && key.startsWith('articles/');
+  const required = ['data-vs-chrome'];
+  if (!reservedIndex) {
+    required.push('data-vs-og');
+    if (key.startsWith('articles/')) required.push('data-vs-ld', 'data-vs-related');
+  }
   const missing = required.filter(m => !html.includes(m));
   if (missing.length) {
     unInjected.push(`${key}  [missing: ${missing.join(', ')}]`);
   }
-  if (!snapKeys.has(key)) unregistered.push(key);
-  const base = key.split('/').pop();
-  if (base === 'index.html' && key.startsWith('articles/')) reserved.push(key);
+  if (!snapKeys.has(key) && !reservedIndex) unregistered.push(key);
+  if (reservedIndex) reserved.push(key);
   const slug = key.startsWith('articles/') ? key.slice('articles/'.length, -5) : key.split('/')[1];
   if (/_/.test(slug) && !LEGACY_NONKEBAB_SLUGS.has(slug)) nonKebab.push(slug);
 });

@@ -5,7 +5,7 @@
 // is PRESERVED; only brand-new files get auto-extracted metadata.
 // Run: pnpm rebuild-manifest   (node --env-file=../.env scripts/rebuild-manifest.mjs)
 import { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
-import { CONTENT_BUCKET, LEGACY_NONKEBAB_SLUGS } from './pipeline-config.mjs';
+import { CONTENT_BUCKET, LEGACY_NONKEBAB_SLUGS, ARTICLE_SUBDIRS, UNLISTED_ON_INGEST } from './pipeline-config.mjs';
 
 const client = new S3Client({
   region: process.env.AWS_REGION || 'auto',
@@ -55,17 +55,33 @@ async function listAll(Bucket, Prefix) {
 async function getText(Bucket, Key) { const r = await client.send(new GetObjectCommand({ Bucket, Key })); return r.Body.transformToString(); }
 
 const keys = await listAll(DST, `${PREFIX}/`);
-const allHtmlSlugs = keys.filter(k => new RegExp(`^${PREFIX}/[^/]+\\.html$`).test(k)).map(k => k.slice(PREFIX.length + 1, -5)).sort();
-const thumbSlugs = new Set(keys.filter(k => k.endsWith('/_thumb.webp')).map(k => k.slice(PREFIX.length + 1).replace(/\/_thumb\.webp$/, '')));
+const keySet = new Set(keys);
+// Stories live at articles/<slug>.html and articles/<sub>/<slug>.html for the
+// declared sub-folders. The id space stays FLAT (id = <slug>) so registry ids,
+// curation, and /admin are unaffected by where a file lives in the bucket.
+const storyRe = new RegExp(`^${PREFIX}/(?:(${ARTICLE_SUBDIRS.join('|')})/)?([^/]+)\\.html$`);
+const allStories = keys
+  .map(k => { const m = k.match(storyRe); return m ? { key: k, dir: m[1] ? `${m[1]}/` : '', slug: m[2] } : null; })
+  .filter(Boolean)
+  .sort((a, b) => a.slug.localeCompare(b.slug));
 
 // ── Slug / filename validation (catches the ways a mis-named upload breaks the gallery) ──
 // 1. Skip reserved filenames (index.html, manifest.html) — they aren't stories.
 const RESERVED = new Set(['index', 'manifest']);
-const reserved = allHtmlSlugs.filter(s => RESERVED.has(s.toLowerCase()));
-const htmlSlugs = allHtmlSlugs.filter(s => !RESERVED.has(s.toLowerCase()));
-if (reserved.length) console.warn(`  ! skipped reserved filename(s): ${reserved.map(s => `${PREFIX}/${s}.html`).join(', ')}`);
+const reserved = allStories.filter(s => RESERVED.has(s.slug.toLowerCase()));
+let stories = allStories.filter(s => !RESERVED.has(s.slug.toLowerCase()));
+if (reserved.length) console.warn(`  ! skipped reserved filename(s): ${reserved.map(s => s.key).join(', ')}`);
+// 1b. Guard the flat id space: the same slug in two folders would collide — keep
+//     the first (sorted) occurrence and warn.
+const bySlug = new Map();
+stories = stories.filter(s => {
+  const prior = bySlug.get(s.slug);
+  if (prior) { console.warn(`  ! slug collision: ${s.key} vs ${prior.key} — keeping ${prior.key}`); return false; }
+  bySlug.set(s.slug, s);
+  return true;
+});
 // 2. Warn on non-kebab slugs (underscores / uppercase drift from the URL convention).
-const nonKebab = htmlSlugs.filter(s => /[^a-z0-9-]/.test(s) && !LEGACY_NONKEBAB_SLUGS.has(s));
+const nonKebab = stories.filter(s => /[^a-z0-9-]/.test(s.slug) && !LEGACY_NONKEBAB_SLUGS.has(s.slug)).map(s => s.slug);
 if (nonKebab.length) console.warn(`  ! non-kebab slug(s) (rename to lowercase-kebab): ${nonKebab.join(', ')}`);
 
 let existing = {};
@@ -76,22 +92,26 @@ const titleToId = new Map();
 for (const it of Object.values(existing)) if (it.title) titleToId.set(String(it.title).trim().toLowerCase(), it.id);
 
 const items = []; let added = 0; const needTopic = [];
-for (const slug of htmlSlugs) {
-  const thumb = thumbSlugs.has(slug) ? `${PREFIX}/${slug}/_thumb.webp` : null;
+for (const { key, dir, slug } of stories) {
+  const thumbKey = `${PREFIX}/${dir}${slug}/_thumb.webp`;
+  const thumb = keySet.has(thumbKey) ? thumbKey : null;
   if (existing[slug]) {
-    items.push({ ...existing[slug], file: `${PREFIX}/${slug}.html`, thumb }); // preserve curation; refresh file/thumb
+    items.push({ ...existing[slug], file: key, thumb }); // preserve curation; refresh file/thumb
   } else {
     added++;
-    let meta; try { meta = extractMeta(await getText(DST, `${PREFIX}/${slug}.html`), slug); } catch { meta = { title: titleCase(slug), description: '' }; }
+    let meta; try { meta = extractMeta(await getText(DST, key), slug); } catch { meta = { title: titleCase(slug), description: '' }; }
     const norm = meta.title.trim().toLowerCase();
     const dupOf = titleToId.get(norm);
     if (dupOf && dupOf !== slug) console.warn(`  ! "${slug}" has the same <title> as "${dupOf}" — possible mis-named re-upload?`);
     if (norm) titleToId.set(norm, slug); // so a later new file with the same title is flagged against this one too
-    needTopic.push(slug);
-    items.push({ id: slug, type: 'article', title: meta.title, description: meta.description, tags: [], file: `${PREFIX}/${slug}.html`, thumb, accent: '#46688f', featured: false, status: 'published' });
+    // Booklet chapters ingest as 'unlisted' (served + sitemapped + OG'd, but no
+    // gallery card — readers reach them through the booklet page).
+    const status = UNLISTED_ON_INGEST.has(slug) ? 'unlisted' : 'published';
+    if (status === 'published') needTopic.push(slug);
+    items.push({ id: slug, type: 'article', title: meta.title, description: meta.description, tags: [], file: key, thumb, accent: '#46688f', featured: false, status });
   }
 }
-const removed = Object.keys(existing).filter(id => !htmlSlugs.includes(id));
+const removed = Object.keys(existing).filter(id => !bySlug.has(id));
 if (needTopic.length) console.warn(`  · ${needTopic.length} new article(s) created with no topic — set it in /admin: ${needTopic.join(', ')}`);
 
 const manifest = { _README: existing.__readme || 'Article registry for the vishalsingh.org gallery. Edit to curate (status: published|hidden, featured, topic, tags, title, description). Hub reads via ISR; paths relative to the content base URL.', generated: new Date().toISOString().slice(0, 10), count: items.length, items };

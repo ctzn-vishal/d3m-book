@@ -1,8 +1,8 @@
 // One-off (idempotent) migration: rebuild the Turso `gallery` table WITH CHECK
 // constraints so the CMS only accepts valid values (type ∈ App/Teaching/Blog/
-// Dataset, status ∈ published/hidden/draft, the boolean flags ∈ 0/1). SQLite
-// can't ALTER TABLE ADD CONSTRAINT, so we recreate + copy in a transaction.
-// Safe to re-run: skips if the table already has CHECK constraints.
+// Dataset, status ∈ published/hidden/draft/unlisted, the boolean flags ∈ 0/1).
+// SQLite can't ALTER TABLE ADD CONSTRAINT, so we recreate + copy in a transaction.
+// Safe to re-run: skips if the table already has the current CHECK vocabulary.
 // Run: pnpm migrate-gallery   (node --env-file=../.env scripts/migrate-gallery.mjs)
 import { connectTurso } from './_turso.mjs';
 
@@ -24,7 +24,7 @@ const CREATE_WITH_CHECKS = `CREATE TABLE gallery_new (
   thumbnail TEXT,
   accent TEXT,
   featured INTEGER NOT NULL DEFAULT 0 CHECK (featured IN (0,1)),
-  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft')),
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft','unlisted')),
   sort INTEGER NOT NULL DEFAULT 0,
   created_at TEXT DEFAULT (datetime('now')),
   updated_at TEXT DEFAULT (datetime('now'))
@@ -34,8 +34,10 @@ const db = await connectTurso(process.env.TURSO_DATABASE_URL, process.env.TURSO_
 
 const existing = (await db.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='gallery'")).rows[0];
 if (!existing) { console.error('No `gallery` table found — run `pnpm sync-registry` first.'); process.exit(1); }
-if (String(existing.sql).toUpperCase().includes('CHECK')) {
-  console.log('gallery already has CHECK constraints — nothing to do.');
+// Re-run when the status vocabulary grows: only skip if the live constraint
+// already knows 'unlisted' (an older CHECK without it must be rebuilt).
+if (String(existing.sql).toUpperCase().includes('CHECK') && String(existing.sql).includes("'unlisted'")) {
+  console.log('gallery already has the current CHECK constraints — nothing to do.');
   process.exit(0);
 }
 

@@ -184,6 +184,22 @@
       "sort": 0
     },
     {
+      "id": "college-ledger",
+      "type": "app",
+      "title": "College Ledger — Every U.S. College, on the Record",
+      "description": "Cost by family income, graduate earnings and debt, and three decades of trajectory for 6,273 accredited U.S. colleges — College Scorecard + IPEDS, shown honestly: suppressed is suppressed, never zero.",
+      "domain": "Education",
+      "topic": "Inequality & Mobility",
+      "tags": ["education", "college-scorecard", "earnings", "explorer"],
+      "href": "https://college-scorecard-rouge.vercel.app/",
+      "external": true,
+      "openInNewTab": true,
+      "thumbnail": "/app-college-ledger.jpg",
+      "accent": "#46688f",
+      "featured": false,
+      "status": "published"
+    },
+    {
       "id": "worldlines",
       "type": "app",
       "title": "Worldlines — The World in Numbers",

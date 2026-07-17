@@ -33,7 +33,7 @@ type RegistryItem = {
   thumbnail?: string;
   accent: string;
   featured: boolean;
-  status: 'published' | 'hidden' | 'draft';
+  status: 'published' | 'hidden' | 'draft' | 'unlisted';
   sort: number;
   createdAt?: string;
   updatedAt?: string;
@@ -234,7 +234,7 @@ await db.execute(`CREATE TABLE IF NOT EXISTS gallery (
   open_in_new_tab INTEGER NOT NULL DEFAULT 0 CHECK (open_in_new_tab IN (0,1)),
   thumbnail TEXT, accent TEXT,
   featured INTEGER NOT NULL DEFAULT 0 CHECK (featured IN (0,1)),
-  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft')),
+  status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft','unlisted')),
   sort INTEGER NOT NULL DEFAULT 0,
   created_at TEXT DEFAULT (datetime('now')),
   updated_at TEXT DEFAULT (datetime('now'))

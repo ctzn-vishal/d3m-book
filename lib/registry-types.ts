@@ -22,7 +22,12 @@ export const TYPE_BLURB: Record<RegistryType, string> = {
   Dataset: 'Downloadable datasets',
 };
 
-export type RegistryStatus = 'published' | 'hidden' | 'draft';
+/**
+ * 'unlisted' = publicly served and in the content sitemap, but no card in the
+ * gallery grid — used for chapters of a booklet (readers reach them through the
+ * booklet page, e.g. American Stories). 'hidden' = soft-deleted.
+ */
+export type RegistryStatus = 'published' | 'hidden' | 'draft' | 'unlisted';
 
 export type RegistryItem = {
   id: string;

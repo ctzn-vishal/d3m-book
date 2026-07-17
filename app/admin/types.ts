@@ -3,7 +3,7 @@ import { TOPICS } from '@/lib/taxonomy';
 
 /** Dropdown vocabularies — the SAME lists the DB CHECK constraints enforce. */
 export const TYPE_OPTIONS: RegistryType[] = [...REGISTRY_TYPES];
-export const STATUS_OPTIONS: RegistryStatus[] = ['published', 'hidden', 'draft'];
+export const STATUS_OPTIONS: RegistryStatus[] = ['published', 'hidden', 'draft', 'unlisted'];
 export const TOPIC_OPTIONS: string[] = [...TOPICS];
 
 /** A gallery row as the admin table edits it (serializable; passed server→client). */

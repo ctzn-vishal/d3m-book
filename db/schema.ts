@@ -9,8 +9,8 @@ import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
  * NOTE: the `{ enum }` lists below are TypeScript/Studio metadata only — they do
  * NOT enforce values in the database. Real validity is enforced by CHECK
  * constraints on the table (scripts/migrate-gallery.mjs): type ∈ App/Teaching/
- * Blog/Dataset, status ∈ published/hidden/draft, flags ∈ 0/1. Keep this schema in
- * sync with the table if columns change.
+ * Blog/Dataset, status ∈ published/hidden/draft/unlisted, flags ∈ 0/1. Keep this
+ * schema in sync with the table if columns change.
  */
 export const gallery = sqliteTable('gallery', {
   id: text('id').primaryKey(),
@@ -30,7 +30,7 @@ export const gallery = sqliteTable('gallery', {
   accent: text('accent'),
   /** Floats the item to the top of the gallery. */
   featured: integer('featured', { mode: 'boolean' }).notNull().default(false),
-  status: text('status', { enum: ['published', 'hidden', 'draft'] }).notNull().default('published'),
+  status: text('status', { enum: ['published', 'hidden', 'draft', 'unlisted'] }).notNull().default('published'),
   /** Lower sorts earlier (within the same featured group). */
   sort: integer('sort').notNull().default(0),
   /** ISO-ish 'YYYY-MM-DD HH:MM:SS' (UTC) timestamps — set by datetime('now'). */

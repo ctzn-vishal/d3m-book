@@ -42,10 +42,11 @@ const browser = await chromium.launch({ headless: true });
 const ctx = await browser.newContext({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 2 });
 
 function bucketKey(item) {
-  const slug = item.id;
-  return item.type === 'App'
-    ? { key: `apps/${slug}/preview.jpg`, format: 'jpeg' }
-    : { key: `articles/${slug}/_thumb.webp`, format: 'webp' };
+  if (item.type === 'App') return { key: `apps/${item.id}/preview.jpg`, format: 'jpeg' };
+  // Blog: derive from the href path so sub-folder stories (articles/HF/<slug>.html)
+  // get their thumb where rebuild-manifest looks: articles/HF/<slug>/_thumb.webp.
+  const path = new URL(item.href).pathname.replace(/^\//, '').replace(/\.html$/, '');
+  return { key: `${path}/_thumb.webp`, format: 'webp' };
 }
 
 const results = [];

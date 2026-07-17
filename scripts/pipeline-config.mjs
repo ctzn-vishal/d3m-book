@@ -14,6 +14,38 @@
 export const CONTENT_BUCKET = process.env.TIGRIS_CONTENT_BUCKET || 'vishal';
 
 /**
+ * Sub-folders under articles/ that also hold data stories. Files at
+ * articles/<sub>/<slug>.html are ingested with id = <slug> (flat id space —
+ * rebuild-manifest guards collisions), served from their real key, thumbnails
+ * at articles/<sub>/<slug>/_thumb.webp. Non-HTML assets in the folder
+ * (style.css, charts.js, *.md) are ignored by the pipeline.
+ */
+export const ARTICLE_SUBDIRS = ['HF'];
+
+/**
+ * Article slugs ingested with status 'unlisted' instead of 'published':
+ * chapters of the American Stories booklet (articles/HF/american-stories-booklet.html
+ * — itself a normal published story card). Unlisted = publicly served, in the
+ * sitemap, OG-injected, but NOT a card in the gallery grid — readers reach these
+ * through the booklet. Includes three chapters not yet uploaded to the bucket
+ * (mask-and-sermon-pilot, the two american-stories-* notes) so they ingest
+ * correctly whenever they land.
+ */
+export const UNLISTED_ON_INGEST = new Set([
+  'earthquake-everyones-story',
+  'triangle-fire-public-failure',
+  'wilmington-coup-order',
+  'votes-after-victory',
+  'prohibition-moral-career',
+  'automobile-public-danger',
+  'the-dead-they-didnt-count',
+  'the-war-the-papers-wanted',
+  'mask-and-sermon-pilot',
+  'american-stories-methodological-note',
+  'american-stories-thematic-agenda',
+]);
+
+/**
  * Existing article slugs that use underscores instead of lowercase-kebab. The
  * files are already published and linked, so they can't be renamed without
  * breaking URLs — they're grandfathered. The non-kebab hygiene check (in

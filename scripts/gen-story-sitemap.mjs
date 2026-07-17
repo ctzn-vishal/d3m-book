@@ -24,9 +24,11 @@ const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishals
 // Every published item whose canonical URL is bucket-hosted HTML — Blog stories
 // (articles/*.html) AND Teaching studios (studios/**/index.html). Apps (external)
 // and datasets (internal /datasets/[id]) belong in the hub sitemap, not here.
+// 'unlisted' items (booklet chapters) are public canonical pages too — indexed,
+// just not gallery cards — so they stay in the sitemap.
 const snap = JSON.parse(await readFile(fileURLToPath(new URL('../content/registry.snapshot.json', import.meta.url)), 'utf8'));
 const items = (snap.items || [])
-  .filter(i => i.status === 'published' && typeof i.href === 'string' && i.href.startsWith(CONTENT + '/') && i.href.endsWith('.html'));
+  .filter(i => (i.status === 'published' || i.status === 'unlisted') && typeof i.href === 'string' && i.href.startsWith(CONTENT + '/') && i.href.endsWith('.html'));
 
 // One entry per unique URL; lastmod = the row's real last content change
 // ('YYYY-MM-DD HH:MM:SS' UTC → date part), falling back to created_at, else no
