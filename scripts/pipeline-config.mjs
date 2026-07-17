@@ -20,18 +20,18 @@ export const CONTENT_BUCKET = process.env.TIGRIS_CONTENT_BUCKET || 'vishal';
  * at articles/<sub>/<slug>/_thumb.webp. Non-HTML assets in the folder
  * (style.css, charts.js, *.md) are ignored by the pipeline.
  */
-export const ARTICLE_SUBDIRS = ['HF'];
+export const ARTICLE_SUBDIRS = ['HF', 'india'];
 
 /**
  * Article slugs ingested with status 'unlisted' instead of 'published':
- * chapters of the American Stories booklet (articles/HF/american-stories-booklet.html
- * — itself a normal published story card). Unlisted = publicly served, in the
- * sitemap, OG-injected, but NOT a card in the gallery grid — readers reach these
- * through the booklet. Includes three chapters not yet uploaded to the bucket
- * (mask-and-sermon-pilot, the two american-stories-* notes) so they ingest
- * correctly whenever they land.
+ * booklet CHAPTERS (each booklet's cover page is itself a normal published story
+ * card). Unlisted = publicly served, in the sitemap, OG-injected, but NOT a card
+ * in the gallery grid — readers reach these through the booklet.
  */
 export const UNLISTED_ON_INGEST = new Set([
+  // American Stories (cover: articles/HF/american-stories-booklet.html). The
+  // last three chapters aren't uploaded yet — listed so they ingest correctly
+  // whenever they land.
   'earthquake-everyones-story',
   'triangle-fire-public-failure',
   'wilmington-coup-order',
@@ -43,6 +43,12 @@ export const UNLISTED_ON_INGEST = new Set([
   'mask-and-sermon-pilot',
   'american-stories-methodological-note',
   'american-stories-thematic-agenda',
+  // The Political Ad Ledger — India (cover: articles/india/the-political-ad-ledger.html).
+  'ledger-1-whats-in-the-data',
+  'ad-election-anatomy',
+  'shadow-campaign',
+  'govt-second-advertiser',
+  'ledger-5-what-the-ads-say',
 ]);
 
 /**

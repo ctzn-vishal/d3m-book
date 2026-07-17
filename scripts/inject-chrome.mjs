@@ -54,8 +54,11 @@ async function listAll(Bucket, Prefix) {
 async function getText(Bucket, Key) { const r = await client.send(new GetObjectCommand({ Bucket, Key })); return r.Body.transformToString(); }
 async function pool(items, n, fn) { let i = 0; await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) { const idx = i++; await fn(items[idx]); } })); }
 
+// apps/<slug>/v<N>/… is a versioned DATA prefix (the data-app pattern), not
+// renderable app surface — never mutate files inside it.
+const isVersionedData = k => /^apps\/[^/]+\/v\d+\//.test(k);
 const keys = [];
-for (const p of PREFIXES) keys.push(...(await listAll(DST, `${p}/`)).filter(k => k.endsWith('.html')));
+for (const p of PREFIXES) keys.push(...(await listAll(DST, `${p}/`)).filter(k => k.endsWith('.html') && !isVersionedData(k)));
 console.log(`Found ${keys.length} HTML files across ${PREFIXES.join(', ')} (registry meta for ${metaByKey.size}, ${candidates.length} related-link candidates).`);
 
 let pill = 0, og = 0, ld = 0, rel = 0, changed = 0, skipped = 0, err = 0;

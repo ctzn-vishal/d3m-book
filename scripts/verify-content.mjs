@@ -35,9 +35,12 @@ async function listAll(Prefix) {
 async function getText(Key) { const r = await client.send(new GetObjectCommand({ Bucket: DST, Key })); return r.Body.transformToString(); }
 async function pool(items, n, fn) { let i = 0; await Promise.all(Array.from({ length: n }, async () => { while (i < items.length) { const idx = i++; await fn(items[idx]); } })); }
 
-// Bucket HTML (data stories + studios)
+// Bucket HTML (data stories + studios). apps/<slug>/v<N>/… is a versioned DATA
+// prefix (the data-app pattern) — its files are payloads, not renderable pages,
+// so they're outside the inject/register contract.
+const isVersionedData = k => /^apps\/[^/]+\/v\d+\//.test(k);
 const keys = [];
-for (const p of PREFIXES) keys.push(...(await listAll(`${p}/`)).filter(k => k.endsWith('.html')));
+for (const p of PREFIXES) keys.push(...(await listAll(`${p}/`)).filter(k => k.endsWith('.html') && !isVersionedData(k)));
 
 // Committed snapshot = what the gallery/inject/sitemap consider published
 const snap = JSON.parse(await readFile(fileURLToPath(new URL('../content/registry.snapshot.json', import.meta.url)), 'utf8'));
