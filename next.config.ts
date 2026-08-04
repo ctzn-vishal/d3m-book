@@ -143,7 +143,7 @@ const nextConfig: NextConfig = {
   //   • Next origins → set `basePath` (+ `assetPrefix`) to the mount path in
   //                    THEIR OWN next.config (e.g. basePath: '/atlas/trade').
   //   • scrc-data    → Vite SPA: rebuild with `base: '/apps/scrc/'` (no basePath knob).
-  // Keep the hub pinned to a current Next 16.2.x patch — this proxy path is the
+  // Keep the hub pinned to a current Next 16.3.x patch — this proxy path is the
   // surface the rewrite/middleware advisories touched.
   async rewrites() {
     return {
