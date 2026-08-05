@@ -42,7 +42,7 @@ export type DecisionBrief = {
 /* ------------------------------------------------------------------ *
  * Real Progresso soup seasonality, indexed to January = 100. These are
  * the same retail-scanner numbers the Part II chapters chart (see
- * ch04-baselines/data/soup-baselines.json); inlined here so the
+ * ch03-question-to-chart/data/soup-baselines.json); inlined here so the
  * storyboard composes genuine evidence rather than placeholder shapes.
  * ------------------------------------------------------------------ */
 

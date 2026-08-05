@@ -1,0 +1,168 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
+import { SoupBaselineChart } from '@/components/Book/part2/SoupVisualEvidence';
+import questionMapRaw from './data/question-chart-map.json';
+import soupRaw from './data/soup-baselines.json';
+
+export const questionMap = questionMapRaw.dataPoints;
+export const soup = soupRaw;
+export const seasonRows = soupRaw.seasonSummary.map((row) => ({
+  season: row.soup_season,
+  avg_price: `$${row.progresso_price.toFixed(2)}`,
+  share: `${(row.progresso_share * 100).toFixed(1)}%`,
+  stores: row.stores.toLocaleString(),
+}));
+
+<div className="not-prose mb-6">
+  <LadderPosition compact current={1} caption="Part II — visual evidence makes patterns visible before any method is named." />
+</div>
+
+<DropCap>
+
+A category manager asks for "a chart of soup sales." It is a reasonable-sounding request and an impossible one to fill, because the same soup data supports at least four different charts and each answers a different question. A winter surge. A summer trough. A price increase. A share collapse. Nothing in the phrase *a chart of soup sales* says which of those the manager needs to see. The request that can be filled is the one that names a comparison: *how far does soup demand fall from its winter peak, and does price move with it or against it?* That sentence selects the chart almost by itself. This chapter is about the step between the two requests — the translation from a business question into a comparison, which is the only step that makes chart choice a decision instead of a preference.
+
+</DropCap>
+
+## The executive question: *what comparison would answer this?*
+
+Chart choice looks like a design problem and is really a question-framing problem. Managers rarely need the name of every visualization technique. They need to know what comparison a business question is asking for, because the comparison determines the visual form. Get the comparison right and the chart is nearly automatic. Get it wrong and no amount of polish rescues the page.
+
+The move has three steps, and only the first two are hard:
+
+1. **Question.** What decision is this chart for? *Should we staff Suburban stores differently on weekday mornings?*
+2. **Comparison.** What has to be set against what to answer it? *Weekday-morning traffic in Suburban stores against the same hours in every other region.*
+3. **Chart.** Which visual form makes that comparison legible? *A sorted bar of morning traffic by region, or a small-multiple grid of hour-of-day curves.*
+
+Most bad charts skip step two. They jump from a vague question to a familiar template, and the template quietly picks a comparison nobody asked for. Figure 1 is the shortest useful version of step three: ten business questions and the chart form each one implies. It is not exhaustive — every analytics team has its own variants — but it is the minimum vocabulary a manager should expect a dashboard designer to have.
+
+<DataTable
+  caption="Figure 1. Ten common business questions and the chart that answers each. Read it left to right: the question shape determines the comparison, and the comparison determines the chart. Read it right to left — picking a chart first and hunting for a question it fits — and the same table becomes a menu of ways to mislead."
+  columns={[
+    { key: 'question', label: 'Business question', align: 'left' },
+    { key: 'chart',    label: 'Chart',             align: 'left' },
+    { key: 'use_when', label: 'Use when',          align: 'left' },
+  ]}
+  rows={questionMap}
+/>
+
+The pattern across all ten rows is that the *question shape* determines the *chart shape*. Continuous time becomes a line. A fixed sequence of stages becomes a funnel. A categorical ranking becomes a sorted bar. Two snapshots become a slope. There is no entry in Figure 1 whose primary job is decoration; each exists because some specific kind of business question is hard to answer without it. The next section, [the chart atlas](/ch03-chart-atlas), expands this table into the full working vocabulary — every form with a live example, the question it serves, and the way it can be misused.
+
+<Callout variant="definition" title="Comparison">
+  The comparison is the pair of things a chart sets against each other: this month against last, this region against the rest, this segment against the average, this year against plan. A chart with no comparison is a label with axes.
+</Callout>
+
+## The comparison hides in the baseline
+
+Naming the comparison sounds abstract until you try to build the chart, at which point it becomes concrete and unavoidable: *compared with what?* The answer to that question is the **baseline**, and it is the first real decision in any chart — before color, before size, before software.
+
+The Progresso soup case makes this visible, and it will run through the rest of Part II. It is monthly scanner data across more than two thousand stores from June 2001 through December 2006, with Progresso, Campbell's, and private label all in the same category, and store-level census region and ZIP coordinates attached. It is seasonal, competitive, geographic, and — several chapters from now — the case that carries the pricing analysis in Part III.
+
+The business pattern is countercyclical: Progresso's price rises when soup demand weakens. That sentence is easy to say after the fact. The question is how to make it visible without asking the reader to inspect every number. Figure 1's table says a metric-over-time question wants a line chart, but three different lines are candidates here — volume, share, and price — measured in three incompatible units. Indexing all three to a common January baseline puts them on one scale, and the pattern that was buried in the units becomes the shape of the chart.
+
+<Figure width="page-outset" caption="Figure 2. Progresso demand and share fall into the summer trough while the price index rises. A shared January baseline makes the seasonal direction visible before any model appears — and makes the scissors between demand and price impossible to miss.">
+  <div className="not-prose">
+    <SoupBaselineChart data={soup} />
+  </div>
+</Figure>
+
+The useful feature of Figure 2 is not that January is the right baseline. It is that the baseline is *explicit*, which means the comparison is explicit, which means a reader can argue with it. Each alternative baseline asks a different question of exactly the same data:
+
+- **A January baseline** asks: *how far does the year move away from the winter level?*
+- **A prior-year baseline** asks: *how different is this year from last year?*
+- **A competitor baseline** asks: *does Progresso move differently from Campbell's?*
+- **A region baseline** asks: *which markets are behaving unusually?*
+- **An active-store baseline** asks: *is this a demand pattern or a panel-coverage artifact?*
+
+None of those is more neutral than the others. Baseline choice is a managerial choice because it names the comparison, and naming the comparison is most of the argument. The same chart indexed to June would emphasize winter recovery rather than summer collapse. Indexed to Campbell's, it would become a chart about competitive pricing behavior. An analyst who picks a baseline without saying so has made the manager's argument for her, silently.
+
+## Indexes make comparisons legible and levels invisible
+
+An index is the workhorse of comparison because it strips out the thing that usually blocks comparison: incompatible units and incompatible starting points. Twelve metro housing markets starting at wildly different price levels cannot be ranked by growth on a raw price chart — the expensive coastal markets sit at the top no matter what they did. Rebase every market to 100 at a common date and the fastest grower becomes the steepest line, which is what the question actually asked for.
+
+That power is also the trap. An index answers *how much did this move?* and deliberately discards *how much is this worth?* A niche product and a flagship both rise from 100 to 140 even when one moves ten times the units. Whenever the decision depends on magnitude — where to spend, what to staff, which market to enter — the indexed view has to be paired with the levels it hid.
+
+Figure 3 does exactly that for the soup case: it drops the index and returns price to dollars, so the seasonal contrast a pricing manager would actually act on stays concrete. Winter is defined here as October through February, the months when soup demand is generally strongest — a business season, not a calendar one.
+
+<DataTable
+  caption="Figure 3. Winter is the high-demand season for Progresso, while non-winter months carry a higher average price and a lower share. The index made the direction visible; the dollars make it actionable."
+  columns={[
+    { key: 'season', label: 'Season', align: 'left' },
+    { key: 'avg_price', label: 'Avg Progresso price', align: 'right' },
+    { key: 'share', label: 'Progresso share', align: 'right' },
+    { key: 'stores', label: 'Stores', align: 'right' },
+  ]}
+  rows={seasonRows}
+/>
+
+Figure 3 is intentionally blunt, and intentionally incomplete. It does not prove that price caused lower volume. What it does is create the next question — *why does Progresso price look highest when demand is weakest?* — and a visualization chapter should stop exactly there. Whether that pattern is causal, strategic, promotional, inventory-driven, or simply confounded by seasonality is a question for [Part III](/ch05-metrics-to-decisions), which has the tools to answer it. Part II's job is to make the question unavoidable.
+
+<Callout variant="definition" title="Baseline">
+  A baseline is the comparison point that gives a number meaning. It can be a month, a competitor, a target, a region, a customer segment, or a prior period. Every chart has one, whether or not the analyst chose it deliberately.
+</Callout>
+
+<Pitfall title="Starting from the tool">
+"Make a map." "Make a dashboard." "Put it in a heatmap." None of these is a business question, and each smuggles in a comparison nobody agreed to. **Write the comparison sentence first**, then let it select the chart.
+</Pitfall>
+
+<Pitfall title="The dramatic baseline">
+Indexing to the lowest month so every recovery looks enormous, or to the highest so every decline looks catastrophic, produces a chart that is technically correct and editorially manipulative. **Pick the baseline that names the real comparison, not the one that maximizes the swing.**
+</Pitfall>
+
+<Pitfall title="Hiding scale behind an index">
+An index can make a niche product and a flagship look equally important: both rise from 100 to 140 even if one moves ten times more units. **Pair the indexed view with absolute levels** so a small mover is never mistaken for a large one.
+</Pitfall>
+
+<Pitfall title="The baseline as causal control">
+Campbell's is a useful benchmark for Progresso, but a benchmark is not a counterfactual. **Comparing against something clarifies the comparison; it does not, by itself, identify a cause.**
+</Pitfall>
+
+The deeper pathology behind all four is the same: building charts from the *data the team has* instead of the *question the manager has*. The discipline that fixes it costs one sentence. Before opening the tool, write down: *this chart compares ___ with ___, so that a manager can decide ___.* If that sentence cannot be completed, the chart is not ready to be built, and no amount of design will hide it.
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions on translating a question into a comparison, recognizing a number that has no baseline at all, and choosing between an index and a level."
+  questions={[
+    {
+      prompt: <>A regional VP asks: "which of our twelve metro markets grew fastest in home values since 2020?" Your dataset has monthly price levels per market, but the markets start at very different price points, so a raw multi-line chart is dominated by the expensive coastal markets sitting at the top. Which chart best answers the VP's actual question?</>,
+      options: [
+        { label: <>An indexed line chart that rebases every market to 100 at the start of 2020, so each line shows percent growth and the fastest grower is the steepest line regardless of starting price.</> },
+        { label: <>A raw multi-line chart of price levels, because it shows the true dollar value of each market and the VP can read growth from how high each line ends up.</> },
+        { label: <>A heatmap of market by month colored by price level, because it fits all twelve markets in one panel without overlapping lines.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>The question is about relative growth, so the comparison must be growth, not level. Indexing each market to 100 at a common start converts the lines to percent change, making the fastest grower the steepest line no matter where it started. The raw level chart is the tempting trap: a market can end up high simply because it began high, so "ends up highest" answers "which is most expensive," not "which grew fastest." The heatmap colored by level has the same flaw and buries the ranking the VP needs in a wall of color. The comparison determines the chart, not the other way around.</>,
+    },
+    {
+      prompt: <>A brand manager circulates a slide reading "Progresso non-winter price: 3.42 dollars" as evidence that pricing is too aggressive in the off-season. A colleague objects that the number, standing alone, cannot support that conclusion. What is the strongest version of the colleague's objection?</>,
+      options: [
+        { label: <>A single number carries no meaning until it names what it is being compared with — the winter price, a competitor's price, or last year's — so "3.42" without a baseline anchor cannot say whether pricing is aggressive at all.</> },
+        { label: <>The figure should have been shown as an index relative to January rather than in dollars, because dollar levels are never the right unit for a pricing decision.</> },
+        { label: <>The objection is misplaced: a single off-season average is sufficient, and adding any comparison would only clutter the slide.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Every number on a chart is implicitly a comparison, and the comparison has to be named to mean anything. "3.42 dollars" is neither high nor low until it is set against an anchor — the winter price, a rival, or a prior year. Indexing is one way to express a comparison, but the claim that dollars are "never" the right unit overshoots; the defect is the missing baseline, not the unit. And declaring one number sufficient is exactly the error this section warns against.</>,
+    },
+    {
+      prompt: <>Your indexed chart shows a new specialty line and the flagship product both rising from 100 to 140 since January. The category director proposes shifting shelf space toward the specialty line "since it is growing just as fast." What does the chart's construction hide, and what should accompany it?</>,
+      options: [
+        { label: <>Nothing is hidden — equal index growth means equal business impact, so the shelf-space argument follows directly from the chart.</> },
+        { label: <>The index deliberately discards level, so identical growth lines can represent wildly different unit volumes; the indexed view needs the absolute levels beside it before a shelf-space decision is defensible.</> },
+        { label: <>The problem is the January baseline; rebasing to the most recent month would make the comparison sound.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Indexing answers "how much did this move" by throwing away "how much is this worth" — that is the whole point of the transform and the whole risk. Two lines can climb identically while one moves a few hundred units and the other tens of thousands. Shelf space is a magnitude decision, so it needs the levels the index suppressed. Changing the baseline does not help: any baseline produces the same scale-blindness, because the blindness comes from indexing, not from which month anchors it.</>,
+    },
+  ]}
+/>
+
+<Takeaway label="The operating posture">
+
+Before asking *which chart should we make?*, ask *what comparison would answer this?* — then say the comparison out loud, in a sentence, before opening the tool. The baseline is where that sentence becomes a design choice: January indexing makes the soup seasonality visible, a winter/non-winter split makes it actionable, and a competitor baseline would have made it a different chapter entirely. *None of those baselines is neutral, and pretending otherwise is how a chart makes an argument the analyst never has to defend.* The rest of this chapter builds out the vocabulary — [the atlas](/ch03-chart-atlas) of visual forms, [small multiples](/ch03-small-multiples) for when one comparison is not enough, and [intervals](/ch03-uncertainty) for when the comparison might be noise.
+
+</Takeaway>

@@ -1,9 +1,20 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { QuizBlock } from '@/components/Book/QuizBlock';
 import { Figure } from '@/components/Book/Figure';
+import { Step } from '@/components/Book/Step';
+import { KeyNumber } from '@/components/Book/KeyNumber';
 import { Callout } from '@/components/Book/Callout';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
+import {
+  DashboardArc,
+  KpiTile,
+  TrendLine,
+  RegionBreakdown,
+  DaypartDrilldown,
+  RecommendedAction,
+  BuffetVsMemo,
+} from '@/components/Book/part2/DashboardArc';
 import { SoupDashboardCritique } from '@/components/Book/part2/SoupVisualEvidence';
 import critiqueRaw from './data/soup-dashboard-critique.json';
 
@@ -11,44 +22,141 @@ export const critique = critiqueRaw;
 
 <DropCap>
 
-A dashboard is not successful because every chart is attractive. It is successful when the reader knows what to monitor, what to diagnose, and what decision or next test follows. The Progresso soup dashboard already has a strong visual story. The teaching opportunity is to turn that story into a decision system.
+The CEO opens the new Bean & Basket executive dashboard. Twelve tiles, six charts, three filter dropdowns, two KPI rings, and a heatmap. Each one looks polished. After ninety seconds of scanning, he closes the tab. He could not have answered, from the dashboard, why revenue was flat last quarter — not because the answer wasn't in there, but because nothing on the page told him where to look first. The dashboard had charts. It did not have a question. A good dashboard is the opposite: every panel answers one specific question, and the panels are ordered so the answer to the first leads naturally to the second, which leads to the third. The CEO's eye should never have to wander. The page should walk him through the analysis.
 
 </DropCap>
 
-## The executive question: *how should a dashboard move from monitoring to diagnosis to action?*
+## The executive question: *what should a manager notice first?*
 
-The existing soup dashboard has four strong ingredients: monthly category volume, seasonal pricing, a store map, and category share. It also has an intuitive headline: demand weakens in summer while Progresso price rises. That is a good dashboard seed because the pattern is visual, memorable, and strategically uncomfortable. The redesign challenge is to keep the strong case evidence while making the decision path explicit.
+[Chapter 3](/ch03-question-to-chart) built the vocabulary — how to translate a business question into a comparison, which chart forms serve which comparisons, when to facet, and how to show what the data cannot support. This chapter spends that vocabulary on the artifact managers actually receive: a page of charts with somebody's name on it.
 
-The redesign question is not whether the dashboard looks polished. It does. The question is whether the dashboard ends in a better managerial decision question. A visual system that stops at "interesting" is unfinished.
+A dashboard is a *sequence of business questions*. Not a collection of charts, not a status report, not a data buffet — a sequence. The first panel asks an executive question, the second answers it, the third asks the natural follow-up, and so on until the page ends at a recommended action. When a manager looks at a well-built dashboard she does not scan; she reads, in the order the page is laid out, and the order makes sense.
 
-Figure 1 treats the current dashboard as a critique object. Each panel gets a job. Each job gets an upgrade. The point is to teach a reusable design discipline: monitor, diagnose, decide.
+The instinct to "show everything" is the most common failure in dashboard design. Twelve tiles, each showing a different KPI, each presented as if equally important, force the viewer to do the prioritization work the dashboard was supposed to do for her. The defense is to build the page the way an analyst writes a memo.
 
-<Figure width="screen-inset" caption="Figure 1. The soup dashboard becomes a decision system when each panel has a job and the final panel names the next test.">
+## Three modes: monitor, diagnose, decide
+
+Every panel on a dashboard is doing one of three jobs, and confusion between them is what makes pages feel busy but unhelpful.
+
+**Monitor** asks whether something important changed. It is the only mode most dashboards ever reach, and on its own it produces a status report.
+
+**Diagnose** asks where the change came from — which region, segment, cohort, or daypart is carrying it. This is where [small multiples](/ch03-small-multiples) and breakdowns live.
+
+**Decide** asks what action or test follows. This is the mode almost every real dashboard omits, and its absence is why so many polished pages get praised once and never opened again.
+
+The distinction keeps the page honest in both directions. A monitor panel should not pretend to identify causes. A diagnostic panel should not stop at the pattern. A decision panel should not hide the uncertainty that qualifies it.
+
+## The arc, in six steps
+
+The three modes expand into six concrete panels. This is the order that has worked for fifty years and will work for fifty more: the executive question on top, the KPI tile that lands the headline, the trend that puts the headline in context, the breakdowns that explain the trend, the drilldown that reaches the actionable level, and the recommended action at the bottom.
+
+<Step number={1} title="The executive question (one sentence at the top)">
+
+Every dashboard starts with a question, written in plain English at the top of the page. Not *"Sales overview."* Not *"Q1 performance."* Something specific: *"Why did revenue flatten in Q1, after eight quarters of growth?"* The question names what the rest of the page is trying to answer and gives the reader a frame for the numbers that follow.
+
+</Step>
+
+<Step number={2} title="The KPI tile — the headline number (monitor)">
+
+One number, large, with a comparison. Last quarter's revenue against the quarter before, or against the same quarter last year. Used well, the KPI tile answers the executive question in about two seconds. Note that it is a comparison, not a number — the [baseline discipline](/ch03-question-to-chart) applies to a tile exactly as it applies to a chart.
+
+<KeyNumber
+  value="$1.18M"
+  unit="Q1"
+  label="Bean & Basket chain-wide revenue, Q1 2024."
+  change="+0.7% vs Q4 2023"
+/>
+
+<div className="not-prose my-4">
+  <KpiTile />
+</div>
+
+</Step>
+
+<Step number={3} title="The trend — put the headline in context (monitor)">
+
+A line chart of the same metric over the last 8–12 periods. Without the trend, "+0.7%" reads as steady; with the trend, it reads as the first non-growth quarter after a year of 4–6% gains. The chart in this position is almost always a line, almost always with the most recent point flagged, and almost always *bare* — no clutter, no second metric, no overlaid bars. Its whole job is to give context for the tile above.
+
+<div className="not-prose my-4">
+  <TrendLine />
+</div>
+
+</Step>
+
+<Step number={4} title="The breakdown — where is the change coming from? (diagnose)">
+
+Once the trend establishes that something interesting happened, the next panel decomposes it. Revenue by region. By product category. By store cohort. The right breakdown is the one whose variance explains the trend — usually two or three are tried, and the one where the differences are largest stays on the page. The chart is almost always a sorted bar, sometimes a small-multiples grid when there are too many groups to rank.
+
+<div className="not-prose my-4">
+  <RegionBreakdown />
+</div>
+
+</Step>
+
+<Step number={5} title="The drilldown — segment to the actionable level (diagnose)">
+
+The breakdown identifies the *where*; the drilldown finds the *what*. If the regional breakdown surfaces Suburban as the breakout, the drilldown digs into Suburban: customer segments, hour-of-day patterns, product mix. This is where exploratory visualization lives — scatterplots, small multiples, anything that admits *new information* into the analysis. Most viewers do not need this panel every day. Analysts do.
+
+<div className="not-prose my-4">
+  <DaypartDrilldown />
+</div>
+
+</Step>
+
+<Step number={6} title="The recommended action (decide)">
+
+The last panel is the only one that is not a chart. It is a paragraph — sometimes two — translating the four chart panels into a recommendation. *"Suburban grew on weekday-morning commuter traffic. Recommend doubling weekday-morning staffing and piloting a 7am promo at the Campus store, where commuter foot traffic is comparable but conversion lags by 11 points."* This is the panel most dashboards omit. It is also the only panel that turns a dashboard from a status report into a decision document.
+
+<div className="not-prose my-4">
+  <RecommendedAction />
+</div>
+
+</Step>
+
+Here is the whole arc on one page — the executive question on top, then five panels reading straight down to the recommended action. Hover any chart for the underlying numbers, and notice that each panel answers the question the panel above it raises.
+
+<DashboardArc />
+
+The six steps are not specific to a tool. They work in Looker, in Tableau, in a printed PDF, in a one-pager taped to a wall. What makes the dashboard work is not the platform; it is the *sequence*. Without a sequence, the same six panels are a buffet; with one, they are a memo.
+
+The difference is entirely in the ordering. Toggle below between the *buffet* — the same four panels as equal tiles, with no obvious place to start — and the *memo*. The data never changes; only whether the page does the prioritizing for you.
+
+<BuffetVsMemo />
+
+<Pitfall title="The buffet dashboard">
+Twelve tiles, no order, no hierarchy — every chart the same size, every metric presented as if equally important — forces the viewer to do the prioritization the dashboard was supposed to do. **Pick one executive question per page; if there are three questions, build three pages.**
+</Pitfall>
+
+<Pitfall title="Vanity metrics on top">
+Total page views, total accounts, total impressions — large, growing, and connected to no decision. **A KPI tile should answer a question the manager would otherwise ask;** a number nobody would ever act on does not belong on the headline row.
+</Pitfall>
+
+<Pitfall title="Charts without comparisons">
+A single bar reading "Q1 revenue: $1.18M" is not a chart, it is a label. **Every chart on a dashboard should make a comparison** — to last period, to plan, to target, to a benchmark. "$1.18M, +0.7% vs Q4" is informative; "$1.18M" alone is not.
+</Pitfall>
+
+## Applying the arc: the soup dashboard
+
+The Bean & Basket arc is a template. Running it against a real dashboard is where the discipline gets tested, so Figure 1 treats the Progresso soup dashboard as a critique object.
+
+That dashboard already has four strong ingredients — monthly category volume, seasonal pricing, a store map, and category share — and an intuitive headline: demand weakens in summer while Progresso's price rises. It is a good seed precisely because the pattern is visual, memorable, and strategically uncomfortable. The redesign question is not whether it looks polished. It does. The question is whether it ends in a better managerial decision. **A visual system that stops at "interesting" is unfinished.**
+
+In Figure 1, each panel is assigned a job, and each job gets an upgrade.
+
+<Figure width="screen-inset" caption="Figure 1. The soup dashboard becomes a decision system when each panel has a job — monitor, diagnose, or decide — and the final panel names the next test.">
   <div className="not-prose">
     <SoupDashboardCritique data={critique} />
   </div>
 </Figure>
 
-The strongest dashboard move in Figure 1 is the final step. A descriptive dashboard should not end by declaring that Progresso should lower price. It should end by naming what must be learned next: whether price changes caused lower volume, whether promotions or inventory explain the pattern, and which regions deserve separate pricing tests.
-
-<Callout variant="finding" title="Live dashboard example">
-  The [Industry Ad Spend Explorer](/studios/ad-spend-explorer) applies the same monitor-diagnose-decide discipline to advertising data. Pick an industry group, read the Covid-era spend shock, inspect media allocation, and then drill into the advertisers that explain the movement.
-</Callout>
-
-## Monitor, diagnose, decide
-
-A dashboard sequence has three modes.
-
-**Monitor** asks whether something important changed. In the soup case, monthly category volume monitors the seasonal demand cycle.
-
-**Diagnose** asks where the change came from. Seasonal price, share, region, and store maps diagnose whether the Progresso pattern is broad, regional, or competitive.
-
-**Decide** asks what action or test follows. The decision panel should distinguish what the dashboard shows from what it cannot prove.
-
-This distinction keeps the dashboard honest. A monitor panel should not pretend to identify causes. A diagnostic panel should not skip the next question. A decision panel should not hide uncertainty.
+The strongest move in Figure 1 is the last one. A descriptive dashboard should not end by declaring that Progresso ought to lower price — it has no basis for that claim. It should end by naming what must be learned next: whether price changes caused lower volume, whether promotions or inventory explain the pattern, and which regions deserve separate pricing tests.
 
 <Callout variant="caveat" title="The dashboard should hand off to causal analysis">
-  The soup dashboard can show countercyclical pricing. It cannot prove the causal effect of price on volume. Its best decision is to recommend the next credible pricing test or quasi-experimental design.
+  The soup dashboard can show countercyclical pricing. It cannot prove the causal effect of price on volume. Its best possible ending is to recommend the next credible pricing test or quasi-experimental design — which is exactly where [Part III](/ch05-metrics-to-decisions) picks up.
+</Callout>
+
+<Callout variant="finding" title="Live dashboard examples">
+Two studios apply this arc to real data. The [Presidential Election Atlas](/studios/presidential-election-atlas) opens on the result, puts the state map in the diagnostic position, and uses state swings and battleground margins to decide what to inspect next. The [Industry Ad Spend Explorer](/studios/ad-spend-explorer) runs monitor–diagnose–decide over advertising data: pick an industry group, read the Covid-era spend shock, inspect media allocation, then drill into the advertisers that explain the movement.
 </Callout>
 
 <Pitfall title="The attractive dead end">
@@ -56,19 +164,21 @@ The dashboard makes the pattern obvious, the viewer does not know what to do nex
 </Pitfall>
 
 <Pitfall title="The overclaiming caption">
-A chart shows volume falling as price rises and the caption says price caused the decline. **That sentence belongs only after the identification work has been done** — until then, describe the association and name what it cannot prove.
+A chart shows volume falling as price rises, and the caption says price caused the decline. **That sentence belongs only after the identification work has been done** — until then, describe the association and name what it cannot prove.
 </Pitfall>
 
 <Pitfall title="Missing operational context">
-Store coverage, region definitions, winter definitions, product definitions, and map approximations all change interpretation. A dashboard need not display every caveat at once, **but it must put the relevant caveat next to the relevant chart.**
+Store coverage, region definitions, season definitions, product definitions, and map approximations all change interpretation. A dashboard need not display every caveat at once, **but it must put the relevant caveat next to the relevant chart.**
 </Pitfall>
+
+The deeper pathology behind all six pitfalls is the same: building dashboards from the *data the team has* instead of the *questions the manager has*. The fix is to start every dashboard project with the question, written down, before any chart template is opened. A team that does this ships dashboards that survive their first review. A team that doesn't builds beautiful tools that get closed after ninety seconds.
 
 <QuizBlock
   title="Concept check"
-  intro="Three questions spanning the decision-ending dashboard, the monitor-diagnose-decide handoff to causal work, and editing a visual brief around the question."
+  intro="Four questions on ordering a page as a memo, the difference between exploring and presenting, the honest ending of a descriptive dashboard, and editing a brief around the question."
   questions={[
     {
-      prompt: <>The soup dashboard makes one pattern unmistakable: volume falls in summer while Progresso's price rises. A reviewer calls it "finished" because the insight is obvious at a glance. What is the design flaw this praise is hiding?</>,
+      prompt: <>The soup dashboard makes one pattern unmistakable: volume falls in summer while Progresso's price rises. A reviewer calls it "finished" because the insight is obvious at a glance. What design flaw is this praise hiding?</>,
       options: [
         { label: <>The dashboard ends at an interesting pattern instead of a decision or next test, so it earns praise and then changes nothing — the "attractive dead end."</> },
         { label: <>The charts need more polish before the dashboard can be considered complete.</> },
@@ -78,30 +188,42 @@ Store coverage, region definitions, winter definitions, product definitions, and
       explanation: <>A dashboard succeeds when the reader knows what to do next, not when a chart is striking. Obviousness is not an ending; the page must close on the next managerial decision or test. More polish or more panels do not fix a page that stops at "interesting."</>,
     },
     {
-      prompt: <>In the monitor-diagnose-decide sequence, the decide panel shows volume dropping as price rises. A manager wants the caption to read "raising price lowered volume; cut price." Why should the dashboard refuse?</>,
+      prompt: <>You are deep in the drilldown panel, where exploratory visualization lives. A scatterplot of store foot traffic against conversion shows three odd stores far from the cloud. A colleague says, "great, drop those three outliers straight onto the executive KPI row so leadership sees them." What is the soundest response?</>,
+      options: [
+        { label: <>Agree, since the scatterplot already revealed the outliers, the exploratory work is done and the same chart can headline the executive page.</> },
+        { label: <>Push back: the scatterplot is exploratory, meant to admit new questions, so the next step is to investigate why those three stores differ — not to promote a raw exploratory chart into a headline that is supposed to deliver a settled, comparison-driven answer.</> },
+        { label: <>Replace the scatterplot with a single KPI tile reading "3 outlier stores" and put that on the headline row, because one number is always cleaner than a chart for executives.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>Scatterplots and small multiples sit in the drilldown, where the job is to admit new information and raise questions — the essence of exploratory work. Finding three unusual stores starts an inquiry; it does not finish one. The headline row is confirmatory in spirit: it lands a settled comparison the manager can act on in seconds. The third option is the vanity-metric trap — "3 outlier stores" is a number connected to no decision, and a clean tile does not make it belong.</>,
+    },
+    {
+      prompt: <>In the monitor–diagnose–decide sequence, the decide panel shows volume dropping as price rises. A manager wants the caption to read "raising price lowered volume; cut price." Why should the dashboard refuse?</>,
       options: [
         { label: <>The sample of months is too small for the caption to be statistically reliable.</> },
         { label: <>A descriptive dashboard can show the association but cannot separate price from seasonality; its honest job is to hand off to a credible pricing test or quasi-experimental design.</> },
-        { label: <>Decide panels should never carry captions, only the monitor panel should.</> },
+        { label: <>Decide panels should never carry captions; only the monitor panel should.</> },
       ],
       correctIndex: 1,
-      explanation: <>Monitor asks if something changed, diagnose asks where from, decide names the next action — and that action here is the next test, not a causal verdict. The dashboard observes countercyclical pricing but cannot prove price caused the decline; overwriting that limit with a causal caption is the overclaiming trap.</>,
+      explanation: <>Monitor asks if something changed, diagnose asks where from, decide names the next action — and here that action is the next test, not a causal verdict. The dashboard observes countercyclical pricing but cannot prove price caused the decline; overwriting that limit with a causal caption is the overclaiming trap. The month count is not the binding constraint — the intervals are narrow; identification is what is missing.</>,
     },
     {
-      prompt: <>Building the capstone's six-panel decision brief, you have computed revenue, AOV, repeat rate, gross margin, revenue per active customer, and a rolling trend. The instinct is to give each its own panel "for completeness." What does the brief discipline require instead?</>,
+      prompt: <>Building a six-panel decision brief, you have computed revenue, AOV, repeat rate, gross margin, revenue per active customer, and a rolling trend. The instinct is to give each its own panel "for completeness." What does the brief discipline require instead?</>,
       options: [
         { label: <>Show every metric you computed, since omitting one looks like you failed to analyze it.</> },
         { label: <>Pick the panels by which charts render most attractively, regardless of the question.</> },
-        { label: <>Include only the panels the executive question needs — question, KPI, trend, store comparison, the drilldown that comparison surfaces, and the recommended action — and leave the rest out.</> },
+        { label: <>Include only the panels the executive question needs — question, KPI, trend, comparison, the drilldown that comparison surfaces, and the recommended action — and leave the rest in the appendix.</> },
       ],
       correctIndex: 2,
-      explanation: <>A decision brief is edited around the question→visual→decision flow, not around the analyst's effort. Computing a metric is not a reason to display it; completeness dilutes the decision path. The drilldown should follow whatever the comparison panel surfaces, and unused metrics stay in the appendix, not the brief.</>,
+      explanation: <>A decision brief is edited around the question → visual → decision flow, not around the analyst's effort. Computing a metric is not a reason to display it; completeness dilutes the decision path. The drilldown should follow whatever the comparison panel surfaces, and unused metrics stay in the appendix, not the brief.</>,
     },
   ]}
 />
 
 <Takeaway label="What to ship">
 
-A dashboard should have an ending. In the soup case, the ending is not "Progresso should cut price." The ending is sharper: *"Progresso appears to price countercyclically; the pattern varies by region; before changing policy, estimate elasticity with a design that separates price from seasonality."* That is what a visual evidence dashboard should do: make the next decision question unavoidable.
+Before asking *which chart should we make?*, ask *which question are we trying to answer?* — then ask what the natural next question will be once it is answered, because that second question determines the second panel. Working the sequence produces a page that reads top to bottom and ends somewhere useful. *The discipline is editorial, not technical: the charts are easy; the order is the work.*
+
+And the page needs an ending. In the soup case the ending is not "Progresso should cut price." It is sharper and more honest: *"Progresso appears to price countercyclically; the pattern varies by region; before changing policy, estimate elasticity with a design that separates price from seasonality."* That is what a visual-evidence dashboard should do — make the next decision question unavoidable.
 
 </Takeaway>

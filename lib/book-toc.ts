@@ -45,27 +45,25 @@ export const book: Book = {
     },
     {
       numeral: 'II',
-      title: 'Visual Evidence: From Charts to Dashboards',
+      title: 'Visual Evidence: From Charts to Decisions',
       chapters: [
         {
           number: 3,
-          title: 'Chart Grammar for Business Questions',
+          title: 'Chart Grammar: Matching Visuals to Business Questions',
           articles: [
-            { slug: 'ch03-exploratory-viz', number: '3.1', title: 'Exploratory Visualization and Dashboards', status: 'published' },
-            { slug: 'ch03-chart-atlas', number: '3.2', title: 'Chart Atlas', status: 'published' },
-            { slug: 'ch03-concentration-case', number: '3.3', title: 'Case Study: Market Concentration Metrics', status: 'published' },
+            { slug: 'ch03-question-to-chart', number: '3.1', title: 'From Question to Comparison to Chart', status: 'published' },
+            { slug: 'ch03-chart-atlas', number: '3.2', title: 'The Chart Atlas', status: 'published' },
+            { slug: 'ch03-small-multiples', number: '3.3', title: 'Small Multiples and Heterogeneity', status: 'published' },
+            { slug: 'ch03-uncertainty', number: '3.4', title: 'Uncertainty and Statistical Charts', status: 'published' },
           ],
         },
         {
           number: 4,
-          title: 'Comparison, Uncertainty, and Dashboards',
+          title: 'From Charts to Decisions',
           articles: [
-            { slug: 'ch04-baselines', number: '4.1', title: 'Baselines, Indexes, and Benchmarks', status: 'published' },
-            { slug: 'ch04-small-multiples', number: '4.2', title: 'Small Multiples for Heterogeneity', status: 'published' },
-            { slug: 'ch04-uncertainty', number: '4.3', title: 'Uncertainty for Managers', status: 'published' },
-            { slug: 'ch04-statistical-charts', number: '4.4', title: 'Statistical Charts Before Statistics', status: 'published' },
-            { slug: 'ch04-dashboards', number: '4.5', title: 'Dashboard Decision Systems', status: 'published' },
-            { slug: 'ch04-studio-visual-brief', number: '4.6', title: 'Visual Decision Brief Studio', status: 'published' },
+            { slug: 'ch04-dashboards', number: '4.1', title: 'Dashboards as Decision Systems', status: 'published' },
+            { slug: 'ch04-concentration-case', number: '4.2', title: 'Case Study: Market Concentration Metrics', status: 'published' },
+            { slug: 'ch04-studio-visual-brief', number: '4.3', title: 'Visual Decision Brief Studio', status: 'published' },
           ],
         },
       ],

@@ -116,7 +116,7 @@
         "Survey data",
         "Ranking"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/political-identity-divergence/index.html",
       "external": true,
       "openInNewTab": true,
@@ -335,7 +335,7 @@
         "Maps",
         "Exploratory viz"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/nyc-airbnb-atlas/index.html",
       "external": true,
       "openInNewTab": true,
@@ -386,7 +386,7 @@
         "Time series",
         "Survey data"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/religious-composition-dashboard/index.html",
       "external": true,
       "openInNewTab": true,
@@ -487,7 +487,7 @@
         "Geospatial analysis",
         "Time series"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/presidential-election-atlas/index.html",
       "external": true,
       "openInNewTab": true,
@@ -1766,7 +1766,7 @@
         "Correlation",
         "Small multiples"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/articles/american_evenings.html",
       "external": true,
       "openInNewTab": true,
@@ -1817,7 +1817,7 @@
         "Scatter plot",
         "Census / ACS"
       ],
-      "teaching": "ch04-baselines",
+      "teaching": "ch03-question-to-chart",
       "href": "https://content.vishalsingh.org/articles/index-autopsy.html",
       "external": true,
       "openInNewTab": true,
@@ -1893,7 +1893,7 @@
         "Time series",
         "Correlation"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/unsorted-voters-switched/index.html",
       "external": true,
       "openInNewTab": true,
@@ -1970,7 +1970,7 @@
         "Correlation",
         "Panel data"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/one-national-election-county-swing-uniformity/index.html",
       "external": true,
       "openInNewTab": true,
@@ -2021,7 +2021,7 @@
         "Time series",
         "Survey analysis"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/negative-partisanship-anes/index.html",
       "external": true,
       "openInNewTab": true,
@@ -2120,7 +2120,7 @@
         "Time series",
         "Shock analysis"
       ],
-      "teaching": "ch03-concentration-case",
+      "teaching": "ch04-concentration-case",
       "href": "https://content.vishalsingh.org/studios/ad-spend-explorer/index.html",
       "external": true,
       "openInNewTab": true,
@@ -2387,7 +2387,7 @@
         "Time series",
         "Survey analysis"
       ],
-      "teaching": "ch04-small-multiples",
+      "teaching": "ch03-small-multiples",
       "href": "https://content.vishalsingh.org/articles/south-convergence-or-apart.html",
       "external": true,
       "openInNewTab": true,
@@ -2462,7 +2462,7 @@
         "Time series",
         "Survey data"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/partisans-finally-got-constraint/index.html",
       "external": true,
       "openInNewTab": true,
@@ -2755,7 +2755,7 @@
         "Census / ACS",
         "Decomposition"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/merchant-right-county-residuals/index.html",
       "external": true,
       "openInNewTab": true,
@@ -2780,7 +2780,7 @@
         "Survey data",
         "Inequality analysis"
       ],
-      "teaching": "ch04-statistical-charts",
+      "teaching": "ch03-uncertainty",
       "href": "https://content.vishalsingh.org/articles/smiles_and_ladders.html",
       "external": true,
       "openInNewTab": true,
@@ -2805,7 +2805,7 @@
         "Correlation",
         "Health / mortality data"
       ],
-      "teaching": "ch04-statistical-charts",
+      "teaching": "ch03-uncertainty",
       "href": "https://content.vishalsingh.org/articles/coefficient-zoo.html",
       "external": true,
       "openInNewTab": true,
@@ -2856,7 +2856,7 @@
         "Panel data",
         "Administrative data"
       ],
-      "teaching": "ch03-concentration-case",
+      "teaching": "ch04-concentration-case",
       "href": "https://content.vishalsingh.org/articles/born-rich-premium.html",
       "external": true,
       "openInNewTab": true,
@@ -2882,7 +2882,7 @@
         "Census / ACS",
         "Regression"
       ],
-      "teaching": "ch03-concentration-case",
+      "teaching": "ch04-concentration-case",
       "href": "https://content.vishalsingh.org/articles/company-you-keep.html",
       "external": true,
       "openInNewTab": true,
@@ -2982,7 +2982,7 @@
         "Census / ACS",
         "Scatter plot"
       ],
-      "teaching": "ch04-small-multiples",
+      "teaching": "ch03-small-multiples",
       "href": "https://content.vishalsingh.org/articles/eight-americas.html",
       "external": true,
       "openInNewTab": true,
@@ -3008,7 +3008,7 @@
         "Correlation",
         "Ranking"
       ],
-      "teaching": "ch04-baselines",
+      "teaching": "ch03-question-to-chart",
       "href": "https://content.vishalsingh.org/articles/flat-line.html",
       "external": true,
       "openInNewTab": true,
@@ -3061,7 +3061,7 @@
         "Small multiples",
         "Time series"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/gen-z-gender-war-overstated/index.html",
       "external": true,
       "openInNewTab": true,
@@ -3088,7 +3088,7 @@
         "Decomposition",
         "Small multiples"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/political-identification-us/index.html",
       "external": true,
       "openInNewTab": true,
@@ -3138,7 +3138,7 @@
         "Trend analysis",
         "Election returns"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/income-ladder-flipped/index.html",
       "external": true,
       "openInNewTab": true,
@@ -3340,7 +3340,7 @@
         "Survey data",
         "Correlation"
       ],
-      "teaching": "ch04-uncertainty",
+      "teaching": "ch03-uncertainty",
       "href": "https://content.vishalsingh.org/articles/plateau_in_the_tail.html",
       "external": true,
       "openInNewTab": true,
@@ -3417,7 +3417,7 @@
         "Scatter plot",
         "Health / mortality data"
       ],
-      "teaching": "ch04-small-multiples",
+      "teaching": "ch03-small-multiples",
       "href": "https://content.vishalsingh.org/articles/slope-factory.html",
       "external": true,
       "openInNewTab": true,
@@ -3468,7 +3468,7 @@
         "Time series",
         "Inequality analysis"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/articles/stress_decade.html",
       "external": true,
       "openInNewTab": true,
@@ -3915,7 +3915,7 @@
         "Time series",
         "Shock analysis"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/drug-availability-teens/index.html",
       "external": true,
       "openInNewTab": true,
@@ -3966,7 +3966,7 @@
         "Survey data",
         "Election returns"
       ],
-      "teaching": "ch03-exploratory-viz",
+      "teaching": "ch04-dashboards",
       "href": "https://content.vishalsingh.org/studios/party-beats-place-seven-to-one/index.html",
       "external": true,
       "openInNewTab": true,

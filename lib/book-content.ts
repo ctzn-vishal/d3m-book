@@ -41,13 +41,13 @@ export const partContent: Record<string, PartContent> = {
   II: {
     tagline: 'Charts that answer, not decorate',
     summary:
-      "This part is about visual argument: turning a clean dataset into a chart that answers a named business question without quietly overclaiming. Chapter 3 supplies the grammar, matching each visual family to the decision it serves and treating a dashboard as a structured memo from executive question to recommended action. Chapter 4 sharpens the craft — a chart's first choice is its baseline, confidence intervals describe variation rather than cause, and the honest endpoint of any dashboard is the next test to run. Together they move the reader from picking a chart type to defending a one-page board memo with its limits stated out loud.",
+      "This part is about visual argument: turning a clean dataset into a chart that answers a named business question without quietly overclaiming. Chapter 3 builds the grammar — chart choice is question framing, so the comparison gets named before the tool opens, the baseline is where that choice becomes visible, and a filterable atlas of twenty-six forms across eight evidence families supplies the vocabulary, with small multiples and statistical charts as its two deep dives. Chapter 4 spends that grammar on the artifact managers actually receive: the six-panel dashboard arc and the monitor–diagnose–decide discipline, a concentration case where the definition rather than the metric decides the answer, and a studio that ends in a one-page board memo. Throughout, one Progresso scanner panel carries the through-line, and the honest endpoint of every page is the next test to run.",
     whatYoullLearn: [
-      'Map a business question to the right visual family — distribution, comparison, time, relationship, geography, or uncertainty',
-      'Structure a dashboard as a memo: KPI, trend, breakdown, drilldown, and a recommended action',
-      'Choose the baseline and index a series before choosing color, so comparisons read honestly',
-      'Read confidence intervals and small multiples as descriptions of variation, not claims of causation',
-      'Assemble grain, joins, metrics, and reshaping into a one-page board memo that names its own causal limits',
+      'Translate a vague chart request into a named comparison, and choose the baseline that makes it honest rather than dramatic',
+      'Route a business question to the right evidence family — distribution, comparison, time, relationship, geography, multivariate, uncertainty, or business bridge',
+      'Decide when small multiples earn their space, and hold scale, window, and order fixed so the panels stay comparable',
+      'Read distributions, log transforms, and confidence intervals as descriptions of variation, not claims of causation',
+      'Structure a dashboard as a memo — question, KPI, trend, breakdown, drilldown, recommended action — that ends on the next decision, not the pattern',
     ],
     icon: 'LineChart',
   },
@@ -164,36 +164,39 @@ export const chapterContent: Record<number, ChapterContent> = {
   },
   3: {
     throughLine:
-      'Pick the chart from the question, not the question from the chart — and the definition underneath the metric matters more than the metric.',
+      'Every chart is a comparison — name it before opening the tool, because the comparison chooses the chart and the chart never chooses back.',
     summary:
-      "This chapter treats charts as answers to specific business questions rather than decoration, since the wrong chart quietly overclaims. It opens with the dashboard-as-memo idea — a six-step arc from executive question to KPI tile, trend, breakdown, drilldown, and recommended action — illustrated on the Bean & Basket revenue story. A chart atlas then maps each visual family (distribution, comparison, time, relationship, geography, uncertainty) to a real finding drawn from soup scanner data, county cross-sections, and Zillow housing series. The closing case measures advertising-voice concentration across $369B of ad spend with CR1, CR4, and HHI, and shows that the choice of market and firm boundary, not the metric, decides the answer.",
+      "This chapter builds the grammar of visual evidence, treating chart choice as a question-framing problem rather than a design one. It opens on the translation that makes the rest possible — business question to named comparison to visual form — and lands immediately on the baseline, since 'compared with what?' is where that choice becomes a design decision: January indexing makes Progresso's countercyclical seasonality visible, and the dollar table makes it actionable. A filterable chart atlas then supplies the vocabulary, mapping twenty-six forms across eight evidence families (distribution, comparison, time, relationship, geography, multivariate, uncertainty, business bridge) to real findings drawn from soup scanner data, county cross-sections, and Zillow housing series, with guidance on choosing between near neighbors — bar or dot, stacked or grouped, line or slopegraph, map or bar. Two forms then get full treatments: small multiples, which test whether a national headline survives region by region under a strict same-scale rule, and the statistical charts — skewed distributions, log transforms, log-log slopes, and confidence intervals — that bridge visual evidence to estimation while marking exactly where description has to stop.",
     topics: [
-      'dashboard-as-memo six-step arc',
-      'question-to-chart mapping',
-      'indexed line charts',
-      'KPI tiles with comparisons',
-      'exploratory vs. confirmatory drilldown',
-      'Herfindahl–Hirschman Index (HHI)',
-      'CR1 / CR4 concentration ratios',
-      'market-definition sensitivity',
-      'firm-boundary (owner vs. brand) aggregation',
+      'question-to-comparison-to-chart translation',
+      'baseline and index choice',
+      'winter / non-winter seasonal splits',
+      'eight evidence families',
+      'choosing between near-neighbor chart forms',
+      'small multiples with shared axes',
+      'regional heterogeneity',
+      'log transforms and elasticity intuition',
+      'confidence intervals for managers',
+      'panel coverage and unbalanced data',
+      'precision vs. identification',
     ],
     icon: 'BarChart3',
   },
   4: {
     throughLine:
-      'Every chart is a comparison — name the baseline, show the spread, and end on a decision, not a pattern.',
+      'A page of charts becomes a decision when it is ordered like a memo, commits to a definition, and ends on the next test rather than the pattern.',
     summary:
-      "This chapter argues that a chart's first decision is its baseline, not its color, working throughout with Progresso scanner data — monthly sales across two thousand-plus stores from 2001 to 2006. It moves from January-indexed seasonality to region-by-region small multiples, to confidence intervals that describe store-month variation rather than causal effects, to log-log scatterplots that preview an elasticity-style slope before any regression appears. The payoff is a discipline for dashboards — monitor, diagnose, decide — that ends on the next test to run rather than an attractive pattern. A Bean & Basket capstone then chains grain, joins, metrics, and reshaping into a one-page board memo with its causal limits stated out loud.",
+      "This chapter spends Chapter 3's grammar on the artifact managers actually receive. It opens with the dashboard as a sequence of business questions — three modes (monitor, diagnose, decide) expanded into a six-panel arc from executive question to KPI tile, trend, breakdown, drilldown, and recommended action — built on the Bean & Basket revenue story and then turned against the Progresso soup dashboard as a critique object, where the honest ending is a pricing test rather than a verdict. The concentration case measures advertising-voice concentration across $369B of ad spend with CR1, CR4, and HHI, and shows that the choice of market and firm boundary, not the metric, decides the answer. A closing studio sequences the soup visuals into a one-page executive pricing brief with its causal limits stated out loud.",
     topics: [
-      'baseline and index choice',
-      'winter / non-winter seasonal splits',
-      'small multiples with shared axes',
-      'regional heterogeneity',
-      'confidence intervals for managers',
-      'panel coverage and unbalanced data',
-      'log transforms and elasticity intuition',
-      'monitor–diagnose–decide dashboards',
+      'monitor–diagnose–decide',
+      'dashboard-as-memo six-step arc',
+      'KPI tiles with comparisons',
+      'exploratory vs. confirmatory drilldown',
+      'buffet vs. memo layouts',
+      'Herfindahl–Hirschman Index (HHI)',
+      'CR1 / CR4 concentration ratios',
+      'market-definition sensitivity',
+      'firm-boundary (owner vs. brand) aggregation',
       'descriptive vs. causal claims',
     ],
     icon: 'LayoutDashboard',
@@ -448,22 +451,18 @@ export const articleBlurbs: Record<string, string> = {
     'Triages dirty transactions — returns, typos, sync gaps — into fix, investigate, or keep, warning against silent imputation and outlier deletion.',
   'ch02-studio-data-language':
     'A capstone studio building a reusable six-part data-and-metric brief that hands a trustworthy evidence layer forward to Part II.',
-  'ch03-exploratory-viz':
-    'Frames a dashboard as a sequenced memo, walking the Bean & Basket revenue story through executive question, KPI, trend, breakdown, drilldown, and action.',
+  'ch03-question-to-chart':
+    'Turns a vague chart request into a named comparison, then shows how baseline and index choice decide which business pattern a soup-sales chart makes visible first.',
   'ch03-chart-atlas':
-    'A translation guide pairing each chart family with a real soup, county, or Zillow finding plus the misuse risk it carries.',
-  'ch03-concentration-case':
-    'Measures advertising-voice concentration across industries with CR1, CR4, and HHI, showing market and firm definitions drive the answer more than the metric.',
-  'ch04-baselines':
-    'Shows how baseline choice — January, a competitor, a region — decides which business pattern a soup-sales chart makes visible first.',
-  'ch04-small-multiples':
+    'A filterable reference of twenty-six chart forms across eight evidence families, each tied to a real soup, county, or Zillow finding and the misuse risk it carries.',
+  'ch03-small-multiples':
     'Uses same-scale regional panels to test whether the national countercyclical pricing pattern is broad-based or driven by one market.',
-  'ch04-uncertainty':
-    'Teaches managers to ask what an interval varies over and which decision it changes, since precision is not identification.',
-  'ch04-statistical-charts':
-    'Bridges visuals to estimation: skewed volume motivates logs, a log-log scatter previews a −2.46 elasticity, seasonality reveals the confound.',
+  'ch03-uncertainty':
+    'Shape before summary, slope before equation, interval before verdict: skewed volume motivates logs, a log-log scatter previews a −2.46 elasticity, and intervals mark where description stops.',
   'ch04-dashboards':
-    'Redesigns the soup dashboard into a monitor–diagnose–decide system that ends by naming the next pricing test, not a verdict.',
+    'Builds the six-panel dashboard arc on the Bean & Basket revenue story, then applies monitor–diagnose–decide to the soup dashboard so the page ends on the next pricing test, not a verdict.',
+  'ch04-concentration-case':
+    'Measures advertising-voice concentration across industries with CR1, CR4, and HHI, showing market and firm definitions drive the answer more than the metric.',
   'ch04-studio-visual-brief':
     'Sequences the Progresso soup visuals — indexes, small multiples, uncertainty, dashboards — into a one-page executive pricing brief that ends in a decision and names its causal limits.',
   'ch05-metrics-to-decisions':
@@ -619,23 +618,19 @@ export const articleDescriptions: Record<string, string> = {
   'ch02-studio-data-language':
     'A Part I studio for turning raw tables into a reusable data and metric brief.',
   'ch03-chart-atlas':
-    'A visual vocabulary for managers: common chart types, when to use them, what question they answer, and what can go wrong.',
-  'ch03-concentration-case':
-    'An advertising-spend case study on CR1, CR4, HHI, ownership hierarchy, threshold sensitivity, and market-concentration visualization.',
-  'ch03-exploratory-viz':
-    'A dashboard is not a collection of charts. It is a sequence of business questions. Every panel should answer one question and lead to the next.',
-  'ch04-baselines':
-    'Baseline choices decide what a manager sees first. The soup case shows how indexing reveals seasonality while hiding business scale.',
-  'ch04-dashboards':
-    'Dashboards should move from monitoring to diagnosis to decision. The soup dashboard becomes a critique and redesign case.',
-  'ch04-small-multiples':
+    'A filterable visual vocabulary for managers: twenty-six chart forms in eight evidence families, when to use each, what question it answers, and what can go wrong.',
+  'ch03-question-to-chart':
+    'Chart choice is question framing, not design. Name the comparison first — the baseline is where that choice becomes visible, and the soup case shows how indexing reveals seasonality while hiding scale.',
+  'ch03-small-multiples':
     'Small multiples show whether the national soup pattern is broad-based or region-specific, then preview elasticity intuition with log-log scatterplots.',
-  'ch04-statistical-charts':
-    'Raw and log distributions, coefficient intervals, and log-log scatterplots as intuitive bridges to later pricing regressions.',
+  'ch03-uncertainty':
+    'Distributions, log transforms, log-log scatterplots, and confidence intervals — the statistical charts that bridge visual evidence to estimation and mark where description stops.',
+  'ch04-concentration-case':
+    'An advertising-spend case study on CR1, CR4, HHI, ownership hierarchy, threshold sensitivity, and market-concentration visualization.',
+  'ch04-dashboards':
+    'A dashboard is a sequence of business questions: the six-panel arc from executive question to recommended action, and the monitor–diagnose–decide discipline that keeps it honest.',
   'ch04-studio-visual-brief':
     'A Part II studio that sequences the Progresso soup visuals — indexes, small multiples, uncertainty, and dashboards — into a one-page executive pricing brief, then marks the line the charts cannot cross into causal claims.',
-  'ch04-uncertainty':
-    'Confidence intervals, store coverage, and uncertainty language for managers using the Progresso soup case.',
   'ch05-counterfactual':
     'Potential outcomes, counterfactuals, and why the missing comparison is the core object of causal analysis.',
   'ch05-experiments':

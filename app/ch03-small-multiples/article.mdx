@@ -1,0 +1,135 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { SoupRegionSmallMultiples, SoupElasticityScatter } from '@/components/Book/part2/SoupVisualEvidence';
+import soupRaw from './data/soup-small-multiples.json';
+
+export const soup = soupRaw;
+export const coefficientRows = soupRaw.regionCoefficients.map((row) => ({
+  region: row.group,
+  estimate: row.estimate.toFixed(2),
+  interval: `${row.ci_low.toFixed(2)} to ${row.ci_high.toFixed(2)}`,
+  r2: row.r2.toFixed(2),
+}));
+
+<DropCap>
+
+A national average is usually the first honest summary and the first dangerous shortcut. It tells managers whether a pattern exists somewhere in the business. It does not tell them whether the pattern is broad enough to act on everywhere. Those are different claims, and the gap between them is where national pricing memos go to die. Small multiples close the gap by doing the simplest possible thing: making the same comparison repeatedly, one market at a time, on identical axes, so the eye can see whether the headline survives.
+
+</DropCap>
+
+## The executive question: *is the national pattern broad-based or region-specific?*
+
+The [atlas](/ch03-chart-atlas) card for small multiples describes the form in one line. This section is the argument for when to spend the space, because faceting is not free — four panels take four times the room and ask the reader to hold four comparisons at once. That cost is worth paying under exactly one condition: **the managerial question is itself about heterogeneity.** Whether a pattern holds everywhere, whether one segment is doing all the work, whether a single national number is safe to build a policy on — none of those can be answered by a national line, no matter how carefully it is drawn.
+
+The soup case has four census regions: East, Midwest, South, and West. The [national indexed chart](/ch03-question-to-chart) said Progresso raises price into a seasonal demand trough. That is a claim about the average. Figure 1 asks whether it is a claim about the business.
+
+<Figure width="body-outset" caption="Figure 1. Progresso price rises into the weak-demand months in every region, but the share story is not equally strong everywhere. Small multiples reveal heterogeneity the national average hides.">
+  <div className="not-prose">
+    <SoupRegionSmallMultiples data={soup} />
+  </div>
+</Figure>
+
+Figure 1 gives managers two findings at once, and they point in opposite directions. First, the price seasonality is *not* a single-market artifact — it appears in all four regions, which makes the national headline more credible, not less. Second, the share level differs sharply by region: the East is a much stronger Progresso market than the South or the Midwest. A national pricing memo that carried the first finding while ignoring the second would turn a visual average into an operational mistake.
+
+That combination — the pattern is broad, the levels are not — is the most common real result, and it is precisely the result a national chart cannot express. It is also why "we checked and the pattern holds" is an incomplete sentence. Holds *where*, at *what level*, and *how strongly* are three separate answers.
+
+## The same-scale rule
+
+Small multiples work because the eye compares panels directly. That mechanism depends entirely on the panels being comparable, which means three things stay fixed across every panel and only the data varies:
+
+- **The scale.** Identical y-axes. If each panel is auto-scaled to fill its own frame, a tiny swing and an enormous swing look the same, and the reader concludes the regions behave alike when they do not. This is a correctness failure, not a cosmetic one.
+- **The window.** Identical time ranges. A panel that starts in a different month has a different story built into its left edge.
+- **The order.** A stable, meaningful panel order — by size, by geography, or by the metric itself — so the reader is not hunting for the pattern in a random arrangement.
+
+Each of those is easy to violate by accident, because most plotting libraries default to free scales when they facet. "Let each region breathe" is how the mistake is usually described, and it is the single most common way a small-multiple chart quietly stops being one.
+
+## Small multiples as model preparation
+
+Faceting also does something the rest of the book depends on: it previews regression. A regression with one coefficient asks for one summary relationship across the whole dataset. A small-multiple chart asks whether that one summary is likely to be *stable* across groups — which is the same question a heterogeneity analysis asks formally in [Chapter 7](/ch07-heterogeneous-effects), many chapters before the machinery arrives.
+
+Figure 2 makes the preview concrete by plotting log(Progresso volume) against log(Progresso price), separately by region. The downward trend line is an elasticity-style visual: a one percent increase in price is associated with some percent change in volume. We are not yet claiming a causal elasticity. We are teaching the eye to see a slope before it has to read an equation.
+
+<Figure width="body-outset" caption="Figure 2. The log price-volume slope is negative in every region, but steeper in the Midwest than in the East or West. This previews elasticity without yet making a causal claim.">
+  <div className="not-prose">
+    <SoupElasticityScatter data={soup} groupBy="region" />
+  </div>
+</Figure>
+
+Figure 3 turns those visual slopes into numbers with intervals — a bridge view that is still descriptive but already moving toward the statistical graphics of the [next section](/ch03-uncertainty).
+
+<DataTable
+  caption="Figure 3. Region-level log-log slopes differ enough that a single national pricing story would be too coarse. These are month-adjusted descriptive previews, not final causal elasticity estimates."
+  columns={[
+    { key: 'region', label: 'Region', align: 'left' },
+    { key: 'estimate', label: 'Slope', align: 'right' },
+    { key: 'interval', label: '95% interval', align: 'right' },
+    { key: 'r2', label: 'R-squared', align: 'right' },
+  ]}
+  rows={coefficientRows}
+/>
+
+Figure 3 should not replace Figure 2, and the reason generalizes well beyond this case. The table makes the slopes precise; the scatterplots show whether that precision comes from a clean pattern or from compressing a messy one into a single number. A steep slope through a tight cloud and a steep slope through a shapeless scatter produce identical table rows and deserve very different levels of trust. Managers need both views before deciding whether a national elasticity estimate is useful at all.
+
+<Callout variant="caveat" title="Do not overread the slope">
+  The slope in Figure 2 is an association in scanner data. It may reflect pricing strategy, promotions, seasonality, store mix, consumer demand, or omitted variables. Later chapters on [pricing](/ch08-price-elasticity) and [identification](/ch06-identification) will ask what variation makes an elasticity estimate credible.
+</Callout>
+
+<Pitfall title="Panels that aren't comparable">
+Different y-axes make every region look equally volatile; different time windows make one market look stable and another erratic; different sorting makes the reader hunt for the pattern. **Hold the scale, the window, and the order fixed across panels so the only thing that varies is the data.**
+</Pitfall>
+
+<Pitfall title="Small multiples as decoration">
+Four small charts are not automatically better than one. **Small multiples earn their space only when the managerial question is about heterogeneity** — regions, segments, products, cohorts, stores, or seasons. Faceting by reflex is the mirror image of never faceting at all.
+</Pitfall>
+
+<Pitfall title="Too many panels to read">
+Forty panels is not a small-multiple chart, it is a wall. **When the group count outruns the eye, rank first and facet the top few**, or switch to a form built for many groups — a heatmap, a dot plot of group-level summaries, or a coefficient plot.
+</Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="Three questions on the same-scale rule, on when faceting earns its space, and on why a table of slopes cannot replace the scatterplots behind it."
+  questions={[
+    {
+      prompt: <>You build a four-panel small-multiple of soup volume by region. To "let each region breathe," a teammate sets each panel's y-axis to its own min and max so every region fills its frame. Why is this a defect rather than a polish?</>,
+      options: [
+        { label: <>Independent y-axes make every region's swings look the same size, destroying the cross-panel comparison that is the whole point of small multiples; the axes must be shared so only the data varies.</> },
+        { label: <>Independent y-axes are fine for volume but should never be used for price, so the issue is limited to this particular metric.</> },
+        { label: <>The only problem is aesthetic: panels with different axes look mismatched, but the comparison itself remains valid.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Small multiples work because the eye compares panels directly, and that only holds when the scale, the time window, and the panel order are fixed across every panel. Free y-axes rescale each region to fill its frame, so a tiny swing and a huge swing look identical — the reader reads shape and concludes the regions are alike when they are not. This is a correctness failure, not a cosmetic one, and it is not specific to volume versus price.</>,
+    },
+    {
+      prompt: <>A VP asks whether the company's countercyclical pricing pattern "holds everywhere or just in a few markets." An analyst answers with the single national average price-by-month line. When does the national line suffice, and when do small multiples earn their space here?</>,
+      options: [
+        { label: <>The national line always suffices; small multiples are decorative and add cost without changing the decision.</> },
+        { label: <>Small multiples always beat a national line, so every chart should be faceted by region regardless of the question.</> },
+        { label: <>The national line answers "is there a pattern on average," but the VP's question is explicitly about heterogeneity across markets, so small multiples earn their space precisely because the question is whether the pattern survives region by region.</> },
+      ],
+      correctIndex: 2,
+      explanation: <>Small multiples are justified when the managerial question is about heterogeneity — regions, segments, cohorts — and are otherwise clutter. A national average is the right tool for "is there a pattern overall," but the VP asked whether the pattern holds everywhere, which is a heterogeneity question by construction. Faceting earns its space here; faceting everything by reflex is the opposite error.</>,
+    },
+    {
+      prompt: <>Figure 3 reports a regional slope table with tight intervals, and a colleague proposes dropping the Figure 2 scatterplots from the deck "since the table says the same thing more precisely." What does that edit lose?</>,
+      options: [
+        { label: <>Nothing substantive — the table is a strictly more precise summary, so the scatterplots are redundant once the slopes are estimated.</> },
+        { label: <>The table reports the slope but not the shape behind it: a steep slope through a tight cloud and a steep slope through a shapeless scatter produce identical rows, and only the scatterplot shows which one you have.</> },
+        { label: <>It loses the ability to rank the regions, which can only be read visually from the panels.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>A summary statistic compresses, and compression is lossy in a specific way: it keeps the center and the width while discarding the shape that justifies trusting them. Two very different scatters can yield the same slope and the same interval. Ranking is in fact easier from the table, so that is not the loss; the loss is the evidence about whether the number summarizes a clean pattern or papers over a messy one.</>,
+    },
+  ]}
+/>
+
+<Takeaway label="The call">
+
+Use a national chart to find the headline. Use small multiples to decide whether the headline *survives contact with the business* — and hold the scale, the window, and the order fixed, or the panels stop being comparable and the whole exercise becomes decorative. In the soup case the countercyclical price pattern is genuinely broad, but market strength differs sharply by region, which is exactly the distinction an executive needs before a pricing conversation hardens into a national policy. *The average tells you a pattern exists; the panels tell you whether you can act on it everywhere.*
+
+</Takeaway>

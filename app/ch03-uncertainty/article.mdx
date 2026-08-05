@@ -1,0 +1,172 @@
+import { DropCap } from '@/components/Book/DropCap';
+import { QuizBlock } from '@/components/Book/QuizBlock';
+import { Figure } from '@/components/Book/Figure';
+import { Callout } from '@/components/Book/Callout';
+import { DataTable } from '@/components/Book/DataTable';
+import { KeyNumber } from '@/components/Book/KeyNumber';
+import { Pitfall } from '@/components/Book/Pitfall';
+import { Takeaway } from '@/components/Book/Takeaway';
+import { SoupUncertaintyIntervals, SoupDistributionAndCoefficients, SoupElasticityScatter } from '@/components/Book/part2/SoupVisualEvidence';
+import uncertaintyRaw from './data/soup-uncertainty.json';
+import statisticalRaw from './data/soup-statistical-charts.json';
+
+export const uncertainty = uncertaintyRaw;
+export const soup = statisticalRaw;
+export const rules = uncertaintyRaw.interpretationRules.map((rule, index) => ({
+  rule: `Rule ${index + 1}`,
+  interpretation: rule,
+}));
+
+<DropCap>
+
+Executives do not need confidence intervals because they enjoy statistical ritual. They need them because decisions happen before certainty arrives, and an interval is the cheapest honest answer to the only question that matters at that moment: *is this difference big enough, precise enough, and stable enough to act on?* The charts in this section are the last ones in Part II, and they are the ones that carry statistical content — distributions that explain why a transform is needed, scatterplots that show a slope before any equation names it, and intervals that mark the boundary of what the data can support. If a manager can read these four visuals, the regression in Part III arrives as compact notation for something already understood rather than as a new subject.
+
+</DropCap>
+
+## The executive question: *what does the chart show, and where does it stop?*
+
+The Progresso soup pattern is visually strong: share falls in warm months and rises in the soup season, and price moves against demand. But the data is a panel of store-months, not a census of every possible market condition. Store coverage changes over time. Store-level behavior varies enormously. A chart that shows the finding without the limits around the finding is not being confident, it is being incomplete.
+
+Statistical charts do that limit-marking work in three moves, and they build on each other:
+
+1. **Shape before summary.** Look at the distribution before trusting any average of it.
+2. **Slope before equation.** Read the relationship visually before estimating it.
+3. **Interval before verdict.** Show the range of plausible values, and say what the range is *about*.
+
+## Shape before summary
+
+Raw Progresso store-month volume has a long right tail: many ordinary store-months and a few very large ones. That shape has an immediate managerial consequence. The mean sits well above where the bulk of stores actually are, so any staffing or inventory plan built around "the typical store-month" from the raw average over-resources the ordinary store and under-resources the rare giant.
+
+Figure 1 shows the raw histogram — fixed-width bins clipped near the 99th percentile so the shape is visible rather than dominated by the largest stores — beside the log transform that compresses the tail and makes typical store-months comparable.
+
+<Figure width="screen-inset" caption="Figure 1. Fixed-width histograms show the long-tail soup volume problem; the log transformation compresses that tail and makes typical store-months easier to compare. The coefficient intervals in the same figure preview what an estimate looks like as a visual object.">
+  <div className="not-prose">
+    <SoupDistributionAndCoefficients data={soup} />
+  </div>
+</Figure>
+
+The log is not a cosmetic move, and treating it as one is the most common misunderstanding in this whole area. Taking logs changes the *question* from differences in units to differences in percentages — which, for a pricing manager, is usually the question that was being asked all along. Use it because the business logic is multiplicative, not because the chart looks tidier afterward.
+
+Figure 1 also introduces coefficient intervals, and the point there is not regression mechanics. The point is that a statistical estimate is a **visual object** with four parts: a center, an interval, a comparison group, and a limit statement. Every estimate in the rest of this book has all four, whether or not the chart shows them.
+
+## Slope before equation
+
+The most intuitive statistical chart in the soup case is log(volume) against log(price). In a log-log chart the slope carries elasticity intuition directly: a one percent price difference is associated with some percent difference in volume. That is why the pricing chapters use log regression, and it is worth seeing before the equation arrives.
+
+<KeyNumber
+  value="-2.46"
+  label="The national month-adjusted log-log slope: a 1% higher Progresso price is associated with about 2.46% lower volume in this descriptive preview."
+  align="center"
+/>
+
+That number is not the final price elasticity. It is an intuition-building estimate, and the soup case also shows exactly why it cannot be the last word. Winter months are high-demand months. Non-winter months are lower-demand months. If Progresso's pricing moves across that same seasonal cycle — and [the indexed chart](/ch03-question-to-chart) showed that it does — then the scatterplot is mixing price behavior with seasonal demand, and the slope is measuring both at once.
+
+Figure 2 separates the scatter by winter and non-winter, with winter defined here as October through February.
+
+<Figure width="page-outset" caption="Figure 2. Winter and non-winter scatterplots both slope downward, but the comparison is still descriptive: seasonality and pricing strategy move together, so the slope cannot separate them.">
+  <div className="not-prose">
+    <SoupElasticityScatter data={soup} groupBy="season" />
+  </div>
+</Figure>
+
+Figure 2 is useful precisely because it is not enough. It hands the reader the visual intuition for elasticity while leaving the identification question standing in plain view: *what price variation is independent of demand shocks, promotions, inventory, store mix, and seasonality?* That question is the whole subject of [Chapter 6](/ch06-identification), and Part II's contribution is to make it feel necessary rather than pedantic.
+
+<Callout variant="definition" title="Elasticity intuition">
+  In a log-log price-volume chart, the slope is an elasticity-style number. A slope of −2 says that a 1% higher price is associated with about 2% lower volume. Association is not causation; the chart previews the idea before [later chapters](/ch08-price-elasticity) estimate it carefully.
+</Callout>
+
+## Interval before verdict
+
+Figure 3 shows monthly mean Progresso share across store-months with intervals attached. The intervals are narrow, because there are tens of thousands of store-month observations. Narrow is useful. Narrow is not the same as certain.
+
+<Figure width="page-outset" caption="Figure 3. Progresso share is reliably lower in the summer months, but the intervals describe store-month variation — not the causal effect of price.">
+  <div className="not-prose">
+    <SoupUncertaintyIntervals data={uncertainty} />
+  </div>
+</Figure>
+
+Figure 3 should be read in two passes. First read the pattern: share is lower in summer and higher across the broader soup season. Then read the caveat: the interval describes observed store-month variation around a monthly summary. It says nothing at all about what would happen if Progresso changed price tomorrow.
+
+That distinction is central to the rest of the book, and it is worth stating as a rule: **statistical precision does not repair a weak comparison.** A very narrow interval around a biased estimate is still a biased estimate — it is just a confidently wrong one. Precision and identification are separate properties, earned by separate means, and a chart that shows only the first invites readers to assume the second.
+
+There is a second, less glamorous reason intervals differ in width here. The soup panel is unbalanced: stores enter and exit the observed panel, so monthly active store counts vary. That does not make the data unusable. It means the **coverage note belongs next to the figure**, not buried in an appendix. If a December point rests on many more active stores than a June point, the reader needs that before reading the chart as pure seasonality — and the same principle will matter again in model monitoring, survey analysis, A/B tests, and AI evaluation.
+
+<DataTable
+  caption="Figure 4. Uncertainty language is only useful when the chart explains what kind of uncertainty the interval represents."
+  columns={[
+    { key: 'rule', label: 'Rule', align: 'left' },
+    { key: 'interpretation', label: 'Interpretation', align: 'left' },
+  ]}
+  rows={rules}
+/>
+
+Figure 4 sits deliberately close to the chart rather than in a technical appendix, because it encodes a reporting habit: every interval should answer what is varying, what is being averaged, and which decision would change if the interval were wider.
+
+<Pitfall title="Precision mistaken for identification">
+A narrow interval means the descriptive estimate is measured precisely under the chosen summary. **It does not mean the comparison is causal, fair, complete, or strategically actionable** — a tight band around a biased estimate is still biased.
+</Pitfall>
+
+<Pitfall title="Treating the log transform as a trick">
+The log is not a cosmetic move. **It changes the question from differences in units to differences in percentages** — often exactly what a pricing manager needs. Use it because the question is multiplicative, not to make a chart look tidier.
+</Pitfall>
+
+<Pitfall title="Intervals as a rhetorical shield">
+A chart with error bars looks scientific, so the recommendation feels stronger — which is backwards. **Intervals should make a claim more inspectable, not less challengeable.**
+</Pitfall>
+
+<Pitfall title="Hiding uncertainty for a cleaner chart">
+Dropping the intervals makes a dashboard tile prettier and less useful at once. **When the decision turns on whether two regions, months, or segments differ meaningfully, the interval is the part the decision depends on** — keep it.
+</Pitfall>
+
+<QuizBlock
+  title="Concept check"
+  intro="Four questions spanning what a narrow interval certifies, why the log transform is a change of question, how to read overlapping and unequal-width intervals, and what a distribution reveals that a mean cannot."
+  questions={[
+    {
+      prompt: <>A dashboard shows last quarter's regional sales gap with very tight error bars, so a VP concludes the gap is a reliable basis to shift the ad budget. What is the strongest objection?</>,
+      options: [
+        { label: <>A narrow interval certifies that the descriptive gap is measured precisely, not that the comparison is causal, fair, or actionable — a tight band around a biased estimate is still biased.</> },
+        { label: <>The error bars should be recomputed at 99% rather than 95% before any decision is made.</> },
+        { label: <>Tight error bars usually signal too small a sample, so the precision is illusory and the gap is probably noise.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>Precision answers "uncertainty about what" — here, store-month variation around a summary — not whether the comparison identifies a causal, decision-relevant effect. Recomputing the confidence level changes the width, not the meaning; and a narrow interval comes from many observations, so it is not evidence of a small sample.</>,
+    },
+    {
+      prompt: <>Store-month soup volume is sharply right-skewed, and this section takes the log before plotting price against volume. What is the real reason to use logs here?</>,
+      options: [
+        { label: <>Logging compresses the long tail so the chart looks tidier and the outliers stop dominating the picture.</> },
+        { label: <>It reframes the question from differences in units to differences in percentages, so the slope reads as an elasticity — the multiplicative question a pricing manager actually asks.</> },
+        { label: <>Logging removes the confounding from seasonality and promotions, making the price-volume slope causal.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>The log is a change of question, not a cosmetic move: in a log-log chart the slope is a percent-for-percent (elasticity) number, which is what pricing decisions need. A cleaner-looking tail is a side effect, and the log does nothing to fix confounding — winter demand and pricing still move together.</>,
+    },
+    {
+      prompt: <>Two months' mean-share intervals overlap slightly; a teammate says "overlap means no real difference, so ignore it." A second month's interval is much wider than the first. How should you reason?</>,
+      options: [
+        { label: <>Slight overlap does not by itself prove "no difference," and unequal widths are themselves information — the wider interval likely rests on fewer active stores, so coverage belongs read alongside the chart.</> },
+        { label: <>Overlap proves the two months are statistically identical, so the comparison can be dropped from the analysis.</> },
+        { label: <>The wider interval is the more trustworthy one because a larger range is more conservative and less likely to mislead.</> },
+      ],
+      correctIndex: 0,
+      explanation: <>"Intervals overlap, therefore equal" is a common misreading; overlap is suggestive, not a verdict. Width carries meaning: a wide band usually reflects thinner coverage (fewer store-months), which is why coverage notes sit near the figure. A wider interval is less precise, not more trustworthy.</>,
+    },
+    {
+      prompt: <>Across all Progresso store-months, average monthly unit volume is about 900 units, and the finance team proposes staffing and inventory plans assuming a typical store-month sells around 900. Before signing off, you plot the full distribution. Which finding would most change how you act on that 900 figure?</>,
+      options: [
+        { label: <>The distribution is tightly clustered just above and below 900, confirming that nearly every store-month behaves like the average.</> },
+        { label: <>The distribution is heavily right-skewed: most store-months sell well under 900, while a thin tail of very high-volume store-months pulls the mean up, so the mean describes almost no actual store.</> },
+        { label: <>The distribution is centered exactly on 900 but the chart looks busy, which mainly tells you the histogram needs fewer bins.</> },
+      ],
+      correctIndex: 1,
+      explanation: <>This is the shape-before-summary lesson. A right-skewed distribution means a few high-volume store-months drag the mean above where the bulk of stores actually sit, so planning every store around 900 over-resources the typical low-volume store and under-resources the rare giants. The single mean hides that shape entirely; only the distribution reveals it. The tight-cluster option would justify trusting the mean but is contradicted by the known skew in this data, and the third mistakes a real signal for a cosmetic binning issue.</>,
+    },
+  ]}
+/>
+
+<Takeaway label="What this buys you">
+
+Statistical charts are not decoration for technical chapters. They are *the bridge from visual evidence to formal estimation*, and the soup case shows the whole bridge in four figures: skewed volume leads to logs, the log-log scatter leads to elasticity intuition, seasonality leads to the identification question, and the interval marks where description has to stop. Whenever you see an interval, ask two things — *uncertainty about what?* and *uncertainty for which decision?* In this case the seasonal share pattern is visually reliable and the pricing decision still requires a better causal comparison. *That is not a weakness of the chart. It is the chart doing its job* — and it is the handoff [Part III](/ch05-metrics-to-decisions) is built to receive.
+
+</Takeaway>

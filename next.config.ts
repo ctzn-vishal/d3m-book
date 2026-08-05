@@ -50,14 +50,27 @@ const nextConfig: NextConfig = {
       { source: '/ch07-transformations-and-metrics', destination: '/ch02-metrics', permanent: true },
       { source: '/ch08-data-quality', destination: '/ch02-data-quality', permanent: true },
       { source: '/data-language-studio', destination: '/ch02-studio-data-language', permanent: true },
-      { source: '/ch09-exploratory-viz', destination: '/ch03-exploratory-viz', permanent: true },
-      { source: '/chart-atlas', destination: '/ch03-chart-atlas', permanent: true },
-      { source: '/market-concentration-metrics-case', destination: '/ch03-concentration-case', permanent: true },
-      { source: '/visual-comparison-baselines', destination: '/ch04-baselines', permanent: true },
-      { source: '/small-multiples-for-heterogeneity', destination: '/ch04-small-multiples', permanent: true },
-      { source: '/uncertainty-for-managers', destination: '/ch04-uncertainty', permanent: true },
-      { source: '/statistical-charts-before-statistics', destination: '/ch04-statistical-charts', permanent: true },
+      // Part II consolidation: Chapter 3 became the chart-grammar chapter
+      // (question→chart, atlas, small multiples, uncertainty) and Chapter 4 the
+      // decisions chapter (dashboards, concentration case, studio). Nine
+      // sections became seven — dashboards were taught twice (ch03-exploratory-viz
+      // and ch04-dashboards), and uncertainty/statistical-charts overlapped — so
+      // every retired slug, and every pre-consolidation path that pointed at one,
+      // 301s forward to the section that absorbed the material.
+      { source: '/ch03-exploratory-viz', destination: '/ch04-dashboards', permanent: true },
+      { source: '/ch09-exploratory-viz', destination: '/ch04-dashboards', permanent: true },
       { source: '/dashboard-decision-systems', destination: '/ch04-dashboards', permanent: true },
+      { source: '/chart-atlas', destination: '/ch03-chart-atlas', permanent: true },
+      { source: '/ch03-concentration-case', destination: '/ch04-concentration-case', permanent: true },
+      { source: '/market-concentration-metrics-case', destination: '/ch04-concentration-case', permanent: true },
+      { source: '/ch04-baselines', destination: '/ch03-question-to-chart', permanent: true },
+      { source: '/visual-comparison-baselines', destination: '/ch03-question-to-chart', permanent: true },
+      { source: '/ch04-small-multiples', destination: '/ch03-small-multiples', permanent: true },
+      { source: '/small-multiples-for-heterogeneity', destination: '/ch03-small-multiples', permanent: true },
+      { source: '/ch04-uncertainty', destination: '/ch03-uncertainty', permanent: true },
+      { source: '/uncertainty-for-managers', destination: '/ch03-uncertainty', permanent: true },
+      { source: '/ch04-statistical-charts', destination: '/ch03-uncertainty', permanent: true },
+      { source: '/statistical-charts-before-statistics', destination: '/ch03-uncertainty', permanent: true },
       { source: '/ch10-capstone-growth-diagnostic', destination: '/ch04-studio-visual-brief', permanent: true },
       { source: '/ch11-from-metrics-to-decisions', destination: '/ch05-metrics-to-decisions', permanent: true },
       { source: '/ch12-causality-counterfactual', destination: '/ch05-counterfactual', permanent: true },

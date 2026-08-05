@@ -1,65 +1,90 @@
 import { DropCap } from '@/components/Book/DropCap';
 import { Figure } from '@/components/Book/Figure';
 import { DataTable } from '@/components/Book/DataTable';
+import { Callout } from '@/components/Book/Callout';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { ChartAtlas } from '@/components/Book/part2/ChartAtlas';
 import atlasRaw from './data/chart-atlas.json';
 
 export const atlas = atlasRaw;
-export const sourceRows = [
+
+export const familyRows = [
   {
-    source: 'Soup',
-    scope: `{"${atlasRaw.metadata.soup_rows.toLocaleString()} store-months; $"}{atlasRaw.metadata.soup_stores.toLocaleString()} stores; {"${atlasRaw.metadata.soup_date_range}`,
-    role: 'The Part II through-line for seasonality, pricing, volume, share, and skewed store-month behavior.',
+    family: 'Distribution',
+    question: 'What does the spread look like — is the average safe to use?',
+    forms: 'Histogram, density curve, box plot, strip plot',
   },
   {
-    source: 'County',
-    scope: `$"}{atlasRaw.metadata.county_rows.toLocaleString()} counties`,
-    role: 'Cross-sectional evidence for distributions, scatterplots, demographic correlations, maps, intervals, and coefficient previews.',
+    family: 'Comparison',
+    question: 'Which category is largest, and by how much?',
+    forms: 'Sorted bar, dot / lollipop, grouped bar, stacked and 100% bar, slopegraph',
   },
   {
-    source: 'Zillow',
-    scope: `{"${atlasRaw.metadata.zillow_states.toLocaleString()} state time series; $"}{atlasRaw.metadata.zillow_date_range}`,
-    role: 'Long monthly housing series for lines, indexed comparisons, small multiples, and state-year heatmaps.',
+    family: 'Time',
+    question: 'What changed, when, and starting from where?',
+    forms: 'Line, indexed line, area and stacked area, small multiples',
   },
   {
-    source: 'Teaching arrays',
-    scope: 'Small illustrative totals',
-    role: 'Used only for Pareto and waterfall charts, where the lesson is a business bridge rather than a natural field in the three cases.',
+    family: 'Relationship',
+    question: 'Do two things move together, and is the pattern clean?',
+    forms: 'Scatterplot, bubble plot',
+  },
+  {
+    family: 'Geography',
+    question: 'Does location itself change the decision?',
+    forms: 'Choropleth, tile map',
+  },
+  {
+    family: 'Multivariate',
+    question: 'Can I scan many pairs or many cells at once?',
+    forms: 'Correlation matrix, heatmap, treemap',
+  },
+  {
+    family: 'Uncertainty',
+    question: 'Is this difference large enough and precise enough to act on?',
+    forms: 'Interval plot, coefficient / forest plot',
+  },
+  {
+    family: 'Business Bridge',
+    question: 'How do components add up to the number leadership tracks?',
+    forms: 'Pareto, waterfall, funnel',
   },
 ];
 
 <DropCap>
 
-The chart atlas is not a gallery. It is a translation guide. Managers rarely need the name of every visualization technique, but they do need to know what visual comparison a business question is asking for. A histogram, a line chart, an indexed line, a heatmap, and a coefficient plot are not interchangeable styles. Each one answers a different managerial question and carries a different risk of overclaiming.
+The chart atlas is not a gallery. It is a translation guide, and the thing it translates is a sentence: *this chart compares ___ with ___.* [Section 3.1](/ch03-question-to-chart) argued that the comparison, not the chart, is the real decision. This section is the vocabulary that decision draws on — twenty-six visual forms, each tied to the managerial question it answers, the finding it produces in real data, and the way it can be made to overclaim. A histogram, a line chart, an indexed line, a heatmap, and a coefficient plot are not interchangeable styles. Each answers a different question and carries a different risk.
 
 </DropCap>
 
-## The executive question: *which chart form matches the managerial question?*
+## The executive question: *which visual form matches the question I actually have?*
 
-The atlas uses the real case data for this part of the book. Soup carries the Part II through-line. County data supplies cross-sectional and geographic examples. Zillow supplies long state time-series examples. The small teaching arrays appear only where the chart form is a managerial accounting bridge, not a natural field in the three datasets.
-
-Figure 1 is the source contract. It matters because students should learn chart choice from evidence, not screenshots. Every miniature chart in Figure 2 is drawn from these sources and each card states a real finding or a deliberate teaching simplification.
+The atlas is organized by **evidence family** rather than by chart name, because a manager does not arrive knowing she needs a lollipop chart. She arrives with a question about spread, or ranking, or change over time, and the family is what routes her. Figure 1 is the routing table.
 
 <DataTable
-  caption="Figure 1. The atlas is generated from the Part II case folder: soup for the pricing panel, county for cross-sectional and geographic evidence, and Zillow for long state time series."
+  caption="Figure 1. Eight evidence families. Find the row whose question sounds like yours, then use the family filter in Figure 2 to see only those forms. The names of the charts matter far less than knowing which row you are in."
   columns={[
-    { key: 'source', label: 'Source', align: 'left' },
-    { key: 'scope',  label: 'Scope',  align: 'left' },
-    { key: 'role',   label: 'Role in the atlas', align: 'left' },
+    { key: 'family',   label: 'Family',            align: 'left' },
+    { key: 'question', label: 'The question it answers', align: 'left' },
+    { key: 'forms',    label: 'Forms in the atlas', align: 'left' },
   ]}
-  rows={sourceRows}
+  rows={familyRows}
 />
+
+Every miniature chart in the atlas is drawn from the real case data for this part of the book, not from screenshots or invented numbers, so that chart choice is learned from evidence rather than from style guides. **Soup** carries the Part II through-line — seasonality, price, volume, share. **County** supplies cross-sectional and geographic examples. **Zillow** supplies long state time series. Small teaching arrays appear only where the form is a managerial accounting bridge with no natural field in the three datasets; those cards are badged so the distinction stays visible.
 
 ## The atlas
 
-Read Figure 2 from left to right inside each card:
+Read each card from top to bottom:
 
-1. The family names the evidence problem: distribution, comparison, time, relationship, geography, multivariate structure, uncertainty, or business bridge.
-2. The miniature chart shows the visual form using the teaching data.
-3. The finding states what this specific data example reveals.
-4. The use, question, and trap lines say when the form should and should not be used.
+1. **The family** names the evidence problem the form is built for.
+2. **The chart** is live — hover for values, and where two forms answer the same question, toggle between them.
+3. **The finding** states what this specific data example actually reveals.
+4. **Use / Question / Trap** say when the form should and should not be reached for.
+5. **The link**, where one appears, opens the section of Part II that treats the form in depth.
+
+Filter by family or search by question — typing *"drop-off"*, *"composition"*, or *"over time"* will find the form faster than remembering its name.
 
 <Figure width="screen-inset" caption="Figure 2. The chart atlas turns chart choice into managerial choice: each visual form is tied to a question, a real finding, and a misuse risk.">
   <div className="not-prose">
@@ -67,16 +92,30 @@ Read Figure 2 from left to right inside each card:
   </div>
 </Figure>
 
-The important habit is to move from question to comparison to chart. If the question is whether Progresso store-month volume is skewed, use a distribution chart. If the question is which housing markets grew faster after 2020, use an indexed line or dot plot. If the question is whether demographic variables move together before a model, use a correlation matrix. The chart is the consequence of the comparison, not the starting point.
+## Choosing between near neighbors
 
-## How the atlas will be reused
+Most real chart decisions are not "bar or map." They are choices between two forms in the same family that look interchangeable and are not. These are the four that come up constantly.
 
-Later chapters should refer back to this page instead of re-teaching chart basics. A pricing chapter can use the scatterplot and coefficient plot language to preview elasticity. A causal chapter can use interval plots and small multiples to explain effect heterogeneity. A machine-learning chapter can reuse heatmaps, lift charts, calibration views, and residual displays. An AI evaluation chapter can use the same uncertainty and dashboard discipline without pausing to define every chart from scratch.
+**Bar or dot plot?** Bars encode value as length from zero, so they need a zero baseline and they get visually heavy past a dozen categories. Dot plots drop the bar and keep the position, which lets you rank twenty or thirty items legibly and lets the axis start somewhere other than zero when the interesting variation is in a narrow band. Use bars when the magnitude relative to zero is the point; use dots when the *ranking* is the point.
 
-The atlas also gives students a vocabulary for saying no. A map is useful only when location changes the decision. A density curve is useful when shape matters more than counts. A correlation matrix is useful for scanning many relationships, but it is a poor executive answer when the decision requires one ranked comparison. Simple charts are not inferior; mismatched charts are.
+**Stacked or grouped bars?** Stacking answers a part-to-whole question and answers it honestly for exactly one segment: the bottom one. Every segment above it starts at a shifting baseline, so comparing "premium soup across quarters" in a stacked chart is guesswork. Group the bars when readers need to compare a specific series across groups; stack them when the total and the rough mix are what matter; use the 100% variant only when the total is deliberately irrelevant.
 
-<Pitfall title="Starting from the tool">
-"Make a map" or "make a dashboard" is not a business question. **Write the comparison first**, then let it select the chart.
+**Line or slopegraph?** A line chart is for the *path* — the shape between the endpoints carries information. A slopegraph is for the *move* — two points in time, many categories, and the question is who rose and who fell. Using a line chart for two time points wastes the form; using a slopegraph for a monthly series destroys the seasonality.
+
+**Map or bar?** A map is worth its considerable space only when location itself changes the decision — territory assignment, logistics, regulation, store siting. If the question is "which five states grew fastest," a sorted bar or dot plot answers it more precisely in a quarter of the room, because the eye reads position far more accurately than it reads color. And whatever the form, map rates and changes rather than raw counts: on a choropleth, area silently multiplies the count.
+
+<Callout variant="definition" title="Evidence family">
+  A family groups chart forms by the kind of evidence problem they solve — distribution, comparison, time, relationship, geography, multivariate structure, uncertainty, or business bridge — rather than by how the chart looks. Routing to the right family is most of chart choice.
+</Callout>
+
+## Saying no with the atlas
+
+The atlas is at least as useful for declining a chart request as for filling one. A map is useful only when location changes the decision. A density curve is useful when shape matters more than counts. A correlation matrix is useful for scanning many relationships at once, and a poor executive answer when the decision needs one ranked comparison. A pie chart is in the atlas as an anti-pattern precisely so the argument against it can be made from the page rather than from taste: try to rank the three smallest slices by eye, then do the same on a bar.
+
+Simple charts are not inferior. Mismatched charts are.
+
+<Pitfall title="Treating the atlas as a menu">
+Browsing until something looks good reverses the logic of the whole section. **The business question determines the comparison; the comparison determines the form.** Arriving at the atlas without a comparison in hand means arriving too early.
 </Pitfall>
 
 <Pitfall title="The right chart at the wrong grain">
@@ -84,13 +123,15 @@ A county scatterplot cannot answer a household-level question, and a store-month
 </Pitfall>
 
 <Pitfall title="Analytical-looking charts overclaim">
-Trend lines, coefficient plots, heatmaps, and intervals look authoritative on sight. **They still need units, denominators, definitions, uncertainty, and causal limits** before the manager can act on them.
+Trend lines, coefficient plots, heatmaps, and intervals look authoritative on sight. **They still need units, denominators, definitions, uncertainty, and causal limits** before a manager can act on them — which is what the [next two sections](/ch03-uncertainty) are for.
 </Pitfall>
 
-The deeper failure is treating the atlas as a menu. It is better to treat it as a decision aid. The business question determines the comparison. The comparison determines the visual form. The visual form determines what the manager can see quickly and what must be stated as a limitation.
+## How the rest of the book reuses this page
+
+Later chapters point back here instead of re-teaching chart basics. The pricing chapters use the scatterplot and coefficient-plot vocabulary to introduce elasticity. The causal chapters use interval plots and small multiples to explain effect heterogeneity. The machine-learning chapters reuse heatmaps, lift charts, calibration views, and residual displays. The AI-evaluation chapter borrows the same uncertainty discipline without pausing to define every form from scratch. Within Part II, three forms get their own treatment immediately: [indexed lines](/ch03-question-to-chart) as the baseline decision, [small multiples](/ch03-small-multiples) as the heterogeneity test, and [intervals and statistical charts](/ch03-uncertainty) as the boundary of what description can claim.
 
 <Takeaway label="Decision rule">
 
-When a manager asks for a chart, *translate the request into a comparison before opening the visualization tool*. Ask whether the problem is about distribution, comparison, time, relationship, geography, many variables, uncertainty, or a business bridge. Then choose the simplest chart that makes that comparison visible — and state what the chart cannot prove.
+When a manager asks for a chart, *translate the request into a comparison before opening the visualization tool*. Ask which family the problem belongs to — distribution, comparison, time, relationship, geography, multivariate, uncertainty, or business bridge — then choose the **simplest** form that makes that comparison visible, and state what the chart cannot prove. *The atlas is a decision aid, not a catalog: its most valuable entries are the ones that tell you which chart not to build.*
 
 </Takeaway>

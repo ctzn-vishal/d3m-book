@@ -79,6 +79,63 @@ const FAMILY_ORDER = [
   'Business Bridge',
 ];
 
+/**
+ * Cards whose form gets a full treatment elsewhere in Part II. The atlas is the
+ * index; these links are the "read more" edges that turn it from a gallery into
+ * a hub — §3.1 for baselines/indexes, §3.3 for faceting, §3.4 for the
+ * statistical forms, §4.1–4.2 for the managerial bridges.
+ */
+const DEEP_DIVE: Record<string, { href: string; label: string }> = {
+  line: { href: '/ch03-question-to-chart', label: 'Baselines and indexes → §3.1' },
+  indexedLine: { href: '/ch03-question-to-chart', label: 'Baselines and indexes → §3.1' },
+  smallMultiples: { href: '/ch03-small-multiples', label: 'When faceting earns its space → §3.3' },
+  histogram: { href: '/ch03-uncertainty', label: 'Shape before summary → §3.4' },
+  density: { href: '/ch03-uncertainty', label: 'Shape before summary → §3.4' },
+  strip: { href: '/ch03-uncertainty', label: 'Shape before summary → §3.4' },
+  scatter: { href: '/ch03-uncertainty', label: 'Reading a slope before the equation → §3.4' },
+  interval: { href: '/ch03-uncertainty', label: 'What an interval is about → §3.4' },
+  coefficient: { href: '/ch03-uncertainty', label: 'What an interval is about → §3.4' },
+  pareto: { href: '/ch04-concentration-case', label: 'Concentration, measured properly → §4.2' },
+  funnel: { href: '/ch04-dashboards', label: 'The dashboard arc → §4.1' },
+  waterfall: { href: '/ch04-dashboards', label: 'The dashboard arc → §4.1' },
+};
+
+/**
+ * Extra search vocabulary per form. The card copy is written for reading, not
+ * for retrieval, so a reader searching the way §3.2 tells them to — by the
+ * comparison ("ranking", "growth", "part-to-whole") rather than the chart name
+ * — would otherwise miss forms whose prose happens to use different words.
+ */
+const SEARCH_TERMS: Record<string, string> = {
+  histogram: 'distribution spread shape skew counts bins outliers tail',
+  density: 'distribution spread shape smooth curve kernel',
+  boxplot: 'distribution spread quartiles median compare groups outliers',
+  strip: 'distribution spread every observation dots raw points jitter',
+  bar: 'ranking rank compare categories largest biggest which',
+  dot: 'ranking rank compare categories growth change many categories',
+  lollipop: 'ranking rank compare categories growth change',
+  stackedBar: 'composition part-to-whole share mix breakdown percentage',
+  groupedBar: 'compare side by side categories within groups clustered',
+  slopegraph: 'change between two periods before after growth movement direction',
+  line: 'over time trend growth series history when changed',
+  indexedLine: 'over time trend growth rebase baseline index percent change compare markets',
+  area: 'over time magnitude composition total volume cumulative',
+  smallMultiples: 'heterogeneity facet by group regions segments panels compare many series over time',
+  scatter: 'relationship correlation two variables association slope clusters outliers',
+  bubble: 'relationship correlation three variables size magnitude',
+  tileMap: 'geography location where map spatial region state',
+  choropleth: 'geography location where map spatial region state growth',
+  correlation: 'many variables scan pairs correlation matrix relationships before modeling',
+  heatmap: 'many cells scan grid two dimensions over time intensity',
+  treemap: 'composition part-to-whole share many categories rank area',
+  interval: 'uncertainty confidence error bars precision range significance',
+  coefficient: 'uncertainty confidence error bars estimate regression forest effect size',
+  pareto: 'concentration ranking eighty twenty cumulative share long tail revenue drivers',
+  waterfall: 'bridge decomposition contribution from to build-up variance',
+  funnel: 'drop-off conversion stages pipeline sequence attrition',
+  pie: 'composition part-to-whole share anti-pattern avoid',
+};
+
 const CHART_H = 260;
 
 /* ------------------------------------------------------------------ */
@@ -211,6 +268,7 @@ const PIE_DATA = TREE_DATA;
 /* ------------------------------------------------------------------ */
 
 function CardShell({
+  id,
   family,
   title,
   source,
@@ -222,6 +280,7 @@ function CardShell({
   badge,
   children,
 }: {
+  id: string;
   family: string;
   title: string;
   source: string;
@@ -234,38 +293,57 @@ function CardShell({
   children: React.ReactNode;
 }) {
   const accent = SOURCE_COLORS[source] ?? CHART.slate;
+  const deepDive = DEEP_DIVE[id];
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-100 bg-slate-50/80 p-4">
+    <article
+      id={`atlas-${id}`}
+      className="flex h-full scroll-mt-24 flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800/40 dark:shadow-none"
+    >
+      <div className="border-b border-slate-100 bg-slate-50/80 p-4 dark:border-slate-700 dark:bg-slate-800/70">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{family}</p>
-            <h3 className="mt-1 text-base font-semibold text-slate-950">{title}</h3>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{family}</p>
+            <h3 className="mt-1 text-base font-semibold text-slate-950 dark:text-slate-100">{title}</h3>
           </div>
-          <span className="rounded-full px-2 py-1 text-[10px] font-semibold text-white" style={{ background: accent }}>
+          <span className="shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold text-white" style={{ background: accent }}>
             {badge ?? source}
           </span>
         </div>
       </div>
-      <div className="px-3 pt-3">{children}</div>
-      <div className="mx-4 mt-3 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700">
-        <span className="font-semibold text-slate-950">Finding in this data: </span>
+      {/* The Plot specs use fixed ink-on-transparent text (lib/chart-theme.ts),
+          so the chart itself always sits on a light plate — in dark mode only
+          the card chrome darkens, and the figure stays legible. */}
+      <div className="m-3 rounded-md bg-white px-1 pb-1 pt-2 ring-1 ring-slate-100 dark:ring-slate-700">{children}</div>
+      <div className="mx-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300">
+        <span className="font-semibold text-slate-950 dark:text-slate-100">Finding in this data: </span>
         {finding}
       </div>
-      <div className="mt-auto space-y-2 border-t border-slate-100 p-4 text-xs leading-relaxed">
+      <div className="mt-auto space-y-2 border-t border-slate-100 p-4 text-xs leading-relaxed dark:border-slate-700">
         <p>
-          <span className="font-semibold text-slate-900">Use:</span> <span className="text-slate-600">{useWhen}</span>
+          <span className="font-semibold text-slate-900 dark:text-slate-100">Use:</span>{' '}
+          <span className="text-slate-600 dark:text-slate-400">{useWhen}</span>
         </p>
         <p>
-          <span className="font-semibold text-slate-900">Question:</span>{' '}
-          <span className="text-slate-600">{managerQuestion}</span>
+          <span className="font-semibold text-slate-900 dark:text-slate-100">Question:</span>{' '}
+          <span className="text-slate-600 dark:text-slate-400">{managerQuestion}</span>
         </p>
         <p>
-          <span className="font-semibold text-slate-900">Trap:</span> <span className="text-slate-600">{avoid}</span>
+          <span className="font-semibold text-slate-900 dark:text-slate-100">Trap:</span>{' '}
+          <span className="text-slate-600 dark:text-slate-400">{avoid}</span>
         </p>
-        <p className="border-l-2 pl-2 text-slate-700" style={{ borderColor: accent }}>
+        <p className="border-l-2 pl-2 text-slate-700 dark:text-slate-300" style={{ borderColor: accent }}>
           {caseExample}
         </p>
+        {deepDive && (
+          <p className="pt-1">
+            <a
+              href={deepDive.href}
+              className="font-medium text-sky-700 underline decoration-sky-300 underline-offset-2 hover:text-sky-900 dark:text-sky-300 dark:decoration-sky-700 dark:hover:text-sky-200"
+            >
+              {deepDive.label}
+            </a>
+          </p>
+        )}
       </div>
     </article>
   );
@@ -282,7 +360,7 @@ function Toggle<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="mb-2 inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5 text-[11px] font-medium">
+    <div className="mb-2 ml-1 inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5 text-[11px] font-medium">
       {options.map(opt => (
         <button
           key={opt.value}
@@ -1545,8 +1623,40 @@ const EXTRA_CARDS: ExtraCard[] = [
 /* ------------------------------------------------------------------ */
 
 export function ChartAtlas({ data }: { data: AtlasData }) {
-  const allCards: ExtraCard[] = [...data.cards, ...EXTRA_CARDS];
+  const allCards: ExtraCard[] = React.useMemo(() => [...data.cards, ...EXTRA_CARDS], [data.cards]);
   const families = FAMILY_ORDER.filter(f => allCards.some(c => c.family === f));
+
+  const [activeFamily, setActiveFamily] = React.useState<string | null>(null);
+  const [query, setQuery] = React.useState('');
+
+  // Search across every field a reader might type: the chart name, the family,
+  // and — most usefully — the manager question and the "use when" line, so
+  // typing "over time" or "drop-off" lands on the right form. Matched
+  // token-by-token rather than as one phrase, so word order and intervening
+  // words ("composition over time") don't cost the reader a hit.
+  const matches = React.useMemo(() => {
+    const tokens = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    return allCards.filter(card => {
+      if (activeFamily && card.family !== activeFamily) return false;
+      if (!tokens.length) return true;
+      const haystack = [
+        card.title,
+        card.family,
+        card.useWhen,
+        card.managerQuestion,
+        card.caseExample,
+        card.avoid,
+        card.finding,
+        SEARCH_TERMS[card.id] ?? '',
+      ]
+        .join(' ')
+        .toLowerCase();
+      return tokens.every(t => haystack.includes(t));
+    });
+  }, [allCards, activeFamily, query]);
+
+  const visibleFamilies = families.filter(f => matches.some(c => c.family === f));
+  const isFiltered = Boolean(activeFamily) || query.trim().length > 0;
 
   const metrics = [
     {
@@ -1573,14 +1683,15 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-md border border-slate-200 bg-slate-950 p-5 text-white shadow-sm">
+      <div className="rounded-md border border-slate-200 bg-slate-950 p-5 text-white shadow-sm dark:border-slate-700 dark:shadow-none">
         <div className="grid gap-4 lg:grid-cols-[1.3fr_2fr]">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">How to read the atlas</p>
             <h3 className="mt-1 text-xl font-semibold">Start from the comparison, then choose the chart.</h3>
             <p className="mt-3 text-sm leading-relaxed text-slate-300">
               Each card moves from business question to visual form to misuse risk. Charts are live: hover for values,
-              and where two forms answer the same question, toggle between them.
+              and where two forms answer the same question, toggle between them. Filter by family or search the
+              questions below, and follow a card&rsquo;s link when a form gets a full treatment elsewhere in Part II.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
@@ -1597,32 +1708,96 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
 
       <div className="grid gap-3 md:grid-cols-4">
         {data.sourceNotes.map(note => (
-          <div key={note.case} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+          <div
+            key={note.case}
+            className="rounded-md border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/40 dark:shadow-none"
+          >
             <p className="text-sm font-semibold" style={{ color: SOURCE_COLORS[note.case] ?? CHART.ink }}>
               {note.case}
             </p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600">{note.role}</p>
+            <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{note.role}</p>
           </div>
         ))}
       </div>
 
-      {families.map(family => {
-        const cards = allCards.filter(c => c.family === family);
+      {/* Filter bar — the atlas is a reference, so it needs a way in other than
+          scrolling 26 cards. Sticks under the reading header while browsing. */}
+      <div className="sticky top-2 z-20 rounded-md border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setActiveFamily(null)}
+            aria-pressed={activeFamily === null}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              activeFamily === null
+                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+            }`}
+          >
+            All forms
+          </button>
+          {families.map(family => (
+            <button
+              key={family}
+              type="button"
+              onClick={() => setActiveFamily(activeFamily === family ? null : family)}
+              aria-pressed={activeFamily === family}
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                activeFamily === family
+                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+              }`}
+            >
+              {family}
+            </button>
+          ))}
+          <div className="ml-auto flex items-center gap-2">
+            <label htmlFor="atlas-search" className="sr-only">
+              Search the atlas by chart name or business question
+            </label>
+            <input
+              id="atlas-search"
+              type="search"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search a question — “over time”, “drop-off”…"
+              className="w-56 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-800 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+            />
+            <span className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+              {matches.length} of {allCards.length}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {matches.length === 0 && (
+        <p className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+          No chart form matches “{query}”. Try the comparison instead of the chart name — “composition”, “ranking”,
+          “growth”, “spread”.
+        </p>
+      )}
+
+      {visibleFamilies.map(family => {
+        const cards = matches.filter(c => c.family === family);
         return (
-          <section key={family}>
-            <div className="mb-3 flex items-end justify-between gap-3 border-b border-slate-200 pb-2">
+          <section key={family} id={`family-${family.toLowerCase().replace(/\s+/g, '-')}`} className="scroll-mt-24">
+            <div className="mb-3 flex items-end justify-between gap-3 border-b border-slate-200 pb-2 dark:border-slate-700">
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700">{family}</h3>
-                <p className="mt-1 text-xs text-slate-500">{FAMILY_NOTES[family]}</p>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+                  {family}
+                </h3>
+                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{FAMILY_NOTES[family]}</p>
               </div>
-              <p className="text-xs text-slate-500">
+              <p className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
                 {cards.length} chart{cards.length === 1 ? '' : 's'}
+                {isFiltered ? ' shown' : ''}
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
               {cards.map(card => (
                 <CardShell
                   key={card.id}
+                  id={card.id}
                   family={card.family}
                   title={card.title}
                   source={card.dataSource}

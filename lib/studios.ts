@@ -126,7 +126,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Exploratory viz'],
     methods: ['Dashboard sequencing', 'Geospatial comparison', 'State shifts'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/presidential-election-atlas/preview.jpg',
@@ -144,7 +144,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Exploratory viz'],
     methods: ['Survey trends', 'Group comparison', 'Cohort shifts'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/political-identity-divergence/preview.jpg',
@@ -162,7 +162,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Survey data'],
     methods: ['Survey trends', 'Coalition sorting', 'Group comparison'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/political-identification-us/preview.jpg',
@@ -180,7 +180,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Survey data'],
     methods: ['Affective polarization', 'Feeling thermometers', 'Distribution shifts'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/negative-partisanship-anes/preview.jpg',
@@ -198,7 +198,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Correlation', 'Survey data'],
     methods: ['Correlation matrices', 'Issue constraint', 'Sorting decomposition'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/partisans-finally-got-constraint/preview.jpg',
@@ -216,7 +216,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Survey data'],
     methods: ['Cohort analysis', 'Cross-pressure', 'Coalition sorting'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/unsorted-voters-switched/preview.jpg',
@@ -234,7 +234,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Survey data', 'Group comparison'],
     methods: ['Youth politics', 'Gender gaps', 'Diverging dot plots'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/gen-z-gender-war-overstated/preview.png',
@@ -252,7 +252,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Survey data', 'Realignment'],
     methods: ['Income voting', 'Coalition realignment', 'Slope charts'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/income-ladder-flipped/preview.png',
@@ -270,7 +270,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Survey data', 'Group comparison'],
     methods: ['Policy attitudes', 'County context', 'Diverging dot plots'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/party-beats-place-seven-to-one/preview.png',
@@ -288,7 +288,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Time series'],
     methods: ['County swing', 'Election nationalization', 'Small-multiple histograms'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/one-national-election-county-swing-uniformity/preview.png',
@@ -306,7 +306,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Regression'],
     methods: ['County residuals', 'Education controls', 'Geospatial diagnostics'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/merchant-right-county-residuals/preview.png',
@@ -324,7 +324,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Survey data'],
     methods: ['Survey trends', 'Long-run comparison', 'Small multiples'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/drug-availability-teens/preview.jpg',
@@ -342,7 +342,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Demographics', 'Forecasts'],
     methods: ['Composition analysis', 'Regional comparison', 'Projection reading'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/religious-composition-dashboard/preview.jpg',
@@ -360,7 +360,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Time series', 'Shock analysis'],
     methods: ['Dashboard sequencing', 'Media mix', 'Shock analysis'],
-    relatedSlug: 'ch03-concentration-case',
+    relatedSlug: 'ch04-concentration-case',
     kind: 'dashboard',
     preview: {
       src: '/studios/ad-spend-explorer/preview.jpg',
@@ -396,7 +396,7 @@ export const studios: Studio[] = [
     collections: ['teaching'],
     methodTags: ['Dashboard', 'Maps', 'Exploratory viz'],
     methods: ['Exploratory viz', 'Geospatial mapping', 'Distributions'],
-    relatedSlug: 'ch03-exploratory-viz',
+    relatedSlug: 'ch04-dashboards',
     kind: 'dashboard',
     preview: {
       src: '/studios/nyc-airbnb-atlas/preview.jpg',
