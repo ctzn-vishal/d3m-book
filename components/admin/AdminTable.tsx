@@ -27,28 +27,46 @@ import {
   ArrowUpToLine,
   ArrowDownToLine,
   Pencil,
+  Sparkles,
 } from 'lucide-react';
 import type { RegistryType, RegistryStatus } from '@/lib/registry-types';
+import { curationGaps } from '@/lib/curation';
 import { updateRow, reorder } from '@/app/admin/actions';
 import {
   TYPE_OPTIONS,
   STATUS_OPTIONS,
   TOPIC_OPTIONS,
+  TEACHING_OPTIONS,
   type AdminRow,
   type RowPatch,
 } from '@/app/admin/types';
 
-type OrderMode = 'saved' | 'featured' | 'az' | 'updated' | 'type';
+type OrderMode = 'saved' | 'added' | 'featured' | 'az' | 'updated' | 'type';
 const ORDER_LABELS: Record<OrderMode, string> = {
   saved: 'Saved order (drag)',
+  added: 'Recently added',
   featured: 'Featured first',
   az: 'A–Z',
-  updated: 'Recently updated',
+  updated: 'Recently edited',
   type: 'By type',
 };
 
 const selectCls =
   'rounded-md border border-hub-line bg-hub-paper px-2 py-1 font-plex text-[11px] uppercase tracking-[0.04em] text-hub-ink focus:border-hub-teal focus:outline-none';
+
+/** "3d ago" / "2w ago" — enough to spot an ingest batch without reading timestamps. */
+function relativeDays(ts: string | null): string | null {
+  if (!ts) return null;
+  // Turso writes 'YYYY-MM-DD HH:MM:SS' in UTC; make that explicit for Date.parse.
+  const ms = Date.parse(ts.replace(' ', 'T') + (/[Zz]|[+-]\d\d:?\d\d$/.test(ts) ? '' : 'Z'));
+  if (Number.isNaN(ms)) return null;
+  const days = Math.floor((Date.now() - ms) / 86_400_000);
+  if (days <= 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 14) return `${days}d ago`;
+  if (days < 60) return `${Math.floor(days / 7)}w ago`;
+  return `${Math.floor(days / 30)}mo ago`;
+}
 
 /** Splice a reordered VISIBLE subset back into the full saved order: non-visible
  *  rows keep their slots; visible rows fill the visible slots in their new order. */
@@ -64,6 +82,7 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<'all' | RegistryType>('all');
   const [orderMode, setOrderMode] = useState<OrderMode>('saved');
+  const [needsOnly, setNeedsOnly] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
@@ -72,24 +91,31 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
+  // Rows still missing a topic or carrying only generic tags — the same set
+  // `pnpm curate-new` would pick up (lib/curation.ts).
+  const needingCuration = useMemo(() => rows.filter(r => curationGaps(r).length > 0), [rows]);
+
   const q = query.trim().toLowerCase();
   const filtered = useMemo(
     () =>
       rows.filter(
         r =>
           (typeFilter === 'all' || r.type === typeFilter) &&
+          (!needsOnly || curationGaps(r).length > 0) &&
           (q === '' ||
             r.id.toLowerCase().includes(q) ||
             r.title.toLowerCase().includes(q) ||
             (r.topic ?? '').toLowerCase().includes(q) ||
             r.tags.some(t => t.toLowerCase().includes(q)))
       ),
-    [rows, q, typeFilter]
+    [rows, q, typeFilter, needsOnly]
   );
 
   // `saved` keeps the canonical order (drag maps to it); other modes are view-only.
   const displayed = useMemo(() => {
     switch (orderMode) {
+      case 'added':
+        return [...filtered].sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''));
       case 'featured':
         return [...filtered].sort((a, b) => Number(b.featured) - Number(a.featured));
       case 'az':
@@ -102,6 +128,14 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
         return filtered;
     }
   }, [filtered, orderMode]);
+
+  /** Open the curation queue: uncurated rows only, newest ingest first. */
+  function openCurationQueue() {
+    setNeedsOnly(true);
+    setOrderMode('added');
+    setTypeFilter('all');
+    setQuery('');
+  }
 
   const dragEnabled = orderMode === 'saved';
 
@@ -169,6 +203,39 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
 
   return (
     <div className="mt-5">
+      {/* Curation queue banner — the fastest path to "what did I just ingest
+          that still has no topic?", which is otherwise buried in 178 cards. */}
+      {needingCuration.length > 0 && !needsOnly && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-hub-amber/40 bg-hub-amber/10 px-4 py-3">
+          <p className="flex items-center gap-2 text-[13px] text-hub-ink">
+            <Sparkles size={15} className="shrink-0 text-hub-amber" />
+            <span>
+              <strong>{needingCuration.length}</strong>{' '}
+              {needingCuration.length === 1 ? 'item needs' : 'items need'} a topic or real tags
+              {needingCuration.some(r => r.createdAt) && (
+                <span className="text-hub-ink-soft">
+                  {' '}
+                  · newest added{' '}
+                  {relativeDays(
+                    needingCuration.reduce<string | null>(
+                      (max, r) => ((r.createdAt ?? '') > (max ?? '') ? r.createdAt : max),
+                      null
+                    )
+                  )}
+                </span>
+              )}
+            </span>
+          </p>
+          <button
+            type="button"
+            onClick={openCurationQueue}
+            className="shrink-0 rounded-lg border border-hub-amber/50 bg-hub-card px-3.5 py-1.5 font-plex text-[11px] font-medium uppercase tracking-[0.08em] text-hub-ink transition-colors hover:border-hub-amber"
+          >
+            Curate them →
+          </button>
+        </div>
+      )}
+
       {/* Toolbar */}
       <div className="sticky top-0 z-20 -mx-2 flex flex-wrap items-center gap-2 bg-hub-paper/95 px-2 py-2 backdrop-blur">
         <div className="relative min-w-[200px] flex-grow">
@@ -191,6 +258,19 @@ export function AdminTable({ initialRows }: { initialRows: AdminRow[] }) {
             <option key={t} value={t}>{t}</option>
           ))}
         </select>
+        <button
+          type="button"
+          onClick={() => setNeedsOnly(v => !v)}
+          aria-pressed={needsOnly}
+          title="Show only rows missing a topic or carrying only generic tags"
+          className={`rounded-md border px-2.5 py-1 font-plex text-[11px] uppercase tracking-[0.04em] transition-colors ${
+            needsOnly
+              ? 'border-hub-amber bg-hub-amber/15 text-hub-ink'
+              : 'border-hub-line bg-hub-paper text-hub-ink-soft hover:border-hub-line-strong hover:text-hub-ink'
+          }`}
+        >
+          Needs curation ({needingCuration.length})
+        </button>
         <label className="flex items-center gap-1.5 font-plex text-[10px] uppercase tracking-[0.06em] text-hub-ink-faint">
           Order
           <select value={orderMode} onChange={e => setOrderMode(e.target.value as OrderMode)} aria-label="Order by" className={selectCls}>
@@ -249,7 +329,9 @@ function SortableCard({
     id: row.id,
     disabled: !dragEnabled,
   });
-  const [expanded, setExpanded] = useState(false);
+  // Rows that still need curation open with their editors already showing —
+  // the point of finding them is to fill them in.
+  const [expanded, setExpanded] = useState(() => curationGaps(row).length > 0);
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -257,13 +339,17 @@ function SortableCard({
     zIndex: isDragging ? 10 : undefined,
   };
   const dimmed = row.status !== 'published';
+  const gaps = curationGaps(row);
+  const added = relativeDays(row.createdAt);
 
   return (
     <li
       ref={setNodeRef}
       style={style}
       data-id={row.id}
-      className={`flex flex-col overflow-hidden rounded-xl border border-hub-line bg-hub-card shadow-hub ${dimmed ? 'opacity-60' : ''}`}
+      className={`flex flex-col overflow-hidden rounded-xl border bg-hub-card shadow-hub ${
+        gaps.length ? 'border-hub-amber/50' : 'border-hub-line'
+      } ${dimmed ? 'opacity-60' : ''}`}
     >
       {/* Thumbnail strip with drag handle + featured toggle */}
       <div className="relative aspect-[16/8] bg-hub-paper2">
@@ -314,6 +400,25 @@ function SortableCard({
           className="w-full rounded-md border border-transparent bg-transparent px-1 py-0.5 font-serif text-[15px] font-semibold leading-snug text-hub-ink hover:border-hub-line focus:border-hub-teal focus:bg-hub-paper focus:outline-none"
         />
 
+        {(gaps.length > 0 || added) && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            {gaps.length > 0 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-hub-amber/15 px-2 py-0.5 font-plex text-[10px] uppercase tracking-[0.05em] text-hub-ink">
+                <Sparkles size={10} className="text-hub-amber" />
+                needs {gaps.join(' + ')}
+              </span>
+            )}
+            {added && (
+              <span
+                className="font-plex text-[10px] uppercase tracking-[0.05em] text-hub-ink-faint"
+                title={row.createdAt ? `added ${row.createdAt} UTC` : undefined}
+              >
+                added {added}
+              </span>
+            )}
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center gap-1.5">
           <select value={row.type} onChange={e => onPatch(row.id, { type: e.target.value as RegistryType })} aria-label="Type" className={selectCls}>
             {TYPE_OPTIONS.map(t => (
@@ -327,7 +432,12 @@ function SortableCard({
           </select>
         </div>
 
-        <select value={row.topic ?? ''} onChange={e => onPatch(row.id, { topic: e.target.value || null })} aria-label="Topic" className={`${selectCls} w-full`}>
+        <select
+          value={row.topic ?? ''}
+          onChange={e => onPatch(row.id, { topic: e.target.value || null })}
+          aria-label="Topic"
+          className={`${selectCls} w-full ${gaps.includes('topic') ? 'border-hub-amber' : ''}`}
+        >
           <option value="">— topic —</option>
           {TOPIC_OPTIONS.map(t => (
             <option key={t} value={t}>{t}</option>
@@ -353,8 +463,21 @@ function SortableCard({
               }}
               placeholder="tags, comma, separated"
               aria-label="Tags"
-              className="w-full rounded-md border border-hub-line bg-hub-paper px-2 py-1 font-plex text-[11px] text-hub-ink-soft focus:border-hub-teal focus:outline-none"
+              className={`w-full rounded-md border bg-hub-paper px-2 py-1 font-plex text-[11px] text-hub-ink-soft focus:border-hub-teal focus:outline-none ${
+                gaps.includes('tags') ? 'border-hub-amber' : 'border-hub-line'
+              }`}
             />
+            <select
+              value={row.teaching ?? ''}
+              onChange={e => onPatch(row.id, { teaching: e.target.value || null })}
+              aria-label="Paired book section"
+              className={`${selectCls} w-full normal-case tracking-normal`}
+            >
+              <option value="">— pairs with no chapter —</option>
+              {TEACHING_OPTIONS.map(o => (
+                <option key={o.slug} value={o.slug}>{o.label}</option>
+              ))}
+            </select>
             <textarea
               key={`desc-${row.description}`}
               defaultValue={row.description}

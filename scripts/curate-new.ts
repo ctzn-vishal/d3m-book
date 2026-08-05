@@ -20,6 +20,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { TOPICS } from '../lib/taxonomy';
 import { TAG_VOCABULARY } from '../lib/tag-vocabulary';
+import { needsCuration } from '../lib/curation';
 
 const APPLY = process.env.APPLY === '1';
 const ONLY = (process.env.ONLY || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -30,8 +31,6 @@ const PROPOSALS = fileURLToPath(new URL('./.curate/proposals.json', import.meta.
 const ALL_TAGS = TAG_VOCABULARY.map(t => t.tag);
 const TAG_SET = new Set<string>(ALL_TAGS);
 const TOPIC_SET = new Set<string>(TOPICS);
-// Tags that carry no information — a row with only these (or none) needs curating.
-const GENERIC_TAGS = new Set(['data story', 'dataset', 'studio', 'app']);
 
 interface Row { id: string; type: string; title: string; topic: string | null; tags: string[]; href: string }
 interface Proposal {
@@ -45,8 +44,6 @@ function parseTags(raw: unknown): string[] {
   if (typeof raw === 'string') { try { const a = JSON.parse(raw); return Array.isArray(a) ? a.map(String) : []; } catch { return []; } }
   return [];
 }
-const tagsGeneric = (tags: string[]) => tags.length === 0 || tags.every(t => GENERIC_TAGS.has(t.toLowerCase()));
-const needsCuration = (r: Row) => !r.topic || r.topic === 'Other' || tagsGeneric(r.tags);
 
 // ── Turso connect (direct token, else mint a DB-scoped token) ──────────────
 async function bearer(token: string, path: string, init?: RequestInit): Promise<any> {

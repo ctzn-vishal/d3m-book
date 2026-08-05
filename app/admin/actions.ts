@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { withDb } from '@/lib/turso-admin';
 import { ADMIN_COOKIE, isValidSession } from '@/lib/admin-auth';
-import { TYPE_OPTIONS, STATUS_OPTIONS, TOPIC_OPTIONS, type RowPatch, type ActionResult } from './types';
+import { TYPE_OPTIONS, STATUS_OPTIONS, TOPIC_OPTIONS, TEACHING_OPTIONS, type RowPatch, type ActionResult } from './types';
 
 /**
  * Server actions for /admin v1 — metadata curation of EXISTING rows only.
@@ -63,6 +63,15 @@ export async function updateRow(id: string, patch: RowPatch): Promise<ActionResu
     }
     if (patch.tags !== undefined) {
       sets.push('tags=?'); args.push(JSON.stringify(normalizeTags(patch.tags)));
+    }
+    if (patch.teaching !== undefined) {
+      const teaching = patch.teaching ? patch.teaching.trim() : '';
+      // Validate against the live TOC: an unknown slug wouldn't error at read
+      // time, it would just never match a chapter and the pairing would vanish.
+      if (teaching && !TEACHING_OPTIONS.some(o => o.slug === teaching)) {
+        throw new Error(`unknown chapter slug: ${teaching}`);
+      }
+      sets.push('teaching=?'); args.push(teaching || null);
     }
 
     if (!sets.length) return { ok: true };

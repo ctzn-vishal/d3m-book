@@ -23,6 +23,7 @@ function toAdminRow(r: Record<string, any>): AdminRow {
     accent: r.accent ?? null,
     domain: r.domain ?? null,
     external: !!r.external,
+    createdAt: r.created_at ?? null,
     updatedAt: r.updated_at ?? null,
   };
 }
@@ -52,9 +53,12 @@ export default async function AdminPage() {
             Curate the gallery
           </h1>
           <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-hub-ink-soft">
-            Drag cards (or use ⤒/⤓) to set order — works inside a filter too, so you can order just
-            the Apps. ⭐ floats an item to the top of the live gallery. Edit type / status / topic /
-            text inline. Changes write to <strong>live Turso</strong> and show within seconds; the
+            Just ingested something? <strong>Needs curation</strong> filters to the rows still
+            missing a topic or real tags — the same set <code>pnpm curate-new</code> picks up — and
+            <strong> Recently added</strong> orders by ingest date so a new batch sits at the top.
+            Drag cards (or use ⤒/⤓) to set order — works inside a filter too. ⭐ floats an item to
+            the top of the live gallery. Edit type / status / topic / tags / paired chapter / text
+            inline. Changes write to <strong>live Turso</strong> and show within seconds; the
             committed snapshot syncs nightly.
           </p>
         </div>
