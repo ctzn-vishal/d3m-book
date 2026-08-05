@@ -18,6 +18,15 @@ on:
     - cron: '17 7 * * *' # 07:17 UTC daily
   workflow_dispatch: {}
 
+# Shared with publish-content.yml, which also syncs the registry and commits this
+# same file (nightly at 06:20 UTC). Serializing them keeps the two from racing on
+# `git push`; on a normal night publish-content has already landed the snapshot by
+# the time this runs, so it finds nothing to commit and exits quickly. This job is
+# kept as the cheap fallback for nights when the heavier pipeline fails.
+concurrency:
+  group: content-pipeline
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest

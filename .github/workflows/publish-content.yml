@@ -1,15 +1,29 @@
-# Full content-publish pipeline, runnable on demand (Actions → run workflow).
+# Full content-publish pipeline — nightly, plus on demand (Actions → run workflow).
 # Mirrors `pnpm publish-content` but with env from repo secrets, so new bucket
-# uploads can be ingested without a dev machine:
+# uploads are ingested without a dev machine:
 #   rebuild-manifest → sync-registry → [gen-thumbnails → rebuild+sync again]
 #   → inject-chrome → gen-story-sitemap (+robots.txt) → verify-content
 #   → commit the refreshed snapshot (which triggers the Vercel deploy).
 #
-# Thumbnails are optional (default on): a headless Chromium screenshots each
-# bucket story that has no thumbnail yet, uploads it, and the second
-# rebuild+sync pass folds the new thumbs into the manifest/snapshot so
-# inject-chrome writes og:image in the same run. Failures there don't abort the
-# pipeline — stories just keep their typed placeholder cards until the next run.
+# WHY NIGHTLY: this is the ONLY job that reads the bucket. Dropping <slug>.html
+# into vishal/articles/ does nothing until rebuild-manifest scans it, and when
+# this workflow was dispatch-only that scan was easy to forget — uploads sat
+# invisible for weeks while the nightly snapshot sync kept reporting success
+# (it only copies Turso → the committed snapshot; it never lists the bucket).
+#
+# CONSEQUENCE OF NIGHTLY: rebuild-manifest ingests new stories as `published`
+# (everything except the slugs in UNLISTED_ON_INGEST), so a file dropped in the
+# bucket goes live on the gallery on the next run, before it has a topic or a
+# description. That is the intended trade. To stage something instead, either add
+# its slug to UNLISTED_ON_INGEST in scripts/pipeline-config.mjs before it lands,
+# or set the row to `draft` in /admin — curated columns survive later rebuilds.
+#
+# Thumbnails default ON for scheduled runs and are a checkbox for manual ones: a
+# headless Chromium screenshots each bucket story that has no thumbnail yet,
+# uploads it, and the second rebuild+sync pass folds the new thumbs into the
+# manifest/snapshot so inject-chrome writes og:image in the same run. Failures
+# there don't abort the pipeline — stories just keep their typed placeholder
+# cards until the next run.
 #
 # Required repo secrets (same set as sync-snapshot.yml):
 #   TURSO_DATABASE_URL, TURSO_AUTH_TOKEN,
@@ -17,6 +31,12 @@
 name: Publish content pipeline
 
 on:
+  schedule:
+    # 06:20 UTC daily — an hour ahead of sync-snapshot.yml (07:17 UTC) so this
+    # heavier job lands its snapshot commit first and the lighter one usually
+    # finds nothing to do. Both share the `content-pipeline` concurrency group,
+    # so even if this overruns they serialize rather than racing on git push.
+    - cron: '20 6 * * *'
   workflow_dispatch:
     inputs:
       thumbnails:
@@ -79,17 +99,26 @@ jobs:
         run: node --import tsx scripts/sync-registry.ts
 
       - name: Install Chromium for thumbnails
-        if: ${{ inputs.thumbnails }}
+        # `inputs` is empty on a schedule trigger, so a bare `inputs.thumbnails`
+        # would be falsey and silently skip thumbnails on every nightly run.
+        # Default ON unless a manual run unticked the box.
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.thumbnails }}
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Generate + upload missing thumbnails
-        if: ${{ inputs.thumbnails }}
+        # `inputs` is empty on a schedule trigger, so a bare `inputs.thumbnails`
+        # would be falsey and silently skip thumbnails on every nightly run.
+        # Default ON unless a manual run unticked the box.
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.thumbnails }}
         continue-on-error: true
         timeout-minutes: 25
         run: UPLOAD=1 node scripts/gen-thumbnails.mjs
 
       - name: Fold new thumbnails into manifest + snapshot
-        if: ${{ inputs.thumbnails }}
+        # `inputs` is empty on a schedule trigger, so a bare `inputs.thumbnails`
+        # would be falsey and silently skip thumbnails on every nightly run.
+        # Default ON unless a manual run unticked the box.
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.thumbnails }}
         run: |
           node scripts/rebuild-manifest.mjs
           node --import tsx scripts/sync-registry.ts
@@ -114,5 +143,12 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add content/registry.snapshot.json
             git commit -m "chore: publish-content pipeline snapshot sync"
-            git push
+            # Now that this runs unattended, don't let a push lose to a commit
+            # that landed since checkout (the nightly sync, or a human) — rebase
+            # and retry once rather than failing the whole run at the last step.
+            git push || {
+              echo "Push rejected — rebasing onto origin/${GITHUB_REF_NAME} and retrying."
+              git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+              git push
+            }
           fi
