@@ -70,6 +70,22 @@ const allStories = keys
   .sort((a, b) => a.slug.localeCompare(b.slug));
 
 // ── Slug / filename validation (catches the ways a mis-named upload breaks the gallery) ──
+// 0. HTML under articles/ that the story pattern did NOT match — almost always an
+//    upload into a sub-folder that isn't declared in ARTICLE_SUBDIRS. These used to
+//    be dropped in total silence, so the story simply never appeared in the gallery
+//    and there was nothing anywhere to explain why. Name them and say the fix.
+const matched = new Set(allStories.map(s => s.key));
+const orphanHtml = keys.filter(k => k.endsWith('.html') && !matched.has(k));
+if (orphanHtml.length) {
+  console.warn(
+    `  ! ${orphanHtml.length} HTML file(s) under ${PREFIX}/ are NOT being ingested:\n` +
+      orphanHtml.map(k => `      ${k}`).join('\n') +
+      `\n    Stories must live at ${PREFIX}/<slug>.html or ${PREFIX}/<sub>/<slug>.html where` +
+      ` <sub> is one of: ${ARTICLE_SUBDIRS.join(', ')}.` +
+      `\n    To ingest a new sub-folder, add it to ARTICLE_SUBDIRS in scripts/pipeline-config.mjs.`
+  );
+}
+
 // 1. Skip reserved filenames (index.html, manifest.html) — they aren't stories.
 const RESERVED = new Set(['index', 'manifest']);
 const reserved = allStories.filter(s => RESERVED.has(s.slug.toLowerCase()));
