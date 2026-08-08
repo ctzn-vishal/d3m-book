@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, BookOpen, LayoutGrid } from 'lucide-react';
+import { ArrowRight, BookOpen, Database, LayoutGrid } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
 import { chapterHref } from '@/lib/book-toc';
 import { getPartContent } from '@/lib/book-content';
@@ -154,6 +154,44 @@ export function TeachingCover({ book }: { book: Book }) {
             );
           })}
         </ol>
+      </section>
+
+      {/* ── Companion data portraits ─────────────────────────────────────
+          Standalone reads of the datasets the chapters draw on. Not part of
+          the linear arc above, so they sit below it rather than inside a part. */}
+      <section className="border-t border-border py-12">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted">Companion data</p>
+        <h2 className="mt-1.5 font-display text-[clamp(20px,3vw,26px)] font-semibold leading-tight text-body">
+          Dataset portraits
+        </h2>
+        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted">
+          Guided reads of the corpora behind the case chapters — what is in them, how they are
+          shaped, and the ways they mislead.
+        </p>
+
+        <ul className="mt-6 grid gap-5 sm:grid-cols-2">
+          <li>
+            <Link
+              href="/teaching/amazon"
+              className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md"
+            >
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition-transform duration-200 group-hover:scale-105 dark:bg-sky-950/50 dark:text-sky-400">
+                <Database size={19} strokeWidth={1.8} />
+              </span>
+              <span className="mt-3 font-display text-[16.5px] font-semibold leading-snug text-body transition-colors group-hover:text-link">
+                Half a billion Amazon reviews
+              </span>
+              <span className="mt-1.5 flex-1 text-[13.5px] leading-snug text-muted">
+                Rating distributions, category volumes, growth, seasonality, and the
+                verified-purchase gap across 33 product categories, 1996–2023.
+              </span>
+              <span className="mt-4 inline-flex items-center gap-1.5 text-[12.5px] font-medium text-muted transition-colors group-hover:text-link">
+                Open the portrait
+                <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </Link>
+          </li>
+        </ul>
       </section>
     </BookFrame>
   );
