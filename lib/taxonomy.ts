@@ -13,14 +13,16 @@
 export const TOPICS = [
   'Elections & Voting',
   'Polarization & Public Opinion',
-  'Happiness & Well-Being',
+  'Media, News & Advertising',
+  'Growing Up in America',
   'Health & Mortality',
-  'Religion & Belief',
-  'Demographics & Society',
+  'Happiness & Well-Being',
+  'Business & Markets',
   'Consumer & Household Finance',
   'Inequality & Mobility',
-  'Business & Markets',
-  'Methods, AI & Data',
+  'Demographics & Society',
+  'Religion & Belief',
+  'AI & Language Models',
 ] as const;
 
 export type Topic = (typeof TOPICS)[number];
@@ -76,11 +78,38 @@ export const TOPIC_META: Record<Topic, { slug: string; blurb: string }> = {
     blurb:
       'Pricing, competition, advertising, and market structure — data stories and teaching cases from the business world.',
   },
-  'Methods, AI & Data': {
-    slug: 'methods-ai-data',
+  'Media, News & Advertising': {
+    slug: 'media-news-advertising',
     blurb:
-      'The craft itself: visualization, causal inference, machine learning, and AI — methods explained with real data.',
+      'The press, the archive, and the ad ledger — how stories get told, what gets covered, and who pays to be seen.',
   },
+  'Growing Up in America': {
+    slug: 'growing-up-in-america',
+    blurb:
+      'Adolescence in the data: mental health, school, sleep, substances, politics, and belief among American teens across five decades.',
+  },
+  'AI & Language Models': {
+    slug: 'ai-language-models',
+    blurb:
+      'What language models can and cannot measure — benchmarks, meaning, bias, and using LLMs as instruments on real data.',
+  },
+};
+
+/**
+ * Retired topics kept as read-only aliases so `/topic/<old-slug>` never 404s.
+ *
+ * 'Methods, AI & Data' was removed because it was the only entry answering *how*
+ * a piece was done rather than *what it is about* — which is why it grew into
+ * the largest bucket and swallowed items belonging to Business & Markets and
+ * elsewhere. Method now lives in the tag vocabulary (lib/tag-vocabulary.ts,
+ * `method` facet), where it composes with any subject.
+ *
+ * Rows in Turso may still carry a retired topic until they are re-filed in
+ * /admin; the gallery renders whatever it finds (see galleryTopicOrder), so
+ * nothing disappears in the meantime.
+ */
+export const RETIRED_TOPIC_SLUGS: Record<string, string> = {
+  'methods-ai-data': 'ai-language-models',
 };
 
 const SLUG_TO_TOPIC = new Map<string, Topic>(TOPICS.map(t => [TOPIC_META[t].slug, t]));
@@ -95,6 +124,23 @@ export function topicFromSlug(slug: string): Topic | undefined {
   return SLUG_TO_TOPIC.get(slug);
 }
 
+/**
+ * Section order for the gallery: canonical topics first, in TOPICS order, then
+ * any other topic actually present on rows (a retired value not yet re-filed),
+ * so a stale topic still renders a section instead of silently hiding its items.
+ *
+ * This matters more than it looks. Under the old flat grid an unfiled or
+ * retired row still appeared somewhere; under a sectioned layout anything not
+ * matched by a section is invisible. Driving the order from `TOPICS ∪ present`
+ * makes it impossible to lose a row by editing the vocabulary.
+ */
+export function galleryTopicOrder(present: Iterable<string>): string[] {
+  const canonical = TOPICS as readonly string[];
+  const known = new Set<string>(canonical);
+  const extra = [...new Set(present)].filter(t => t && !known.has(t)).sort();
+  return [...canonical, ...extra];
+}
+
 const DOMAIN_TO_TOPIC: Record<string, string> = {
   Politics: 'Elections & Voting',
   Elections: 'Elections & Voting',
@@ -105,8 +151,8 @@ const DOMAIN_TO_TOPIC: Record<string, string> = {
   'Consumer Finance': 'Consumer & Household Finance',
   'Household Finance': 'Consumer & Household Finance',
   'Public Finance': 'Inequality & Mobility',
-  'Global Media': 'Business & Markets',
-  Advertising: 'Business & Markets',
+  'Global Media': 'Media, News & Advertising',
+  Advertising: 'Media, News & Advertising',
   Marketplaces: 'Business & Markets',
   'CPG & Pricing': 'Business & Markets',
   Airlines: 'Business & Markets',

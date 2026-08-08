@@ -21,6 +21,7 @@ import {
 } from '@/lib/registry-types';
 import { TAG_VOCABULARY, type TagFacet } from '@/lib/tag-vocabulary';
 import { GalleryCard, TYPE_META } from '@/components/hub/GalleryCard';
+import { GallerySections } from '@/components/hub/GallerySections';
 import { topicSlug } from '@/lib/taxonomy';
 
 /** Facet display order + labels for the grouped tag panel. */
@@ -392,7 +393,13 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
       </div>
 
       <p className="mb-5 mt-4 font-plex text-[11.5px] uppercase tracking-[0.06em] text-hub-ink-faint">
-        {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+        {hasFilters ? (
+          <>
+            {filtered.length} {filtered.length === 1 ? 'result' : 'results'}
+          </>
+        ) : (
+          <>Browse by topic · {items.length} pieces</>
+        )}
         {topic !== 'all' && topicSlug(topic) && (
           <Link
             href={`/topic/${topicSlug(topic)}`}
@@ -417,23 +424,30 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
         )}
       </p>
 
-      {/* Animated grid */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        <AnimatePresence mode="popLayout">
-          {filtered.map(item => (
-            <motion.div
-              key={`${item.type}-${item.id}`}
-              layout
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.24, ease: EASE }}
-            >
-              <GalleryCard item={item} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+      {/* Two modes. Browsing (no filters) gets topic shelves — a flat grid of
+          ~180 cards runs 35 viewports and offers no way in. Searching or
+          filtering gets the flat animated grid, because once you've narrowed to
+          a set, grouping it again just adds chrome between you and the answer. */}
+      {!hasFilters ? (
+        <GallerySections items={filtered} />
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {filtered.map(item => (
+              <motion.div
+                key={`${item.type}-${item.id}`}
+                layout
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.24, ease: EASE }}
+              >
+                <GalleryCard item={item} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
 
       {filtered.length === 0 && (
         <p className="rounded-2xl border border-dashed border-hub-line-strong bg-hub-card p-10 text-center text-hub-ink-soft">

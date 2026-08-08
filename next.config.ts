@@ -26,6 +26,12 @@ const nextConfig: NextConfig = {
       // its own top-level surface at /amazon, where it can host per-analysis
       // sub-pages instead of being one long chapter-shaped page.
       { source: '/teaching/amazon', destination: '/amazon', permanent: true },
+      // Retired topic slugs. 'Methods, AI & Data' was the only topic answering
+      // *how* rather than *what*, so it was split: method became a tag facet and
+      // the AI-subject items became their own topic. Keep the old shelf URL
+      // alive — it is linked from teaching notes. Mirror of
+      // lib/taxonomy.ts#RETIRED_TOPIC_SLUGS.
+      { source: '/topic/methods-ai-data', destination: '/topic/ai-language-models', permanent: true },
       { source: '/ch00-0-foreword', destination: '/ch00-foreword', permanent: true },
       // Part 0 §0.1–§0.4 (Where Data Comes From / How Data Is Stored / How Data Is
       // Used / The Data-to-Decision Loop) were merged into one chapter,

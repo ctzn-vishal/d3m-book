@@ -1,5 +1,5 @@
 import { getDbClient } from '@/lib/turso-admin';
-import { AdminTable } from '@/components/admin/AdminTable';
+import { AdminViews } from '@/components/admin/AdminViews';
 import type { AdminRow } from './types';
 import type { RegistryType, RegistryStatus } from '@/lib/registry-types';
 
@@ -53,13 +53,12 @@ export default async function AdminPage() {
             Curate the gallery
           </h1>
           <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-hub-ink-soft">
-            Just ingested something? <strong>Needs curation</strong> filters to the rows still
-            missing a topic or real tags — the same set <code>pnpm curate-new</code> picks up — and
-            <strong> Recently added</strong> orders by ingest date so a new batch sits at the top.
-            Drag cards (or use ⤒/⤓) to set order — works inside a filter too. ⭐ floats an item to
-            the top of the live gallery. Edit type / status / topic / tags / paired chapter / text
-            inline. Changes write to <strong>live Turso</strong> and show within seconds; the
-            committed snapshot syncs nightly.
+            <strong>Table</strong> is for bulk work: sort and facet any column, select rows, and set
+            topic / type / status across the whole selection in one write. Amber marks a row with no
+            topic or an import-batch date; plum marks a retired topic. <strong>Cards</strong> keeps
+            drag-to-reorder (or ⤒/⤓) and the paired-chapter picker. ⭐ floats an item to the top of
+            the live gallery. Changes write to <strong>live Turso</strong> and show within seconds;
+            the committed snapshot syncs nightly.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -91,7 +90,7 @@ export default async function AdminPage() {
         </p>
       )}
 
-      {connected ? <AdminTable initialRows={rows} /> : null}
+      {connected ? <AdminViews rows={rows} /> : null}
     </div>
   );
 }

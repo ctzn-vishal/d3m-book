@@ -39,10 +39,24 @@ export type AdminRow = {
   updatedAt: string | null;
 };
 
-/** The curated fields /admin v1 may change (metadata only — no content/create/delete). */
+/**
+ * The curated fields /admin may change (metadata only — no content/create/delete).
+ *
+ * `createdAt` is editable because most of the catalog was bulk-imported and
+ * carries an ingest timestamp rather than a publication date — three distinct
+ * months across 181 rows — which makes any "recently added" ordering
+ * meaningless until the real dates are backfilled.
+ */
 export type RowPatch = Partial<
-  Pick<AdminRow, 'type' | 'status' | 'featured' | 'topic' | 'title' | 'description' | 'tags' | 'teaching'>
+  Pick<
+    AdminRow,
+    'type' | 'status' | 'featured' | 'topic' | 'title' | 'description' | 'tags' | 'teaching' | 'createdAt'
+  >
 >;
+
+/** Fields the bulk editor may set across a selection. Deliberately narrower
+ *  than RowPatch — title/description/tags are per-row by nature. */
+export type BulkPatch = Partial<Pick<AdminRow, 'type' | 'status' | 'featured' | 'topic'>>;
 
 /**
  * Server actions return this instead of throwing. Next.js redacts thrown

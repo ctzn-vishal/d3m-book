@@ -43,6 +43,7 @@
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-switch": "^1.2.6",
     "@tailwindcss/typography": "^0.5.19",
+    "@tanstack/react-table": "^9.1.1",
     "@types/katex": "^0.16.8",
     "@types/mdx": "^2.0.13",
     "clsx": "^2.1.1",

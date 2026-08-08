@@ -4,7 +4,15 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { withDb } from '@/lib/turso-admin';
 import { ADMIN_COOKIE, isValidSession } from '@/lib/admin-auth';
-import { TYPE_OPTIONS, STATUS_OPTIONS, TOPIC_OPTIONS, TEACHING_OPTIONS, type RowPatch, type ActionResult } from './types';
+import {
+  TYPE_OPTIONS,
+  STATUS_OPTIONS,
+  TOPIC_OPTIONS,
+  TEACHING_OPTIONS,
+  type RowPatch,
+  type BulkPatch,
+  type ActionResult,
+} from './types';
 
 /**
  * Server actions for /admin v1 — metadata curation of EXISTING rows only.
@@ -21,6 +29,23 @@ async function assertAuthed() {
 
 function normalizeTags(tags: string[]): string[] {
   return [...new Set(tags.map(t => t.trim()).filter(Boolean))].slice(0, 12);
+}
+
+/**
+ * Accepts a `YYYY-MM-DD` date from the admin's date input and stores it in the
+ * same `YYYY-MM-DD HH:MM:SS` UTC shape Turso already holds, so sorting stays a
+ * plain string comparison. Empty clears the field.
+ */
+function normalizeDate(value: string | null): string | null {
+  const v = (value ?? '').trim();
+  if (!v) return null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  if (!m) throw new Error(`invalid date (expected YYYY-MM-DD): ${v}`);
+  const d = new Date(`${v}T00:00:00Z`);
+  if (Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== v) {
+    throw new Error(`not a real date: ${v}`);
+  }
+  return `${v} 00:00:00`;
 }
 
 function bumpAndRevalidate() {
@@ -73,10 +98,63 @@ export async function updateRow(id: string, patch: RowPatch): Promise<ActionResu
       }
       sets.push('teaching=?'); args.push(teaching || null);
     }
+    if (patch.createdAt !== undefined) {
+      sets.push('created_at=?'); args.push(normalizeDate(patch.createdAt));
+    }
 
     if (!sets.length) return { ok: true };
     sets.push("updated_at=datetime('now')");
     await withDb(db => db.execute({ sql: `UPDATE gallery SET ${sets.join(', ')} WHERE id=?`, args: [...args, id] }));
+    bumpAndRevalidate();
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message || 'Unknown error' };
+  }
+}
+
+/**
+ * Apply one patch to many rows in a single write.
+ *
+ * This exists for the taxonomy work: re-filing ~40 items one row at a time is
+ * exactly how a vocabulary drifts in the first place. Validates once, then
+ * issues a single batched UPDATE so a 40-row re-topic is one round trip rather
+ * than 40 — and either all of it lands or none of it does.
+ */
+export async function updateRows(ids: string[], patch: BulkPatch): Promise<ActionResult> {
+  try {
+    await assertAuthed();
+    const unique = [...new Set(ids.filter(Boolean))];
+    if (!unique.length) throw new Error('no rows selected');
+
+    const sets: string[] = [];
+    const args: (string | number | null)[] = [];
+
+    if (patch.type !== undefined) {
+      if (!TYPE_OPTIONS.includes(patch.type)) throw new Error(`invalid type: ${patch.type}`);
+      sets.push('type=?'); args.push(patch.type);
+    }
+    if (patch.status !== undefined) {
+      if (!STATUS_OPTIONS.includes(patch.status)) throw new Error(`invalid status: ${patch.status}`);
+      sets.push('status=?'); args.push(patch.status);
+    }
+    if (patch.featured !== undefined) {
+      sets.push('featured=?'); args.push(patch.featured ? 1 : 0);
+    }
+    if (patch.topic !== undefined) {
+      const topic = patch.topic ? patch.topic.trim() : '';
+      if (topic && !TOPIC_OPTIONS.includes(topic)) throw new Error(`invalid topic: ${topic}`);
+      sets.push('topic=?'); args.push(topic || null);
+    }
+    if (!sets.length) throw new Error('nothing to change');
+
+    sets.push("updated_at=datetime('now')");
+    const placeholders = unique.map(() => '?').join(',');
+    await withDb(db =>
+      db.execute({
+        sql: `UPDATE gallery SET ${sets.join(', ')} WHERE id IN (${placeholders})`,
+        args: [...args, ...unique],
+      })
+    );
     bumpAndRevalidate();
     return { ok: true };
   } catch (e) {
