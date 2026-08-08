@@ -10,6 +10,7 @@
     "lint": "next lint",
     "verify-book": "node --import tsx scripts/verify-book.ts",
     "fetch-data": "node --env-file=.env.local scripts/fetch-article-data.mjs",
+    "fetch-amazon": "node scripts/fetch-amazon-aggregates.mjs",
     "sync-articles": "node --env-file=.env.local scripts/sync-articles.mjs",
     "rebuild-manifest": "node --env-file=.env.local scripts/rebuild-manifest.mjs",
     "sync-datasets": "node --env-file=.env.local scripts/sync-datasets.mjs",
