@@ -1,6 +1,7 @@
 import { HubHeader } from '@/components/hub/HubHeader';
 import { HubFooter } from '@/components/hub/HubFooter';
 import { AmazonNav } from '@/components/amazon/AmazonNav';
+import { ScrollToTop } from '@/components/hub/ScrollToTop';
 
 /**
  * Shell for every /amazon surface. Same warm-paper editorial scope as the rest
@@ -16,6 +17,7 @@ export default function AmazonLayout({ children }: { children: React.ReactNode }
       <AmazonNav />
       <div className="flex-grow">{children}</div>
       <HubFooter />
+      <ScrollToTop />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { HubHeader } from '@/components/hub/HubHeader';
 import { HubFooter } from '@/components/hub/HubFooter';
+import { ScrollToTop } from '@/components/hub/ScrollToTop';
 
 /**
  * Layout for the hub surfaces (home, gallery, research, about).
@@ -13,6 +14,7 @@ export default function HubLayout({ children }: { children: React.ReactNode }) {
       <HubHeader />
       <div className="flex-grow">{children}</div>
       <HubFooter />
+      <ScrollToTop />
     </div>
   );
 }
