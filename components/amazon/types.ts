@@ -1,7 +1,7 @@
 /**
- * Shape of app/teaching/amazon/data/amazon-reviews.json, plus the formatting
- * and palette helpers the report shares. Regenerate the JSON with
- * `pnpm fetch-amazon` (scripts/fetch-amazon-aggregates.mjs).
+ * Shape of app/amazon/data/amazon-reviews.json, plus the formatting and palette
+ * helpers every Amazon page shares. Regenerate the JSON with `pnpm fetch-amazon`
+ * (scripts/fetch-amazon-aggregates.mjs).
  */
 
 /** One point in a time series. Field names are terse because they repeat ~2,200×. */
@@ -69,25 +69,29 @@ export const ALL = 'ALL';
 export const MIN_CELL = 500;
 
 // ── Palette ────────────────────────────────────────────────────────────────
-// Axis/label colours resolve through the book's CSS variables so the charts
-// follow the light/dark toggle. Accent hues are fixed mid-tones chosen to hold
-// contrast on both the white and slate-900 reading surfaces.
-export const INK = 'rgb(var(--book-body))';
-export const MUTED = 'rgb(var(--book-muted))';
-export const GRID = 'rgb(var(--book-border))';
-export const SURFACE = 'rgb(var(--book-surface))';
+// Axis and label colours resolve through the hub's CSS variables so charts
+// follow the light/dark toggle and sit inside the warm-paper editorial scope
+// rather than the book's white reading theme.
+export const INK = 'rgb(var(--hub-ink))';
+export const SOFT = 'rgb(var(--hub-ink-soft))';
+export const MUTED = 'rgb(var(--hub-ink-faint))';
+export const GRID = 'rgb(var(--hub-line))';
+export const SURFACE = 'rgb(var(--hub-paper))';
 
+/** Accents track the hub tokens, so they invert with the theme for free. */
 export const ACCENT = {
-  sky: '#0EA5E9',
-  orange: '#F97316',
-  emerald: '#10B981',
-  violet: '#8B5CF6',
-  rose: '#F43F5E',
-  amber: '#F59E0B',
+  blue: 'rgb(var(--hub-blue))',
+  amber: 'rgb(var(--hub-amber))',
+  teal: 'rgb(var(--hub-teal))',
+  plum: 'rgb(var(--hub-plum))',
 } as const;
 
-/** 1★ → 5★, warm-to-cool so the sentiment ordering reads without a legend. */
-export const STARS = ['#F43F5E', '#FB923C', '#FACC15', '#84CC16', '#10B981'];
+/**
+ * 1★ → 5★. Fixed mid-tones rather than hub vars — an ordered five-step ramp
+ * needs five hues, and every one is chosen at roughly L* 45–65 so it holds
+ * contrast on both the paper and the near-black surface.
+ */
+export const STARS = ['#C9524A', '#D4813F', '#C2A03A', '#78A05C', '#3E8C86'];
 
 // ── Formatters ─────────────────────────────────────────────────────────────
 export const int = (n: number) => n.toLocaleString('en-US');
@@ -106,6 +110,9 @@ export function compact(n: number): string {
 }
 
 export const pct = (n: number, d = 1) => `${n.toFixed(d)}%`;
+
+/** Signed to two decimals — for differences where the sign carries the meaning. */
+export const signed = (n: number, d = 2) => `${n >= 0 ? '+' : '−'}${Math.abs(n).toFixed(d)}`;
 
 export function isoDate(s: string): string {
   return new Date(`${s}T00:00:00Z`).toLocaleDateString('en-US', {

@@ -24,7 +24,7 @@ const ORIGIN = 'https://ontopic-public-data.t3.storage.dev';
 const PREFIX = 'amazon-reviews/merged_results';
 const OUT = resolve(
   dirname(fileURLToPath(import.meta.url)),
-  '../app/teaching/amazon/data/amazon-reviews.json'
+  '../app/amazon/data/amazon-reviews.json'
 );
 
 /** Minimal RFC-4180 parser — enough for these files (no embedded quotes). */

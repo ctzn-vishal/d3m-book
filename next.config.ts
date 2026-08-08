@@ -22,6 +22,10 @@ const nextConfig: NextConfig = {
   // ch50 -> ch16-llm-capabilities).
   async redirects() {
     return [
+      // The Amazon-reviews project moved out of the book (/teaching/amazon) to
+      // its own top-level surface at /amazon, where it can host per-analysis
+      // sub-pages instead of being one long chapter-shaped page.
+      { source: '/teaching/amazon', destination: '/amazon', permanent: true },
       { source: '/ch00-0-foreword', destination: '/ch00-foreword', permanent: true },
       // Part 0 §0.1–§0.4 (Where Data Comes From / How Data Is Stored / How Data Is
       // Used / The Data-to-Decision Loop) were merged into one chapter,

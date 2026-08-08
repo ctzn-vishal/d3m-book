@@ -3,6 +3,7 @@ import { SITE_URL } from '@/lib/share-metadata';
 import { allArticles, getAllPartNumerals } from '@/lib/book-toc';
 import { getDatasetItems } from '@/lib/gallery';
 import { TOPICS, TOPIC_META } from '@/lib/taxonomy';
+import { LIVE_ANALYSES } from '@/lib/amazon';
 
 export const revalidate = 86400;
 
@@ -12,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const corePages: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE_URL}/teaching`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
-    { url: `${SITE_URL}/teaching/amazon`, lastModified: now, changeFrequency: 'yearly', priority: 0.7 },
+    { url: `${SITE_URL}/amazon`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/research`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/nlp`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
@@ -38,6 +39,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.6,
     }));
+
+  // Amazon-reviews analyses — one page per entry in lib/amazon.ts.
+  const amazonPages: MetadataRoute.Sitemap = LIVE_ANALYSES.map(
+    (a): MetadataRoute.Sitemap[number] => ({
+      url: `${SITE_URL}/amazon/${a.slug}`,
+      lastModified: new Date(`${a.updated}T00:00:00Z`),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    })
+  );
 
   // Topic landing pages — one per canonical topic (lib/taxonomy).
   const topicPages: MetadataRoute.Sitemap = TOPICS.map(
@@ -67,5 +78,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     datasetPages = [];
   }
 
-  return [...corePages, ...topicPages, ...teachingNav, ...bookPages, ...datasetPages];
+  return [
+    ...corePages,
+    ...amazonPages,
+    ...topicPages,
+    ...teachingNav,
+    ...bookPages,
+    ...datasetPages,
+  ];
 }

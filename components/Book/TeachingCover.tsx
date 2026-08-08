@@ -172,7 +172,7 @@ export function TeachingCover({ book }: { book: Book }) {
         <ul className="mt-6 grid gap-5 sm:grid-cols-2">
           <li>
             <Link
-              href="/teaching/amazon"
+              href="/amazon"
               className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-5 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-md"
             >
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600 transition-transform duration-200 group-hover:scale-105 dark:bg-sky-950/50 dark:text-sky-400">
