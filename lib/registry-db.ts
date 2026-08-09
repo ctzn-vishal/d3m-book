@@ -1,6 +1,6 @@
 import 'server-only';
 import { getDbClient, resetDbClient } from '@/lib/turso-admin';
-import { snapshotItems, sortItems } from '@/lib/registry';
+import { snapshotItems, snapshotItemsIncludingUnlisted, sortItems } from '@/lib/registry';
 import type { RegistryItem, RegistryType } from '@/lib/registry-types';
 
 /**
@@ -35,6 +35,10 @@ function mapRows(rows: Record<string, any>[]): RegistryItem[] {
     topic: r.topic ?? undefined,
     tags: parseTags(r.id, r.tags),
     teaching: r.teaching ?? undefined,
+    collection: r.collection ?? undefined,
+    // Older DBs predate the column; PRAGMA-guarded ALTERs in sync-registry add
+    // it, but a read can land before that runs — so treat absent as unset.
+    part: r.part == null ? undefined : Number(r.part),
     href: r.href,
     external: !!r.external,
     openInNewTab: !!r.open_in_new_tab,
@@ -86,6 +90,19 @@ async function readTurso(where: string): Promise<RegistryItem[] | null> {
 export async function getRegistry(): Promise<RegistryItem[]> {
   const live = await readTurso(" WHERE status = 'published'");
   return live ? sortItems(live) : snapshotItems();
+}
+
+/**
+ * Published *and* unlisted rows — for collection hubs only.
+ *
+ * 'unlisted' means "publicly served, but no card in the gallery grid", which is
+ * precisely what a series part is: it should be reachable from its collection's
+ * page and nowhere else. Every other surface must keep using `getRegistry()`.
+ *
+ */
+export async function getRegistryIncludingUnlisted(): Promise<RegistryItem[]> {
+  const live = await readTurso(" WHERE status IN ('published','unlisted')");
+  return live ? sortItems(live) : snapshotItemsIncludingUnlisted();
 }
 
 /**

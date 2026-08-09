@@ -40,6 +40,21 @@ export type RegistryItem = {
   tags: string[];
   /** Slug of the book article/chapter this pairs with, if any. */
   teaching?: string;
+  /**
+   * Slug of the collection this item belongs to — see lib/collections.ts.
+   *
+   * A collection groups related pieces that were each authored as a standalone
+   * file: a numbered series, a booklet, or the analyses over one dataset.
+   * Membership is metadata, so a new piece joins by setting this field rather
+   * than by any existing page being rewritten.
+   */
+  collection?: string;
+  /**
+   * 1-based position within the collection. Set on every member ⇒ the
+   * collection reads as an ordered series (with prev/next); left unset ⇒ an
+   * unordered set where reading order carries no meaning.
+   */
+  part?: number;
   href: string;
   external: boolean;
   openInNewTab?: boolean;

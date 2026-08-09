@@ -230,6 +230,7 @@ await db.execute(`CREATE TABLE IF NOT EXISTS gallery (
   type TEXT NOT NULL CHECK (type IN ('App','Teaching','Blog','Dataset')),
   title TEXT NOT NULL, description TEXT,
   domain TEXT, topic TEXT, tags TEXT, teaching TEXT, href TEXT NOT NULL,
+  collection TEXT, part INTEGER,
   external INTEGER NOT NULL DEFAULT 0 CHECK (external IN (0,1)),
   open_in_new_tab INTEGER NOT NULL DEFAULT 0 CHECK (open_in_new_tab IN (0,1)),
   thumbnail TEXT, accent TEXT,
@@ -246,6 +247,11 @@ const cols = new Set((await db.execute('PRAGMA table_info(gallery)')).rows.map((
 for (const col of ['created_at', 'updated_at']) {
   if (!cols.has(col)) await db.execute(`ALTER TABLE gallery ADD COLUMN ${col} TEXT`);
 }
+// Collection membership (lib/collections.ts). Nullable and curated — never
+// derived from source — so an existing table just gains two empty columns and
+// nothing changes until rows are filed in /admin.
+if (!cols.has('collection')) await db.execute('ALTER TABLE gallery ADD COLUMN collection TEXT');
+if (!cols.has('part')) await db.execute('ALTER TABLE gallery ADD COLUMN part INTEGER');
 // A single timestamp for this run, in the DB's datetime('now') format (UTC,
 // 'YYYY-MM-DD HH:MM:SS') so JS-set and SQL-default values are consistent.
 const NOW = (await db.execute("SELECT datetime('now') AS now")).rows[0].now as string;
@@ -258,6 +264,11 @@ await db.execute("UPDATE gallery SET updated_at = datetime('now') WHERE updated_
 // CURATED columns (kept from Turso if the row exists) vs DERIVED (refreshed from source).
 // `updated_at` only bumps when a persisted column actually changes, so it stays a
 // meaningful "last content change" rather than "last sync".
+//
+// `collection` and `part` are curated by omission: they appear in neither the
+// INSERT column list nor the ON CONFLICT SET list below, so a sync can't clear
+// them and a new row simply starts NULL. Do NOT add them to that statement —
+// collection membership has no source-of-truth outside Turso/admin.
 const norm = (v: any) => (v === undefined ? null : v);
 function rowChanged(prev: any, m: RegistryItem): boolean {
   return (

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { withDb } from '@/lib/turso-admin';
+import { COLLECTIONS } from '@/lib/collections';
 import { ADMIN_COOKIE, isValidSession } from '@/lib/admin-auth';
 import {
   TYPE_OPTIONS,
@@ -46,6 +47,23 @@ function normalizeDate(value: string | null): string | null {
     throw new Error(`not a real date: ${v}`);
   }
   return `${v} 00:00:00`;
+}
+
+/** Collection slug must exist in lib/collections.ts — an unknown slug would file
+ *  the row into a collection with no editorial shell and no hub page. */
+function normalizeCollection(value: string | null): string | null {
+  const v = (value ?? '').trim();
+  if (!v) return null;
+  if (!COLLECTIONS.some(c => c.slug === v)) throw new Error(`unknown collection: ${v}`);
+  return v;
+}
+
+/** Position within an ordered collection. Empty clears it (an unordered member). */
+function normalizePart(value: number | null): number | null {
+  if (value === null || value === undefined) return null;
+  const n = Number(value);
+  if (!Number.isInteger(n) || n < 1 || n > 999) throw new Error(`invalid part: ${value}`);
+  return n;
 }
 
 function bumpAndRevalidate() {
@@ -101,6 +119,12 @@ export async function updateRow(id: string, patch: RowPatch): Promise<ActionResu
     if (patch.createdAt !== undefined) {
       sets.push('created_at=?'); args.push(normalizeDate(patch.createdAt));
     }
+    if (patch.collection !== undefined) {
+      sets.push('collection=?'); args.push(normalizeCollection(patch.collection));
+    }
+    if (patch.part !== undefined) {
+      sets.push('part=?'); args.push(normalizePart(patch.part));
+    }
 
     if (!sets.length) return { ok: true };
     sets.push("updated_at=datetime('now')");
@@ -144,6 +168,9 @@ export async function updateRows(ids: string[], patch: BulkPatch): Promise<Actio
       const topic = patch.topic ? patch.topic.trim() : '';
       if (topic && !TOPIC_OPTIONS.includes(topic)) throw new Error(`invalid topic: ${topic}`);
       sets.push('topic=?'); args.push(topic || null);
+    }
+    if (patch.collection !== undefined) {
+      sets.push('collection=?'); args.push(normalizeCollection(patch.collection));
     }
     if (!sets.length) throw new Error('nothing to change');
 

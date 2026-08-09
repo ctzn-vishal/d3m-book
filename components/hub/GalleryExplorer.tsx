@@ -155,7 +155,17 @@ function RemovableChip({ onRemove, children }: { onRemove: () => void; children:
   );
 }
 
-export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; facets: RegistryFacets }) {
+export function GalleryExplorer({
+  items,
+  facets,
+  collectionSizes = {},
+}: {
+  items: RegistryItem[];
+  facets: RegistryFacets;
+  /** slug → total members incl. unlisted, so a series whose parts are unlisted
+   *  still collapses to one card instead of showing as a lone item. */
+  collectionSizes?: Record<string, number>;
+}) {
   const [query, setQuery] = useState('');
   const [type, setType] = useState<RegistryType | 'all'>('all');
   const [topic, setTopic] = useState<string | 'all'>('all');
@@ -429,7 +439,7 @@ export function GalleryExplorer({ items, facets }: { items: RegistryItem[]; face
           filtering gets the flat animated grid, because once you've narrowed to
           a set, grouping it again just adds chrome between you and the answer. */}
       {!hasFilters ? (
-        <GallerySections items={filtered} />
+        <GallerySections items={filtered} collectionSizes={collectionSizes} />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           <AnimatePresence mode="popLayout">

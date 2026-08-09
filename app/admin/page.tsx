@@ -15,6 +15,8 @@ function toAdminRow(r: Record<string, any>): AdminRow {
     topic: r.topic ?? null,
     tags: r.tags ? JSON.parse(r.tags) : [],
     teaching: r.teaching ?? null,
+    collection: r.collection ?? null,
+    part: r.part == null ? null : Number(r.part),
     status: r.status as RegistryStatus,
     featured: !!r.featured,
     sort: r.sort ?? 0,

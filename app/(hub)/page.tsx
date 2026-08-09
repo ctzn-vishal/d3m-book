@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { GalleryExplorer } from '@/components/hub/GalleryExplorer';
-import { getRegistry } from '@/lib/registry-db';
+import { getRegistry, getRegistryIncludingUnlisted } from '@/lib/registry-db';
 import { getRegistryFacets } from '@/lib/registry';
 import { SITE_URL } from '@/lib/share-metadata';
 import { JsonLd } from '@/components/JsonLd';
@@ -37,6 +37,15 @@ export default async function HomeGallery() {
   const items = await getRegistry();
   const facets = getRegistryFacets(items);
 
+  // Collection sizes count unlisted members too. A series normally keeps its
+  // parts unlisted so they don't litter the grid, so counting only what the
+  // gallery can see would leave a six-part series looking like a single item.
+  const withUnlisted = await getRegistryIncludingUnlisted();
+  const collectionSizes: Record<string, number> = {};
+  for (const i of withUnlisted) {
+    if (i.collection) collectionSizes[i.collection] = (collectionSizes[i.collection] ?? 0) + 1;
+  }
+
   return (
     <div>
       <JsonLd data={homeLd} />
@@ -56,7 +65,7 @@ export default async function HomeGallery() {
       </header>
 
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-7">
-        <GalleryExplorer items={items} facets={facets} />
+        <GalleryExplorer items={items} facets={facets} collectionSizes={collectionSizes} />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import { REGISTRY_TYPES, type RegistryType, type RegistryStatus } from '@/lib/registry-types';
 import { TOPICS } from '@/lib/taxonomy';
+import { COLLECTIONS } from '@/lib/collections';
 import { allArticles } from '@/lib/book-toc';
 
 /** Dropdown vocabularies — the SAME lists the DB CHECK constraints enforce. */
@@ -27,6 +28,10 @@ export type AdminRow = {
   topic: string | null;
   tags: string[];
   teaching: string | null;
+  /** Collection slug (lib/collections.ts), or null if the item stands alone. */
+  collection: string | null;
+  /** 1-based position within an ordered collection; null for unordered sets. */
+  part: number | null;
   status: RegistryStatus;
   featured: boolean;
   sort: number;
@@ -50,13 +55,29 @@ export type AdminRow = {
 export type RowPatch = Partial<
   Pick<
     AdminRow,
-    'type' | 'status' | 'featured' | 'topic' | 'title' | 'description' | 'tags' | 'teaching' | 'createdAt'
+    | 'type'
+    | 'status'
+    | 'featured'
+    | 'topic'
+    | 'title'
+    | 'description'
+    | 'tags'
+    | 'teaching'
+    | 'createdAt'
+    | 'collection'
+    | 'part'
   >
 >;
 
 /** Fields the bulk editor may set across a selection. Deliberately narrower
- *  than RowPatch — title/description/tags are per-row by nature. */
-export type BulkPatch = Partial<Pick<AdminRow, 'type' | 'status' | 'featured' | 'topic'>>;
+ *  than RowPatch — title/description/tags/part are per-row by nature. */
+export type BulkPatch = Partial<Pick<AdminRow, 'type' | 'status' | 'featured' | 'topic' | 'collection'>>;
+
+/** Collection slugs offered in the admin dropdowns. */
+export const COLLECTION_OPTIONS: Array<{ slug: string; label: string }> = COLLECTIONS.map(c => ({
+  slug: c.slug,
+  label: c.title,
+}));
 
 /**
  * Server actions return this instead of throwing. Next.js redacts thrown

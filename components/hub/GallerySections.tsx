@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { RegistryItem } from '@/lib/registry-types';
 import { GalleryCard } from '@/components/hub/GalleryCard';
+import { CollectionCard } from '@/components/hub/CollectionCard';
+import { findCollection, type Collection } from '@/lib/collections';
 import { galleryTopicOrder, topicSlug, TOPIC_META } from '@/lib/taxonomy';
 
 /** Items shown per shelf before the "see all" link takes over. */
@@ -11,6 +13,66 @@ const PER_SECTION = 6;
 
 /** Bucket for rows with no topic — always last, and never silently dropped. */
 const UNFILED = 'More from the catalog';
+
+/** A shelf entry is either a single item or a whole collection standing in for
+ *  its members. Collapsing happens per shelf, so a collection appears once, on
+ *  the shelf of whichever topic its members carry. */
+type Entry =
+  | { kind: 'item'; key: string; item: RegistryItem; featured: boolean }
+  | {
+      kind: 'collection';
+      key: string;
+      collection: Collection;
+      members: RegistryItem[];
+      /** Every member, including unlisted ones the gallery never shows. */
+      total: number;
+      featured: boolean;
+    };
+
+/**
+ * Fold a shelf's items so that members of a known collection collapse into one
+ * card. A collection whose slug has no entry in lib/collections.ts is left
+ * expanded — better a few loose cards than a card pointing at a hub that has no
+ * title or blurb.
+ */
+function collapse(items: RegistryItem[], sizes: Record<string, number>): Entry[] {
+  const out: Entry[] = [];
+  const grouped = new Map<string, RegistryItem[]>();
+
+  for (const item of items) {
+    const c = item.collection ? findCollection(item.collection) : undefined;
+    if (!c) {
+      out.push({ kind: 'item', key: `${item.type}-${item.id}`, item, featured: item.featured });
+      continue;
+    }
+    const list = grouped.get(c.slug);
+    if (list) list.push(item);
+    else grouped.set(c.slug, [item]);
+  }
+
+  for (const [slug, members] of grouped) {
+    const c = findCollection(slug)!;
+    // Size counts every member including unlisted ones. A series usually keeps
+    // its parts unlisted so they don't litter the grid — judging by the visible
+    // members alone would leave a six-part series showing as a lone card.
+    const total = Math.max(sizes[slug] ?? 0, members.length);
+    if (total < 2) {
+      const only = members[0];
+      out.push({ kind: 'item', key: `${only.type}-${only.id}`, item: only, featured: only.featured });
+      continue;
+    }
+    out.push({
+      kind: 'collection',
+      key: `collection-${slug}`,
+      collection: c,
+      members,
+      total,
+      featured: members.some(m => m.featured),
+    });
+  }
+
+  return out;
+}
 
 /**
  * The default (unfiltered) gallery: one shelf per topic instead of a single
@@ -27,7 +89,14 @@ const UNFILED = 'More from the catalog';
  * topic's items visible until they're re-filed — under a sectioned layout an
  * unmatched row is invisible, not merely unsorted.
  */
-export function GallerySections({ items }: { items: RegistryItem[] }) {
+export function GallerySections({
+  items,
+  collectionSizes = {},
+}: {
+  items: RegistryItem[];
+  /** slug → total members (published + unlisted), from the server. */
+  collectionSizes?: Record<string, number>;
+}) {
   const byTopic = new Map<string, RegistryItem[]>();
   for (const item of items) {
     const key = item.topic || UNFILED;
@@ -44,10 +113,15 @@ export function GallerySections({ items }: { items: RegistryItem[] }) {
     <div className="mt-2">
       {order.map(topic => {
         const all = byTopic.get(topic)!;
-        // Featured first within a shelf, so the six on show are the six chosen.
-        const sorted = [...all].sort((a, b) => Number(b.featured) - Number(a.featured));
-        const shown = sorted.slice(0, PER_SECTION);
-        const rest = all.length - shown.length;
+        // Collapse collections first, then take the top six ENTRIES — a
+        // five-part series occupies one slot, not five, which is the point.
+        const entries = collapse(all, collectionSizes).sort((a, b) => Number(b.featured) - Number(a.featured));
+        const shown = entries.slice(0, PER_SECTION);
+        // Count in ITEMS, not entries: six cards can already represent more than
+        // six pieces once a collection is folded in, and the "see all" link
+        // should appear whenever the topic page holds something the shelf doesn't.
+        const itemsShown = shown.reduce((n, e) => n + (e.kind === 'collection' ? e.members.length : 1), 0);
+        const rest = all.length - itemsShown;
         const slug = topic === UNFILED ? undefined : topicSlug(topic);
         const blurb =
           topic === UNFILED
@@ -74,9 +148,18 @@ export function GallerySections({ items }: { items: RegistryItem[] }) {
             {blurb && <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-hub-ink-soft">{blurb}</p>}
 
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {shown.map(item => (
-                <GalleryCard key={`${item.type}-${item.id}`} item={item} />
-              ))}
+              {shown.map(entry =>
+                entry.kind === 'collection' ? (
+                  <CollectionCard
+                    key={entry.key}
+                    collection={entry.collection}
+                    members={entry.members}
+                    total={entry.total}
+                  />
+                ) : (
+                  <GalleryCard key={entry.key} item={entry.item} />
+                )
+              )}
             </div>
 
             {/* A canonical topic has a landing page; a retired one only exists

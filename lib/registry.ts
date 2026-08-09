@@ -40,6 +40,17 @@ export function snapshotItems(): RegistryItem[] {
   return sortItems(SNAPSHOT.filter(i => i.status === 'published'));
 }
 
+/**
+ * Published *and* unlisted snapshot items — the fallback for collection hubs.
+ *
+ * A series part is normally 'unlisted': served, but no card in the gallery grid.
+ * Filtering those out here would make a hub show one part of six whenever the
+ * DB is unreachable, which reads as data loss rather than degradation.
+ */
+export function snapshotItemsIncludingUnlisted(): RegistryItem[] {
+  return sortItems(SNAPSHOT.filter(i => i.status === 'published' || i.status === 'unlisted'));
+}
+
 /** Look up any item by id (incl. hidden) — used by the in-book <CaseRef>. */
 export function getRegistryItem(id: string): RegistryItem | undefined {
   return SNAPSHOT.find(i => i.id === id);
