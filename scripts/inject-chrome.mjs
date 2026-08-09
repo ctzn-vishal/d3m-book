@@ -33,6 +33,11 @@ const client = new S3Client({
 const DST = CONTENT_BUCKET;
 const PREFIXES = ['articles', 'studios', 'apps'];
 const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
+// --dry-run reads and transforms everything but PUTs nothing, and lists the
+// keys that would change. Worth reaching for after a registry change that
+// touches many rows (a re-topic, a new collection) to see the blast radius
+// before rewriting the bucket.
+const DRY = process.argv.includes('--dry-run');
 
 // ── Registry snapshot: per-file metadata + the related-links candidate pool ──
 const snap = JSON.parse(await readFile(fileURLToPath(new URL('../content/registry.snapshot.json', import.meta.url)), 'utf8'));
@@ -45,6 +50,14 @@ for (const it of snap.items ?? []) {
 // Related candidates: published, bucket-hosted stories/studios/apps (no datasets —
 // those live on the hub and read as downloads, not follow-on reading).
 const candidates = [...metaByKey.values()].filter(it => it.status === 'published' && it.type !== 'Dataset');
+// Series resolution needs the WHOLE snapshot, not just bucket-hosted files:
+// a collection can mix bucket HTML with hub routes, and its parts are usually
+// 'unlisted' (served, but no gallery card) — filtering those out would break
+// the prev/next chain at the first one.
+const siblings = snap.items ?? [];
+const collections = JSON.parse(
+  await readFile(fileURLToPath(new URL('../content/collections.json', import.meta.url)), 'utf8')
+).collections ?? [];
 
 async function listAll(Bucket, Prefix) {
   let t; const out = [];
@@ -59,20 +72,23 @@ async function pool(items, n, fn) { let i = 0; await Promise.all(Array.from({ le
 const isVersionedData = k => /^apps\/[^/]+\/v\d+\//.test(k);
 const keys = [];
 for (const p of PREFIXES) keys.push(...(await listAll(DST, `${p}/`)).filter(k => k.endsWith('.html') && !isVersionedData(k)));
-console.log(`Found ${keys.length} HTML files across ${PREFIXES.join(', ')} (registry meta for ${metaByKey.size}, ${candidates.length} related-link candidates).`);
+const inCollections = siblings.filter(i => i.collection).length;
+console.log(`Found ${keys.length} HTML files across ${PREFIXES.join(', ')} (registry meta for ${metaByKey.size}, ${candidates.length} related-link candidates, ${inCollections} rows in ${collections.length} collections).`);
 
-let pill = 0, og = 0, ld = 0, rel = 0, changed = 0, skipped = 0, err = 0;
+let pill = 0, og = 0, ld = 0, rel = 0, series = 0, changed = 0, skipped = 0, err = 0;
 await pool(keys, 6, async key => {
   try {
     const html = await getText(DST, key);
-    const { html: out, did } = applyChrome(html, { key, meta: metaByKey.get(key), candidates });
+    const { html: out, did } = applyChrome(html, { key, meta: metaByKey.get(key), candidates, siblings, collections });
     if (did.pill) pill++;
     if (did.og) og++;
     if (did.ld) ld++;
     if (did.rel) rel++;
+    if (did.series) series++;
     if (out === html) { skipped++; return; }
     changed++;
+    if (DRY) { console.log('  would rewrite', key, Object.entries(did).filter(([, v]) => v).map(([k]) => k).join(',')); return; }
     await client.send(new PutObjectCommand({ Bucket: DST, Key: key, Body: out, ContentType: 'text/html; charset=utf-8', CacheControl: 'public, max-age=3600' }));
   } catch (e) { err++; console.log('  ERR', key, e.message); }
 });
-console.log(`Rewrote ${changed} file(s) — pill +${pill}, og ±${og}, json-ld ±${ld}, related ±${rel} | unchanged: ${skipped} | errors: ${err}`);
+console.log(`${DRY ? 'DRY RUN — would rewrite' : 'Rewrote'} ${changed} file(s) — pill +${pill}, og ±${og}, json-ld ±${ld}, related ±${rel}, series ±${series} | unchanged: ${skipped} | errors: ${err}`);

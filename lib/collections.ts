@@ -14,11 +14,17 @@
  * rewritten to point at a later one. This file holds only the editorial shell:
  * what the collection is called and how it is introduced.
  *
- * Adding a collection: append an entry. A hub page appears automatically at
- * /c/<slug> as soon as any row claims the slug. If it later outgrows the
- * generic page, hand-build a route and set `href` — the collection keeps its
- * identity and the gallery keeps linking to one place.
+ * Adding a collection: append an entry to content/collections.json. A hub page
+ * appears automatically at /c/<slug> as soon as any row claims the slug. If it
+ * later outgrows the generic page, hand-build a route and set `href` — the
+ * collection keeps its identity and the gallery keeps linking to one place.
+ *
+ * The definitions live in JSON, not here, because scripts/chrome-blocks.mjs
+ * needs them too — it injects the series strip into the bucket HTML and is
+ * plain ESM that cannot import TypeScript. One file, two readers, no drift.
  */
+
+import data from '@/content/collections.json';
 
 export interface Collection {
   /** URL segment; also the value stored on `gallery.collection`. */
@@ -41,34 +47,7 @@ export interface Collection {
   source?: string;
 }
 
-export const COLLECTIONS: Collection[] = [
-  {
-    slug: 'india-ad-ledger',
-    title: 'The Political Ad Ledger',
-    blurb:
-      'A five-part read through India’s political advertising disclosures — who buys, what they say, and what the ledger leaves out.',
-    status: 'building',
-    source: 'Indian political ad disclosures',
-  },
-  {
-    slug: 'amazon-reviews',
-    title: 'Half a billion Amazon reviews',
-    blurb:
-      'Analyses over the Amazon Reviews 2023 corpus — 507.7M reviews across 33 product categories, 1996–2023.',
-    href: '/amazon',
-    status: 'building',
-    source: 'Amazon Reviews 2023 aggregates',
-  },
-  {
-    slug: 'measure-of-words',
-    title: 'The Measure of Words',
-    blurb:
-      'A field booklet on text as data: dictionaries, topic models, and LLM measurement at scale.',
-    href: '/nlp',
-    status: 'complete',
-    source: 'Text-as-data corpora',
-  },
-];
+export const COLLECTIONS: Collection[] = data.collections as Collection[];
 
 const BY_SLUG = new Map(COLLECTIONS.map(c => [c.slug, c]));
 

@@ -1,0 +1,28 @@
+{
+  "_README": "Collection definitions — the editorial shell for groups of related pieces. Membership itself lives on gallery rows (collection + part), curated in /admin. Plain JSON because two worlds read it: lib/collections.ts (typed, for the app) and scripts/chrome-blocks.mjs (plain ESM, for the bucket HTML injector). Keeping one file avoids the two drifting.",
+  "collections": [
+    {
+      "slug": "india-ad-ledger",
+      "title": "The Political Ad Ledger",
+      "blurb": "A five-part read through India's political advertising disclosures — who buys, what they say, and what the ledger leaves out.",
+      "status": "building",
+      "source": "Indian political ad disclosures"
+    },
+    {
+      "slug": "amazon-reviews",
+      "title": "Half a billion Amazon reviews",
+      "blurb": "Analyses over the Amazon Reviews 2023 corpus — 507.7M reviews across 33 product categories, 1996–2023.",
+      "href": "/amazon",
+      "status": "building",
+      "source": "Amazon Reviews 2023 aggregates"
+    },
+    {
+      "slug": "measure-of-words",
+      "title": "The Measure of Words",
+      "blurb": "A field booklet on text as data: dictionaries, topic models, and LLM measurement at scale.",
+      "href": "/nlp",
+      "status": "complete",
+      "source": "Text-as-data corpora"
+    }
+  ]
+}

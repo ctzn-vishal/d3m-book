@@ -13,6 +13,7 @@ export const MARKER = 'data-vs-chrome';   // home pill (inject once)
 export const OGM = 'data-vs-og';          // social/SEO head tags (upserted)
 export const LDM = 'data-vs-ld';          // Article JSON-LD (upserted, articles only)
 export const RELM = 'data-vs-related';    // related-stories footer (upserted, articles only)
+export const SERM = 'data-vs-series';     // collection/series strip (upserted, articles only)
 
 // ── Home pill (reads ?from=<chapter-slug>; points back to that chapter else home) ──
 export const SNIPPET = `
@@ -126,14 +127,101 @@ export function upsertRelated(html, picks) {
   return i === -1 ? `${html}\n${block}` : `${html.slice(0, i)}\n${block}\n${html.slice(i)}`;
 }
 
+// ── Collection / series strip (articles only, upserted) ──
+// This is what makes independently authored HTML files behave like a series
+// without any of them being re-edited: membership is registry metadata, and the
+// strip is regenerated from it on every pipeline run. Publishing part 6 updates
+// parts 1–5 automatically.
+
+/**
+ * Resolve one item's place in its collection. Returns null when the item has no
+ * collection, when the slug is unknown (no editorial shell to name it), or when
+ * it's the only member — a strip announcing a series of one is worse than none.
+ *
+ * `siblings` should be the full snapshot, including 'unlisted' rows: series
+ * parts are normally unlisted so they don't litter the gallery grid, and
+ * excluding them would break the chain at the first one.
+ */
+export function seriesFor(item, siblings, collections) {
+  if (!item?.collection) return null;
+  const collection = (collections ?? []).find(c => c.slug === item.collection);
+  if (!collection) return null;
+
+  const members = siblings
+    .filter(o => o.collection === item.collection && o.status !== 'hidden' && o.status !== 'draft')
+    .sort((a, b) => {
+      const ap = a.part ?? Number.MAX_SAFE_INTEGER;
+      const bp = b.part ?? Number.MAX_SAFE_INTEGER;
+      return ap !== bp ? ap - bp : String(a.title).localeCompare(String(b.title));
+    });
+  if (members.length < 2) return null;
+
+  const i = members.findIndex(o => o.id === item.id);
+  if (i === -1) return null;
+
+  return {
+    collection,
+    members,
+    index: i,
+    // Ordered only when every member is numbered; a half-numbered collection
+    // still renders, just without "Part N of M".
+    ordered: members.every(o => typeof o.part === 'number'),
+    prev: members[i - 1],
+    next: members[i + 1],
+  };
+}
+
+export function seriesBlock(ctx) {
+  const { collection, members, index, ordered, prev, next } = ctx;
+  const hubHref = collection.href ? `${HOME}${collection.href.replace(/^\//, '')}` : `${HOME}c/${collection.slug}`;
+
+  // "Part 3 of 5" only when the set is closed. While a collection is still
+  // being written, a denominator would promise parts that don't exist.
+  const position = ordered
+    ? collection.status === 'complete'
+      ? `Part ${index + 1} of ${members.length}`
+      : `Part ${index + 1}`
+    : 'Part of';
+
+  const link = (o, dir) =>
+    `<a href="${esc(o.href)}" style="display:block;flex:1 1 220px;color:inherit;text-decoration:none;padding:12px 14px;border:1px solid rgba(128,128,128,.3);border-radius:10px">`
+    + `<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.55">${dir}</div>`
+    + `<div style="margin-top:4px;font-weight:600;text-decoration:underline;text-underline-offset:3px">${esc(o.title)}</div>`
+    + `</a>`;
+
+  const nav = [prev ? link(prev, '← Previous') : '', next ? link(next, 'Next →') : '']
+    .filter(Boolean)
+    .join('\n');
+
+  return `<aside ${SERM} aria-label="Series navigation" style="max-width:720px;margin:64px auto 0;padding:22px 20px 0;border-top:1px solid rgba(128,128,128,.35);font-family:ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;line-height:1.45">
+<p style="margin:0 0 14px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.6">${esc(position)} · <a href="${hubHref}" style="color:inherit;text-decoration:underline;text-underline-offset:3px">${esc(collection.title)}</a></p>
+${nav ? `<div style="display:flex;flex-wrap:wrap;gap:12px">\n${nav}\n</div>` : ''}
+<p style="margin:14px 0 0;font-size:13px"><a href="${hubHref}" style="color:inherit;opacity:.75;text-decoration:underline;text-underline-offset:3px">All ${members.length} parts →</a></p>
+</aside>`;
+}
+
+const SER_RE = /\n?<aside data-vs-series[\s\S]*?<\/aside>/;
+export function upsertSeries(html, ctx) {
+  const block = seriesBlock(ctx);
+  if (SER_RE.test(html)) return html.replace(SER_RE, '\n' + block);
+  // Sit ABOVE the related-stories footer when there is one: "what's next in
+  // this series" beats "what else is vaguely similar". Anchoring on the related
+  // block also keeps the position stable across re-runs.
+  const rel = html.indexOf(`<aside ${RELM}`);
+  if (rel !== -1) return `${html.slice(0, rel)}${block}\n${html.slice(rel)}`;
+  const i = html.lastIndexOf('</body>');
+  return i === -1 ? `${html}\n${block}` : `${html.slice(0, i)}\n${block}\n${html.slice(i)}`;
+}
+
 /**
  * Apply every applicable concern to one file. `meta` is the registry snapshot
- * item for this bucket key (or undefined when unregistered — pill only), and
- * `candidates` the published related-links pool. Returns the transformed HTML
- * plus which concerns changed it.
+ * item for this bucket key (or undefined when unregistered — pill only),
+ * `candidates` the published related-links pool, `siblings` the full snapshot
+ * (incl. unlisted) for series resolution, and `collections` their definitions.
+ * Returns the transformed HTML plus which concerns changed it.
  */
-export function applyChrome(html, { key, meta, candidates }) {
-  const did = { pill: false, og: false, ld: false, rel: false };
+export function applyChrome(html, { key, meta, candidates, siblings = [], collections = [] }) {
+  const did = { pill: false, og: false, ld: false, rel: false, series: false };
   let out = html;
 
   if (!out.includes(MARKER)) {
@@ -154,6 +242,13 @@ export function applyChrome(html, { key, meta, candidates }) {
     if (picks.length) {
       const withRel = upsertRelated(out, picks);
       if (withRel !== out) { did.rel = true; out = withRel; }
+    }
+
+    // After related, so the strip can anchor above it on first injection.
+    const ctx = seriesFor(meta, siblings, collections);
+    if (ctx) {
+      const withSeries = upsertSeries(out, ctx);
+      if (withSeries !== out) { did.series = true; out = withSeries; }
     }
   }
 
