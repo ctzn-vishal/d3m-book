@@ -31,11 +31,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const topic = topicFromSlug(slug);
   if (!topic) return { title: 'Topic not found' };
   const { blurb } = TOPIC_META[topic];
+
+  // A topic can be seeded into the vocabulary before anything is filed into it.
+  // Serving that as an indexable page puts a thin, empty result in search —
+  // so noindex it until it has something to show. It flips back on its own the
+  // moment a row is filed, because this is computed per request under ISR.
+  const items = await getRegistry();
+  const isEmpty = !items.some(i => i.topic === topic);
+
   return {
     title: `${topic} — Data Stories, Apps & Teaching | Vishal Singh`,
     description: blurb,
     alternates: { canonical: `${SITE_URL}/topic/${slug}` },
     openGraph: { siteName: 'vishalsingh.org' },
+    ...(isEmpty ? { robots: { index: false, follow: true } } : {}),
   };
 }
 

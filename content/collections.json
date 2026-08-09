@@ -9,6 +9,13 @@
       "source": "Indian political ad disclosures"
     },
     {
+      "slug": "american-adolescence",
+      "title": "Growing Up in America",
+      "blurb": "A ten-part read on American adolescence — mental health, sleep, smoking, bullying, school safety, work, faith, and grades, across five decades of survey data.",
+      "status": "complete",
+      "source": "Monitoring the Future / YRBS"
+    },
+    {
       "slug": "amazon-reviews",
       "title": "Half a billion Amazon reviews",
       "blurb": "Analyses over the Amazon Reviews 2023 corpus — 507.7M reviews across 33 product categories, 1996–2023.",

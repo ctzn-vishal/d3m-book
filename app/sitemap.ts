@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/share-metadata';
 import { allArticles, getAllPartNumerals } from '@/lib/book-toc';
 import { getDatasetItems } from '@/lib/gallery';
+import { getRegistry } from '@/lib/registry-db';
 import { TOPICS, TOPIC_META } from '@/lib/taxonomy';
 import { LIVE_ANALYSES } from '@/lib/amazon';
 
@@ -50,8 +51,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   );
 
-  // Topic landing pages — one per canonical topic (lib/taxonomy).
-  const topicPages: MetadataRoute.Sitemap = TOPICS.map(
+  // Topic landing pages — one per canonical topic (lib/taxonomy) that actually
+  // has something on it. A topic can be seeded into the vocabulary before any
+  // row is filed into it; listing an empty shelf here would submit a thin page
+  // for indexing. The page itself also sends noindex while empty.
+  let populatedTopics = new Set<string>();
+  try {
+    populatedTopics = new Set((await getRegistry()).map(i => i.topic).filter(Boolean) as string[]);
+  } catch {
+    populatedTopics = new Set(TOPICS as readonly string[]);
+  }
+  const topicPages: MetadataRoute.Sitemap = TOPICS.filter(t => populatedTopics.has(t)).map(
     (t): MetadataRoute.Sitemap[number] => ({
       url: `${SITE_URL}/topic/${TOPIC_META[t].slug}`,
       lastModified: now,
