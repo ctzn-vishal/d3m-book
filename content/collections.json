@@ -16,6 +16,13 @@
       "source": "Monitoring the Future / YRBS"
     },
     {
+      "slug": "notable-alumni",
+      "title": "The Alumni Archive",
+      "blurb": "What Wikidata's archive of notable alumni says — and cannot say — about who universities produce, and when their famous women finally appear.",
+      "status": "building",
+      "source": "Wikidata notable-alumni archive"
+    },
+    {
       "slug": "amazon-reviews",
       "title": "Half a billion Amazon reviews",
       "blurb": "Analyses over the Amazon Reviews 2023 corpus — 507.7M reviews across 33 product categories, 1996–2023.",

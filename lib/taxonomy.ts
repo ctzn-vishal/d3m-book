@@ -21,6 +21,7 @@ export const TOPICS = [
   'Consumer & Household Finance',
   'Inequality & Mobility',
   'Demographics & Society',
+  'Schools & Universities',
   'Religion & Belief',
   'AI & Language Models',
 ] as const;
@@ -77,6 +78,11 @@ export const TOPIC_META: Record<Topic, { slug: string; blurb: string }> = {
     slug: 'business-markets',
     blurb:
       'Pricing, competition, advertising, and market structure — data stories and teaching cases from the business world.',
+  },
+  'Schools & Universities': {
+    slug: 'schools-universities',
+    blurb:
+      'Colleges, school districts, and the people they produce — cost and earnings, alumni networks, grade inflation, and who gets through.',
   },
   'Media, News & Advertising': {
     slug: 'media-news-advertising',

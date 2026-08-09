@@ -17,6 +17,8 @@
     "sync-datasets": "node --env-file=.env.local scripts/sync-datasets.mjs",
     "sync-studios": "node --env-file=.env.local scripts/sync-studios.mjs",
     "sync-registry": "node --env-file=.env.local --import tsx scripts/sync-registry.ts",
+    "refile": "node --env-file=.env.local --import tsx scripts/refile-topics.mjs",
+    "refile:dry": "node --env-file=.env.local --import tsx scripts/refile-topics.mjs --dry-run",
     "migrate-gallery": "node --env-file=.env.local scripts/migrate-gallery.mjs",
     "migrate-timestamps": "node --env-file=.env.local scripts/migrate-timestamps.mjs",
     "mint-db-token": "node --env-file=.env.local scripts/mint-db-token.mjs",

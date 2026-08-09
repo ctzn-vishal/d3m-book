@@ -1,0 +1,70 @@
+{
+  "_README": "One-off re-filing plan applied by `pnpm refile` (scripts/refile-topics.mjs). Each entry sets the listed fields on that gallery row in Turso; omitted fields are left alone. Reviewable as a diff, replayable, and safe to run twice — the script only writes rows whose values actually differ. Delete this file once the migration has landed, or keep it as a record.",
+  "_note_left_alone": "Three rows are deliberately absent: the_data_wont_tell_you_why and weights_vs_design_distill_article are genuinely about method with no subject, and scrc-data is a resource gallery. File them by hand if you want them off the retired shelf.",
+
+  "entries": [
+    { "id": "ai-news-framing", "topic": "AI & Language Models" },
+    { "id": "the_stochastic_parrot_debate", "topic": "AI & Language Models" },
+    { "id": "the_fairness_you_cant_have", "topic": "AI & Language Models" },
+    { "id": "measure-of-words", "topic": "AI & Language Models", "collection": "measure-of-words" },
+    { "id": "ai-models", "topic": "AI & Language Models" },
+    { "id": "llm-predict", "topic": "AI & Language Models" },
+    { "id": "counting-discovering-measuring", "topic": "AI & Language Models" },
+    { "id": "insight-digest", "topic": "AI & Language Models" },
+    { "id": "stackoverflow-commons", "topic": "AI & Language Models" },
+
+    { "id": "american-stories-booklet", "topic": "Media, News & Advertising" },
+    { "id": "the-dead-they-didnt-count", "topic": "Media, News & Advertising" },
+    { "id": "half-life-of-fame", "topic": "Media, News & Advertising" },
+    { "id": "trump-tweet-device", "topic": "Media, News & Advertising" },
+    { "id": "trump-tweets", "topic": "Media, News & Advertising" },
+    { "id": "gdelt-media-agenda-lab", "topic": "Media, News & Advertising" },
+    { "id": "prohibition-moral-career", "topic": "Media, News & Advertising" },
+    { "id": "byline-economy", "topic": "Media, News & Advertising" },
+    { "id": "politics-ate-the-newsroom", "topic": "Media, News & Advertising" },
+    { "id": "ad-spend-explorer", "topic": "Media, News & Advertising" },
+
+    { "id": "01-scars-that-dont-show", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 1 },
+    { "id": "02-the-diploma-divide", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 2 },
+    { "id": "03-the-great-sadness", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 3 },
+    { "id": "04-the-vanishing-cigarette", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 4 },
+    { "id": "05-the-sleep-recession", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 5 },
+    { "id": "06-the-weight-of-home", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 6 },
+    { "id": "07-losing-their-religion", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 7 },
+    { "id": "08-the-great-withdrawal", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 8 },
+    { "id": "09-lake-wobegon-high", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 9 },
+    { "id": "10-safer-and-more-afraid", "topic": "Growing Up in America", "collection": "american-adolescence", "part": 10 },
+    { "id": "political-identity-divergence", "topic": "Growing Up in America" },
+    { "id": "drug-availability-teens", "topic": "Growing Up in America" },
+
+    { "id": "alumni-factory", "topic": "Schools & Universities", "collection": "notable-alumni" },
+    { "id": "nyu-shaped-by-new-york", "topic": "Schools & Universities", "collection": "notable-alumni" },
+    { "id": "university-fingerprints", "topic": "Schools & Universities", "collection": "notable-alumni" },
+    { "id": "nobel-pipeline", "topic": "Schools & Universities", "collection": "notable-alumni" },
+    { "id": "toll-booth", "topic": "Schools & Universities" },
+    { "id": "college-ledger", "topic": "Schools & Universities" },
+    { "id": "girls-country", "topic": "Schools & Universities" },
+
+    { "id": "southwest-regression-exercise", "topic": "Business & Markets" },
+    { "id": "beer-goose-island", "topic": "Business & Markets" },
+    { "id": "beer-acquisition-tweets", "topic": "Business & Markets" },
+    { "id": "political-book-reviews", "topic": "Business & Markets" },
+    { "id": "big5-short-form-case", "topic": "Business & Markets" },
+
+    { "id": "se_compare_nhanes", "topic": "Health & Mortality" },
+    { "id": "coefficient-zoo", "topic": "Health & Mortality" },
+
+    { "id": "index-autopsy", "topic": "Inequality & Mobility" },
+    { "id": "slope-factory", "topic": "Inequality & Mobility" },
+
+    { "id": "worldlines", "topic": "Demographics & Society" },
+    { "id": "the-shape-of-development", "topic": "Demographics & Society" },
+
+    { "id": "ledger-1-whats-in-the-data", "collection": "india-ad-ledger", "part": 1 },
+    { "id": "ad-election-anatomy", "collection": "india-ad-ledger", "part": 2 },
+    { "id": "govt-second-advertiser", "collection": "india-ad-ledger", "part": 3 },
+    { "id": "shadow-campaign", "collection": "india-ad-ledger", "part": 4 },
+    { "id": "ledger-5-what-the-ads-say", "collection": "india-ad-ledger", "part": 5 },
+    { "id": "the-political-ad-ledger", "topic": "Media, News & Advertising", "collection": "india-ad-ledger", "part": 6 }
+  ]
+}
