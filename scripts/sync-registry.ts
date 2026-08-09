@@ -359,6 +359,12 @@ const items: RegistryItem[] = rows.map(r => ({
   id: r.id, type: r.type, title: r.title, description: r.description ?? '',
   domain: r.domain ?? undefined, topic: r.topic ?? undefined,
   tags: r.tags ? JSON.parse(r.tags) : [], teaching: r.teaching ?? undefined,
+  // Collection membership is curated-only (never derived), but it still has to
+  // reach the snapshot: scripts/inject-chrome.mjs reads the snapshot — not the
+  // DB — to build the series navigation, so omitting these here silently means
+  // no strip is ever injected.
+  collection: r.collection ?? undefined,
+  part: r.part == null ? undefined : Number(r.part),
   href: r.href, external: !!r.external, openInNewTab: !!r.open_in_new_tab,
   thumbnail: r.thumbnail ?? undefined, accent: r.accent ?? '#46688f',
   featured: !!r.featured, status: r.status, sort: r.sort ?? 0,

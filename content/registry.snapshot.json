@@ -82,7 +82,7 @@
       "title": "The Great Divergence: Teen Political Identity",
       "description": "Track how U.S. high school seniors describe their political identity from 1976-2023, with gender gaps, ideological spectrum shifts, and post-2016 decomposition views.",
       "domain": "Public Opinion",
-      "topic": "Polarization & Public Opinion",
+      "topic": "Growing Up in America",
       "tags": [
         "Survey analysis",
         "Trend analysis",
@@ -101,14 +101,14 @@
       "status": "published",
       "sort": 5,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:11"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "toll-booth",
       "type": "Blog",
       "title": "The Toll Booth",
       "description": "College is sold as the great equalizer. Across 6,400 U.S. institutions it looks more like a toll booth: a for-profit earnings penalty, a net-price schedule that bills a poor family a third of its income, and 2,200 counties with no four-y…",
-      "topic": "Inequality & Mobility",
+      "topic": "Schools & Universities",
       "tags": [
         "Geospatial analysis",
         "Index construction",
@@ -126,14 +126,14 @@
       "status": "published",
       "sort": 6,
       "createdAt": "2026-06-23 23:46:50",
-      "updatedAt": "2026-06-24 02:07:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "american-stories-booklet",
       "type": "Blog",
       "title": "American Stories — A Booklet",
       "description": "A bound reading of nine American Stories investigations: how U.S. newspapers narrated catastrophe, violence, and reform between 1898 and 1933. Opens with the data and the GABRIEL method behind every article.",
-      "topic": "Methods, AI & Data",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Text analysis",
         "Index construction",
@@ -151,14 +151,14 @@
       "status": "published",
       "sort": 8,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "the-political-ad-ledger",
       "type": "Blog",
       "title": "The Political Ad Ledger",
       "description": "A data booklet on what Google's public political-ads dataset reveals about political advertising in India, 2019–2026: the money, the machinery, and the government behind it.",
-      "topic": "Elections & Voting",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Text analysis",
         "Administrative data",
@@ -167,6 +167,8 @@
         "Segmentation",
         "Time series"
       ],
+      "collection": "india-ad-ledger",
+      "part": 6,
       "href": "https://content.vishalsingh.org/articles/india/the-political-ad-ledger.html",
       "external": true,
       "openInNewTab": true,
@@ -176,14 +178,14 @@
       "status": "published",
       "sort": 21,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-07-17 22:23:55"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "ai-news-framing",
       "type": "Blog",
       "title": "AI’s Split-Screen Politics",
       "description": "Left-leaning channels cast AI as a classroom, a risk, and a governance problem; right-leaning channels cast it as a business engine, a productivity tool, and a national race.",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "Text analysis",
         "Classification",
@@ -198,7 +200,7 @@
       "status": "published",
       "sort": 35,
       "createdAt": "2026-06-24 17:58:45",
-      "updatedAt": "2026-06-24 18:47:22"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "chat-fred",
@@ -281,7 +283,7 @@
       "title": "GDELT Media Agenda Lab",
       "description": "Search global news and television coverage as an agenda-setting lab: compare attention, tone, source geography, station airtime, and evidence cards from live GDELT APIs.",
       "domain": "Global Media",
-      "topic": "Business & Markets",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Dashboard",
         "Text analysis",
@@ -297,7 +299,7 @@
       "status": "published",
       "sort": 79,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "fal-case-studies",
@@ -353,7 +355,7 @@
       "title": "Insight Digest",
       "description": "AI-generated book summaries to read or listen to — across philosophy, psychology, self-help, history, and geopolitics.",
       "domain": "Learning",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "ai",
         "book summaries",
@@ -369,7 +371,7 @@
       "status": "published",
       "sort": 111,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "religious-composition-dashboard",
@@ -501,10 +503,14 @@
     },
     {
       "id": "ai-public-opinion-verified",
-      "type": "Blog",
+      "type": "Teaching",
       "title": "The Gap Is the Story — Public Opinion on AI, Re-Checked",
       "description": "Nine charts on global and US public opinion about artificial intelligence, verified against source data, plus a ledger of what a widely circulated research summary got wrong.",
-      "tags": [],
+      "topic": "AI & Language Models",
+      "tags": [
+        "ai opinion",
+        "survey"
+      ],
       "href": "https://content.vishalsingh.org/articles/ai-public-opinion-verified.html",
       "external": true,
       "openInNewTab": true,
@@ -514,7 +520,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-08-09 06:35:00",
-      "updatedAt": "2026-08-09 06:36:18"
+      "updatedAt": "2026-08-09 15:01:10"
     },
     {
       "id": "worldlines",
@@ -522,7 +528,7 @@
       "title": "Worldlines — The World in Numbers",
       "description": "A cross-country indicators explorer — 85 measures of development, democracy, belief, and wellbeing across 217 countries (1750–2025), with country profiles, rankings, and peer benchmarking.",
       "domain": "Global development",
-      "topic": "Methods, AI & Data",
+      "topic": "Demographics & Society",
       "tags": [
         "indicators",
         "cross-country",
@@ -540,7 +546,7 @@
       "status": "published",
       "sort": 2,
       "createdAt": "2026-07-06 16:00:50",
-      "updatedAt": "2026-07-06 16:00:50"
+      "updatedAt": "2026-08-09 18:48:01"
     },
     {
       "id": "college-ledger",
@@ -548,7 +554,7 @@
       "title": "College Ledger — Every U.S. College, on the Record",
       "description": "Cost by family income, graduate earnings and debt, and three decades of trajectory for 6,273 accredited U.S. colleges — College Scorecard + IPEDS, shown honestly: suppressed is suppressed, never zero.",
       "domain": "Education",
-      "topic": "Inequality & Mobility",
+      "topic": "Schools & Universities",
       "tags": [
         "education",
         "college-scorecard",
@@ -564,7 +570,7 @@
       "status": "published",
       "sort": 4,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:16:03"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "state-home-values",
@@ -592,7 +598,7 @@
       "type": "Teaching",
       "title": "Beyond the Stochastic Parrot — Chomsky, LLMs, and the Nature of Meaning",
       "description": "An interactive essay on the stochastic-parrot debate: what Chomsky claims, how language models actually work, and what the evidence says about machine understanding.",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "Text analysis",
         "Classification",
@@ -608,15 +614,18 @@
       "status": "published",
       "sort": 9,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-04 15:28:32"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "prohibition-moral-career",
       "type": "Blog",
       "title": "How a Moral Crusade Became a Governance Problem",
       "description": "Prohibition entered the Constitution through moral reform and democratic legitimacy. Fourteen years later, newspapers buried it under economics, administration, and regulated repeal.",
-      "topic": "Polarization & Public Opinion",
-      "tags": [],
+      "topic": "Media, News & Advertising",
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
       "href": "https://content.vishalsingh.org/articles/HF/prohibition-moral-career.html",
       "external": true,
       "openInNewTab": true,
@@ -626,7 +635,7 @@
       "status": "published",
       "sort": 10,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-04 15:29:19"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "ad-election-anatomy",
@@ -634,7 +643,12 @@
       "title": "The Anatomy of a ₹383-Crore Ad Election",
       "description": "Seven years of Google political ads in India — 397,522 of them — show a machine that wakes only for elections, spends four of every five rupees on video, and is dominated by one party running images at industrial scale.",
       "topic": "Elections & Voting",
-      "tags": [],
+      "tags": [
+        "india politics",
+        "google ad"
+      ],
+      "collection": "india-ad-ledger",
+      "part": 2,
       "href": "https://content.vishalsingh.org/articles/india/ad-election-anatomy.html",
       "external": true,
       "openInNewTab": true,
@@ -644,7 +658,7 @@
       "status": "unlisted",
       "sort": 11,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-08-09 04:02:32"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "the-attention-budget",
@@ -675,7 +689,11 @@
       "title": "The Coup America Called Order",
       "description": "1,624 newspaper articles reveal how the 1898 Wilmington coup was recognized, justified, euphemized, and condemned across the American press.",
       "topic": "AI & Language Models",
-      "tags": [],
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
+      "collection": "measure-of-words",
       "href": "https://content.vishalsingh.org/articles/HF/wilmington-coup-order.html",
       "external": true,
       "openInNewTab": true,
@@ -685,15 +703,18 @@
       "status": "unlisted",
       "sort": 13,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-09 04:02:40"
+      "updatedAt": "2026-08-09 15:07:45"
     },
     {
       "id": "the-dead-they-didnt-count",
       "type": "Teaching",
       "title": "The Dead They Didn't Count",
       "description": "18,863 newspaper articles show how the American press framed the Titanic: quick to blame the company and mourn the spectacle, but nearly silent on the immigrant poor in steerage who died in the greatest numbers.",
-      "topic": "Methods, AI & Data",
-      "tags": [],
+      "topic": "Media, News & Advertising",
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
       "href": "https://content.vishalsingh.org/articles/HF/the-dead-they-didnt-count.html",
       "external": true,
       "openInNewTab": true,
@@ -703,14 +724,14 @@
       "status": "published",
       "sort": 14,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-04 15:30:00"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "the_fairness_you_cant_have",
       "type": "Blog",
       "title": "The Fairness You Can't Have — COMPAS, ProPublica, and the impossibility theorem",
       "description": "An interactive essay on algorithmic fairness: the COMPAS recidivism controversy, why calibration and equal error rates cannot both hold when base rates differ, and what the impossibility theorem means for anyone deploying a model.",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "Causal inference",
         "Classification",
@@ -727,7 +748,7 @@
       "status": "published",
       "sort": 15,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "triangle-fire-public-failure",
@@ -735,7 +756,11 @@
       "title": "The Fire That Put New York on Trial",
       "description": "973 newspaper articles show how the Triangle fire became both a gendered national tragedy and a local argument for regulation.",
       "topic": "AI & Language Models",
-      "tags": [],
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
+      "collection": "measure-of-words",
       "href": "https://content.vishalsingh.org/articles/HF/triangle-fire-public-failure.html",
       "external": true,
       "openInNewTab": true,
@@ -745,7 +770,7 @@
       "status": "unlisted",
       "sort": 16,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-09 04:02:46"
+      "updatedAt": "2026-08-09 15:07:51"
     },
     {
       "id": "the-floor-time-gap",
@@ -776,7 +801,12 @@
       "title": "The Government Is the Second-Biggest Political Advertiser",
       "description": "On Google's platform, the largest political advertiser in India after the ruling party isn't another party. It's the government itself — ₹155 crore of taxpayer-funded publicity that the system files as political, and that surges when ele…",
       "topic": "Elections & Voting",
-      "tags": [],
+      "tags": [
+        "india politics",
+        "google ad"
+      ],
+      "collection": "india-ad-ledger",
+      "part": 3,
       "href": "https://content.vishalsingh.org/articles/india/govt-second-advertiser.html",
       "external": true,
       "openInNewTab": true,
@@ -786,7 +816,7 @@
       "status": "unlisted",
       "sort": 18,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-08-09 04:03:03"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "the-mainstreaming-clock",
@@ -817,13 +847,14 @@
       "title": "The Measure of Words",
       "description": "A field booklet on text as data — six data essays, two live studios, and a data shelf, from dictionary word counts to LLM measurement at scale.",
       "domain": "Text as data",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "NLP",
         "text analysis",
         "LLM measurement",
         "booklet"
       ],
+      "collection": "measure-of-words",
       "href": "/nlp",
       "external": false,
       "openInNewTab": false,
@@ -832,7 +863,7 @@
       "status": "published",
       "sort": 20,
       "createdAt": "2026-07-12 09:18:59",
-      "updatedAt": "2026-07-17 21:16:49"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "shadow-campaign",
@@ -840,7 +871,12 @@
       "title": "The Shadow Campaign",
       "description": "Google's political-ad ledger doesn't just list parties. Hidden in it is the machinery behind them — the consultancies and the governments — and you can read which firm ran which campaign from nothing but where and when the ads were aimed.",
       "topic": "Elections & Voting",
-      "tags": [],
+      "tags": [
+        "india politics",
+        "google ad"
+      ],
+      "collection": "india-ad-ledger",
+      "part": 4,
       "href": "https://content.vishalsingh.org/articles/india/shadow-campaign.html",
       "external": true,
       "openInNewTab": true,
@@ -850,7 +886,7 @@
       "status": "unlisted",
       "sort": 22,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-08-09 04:03:07"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "the-survivors-curve",
@@ -881,7 +917,7 @@
       "type": "Blog",
       "title": "The University Shaped Like New York",
       "description": "What Wikidata's selected archive of notable alumni says—and cannot say—about NYU and 23 U.S. comparison universities.",
-      "topic": "Demographics & Society",
+      "topic": "Schools & Universities",
       "tags": [
         "Segmentation",
         "Benchmarking",
@@ -890,6 +926,7 @@
         "Ranking",
         "Heatmap"
       ],
+      "collection": "notable-alumni",
       "href": "https://content.vishalsingh.org/articles/nyu-shaped-by-new-york.html",
       "external": true,
       "openInNewTab": true,
@@ -899,7 +936,7 @@
       "status": "published",
       "sort": 24,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 22:23:54"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "votes-after-victory",
@@ -907,7 +944,11 @@
       "title": "The Vote Was Won. The Argument Wasn’t.",
       "description": "How newspapers turned suffrage ratification into a story about citizenship, constitutional legitimacy, and the new electoral map.",
       "topic": "Elections & Voting",
-      "tags": [],
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
+      "collection": "measure-of-words",
       "href": "https://content.vishalsingh.org/articles/HF/votes-after-victory.html",
       "external": true,
       "openInNewTab": true,
@@ -917,7 +958,7 @@
       "status": "unlisted",
       "sort": 25,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-09 04:03:14"
+      "updatedAt": "2026-08-09 15:08:06"
     },
     {
       "id": "the-war-the-papers-wanted",
@@ -925,7 +966,11 @@
       "title": "The War the Papers Talked Themselves Into",
       "description": "30,229 newspaper articles show the American press did not scream for war after the USS Maine exploded. Caution came first; certainty and war advocacy were built slowly over six weeks.",
       "topic": "AI & Language Models",
-      "tags": [],
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
+      "collection": "measure-of-words",
       "href": "https://content.vishalsingh.org/articles/HF/the-war-the-papers-wanted.html",
       "external": true,
       "openInNewTab": true,
@@ -935,7 +980,7 @@
       "status": "unlisted",
       "sort": 26,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-09 04:03:20"
+      "updatedAt": "2026-08-09 15:08:10"
     },
     {
       "id": "iowa-russian-vodka",
@@ -967,7 +1012,7 @@
       "type": "Blog",
       "title": "Twenty-Four Universities, Five Fingerprints",
       "description": "A clustering case study of occupational fingerprints in Wikidata's selected archive of notable university alumni.",
-      "topic": "Demographics & Society",
+      "topic": "Schools & Universities",
       "tags": [
         "Clustering",
         "Dimensionality reduction",
@@ -975,6 +1020,7 @@
         "Small multiples",
         "Heatmap"
       ],
+      "collection": "notable-alumni",
       "href": "https://content.vishalsingh.org/articles/university-fingerprints.html",
       "external": true,
       "openInNewTab": true,
@@ -984,7 +1030,7 @@
       "status": "published",
       "sort": 28,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-07-17 22:23:55"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "ledger-5-what-the-ads-say",
@@ -992,7 +1038,12 @@
       "title": "What the Ads Say — The Political Ad Ledger",
       "description": "The dataset has no creative content — so we watched the ads. A close reading of the top video ads from five key advertisers: who builds campaigns around a leader, who attacks, and a government that puts the Prime Minister in most of its…",
       "topic": "Elections & Voting",
-      "tags": [],
+      "tags": [
+        "india politics",
+        "google ad"
+      ],
+      "collection": "india-ad-ledger",
+      "part": 5,
       "href": "https://content.vishalsingh.org/articles/india/ledger-5-what-the-ads-say.html",
       "external": true,
       "openInNewTab": true,
@@ -1002,7 +1053,7 @@
       "status": "unlisted",
       "sort": 29,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-08-09 04:03:26"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "ledger-1-whats-in-the-data",
@@ -1010,7 +1061,12 @@
       "title": "What's in the Ledger — The Political Ad Ledger",
       "description": "Before the findings, the source. What Google's public political-ads dataset actually records about India — 397,522 ads across eight years — and the things it can and cannot tell us.",
       "topic": "Elections & Voting",
-      "tags": [],
+      "tags": [
+        "india politics",
+        "google ad"
+      ],
+      "collection": "india-ad-ledger",
+      "part": 1,
       "href": "https://content.vishalsingh.org/articles/india/ledger-1-whats-in-the-data.html",
       "external": true,
       "openInNewTab": true,
@@ -1020,7 +1076,7 @@
       "status": "unlisted",
       "sort": 30,
       "createdAt": "2026-07-17 22:16:48",
-      "updatedAt": "2026-08-09 04:03:31"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "automobile-public-danger",
@@ -1028,7 +1084,11 @@
       "title": "When the Automobile Became a Public Danger",
       "description": "Three matched newspaper snapshots show traffic death moving from speed mania and bad luck toward policing—without fully becoming an infrastructure story.",
       "topic": "AI & Language Models",
-      "tags": [],
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
+      "collection": "measure-of-words",
       "href": "https://content.vishalsingh.org/articles/HF/automobile-public-danger.html",
       "external": true,
       "openInNewTab": true,
@@ -1038,7 +1098,7 @@
       "status": "unlisted",
       "sort": 31,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-09 04:03:36"
+      "updatedAt": "2026-08-09 15:08:20"
     },
     {
       "id": "earthquake-everyones-story",
@@ -1046,7 +1106,11 @@
       "title": "When the Earthquake Became Everyone's Story",
       "description": "24,014 newspaper articles reveal how the 1906 San Francisco earthquake moved from catastrophe to solidarity—and changed as it traveled across America.",
       "topic": "AI & Language Models",
-      "tags": [],
+      "tags": [
+        "hugging face",
+        "nlp"
+      ],
+      "collection": "measure-of-words",
       "href": "https://content.vishalsingh.org/articles/HF/earthquake-everyones-story.html",
       "external": true,
       "openInNewTab": true,
@@ -1056,7 +1120,7 @@
       "status": "unlisted",
       "sort": 32,
       "createdAt": "2026-07-17 21:16:03",
-      "updatedAt": "2026-08-09 04:03:40"
+      "updatedAt": "2026-08-09 15:08:22"
     },
     {
       "id": "who-gets-to-testify",
@@ -1157,7 +1221,7 @@
       "type": "Blog",
       "title": "Lake Wobegon High — Fifty Years of Grade Inflation in American High Schools",
       "description": "In Garrison Keillor’s fictional town, all the children are above average. In actual American high schools, they are now mostly A students: the share of seniors reporting an A average has more than doubled since 1976, while truancy hasn’t…",
-      "topic": "Demographics & Society",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Time series",
@@ -1165,6 +1229,8 @@
         "Benchmarking",
         "Distribution"
       ],
+      "collection": "american-adolescence",
+      "part": 9,
       "href": "https://content.vishalsingh.org/articles/09-lake-wobegon-high.html",
       "external": true,
       "openInNewTab": true,
@@ -1174,20 +1240,22 @@
       "status": "published",
       "sort": 38,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "07-losing-their-religion",
       "type": "Blog",
       "title": "Losing Their Religion — Faith Among American High School Seniors, 1976–2024",
       "description": "Every year since 1976, America’s high school seniors have been asked how often they attend religious services and how much religion matters in their lives. The pews emptied slowly, then quickly. But the more surprising finding is who lef…",
-      "topic": "Religion & Belief",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Survey data",
         "Time series",
         "Decomposition"
       ],
+      "collection": "american-adolescence",
+      "part": 7,
       "href": "https://content.vishalsingh.org/articles/07-losing-their-religion.html",
       "external": true,
       "openInNewTab": true,
@@ -1197,14 +1265,14 @@
       "status": "published",
       "sort": 39,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "byline-economy",
       "type": "Blog",
       "title": "Nine Thousand Bylines",
       "description": "HuffPost's author fields record a business model reversing in real time: a 9,000-contributor open platform in 2014 re-concentrates into a staff core writing 42% of bylined output by 2016.",
-      "topic": "Business & Markets",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Text analysis",
         "Time series",
@@ -1221,14 +1289,14 @@
       "status": "published",
       "sort": 40,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 22:23:54"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "10-safer-and-more-afraid",
       "type": "Blog",
       "title": "Safer and More Afraid — The Paradox of Violence in American Schools, 1991–2023",
       "description": "By every measure of actual violence, American high schools are far safer than in the 1990s: fights cut in half, weapons on campus down two-thirds. Yet the share of students too afraid to go to school at all has tripled. Thirty years of d…",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Survey analysis",
@@ -1236,6 +1304,8 @@
         "Time series",
         "Small multiples"
       ],
+      "collection": "american-adolescence",
+      "part": 10,
       "href": "https://content.vishalsingh.org/articles/10-safer-and-more-afraid.html",
       "external": true,
       "openInNewTab": true,
@@ -1245,14 +1315,14 @@
       "status": "published",
       "sort": 41,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "se_compare_nhanes",
       "type": "Teaching",
       "title": "Same Betas, Three Standard Errors &middot; NHANES",
       "description": "One NHANES dataset, four variance machines, and exactly what the naive standard error quietly gets wrong.",
-      "topic": "Methods, AI & Data",
+      "topic": "Health & Mortality",
       "tags": [
         "Regression",
         "Survey analysis",
@@ -1267,14 +1337,14 @@
       "status": "published",
       "sort": 42,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "01-scars-that-dont-show",
       "type": "Blog",
       "title": "Scars That Don't Show — Bullying and the Mental Health of American Teens",
       "description": "One in four American high schoolers is bullied — in the hallway, on the phone, or both. The bruises are rare. The despair is not: bullied teens report sadness, suicidal thinking, and suicide attempts at rates two to six times higher than…",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Survey analysis",
         "Regression",
@@ -1283,6 +1353,8 @@
         "Survey data",
         "Trend analysis"
       ],
+      "collection": "american-adolescence",
+      "part": 1,
       "href": "https://content.vishalsingh.org/articles/01-scars-that-dont-show.html",
       "external": true,
       "openInNewTab": true,
@@ -1292,14 +1364,14 @@
       "status": "published",
       "sort": 43,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "alumni-factory",
       "type": "Blog",
       "title": "The Alumni Factory",
       "description": "One million notable alumni of 250 institutions: what each school actually produces, and when its famous women finally appear.",
-      "topic": "Demographics & Society",
+      "topic": "Schools & Universities",
       "tags": [
         "Index construction",
         "Benchmarking",
@@ -1308,6 +1380,7 @@
         "Decomposition",
         "Heatmap"
       ],
+      "collection": "notable-alumni",
       "href": "https://content.vishalsingh.org/articles/alumni-factory.html",
       "external": true,
       "openInNewTab": true,
@@ -1317,14 +1390,14 @@
       "status": "published",
       "sort": 44,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:48"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "stackoverflow-commons",
       "type": "Blog",
       "title": "The Commons Was Already Dying",
       "description": "23 million Stack Overflow questions show the knowledge commons peaked in 2016 and hardened long before ChatGPT arrived to finish the job.",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "Trend analysis",
         "Time series",
@@ -1340,7 +1413,7 @@
       "status": "published",
       "sort": 45,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "complaint-machine",
@@ -1372,7 +1445,7 @@
       "type": "Blog",
       "title": "The Diploma Divide Comes for the Prom — Teen Politics by Sex and Parental Education, 1976–2024",
       "description": "The “Trump effect” on teenage politics is usually told as a story about boys and girls. Follow half a million high school seniors across five decades and a second fault line appears: whose parents went to college. After 2016, daughters o…",
-      "topic": "Polarization & Public Opinion",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Survey data",
@@ -1381,6 +1454,8 @@
         "Small multiples",
         "Slopegraph"
       ],
+      "collection": "american-adolescence",
+      "part": 2,
       "href": "https://content.vishalsingh.org/articles/02-the-diploma-divide.html",
       "external": true,
       "openInNewTab": true,
@@ -1390,7 +1465,7 @@
       "status": "published",
       "sort": 47,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "fed-complaint-box",
@@ -1422,7 +1497,7 @@
       "type": "Blog",
       "title": "The Great Sadness — Three Decades of Teen Mental Health, 1991–2023",
       "description": "Around 2011, something broke. After a decade of stable — even improving — mental health, American teenagers, and especially teenage girls, began reporting sadness and suicidal thinking at rates the CDC’s survey had never recorded. By 202…",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Time series",
@@ -1431,6 +1506,8 @@
         "Segmentation",
         "Distribution"
       ],
+      "collection": "american-adolescence",
+      "part": 3,
       "href": "https://content.vishalsingh.org/articles/03-the-great-sadness.html",
       "external": true,
       "openInNewTab": true,
@@ -1440,14 +1517,14 @@
       "status": "published",
       "sort": 49,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "08-the-great-withdrawal",
       "type": "Blog",
       "title": "The Great Withdrawal — How American Teens Stopped Dating, Working, Drinking, and Going Out",
       "description": "Dating. Going out at night. The after-school job. The first beer. The first everything. Across fifty years of surveys, every classic marker of teenage social life is in retreat at once — most of them starting their slide around 2010, non…",
-      "topic": "Demographics & Society",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Survey analysis",
@@ -1455,6 +1532,8 @@
         "Decomposition",
         "Panel data"
       ],
+      "collection": "american-adolescence",
+      "part": 8,
       "href": "https://content.vishalsingh.org/articles/08-the-great-withdrawal.html",
       "external": true,
       "openInNewTab": true,
@@ -1464,14 +1543,14 @@
       "status": "published",
       "sort": 50,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "half-life-of-fame",
       "type": "Blog",
       "title": "The Half-Life of Fame",
       "description": "What 719 celebrity deaths reveal about how attention works: the spike is enormous, the decay is brutal, and the half-life is one day.",
-      "topic": "Methods, AI & Data",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Trend analysis",
         "Time series",
@@ -1487,7 +1566,7 @@
       "status": "published",
       "sort": 51,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:48"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "pandemic-instrument-boom",
@@ -1541,7 +1620,7 @@
       "type": "Blog",
       "title": "The Nobel Pipeline",
       "description": "A thousand laureates' education records show genius aging, migrating across the Atlantic, and passing through a startlingly small set of doors.",
-      "topic": "Demographics & Society",
+      "topic": "Schools & Universities",
       "tags": [
         "Trend analysis",
         "Benchmarking",
@@ -1550,6 +1629,7 @@
         "Administrative data",
         "Geographic data"
       ],
+      "collection": "notable-alumni",
       "href": "https://content.vishalsingh.org/articles/nobel-pipeline.html",
       "external": true,
       "openInNewTab": true,
@@ -1559,7 +1639,7 @@
       "status": "published",
       "sort": 54,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 22:23:54"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "chicago-rhythms",
@@ -1615,7 +1695,7 @@
       "type": "Blog",
       "title": "The Sleep Recession — American Teens and the Eight-Hour Night, 2007–2023",
       "description": "Pediatricians say teenagers need eight to ten hours of sleep. In 2007, fewer than a third of American high schoolers got even the minimum on a school night. Sixteen years later it is fewer than a quarter — and the students getting five h…",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Time series",
@@ -1623,6 +1703,8 @@
         "Correlation",
         "Survey data"
       ],
+      "collection": "american-adolescence",
+      "part": 5,
       "href": "https://content.vishalsingh.org/articles/05-the-sleep-recession.html",
       "external": true,
       "openInNewTab": true,
@@ -1632,14 +1714,14 @@
       "status": "published",
       "sort": 57,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "04-the-vanishing-cigarette",
       "type": "Blog",
       "title": "The Vanishing Cigarette — How Teen Smoking Died and What Replaced It",
       "description": "In 1997, more than one in three American high schoolers smoked. Today it is one in thirty — the greatest public-health victory in the history of youth surveys. But nicotine didn’t leave the building. It changed its clothes, learned to ta…",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Trend analysis",
         "Time series",
@@ -1647,6 +1729,8 @@
         "Survey data",
         "Small multiples"
       ],
+      "collection": "american-adolescence",
+      "part": 4,
       "href": "https://content.vishalsingh.org/articles/04-the-vanishing-cigarette.html",
       "external": true,
       "openInNewTab": true,
@@ -1656,14 +1740,14 @@
       "status": "published",
       "sort": 58,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "06-the-weight-of-home",
       "type": "Blog",
       "title": "The Weight of Home — Adverse Childhood Experiences and Teen Suicidality, 2023",
       "description": "In 2023, for the first time, the CDC’s national youth survey asked high schoolers a battery of questions about what happened inside their childhood homes — abuse, a parent’s addiction or mental illness, jail, hunger. Half of students rep…",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Survey analysis",
         "Causal inference",
@@ -1671,6 +1755,8 @@
         "Health / mortality data",
         "Ranking"
       ],
+      "collection": "american-adolescence",
+      "part": 6,
       "href": "https://content.vishalsingh.org/articles/06-the-weight-of-home.html",
       "external": true,
       "openInNewTab": true,
@@ -1680,7 +1766,7 @@
       "status": "published",
       "sort": 59,
       "createdAt": "2026-07-06 15:55:26",
-      "updatedAt": "2026-07-06 15:59:15"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "weights_vs_design_distill_article",
@@ -1711,7 +1797,7 @@
       "type": "Blog",
       "title": "When Politics Ate the Newsroom",
       "description": "209,527 HuffPost headlines, 2012–2022: politics triples its share of the newsroom, the listicle dies, and you can date the arrival of every word.",
-      "topic": "Polarization & Public Opinion",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Text analysis",
         "Trend analysis",
@@ -1728,7 +1814,7 @@
       "status": "published",
       "sort": 61,
       "createdAt": "2026-07-10 15:36:05",
-      "updatedAt": "2026-07-17 21:22:49"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "who-gets-remembered",
@@ -1834,7 +1920,7 @@
       "type": "Teaching",
       "title": "An Index Autopsy",
       "description": "We rebuilt a deprivation index from scratch with PCA — no housing costs — and compared it to the canonical ADI. They agree on the gradient and disagree violently about New York.",
-      "topic": "Methods, AI & Data",
+      "topic": "Inequality & Mobility",
       "tags": [
         "Index construction",
         "Dimensionality reduction",
@@ -1853,7 +1939,7 @@
       "status": "published",
       "sort": 68,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "progresso-dashboard",
@@ -2140,7 +2226,7 @@
       "title": "Industry Ad Spend Explorer",
       "description": "Explore 2018-2022 advertising spend by industry group, advertiser, and media type, with a Covid-era lens on budget shocks, recovery, and media mix shifts.",
       "domain": "Advertising",
-      "topic": "Business & Markets",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Dashboard",
         "Time series",
@@ -2156,7 +2242,7 @@
       "status": "published",
       "sort": 82,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "sliver-of-the-map",
@@ -2455,7 +2541,7 @@
       "type": "Dataset",
       "title": "Political books review corpus",
       "description": "Amazon-style political and business book reviews with ratings, text, review metadata, product description, category, price, and reviewer fields.",
-      "topic": "Methods, AI & Data",
+      "topic": "Business & Markets",
       "tags": [
         "NLP",
         "reviews",
@@ -2471,7 +2557,7 @@
       "status": "published",
       "sort": 97,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "partisans-finally-got-constraint",
@@ -2602,7 +2688,7 @@
       "title": "Regression Exercise: Did Southwest Lower Airfares?",
       "description": "The hands-on companion: download the route data, run the regression yourself, and read the coefficients the way a manager would. Built for a live class session.",
       "domain": "Airlines",
-      "topic": "Methods, AI & Data",
+      "topic": "Business & Markets",
       "tags": [
         "Regression",
         "Exercise",
@@ -2618,7 +2704,7 @@
       "status": "published",
       "sort": 103,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "regulation-demand-guns",
@@ -2649,7 +2735,7 @@
       "type": "Blog",
       "title": "Reading Is a Girls' Country",
       "description": "Across 12,360 school districts, girls out-read boys in 99.9 percent. Math is contested ground — and which side wins tracks the district's affluence.",
-      "topic": "Demographics & Society",
+      "topic": "Schools & Universities",
       "tags": [
         "Inequality analysis",
         "Choropleth",
@@ -2667,7 +2753,7 @@
       "status": "published",
       "sort": 105,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-07-17 22:23:54"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "renthop-listings",
@@ -2698,7 +2784,7 @@
       "title": "AI Models & Benchmarks",
       "description": "A filterable, sortable comparison of frontier and open-weight models — context windows, pricing, modalities, and access.",
       "domain": "AI reference",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "ai",
         "benchmarks",
@@ -2714,7 +2800,7 @@
       "status": "published",
       "sort": 107,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "mental-health-ed-surveillance",
@@ -2823,7 +2909,7 @@
       "type": "Teaching",
       "title": "The Coefficient Zoo",
       "description": "Fifty-one regressions per health behavior: what doubling a neighborhood's income does to smoking, obesity, and — running the other way in 98% of states — binge drinking.",
-      "topic": "Methods, AI & Data",
+      "topic": "Health & Mortality",
       "tags": [
         "Regression",
         "Scatter plot",
@@ -2841,7 +2927,7 @@
       "status": "published",
       "sort": 113,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-07-17 22:23:54"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "the-abortion-sort",
@@ -3409,7 +3495,7 @@
       "type": "Teaching",
       "title": "The Shape of Development — PCA, Factor Analysis & Clustering",
       "description": "Twelve numbers describe a country. It turns out you need barely one. A working note on principal components, factors, and clusters.",
-      "topic": "Methods, AI & Data",
+      "topic": "Demographics & Society",
       "tags": [
         "Dimensionality reduction",
         "Clustering",
@@ -3427,14 +3513,14 @@
       "status": "published",
       "sort": 137,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:17"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "slope-factory",
       "type": "Teaching",
       "title": "The Slope Factory",
       "description": "We fit the deprivation–life-expectancy regression separately in 266 American metros. Every single slope came back negative. Many small models, one law.",
-      "topic": "Methods, AI & Data",
+      "topic": "Inequality & Mobility",
       "tags": [
         "Regression",
         "Small multiples",
@@ -3453,7 +3539,7 @@
       "status": "published",
       "sort": 138,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:17"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "starting-line",
@@ -3661,7 +3747,7 @@
       "type": "Dataset",
       "title": "Trump tweet device corpus",
       "description": "Tweet text with timestamps and iPhone/Android attribution labels, likely for authorship, source, or political text analysis.",
-      "topic": "Methods, AI & Data",
+      "topic": "Media, News & Advertising",
       "tags": [
         "NLP",
         "politics",
@@ -3677,7 +3763,7 @@
       "status": "published",
       "sort": 149,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:17"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "race-attitudes-shocks",
@@ -3932,7 +4018,7 @@
       "title": "Within Reach: Teen Drug Availability",
       "description": "Read four decades of Monitoring the Future survey data on how available teens think drugs are, comparing substances, grade levels, long-run declines, and 2024 levels.",
       "domain": "Public Health",
-      "topic": "Health & Mortality",
+      "topic": "Growing Up in America",
       "tags": [
         "Survey analysis",
         "Trend analysis",
@@ -3951,7 +4037,7 @@
       "status": "published",
       "sort": 160,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:14"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "llm-predict",
@@ -3959,7 +4045,7 @@
       "title": "LLM Prediction Arena",
       "description": "Can AI beat the crowd? Six LLMs make blind probability forecasts on live prediction markets — scored on calibration and skill against the market price, then pooled into an ensemble.",
       "domain": "AI reference",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "ai",
         "llm",
@@ -3975,7 +4061,7 @@
       "status": "published",
       "sort": 161,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:17"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "party-beats-place-seven-to-one",
@@ -4077,7 +4163,7 @@
       "type": "Dataset",
       "title": "Beer acquisition tweet sentiment corpus",
       "description": "Tweet corpus around beer-brand acquisition events, with text, source, event timing, acquisition period, URL flag, and date fields.",
-      "topic": "Methods, AI & Data",
+      "topic": "Business & Markets",
       "tags": [
         "NLP",
         "sentiment",
@@ -4093,7 +4179,7 @@
       "status": "published",
       "sort": 166,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:17"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "colorado-legalization-housing",
@@ -4245,7 +4331,7 @@
       "type": "Teaching",
       "title": "Did Goose Island Sell Out?",
       "description": "On March 28, 2011, Anheuser-Busch InBev acquired Chicago’s Goose Island. This case treats the acquisition as a natural experiment: roughly 20,000 tweets mentioning Goose Island, split into the weeks b",
-      "topic": "Methods, AI & Data",
+      "topic": "Business & Markets",
       "tags": [
         "Text analysis",
         "Classification",
@@ -4260,14 +4346,14 @@
       "status": "published",
       "sort": 175,
       "createdAt": "2026-06-24 17:58:45",
-      "updatedAt": "2026-06-24 18:47:07"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "trump-tweets",
       "type": "Teaching",
       "title": "Two Thumbs, One Account",
       "description": "During the 2016 cycle, @realDonaldTrump was posted from two devices. The Washington Post noticed a pattern: warm, on-message tweets came from an iPhone (staff), while the combative ones came from an A",
-      "topic": "Methods, AI & Data",
+      "topic": "Media, News & Advertising",
       "tags": [
         "Text analysis",
         "Classification",
@@ -4283,14 +4369,14 @@
       "status": "published",
       "sort": 176,
       "createdAt": "2026-06-24 17:58:45",
-      "updatedAt": "2026-06-24 18:47:11"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "counting-discovering-measuring",
       "type": "Teaching",
       "title": "Counting, Discovering, Measuring — text analysis with and without LLMs",
       "description": "Three generations of text-as-data — dictionaries, topic models, and LLM measurement at scale — and what large language models add. A field guide for managers and analysts.",
-      "topic": "Methods, AI & Data",
+      "topic": "AI & Language Models",
       "tags": [
         "Text analysis",
         "Benchmarking",
@@ -4305,7 +4391,7 @@
       "status": "published",
       "sort": 177,
       "createdAt": "2026-06-24 17:58:45",
-      "updatedAt": "2026-06-24 18:47:01"
+      "updatedAt": "2026-08-09 19:52:55"
     },
     {
       "id": "cross_price_elasticity_case",
@@ -4355,7 +4441,7 @@
       "type": "Teaching",
       "title": "How Many Questions Do You Need? — Factor Analysis and the Cost of a Shorter Survey",
       "description": "Bean & Basket wants to launch a Discovery Subscription — a rotating single-origin coffee delivered monthly, sold as a $45-a-year commitment. The marketing team has a theory about who will buy it: curious people. People who like trying th…",
-      "topic": "Methods, AI & Data",
+      "topic": "Business & Markets",
       "tags": [
         "Big5",
         "PCA"
@@ -4369,7 +4455,7 @@
       "status": "published",
       "sort": 180,
       "createdAt": "2026-08-05 16:58:37",
-      "updatedAt": "2026-08-05 17:02:34"
+      "updatedAt": "2026-08-09 19:52:55"
     }
   ]
 }
