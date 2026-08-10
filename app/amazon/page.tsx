@@ -12,8 +12,8 @@ import raw from './data/amazon-reviews.json';
 import qualityRaw from './data/phase2-review-quality.json';
 
 const data = raw as AmazonData;
-// The verified-purchase joint (Phase 2) corrects the category-level reading of
-// the verification section — see components/amazon/Overview.tsx.
+// The review-level verified-purchase joint corrects the category-level reading
+// of the verification section — see components/amazon/Overview.tsx.
 const quality = qualityRaw as unknown as ReviewQuality;
 const { meta } = data;
 

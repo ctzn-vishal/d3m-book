@@ -7,7 +7,19 @@ import { INK } from './types';
  * and the client-rendered chart articles.
  */
 
-/** Plot's `style` option, themed to the hub scope. */
+/**
+ * Plot's `style` option, themed to the hub scope.
+ *
+ * `overflow: visible` is required so axis labels aren't clipped — but it also
+ * means a mark drawn outside the plot area will spill over the card and the
+ * prose beneath it, silently, with no console error.
+ *
+ * The trap: `Plot.barY` on a truncated y-domain (say `[3.5, 4.4]`) draws from
+ * y=0, which now maps far below the frame. Never put a bar on an axis that
+ * doesn't start at zero — use a lollipop (`Plot.ruleX` from the domain floor
+ * plus `Plot.dot` at the value). That is also the honest encoding, since a bar's
+ * length is meaningless when measured from an arbitrary floor.
+ */
 export const plotStyle = {
   background: 'transparent',
   color: INK,

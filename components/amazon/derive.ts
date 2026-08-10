@@ -1,5 +1,5 @@
 /**
- * Statistics derived from the published Phase 1 aggregates — no new data
+ * Statistics derived from the published category summaries — no new data
  * collection required. Kept separate from the chart components so the numbers
  * quoted in prose and the numbers plotted always come from one place.
  *

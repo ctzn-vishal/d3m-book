@@ -36,7 +36,7 @@ export function DataAppendix({ data }: { data: AmazonData }) {
       }
     >
       <h3 className="font-serif text-[19px] font-semibold text-hub-ink">
-        Phase 1 — five marginal aggregates
+        The category summaries — five files
       </h3>
       <div className="mt-3 overflow-x-auto rounded-xl border border-hub-line">
         <table className="w-full min-w-[34rem] border-collapse text-left text-[13.5px]">
@@ -60,13 +60,14 @@ export function DataAppendix({ data }: { data: AmazonData }) {
       </div>
 
       <h3 className="mt-10 font-serif text-[19px] font-semibold text-hub-ink">
-        Phase 2 — 29 more files, behavioural rather than marginal
+        The behavioural aggregates — 29 more files
       </h3>
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-hub-ink-soft">
-        A second pass added <code className="font-plex text-[12.5px]">merged_results_v2/</code> — 29
-        CSVs, 13.7 MB — built from a 40 GB hash-partitioned extract of all 507.7M reviews rather than
-        a fresh scan. Grouping by <em>reviewer</em> and by <em>item</em> is what the first pass could
-        not do, and it is where every finding in{' '}
+        The five files above summarise the review table one category at a time. A second set,{' '}
+        <code className="font-plex text-[12.5px]">merged_results_v2/</code> — 29 CSVs, 13.7 MB —
+        instead groups every review by its <em>author</em> and by its <em>product</em>, which is what
+        makes reviewer-level and item-level questions answerable at all. It is where every finding
+        in{' '}
         <a
           href="/amazon/reviewers"
           className="font-medium text-hub-teal underline decoration-hub-teal/40 underline-offset-2"

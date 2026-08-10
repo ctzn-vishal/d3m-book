@@ -16,9 +16,9 @@ const pretty = (s: string) =>
   dt(s).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
 /**
- * /amazon/daily — the full daily series, which Phase 1 lacked entirely. Its
- * absence is why nothing on this site could previously answer "what happened on
- * a specific day".
+ * /amazon/daily — the full daily series. Its absence from the category summaries
+ * is why nothing on this site could previously answer "what happened on a
+ * specific day".
  */
 export function DailyReport({ data }: { data: Daily }) {
   return (
@@ -41,8 +41,9 @@ function TheWholeSeries({ data }: { data: Daily }) {
       title={`${int(data.coverage.days)} days with at least one review`}
       lede={
         <>
-          Phase 1 published yearly totals and pooled cyclical profiles, but never a date axis — so no
-          question about a specific day could be asked at all. This is the whole thing, from{' '}
+          The earlier aggregates gave yearly totals and pooled cyclical profiles but never a date
+          axis, so no question about a specific day could be asked at all. This is the whole thing,
+          from{' '}
           {pretty(data.coverage.from)} to {pretty(data.coverage.to)}, aggregated to weeks so 28 years
           fit in one chart. The busiest week began {pretty(peak.d)} with {compact(peak.n)} reviews.
         </>

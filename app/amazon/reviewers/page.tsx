@@ -14,7 +14,7 @@ const { metadata, Page } = amazonAnalysisPage<Reviewers>({
   Report: ({ data: d }) => <ReviewersReport data={d} meta={meta} />,
   data,
   standfirst:
-    'Phase 1 never grouped a single review by its author. Doing so turns the star scale into a measurement of two things at once — and the smaller of the two is the product.',
+    'Summarise reviews by category and the reviewer disappears. Group them by author instead, and the star scale turns out to measure two things at once — the smaller of which is the product.',
   description:
     'Who writes Amazon reviews: the activity gradient in ratings, reviewer concentration (Gini 0.64), tenure, and why the marginal variance shares are not a decomposition.',
 });

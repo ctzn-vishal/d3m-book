@@ -23,7 +23,7 @@ type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
 
 /**
  * Seasonality across all 33 categories, computed entirely from the published
- * Phase 1 aggregates — no new extraction.
+ * category summaries — no new extraction.
  *
  * The month / weekday / hour files pool every year from 1996 to 2023, which
  * makes them cyclical profiles and not timelines. That constraint is stated
@@ -397,7 +397,7 @@ function DecemberBuysJanuaryReceives({
           here to confirm that December and January reviewers are different people. What makes it
           more than a story is that the effect scales with gift intensity across 33 independent
           categories rather than showing up in one. Testing it properly needs the reviewer-level
-          data — which is exactly the kind of question the next extraction pass is designed for.
+          data, following the same person across December and January.
         </p>
       </Aside>
     </Section>
@@ -450,11 +450,21 @@ function TheWeekBarelyMatters({ data, rows }: { data: AmazonData; rows: RhythmRo
                 tickFormat: (v: number) => `${v}%`,
               },
               marks: [
-                Plot.barY(s, {
+                // Lollipops: the axis starts at 12% so a 2-point spread is
+                // visible at all, which makes bar length meaningless.
+                Plot.ruleX(s, {
+                  x: 't',
+                  y1: 12,
+                  y2: 'share',
+                  stroke: ACCENT.plum,
+                  strokeWidth: 9,
+                  strokeOpacity: 0.3,
+                }),
+                Plot.dot(s, {
                   x: 't',
                   y: 'share',
+                  r: 5.5,
                   fill: ACCENT.plum,
-                  fillOpacity: 0.8,
                   tip: true,
                   title: (d: { t: number; share: number; cell: Cell }) =>
                     `${data.dayNames[d.t]}\n${pct(d.share)} of reviews (${int(d.cell.n)})\n${d.cell.r.toFixed(2)}★ mean`,

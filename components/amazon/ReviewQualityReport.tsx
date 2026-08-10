@@ -11,7 +11,7 @@ type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
 
 /**
  * /amazon/review-quality — the anatomy of a review, and the joint distributions
- * Phase 1 could only publish as marginals.
+ * that a per-category summary can only report as separate margins.
  *
  * The centrepiece is the verified-purchase joint, because it reverses the sign
  * of the correlation the overview page reports at category level.
@@ -56,7 +56,7 @@ function TheVerifiedReversal({ data }: { data: ReviewQualityData }) {
     >
       <ChartCard
         title="Rating distribution by verified-purchase flag"
-        subtitle={`The 5 × 2 joint Phase 1 could not provide — it published each margin separately, and a joint cannot be recovered from margins.`}
+        subtitle="Counting the pairs directly. Reporting each margin separately — the rating split and the verified split — cannot produce this table."
       >
         <PlotFigure
           ariaLabel="Stacked bar chart of rating distribution for verified and unverified reviews."
@@ -162,9 +162,9 @@ function WhoGetsVotedHelpful({ data }: { data: ReviewQualityData }) {
       title="Negative reviews get read"
       lede={
         <>
-          Helpful votes are the only signal in this corpus of what <em>other</em> shoppers valued, and
-          Phase 1 omitted them entirely. They are brutally skewed — the median review of any rating
-          gets zero — so the story is in the upper tail. At the 99th percentile a one-star review
+          Helpful votes are the only signal in this corpus of what <em>other</em> shoppers valued.
+          They are brutally skewed — the median review of any rating gets zero — so the story is in
+          the upper tail. At the 99th percentile a one-star review
           collects {one.p99.toFixed(1)} votes against {five.p99.toFixed(1)} for a five-star one.
           Complaints travel {(one.p99 / five.p99).toFixed(2)}× further.
         </>

@@ -10,8 +10,8 @@ import type { Phase2Meta, Reviewers } from './phase2-types';
 type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
 
 /**
- * /amazon/reviewers — the user-grain analysis Phase 1 could not do at all,
- * because it never grouped by reviewer.
+ * /amazon/reviewers — the reviewer-level analysis, which requires grouping every
+ * review by its author rather than by category.
  *
  * The through-line: a star rating is partly a measurement of the product and
  * partly a measurement of whoever happened to write it, and the second part is
@@ -71,11 +71,22 @@ function TheActivityGradient({ data }: { data: Reviewers }) {
               x: { label: 'Reviews written by this author →', domain: data.activity.map(a => a.bucket) },
               y: { label: '↑ Mean ★', grid: true, domain: [3.6, 4.4] },
               marks: [
-                Plot.barY(data.activity, {
+                // Lollipops rather than bars: the axis is truncated to make a
+                // 0.45-star gradient legible, and a bar's length would then be
+                // measured from an arbitrary floor.
+                Plot.ruleX(data.activity, {
+                  x: 'bucket',
+                  y1: 3.6,
+                  y2: 'mean',
+                  stroke: ACCENT.blue,
+                  strokeWidth: 9,
+                  strokeOpacity: 0.3,
+                }),
+                Plot.dot(data.activity, {
                   x: 'bucket',
                   y: 'mean',
+                  r: 6,
                   fill: ACCENT.blue,
-                  fillOpacity: 0.85,
                   tip: true,
                   title: (d: (typeof data.activity)[number]) =>
                     `${d.bucket} review${d.bucket === '1' ? '' : 's'}\n${d.mean.toFixed(3)}★ mean\n${pct(d.dist[0])} one-star · ${pct(d.dist[4])} five-star\n${int(d.n)} reviews`,
@@ -84,7 +95,7 @@ function TheActivityGradient({ data }: { data: Reviewers }) {
                   x: 'bucket',
                   y: 'mean',
                   text: (d: (typeof data.activity)[number]) => d.mean.toFixed(2),
-                  dy: -8,
+                  dy: -15,
                   fontSize: 11,
                   fill: MUTED,
                 }),
@@ -348,9 +359,10 @@ function TheHardeningThatIsnt({ data }: { data: Reviewers }) {
           individuals mellowing.
         </p>
         <p className="mt-2.5">
-          Separating the two needs a within-reviewer comparison: the same person&rsquo;s first review
-          against their tenth. These aggregates cannot do it, and it is the single most valuable thing
-          a Phase 3 would add. Read the curve as an upper bound on any real learning effect.
+          Separating the two needs a within-reviewer comparison — the same person&rsquo;s first
+          review against their tenth. These aggregates cannot do it, because they never follow an
+          individual over time. Read the curve as an upper bound on any real learning effect, and
+          treat the gap between it and zero as the size of the selection problem.
         </p>
       </Aside>
     </Section>

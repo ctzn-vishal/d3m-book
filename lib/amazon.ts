@@ -36,7 +36,7 @@ export const ANALYSES: Analysis[] = [
     title: 'The rater in the rating',
     blurb:
       'Who actually writes reviews, and how much of a star rating is about them rather than the product. One-time reviewers give one star 2.5× as often as regulars.',
-    source: 'Phase 2 — user-grain aggregates',
+    source: 'Reviewer-level aggregates · 507.7M reviews',
     minutes: 10,
     updated: '2026-08-09',
     status: 'live',
@@ -47,7 +47,7 @@ export const ANALYSES: Analysis[] = [
     title: 'How a product’s rating forms',
     blurb:
       'Rating by review index, the first-review effect, and the shape of a contested product. Items whose first review was 1★ run half a star lower forever after.',
-    source: 'Phase 2 — item-grain aggregates',
+    source: 'Product-level aggregates · 35M items',
     minutes: 9,
     updated: '2026-08-09',
     status: 'live',
@@ -58,7 +58,7 @@ export const ANALYSES: Analysis[] = [
     title: 'What a review is made of',
     blurb:
       'Helpful votes, length, photos, duplicate text, and the verified-purchase joint that reverses the headline correlation.',
-    source: 'Phase 2 — Tier 0 aggregates',
+    source: 'Review-level aggregates · 507.7M reviews',
     minutes: 8,
     updated: '2026-08-09',
     status: 'live',
@@ -69,7 +69,7 @@ export const ANALYSES: Analysis[] = [
     title: 'Ten thousand days',
     blurb:
       'The full daily series, 1996–2023. The biggest review days in Amazon’s history are not Prime Day or Black Friday — they are the first week of January.',
-    source: 'Phase 2 — daily series',
+    source: 'Daily series · 1996–2023',
     minutes: 6,
     updated: '2026-08-09',
     status: 'live',
@@ -80,7 +80,7 @@ export const ANALYSES: Analysis[] = [
     title: 'What reviewers buy next',
     blurb:
       'Category breadth, the 33×33 co-occurrence matrix, and where a reviewer goes after their last review.',
-    source: 'Phase 2 — cross-category matrices',
+    source: 'Cross-category matrices · 54M reviewers',
     minutes: 7,
     updated: '2026-08-09',
     status: 'live',
@@ -91,7 +91,7 @@ export const ANALYSES: Analysis[] = [
     title: 'What’s on the shelf',
     blurb:
       'Prices, brand concentration, and the attribute vocabulary of 35M products — plus two measures the corpus simply cannot answer.',
-    source: 'Phase 2 — item metadata',
+    source: 'Product metadata · 35M items',
     minutes: 7,
     updated: '2026-08-09',
     status: 'live',

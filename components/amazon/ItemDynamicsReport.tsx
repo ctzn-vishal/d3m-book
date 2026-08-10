@@ -191,11 +191,23 @@ function TheFirstReviewEffect({ data }: { data: ItemDynamics }) {
               x: { label: 'What the first review said →', domain: [1, 2, 3, 4, 5], tickFormat: (d: number) => `${d}★` },
               y: { label: '↑ Mean ★ of reviews 2–n', grid: true, domain: [3.5, 4.4] },
               marks: [
-                Plot.barY(data.firstEffect, {
+                // Lollipops, not bars. The interesting range is 3.75–4.26 out of
+                // 5, so a zero-based axis would flatten it — but a bar drawn on a
+                // truncated axis encodes length from a floor that isn't zero,
+                // which misreads by design and spills past the frame.
+                Plot.ruleX(data.firstEffect, {
+                  x: 'firstRating',
+                  y1: 3.5,
+                  y2: 'later',
+                  stroke: (d: { firstRating: number }) => STARS[d.firstRating - 1],
+                  strokeWidth: 9,
+                  strokeOpacity: 0.35,
+                }),
+                Plot.dot(data.firstEffect, {
                   x: 'firstRating',
                   y: 'later',
+                  r: 6,
                   fill: (d: { firstRating: number }) => STARS[d.firstRating - 1],
-                  fillOpacity: 0.9,
                   tip: true,
                   title: (d: { firstRating: number; n: number; later: number }) =>
                     `first review ${d.firstRating}★\nlater reviews average ${d.later.toFixed(3)}★\n${int(d.n)} later reviews`,
@@ -204,11 +216,10 @@ function TheFirstReviewEffect({ data }: { data: ItemDynamics }) {
                   x: 'firstRating',
                   y: 'later',
                   text: (d: { later: number }) => d.later.toFixed(2),
-                  dy: -8,
+                  dy: -15,
                   fontSize: 11,
                   fill: MUTED,
                 }),
-                Plot.ruleY([0], { stroke: GRID }),
               ],
             }) as PlotOptions
           }

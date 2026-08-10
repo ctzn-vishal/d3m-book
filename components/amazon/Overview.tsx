@@ -340,8 +340,9 @@ function TheVerificationGap({ data, quality }: { data: AmazonData; quality?: Rev
             reviews recovers the behaviour, and the two point opposite ways.
           </p>
           <p className="mt-2.5">
-            Phase 1 could not show this — it published the rating distribution and the verified share
-            as two separate marginals, and a joint cannot be recovered from marginals. The{' '}
+            A category-level summary cannot show this. It reports the rating distribution and the
+            verified share as two separate margins, and a joint cannot be recovered from margins —
+            you have to count the pairs. The{' '}
             <a
               href="/amazon/review-quality"
               className="font-medium text-hub-teal underline decoration-hub-teal/40 underline-offset-2"
