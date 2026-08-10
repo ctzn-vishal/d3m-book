@@ -18,7 +18,7 @@ export function DataAppendix({ data }: { data: AmazonData }) {
   return (
     <Section
       eyebrow="The data"
-      title="Five CSVs, no text, no identifiers"
+      title="Thirty-four CSVs, no text, no identifiers"
       id="data"
       lede={
         <>
@@ -35,7 +35,10 @@ export function DataAppendix({ data }: { data: AmazonData }) {
         </>
       }
     >
-      <div className="overflow-x-auto rounded-xl border border-hub-line">
+      <h3 className="font-serif text-[19px] font-semibold text-hub-ink">
+        Phase 1 — five marginal aggregates
+      </h3>
+      <div className="mt-3 overflow-x-auto rounded-xl border border-hub-line">
         <table className="w-full min-w-[34rem] border-collapse text-left text-[13.5px]">
           <thead>
             <tr className="border-b border-hub-line bg-hub-paper2">
@@ -56,14 +59,44 @@ export function DataAppendix({ data }: { data: AmazonData }) {
         </table>
       </div>
 
+      <h3 className="mt-10 font-serif text-[19px] font-semibold text-hub-ink">
+        Phase 2 — 29 more files, behavioural rather than marginal
+      </h3>
+      <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-hub-ink-soft">
+        A second pass added <code className="font-plex text-[12.5px]">merged_results_v2/</code> — 29
+        CSVs, 13.7 MB — built from a 40 GB hash-partitioned extract of all 507.7M reviews rather than
+        a fresh scan. Grouping by <em>reviewer</em> and by <em>item</em> is what the first pass could
+        not do, and it is where every finding in{' '}
+        <a
+          href="/amazon/reviewers"
+          className="font-medium text-hub-teal underline decoration-hub-teal/40 underline-offset-2"
+        >
+          the reviewer analysis
+        </a>{' '}
+        comes from. Read{' '}
+        <code className="font-plex text-[12.5px]">merged_results_v2/_meta/manifest_v2.json</code>{' '}
+        first — it documents every file&rsquo;s grain, suppression, and caveats, and records two
+        measures it deliberately did not publish.
+      </p>
+      <p className="mt-2 max-w-2xl text-[13px] leading-relaxed text-hub-ink-faint">
+        Grain is load-bearing, not decoration: <code className="font-plex">C</code> is one row per
+        category, <code className="font-plex">G</code> is corpus-wide with no category column,{' '}
+        <code className="font-plex">X</code> is a category × category matrix that must not be joined
+        to per-category files, and <code className="font-plex">C+G</code> carries both, separated by a{' '}
+        <code className="font-plex">scope</code> column. The two scopes answer different questions and
+        are not comparable.
+      </p>
+
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <CodeBlock
           label="Plain HTTPS — no credentials"
           code={`import pandas as pd
 
 BASE = "${meta.bucket}"
+V2   = BASE.replace("merged_results", "merged_results_v2")
+
 cats = pd.read_csv(BASE + "category_stats_all.csv")
-yrs  = pd.read_csv(BASE + "ts_yearly_all.csv")`}
+oad  = pd.read_csv(V2 + "user_one_and_done.csv")`}
         />
         <CodeBlock
           label="S3 protocol"
@@ -86,7 +119,7 @@ cats = pd.read_csv(obj["Body"])`}
       </p>
 
       <h3 className="mt-10 font-serif text-[19px] font-semibold text-hub-ink">
-        Four ways to get this wrong
+        Six ways to get this wrong
       </h3>
       <ol className="mt-4 space-y-3">
         {[
@@ -94,6 +127,8 @@ cats = pd.read_csv(obj["Body"])`}
           ['Filter on count before trusting a rate.', 'A category-year holding one review reports rating_5_pct = 100.0. Every rate chart here drops cells under 500 reviews.'],
           ['Volumes span four orders of magnitude.', `${compact(largest.n)} reviews in ${largest.label} against ${int(smallest.n)} in ${smallest.label}. Normalise before you compare.`],
           ['Percent columns are 0–100.', 'Not 0–1. Dividing twice, or not at all, is the most common bug against these files.'],
+          ['Every mean rating is an upper bound.', 'The Unknown category is excluded — 11% of ratings but 42% of users, and disproportionately one-and-done. Since sparse reviewers rate lower (3.81★ at one review, 4.26★ at ten or more), dropping them pushes every published mean up.'],
+          ['The variance shares do not decompose.', 'user 30.2%, item 19.3%, category 0.7% are MARGINAL shares of one factor at a time. They are crossed and unbalanced, sum to 50.2% corpus-wide and 105.6% on Gift Cards, and partition nothing. Do not derive a residual from them.'],
         ].map(([head, body]) => (
           <li key={head} className="flex gap-3 rounded-lg border border-hub-line bg-hub-paper2/50 px-4 py-3">
             <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-hub-amber" />

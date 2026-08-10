@@ -27,14 +27,20 @@ type PlotOptions = NonNullable<Parameters<typeof Plot.plot>[0]>;
  * leaderboard, and the verification gap — chosen because each one changes how
  * you should read every analysis linked from the index below it.
  */
-export function Overview({ data }: { data: AmazonData }) {
+export function Overview({ data, quality }: { data: AmazonData; quality?: ReviewQuality }) {
   return (
     <>
       <TheShapeOfRatings data={data} />
       <TheCategories data={data} />
-      <TheVerificationGap data={data} />
+      <TheVerificationGap data={data} quality={quality} />
     </>
   );
+}
+
+/** The slice of phase2-review-quality.json this section needs. */
+export interface ReviewQuality {
+  verProfile: Array<{ verified: boolean; n: number; mean: number; dist: number[] }>;
+  verByCategory: Array<{ key: string; label: string; v: number; u: number; gap: number; n: number }>;
 }
 
 // ── Rating distribution ────────────────────────────────────────────────────
@@ -233,10 +239,14 @@ function weight(cats: CategoryStat[], pick: (c: CategoryStat) => number): number
   return cats.reduce((s, c) => s + c.n * pick(c), 0) / n;
 }
 
-function TheVerificationGap({ data }: { data: AmazonData }) {
+function TheVerificationGap({ data, quality }: { data: AmazonData; quality?: ReviewQuality }) {
   const cats = data.categories;
   const media = cats.filter(c => MEDIA.has(c.key));
   const rest = cats.filter(c => !MEDIA.has(c.key));
+
+  const ver = quality?.verProfile.find(v => v.verified);
+  const unver = quality?.verProfile.find(v => !v.verified);
+  const higher = quality?.verByCategory.filter(c => c.gap > 0).length ?? 0;
 
   return (
     <Section
@@ -248,8 +258,8 @@ function TheVerificationGap({ data }: { data: AmazonData }) {
           collapses in media. Books, Kindle, CDs &amp; Vinyl, Digital Music, and Movies &amp; TV
           average {pct(weight(media, c => c.v))} verified against {pct(weight(rest, c => c.v))}{' '}
           everywhere else, and they rate {weight(media, c => c.r).toFixed(2)}★ against{' '}
-          {weight(rest, c => c.r).toFixed(2)}★. People review books they did not buy on Amazon, and
-          they are kinder when they do.
+          {weight(rest, c => c.r).toFixed(2)}★. It is tempting to conclude that unverified reviewers
+          are the generous ones. They are not — see below.
         </>
       }
     >
@@ -311,12 +321,44 @@ function TheVerificationGap({ data }: { data: AmazonData }) {
         />
       </ChartCard>
 
-      <Aside>
-        Treat the verified flag as a <em>sampling</em> variable, not a quality filter. Restricting
-        to verified reviews does not just remove noise — it removes Books, Kindle, and CDs from your
-        sample far more aggressively than it removes Automotive, and it shifts the rating
-        distribution while it does so.
-      </Aside>
+      {ver && unver ? (
+        <Aside>
+          <p>
+            <strong className="font-semibold text-hub-ink">
+              At the review level the relationship reverses.
+            </strong>{' '}
+            Pooled across all {compact(ver.n + unver.n)} reviews, verified purchases average{' '}
+            {ver.mean.toFixed(3)}★ and unverified ones {unver.mean.toFixed(3)}★ — verified reviewers
+            are the marginally <em>kinder</em> group, and that holds in {higher} of{' '}
+            {quality!.verByCategory.length} categories.
+          </p>
+          <p className="mt-2.5">
+            So the chart above is Simpson&rsquo;s paradox, not a finding about reviewer generosity.
+            Media categories are both less-verified and better-rated, for reasons that have nothing
+            to do with each other: they attract enthusiast raters, and their reviews often predate
+            or bypass an Amazon purchase. Comparing categories recovers the composition; comparing
+            reviews recovers the behaviour, and the two point opposite ways.
+          </p>
+          <p className="mt-2.5">
+            Phase 1 could not show this — it published the rating distribution and the verified share
+            as two separate marginals, and a joint cannot be recovered from marginals. The{' '}
+            <a
+              href="/amazon/review-quality"
+              className="font-medium text-hub-teal underline decoration-hub-teal/40 underline-offset-2"
+            >
+              review-anatomy analysis
+            </a>{' '}
+            has the full 5 × 2 table by year and category.
+          </p>
+        </Aside>
+      ) : (
+        <Aside>
+          Treat the verified flag as a <em>sampling</em> variable, not a quality filter. Restricting
+          to verified reviews does not just remove noise — it removes Books, Kindle, and CDs from
+          your sample far more aggressively than it removes Automotive, and it shifts the rating
+          distribution while it does so.
+        </Aside>
+      )}
     </Section>
   );
 }

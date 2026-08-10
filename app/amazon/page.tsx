@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ArrowDown, Database, ExternalLink } from 'lucide-react';
 import { JsonLd } from '@/components/JsonLd';
-import { Overview } from '@/components/amazon/Overview';
+import { Overview, type ReviewQuality } from '@/components/amazon/Overview';
 import { AnalysisIndex } from '@/components/amazon/AnalysisIndex';
 import { DataAppendix } from '@/components/amazon/DataAppendix';
 import { StatStrip } from '@/components/amazon/ui';
@@ -9,8 +9,12 @@ import { compact, int, isoDate, pct, type AmazonData } from '@/components/amazon
 import { SITE_URL, createPreviewMetadata } from '@/lib/share-metadata';
 import { LIVE_ANALYSES } from '@/lib/amazon';
 import raw from './data/amazon-reviews.json';
+import qualityRaw from './data/phase2-review-quality.json';
 
 const data = raw as AmazonData;
+// The verified-purchase joint (Phase 2) corrects the category-level reading of
+// the verification section — see components/amazon/Overview.tsx.
+const quality = qualityRaw as unknown as ReviewQuality;
 const { meta } = data;
 
 const title = 'Half a billion Amazon reviews — Vishal Singh';
@@ -141,7 +145,7 @@ export default function AmazonPage() {
       </header>
 
       <main className="mx-auto max-w-6xl px-5 pb-20 sm:px-7">
-        <Overview data={data} />
+        <Overview data={data} quality={quality} />
         <AnalysisIndex />
         <DataAppendix data={data} />
       </main>

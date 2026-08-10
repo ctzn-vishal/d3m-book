@@ -32,6 +32,72 @@ export interface Analysis {
 
 export const ANALYSES: Analysis[] = [
   {
+    slug: 'reviewers',
+    title: 'The rater in the rating',
+    blurb:
+      'Who actually writes reviews, and how much of a star rating is about them rather than the product. One-time reviewers give one star 2.5× as often as regulars.',
+    source: 'Phase 2 — user-grain aggregates',
+    minutes: 10,
+    updated: '2026-08-09',
+    status: 'live',
+    tags: ['selection', 'reviewers', 'inequality'],
+  },
+  {
+    slug: 'item-dynamics',
+    title: 'How a product’s rating forms',
+    blurb:
+      'Rating by review index, the first-review effect, and the shape of a contested product. Items whose first review was 1★ run half a star lower forever after.',
+    source: 'Phase 2 — item-grain aggregates',
+    minutes: 9,
+    updated: '2026-08-09',
+    status: 'live',
+    tags: ['herding', 'item dynamics', 'cross-category'],
+  },
+  {
+    slug: 'review-quality',
+    title: 'What a review is made of',
+    blurb:
+      'Helpful votes, length, photos, duplicate text, and the verified-purchase joint that reverses the headline correlation.',
+    source: 'Phase 2 — Tier 0 aggregates',
+    minutes: 8,
+    updated: '2026-08-09',
+    status: 'live',
+    tags: ['helpfulness', 'text', 'simpson’s paradox'],
+  },
+  {
+    slug: 'daily',
+    title: 'Ten thousand days',
+    blurb:
+      'The full daily series, 1996–2023. The biggest review days in Amazon’s history are not Prime Day or Black Friday — they are the first week of January.',
+    source: 'Phase 2 — daily series',
+    minutes: 6,
+    updated: '2026-08-09',
+    status: 'live',
+    tags: ['time series', 'seasonality', 'events'],
+  },
+  {
+    slug: 'cross-category',
+    title: 'What reviewers buy next',
+    blurb:
+      'Category breadth, the 33×33 co-occurrence matrix, and where a reviewer goes after their last review.',
+    source: 'Phase 2 — cross-category matrices',
+    minutes: 7,
+    updated: '2026-08-09',
+    status: 'live',
+    tags: ['cross-category', 'networks', 'reviewers'],
+  },
+  {
+    slug: 'catalogue',
+    title: 'What’s on the shelf',
+    blurb:
+      'Prices, brand concentration, and the attribute vocabulary of 35M products — plus two measures the corpus simply cannot answer.',
+    source: 'Phase 2 — item metadata',
+    minutes: 7,
+    updated: '2026-08-09',
+    status: 'live',
+    tags: ['prices', 'concentration', 'metadata'],
+  },
+  {
     slug: 'seasonality',
     title: 'When people write reviews',
     blurb:
