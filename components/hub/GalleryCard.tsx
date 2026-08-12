@@ -49,18 +49,33 @@ function isNew(createdAt?: string): boolean {
   return Number.isFinite(t) && Date.now() - t < 30 * 86400_000;
 }
 
-export function GalleryCard({ item }: { item: RegistryItem }) {
+/** Responsive-grid default (1/2/3 columns). Fixed-width contexts — the home
+ *  page's topic shelves — pass their own so the browser doesn't fetch a
+ *  1000px-wide source for a 320px card. */
+const GRID_SIZES = '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw';
+
+export function GalleryCard({
+  item,
+  /** Hide the topic eyebrow where the surrounding context already states it —
+   *  a topic shelf or a topic page repeats it on every card otherwise. */
+  showTopic = true,
+  sizes = GRID_SIZES,
+}: {
+  item: RegistryItem;
+  showTopic?: boolean;
+  sizes?: string;
+}) {
   const newTab = item.external || item.openInNewTab;
   const { Icon: TypeIcon, tone, solid, soft, bar } = TYPE_META[item.type];
   const inner = (
     <>
-      <div className="relative aspect-[16/10] overflow-hidden bg-hub-paper2">
+      <div className="relative aspect-[16/9] overflow-hidden bg-hub-paper2">
         {item.thumbnail ? (
           <Image
             src={item.thumbnail}
             alt=""
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            sizes={sizes}
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           />
         ) : (
@@ -89,20 +104,25 @@ export function GalleryCard({ item }: { item: RegistryItem }) {
         )}
       </div>
 
-      <div className="flex flex-grow flex-col p-4">
-        {item.topic && (
+      <div className="flex flex-grow flex-col px-4 pb-3.5 pt-3">
+        {showTopic && item.topic && (
           <div className={`flex items-center gap-1.5 font-plex text-[10px] uppercase tracking-[0.06em] ${tone}`}>
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-current" />
             <span className="text-hub-ink-faint">{item.topic}</span>
           </div>
         )}
-        <h3 className="mt-1.5 font-serif text-[17px] font-semibold leading-snug text-hub-ink">
+        {/* Clamped: cards sit in equal-height rows, so one three-line title
+            would set the height of every card beside it. */}
+        <h3 className={`line-clamp-2 font-serif text-[17px] font-semibold leading-snug text-hub-ink ${showTopic && item.topic ? 'mt-1.5' : ''}`}>
           {item.title}
         </h3>
         <p className="mt-1.5 line-clamp-2 flex-grow text-[13px] leading-relaxed text-hub-ink-soft">
           {item.description}
         </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
+        {/* One row of tags. max-h clips a wrapped second row cleanly (the gap
+            puts it well past the cutoff), rather than letting a long tag set
+            add 27px to every card in the row. */}
+        <div className="mt-2.5 flex max-h-[22px] flex-wrap gap-1.5 overflow-hidden">
           {item.tags.slice(0, 3).map(t => (
             <span
               key={t}
@@ -117,7 +137,7 @@ export function GalleryCard({ item }: { item: RegistryItem }) {
   );
 
   const className =
-    'group flex h-full flex-col overflow-hidden rounded-2xl border border-hub-line bg-hub-card shadow-hub transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-hub-line-strong no-underline';
+    'group flex h-full flex-col overflow-hidden rounded-2xl border border-hub-line bg-hub-card shadow-hub transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-hub-line-strong no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hub-teal focus-visible:ring-offset-2 focus-visible:ring-offset-hub-paper';
 
   return newTab ? (
     <a href={item.href} target="_blank" rel={relFor(item.href)} className={className}>

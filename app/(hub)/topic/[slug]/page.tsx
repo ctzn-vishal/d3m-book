@@ -119,7 +119,9 @@ export default async function TopicPage({ params }: Props) {
         {items.length > 0 ? (
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             {items.map(item => (
-              <GalleryCard key={`${item.type}-${item.id}`} item={item} />
+              // Every card on this page carries this page's topic — the header
+              // says it once, so the per-card eyebrow is pure repetition.
+              <GalleryCard key={`${item.type}-${item.id}`} item={item} showTopic={false} />
             ))}
           </div>
         ) : (

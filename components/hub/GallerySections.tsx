@@ -15,6 +15,10 @@ const PER_SECTION = 10;
 /** Bucket for rows with no topic — always last, and never silently dropped. */
 const UNFILED = 'More from the catalog';
 
+/** Shelf cards are a fixed width, so the responsive-grid `sizes` the cards
+ *  default to would have the browser fetch a ~1000px source for a 320px slot. */
+const SHELF_SIZES = '(max-width: 400px) 80vw, 320px';
+
 /** A shelf entry is either a single item or a whole collection standing in for
  *  its members. Collapsing happens per shelf, so a collection appears once, on
  *  the shelf of whichever topic its members carry. */
@@ -121,7 +125,8 @@ function Shelf({
   const page = (dir: 1 | -1) => {
     const el = ref.current;
     if (!el) return;
-    el.scrollBy({ left: dir * Math.max(el.clientWidth * 0.8, 260), behavior: 'smooth' });
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    el.scrollBy({ left: dir * Math.max(el.clientWidth * 0.8, 260), behavior: reduce ? 'auto' : 'smooth' });
   };
 
   const arrow =
@@ -153,12 +158,16 @@ function Shelf({
         <div
           ref={ref}
           onScroll={sync}
-          role="region"
+          // `group`, not `region`: the row needs an accessible name because it
+          // is focusable, but fourteen of these as landmarks would bury the
+          // page's real ones in a screen reader's landmark list.
+          role="group"
           aria-label={label}
           tabIndex={0}
           // pt/pb leave room for the cards' hover lift and shadow, which the
-          // scroll container would otherwise clip.
-          className="no-scrollbar flex snap-x scroll-px-5 gap-5 overflow-x-auto px-5 pb-4 pt-2 sm:scroll-px-7 sm:px-7"
+          // scroll container would otherwise clip. The focus ring is inset so
+          // it isn't clipped by that same overflow.
+          className="no-scrollbar flex snap-x scroll-px-5 gap-5 overflow-x-auto px-5 pb-4 pt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-hub-teal/40 sm:scroll-px-7 sm:px-7"
         >
           {children}
         </div>
@@ -253,6 +262,7 @@ export function GallerySections({
 
                   <span className="inline-flex shrink-0 items-center rounded-full border border-hub-line bg-hub-card px-2.5 py-1 font-plex text-[11px] font-medium tracking-[0.04em] text-hub-ink-soft">
                     {all.length}
+                    <span className="sr-only"> pieces</span>
                   </span>
 
                   {rest > 0 && topic !== UNFILED && (
@@ -277,9 +287,16 @@ export function GallerySections({
                 // card, and the card's own `h-full` then resolves against it.
                 <div key={entry.key} className="w-[80vw] max-w-[320px] shrink-0 snap-start sm:w-[300px] xl:w-[318px]">
                   {entry.kind === 'collection' ? (
-                    <CollectionCard collection={entry.collection} members={entry.members} total={entry.total} />
+                    <CollectionCard
+                      collection={entry.collection}
+                      members={entry.members}
+                      total={entry.total}
+                      sizes={SHELF_SIZES}
+                    />
                   ) : (
-                    <GalleryCard item={entry.item} />
+                    // The shelf's own heading already names the topic — repeating
+                    // it on all ten cards is noise, and a line of card height.
+                    <GalleryCard item={entry.item} showTopic={false} sizes={SHELF_SIZES} />
                   )}
                 </div>
               ))}

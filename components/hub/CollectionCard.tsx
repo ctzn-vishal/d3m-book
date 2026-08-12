@@ -16,12 +16,15 @@ export function CollectionCard({
   collection,
   members,
   total,
+  sizes = '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw',
 }: {
   collection: Collection;
   /** The members visible in this context — used only for artwork. */
   members: RegistryItem[];
   /** Every member, including unlisted parts the gallery never lists. */
   total?: number;
+  /** Override for fixed-width contexts (the home page's topic shelves). */
+  sizes?: string;
 }) {
   const href = collectionHref(collection);
   // Borrow the first member's artwork; a collection has no image of its own.
@@ -31,7 +34,7 @@ export function CollectionCard({
   return (
     <Link
       href={href}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-hub-line bg-hub-card shadow-hub transition-all duration-200 hover:-translate-y-0.5 hover:border-hub-line-strong"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-hub-line bg-hub-card shadow-hub transition-all duration-200 hover:-translate-y-0.5 hover:border-hub-line-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hub-teal focus-visible:ring-offset-2 focus-visible:ring-offset-hub-paper"
     >
       {/* Stacked-paper edge — the visual tell that this is many pieces. */}
       <span
@@ -45,25 +48,28 @@ export function CollectionCard({
             src={thumb}
             alt=""
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            sizes={sizes}
             className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
           />
         </div>
       )}
 
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col px-4 pb-3.5 pt-3">
         <span className="inline-flex items-center gap-1.5 font-plex text-[10px] uppercase tracking-[0.12em] text-hub-teal">
           <Layers size={11} strokeWidth={2.2} />
           {count} {count === 1 ? 'part' : 'parts'}
           {collection.status === 'building' ? ' · ongoing' : ''}
         </span>
 
-        <h3 className="mt-2 font-serif text-[17px] font-semibold leading-snug text-hub-ink transition-colors group-hover:text-hub-teal">
+        {/* Both clamped for the same reason as GalleryCard — this card shares a
+            row with those, and equal-height rows take their cue from the worst
+            case. */}
+        <h3 className="mt-1.5 line-clamp-2 font-serif text-[17px] font-semibold leading-snug text-hub-ink transition-colors group-hover:text-hub-teal">
           {collection.title}
         </h3>
-        <p className="mt-1.5 flex-1 text-[13px] leading-relaxed text-hub-ink-soft">{collection.blurb}</p>
+        <p className="mt-1.5 line-clamp-2 flex-1 text-[13px] leading-relaxed text-hub-ink-soft">{collection.blurb}</p>
 
-        <span className="mt-3 inline-flex items-center gap-1.5 border-t border-hub-line pt-2.5 text-[12px] font-medium text-hub-ink-faint transition-colors group-hover:text-hub-teal">
+        <span className="mt-2.5 inline-flex items-center gap-1.5 border-t border-hub-line pt-2.5 text-[12px] font-medium text-hub-ink-faint transition-colors group-hover:text-hub-teal">
           Open the collection
           <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
         </span>
