@@ -33,6 +33,7 @@ function toAdminRow(r: Record<string, any>): AdminRow {
 export default async function AdminPage() {
   const db = await getDbClient();
   let rows: AdminRow[] = [];
+  let topicOrder: string[] = [];
   let connected = false;
   if (db) {
     try {
@@ -41,6 +42,14 @@ export default async function AdminPage() {
       connected = true;
     } catch {
       connected = false;
+    }
+    // Separate try: the table only exists once someone has saved an order, and
+    // "never reordered" must not read as "Turso unreachable".
+    try {
+      const t = await db.execute('SELECT topic FROM topic_order ORDER BY sort ASC');
+      topicOrder = (t.rows as unknown as { topic: string }[]).map(r => r.topic).filter(Boolean);
+    } catch {
+      topicOrder = [];
     }
   }
 
@@ -59,8 +68,9 @@ export default async function AdminPage() {
             topic / type / status across the whole selection in one write. Amber marks a row with no
             topic or an import-batch date; plum marks a retired topic. <strong>Cards</strong> keeps
             drag-to-reorder (or ⤒/⤓) and the paired-chapter picker. ⭐ floats an item to the top of
-            the live gallery. Changes write to <strong>live Turso</strong> and show within seconds;
-            the committed snapshot syncs nightly.
+            the live gallery. <strong>Topics</strong> orders the shelves themselves — which topic row
+            you meet first on the home page. Changes write to <strong>live Turso</strong> and show
+            within seconds; the committed snapshot syncs nightly.
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -92,7 +102,7 @@ export default async function AdminPage() {
         </p>
       )}
 
-      {connected ? <AdminViews rows={rows} /> : null}
+      {connected ? <AdminViews rows={rows} topicOrder={topicOrder} /> : null}
     </div>
   );
 }

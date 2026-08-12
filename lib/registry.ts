@@ -51,6 +51,16 @@ export function snapshotItemsIncludingUnlisted(): RegistryItem[] {
   return sortItems(SNAPSHOT.filter(i => i.status === 'published' || i.status === 'unlisted'));
 }
 
+/**
+ * The curated shelf order from the committed snapshot — the fallback for
+ * lib/registry-db.ts#getTopicOrder when Turso is unreachable. Empty when the
+ * order has never been saved, which `galleryTopicOrder` reads as "use TOPICS".
+ */
+export function snapshotTopicOrder(): string[] {
+  const raw = (snapshot as { topicOrder?: unknown }).topicOrder;
+  return Array.isArray(raw) ? raw.filter((t): t is string => typeof t === 'string') : [];
+}
+
 /** Look up any item by id (incl. hidden) — used by the in-book <CaseRef>. */
 export function getRegistryItem(id: string): RegistryItem | undefined {
   return SNAPSHOT.find(i => i.id === id);

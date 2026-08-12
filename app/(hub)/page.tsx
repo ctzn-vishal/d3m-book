@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { GalleryExplorer } from '@/components/hub/GalleryExplorer';
-import { getRegistry, getRegistryIncludingUnlisted } from '@/lib/registry-db';
+import { getRegistry, getRegistryIncludingUnlisted, getTopicOrder } from '@/lib/registry-db';
 import { getRegistryFacets } from '@/lib/registry';
 import { SITE_URL } from '@/lib/share-metadata';
 import { JsonLd } from '@/components/JsonLd';
@@ -36,6 +36,9 @@ export const revalidate = 600;
 export default async function HomeGallery() {
   const items = await getRegistry();
   const facets = getRegistryFacets(items);
+  // Shelf order, curated in /admin. A prefix, not the full section list — the
+  // gallery appends anything it doesn't mention (see galleryTopicOrder).
+  const topicOrder = await getTopicOrder();
 
   // Collection sizes count unlisted members too. A series normally keeps its
   // parts unlisted so they don't litter the grid, so counting only what the
@@ -65,7 +68,12 @@ export default async function HomeGallery() {
       </header>
 
       <div className="mx-auto max-w-6xl px-5 py-10 sm:px-7">
-        <GalleryExplorer items={items} facets={facets} collectionSizes={collectionSizes} />
+        <GalleryExplorer
+          items={items}
+          facets={facets}
+          collectionSizes={collectionSizes}
+          topicOrder={topicOrder}
+        />
       </div>
     </div>
   );

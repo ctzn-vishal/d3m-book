@@ -1,6 +1,7 @@
 import 'server-only';
+import type { Client } from '@libsql/client';
 import { getDbClient, resetDbClient } from '@/lib/turso-admin';
-import { snapshotItems, snapshotItemsIncludingUnlisted, sortItems } from '@/lib/registry';
+import { snapshotItems, snapshotItemsIncludingUnlisted, snapshotTopicOrder, sortItems } from '@/lib/registry';
 import type { RegistryItem, RegistryType } from '@/lib/registry-types';
 
 /**
@@ -52,10 +53,10 @@ function mapRows(rows: Record<string, any>[]): RegistryItem[] {
   }));
 }
 
-// Returns the live rows on success (possibly an EMPTY array — a valid state when
-// everything is unpublished), or null when the DB is unreachable / times out / has
-// no creds. Callers distinguish null (fall back to snapshot) from [] (serve empty).
-async function readTurso(where: string): Promise<RegistryItem[] | null> {
+// Returns `run`'s result on success, or null when the DB is unreachable / times
+// out / has no creds. Callers distinguish null (fall back to snapshot) from an
+// empty result (serve empty) — so `run` must never resolve to null itself.
+async function timedRead<T>(run: (db: Client) => Promise<T>): Promise<T | null> {
   let timer: ReturnType<typeof setTimeout> | undefined;
   // Race the connect+query against the timeout. Promise.race doesn't cancel the
   // loser: if the timeout wins, this query promise keeps running and would
@@ -64,19 +65,17 @@ async function readTurso(where: string): Promise<RegistryItem[] | null> {
   const query = (async () => {
     const db = await getDbClient();
     if (!db) return null;
-    return db.execute(`SELECT * FROM gallery${where}`);
+    return run(db);
   })();
   query.catch(e => {
     if (/401|unauthor|expired|jwt|token/i.test((e as Error)?.message ?? '')) resetDbClient();
   });
 
   try {
-    const result = await Promise.race([
+    return await Promise.race([
       query,
       new Promise<null>(resolve => { timer = setTimeout(() => resolve(null), READ_TIMEOUT_MS); }),
     ]);
-    if (!result) return null;
-    return mapRows(result.rows as unknown as Record<string, any>[]);
   } catch (e) {
     // Self-heal a stale/expired token so the next request re-mints.
     if (/401|unauthor|expired|jwt|token/i.test((e as Error)?.message ?? '')) resetDbClient();
@@ -84,6 +83,13 @@ async function readTurso(where: string): Promise<RegistryItem[] | null> {
   } finally {
     if (timer) clearTimeout(timer);
   }
+}
+
+// Live rows on success (possibly an EMPTY array — a valid state when everything
+// is unpublished), or null to fall back to the snapshot.
+async function readTurso(where: string): Promise<RegistryItem[] | null> {
+  const result = await timedRead(db => db.execute(`SELECT * FROM gallery${where}`));
+  return result ? mapRows(result.rows as unknown as Record<string, any>[]) : null;
 }
 
 /** Full published registry: live Turso when reachable, else the committed snapshot. */
@@ -103,6 +109,37 @@ export async function getRegistry(): Promise<RegistryItem[]> {
 export async function getRegistryIncludingUnlisted(): Promise<RegistryItem[]> {
   const live = await readTurso(" WHERE status IN ('published','unlisted')");
   return live ? sortItems(live) : snapshotItemsIncludingUnlisted();
+}
+
+/**
+ * The curated shelf order — which topic row comes first on the home page,
+ * set by drag-and-drop in /admin.
+ *
+ * Read as a plain list of topic names, NOT as the complete section list: it may
+ * omit a topic (one added to the vocabulary since the order was last saved) and
+ * may name one that no longer has any items. `galleryTopicOrder` treats it as a
+ * prefix and appends whatever it doesn't mention, so neither case loses a shelf.
+ *
+ * The table is created lazily by the /admin write, so an install that has never
+ * reordered has no `topic_order` table at all — SQLite raises "no such table",
+ * which is caught here and read as "nothing curated yet".
+ */
+export async function getTopicOrder(): Promise<string[]> {
+  const result = await timedRead(async db => {
+    try {
+      return await db.execute('SELECT topic FROM topic_order ORDER BY sort ASC');
+    } catch (e) {
+      if (/no such table/i.test((e as Error)?.message ?? '')) return { rows: [] };
+      throw e;
+    }
+  });
+  if (!result) return snapshotTopicOrder();
+  const live = (result.rows as unknown as { topic: string }[]).map(r => r.topic).filter(Boolean);
+  // A reachable-but-empty table means the order has genuinely never been saved.
+  // Don't fall back to the snapshot for that — the snapshot is a copy of this
+  // same table, so it would be empty too, and a stale one would override a
+  // deliberate reset.
+  return live;
 }
 
 /**

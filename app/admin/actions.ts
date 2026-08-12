@@ -190,6 +190,61 @@ export async function updateRows(ids: string[], patch: BulkPatch): Promise<Actio
 }
 
 /**
+ * Persist the order of the home page's topic shelves.
+ *
+ * `orderedTopics` is the full list in display order; each topic's row index
+ * becomes its `sort`. Stored in its own tiny table rather than as a column on
+ * `gallery` — shelf order is a property of the topic, not of any item, and
+ * putting it on rows would mean N writes to move one shelf, with no way to
+ * position a topic that currently has nothing filed under it.
+ *
+ * A topic is accepted if it is canonical OR currently sits on a row. The second
+ * clause is what lets a retired-but-not-yet-re-filed topic (which still renders
+ * a shelf) be positioned instead of being stuck wherever the fallback puts it.
+ *
+ * The write is a delete-then-insert of the whole list inside one batch, so the
+ * stored order can never end up half-old/half-new, and a topic dropped from the
+ * list is genuinely removed rather than left behind at a stale index.
+ */
+export async function reorderTopics(orderedTopics: string[]): Promise<ActionResult> {
+  try {
+    await assertAuthed();
+    const unique = [...new Set(orderedTopics.map(t => t.trim()).filter(Boolean))];
+    if (!unique.length) throw new Error('no topics given');
+
+    await withDb(async db => {
+      await db.execute(`CREATE TABLE IF NOT EXISTS topic_order (
+        topic TEXT PRIMARY KEY,
+        sort INTEGER NOT NULL
+      )`);
+
+      const known = new Set(TOPIC_OPTIONS);
+      for (const r of (await db.execute('SELECT DISTINCT topic FROM gallery WHERE topic IS NOT NULL')).rows) {
+        known.add(r.topic as string);
+      }
+      const unknown = unique.filter(t => !known.has(t));
+      if (unknown.length) throw new Error(`unknown topic: ${unknown.join(', ')}`);
+
+      await db.batch(
+        [
+          { sql: 'DELETE FROM topic_order', args: [] },
+          ...unique.map((topic, i) => ({
+            sql: 'INSERT INTO topic_order (topic, sort) VALUES (?, ?)',
+            args: [topic, i] as (string | number)[],
+          })),
+        ],
+        'write'
+      );
+    });
+
+    bumpAndRevalidate();
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: (e as Error).message || 'Unknown error' };
+  }
+}
+
+/**
  * Persist a new display order. `orderedIds` is the full list in display order;
  * each row's `sort` becomes its index. Only rows whose sort actually changed are
  * written (so a no-op drag, or dragging one row, touches the minimum). `sort` is

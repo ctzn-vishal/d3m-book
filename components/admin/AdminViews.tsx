@@ -1,32 +1,37 @@
 'use client';
 
 import * as React from 'react';
-import { LayoutGrid, Rows3 } from 'lucide-react';
+import { LayoutGrid, Rows3, ListOrdered } from 'lucide-react';
 import { AdminTable } from '@/components/admin/AdminTable';
 import { AdminDataTable } from '@/components/admin/AdminDataTable';
+import { TopicOrder } from '@/components/admin/TopicOrder';
 import type { AdminRow } from '@/app/admin/types';
 
 const KEY = 'admin:view';
+type View = 'cards' | 'table' | 'topics';
+const VIEWS: View[] = ['cards', 'table', 'topics'];
 
 /**
- * Switches between the two curation surfaces.
+ * Switches between the curation surfaces.
  *
  * Cards keep drag-to-reorder — ordering is a spatial judgement and a dense
  * table is a poor place to make it. The table is for everything else: sorting,
- * faceting, and multi-row edits. Neither replaces the other, so both stay.
+ * faceting, and multi-row edits. Topics orders the shelves themselves, which is
+ * a different question from ordering items within one. None replaces another,
+ * so all three stay.
  *
  * The choice persists in localStorage; read in an effect rather than during
  * render so the server and first client render agree.
  */
-export function AdminViews({ rows }: { rows: AdminRow[] }) {
-  const [view, setView] = React.useState<'cards' | 'table'>('table');
+export function AdminViews({ rows, topicOrder }: { rows: AdminRow[]; topicOrder: string[] }) {
+  const [view, setView] = React.useState<View>('table');
 
   React.useEffect(() => {
     const saved = window.localStorage.getItem(KEY);
-    if (saved === 'cards' || saved === 'table') setView(saved);
+    if (saved && (VIEWS as string[]).includes(saved)) setView(saved as View);
   }, []);
 
-  const pick = (v: 'cards' | 'table') => {
+  const pick = (v: View) => {
     setView(v);
     try {
       window.localStorage.setItem(KEY, v);
@@ -42,6 +47,7 @@ export function AdminViews({ rows }: { rows: AdminRow[] }) {
           [
             { id: 'table', label: 'Table', Icon: Rows3 },
             { id: 'cards', label: 'Cards', Icon: LayoutGrid },
+            { id: 'topics', label: 'Topics', Icon: ListOrdered },
           ] as const
         ).map(({ id, label, Icon }) => (
           <button
@@ -59,7 +65,9 @@ export function AdminViews({ rows }: { rows: AdminRow[] }) {
         ))}
       </div>
 
-      {view === 'table' ? <AdminDataTable initialRows={rows} /> : <AdminTable initialRows={rows} />}
+      {view === 'table' && <AdminDataTable initialRows={rows} />}
+      {view === 'cards' && <AdminTable initialRows={rows} />}
+      {view === 'topics' && <TopicOrder rows={rows} initialOrder={topicOrder} />}
     </>
   );
 }

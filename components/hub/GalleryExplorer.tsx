@@ -159,12 +159,15 @@ export function GalleryExplorer({
   items,
   facets,
   collectionSizes = {},
+  topicOrder = [],
 }: {
   items: RegistryItem[];
   facets: RegistryFacets;
   /** slug → total members incl. unlisted, so a series whose parts are unlisted
    *  still collapses to one card instead of showing as a lone item. */
   collectionSizes?: Record<string, number>;
+  /** Curated shelf order from /admin; a prefix, not the full section list. */
+  topicOrder?: string[];
 }) {
   const [query, setQuery] = useState('');
   const [type, setType] = useState<RegistryType | 'all'>('all');
@@ -439,7 +442,7 @@ export function GalleryExplorer({
           filtering gets the flat animated grid, because once you've narrowed to
           a set, grouping it again just adds chrome between you and the answer. */}
       {!hasFilters ? (
-        <GallerySections items={filtered} collectionSizes={collectionSizes} />
+        <GallerySections items={filtered} collectionSizes={collectionSizes} topicOrder={topicOrder} />
       ) : (
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
           <AnimatePresence mode="popLayout">

@@ -131,20 +131,36 @@ export function topicFromSlug(slug: string): Topic | undefined {
 }
 
 /**
- * Section order for the gallery: canonical topics first, in TOPICS order, then
- * any other topic actually present on rows (a retired value not yet re-filed),
- * so a stale topic still renders a section instead of silently hiding its items.
+ * Section order for the gallery, in three tiers:
  *
- * This matters more than it looks. Under the old flat grid an unfiled or
+ *   1. `curated` — the order set by drag-and-drop in /admin (the `topic_order`
+ *      table). Empty when nothing has been curated yet.
+ *   2. Canonical topics the curated list doesn't mention, in TOPICS order. This
+ *      is what lets a topic be ADDED to the vocabulary without anyone having to
+ *      re-save the order in /admin first.
+ *   3. Anything else actually present on rows — a retired value not yet
+ *      re-filed — alphabetically, so a stale topic still renders a section
+ *      instead of silently hiding its items.
+ *
+ * Tier 3 matters more than it looks. Under the old flat grid an unfiled or
  * retired row still appeared somewhere; under a sectioned layout anything not
- * matched by a section is invisible. Driving the order from `TOPICS ∪ present`
- * makes it impossible to lose a row by editing the vocabulary.
+ * matched by a section is invisible. Deriving the order from
+ * `curated ∪ TOPICS ∪ present` makes it impossible to lose a row by editing the
+ * vocabulary — or by saving a partial order.
  */
-export function galleryTopicOrder(present: Iterable<string>): string[] {
-  const canonical = TOPICS as readonly string[];
-  const known = new Set<string>(canonical);
-  const extra = [...new Set(present)].filter(t => t && !known.has(t)).sort();
-  return [...canonical, ...extra];
+export function galleryTopicOrder(present: Iterable<string>, curated: readonly string[] = []): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  const push = (t: string) => {
+    if (!t || seen.has(t)) return;
+    seen.add(t);
+    out.push(t);
+  };
+
+  for (const t of curated) push(t);
+  for (const t of TOPICS) push(t);
+  for (const t of [...new Set(present)].sort()) push(t);
+  return out;
 }
 
 const DOMAIN_TO_TOPIC: Record<string, string> = {

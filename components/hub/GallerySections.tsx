@@ -201,10 +201,14 @@ function Shelf({
 export function GallerySections({
   items,
   collectionSizes = {},
+  topicOrder = [],
 }: {
   items: RegistryItem[];
   /** slug → total members (published + unlisted), from the server. */
   collectionSizes?: Record<string, number>;
+  /** Curated shelf order (the `topic_order` table, set in /admin). Treated as a
+   *  prefix — see galleryTopicOrder — so it can never hide a topic it omits. */
+  topicOrder?: string[];
 }) {
   const byTopic = new Map<string, RegistryItem[]>();
   for (const item of items) {
@@ -215,7 +219,7 @@ export function GallerySections({
   }
 
   const present = [...byTopic.keys()].filter(k => k !== UNFILED);
-  const order = galleryTopicOrder(present).filter(t => byTopic.has(t));
+  const order = galleryTopicOrder(present, topicOrder).filter(t => byTopic.has(t));
   if (byTopic.has(UNFILED)) order.push(UNFILED);
 
   return (
