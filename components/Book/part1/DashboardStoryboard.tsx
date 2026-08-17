@@ -82,7 +82,7 @@ function renderPanel(data: DashboardStoryboardData, stageId: string) {
   if (stageId === 'headline') {
     return (
       <div className="grid min-h-[280px] gap-4 md:grid-cols-[1fr_1.2fr] md:items-center">
-        <div className="rounded-md border border-border bg-white p-5 dark:bg-slate-800/40">
+        <div className="rounded-md border border-border bg-surface p-5">
           <div className="text-[11px] font-semibold uppercase tracking-wide text-muted">
             Headline KPI
           </div>
@@ -90,7 +90,7 @@ function renderPanel(data: DashboardStoryboardData, stageId: string) {
             <span className="text-5xl font-semibold tracking-tight text-body">
               {data.kpi.value}
             </span>
-            <span className="mb-1 rounded-md bg-green-50 px-2 py-1 text-sm font-medium text-green-700 dark:bg-green-950/30 dark:text-green-100">
+            <span className="mb-1 rounded-md bg-pos/10 px-2 py-1 text-sm font-medium text-pos">
               {data.kpi.change}
             </span>
           </div>
@@ -107,7 +107,7 @@ function renderPanel(data: DashboardStoryboardData, stageId: string) {
 
   if (stageId === 'trend') {
     return (
-      <div className="h-[300px] rounded-md border border-border bg-white p-4 dark:bg-slate-800/40">
+      <div className="h-[300px] rounded-md border border-border bg-surface p-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data.trend} margin={{ top: 10, right: 18, bottom: 8, left: 0 }}>
             <CartesianGrid stroke="#E5E7EB" strokeDasharray="3 3" />
@@ -124,7 +124,7 @@ function renderPanel(data: DashboardStoryboardData, stageId: string) {
 
   if (stageId === 'breakdown') {
     return (
-      <div className="h-[300px] rounded-md border border-border bg-white p-4 dark:bg-slate-800/40">
+      <div className="h-[300px] rounded-md border border-border bg-surface p-4">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data.stores} margin={{ top: 10, right: 18, bottom: 8, left: 0 }}>
             <CartesianGrid stroke="#E5E7EB" vertical={false} />
@@ -144,7 +144,7 @@ function renderPanel(data: DashboardStoryboardData, stageId: string) {
 
   if (stageId === 'drilldown') {
     return (
-      <div className="h-[300px] rounded-md border border-border bg-white p-4 dark:bg-slate-800/40">
+      <div className="h-[300px] rounded-md border border-border bg-surface p-4">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data.categories} margin={{ top: 10, right: 18, bottom: 8, left: 0 }}>
             <CartesianGrid stroke="#E5E7EB" vertical={false} />
@@ -165,8 +165,8 @@ function renderPanel(data: DashboardStoryboardData, stageId: string) {
   return (
     <div className="grid min-h-[280px] gap-3 md:grid-cols-3">
       {data.actions.map((action, index) => (
-        <div key={action} className="rounded-md border border-border bg-white p-4 dark:bg-slate-800/40">
-          <div className="mb-3 inline-flex h-7 w-7 items-center justify-center rounded-md bg-emerald-50 text-sm font-semibold tabular-nums text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-100">
+        <div key={action} className="rounded-md border border-border bg-surface p-4">
+          <div className="mb-3 inline-flex h-7 w-7 items-center justify-center rounded-md bg-pos/10 text-sm font-semibold tabular-nums text-pos">
             {index + 1}
           </div>
           <p className="text-sm leading-relaxed text-subtle">{action}</p>
@@ -185,8 +185,8 @@ export function DashboardStoryboard({ data }: DashboardStoryboardProps) {
   }
 
   return (
-    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-card shadow-sm">
-      <div className="border-b border-border bg-white p-4 dark:bg-slate-800/40 md:p-5">
+    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-card">
+      <div className="border-b border-border bg-surface p-4 md:p-5">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-wide text-muted">
@@ -202,7 +202,7 @@ export function DashboardStoryboard({ data }: DashboardStoryboardProps) {
         </div>
       </div>
 
-      <div className="grid border-b border-border bg-white dark:bg-slate-800/40 md:grid-cols-5">
+      <div className="grid border-b border-border bg-surface md:grid-cols-5">
         {data.stages.map((stage) => {
           const Icon = iconFor(stage.id);
           const selected = stage.id === active.id;
@@ -215,8 +215,8 @@ export function DashboardStoryboard({ data }: DashboardStoryboardProps) {
               className={[
                 'flex min-h-16 items-center gap-2 border-b border-border px-3 py-3 text-left text-sm transition-colors md:border-b-0 md:border-r last:md:border-r-0',
                 selected
-                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                  : 'bg-white text-subtle hover:bg-code-bg dark:bg-slate-800/40',
+                  ? 'bg-body text-surface  '
+                  : 'bg-surface text-subtle hover:bg-code-bg ',
               ].join(' ')}
             >
               <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -228,7 +228,7 @@ export function DashboardStoryboard({ data }: DashboardStoryboardProps) {
 
       <div className="p-4 md:p-6">
         {renderPanel(data, active.id)}
-        <div className="mt-4 rounded-md border border-border bg-white p-4 text-sm leading-relaxed text-subtle dark:bg-slate-800/40">
+        <div className="mt-4 rounded-md border border-border bg-surface p-4 text-sm leading-relaxed text-subtle">
           <span className="font-semibold text-body">What the viewer should notice: </span>
           {active.takeaway}
         </div>

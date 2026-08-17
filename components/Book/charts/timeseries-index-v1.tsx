@@ -111,13 +111,13 @@ export default function TimeseriesIndexV1({
     }, [demographicGroups, defaultVisibleGroups]);
 
     if (!data || !data.dataPoints || !Array.isArray(data.dataPoints) || data.dataPoints.length === 0) {
-        return <div className="p-4 text-center text-gray-500">No data available to display chart.</div>;
+        return <div className="p-4 text-center text-muted">No data available to display chart.</div>;
     }
 
     const processed = data.dataPoints.map(processDataPoint);
     const validYears = processed.map(d => d.year).filter((y): y is number => y !== null);
     if (validYears.length === 0) {
-        return <div className="p-4 text-center text-gray-500">Data contains no valid years.</div>;
+        return <div className="p-4 text-center text-muted">Data contains no valid years.</div>;
     }
 
     const minYear = Math.min(...validYears);
@@ -196,8 +196,8 @@ export default function TimeseriesIndexV1({
         const visible = payload.filter((s: any) => visibleGroups.has(s.name));
         if (visible.length === 0) return null;
         return (
-            <div className="max-w-xs rounded-md border border-slate-200 bg-white p-3 text-sm shadow-lg">
-                <p className="mb-2 font-semibold text-slate-700">{`Year: ${label}`}</p>
+            <div className="max-w-xs rounded-md border border-border bg-surface p-3 text-sm">
+                <p className="mb-2 font-semibold text-subtle">{`Year: ${label}`}</p>
                 {visible.map((s: any) => {
                     const colorIndex = demographicGroups.indexOf(s.name);
                     const color = colorIndex !== -1 ? COLORS[colorIndex % COLORS.length] : '#8884d8';
@@ -205,16 +205,16 @@ export default function TimeseriesIndexV1({
                     return (
                         <div key={s.name} className="mb-1.5 last:mb-0">
                             <p className="font-medium" style={{ color }}>{s.name}</p>
-                            <p className="text-slate-600" style={{ color }}>
+                            <p className="text-subtle" style={{ color }}>
                                 {`Index: ${s.value != null ? s.value.toFixed(1) : 'N/A'}`}
                             </p>
                             {raw != null && (
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted">
                                     {`Raw: ${raw.toFixed(1)}%`}
                                 </p>
                             )}
                             {s.payload?.n_actual && (
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted">
                                     {`N: ${s.payload.n_actual.toLocaleString()}`}
                                 </p>
                             )}
@@ -231,13 +231,13 @@ export default function TimeseriesIndexV1({
         <div className={
             compact
                 ? "w-full p-2"
-                : "w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm md:px-5 md:pt-4"
+                : "w-full overflow-hidden rounded-md border border-border bg-surface px-3.5 pb-4 pt-3  md:px-5 md:pt-4"
         }>
             {!compact && (
-                <div className="mb-3 border-b border-slate-100 pb-2">
-                    <h2 className="text-sm font-semibold leading-snug text-slate-900">{data.metadata.title}</h2>
-                    <p className="mt-0.5 text-xs leading-snug text-slate-600">{subtitle}</p>
-                    {data.metadata.question && <p className="mt-0.5 text-xs italic leading-snug text-slate-500">{data.metadata.question}</p>}
+                <div className="mb-3 border-b border-border pb-2">
+                    <h2 className="text-sm font-semibold leading-snug text-body">{data.metadata.title}</h2>
+                    <p className="mt-0.5 text-xs leading-snug text-subtle">{subtitle}</p>
+                    {data.metadata.question && <p className="mt-0.5 text-xs italic leading-snug text-muted">{data.metadata.question}</p>}
                 </div>
             )}
 
@@ -304,8 +304,8 @@ export default function TimeseriesIndexV1({
             </div>
 
             {!compact && (
-                <div className="mt-3 flex flex-col items-start justify-between gap-2 border-t border-slate-100 pt-2 sm:flex-row sm:items-center">
-                    <div className="order-1 text-left text-[11px] leading-snug text-slate-500 sm:order-none">
+                <div className="mt-3 flex flex-col items-start justify-between gap-2 border-t border-border pt-2 sm:flex-row sm:items-center">
+                    <div className="order-1 text-left text-[11px] leading-snug text-muted sm:order-none">
                         Source: {data.metadata.source?.name || 'Not specified'}
                         {data.metadata.observations && ` (${data.metadata.observations.toLocaleString()} Observations)`}
                     </div>

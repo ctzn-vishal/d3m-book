@@ -208,11 +208,11 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-md border border-border bg-surface p-4">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h3 className="text-sm font-semibold text-slate-950">{title}</h3>
-          {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+          <h3 className="text-sm font-semibold text-body">{title}</h3>
+          {subtitle && <p className="mt-1 text-xs leading-snug text-muted">{subtitle}</p>}
         </div>
         {controls}
       </div>
@@ -223,7 +223,7 @@ function ChartCard({
 
 function Legend({ items }: { items: Array<{ label: string; color: string }> }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle">
       {items.map(item => (
         <span key={item.label} className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: item.color }} />
@@ -250,8 +250,8 @@ function Segmented<T extends string | number>({
 }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">{label}</span>
-      <div className="inline-flex flex-wrap rounded-md border border-slate-200 bg-slate-50 p-0.5">
+      <span className="text-[10px] font-semibold uppercase tracking-wide text-muted">{label}</span>
+      <div className="inline-flex flex-wrap rounded-md border border-border bg-code-bg p-0.5">
         {options.map(option => {
           const active = option === value;
           return (
@@ -263,8 +263,8 @@ function Segmented<T extends string | number>({
               className={
                 "rounded px-2.5 py-1 text-xs font-medium transition-colors " +
                 (active
-                  ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-200"
-                  : "text-slate-500 hover:text-slate-800")
+                  ? "bg-surface text-body  ring-1 ring-border"
+                  : "text-muted hover:text-body")
               }
             >
               {format ? format(option) : String(option)}
@@ -366,10 +366,10 @@ export function ConcentrationMetricCards({ data }: { data: MarketConcentrationDa
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {cards.map(card => (
-        <div key={card.label} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-          <p className="text-[10px] font-semibold uppercase text-slate-500">{card.label}</p>
-          <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-950">{card.value}</p>
-          <p className="mt-1 text-xs leading-snug text-slate-500">{card.detail}</p>
+        <div key={card.label} className="rounded-md border border-border bg-surface p-4">
+          <p className="text-[10px] font-semibold uppercase text-muted">{card.label}</p>
+          <p className="mt-2 text-2xl font-semibold tabular-nums text-body">{card.value}</p>
+          <p className="mt-1 text-xs leading-snug text-muted">{card.detail}</p>
         </div>
       ))}
     </div>
@@ -449,7 +449,7 @@ export function EntitySpendDistribution({ data }: { data: MarketConcentrationDat
           }) as PlotOptions
         }
       />
-      <p className="mt-2 text-xs leading-relaxed text-slate-500">
+      <p className="mt-2 text-xs leading-relaxed text-muted">
         The long upper tail is why a minimum-spend threshold is tempting and why it must be reported as a sensitivity check: dropping the
         bottom percentiles and renormalizing the survivors mechanically raises HHI.
       </p>
@@ -962,17 +962,17 @@ export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationD
       />
 
       {/* Live recompute readout for one selected industry. */}
-      <div className="mt-4 rounded-md border border-slate-200 bg-slate-50/60 p-3">
+      <div className="mt-4 rounded-md border border-border bg-code-bg/60 p-3">
         <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-col gap-1">
-            <label className="text-[10px] font-semibold uppercase tracking-wide text-slate-500" htmlFor="conc-industry">
+            <label className="text-[10px] font-semibold uppercase tracking-wide text-muted" htmlFor="conc-industry">
               Recompute one industry
             </label>
             <select
               id="conc-industry"
               value={industry}
               onChange={e => setIndustry(e.target.value)}
-              className="w-full max-w-xs rounded-md border border-slate-200 bg-white px-2 py-1.5 text-xs text-slate-800 shadow-sm sm:w-72"
+              className="w-full max-w-xs rounded-md border border-border bg-surface px-2 py-1.5 text-xs text-body sm:w-72"
             >
               {availableIndustries.map(name => (
                 <option key={name} value={name}>
@@ -981,11 +981,11 @@ export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationD
               ))}
             </select>
           </div>
-          <p className="text-xs text-slate-500">
-            Entity level: <span className="font-semibold text-slate-700">{level}</span>
+          <p className="text-xs text-muted">
+            Entity level: <span className="font-semibold text-subtle">{level}</span>
             {baseline && (
               <>
-                {" "}- leader <span className="font-semibold text-slate-700">{baseline.leader}</span>
+                {" "}- leader <span className="font-semibold text-subtle">{baseline.leader}</span>
               </>
             )}
           </p>
@@ -993,7 +993,7 @@ export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationD
         <div className="overflow-x-auto">
           <table className="w-full min-w-[480px] border-collapse text-xs">
             <thead>
-              <tr className="text-left text-[10px] uppercase text-slate-500">
+              <tr className="text-left text-[10px] uppercase text-muted">
                 <th className="py-1 pr-3 font-semibold">Min spend</th>
                 <th className="py-1 pr-3 text-right font-semibold">HHI</th>
                 <th className="py-1 pr-3 text-right font-semibold">Band</th>
@@ -1003,14 +1003,14 @@ export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationD
                 <th className="py-1 text-right font-semibold">Retained spend</th>
               </tr>
             </thead>
-            <tbody className="tabular-nums text-slate-700">
+            <tbody className="tabular-nums text-subtle">
               {selectedRows.map(row => (
-                <tr key={row.min_entity_spend} className="border-t border-slate-200">
-                  <td className="py-1.5 pr-3 font-medium text-slate-800">{THRESHOLD_LABELS[row.min_entity_spend]}</td>
+                <tr key={row.min_entity_spend} className="border-t border-border">
+                  <td className="py-1.5 pr-3 font-medium text-body">{THRESHOLD_LABELS[row.min_entity_spend]}</td>
                   <td className="py-1.5 pr-3 text-right">{fmtInt(row.hhi)}</td>
                   <td className="py-1.5 pr-3 text-right">
                     <span
-                      className="inline-block rounded-sm px-1.5 py-0.5 text-[10px] font-medium text-white"
+                      className="inline-block rounded-sm px-1.5 py-0.5 text-[10px] font-medium text-surface"
                       style={{ backgroundColor: BAND_COLORS[row.hhi_band] ?? CHART.slate }}
                     >
                       {row.hhi_band.split(" ")[0]}
@@ -1027,7 +1027,7 @@ export function ThresholdSensitivityChart({ data }: { data: MarketConcentrationD
         </div>
       </div>
 
-      <p className="mt-3 text-xs leading-relaxed text-slate-500">
+      <p className="mt-3 text-xs leading-relaxed text-muted">
         Parenthetical labels at the $1M cutoff show retained spend. A threshold that keeps little spend is a stress test, not a replacement
         denominator. Switching the entity level recomputes HHI, CR1, CR4, and effective entities from the same source rows.
       </p>
@@ -1128,21 +1128,21 @@ export function TopOwnerTable({ data, industries }: { data: MarketConcentrationD
         const rows = data.topOwners.filter(row => row.industry === industry).slice(0, 4);
         const metric = data.industryMetrics.find(row => row.industry === industry);
         return (
-          <div key={industry} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+          <div key={industry} className="rounded-md border border-border bg-surface p-4">
             <div className="mb-3">
-              <h3 className="text-sm font-semibold text-slate-950">{industry}</h3>
-              {metric && <p className="mt-1 text-xs text-slate-500">HHI {fmtInt(metric.hhi)}; CR4 {fmtPct(metric.cr4)}</p>}
+              <h3 className="text-sm font-semibold text-body">{industry}</h3>
+              {metric && <p className="mt-1 text-xs text-muted">HHI {fmtInt(metric.hhi)}; CR4 {fmtPct(metric.cr4)}</p>}
             </div>
             <div className="space-y-2">
               {rows.map(row => (
                 <div key={row.entity} className="grid grid-cols-[1fr_auto] items-center gap-3 text-xs">
                   <div>
-                    <p className="font-medium text-slate-800">{shortLabel(row.entity, 34)}</p>
-                    <div className="mt-1 h-2 rounded-full bg-slate-100">
+                    <p className="font-medium text-body">{shortLabel(row.entity, 34)}</p>
+                    <div className="mt-1 h-2 rounded-full bg-code-bg">
                       <div className="h-2 rounded-full" style={{ width: `${clamp(row.market_share * 100, 2, 100)}%`, backgroundColor: CHART.indigo }} />
                     </div>
                   </div>
-                  <span className="font-mono text-slate-700">{fmtPct(row.market_share)}</span>
+                  <span className="font-mono text-subtle">{fmtPct(row.market_share)}</span>
                 </div>
               ))}
             </div>

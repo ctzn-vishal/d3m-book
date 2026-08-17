@@ -82,7 +82,7 @@ const BY_DAYPART: DaypartRow[] = [
 
 const fmtM = (v: number) => `$${v.toFixed(2)}M`;
 const fmtK = (v: number) => `$${Math.round(v)}K`;
-const fmtSignedPct = (v: number) => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`;
+const fmtSignedPct = (v: number) => `${v >= 0 ?' +' : ''}${v.toFixed(1)}%`;
 
 const REGION_COLOR: Record<string, string> = {
   Suburban: CHART.sky,
@@ -109,21 +109,21 @@ function Panel({
   tone?: 'neutral' | 'accent';
 }) {
   return (
-    <div className="not-prose rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="not-prose rounded-lg border border-border bg-surface p-4">
       <div className="mb-3 flex items-start gap-3">
         {step != null && (
           <span
             className={[
-              'mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums text-white',
-              tone === 'accent' ? 'bg-sky-500' : 'bg-slate-700',
+              'mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums text-surface',
+              tone === 'accent' ? 'bg-accent' : 'bg-body',
             ].join(' ')}
           >
             {step}
           </span>
         )}
         <div className="min-w-0">
-          <p className="text-sm font-semibold leading-snug text-slate-900">{question}</p>
-          {answer && <p className="mt-0.5 text-xs leading-snug text-slate-500">{answer}</p>}
+          <p className="text-sm font-semibold leading-snug text-body">{question}</p>
+          {answer && <p className="mt-0.5 text-xs leading-snug text-muted">{answer}</p>}
         </div>
       </div>
       {children}
@@ -145,14 +145,14 @@ export function KpiTile() {
         answer="One number, large, with a comparison — the answer in two seconds."
       >
         <div className="flex flex-wrap items-baseline gap-3">
-          <span className="text-5xl font-semibold leading-none tracking-tight tabular-nums text-slate-900">
+          <span className="text-5xl font-semibold leading-none tracking-tight tabular-nums text-body">
             $1.18M
           </span>
-          <span className="rounded-md bg-amber-50 px-2 py-0.5 text-sm font-medium tabular-nums text-amber-700">
+          <span className="rounded-md bg-accent/10 px-2 py-0.5 text-sm font-medium tabular-nums text-accent-ink">
             +0.7% vs Q4 2023
           </span>
         </div>
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-muted">
           Bean &amp; Basket chain-wide revenue, Q1 2024. The badge is the comparison
           that turns a label into a KPI.
         </p>
@@ -368,11 +368,11 @@ export function RecommendedAction() {
       question="So what do we do about it?"
       answer="The only panel that is not a chart — it turns the four panels above into a decision."
     >
-      <div className="rounded-md border-l-2 border-sky-500 bg-sky-50/60 px-3 py-2.5 text-sm leading-relaxed text-slate-700">
+      <div className="rounded-md border-l-2 border-accent/40 bg-accent/10 px-3 py-2.5 text-sm leading-relaxed text-subtle">
         Suburban grew on weekday-morning commuter traffic. Recommend doubling
         weekday-morning staffing and piloting a 7am promo at the Campus store,
         where commuter foot traffic is comparable but conversion lags by{' '}
-        <span className="font-semibold text-slate-900">11 points</span>.
+        <span className="font-semibold text-body">11 points</span>.
       </div>
     </Panel>
   );
@@ -385,14 +385,14 @@ export function RecommendedAction() {
 export function DashboardArc() {
   return (
     <div className="not-prose my-8">
-      <div className="mb-3 rounded-md bg-slate-50 px-4 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+      <div className="mb-3 rounded-md bg-code-bg px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">
           Step 1 — the executive question
         </p>
-        <p className="mt-1 text-base font-semibold text-slate-900">
+        <p className="mt-1 text-base font-semibold text-body">
           Why did revenue flatten in Q1, after eight quarters of growth?
         </p>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-muted">
           One sentence at the top. Everything below is the page answering it, in order.
         </p>
       </div>
@@ -417,8 +417,8 @@ type BuffetPanel = { key: string; label: string; node: React.ReactNode };
 function MiniKpi() {
   return (
     <div>
-      <div className="text-2xl font-semibold tabular-nums text-slate-900">$1.18M</div>
-      <div className="text-[11px] text-slate-500">chain revenue · +0.7%</div>
+      <div className="text-2xl font-semibold tabular-nums text-body">$1.18M</div>
+      <div className="text-[11px] text-muted">chain revenue · +0.7%</div>
     </div>
   );
 }
@@ -514,25 +514,25 @@ export function BuffetVsMemo() {
   const ordered = order.map(k => PANELS.find(p => p.key === k)!).filter(Boolean);
 
   return (
-    <div className="not-prose my-8 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="not-prose my-8 rounded-lg border border-border bg-surface p-4">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-slate-900">
+          <p className="text-sm font-semibold text-body">
             {mode === 'buffet' ? 'Buffet: same panels, no order' : 'Memo: the dashboard arc'}
           </p>
-          <p className="mt-0.5 text-xs text-slate-500">
+          <p className="mt-0.5 text-xs text-muted">
             {mode === 'buffet'
               ? 'Four equal tiles. Each is fine alone; together they make you do the prioritizing.'
               : 'The same four panels, ordered question → headline → context → breakdown → drilldown.'}
           </p>
         </div>
-        <div className="inline-flex overflow-hidden rounded-md border border-slate-200 text-xs font-medium">
+        <div className="inline-flex overflow-hidden rounded-md border border-border text-xs font-medium">
           <button
             type="button"
             onClick={() => setMode('buffet')}
             className={[
               'px-3 py-1.5 transition-colors',
-              mode === 'buffet' ? 'bg-slate-700 text-white' : 'bg-white text-slate-600 hover:bg-slate-50',
+              mode === 'buffet' ? 'bg-card text-body' : 'bg-surface text-subtle hover:bg-code-bg',
             ].join(' ')}
             aria-pressed={mode === 'buffet'}
           >
@@ -543,7 +543,7 @@ export function BuffetVsMemo() {
             onClick={() => setMode('memo')}
             className={[
               'px-3 py-1.5 transition-colors',
-              mode === 'memo' ? 'bg-sky-500 text-white' : 'bg-white text-slate-600 hover:bg-slate-50',
+              mode === 'memo' ? 'bg-accent/15 text-accent-ink' : 'bg-surface text-subtle hover:bg-code-bg',
             ].join(' ')}
             aria-pressed={mode === 'memo'}
           >
@@ -555,8 +555,8 @@ export function BuffetVsMemo() {
       {mode === 'buffet' ? (
         <div className="grid gap-3 sm:grid-cols-2">
           {ordered.map(p => (
-            <div key={p.key} className="rounded-md border border-slate-200 bg-slate-50/50 p-3">
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-400">
+            <div key={p.key} className="rounded-md border border-border bg-code-bg/50 p-3">
+              <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted">
                 {p.label}
               </p>
               {p.node}
@@ -566,12 +566,12 @@ export function BuffetVsMemo() {
       ) : (
         <ol className="space-y-3">
           {ordered.map((p, i) => (
-            <li key={p.key} className="flex gap-3 rounded-md border border-slate-200 bg-white p-3">
-              <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-sky-500 text-[11px] font-semibold text-white">
+            <li key={p.key} className="flex gap-3 rounded-md border border-border bg-surface p-3">
+              <span className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-body text-[11px] font-semibold text-surface">
                 {i + 1}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-slate-500">
+                <p className="mb-2 text-[11px] font-medium uppercase tracking-wide text-muted">
                   {p.label}
                 </p>
                 {p.node}
@@ -581,7 +581,7 @@ export function BuffetVsMemo() {
         </ol>
       )}
 
-      <p className="mt-4 text-xs leading-relaxed text-slate-500">
+      <p className="mt-4 text-xs leading-relaxed text-muted">
         Nothing about the data changed between the two views — only the order. The
         buffet asks you to find the story; the memo tells it to you, top to bottom.
       </p>

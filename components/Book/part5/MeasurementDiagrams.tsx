@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+
 /**
  * Conceptual diagrams for §19.3 (GPT-as-measurement) and §22 (AI eval & governance).
  *
@@ -14,42 +16,31 @@ import * as React from 'react';
  *   - AIWorkflowCard: one-page contract for a deployed AI workflow.
  */
 
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  navy: '#1f3a5f',
-  orange: '#c87c2a',
-  orangeLight: '#fed7aa',
-  green: '#0f766e',
-  greenLight: '#ccfbf1',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  purple: '#7c3aed',
-  purpleLight: '#ede9fe',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  teal: '#0d9488',
-  tealLight: '#a7f3d0',
-  pink: '#db2777',
-  pinkLight: '#fce7f3',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
+/**
+ * Was twenty-one hardcoded light-mode hexes. Now the same names,
+ * resolved through the theme — see components/Book/diagram/legacy.ts for
+ * how the ten hues collapse onto ink, accent, pos, and neg.
+ */
+const C = LEGACY_C;
 
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
+/**
+ * Local card wrapper, now a thin pass-through to the shared frame so this
+ * file's figures stop being white slabs on a dark page. `DiagramFrame` owns
+ * the ground, the hairline, and the absence of a shadow.
+ */
+function Card({
+  title,
+  children,
+  footer,
+}: {
+  title?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {title}
-        </p>
-      )}
+    <DiagramFrame eyebrow={title} note={footer}>
       {children}
-      {footer && <div className="mt-2 text-[11px] text-slate-500">{footer}</div>}
-    </div>
+    </DiagramFrame>
   );
 }
 
@@ -72,38 +63,38 @@ export function ConstructVsSurfaceTable() {
   ];
   return (
     <Card title="One tweet, two evidence languages">
-      <div className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-[12.5px] italic text-slate-800">
+      <div className="rounded-md border border-border bg-code-bg px-3 py-2 text-[12.5px] italic text-body">
         {tweet}
       </div>
       <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
-        <div className="rounded-md border border-slate-200 p-3">
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-700">Surface features (classical)</div>
+        <div className="rounded-md border border-border p-3">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-accent-ink">Surface features (classical)</div>
           <ul className="space-y-1.5">
             {surface.map(r => (
               <li key={r.name} className="grid grid-cols-[140px_minmax(0,1fr)_50px] items-center gap-2 text-[11.5px]">
-                <span className="text-slate-700">{r.name}</span>
-                <span className="text-slate-500">{r.note}</span>
-                <span className="text-right tabular-nums font-mono text-slate-800">{r.val.toString()}</span>
+                <span className="text-subtle">{r.name}</span>
+                <span className="text-muted">{r.note}</span>
+                <span className="text-right tabular-nums font-mono text-body">{r.val.toString()}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-[10.5px] italic text-slate-500">Single number, ambiguous meaning. What do you do on Monday?</p>
+          <p className="mt-2 text-[10.5px] italic text-muted">Single number, ambiguous meaning. What do you do on Monday?</p>
         </div>
-        <div className="rounded-md border border-slate-200 p-3">
-          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">Measured constructs (LLM)</div>
+        <div className="rounded-md border border-border p-3">
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-pos">Measured constructs (LLM)</div>
           <ul className="space-y-1.5">
             {constructs.map(r => (
               <li key={r.name} className="grid grid-cols-[200px_minmax(0,1fr)_50px] items-center gap-2 text-[11.5px]">
-                <span className="text-slate-700">{r.name}</span>
+                <span className="text-subtle">{r.name}</span>
                 <span className="block h-2.5 rounded" style={{ width: `${r.val * 100}%`, background: C.green, opacity: 0.85 }} />
-                <span className="text-right tabular-nums font-mono text-slate-800">{r.val.toFixed(2)}</span>
+                <span className="text-right tabular-nums font-mono text-body">{r.val.toFixed(2)}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-[10.5px] italic text-slate-500">Multiple constructs, each with a managerial implication.</p>
+          <p className="mt-2 text-[10.5px] italic text-muted">Multiple constructs, each with a managerial implication.</p>
         </div>
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         VADER tells you the tweet is somewhat negative. The construct view tells you the customer feels <em>betrayed</em>, mourns the brand's independence, and is questioning loyalty. Those are different conversations.
       </p>
     </Card>
@@ -126,17 +117,17 @@ export function GabrielPrimitives() {
     <Card title="The measurement primitives — a vocabulary, not just a library">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-5">
         {cells.map(c => (
-          <div key={c.name} className="rounded-md border border-slate-200 p-3">
+          <div key={c.name} className="rounded-md border border-border p-3">
             <div className="flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: c.color }} />
-              <span className="font-mono text-[12px] font-semibold text-slate-800">{c.name}</span>
+              <span className="font-mono text-[12px] font-semibold text-body">{c.name}</span>
             </div>
-            <div className="mt-1 text-[11px] text-slate-600">{c.sub}</div>
-            <div className="mt-1.5 text-[10.5px] italic text-slate-500">{c.ex}</div>
+            <div className="mt-1 text-[11px] text-subtle">{c.sub}</div>
+            <div className="mt-1.5 text-[10.5px] italic text-muted">{c.ex}</div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         The primitives are language for what an analyst would do after reading a stack of documents. The library is one implementation; the pattern travels.
       </p>
     </Card>
@@ -172,7 +163,7 @@ export function MeasurementCostChart() {
         {[0.1, 1, 10, 100, 1000].map(v => (
           <g key={v}>
             <line x1={xS(v)} y1={m.top} x2={xS(v)} y2={H - m.bottom} stroke={C.grid} strokeWidth={1} />
-            <text x={xS(v)} y={H - m.bottom + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{`$${v < 1 ? v : v.toString()}`}</text>
+            <text x={xS(v)} y={H - m.bottom + 14} textAnchor="middle" className="fill-muted text-[10px]">{`$${v < 1 ? v : v.toString()}`}</text>
           </g>
         ))}
         {rows.map((r, i) => {
@@ -180,15 +171,15 @@ export function MeasurementCostChart() {
           const barX = xS(r.val);
           return (
             <g key={r.label}>
-              <text x={m.left - 8} y={y + rowH / 2 + 4} textAnchor="end" className="fill-slate-800 text-[12px] font-medium">{r.label}</text>
+              <text x={m.left - 8} y={y + rowH / 2 + 4} textAnchor="end" className="fill-body text-[12px] font-medium">{r.label}</text>
               <rect x={m.left} y={y} width={barX - m.left} height={rowH - 12} rx={3} fill={r.color} opacity={0.85} />
-              <text x={barX + 6} y={y + rowH / 2 + 4} className="fill-slate-700 text-[11px] tabular-nums">{`$${r.val.toLocaleString()}`}</text>
+              <text x={barX + 6} y={y + rowH / 2 + 4} className="fill-subtle text-[11px] tabular-nums">{`$${r.val.toLocaleString()}`}</text>
             </g>
           );
         })}
-        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-slate-700 text-[11px]">Total cost (USD, log axis)</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-subtle text-[11px]">Total cost (USD, log axis)</text>
       </svg>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Source: Asirvatham, Mokski &amp; Shleifer (2026). Human annotation costs roughly 700–17,000× as much as a frontier LLM. Cheap measurement reshapes which research questions are answerable at all.
       </p>
     </Card>
@@ -231,21 +222,21 @@ export function ValidationLabSchematic() {
     <Card title="Side-by-side validation — three methods, six tricky cases, one ground truth">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         {methods.map(m => (
-          <div key={m.name} className="rounded-md border border-slate-200 p-3">
+          <div key={m.name} className="rounded-md border border-border p-3">
             <div className="flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: m.color }} />
-              <span className="text-[12px] font-semibold text-slate-800">{m.name}</span>
+              <span className="text-[12px] font-semibold text-body">{m.name}</span>
             </div>
-            <div className="mt-0.5 text-[10px] uppercase tracking-wide text-slate-500">{m.kind}</div>
-            <div className="mt-1.5 text-[11px] text-emerald-700"><strong>+</strong> {m.wins}</div>
-            <div className="mt-0.5 text-[11px] text-rose-700"><strong>−</strong> {m.loses}</div>
+            <div className="mt-0.5 text-[10px] uppercase tracking-wide text-muted">{m.kind}</div>
+            <div className="mt-1.5 text-[11px] text-pos"><strong>+</strong> {m.wins}</div>
+            <div className="mt-0.5 text-[11px] text-neg"><strong>−</strong> {m.loses}</div>
           </div>
         ))}
       </div>
-      <div className="mt-3 overflow-hidden rounded-md border border-slate-200">
+      <div className="mt-3 overflow-hidden rounded-md border border-border">
         <table className="w-full">
           <thead>
-            <tr className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-500">
+            <tr className="bg-code-bg text-[10px] uppercase tracking-wide text-muted">
               <th className="px-2 py-1.5 text-left">Case</th>
               <th className="px-2 py-1.5 text-center">VADER</th>
               <th className="px-2 py-1.5 text-center">BERT</th>
@@ -255,18 +246,18 @@ export function ValidationLabSchematic() {
           </thead>
           <tbody>
             {cases.map((c, i) => (
-              <tr key={c.row} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/40'}>
-                <td className="px-2 py-1.5 text-[11.5px] italic text-slate-700">{c.row}</td>
+              <tr key={c.row} className={i % 2 === 0 ? 'bg-surface' : 'bg-code-bg/40'}>
+                <td className="px-2 py-1.5 text-[11.5px] italic text-subtle">{c.row}</td>
                 {cell(c.d, c.truth)}
                 {cell(c.b, c.truth)}
                 {cell(c.g, c.truth)}
-                <td className="px-2 py-1.5 text-center font-mono text-[11.5px] font-semibold text-slate-800">{c.truth}</td>
+                <td className="px-2 py-1.5 text-center font-mono text-[11.5px] font-semibold text-body">{c.truth}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         The point isn't that one method "wins" — it's that <em>error structures differ</em>. Knowing where each method fails is the most important thing for a manager choosing between them.
       </p>
     </Card>
@@ -292,16 +283,16 @@ export function AIEvalRubric() {
     <Card title="Eight evaluation dimensions every AI workflow review should cover">
       <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
         {dims.map(d => (
-          <div key={d.name} className="rounded-md border border-slate-200 p-2.5">
+          <div key={d.name} className="rounded-md border border-border p-2.5">
             <div className="flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: d.color }} />
-              <span className="text-[12px] font-semibold text-slate-800">{d.name}</span>
+              <span className="text-[12px] font-semibold text-body">{d.name}</span>
             </div>
-            <div className="mt-0.5 text-[11px] text-slate-600">{d.q}</div>
+            <div className="mt-0.5 text-[11px] text-subtle">{d.q}</div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         Accuracy alone is incomplete. A workflow that answers correctly with no grounding, or correctly only for some users, is not yet shippable.
       </p>
     </Card>
@@ -344,25 +335,25 @@ export function RiskControlMap() {
         {risks.map(r => (
           <g key={r.name}>
             <circle cx={xS(r.likelihood)} cy={yS(r.severity)} r={6} fill={C.purple} opacity={0.85} />
-            <text x={xS(r.likelihood) + 7} y={yS(r.severity) + 3} className="fill-slate-700 text-[9.5px]">{r.name}</text>
+            <text x={xS(r.likelihood) + 7} y={yS(r.severity) + 3} className="fill-subtle text-[9.5px]">{r.name}</text>
           </g>
         ))}
         {[0, 0.5, 1].map(v => (
           <g key={v}>
-            <text x={xS(v)} y={H - m.bottom + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{v === 0 ? 'rare' : v === 0.5 ? 'possible' : 'frequent'}</text>
-            <text x={m.left - 8} y={yS(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{v === 0 ? 'mild' : v === 0.5 ? 'serious' : 'catastrophic'}</text>
+            <text x={xS(v)} y={H - m.bottom + 14} textAnchor="middle" className="fill-muted text-[10px]">{v === 0 ? 'rare' : v === 0.5 ? 'possible' : 'frequent'}</text>
+            <text x={m.left - 8} y={yS(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{v === 0 ? 'mild' : v === 0.5 ? 'serious' : 'catastrophic'}</text>
           </g>
         ))}
-        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-slate-700 text-[11px]">Likelihood →</text>
-        <text x={14} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 14 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-slate-700 text-[11px]">Severity ↑</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-subtle text-[11px]">Likelihood →</text>
+        <text x={14} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 14 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-subtle text-[11px]">Severity ↑</text>
         {/* control sidebar */}
         <g transform={`translate(${W - m.right + 10},${m.top - 4})`}>
           <rect x={0} y={0} width={195} height={innerH + 8} rx={6} fill="white" stroke={C.grid} />
-          <text x={10} y={16} className="fill-slate-800 text-[10.5px] font-semibold uppercase tracking-wide">Mitigating controls</text>
+          <text x={10} y={16} className="fill-body text-[10.5px] font-semibold uppercase tracking-wide">Mitigating controls</text>
           {risks.slice(0, 6).map((r, i) => (
             <g key={r.name}>
-              <text x={10} y={32 + i * 22} className="fill-slate-700 text-[9.5px] font-semibold">{r.name}</text>
-              <text x={10} y={42 + i * 22} className="fill-slate-500 text-[9px]">{r.control}</text>
+              <text x={10} y={32 + i * 22} className="fill-subtle text-[9.5px] font-semibold">{r.name}</text>
+              <text x={10} y={42 + i * 22} className="fill-muted text-[9px]">{r.control}</text>
             </g>
           ))}
         </g>
@@ -390,19 +381,19 @@ export function AIWorkflowCard() {
   ];
   return (
     <Card title="The AI workflow card — one page, every shipped workflow">
-      <div className="overflow-hidden rounded-md border border-slate-200">
+      <div className="overflow-hidden rounded-md border border-border">
         <table className="w-full text-[12px]">
           <tbody>
             {rows.map((r, i) => (
-              <tr key={r.k} className={i % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
-                <th className="w-[170px] px-3 py-1.5 text-left align-top font-semibold text-slate-700">{r.k}</th>
-                <td className="px-3 py-1.5 text-slate-700" dangerouslySetInnerHTML={{ __html: r.v }} />
+              <tr key={r.k} className={i % 2 === 0 ? 'bg-code-bg' : 'bg-surface'}>
+                <th className="w-[170px] px-3 py-1.5 text-left align-top font-semibold text-subtle">{r.k}</th>
+                <td className="px-3 py-1.5 text-subtle" dangerouslySetInnerHTML={{ __html: r.v }} />
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Without this card, the workflow is a research artefact. With it, it's infrastructure with an owner.
       </p>
     </Card>

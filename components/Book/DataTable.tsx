@@ -68,10 +68,10 @@ export function DataTable<R extends Record<string, unknown>>({
       <figcaption className="mb-2 text-[13px] italic leading-snug text-muted">
         {caption}
       </figcaption>
-      <div className="overflow-x-auto rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800/40 dark:shadow-none">
+      <div className="overflow-x-auto rounded-md border border-border bg-surface dark:shadow-none">
         <table className="w-full border-collapse text-sm tabular-nums">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60">
+            <tr className="border-b border-border bg-code-bg">
               {columns.map((col, ci) => {
                 const align = col.align ?? defaultAlign(ci);
                 return (
@@ -79,7 +79,7 @@ export function DataTable<R extends Record<string, unknown>>({
                     key={col.key}
                     scope="col"
                     className={[
-                      'px-3 py-2 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400',
+                      'px-3 py-2 text-xs font-semibold uppercase tracking-wide text-subtle ',
                       ALIGN_CLASS[align],
                     ].join(' ')}
                   >
@@ -96,8 +96,8 @@ export function DataTable<R extends Record<string, unknown>>({
                 <tr
                   key={ri}
                   className={[
-                    'border-b border-slate-100 last:border-b-0 hover:bg-slate-50/80 dark:border-slate-800 dark:hover:bg-slate-700/40',
-                    isHighlight ? 'font-semibold text-slate-950 dark:text-slate-50' : 'text-slate-700 dark:text-slate-300',
+                    'border-b border-border last:border-b-0 hover:bg-code-bg/80  dark:hover:bg-card/40',
+                    isHighlight ? 'font-semibold text-body ' : 'text-subtle ',
                   ].join(' ')}
                 >
                   {columns.map((col, ci) => {
@@ -139,7 +139,7 @@ export function DeltaCell({ value, suffix = '' }: { value: number; suffix?: stri
   if (value === 0) {
     return <span className="text-muted tabular-nums">0{suffix}</span>;
   }
-  const sign = value > 0 ? '+' : '−';
+  const sign = value > 0 ?' +' : '−';
   const abs = Math.abs(value);
   const arrow = value > 0 ? '↑' : '↓';
   // Direction-of-change color is the caller's job (via cellClass), since

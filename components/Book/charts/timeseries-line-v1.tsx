@@ -68,7 +68,7 @@ interface TimeTrendDemoChartProps {
     /**
      * When true, renders a stripped-down version of the chart suitable for
      * small-multiples grids:
-     *   - no card chrome (bg-white, shadow, rounded corners) — the wrapper
+     *   - no card chrome (bg-surface, shadow, rounded corners) — the wrapper
      *     provides the frame
      *   - no internal title / subtitle / question block
      *   - no source line and no CI toggle footer
@@ -201,14 +201,14 @@ export default function TimeTrendDemoChart({
     }, [groupsKey, visibleKey]);
 
     if (!data || !data.dataPoints || !Array.isArray(data.dataPoints) || data.dataPoints.length === 0) {
-        return <div className="p-4 text-center text-gray-500">No data available to display chart.</div>;
+        return <div className="p-4 text-center text-muted">No data available to display chart.</div>;
     }
 
     const processedDataPoints = data.dataPoints.map(processDataPoint);
     const allValidYearsNumeric = processedDataPoints.map(d => d.year).filter((year): year is number => year !== null);
 
     if (allValidYearsNumeric.length === 0) {
-        return <div className="p-4 text-center text-gray-500">Data contains no valid years.</div>;
+        return <div className="p-4 text-center text-muted">Data contains no valid years.</div>;
     }
 
     const minYearInData = Math.min(...allValidYearsNumeric);
@@ -333,8 +333,8 @@ export default function TimeTrendDemoChart({
         const prefix = (typeof valueMetadata?.value_prefix === 'string') ? valueMetadata.value_prefix : '';
 
         return (
-            <div className="max-w-xs rounded-md border border-slate-200 bg-white p-3 text-sm shadow-lg">
-                <p className="mb-2 font-semibold text-slate-700">{`Year: ${label}`}</p>
+            <div className="max-w-xs rounded-md border border-border bg-surface p-3 text-sm">
+                <p className="mb-2 font-semibold text-subtle">{`Year: ${label}`}</p>
                 {visiblePayload.map((series) => {
                     const colorIndex = demographicGroups.indexOf(series.name);
                     const color = colorIndex !== -1 ? colorForGroup(series.name, colorIndex) : series.color || '#8884d8';
@@ -342,16 +342,16 @@ export default function TimeTrendDemoChart({
                     return (
                         <div key={series.name} className="mb-1.5 last:mb-0">
                             <p className="font-medium" style={{ color: color }}>{series.name}</p>
-                            <p className="text-slate-600" style={{ color: color }}>
+                            <p className="text-subtle" style={{ color: color }}>
                                 {`Value: ${series.value != null ? `${prefix}${series.value.toFixed(1)}${suffix}` : 'N/A'}`}
                             </p>
                             {pointData?.ci_lower !== undefined && pointData?.ci_upper !== undefined && (
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted">
                                     {`95% CI: [${pointData.ci_lower.toFixed(1)}%, ${pointData.ci_upper.toFixed(1)}%]`}
                                 </p>
                             )}
                             {pointData?.n_actual && (
-                                <p className="text-xs text-slate-500">
+                                <p className="text-xs text-muted">
                                     {`N: ${pointData.n_actual.toLocaleString()}`}
                                 </p>
                             )}
@@ -366,13 +366,13 @@ export default function TimeTrendDemoChart({
         <div className={
             compact
                 ? "w-full p-2"
-                : `w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm md:px-5 md:pt-4`
+                : `w-full overflow-hidden rounded-md border border-border bg-surface px-3.5 pb-4 pt-3  md:px-5 md:pt-4`
         }>
             {!compact && (
-                <div className="mb-3 border-b border-slate-100 pb-2">
-                    <h2 className="text-sm font-semibold leading-snug text-slate-900">{data.metadata.title}</h2>
-                    {data.metadata.subtitle && <p className="mt-0.5 text-xs leading-snug text-slate-600">{data.metadata.subtitle}</p>}
-                    {data.metadata.question && <p className="mt-0.5 text-xs italic leading-snug text-slate-500">{data.metadata.question}</p>}
+                <div className="mb-3 border-b border-border pb-2">
+                    <h2 className="text-sm font-semibold leading-snug text-body">{data.metadata.title}</h2>
+                    {data.metadata.subtitle && <p className="mt-0.5 text-xs leading-snug text-subtle">{data.metadata.subtitle}</p>}
+                    {data.metadata.question && <p className="mt-0.5 text-xs italic leading-snug text-muted">{data.metadata.question}</p>}
                 </div>
             )}
 
@@ -476,8 +476,8 @@ export default function TimeTrendDemoChart({
             </div>
 
             {!compact && (
-                <div className="mt-3 flex flex-col items-start justify-between gap-2 border-t border-slate-100 pt-2 sm:flex-row sm:items-center">
-                    <div className="order-1 text-left text-[11px] leading-snug text-slate-500 sm:order-none">
+                <div className="mt-3 flex flex-col items-start justify-between gap-2 border-t border-border pt-2 sm:flex-row sm:items-center">
+                    <div className="order-1 text-left text-[11px] leading-snug text-muted sm:order-none">
                         Source: {data.metadata.source?.name || 'Not specified'}
                         {data.metadata.observations && ` (${data.metadata.observations.toLocaleString()} Observations)`}
                     </div>
@@ -487,7 +487,7 @@ export default function TimeTrendDemoChart({
                             id="show-ci" checked={showCI} onCheckedChange={setShowCI}
                             disabled={!hasCIData}
                         />
-                        <Label htmlFor="show-ci" className={`text-xs ${!hasCIData ? 'text-slate-400' : 'text-slate-600'}`}>
+                        <Label htmlFor="show-ci" className={`text-xs ${!hasCIData ? 'text-muted' : 'text-subtle'}`}>
                             Show 95% CI
                         </Label>
                     </div>

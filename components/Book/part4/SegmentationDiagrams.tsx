@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+
 /**
  * Conceptual diagrams for Part IV Chapters 16–17.
  *
@@ -20,42 +22,31 @@ import * as React from 'react';
  * Style conventions match PredictionDiagrams.tsx / part3 ConceptDiagrams.
  */
 
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  navy: '#1f3a5f',
-  orange: '#c87c2a',
-  orangeLight: '#fed7aa',
-  green: '#0f766e',
-  greenLight: '#ccfbf1',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  purple: '#7c3aed',
-  purpleLight: '#ede9fe',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  teal: '#0d9488',
-  tealLight: '#a7f3d0',
-  pink: '#db2777',
-  pinkLight: '#fce7f3',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
+/**
+ * Was twenty-one hardcoded light-mode hexes. Now the same names,
+ * resolved through the theme — see components/Book/diagram/legacy.ts for
+ * how the ten hues collapse onto ink, accent, pos, and neg.
+ */
+const C = LEGACY_C;
 
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
+/**
+ * Local card wrapper, now a thin pass-through to the shared frame so this
+ * file's figures stop being white slabs on a dark page. `DiagramFrame` owns
+ * the ground, the hairline, and the absence of a shadow.
+ */
+function Card({
+  title,
+  children,
+  footer,
+}: {
+  title?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {title}
-        </p>
-      )}
+    <DiagramFrame eyebrow={title} note={footer}>
       {children}
-      {footer && <div className="mt-2 text-[11px] text-slate-500">{footer}</div>}
-    </div>
+    </DiagramFrame>
   );
 }
 
@@ -76,16 +67,16 @@ export function ClusterSmallMultiples() {
     <Card title="Five Bean &amp; Basket segments, profiled against five features">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {segments.map(s => (
-          <div key={s.name} className="rounded-md border border-slate-200 p-2.5">
+          <div key={s.name} className="rounded-md border border-border p-2.5">
             <div className="mb-1 flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: s.color }} />
-              <span className="text-[12px] font-semibold text-slate-800">{s.name}</span>
+              <span className="text-[12px] font-semibold text-body">{s.name}</span>
             </div>
             <ul className="space-y-1">
               {features.map((f, i) => (
                 <li key={f} className="grid grid-cols-[72px_minmax(0,1fr)] items-center gap-1.5 text-[10.5px]">
-                  <span className="text-slate-500">{f}</span>
-                  <span className="block h-2 rounded bg-slate-100">
+                  <span className="text-muted">{f}</span>
+                  <span className="block h-2 rounded bg-code-bg">
                     <span className="block h-2 rounded" style={{ width: `${s.scores[i] * 100}%`, background: s.color, opacity: 0.85 }} />
                   </span>
                 </li>
@@ -94,7 +85,7 @@ export function ClusterSmallMultiples() {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         The clusters are a lens, not a truth. Names come from the analyst after looking at the bars — the algorithm only sees similarity.
       </p>
     </Card>
@@ -133,7 +124,7 @@ export function PCABiplotScree() {
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Scree plot showing variance per component and a biplot with brand scores and variable loadings.">
         {/* scree */}
         <g transform={`translate(${left},20)`}>
-          <text x={colW / 2} y={0} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">Scree</text>
+          <text x={colW / 2} y={0} textAnchor="middle" className="fill-body text-[11px] font-semibold">Scree</text>
           {(() => {
             const innerW = colW - 50;
             const innerH = 190;
@@ -150,16 +141,16 @@ export function PCABiplotScree() {
                 })}
                 {/* elbow line at 2 */}
                 <line x1={ox + 6 + 2 * (barW + 2)} y1={oy} x2={ox + 6 + 2 * (barW + 2)} y2={oy + innerH} stroke={C.amber} strokeWidth={1.4} strokeDasharray="4 3" />
-                <text x={ox + 6 + 2 * (barW + 2)} y={oy - 4} textAnchor="middle" className="fill-amber-700 text-[10px] font-semibold">elbow</text>
-                <text x={ox + innerW / 2} y={oy + innerH + 18} textAnchor="middle" className="fill-slate-600 text-[10px]">Component →</text>
-                <text x={ox - 28} y={oy + innerH / 2} transform={`rotate(-90 ${ox - 28} ${oy + innerH / 2})`} textAnchor="middle" className="fill-slate-600 text-[10px]">Variance explained</text>
+                <text x={ox + 6 + 2 * (barW + 2)} y={oy - 4} textAnchor="middle" className="fill-accent-ink text-[10px] font-semibold">elbow</text>
+                <text x={ox + innerW / 2} y={oy + innerH + 18} textAnchor="middle" className="fill-subtle text-[10px]">Component →</text>
+                <text x={ox - 28} y={oy + innerH / 2} transform={`rotate(-90 ${ox - 28} ${oy + innerH / 2})`} textAnchor="middle" className="fill-subtle text-[10px]">Variance explained</text>
               </g>
             );
           })()}
         </g>
         {/* biplot */}
         <g transform={`translate(${left + colW + 30},20)`}>
-          <text x={colW / 2} y={0} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">Biplot</text>
+          <text x={colW / 2} y={0} textAnchor="middle" className="fill-body text-[11px] font-semibold">Biplot</text>
           {(() => {
             const innerW = colW - 50;
             const innerH = 190;
@@ -177,17 +168,17 @@ export function PCABiplotScree() {
                 {loadings.map(l => (
                   <g key={l.name}>
                     <line x1={cx} y1={cy} x2={xS(l.x)} y2={yS(l.y)} stroke={C.purple} strokeWidth={1.4} markerEnd="url(#biplot-arrow)" />
-                    <text x={xS(l.x) + (l.x >= 0 ? 4 : -4)} y={yS(l.y) - 4} textAnchor={l.x >= 0 ? 'start' : 'end'} className="fill-purple-700 text-[9px] italic">{l.name}</text>
+                    <text x={xS(l.x) + (l.x >= 0 ? 4 : -4)} y={yS(l.y) - 4} textAnchor={l.x >= 0 ? 'start' : 'end'} className="fill-subtle text-[9px] italic">{l.name}</text>
                   </g>
                 ))}
                 {brands.map(b => (
                   <g key={b.name}>
                     <circle cx={xS(b.x)} cy={yS(b.y)} r={5} fill={b.color} />
-                    <text x={xS(b.x) + 6} y={yS(b.y) + 3} className="fill-slate-700 text-[9px]">{b.name}</text>
+                    <text x={xS(b.x) + 6} y={yS(b.y) + 3} className="fill-subtle text-[9px]">{b.name}</text>
                   </g>
                 ))}
-                <text x={cx + innerW / 2 - 6} y={cy - 6} textAnchor="end" className="fill-slate-500 text-[9px]">PC1: value → premium</text>
-                <text x={cx + 4} y={oy + 12} className="fill-slate-500 text-[9px]">PC2: convenience → experience</text>
+                <text x={cx + innerW / 2 - 6} y={cy - 6} textAnchor="end" className="fill-muted text-[9px]">PC1: value → premium</text>
+                <text x={cx + 4} y={oy + 12} className="fill-muted text-[9px]">PC2: convenience → experience</text>
               </g>
             );
           })()}
@@ -235,22 +226,22 @@ export function PerceptualMap() {
         <line x1={m.left} y1={cy} x2={W - m.right} y2={cy} stroke={C.muted} strokeWidth={1.2} />
         <line x1={cx} y1={m.top} x2={cx} y2={H - m.bottom} stroke={C.muted} strokeWidth={1.2} />
         {/* quadrant labels */}
-        <text x={m.left + 8} y={m.top + 16} className="fill-slate-400 text-[10px] italic">familiar &amp; cheap</text>
-        <text x={W - m.right - 8} y={m.top + 16} textAnchor="end" className="fill-slate-400 text-[10px] italic">fresh &amp; premium</text>
-        <text x={m.left + 8} y={H - m.bottom - 8} className="fill-slate-400 text-[10px] italic">commodity</text>
-        <text x={W - m.right - 8} y={H - m.bottom - 8} textAnchor="end" className="fill-slate-400 text-[10px] italic">aspirational casual</text>
+        <text x={m.left + 8} y={m.top + 16} className="fill-muted text-[10px] italic">familiar &amp; cheap</text>
+        <text x={W - m.right - 8} y={m.top + 16} textAnchor="end" className="fill-muted text-[10px] italic">fresh &amp; premium</text>
+        <text x={m.left + 8} y={H - m.bottom - 8} className="fill-muted text-[10px] italic">commodity</text>
+        <text x={W - m.right - 8} y={H - m.bottom - 8} textAnchor="end" className="fill-muted text-[10px] italic">aspirational casual</text>
         {/* brands */}
         {brands.map(b => (
           <g key={b.name}>
             <circle cx={xS(b.x)} cy={yS(b.y)} r={5} fill={b.color} />
-            <text x={xS(b.x) + 8} y={yS(b.y) + 3} className="fill-slate-800 text-[10px] font-medium">{b.name}</text>
+            <text x={xS(b.x) + 8} y={yS(b.y) + 3} className="fill-body text-[10px] font-medium">{b.name}</text>
           </g>
         ))}
         {/* axes */}
-        <text x={cx + innerW / 2 - 4} y={cy - 6} textAnchor="end" className="fill-slate-600 text-[10px]">Factor 1: value → premium →</text>
-        <text x={cx + 6} y={m.top + 12} className="fill-slate-600 text-[10px]">Factor 2: familiar → fresh ↑</text>
+        <text x={cx + innerW / 2 - 4} y={cy - 6} textAnchor="end" className="fill-subtle text-[10px]">Factor 1: value → premium →</text>
+        <text x={cx + 6} y={m.top + 12} className="fill-subtle text-[10px]">Factor 2: familiar → fresh ↑</text>
       </svg>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Distances on the map measure perceived similarity. White space — quadrants without brands — suggests positioning opportunities.
       </p>
     </Card>
@@ -304,19 +295,19 @@ export function TsneVsPca() {
     const yS = (v: number) => cy - v * (innerH / 2 - 8);
     return (
       <g>
-        <text x={ox + innerW / 2} y={20} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">{title}</text>
-        <text x={ox + innerW / 2} y={32} textAnchor="middle" className="fill-slate-500 text-[10px]">{sub}</text>
+        <text x={ox + innerW / 2} y={20} textAnchor="middle" className="fill-body text-[11px] font-semibold">{title}</text>
+        <text x={ox + innerW / 2} y={32} textAnchor="middle" className="fill-muted text-[10px]">{sub}</text>
         <rect x={ox} y={oy} width={innerW} height={innerH} fill={C.slate50} stroke={C.grid} />
         {showAxes && (
           <>
             <line x1={ox} y1={cy} x2={ox + innerW} y2={cy} stroke={C.muted} strokeWidth={1} strokeDasharray="2 3" />
             <line x1={cx} y1={oy} x2={cx} y2={oy + innerH} stroke={C.muted} strokeWidth={1} strokeDasharray="2 3" />
-            <text x={ox + innerW - 6} y={cy - 4} textAnchor="end" className="fill-slate-500 text-[9px]">PC1</text>
-            <text x={cx + 4} y={oy + 12} className="fill-slate-500 text-[9px]">PC2</text>
+            <text x={ox + innerW - 6} y={cy - 4} textAnchor="end" className="fill-muted text-[9px]">PC1</text>
+            <text x={cx + 4} y={oy + 12} className="fill-muted text-[9px]">PC2</text>
           </>
         )}
         {!showAxes && (
-          <text x={ox + innerW - 6} y={oy + innerH - 6} textAnchor="end" className="fill-slate-400 text-[9px] italic">axes have no business meaning</text>
+          <text x={ox + innerW - 6} y={oy + innerH - 6} textAnchor="end" className="fill-muted text-[9px] italic">axes have no business meaning</text>
         )}
         {pts.map((p, i) => (
           <circle key={i} cx={xS(p.x)} cy={yS(p.y)} r={2.6} fill={p.c} opacity={0.85} />
@@ -330,7 +321,7 @@ export function TsneVsPca() {
         {panel(30, 'PCA', 'linear axes carry meaning', pcaPts, true)}
         {panel(30 + panelW + 20, 't-SNE / UMAP', 'tight neighborhoods, no axis meaning', tsnePts, false)}
       </svg>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Don’t read distances or angles in a t-SNE/UMAP map literally. They are good for spotting groups, poor for explaining them.
       </p>
     </Card>
@@ -354,12 +345,12 @@ export function TargetingTaxonomy() {
     <Card title="Ad-platform targeting — six families layered to find a customer">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
         {groups.map(g => (
-          <div key={g.name} className="rounded-md border border-slate-200 p-3">
+          <div key={g.name} className="rounded-md border border-border p-3">
             <div className="mb-1.5 flex items-center gap-2">
               <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: g.color }} />
-              <span className="text-[12px] font-semibold text-slate-800">{g.name}</span>
+              <span className="text-[12px] font-semibold text-body">{g.name}</span>
             </div>
-            <ul className="space-y-0.5 text-[11px] text-slate-700">
+            <ul className="space-y-0.5 text-[11px] text-subtle">
               {g.items.map(it => (
                 <li key={it} className="font-mono">· {it}</li>
               ))}
@@ -367,7 +358,7 @@ export function TargetingTaxonomy() {
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         Layering families is the standard targeting strategy. Layer too many and the audience disappears; too few and the audience is everyone.
       </p>
     </Card>
@@ -410,15 +401,15 @@ export function ReachSimilarityCurve() {
           <circle key={p.size} cx={xS(p.size)} cy={ySim(p.sim)} r={3.2} fill={C.blue} />
         ))}
         {[1, 3, 5, 7, 9].map(s => (
-          <text key={s} x={xS(s)} y={H - m.bottom + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{s}%</text>
+          <text key={s} x={xS(s)} y={H - m.bottom + 14} textAnchor="middle" className="fill-muted text-[10px]">{s}%</text>
         ))}
         {[50, 60, 70, 80, 90].map(v => (
-          <text key={v} x={m.left - 6} y={ySim(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{v}%</text>
+          <text key={v} x={m.left - 6} y={ySim(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{v}%</text>
         ))}
-        <text x={(m.left + W - m.right) / 2} y={H - 8} textAnchor="middle" className="fill-slate-700 text-[11px]">Audience size (% of population)</text>
-        <text x={16} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-slate-700 text-[11px]">Similarity to seed (%)</text>
-        <text x={xS(2.5)} y={ySim(92)} className="fill-emerald-700 text-[10px] italic">precise but small</text>
-        <text x={xS(8.5)} y={ySim(60)} className="fill-rose-700 text-[10px] italic">broad but diluted</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 8} textAnchor="middle" className="fill-subtle text-[11px]">Audience size (% of population)</text>
+        <text x={16} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-subtle text-[11px]">Similarity to seed (%)</text>
+        <text x={xS(2.5)} y={ySim(92)} className="fill-pos text-[10px] italic">precise but small</text>
+        <text x={xS(8.5)} y={ySim(60)} className="fill-neg text-[10px] italic">broad but diluted</text>
       </svg>
     </Card>
   );
@@ -449,14 +440,14 @@ export function RetargetingFunnel() {
           const y = 20 + i * stageH;
           return (
             <g key={s.label}>
-              <text x={W / 2 - 110} y={y + stageH / 2 + 4} textAnchor="end" className="fill-slate-800 text-[12px] font-semibold">{s.label}</text>
+              <text x={W / 2 - 110} y={y + stageH / 2 + 4} textAnchor="end" className="fill-body text-[12px] font-semibold">{s.label}</text>
               <rect x={W / 2 - 100} y={y + 4} width={barW} height={stageH - 8} rx={3} fill={s.color} opacity={0.85} />
-              <text x={W / 2 - 100 + barW + 8} y={y + stageH / 2 + 4} className="fill-slate-700 text-[11px] tabular-nums">{s.value}%</text>
+              <text x={W / 2 - 100 + barW + 8} y={y + stageH / 2 + 4} className="fill-subtle text-[11px] tabular-nums">{s.value}%</text>
             </g>
           );
         })}
       </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
+      <p className="mt-1 text-center text-[11px] text-muted">
         Retargeting custom audiences re-engages users who reached a particular stage but didn’t convert.
       </p>
     </Card>
@@ -502,11 +493,11 @@ export function CoPurchaseNetwork() {
         {nodes.map(n => (
           <g key={n.id}>
             <circle cx={n.x} cy={n.y} r={n.r} fill="white" stroke={n.color} strokeWidth={2.2} />
-            <text x={n.x} y={n.y + 4} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">{n.label}</text>
+            <text x={n.x} y={n.y + 4} textAnchor="middle" className="fill-body text-[11px] font-semibold">{n.label}</text>
           </g>
         ))}
       </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
+      <p className="mt-1 text-center text-[11px] text-muted">
         Edge thickness ≈ lift × support. Use these pairings as the seed for add-on recommendations.
       </p>
     </Card>
@@ -529,10 +520,10 @@ export function RankedListMock() {
   ];
   return (
     <Card title="Ranked recommendation for one customer at 8:14 AM">
-      <div className="overflow-hidden rounded-md border border-slate-200">
+      <div className="overflow-hidden rounded-md border border-border">
         <table className="w-full text-[12px]">
           <thead>
-            <tr className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-500">
+            <tr className="bg-code-bg text-[10px] uppercase tracking-wide text-muted">
               <th className="w-12 px-2 py-1.5 text-left">#</th>
               <th className="px-2 py-1.5 text-left">Add-on</th>
               <th className="w-24 px-2 py-1.5 text-right">Score</th>
@@ -541,15 +532,15 @@ export function RankedListMock() {
           </thead>
           <tbody>
             {items.map(it => (
-              <tr key={it.rank} className={it.act ? 'bg-emerald-50/60' : ''}>
-                <td className="px-2 py-1.5 font-mono text-slate-500">{it.rank}</td>
-                <td className="px-2 py-1.5 text-slate-800">{it.name}</td>
-                <td className="px-2 py-1.5 text-right tabular-nums text-slate-700">{it.score.toFixed(2)}</td>
+              <tr key={it.rank} className={it.act ? 'bg-pos/10' : ''}>
+                <td className="px-2 py-1.5 font-mono text-muted">{it.rank}</td>
+                <td className="px-2 py-1.5 text-body">{it.name}</td>
+                <td className="px-2 py-1.5 text-right tabular-nums text-subtle">{it.score.toFixed(2)}</td>
                 <td className="px-2 py-1.5 text-right">
                   {it.act ? (
-                    <span className="rounded bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-800">show</span>
+                    <span className="rounded bg-pos/10 px-1.5 py-0.5 text-[10px] font-semibold text-pos">show</span>
                   ) : (
-                    <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">hide</span>
+                    <span className="rounded bg-code-bg px-1.5 py-0.5 text-[10px] font-semibold text-muted">hide</span>
                   )}
                 </td>
               </tr>
@@ -557,7 +548,7 @@ export function RankedListMock() {
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         The cut-off (here, top 4) is a business choice: how many recommendations does the surface support without becoming clutter?
       </p>
     </Card>
@@ -575,22 +566,22 @@ export function MonitoringDashboardMock() {
         {[
           { kpi: 'AUC (rolling 7d)', val: '0.82', delta: '−0.02', ok: true },
           { kpi: 'Top-decile lift', val: '3.8×', delta: '−0.4×', ok: false },
-          { kpi: 'KS — top feature', val: '0.07', delta: '+0.04', ok: false },
+          { kpi: 'KS — top feature', val: '0.07', delta:' +0.04', ok: false },
           { kpi: 'Coverage', val: '94%', delta: '−1%', ok: true },
         ].map(c => (
-          <div key={c.kpi} className="rounded-md border border-slate-200 p-3">
-            <div className="text-[10px] uppercase tracking-wide text-slate-500">{c.kpi}</div>
+          <div key={c.kpi} className="rounded-md border border-border p-3">
+            <div className="text-[10px] uppercase tracking-wide text-muted">{c.kpi}</div>
             <div className="mt-1 flex items-baseline gap-2">
-              <div className="text-[20px] font-semibold tabular-nums text-slate-900">{c.val}</div>
-              <div className={`text-[11px] ${c.ok ? 'text-slate-500' : 'text-rose-700'}`}>{c.delta}</div>
+              <div className="text-[20px] font-semibold tabular-nums text-body">{c.val}</div>
+              <div className={`text-[11px] ${c.ok ? 'text-muted' : 'text-neg'}`}>{c.delta}</div>
             </div>
-            <div className="mt-1 h-1.5 w-full rounded-full bg-slate-100">
-              <div className={`h-1.5 rounded-full ${c.ok ? 'bg-emerald-500/80' : 'bg-rose-500/80'}`} style={{ width: c.ok ? '78%' : '38%' }} />
+            <div className="mt-1 h-1.5 w-full rounded-full bg-code-bg">
+              <div className={`h-1.5 rounded-full ${c.ok ? 'bg-pos/10' : 'bg-neg/10'}`} style={{ width: c.ok ? '78%' : '38%' }} />
             </div>
           </div>
         ))}
       </div>
-      <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-[11.5px] text-amber-900">
+      <div className="mt-3 rounded-md border border-accent/40 bg-accent/10 p-3 text-[11.5px] text-accent-ink">
         <div className="font-semibold">Alert · drift on <span className="font-mono">days_since_last_purchase</span></div>
         Distribution shift detected at 14:02. Top-decile lift slipping for 3 days. Owner notified; retraining queued for next sprint.
       </div>
@@ -611,8 +602,8 @@ export function DriftSchematic() {
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Left panel: data drift shifts feature distribution. Right panel: concept drift changes the relationship between features and outcome.">
         {/* Data drift */}
         <g transform="translate(30,30)">
-          <text x={panelW / 2} y={-10} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">Data drift</text>
-          <text x={panelW / 2} y={4} textAnchor="middle" className="fill-slate-500 text-[10px]">feature distribution moves</text>
+          <text x={panelW / 2} y={-10} textAnchor="middle" className="fill-body text-[11px] font-semibold">Data drift</text>
+          <text x={panelW / 2} y={4} textAnchor="middle" className="fill-muted text-[10px]">feature distribution moves</text>
           {(() => {
             const innerW = panelW;
             const innerH = 140;
@@ -631,16 +622,16 @@ export function DriftSchematic() {
                 <line x1={0} y1={oy + innerH} x2={innerW} y2={oy + innerH} stroke={C.ink} strokeWidth={1} />
                 {bell(innerW * 0.35, 40, C.blue, 0.85)}
                 {bell(innerW * 0.65, 40, C.red, 0.85)}
-                <text x={innerW * 0.35} y={oy + innerH + 14} textAnchor="middle" className="fill-blue-800 text-[10px]">training</text>
-                <text x={innerW * 0.65} y={oy + innerH + 14} textAnchor="middle" className="fill-rose-800 text-[10px]">live traffic</text>
+                <text x={innerW * 0.35} y={oy + innerH + 14} textAnchor="middle" className="fill-subtle text-[10px]">training</text>
+                <text x={innerW * 0.65} y={oy + innerH + 14} textAnchor="middle" className="fill-neg text-[10px]">live traffic</text>
               </g>
             );
           })()}
         </g>
         {/* Concept drift */}
         <g transform={`translate(${30 + panelW + 20},30)`}>
-          <text x={panelW / 2} y={-10} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">Concept drift</text>
-          <text x={panelW / 2} y={4} textAnchor="middle" className="fill-slate-500 text-[10px]">X → Y relationship changes</text>
+          <text x={panelW / 2} y={-10} textAnchor="middle" className="fill-body text-[11px] font-semibold">Concept drift</text>
+          <text x={panelW / 2} y={4} textAnchor="middle" className="fill-muted text-[10px]">X → Y relationship changes</text>
           {(() => {
             const innerW = panelW;
             const innerH = 140;
@@ -653,15 +644,15 @@ export function DriftSchematic() {
                 <line x1={10} y1={oy + innerH - 10} x2={innerW - 10} y2={oy + 20} stroke={C.blue} strokeWidth={2.4} />
                 {/* drifted line */}
                 <line x1={10} y1={oy + innerH - 40} x2={innerW - 10} y2={oy + 70} stroke={C.red} strokeWidth={2.4} strokeDasharray="4 3" />
-                <text x={innerW - 24} y={oy + 30} textAnchor="end" className="fill-blue-800 text-[10px]">trained pattern</text>
-                <text x={innerW - 24} y={oy + 80} textAnchor="end" className="fill-rose-800 text-[10px]">today’s pattern</text>
-                <text x={innerW / 2} y={oy + innerH + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">feature →</text>
+                <text x={innerW - 24} y={oy + 30} textAnchor="end" className="fill-subtle text-[10px]">trained pattern</text>
+                <text x={innerW - 24} y={oy + 80} textAnchor="end" className="fill-neg text-[10px]">today’s pattern</text>
+                <text x={innerW / 2} y={oy + innerH + 14} textAnchor="middle" className="fill-muted text-[10px]">feature →</text>
               </g>
             );
           })()}
         </g>
       </svg>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Data drift makes the input look unfamiliar. Concept drift makes the input mean something different. Both quietly degrade a model.
       </p>
     </Card>
@@ -691,8 +682,8 @@ export function CustomerIntelligenceFlow() {
           return (
             <g key={c.label}>
               <rect x={x + 10} y={50} width={cellW - 20} height={70} rx={8} fill="white" stroke={c.color} strokeWidth={1.8} />
-              <text x={x + cellW / 2} y={78} textAnchor="middle" className="fill-slate-900 text-[13px] font-semibold" style={{ fill: c.color }}>{c.label}</text>
-              <text x={x + cellW / 2} y={98} textAnchor="middle" className="fill-slate-500 text-[10px]">{c.sub}</text>
+              <text x={x + cellW / 2} y={78} textAnchor="middle" className="fill-body text-[13px] font-semibold" style={{ fill: c.color }}>{c.label}</text>
+              <text x={x + cellW / 2} y={98} textAnchor="middle" className="fill-muted text-[10px]">{c.sub}</text>
               {i < cells.length - 1 && (
                 <line x1={x + cellW - 10} y1={85} x2={x + cellW + 10} y2={85} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#cif-arrow)" />
               )}
@@ -718,7 +709,7 @@ export function CustomerIntelligenceFlow() {
           strokeDasharray="5 4"
           markerEnd="url(#cif-feedback)"
         />
-        <text x={W / 2} y={184} textAnchor="middle" className="fill-amber-700 text-[10px] italic">Monitoring shapes the next problem definition.</text>
+        <text x={W / 2} y={184} textAnchor="middle" className="fill-accent-ink text-[10px] italic">Monitoring shapes the next problem definition.</text>
       </svg>
     </Card>
   );

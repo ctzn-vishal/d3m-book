@@ -62,14 +62,14 @@ export interface StaticChartV1Props {
  */
 export function StaticChartV1({ svgUrl, alt, source, title, subtitle }: StaticChartV1Props) {
   return (
-    <div className="w-full overflow-hidden rounded-md border border-slate-200 bg-white px-3.5 pb-4 pt-3 shadow-sm dark:border-slate-700 dark:shadow-none md:px-5 md:pt-4">
+    <div className="w-full overflow-hidden rounded-md border border-border bg-surface px-3.5 pb-4 pt-3 dark:shadow-none md:px-5 md:pt-4">
       {(title || subtitle) && (
-        <div className="mb-3 border-b border-slate-100 pb-2">
+        <div className="mb-3 border-b border-border pb-2">
           {title && (
-            <h2 className="text-sm font-semibold leading-snug text-slate-900">{title}</h2>
+            <h2 className="text-sm font-semibold leading-snug text-body">{title}</h2>
           )}
           {subtitle && (
-            <p className="mt-0.5 text-xs leading-snug text-slate-600">{subtitle}</p>
+            <p className="mt-0.5 text-xs leading-snug text-subtle">{subtitle}</p>
           )}
         </div>
       )}
@@ -84,8 +84,8 @@ export function StaticChartV1({ svgUrl, alt, source, title, subtitle }: StaticCh
       </div>
 
       {source && (
-        <div className="mt-3 border-t border-slate-100 pt-2">
-          <div className="text-left text-[11px] leading-snug text-slate-500">
+        <div className="mt-3 border-t border-border pt-2">
+          <div className="text-left text-[11px] leading-snug text-muted">
             Source: {source}
           </div>
         </div>

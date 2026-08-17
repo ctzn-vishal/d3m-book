@@ -225,10 +225,10 @@ function CardFrame({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-md border border-border bg-surface p-4">
       <div className="mb-3">
-        <h3 className="text-sm font-semibold text-slate-950">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+        <h3 className="text-sm font-semibold text-body">{title}</h3>
+        {subtitle && <p className="mt-1 text-xs leading-snug text-muted">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -237,7 +237,7 @@ function CardFrame({
 
 function Legend({ items }: { items: Array<{ label: string; color: string }> }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+    <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle">
       {items.map(item => (
         <span key={item.label} className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full" style={{ background: item.color }} />
@@ -258,20 +258,20 @@ export function Part3EvidencePlan({ data }: { data: Part3Data }) {
   return (
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-md border border-slate-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Milk</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-950">{data.milk.summary.overall_whole_share_effect_pp} pp</p>
-          <p className="mt-1 text-xs leading-snug text-slate-600">higher whole-milk share when milk fat levels are equally priced.</p>
+        <div className="rounded-md border border-border bg-surface p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Milk</p>
+          <p className="mt-2 text-2xl font-semibold text-body">{data.milk.summary.overall_whole_share_effect_pp} pp</p>
+          <p className="mt-1 text-xs leading-snug text-subtle">higher whole-milk share when milk fat levels are equally priced.</p>
         </div>
-        <div className="rounded-md border border-slate-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Zillow</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-950">{fmtPct(data.zillow.summary.avg_post_gap_pct, 1)}</p>
-          <p className="mt-1 text-xs leading-snug text-slate-600">average post-2014 Colorado gap versus the synthetic comparison.</p>
+        <div className="rounded-md border border-border bg-surface p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Zillow</p>
+          <p className="mt-2 text-2xl font-semibold text-body">{fmtPct(data.zillow.summary.avg_post_gap_pct, 1)}</p>
+          <p className="mt-1 text-xs leading-snug text-subtle">average post-2014 Colorado gap versus the synthetic comparison.</p>
         </div>
-        <div className="rounded-md border border-slate-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Soup</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-950">{fmtNumber(data.soup.pricing.preferred_elasticity, 2)}</p>
-          <p className="mt-1 text-xs leading-snug text-slate-600">store fixed-effect own-price elasticity for Progresso volume.</p>
+        <div className="rounded-md border border-border bg-surface p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Soup</p>
+          <p className="mt-2 text-2xl font-semibold text-body">{fmtNumber(data.soup.pricing.preferred_elasticity, 2)}</p>
+          <p className="mt-1 text-xs leading-snug text-subtle">store fixed-effect own-price elasticity for Progresso volume.</p>
         </div>
       </div>
       <div className="grid gap-4 lg:grid-cols-5">
@@ -281,14 +281,14 @@ export function Part3EvidencePlan({ data }: { data: Part3Data }) {
             return n >= Number(group.range[0]) && n <= Number(group.range[1]);
           });
           return (
-            <div key={group.chapter} className="rounded-md border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Chapter {group.chapter}</p>
-              <h3 className="mt-1 text-sm font-semibold text-slate-950">{group.title}</h3>
+            <div key={group.chapter} className="rounded-md border border-border bg-code-bg p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Chapter {group.chapter}</p>
+              <h3 className="mt-1 text-sm font-semibold text-body">{group.title}</h3>
               <div className="mt-3 space-y-2">
                 {articles.map(item => (
-                  <div key={item.slug} className="rounded-md bg-white p-2 ring-1 ring-slate-200">
-                    <p className="text-xs font-semibold text-slate-900">{item.number}</p>
-                    <p className="mt-1 text-[11px] leading-snug text-slate-600">{item.case}</p>
+                  <div key={item.slug} className="rounded-md bg-surface p-2 ring-1 ring-border">
+                    <p className="text-xs font-semibold text-body">{item.number}</p>
+                    <p className="mt-1 text-[11px] leading-snug text-subtle">{item.case}</p>
                     <p className="mt-1 text-[11px] leading-snug text-[#8a4b16]">{item.artifact}</p>
                   </div>
                 ))}
@@ -310,7 +310,7 @@ export function CounterfactualWorlds() {
     { x: 502, y: 126, label: 'Counterfactual outcome', fill: '#fed7aa' },
   ];
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-md border border-border bg-surface p-4">
       <svg viewBox="0 0 720 230" className="h-auto w-full" role="img" aria-label="Observed and counterfactual worlds diagram.">
         <defs>
           <marker id="part3-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -325,16 +325,16 @@ export function CounterfactualWorlds() {
         {nodes.map(node => (
           <g key={node.label}>
             <rect x={node.x} y={node.y} width="168" height="62" rx="6" fill={node.fill} stroke="#cbd5e1" />
-            <text x={node.x + 84} y={node.y + 28} textAnchor="middle" className="fill-slate-950 text-[13px] font-semibold">
+            <text x={node.x + 84} y={node.y + 28} textAnchor="middle" className="fill-body text-[13px] font-semibold">
               {node.label}
             </text>
-            <text x={node.x + 84} y={node.y + 45} textAnchor="middle" className="fill-slate-500 text-[10px]">
+            <text x={node.x + 84} y={node.y + 45} textAnchor="middle" className="fill-muted text-[10px]">
               {node.label.includes('Missing') ? 'must be estimated' : 'seen in the data'}
             </text>
           </g>
         ))}
         <path d="M 586 92 C 600 110, 600 124, 586 126" stroke="#172033" strokeWidth="2" fill="none" />
-        <text x="622" y="111" textAnchor="middle" className="fill-slate-950 text-[13px] font-semibold">effect</text>
+        <text x="622" y="111" textAnchor="middle" className="fill-body text-[13px] font-semibold">effect</text>
       </svg>
     </div>
   );
@@ -359,7 +359,7 @@ export function MilkQuasiExperimentFigure({ data }: { data: MilkData }) {
           {[-0.02, 0, 0.04, 0.08].map(t => (
             <g key={t}>
               <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={t === 0 ? '#94a3b8' : palette.grid} strokeDasharray={t === 0 ? '4 4' : undefined} />
-              <text x={x(t)} y={H - 12} textAnchor="middle" className="fill-slate-500 text-[10px]">
+              <text x={x(t)} y={H - 12} textAnchor="middle" className="fill-muted text-[10px]">
                 {t === 0 ? '0' : fmtPctPoint(t, 0)}
               </text>
             </g>
@@ -369,12 +369,12 @@ export function MilkQuasiExperimentFigure({ data }: { data: MilkData }) {
             const color = row.kind === 'outcome' ? palette.green : row.kind === 'placebo' ? palette.orange : palette.blue;
             return (
               <g key={row.metric}>
-                <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-slate-700 text-[12px] font-medium">
+                <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-subtle text-[12px] font-medium">
                   {row.metric}
                 </text>
                 <line x1={x(row.ci_low)} x2={x(row.ci_high)} y1={y} y2={y} stroke={color} strokeWidth={3} />
                 <circle cx={x(row.estimate)} cy={y} r={5} fill={color} />
-                <text x={x(row.estimate) + 9} y={y + 4} className="fill-slate-600 text-[11px]">
+                <text x={x(row.estimate) + 9} y={y + 4} className="fill-subtle text-[11px]">
                   {fmtPctPoint(row.estimate, 1)}
                 </text>
               </g>
@@ -390,17 +390,17 @@ export function MilkQuasiExperimentFigure({ data }: { data: MilkData }) {
         />
       </CardFrame>
       <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-md bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Stores</p>
-          <p className="mt-1 text-lg font-semibold text-slate-950">{data.summary.equal_price_stores.toLocaleString()} equal-price</p>
+        <div className="rounded-md bg-code-bg p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Stores</p>
+          <p className="mt-1 text-lg font-semibold text-body">{data.summary.equal_price_stores.toLocaleString()} equal-price</p>
         </div>
-        <div className="rounded-md bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">ZIP income gap</p>
-          <p className="mt-1 text-lg font-semibold text-slate-950">{incomeRow ? `$${Math.round(incomeRow.estimate)}` : '$0'}</p>
+        <div className="rounded-md bg-code-bg p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">ZIP income gap</p>
+          <p className="mt-1 text-lg font-semibold text-body">{incomeRow ? `$${Math.round(incomeRow.estimate)}` : '$0'}</p>
         </div>
-        <div className="rounded-md bg-slate-50 p-3">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Diet-income correlation</p>
-          <p className="mt-1 text-lg font-semibold text-slate-950">{fmtNumber(data.incomeDietCorrelation, 2)}</p>
+        <div className="rounded-md bg-code-bg p-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Diet-income correlation</p>
+          <p className="mt-1 text-lg font-semibold text-body">{fmtNumber(data.incomeDietCorrelation, 2)}</p>
         </div>
       </div>
     </div>
@@ -410,20 +410,20 @@ export function MilkQuasiExperimentFigure({ data }: { data: MilkData }) {
 export function MilkStudySummary({ data }: { data: MilkData }) {
   return (
     <div className="grid gap-3 md:grid-cols-3">
-      <div className="rounded-md border border-slate-200 bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Equal-price stores</p>
-        <p className="mt-2 text-2xl font-semibold text-slate-950">{data.summary.equal_price_stores.toLocaleString()}</p>
-        <p className="mt-1 text-xs text-slate-600">compared with {data.summary.whole_expensive_stores.toLocaleString()} stores where whole milk is more expensive.</p>
+      <div className="rounded-md border border-border bg-surface p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Equal-price stores</p>
+        <p className="mt-2 text-2xl font-semibold text-body">{data.summary.equal_price_stores.toLocaleString()}</p>
+        <p className="mt-1 text-xs text-subtle">compared with {data.summary.whole_expensive_stores.toLocaleString()} stores where whole milk is more expensive.</p>
       </div>
-      <div className="rounded-md border border-slate-200 bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Whole-milk share</p>
-        <p className="mt-2 text-2xl font-semibold text-slate-950">+{data.summary.overall_whole_share_effect_pp} pp</p>
-        <p className="mt-1 text-xs text-slate-600">the main behavioral difference in the quasi-experimental comparison.</p>
+      <div className="rounded-md border border-border bg-surface p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Whole-milk share</p>
+        <p className="mt-2 text-2xl font-semibold text-body">+{data.summary.overall_whole_share_effect_pp} pp</p>
+        <p className="mt-1 text-xs text-subtle">the main behavioral difference in the quasi-experimental comparison.</p>
       </div>
-      <div className="rounded-md border border-slate-200 bg-white p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Diet-soda placebo</p>
-        <p className="mt-2 text-2xl font-semibold text-slate-950">+{data.summary.diet_soda_placebo_pp} pp</p>
-        <p className="mt-1 text-xs text-slate-600">a small difference on an outcome the milk price structure should not move.</p>
+      <div className="rounded-md border border-border bg-surface p-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Diet-soda placebo</p>
+        <p className="mt-2 text-2xl font-semibold text-body">+{data.summary.diet_soda_placebo_pp} pp</p>
+        <p className="mt-1 text-xs text-subtle">a small difference on an outcome the milk price structure should not move.</p>
       </div>
     </div>
   );
@@ -445,7 +445,7 @@ export function MilkHeterogeneityFigure({ data }: { data: MilkData }) {
         {[0, 0.04, 0.08, 0.12, 0.16].map(t => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={t === 0 ? '#94a3b8' : palette.grid} />
-            <text x={x(t)} y={H - 12} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtPctPoint(t, 0)}</text>
+            <text x={x(t)} y={H - 12} textAnchor="middle" className="fill-muted text-[10px]">{fmtPctPoint(t, 0)}</text>
           </g>
         ))}
         {rows.map((row, index) => {
@@ -453,12 +453,12 @@ export function MilkHeterogeneityFigure({ data }: { data: MilkData }) {
           const color = index === 0 ? palette.green : palette.blue;
           return (
             <g key={row.income_group}>
-              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-slate-700 text-[12px]">
+              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-subtle text-[12px]">
                 {row.income_group}
               </text>
               <line x1={x(Math.max(0, row.ci_low))} x2={x(row.ci_high)} y1={y} y2={y} stroke={color} strokeWidth={3} />
               <circle cx={x(row.estimate)} cy={y} r={5} fill={color} />
-              <text x={x(row.estimate) + 9} y={y + 4} className="fill-slate-600 text-[11px]">{fmtPctPoint(row.estimate, 1)}</text>
+              <text x={x(row.estimate) + 9} y={y + 4} className="fill-subtle text-[11px]">{fmtPctPoint(row.estimate, 1)}</text>
             </g>
           );
         })}
@@ -478,11 +478,11 @@ export function ZillowSyntheticControl({ data, show = 'paths' }: { data: ZillowD
         <div className="space-y-3">
           {data.weights.map(row => (
             <div key={row.state}>
-              <div className="mb-1 flex items-center justify-between text-xs text-slate-600">
+              <div className="mb-1 flex items-center justify-between text-xs text-subtle">
                 <span>{row.state}</span>
                 <span>{fmtPct(row.weight, 1)}</span>
               </div>
-              <div className="h-2 rounded-full bg-slate-100">
+              <div className="h-2 rounded-full bg-code-bg">
                 <div className="h-2 rounded-full bg-[#2563eb]" style={{ width: `${(row.weight / max) * 100}%` }} />
               </div>
             </div>
@@ -515,13 +515,13 @@ export function ZillowSyntheticControl({ data, show = 'paths' }: { data: ZillowD
         {[1996, 2002, 2008, 2014, 2020].map(t => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={palette.grid} />
-            <text x={x(t)} y={H - 12} textAnchor="middle" className="fill-slate-500 text-[10px]">{t}</text>
+            <text x={x(t)} y={H - 12} textAnchor="middle" className="fill-muted text-[10px]">{t}</text>
           </g>
         ))}
         {(show === 'paths' ? [100000, 200000, 300000, 400000] : [-0.1, 0, 0.1, 0.2, 0.3]).map(t => (
           <g key={t}>
             <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke={t === 0 ? '#94a3b8' : palette.grid} strokeDasharray={t === 0 ? '4 4' : undefined} />
-            <text x={m.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{show === 'paths' ? `$${Math.round(t / 1000)}k` : fmtPct(t, 0)}</text>
+            <text x={m.left - 8} y={y(t) + 4} textAnchor="end" className="fill-muted text-[10px]">{show === 'paths' ? `$${Math.round(t / 1000)}k` : fmtPct(t, 0)}</text>
           </g>
         ))}
         <rect x={eventX} y={m.top} width={W - m.right - eventX} height={H - m.bottom - m.top} fill="#f8fafc" />
@@ -563,7 +563,7 @@ export function SoupRegressionLadder({ data }: { data: SoupData }) {
         {[-3.4, -3.0, -2.6, -2.2].map(t => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={palette.grid} />
-            <text x={x(t)} y={H - 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{t.toFixed(1)}</text>
+            <text x={x(t)} y={H - 14} textAnchor="middle" className="fill-muted text-[10px]">{t.toFixed(1)}</text>
           </g>
         ))}
         {rows.map((row, index) => {
@@ -571,17 +571,17 @@ export function SoupRegressionLadder({ data }: { data: SoupData }) {
           const color = index === rows.length - 1 ? palette.green : [palette.blue, palette.orange, palette.purple, palette.red][index] ?? palette.blue;
           return (
             <g key={row.model}>
-              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-slate-700 text-[12px]">
+              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-subtle text-[12px]">
                 {row.model}
               </text>
               <line x1={x(row.ci_low)} x2={x(row.ci_high)} y1={y} y2={y} stroke={color} strokeWidth={3} />
               <circle cx={x(row.estimate)} cy={y} r={5} fill={color} />
-              <text x={x(row.estimate) + 9} y={y + 4} className="fill-slate-600 text-[11px]">{fmtNumber(row.estimate, 2)}</text>
-              <text x={W - m.right + 8} y={y + 4} className="fill-slate-500 text-[10px]">R2 {fmtNumber(row.r2, 2)}</text>
+              <text x={x(row.estimate) + 9} y={y + 4} className="fill-subtle text-[11px]">{fmtNumber(row.estimate, 2)}</text>
+              <text x={W - m.right + 8} y={y + 4} className="fill-muted text-[10px]">R2 {fmtNumber(row.r2, 2)}</text>
             </g>
           );
         })}
-        <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-slate-500 text-[10px]">Elasticity-style coefficient</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-muted text-[10px]">Elasticity-style coefficient</text>
       </svg>
     </CardFrame>
   );
@@ -612,7 +612,7 @@ export function SouthwestRegressionLadder({ data }: { data: SouthwestData }) {
         {gridSteps.map(t => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke={t === 0 ? '#94a3b8' : palette.grid} strokeDasharray={t === 0 ? '4 4' : undefined} />
-            <text x={x(t)} y={H - 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtMoney(t, 0)}</text>
+            <text x={x(t)} y={H - 14} textAnchor="middle" className="fill-muted text-[10px]">{fmtMoney(t, 0)}</text>
           </g>
         ))}
         {rows.map((row, index) => {
@@ -620,17 +620,17 @@ export function SouthwestRegressionLadder({ data }: { data: SouthwestData }) {
           const color = index === rows.length - 1 ? palette.green : [palette.blue, palette.orange, palette.purple, palette.red][index] ?? palette.blue;
           return (
             <g key={row.model}>
-              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-slate-700 text-[12px]">
+              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-subtle text-[12px]">
                 {row.model}
               </text>
               <line x1={x(row.ci_low)} x2={x(row.ci_high)} y1={y} y2={y} stroke={color} strokeWidth={3} />
               <circle cx={x(row.estimate)} cy={y} r={5} fill={color} />
-              <text x={x(row.estimate) + 9} y={y + 4} className="fill-slate-600 text-[11px]">{fmtMoney(row.estimate, 0)}</text>
-              <text x={W - m.right + 8} y={y + 4} className="fill-slate-500 text-[10px]">R2 {fmtNumber(row.r2, 2)}</text>
+              <text x={x(row.estimate) + 9} y={y + 4} className="fill-subtle text-[11px]">{fmtMoney(row.estimate, 0)}</text>
+              <text x={W - m.right + 8} y={y + 4} className="fill-muted text-[10px]">R2 {fmtNumber(row.r2, 2)}</text>
             </g>
           );
         })}
-        <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-slate-500 text-[10px]">Fare gap versus routes without Southwest</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-muted text-[10px]">Fare gap versus routes without Southwest</text>
       </svg>
     </CardFrame>
   );
@@ -659,13 +659,13 @@ export function SoupSeasonScatter({ data, groupBy = 'season' }: { data: SoupData
               {[xDomain[0], (xDomain[0] + xDomain[1]) / 2, xDomain[1]].map(t => (
                 <g key={`x-${t}`}>
                   <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke="#f1f5f9" />
-                  <text x={x(t)} y={H - 13} textAnchor="middle" className="fill-slate-400 text-[9px]">{t.toFixed(1)}</text>
+                  <text x={x(t)} y={H - 13} textAnchor="middle" className="fill-muted text-[9px]">{t.toFixed(1)}</text>
                 </g>
               ))}
               {[yDomain[0], (yDomain[0] + yDomain[1]) / 2, yDomain[1]].map(t => (
                 <g key={`y-${t}`}>
                   <line x1={m.left} x2={W - m.right} y1={y(t)} y2={y(t)} stroke={palette.grid} />
-                  <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-slate-400 text-[9px]">{t.toFixed(1)}</text>
+                  <text x={m.left - 6} y={y(t) + 3} textAnchor="end" className="fill-muted text-[9px]">{t.toFixed(1)}</text>
                 </g>
               ))}
               {points.map((point, i) => (
@@ -674,8 +674,8 @@ export function SoupSeasonScatter({ data, groupBy = 'season' }: { data: SoupData
               {line && (
                 <line x1={x(line.x1)} y1={y(line.y1)} x2={x(line.x2)} y2={y(line.y2)} stroke={color} strokeWidth={3} />
               )}
-              <text x={W / 2} y={H - 2} textAnchor="middle" className="fill-slate-500 text-[10px]">log price</text>
-              <text x={14} y={120} textAnchor="middle" transform="rotate(-90 14 120)" className="fill-slate-500 text-[10px]">log volume</text>
+              <text x={W / 2} y={H - 2} textAnchor="middle" className="fill-muted text-[10px]">log price</text>
+              <text x={14} y={120} textAnchor="middle" transform="rotate(-90 14 120)" className="fill-muted text-[10px]">log volume</text>
             </svg>
           </CardFrame>
         );
@@ -698,23 +698,23 @@ export function SoupCrossPriceHeatmap({ data }: { data: SoupData }) {
     return '#f8fafc';
   };
   return (
-    <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-100 bg-slate-50 p-4">
-        <h3 className="text-sm font-semibold text-slate-950">Substitution differs sharply by region</h3>
-        <p className="mt-1 text-xs text-slate-500">Positive cross-price elasticity means Progresso gains volume when a rival price rises.</p>
+    <div className="overflow-hidden rounded-md border border-border bg-surface">
+      <div className="border-b border-border bg-code-bg p-4">
+        <h3 className="text-sm font-semibold text-body">Substitution differs sharply by region</h3>
+        <p className="mt-1 text-xs text-muted">Positive cross-price elasticity means Progresso gains volume when a rival price rises.</p>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm tabular-nums">
           <thead>
-            <tr className="border-b border-slate-200">
+            <tr className="border-b border-border">
               <th className="px-3 py-2 text-left font-semibold">Region</th>
               {columns.map(col => <th key={col.key} className="px-3 py-2 text-right font-semibold">{col.label}</th>)}
             </tr>
           </thead>
           <tbody>
             {rows.map(row => (
-              <tr key={row.region} className="border-b border-slate-100">
-                <td className="px-3 py-2 font-medium text-slate-900">{row.region}</td>
+              <tr key={row.region} className="border-b border-border">
+                <td className="px-3 py-2 font-medium text-body">{row.region}</td>
                 {columns.map(col => {
                   const value = row[col.key];
                   return (
@@ -759,22 +759,22 @@ export function PricingOptimizer({ data }: { data: SoupData }) {
     : 0;
 
   return (
-    <div className="space-y-4 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="space-y-4 rounded-md border border-border bg-surface p-4">
       <div className="grid gap-4 lg:grid-cols-[1fr_270px]">
         <div>
-          <h3 className="text-sm font-semibold text-slate-950">Optimal price under constant elasticity</h3>
-          <p className="mt-1 text-xs leading-snug text-slate-500">
+          <h3 className="text-sm font-semibold text-body">Optimal price under constant elasticity</h3>
+          <p className="mt-1 text-xs leading-snug text-muted">
             Move elasticity and marginal cost to see why the same formula is a decision aid, not a policy by itself.
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-md bg-slate-50 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Optimal price</p>
-            <p className="mt-1 text-xl font-semibold text-slate-950">{Number.isFinite(optimal) ? fmtMoney(optimal) : 'n/a'}</p>
+          <div className="rounded-md bg-code-bg p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Optimal price</p>
+            <p className="mt-1 text-xl font-semibold text-body">{Number.isFinite(optimal) ? fmtMoney(optimal) : 'n/a'}</p>
           </div>
-          <div className="rounded-md bg-slate-50 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Current avg.</p>
-            <p className="mt-1 text-xl font-semibold text-slate-950">{fmtMoney(currentPrice)}</p>
+          <div className="rounded-md bg-code-bg p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Current avg.</p>
+            <p className="mt-1 text-xl font-semibold text-body">{fmtMoney(currentPrice)}</p>
           </div>
         </div>
       </div>
@@ -782,7 +782,7 @@ export function PricingOptimizer({ data }: { data: SoupData }) {
         {[1.0, 1.4, 1.8, 2.2, 2.6].map(t => (
           <g key={t}>
             <line x1={x(t)} x2={x(t)} y1={m.top} y2={H - m.bottom} stroke="#f1f5f9" />
-            <text x={x(t)} y={H - 13} textAnchor="middle" className="fill-slate-500 text-[10px]">{fmtMoney(t, 1)}</text>
+            <text x={x(t)} y={H - 13} textAnchor="middle" className="fill-muted text-[10px]">{fmtMoney(t, 1)}</text>
           </g>
         ))}
         <path d={path} fill="none" stroke={palette.green} strokeWidth={3} />
@@ -795,12 +795,12 @@ export function PricingOptimizer({ data }: { data: SoupData }) {
             <text x={x(optimal) + 6} y={optY - 8} className="fill-[#0f766e] text-[10px]">formula optimum</text>
           </>
         )}
-        <text x={W / 2} y={H - 4} textAnchor="middle" className="fill-slate-500 text-[10px]">Price</text>
-        <text x={16} y={H / 2} textAnchor="middle" transform={`rotate(-90 16 ${H / 2})`} className="fill-slate-500 text-[10px]">Relative profit</text>
+        <text x={W / 2} y={H - 4} textAnchor="middle" className="fill-muted text-[10px]">Price</text>
+        <text x={16} y={H / 2} textAnchor="middle" transform={`rotate(-90 16 ${H / 2})`} className="fill-muted text-[10px]">Relative profit</text>
       </svg>
       <div className="grid gap-4 md:grid-cols-2">
-        <label className="text-xs font-medium text-slate-700">
-          Elasticity: <span className="font-semibold text-slate-950">{fmtNumber(elasticity, 2)}</span>
+        <label className="text-xs font-medium text-subtle">
+          Elasticity: <span className="font-semibold text-body">{fmtNumber(elasticity, 2)}</span>
           <input
             className="mt-2 w-full accent-[#0f766e]"
             type="range"
@@ -811,8 +811,8 @@ export function PricingOptimizer({ data }: { data: SoupData }) {
             onChange={event => setElasticity(Number(event.target.value))}
           />
         </label>
-        <label className="text-xs font-medium text-slate-700">
-          Marginal cost: <span className="font-semibold text-slate-950">{fmtMoney(cost)}</span>
+        <label className="text-xs font-medium text-subtle">
+          Marginal cost: <span className="font-semibold text-body">{fmtMoney(cost)}</span>
           <input
             className="mt-2 w-full accent-[#c87c2a]"
             type="range"
@@ -836,18 +836,18 @@ export function SeasonalOptimalPriceCompare({ data }: { data: SoupData }) {
   return (
     <div className="space-y-3">
       <div className="grid gap-3 md:grid-cols-2">
-        <div className="rounded-md border border-slate-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Non-winter</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-950">{fmtMoney(seasonal.non_winter.optimal_price)}</p>
-          <p className="mt-1 text-xs text-slate-600">optimal price at an elasticity of {fmtNumber(seasonal.non_winter.elasticity, 2)}.</p>
+        <div className="rounded-md border border-border bg-surface p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Non-winter</p>
+          <p className="mt-2 text-2xl font-semibold text-body">{fmtMoney(seasonal.non_winter.optimal_price)}</p>
+          <p className="mt-1 text-xs text-subtle">optimal price at an elasticity of {fmtNumber(seasonal.non_winter.elasticity, 2)}.</p>
         </div>
-        <div className="rounded-md border border-slate-200 bg-white p-4">
-          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Winter</p>
-          <p className="mt-2 text-2xl font-semibold text-slate-950">{fmtMoney(seasonal.winter.optimal_price)}</p>
-          <p className="mt-1 text-xs text-slate-600">optimal price at an elasticity of {fmtNumber(seasonal.winter.elasticity, 2)}.</p>
+        <div className="rounded-md border border-border bg-surface p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Winter</p>
+          <p className="mt-2 text-2xl font-semibold text-body">{fmtMoney(seasonal.winter.optimal_price)}</p>
+          <p className="mt-1 text-xs text-subtle">optimal price at an elasticity of {fmtNumber(seasonal.winter.elasticity, 2)}.</p>
         </div>
       </div>
-      <p className="text-xs leading-snug text-slate-500">
+      <p className="text-xs leading-snug text-muted">
         {higherPriceSeason} carries the higher optimal price: demand is less elastic in {lessElasticSeason.toLowerCase()} ({fmtNumber(seasonal[lessElasticSeason === 'Winter' ? 'winter' : 'non_winter'].elasticity, 2)} vs. {fmtNumber(seasonal[lessElasticSeason === 'Winter' ? 'non_winter' : 'winter'].elasticity, 2)}), so a bigger markup still clears at a similar quantity.
       </p>
     </div>
@@ -862,16 +862,16 @@ export function IdentificationMemoCard({
   rows: Array<{ label: string; value: string }>;
 }) {
   return (
-    <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-100 bg-slate-950 p-4 text-white">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">Identification memo</p>
+    <div className="overflow-hidden rounded-md border border-border bg-surface">
+      <div className="border-b border-border bg-body p-4 text-surface">
+        <p className="text-xs font-semibold uppercase tracking-wide text-border-strong">Identification memo</p>
         <h3 className="mt-1 text-base font-semibold">{title}</h3>
       </div>
-      <div className="divide-y divide-slate-100">
+      <div className="divide-y divide-border">
         {rows.map(row => (
           <div key={row.label} className="grid gap-2 px-4 py-3 text-sm md:grid-cols-[160px_1fr]">
-            <p className="font-semibold text-slate-900">{row.label}</p>
-            <p className="leading-relaxed text-slate-600">{row.value}</p>
+            <p className="font-semibold text-body">{row.label}</p>
+            <p className="leading-relaxed text-subtle">{row.value}</p>
           </div>
         ))}
       </div>
@@ -913,14 +913,14 @@ export function CausalDesignSelector() {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {designs.map(item => (
-        <article key={item.design} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+        <article key={item.design} className="rounded-md border border-border bg-surface p-4">
           <div className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full" style={{ background: item.color }} />
-            <h3 className="text-sm font-semibold text-slate-950">{item.design}</h3>
+            <h3 className="text-sm font-semibold text-body">{item.design}</h3>
           </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate-700">{item.comparison}</p>
-          <p className="mt-3 text-xs leading-relaxed text-slate-600"><span className="font-semibold text-slate-950">Use when: </span>{item.use}</p>
-          <p className="mt-2 text-xs leading-relaxed text-amber-800"><span className="font-semibold">Watch: </span>{item.risk}</p>
+          <p className="mt-3 text-sm leading-relaxed text-subtle">{item.comparison}</p>
+          <p className="mt-3 text-xs leading-relaxed text-subtle"><span className="font-semibold text-body">Use when: </span>{item.use}</p>
+          <p className="mt-2 text-xs leading-relaxed text-accent-ink"><span className="font-semibold">Watch: </span>{item.risk}</p>
         </article>
       ))}
     </div>
@@ -951,11 +951,11 @@ export function Part3CapstoneBrief({ data }: { data: Part3Data }) {
   return (
     <div className="grid gap-4 lg:grid-cols-3">
       {items.map(item => (
-        <article key={item.title} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-          <h3 className="text-sm font-semibold text-slate-950">{item.title}</h3>
-          <p className="mt-3 text-sm leading-relaxed text-slate-800">{item.finding}</p>
-          <p className="mt-3 border-l-2 border-[#0f766e] pl-3 text-xs leading-relaxed text-slate-700">{item.action}</p>
-          <p className="mt-3 text-xs leading-relaxed text-amber-800">{item.caution}</p>
+        <article key={item.title} className="rounded-md border border-border bg-surface p-4">
+          <h3 className="text-sm font-semibold text-body">{item.title}</h3>
+          <p className="mt-3 text-sm leading-relaxed text-body">{item.finding}</p>
+          <p className="mt-3 border-l-2 border-[#0f766e] pl-3 text-xs leading-relaxed text-subtle">{item.action}</p>
+          <p className="mt-3 text-xs leading-relaxed text-accent-ink">{item.caution}</p>
         </article>
       ))}
     </div>
@@ -1002,14 +1002,14 @@ export function PanelFixedEffectsVisual() {
       title="How Store Fixed Effects Isolate Within-Store Price Sensitivity"
       subtitle={centered ? "Within-Store centered (Each store's demographic mean is subtracted, exposing clean negative slope)" : "Pooled raw comparisons (Confounded by neighborhood demographics, creating a false positive slope)"}
     >
-      <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
+      <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
         <div className="flex gap-2">
           <button
             onClick={() => setCentered(false)}
             className={`rounded px-3 py-1.5 text-xs font-semibold transition-all ${
               !centered
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-body text-surface '
+                : 'bg-code-bg text-subtle hover:bg-card-hover'
             }`}
           >
             1. Pooled Data (Naive)
@@ -1018,8 +1018,8 @@ export function PanelFixedEffectsVisual() {
             onClick={() => setCentered(true)}
             className={`rounded px-3 py-1.5 text-xs font-semibold transition-all ${
               centered
-                ? 'bg-[#0f766e] text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-pos text-surface '
+                : 'bg-code-bg text-subtle hover:bg-card-hover'
             }`}
           >
             2. Centered Data (Fixed Effects)
@@ -1027,10 +1027,10 @@ export function PanelFixedEffectsVisual() {
         </div>
         <div className="flex gap-4 text-xs font-medium">
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-blue-600" /> Store A (Suburban)
+            <span className="h-2.5 w-2.5 rounded-full bg-code-bg" /> Store A (Suburban)
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-purple-600" /> Store B (Urban)
+            <span className="h-2.5 w-2.5 rounded-full bg-code-bg" /> Store B (Urban)
           </span>
         </div>
       </div>
@@ -1043,29 +1043,29 @@ export function PanelFixedEffectsVisual() {
             {[1.2, 1.6, 2.0, 2.4].map(p => (
               <g key={`p-${p}`}>
                 <line x1={xPool(p)} x2={xPool(p)} y1={m.top} y2={H - m.bottom} stroke={palette.grid} strokeDasharray="3 3" />
-                <text x={xPool(p)} y={H - 12} textAnchor="middle" className="fill-slate-500 text-[10px]">${p.toFixed(2)}</text>
+                <text x={xPool(p)} y={H - 12} textAnchor="middle" className="fill-muted text-[10px]">${p.toFixed(2)}</text>
               </g>
             ))}
             {[6.0, 7.0, 8.0, 9.0].map(v => (
               <g key={`v-${v}`}>
                 <line x1={m.left} x2={W - m.right} y1={yPool(v)} y2={yPool(v)} stroke={palette.grid} strokeDasharray="3 3" />
-                <text x={m.left - 8} y={yPool(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{v.toFixed(0)}k</text>
+                <text x={m.left - 8} y={yPool(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{v.toFixed(0)}k</text>
               </g>
             ))}
             {/* Axes titles */}
-            <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-slate-700 text-[11px] font-bold">Latte Price ($)</text>
-            <text x={16} y={(m.top + H - m.bottom) / 2} textAnchor="middle" transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} className="fill-slate-700 text-[11px] font-bold">Latte Sales (Weekly Volume)</text>
+            <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-subtle text-[11px] font-bold">Latte Price ($)</text>
+            <text x={16} y={(m.top + H - m.bottom) / 2} textAnchor="middle" transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} className="fill-subtle text-[11px] font-bold">Latte Sales (Weekly Volume)</text>
 
             {/* Mean centers */}
             <circle cx={xPool(meanA.p)} cy={yPool(meanA.v)} r={6} fill="none" stroke="blue" strokeWidth={2} strokeDasharray="2 2" />
-            <text x={xPool(meanA.p) + 8} y={yPool(meanA.v) - 6} className="fill-blue-800 text-[10px] font-semibold">Store A Avg</text>
+            <text x={xPool(meanA.p) + 8} y={yPool(meanA.v) - 6} className="fill-subtle text-[10px] font-semibold">Store A Avg</text>
 
             <circle cx={xPool(meanB.p)} cy={yPool(meanB.v)} r={6} fill="none" stroke="purple" strokeWidth={2} strokeDasharray="2 2" />
-            <text x={xPool(meanB.p) + 8} y={yPool(meanB.v) + 12} className="fill-purple-800 text-[10px] font-semibold">Store B Avg</text>
+            <text x={xPool(meanB.p) + 8} y={yPool(meanB.v) + 12} className="fill-subtle text-[10px] font-semibold">Store B Avg</text>
 
             {/* Confounded Pooled Regression Line (Positive Slope) */}
             <line x1={xPool(1.1)} y1={yPool(5.4)} x2={xPool(2.7)} y2={yPool(8.8)} stroke="#64748b" strokeWidth={2.5} strokeDasharray="4 4" />
-            <text x={xPool(2.2)} y={yPool(7.8) - 15} transform={`rotate(-18 ${xPool(2.2)} ${yPool(7.8)})`} className="fill-slate-600 text-[11px] font-bold italic">Pooled OLS Slope (+2.88)</text>
+            <text x={xPool(2.2)} y={yPool(7.8) - 15} transform={`rotate(-18 ${xPool(2.2)} ${yPool(7.8)})`} className="fill-subtle text-[11px] font-bold italic">Pooled OLS Slope (+2.88)</text>
           </>
         ) : (
           <>
@@ -1073,18 +1073,18 @@ export function PanelFixedEffectsVisual() {
             {[-0.6, -0.3, 0, 0.3, 0.6].map(p => (
               <g key={`cp-${p}`}>
                 <line x1={xCent(p)} x2={xCent(p)} y1={m.top} y2={H - m.bottom} stroke={palette.grid} strokeDasharray="3 3" />
-                <text x={xCent(p)} y={H - 12} textAnchor="middle" className="fill-slate-500 text-[10px]">{p > 0 ? `+${p.toFixed(1)}` : p.toFixed(1)}</text>
+                <text x={xCent(p)} y={H - 12} textAnchor="middle" className="fill-muted text-[10px]">{p > 0 ? `+${p.toFixed(1)}` : p.toFixed(1)}</text>
               </g>
             ))}
             {[-0.8, -0.4, 0, 0.4, 0.8].map(v => (
               <g key={`cv-${v}`}>
                 <line x1={m.left} x2={W - m.right} y1={yCent(v)} y2={yCent(v)} stroke={palette.grid} strokeDasharray="3 3" />
-                <text x={m.left - 8} y={yCent(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{v > 0 ? `+${v.toFixed(1)}` : v.toFixed(1)}</text>
+                <text x={m.left - 8} y={yCent(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{v > 0 ? `+${v.toFixed(1)}` : v.toFixed(1)}</text>
               </g>
             ))}
             {/* Axes titles */}
-            <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-slate-700 text-[11px] font-bold">Centered Price (Deviations from Store Mean)</text>
-            <text x={16} y={(m.top + H - m.bottom) / 2} textAnchor="middle" transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} className="fill-slate-700 text-[11px] font-bold">Centered Sales (Deviations from Store Mean)</text>
+            <text x={(m.left + W - m.right) / 2} y={H - 4} textAnchor="middle" className="fill-subtle text-[11px] font-bold">Centered Price (Deviations from Store Mean)</text>
+            <text x={16} y={(m.top + H - m.bottom) / 2} textAnchor="middle" transform={`rotate(-90 16 ${(m.top + H - m.bottom) / 2})`} className="fill-subtle text-[11px] font-bold">Centered Sales (Deviations from Store Mean)</text>
 
             {/* Zero axes */}
             <line x1={m.left} x2={W - m.right} y1={yCent(0)} y2={yCent(0)} stroke="#94a3b8" strokeWidth={1} />
@@ -1104,7 +1104,7 @@ export function PanelFixedEffectsVisual() {
             <g key={`A-${i}`} className="transition-all duration-700 ease-in-out">
               <circle cx={cx} cy={cy} r={6.5} fill="#2563eb" fillOpacity={0.85} stroke="#1d4ed8" strokeWidth={1.5} />
               {!centered && (
-                <text x={cx + 9} y={cy + 3} className="fill-blue-900 text-[8px]">W{i+1}</text>
+                <text x={cx + 9} y={cy + 3} className="fill-subtle text-[8px]">W{i+1}</text>
               )}
             </g>
           );
@@ -1118,14 +1118,14 @@ export function PanelFixedEffectsVisual() {
             <g key={`B-${i}`} className="transition-all duration-700 ease-in-out">
               <circle cx={cx} cy={cy} r={6.5} fill="#9333ea" fillOpacity={0.85} stroke="#7e22ce" strokeWidth={1.5} />
               {!centered && (
-                <text x={cx + 9} y={cy + 3} className="fill-purple-900 text-[8px]">W{i+1}</text>
+                <text x={cx + 9} y={cy + 3} className="fill-subtle text-[8px]">W{i+1}</text>
               )}
             </g>
           );
         })}
       </svg>
 
-      <div className="mt-4 rounded bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-600">
+      <div className="mt-4 rounded bg-code-bg p-3 text-[11px] leading-relaxed text-subtle">
         {!centered ? (
           <p>
             <strong>What to notice:</strong> Suburban Store A operates in a high-income area with high baseline demand ($V_A = 8.16k$) and has higher average pricing ($P_A = $2.30$). Urban Store B operates in a lower-income area with lower demand ($V_B = 5.86k$) and lower average prices ($P_B = $1.50$). If we naively pool them, the regression compares across stores, producing a false positive slope (+2.88) which suggests that raising prices increases demand.
@@ -1171,14 +1171,14 @@ export function DiDParallelTrendsVisual() {
           : "Difference-in-Differences (Subtracts the control group's trend to isolate the true causal app lift of +20)"
       }
     >
-      <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
+      <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
         <div className="flex gap-2">
           <button
             onClick={() => setView('naive_time')}
             className={`rounded px-3 py-1.5 text-xs font-semibold transition-all ${
               view === 'naive_time'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-body text-surface '
+                : 'bg-code-bg text-subtle hover:bg-card-hover'
             }`}
           >
             1. Naive Before/After
@@ -1187,8 +1187,8 @@ export function DiDParallelTrendsVisual() {
             onClick={() => setView('naive_space')}
             className={`rounded px-3 py-1.5 text-xs font-semibold transition-all ${
               view === 'naive_space'
-                ? 'bg-slate-900 text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-body text-surface '
+                : 'bg-code-bg text-subtle hover:bg-card-hover'
             }`}
           >
             2. Naive Treated vs. Control
@@ -1197,8 +1197,8 @@ export function DiDParallelTrendsVisual() {
             onClick={() => setView('did')}
             className={`rounded px-3 py-1.5 text-xs font-semibold transition-all ${
               view === 'did'
-                ? 'bg-[#0f766e] text-white shadow-sm'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-pos text-surface '
+                : 'bg-code-bg text-subtle hover:bg-card-hover'
             }`}
           >
             3. Difference-in-Differences
@@ -1209,7 +1209,7 @@ export function DiDParallelTrendsVisual() {
             <span className="h-2.5 w-2.5 rounded-full bg-[#0f766e]" /> Treated Stores (West)
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-slate-400" /> Control Stores (East)
+            <span className="h-2.5 w-2.5 rounded-full bg-card" /> Control Stores (East)
           </span>
         </div>
       </div>
@@ -1219,22 +1219,22 @@ export function DiDParallelTrendsVisual() {
         <line x1={xPre} x2={xPre} y1={40} y2={260} stroke="#cbd5e1" strokeWidth={2} />
         <line x1={xPost} x2={xPost} y1={40} y2={260} stroke="#cbd5e1" strokeWidth={2} />
 
-        <text x={xPre} y={278} textAnchor="middle" className="fill-slate-800 text-[11px] font-bold">PRE-TREATMENT (Months 1-3)</text>
-        <text x={xPost} y={278} textAnchor="middle" className="fill-slate-800 text-[11px] font-bold">POST-TREATMENT (Months 4-6)</text>
+        <text x={xPre} y={278} textAnchor="middle" className="fill-body text-[11px] font-bold">PRE-TREATMENT (Months 1-3)</text>
+        <text x={xPost} y={278} textAnchor="middle" className="fill-body text-[11px] font-bold">POST-TREATMENT (Months 4-6)</text>
 
         {/* Control Group Trend Line */}
         <line x1={xPre} y1={yControlPre} x2={xPost} y2={yControlPost} stroke="#94a3b8" strokeWidth={2.5} />
         <circle cx={xPre} cy={yControlPre} r={5} fill="#94a3b8" />
         <circle cx={xPost} cy={yControlPost} r={5} fill="#94a3b8" />
-        <text x={xPre - 12} y={yControlPre + 4} textAnchor="end" className="fill-slate-500 text-[10px] font-medium">90k</text>
-        <text x={xPost + 12} y={yControlPost + 4} className="fill-slate-500 text-[10px] font-medium">100k (Control)</text>
-        <text x={(xPre+xPost)/2} y={(yControlPre+yControlPost)/2 + 15} textAnchor="middle" className="fill-slate-500 text-[10px] font-semibold">General Shock (+10k)</text>
+        <text x={xPre - 12} y={yControlPre + 4} textAnchor="end" className="fill-muted text-[10px] font-medium">90k</text>
+        <text x={xPost + 12} y={yControlPost + 4} className="fill-muted text-[10px] font-medium">100k (Control)</text>
+        <text x={(xPre+xPost)/2} y={(yControlPre+yControlPost)/2 + 15} textAnchor="middle" className="fill-muted text-[10px] font-semibold">General Shock (+10k)</text>
 
         {/* Treated Group Trend Line (Before to Actual After) */}
         <line x1={xPre} y1={yTreatedPre} x2={xPost} y2={yTreatedPost} stroke="#0f766e" strokeWidth={3} />
         <circle cx={xPre} cy={yTreatedPre} r={6} fill="#0f766e" />
         <circle cx={xPost} cy={yTreatedPost} r={6} fill="#0f766e" />
-        <text x={xPre - 12} y={yTreatedPre + 4} textAnchor="end" className="fill-slate-900 text-[11px] font-bold">100k (Treated)</text>
+        <text x={xPre - 12} y={yTreatedPre + 4} textAnchor="end" className="fill-body text-[11px] font-bold">100k (Treated)</text>
         <text x={xPost + 12} y={yTreatedPost + 4} className="fill-[#0f766e] text-[11px] font-bold">130k (Actual)</text>
 
         {/* View 1: Naive Time Before/After */}
@@ -1243,8 +1243,8 @@ export function DiDParallelTrendsVisual() {
             {/* Draw a horizontal projection to show before-after difference */}
             <line x1={xPre} x2={xPost} y1={yTreatedPre} y2={yTreatedPre} stroke="#dc2626" strokeWidth={1.5} strokeDasharray="3 3" />
             <path d={`M ${xPost + 40} ${yTreatedPre} L ${xPost + 40} ${yTreatedPost}`} stroke="#dc2626" strokeWidth={2} markerEnd="url(#fwl-arrow)" />
-            <text x={xPost + 48} y={(yTreatedPre + yTreatedPost)/2 + 4} className="fill-red-600 text-[10px] font-bold">Naive Before/After Lift (+30k)</text>
-            <text x={(xPre+xPost)/2} y={yTreatedPre - 8} textAnchor="middle" className="fill-red-600 text-[9px] font-semibold">Assumes environment is static!</text>
+            <text x={xPost + 48} y={(yTreatedPre + yTreatedPost)/2 + 4} className="fill-neg text-[10px] font-bold">Naive Before/After Lift (+30k)</text>
+            <text x={(xPre+xPost)/2} y={yTreatedPre - 8} textAnchor="middle" className="fill-neg text-[9px] font-semibold">Assumes environment is static!</text>
           </>
         )}
 
@@ -1253,8 +1253,8 @@ export function DiDParallelTrendsVisual() {
           <>
             {/* Draw vertical line from Treated Post to Control Post */}
             <path d={`M ${xPost - 30} ${yControlPost} L ${xPost - 30} ${yTreatedPost}`} stroke="#dc2626" strokeWidth={2} markerEnd="url(#fwl-arrow)" />
-            <text x={xPost - 38} y={(yControlPost + yTreatedPost)/2 + 4} textAnchor="end" className="fill-red-600 text-[10px] font-bold">Naive Cross-Section (+30k)</text>
-            <text x={xPost - 38} y={(yControlPost + yTreatedPost)/2 + 16} textAnchor="end" className="fill-red-500 text-[8px] italic">Ignores baseline West Coast preference</text>
+            <text x={xPost - 38} y={(yControlPost + yTreatedPost)/2 + 4} textAnchor="end" className="fill-neg text-[10px] font-bold">Naive Cross-Section (+30k)</text>
+            <text x={xPost - 38} y={(yControlPost + yTreatedPost)/2 + 16} textAnchor="end" className="fill-neg text-[8px] italic">Ignores baseline West Coast preference</text>
           </>
         )}
 
@@ -1264,11 +1264,11 @@ export function DiDParallelTrendsVisual() {
             {/* Parallel trend projection */}
             <line x1={xPre} y1={yTreatedPre} x2={xPost} y2={yCounterfactual} stroke="#0f766e" strokeWidth={2} strokeDasharray="4 4" opacity={0.7} />
             <circle cx={xPost} cy={yCounterfactual} r={4.5} fill="#0f766e" fillOpacity={0.5} stroke="#0f766e" />
-            <text x={xPost + 12} y={yCounterfactual + 4} className="fill-slate-500 text-[10px] italic">110k (Counterfactual)</text>
+            <text x={xPost + 12} y={yCounterfactual + 4} className="fill-muted text-[10px] italic">110k (Counterfactual)</text>
 
             {/* Bracket showing general shock +10 */}
             <path d={`M ${xPost - 15} ${yTreatedPre} L ${xPost - 15} ${yCounterfactual}`} stroke="#94a3b8" strokeWidth={1.5} />
-            <text x={xPost - 22} y={(yTreatedPre + yCounterfactual)/2 + 4} textAnchor="end" className="fill-slate-500 text-[9px] font-semibold">General Trend (+10k)</text>
+            <text x={xPost - 22} y={(yTreatedPre + yCounterfactual)/2 + 4} textAnchor="end" className="fill-muted text-[9px] font-semibold">General Trend (+10k)</text>
 
             {/* Bracket showing DiD causal effect +20 */}
             <path d={`M ${xPost - 15} ${yCounterfactual} L ${xPost - 15} ${yTreatedPost}`} stroke="#0f766e" strokeWidth={2.5} />
@@ -1277,7 +1277,7 @@ export function DiDParallelTrendsVisual() {
         )}
       </svg>
 
-      <div className="mt-4 rounded bg-slate-50 p-3 text-[11px] leading-relaxed text-slate-600">
+      <div className="mt-4 rounded bg-code-bg p-3 text-[11px] leading-relaxed text-subtle">
         <p>
           <strong>The Math:</strong>{' '}
           {'$$\\text{DiD Effect} = (130\\text{k} - 100\\text{k}) - (100\\text{k} - 90\\text{k}) = 30\\text{k} - 10\\text{k} = 20\\text{k}$$'}

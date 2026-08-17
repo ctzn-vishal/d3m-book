@@ -63,10 +63,10 @@ function ChartShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-slate-50/70 p-4 shadow-sm">
+    <div className="rounded-md border border-border bg-code-bg/70 p-4">
       <div className="mb-3 flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
-        <h3 className="text-sm font-semibold text-slate-950">{title}</h3>
-        {note && <div className="text-xs leading-snug text-slate-500 md:max-w-sm md:text-right">{note}</div>}
+        <h3 className="text-sm font-semibold text-body">{title}</h3>
+        {note && <div className="text-xs leading-snug text-muted md:max-w-sm md:text-right">{note}</div>}
       </div>
       {children}
     </div>
@@ -75,12 +75,12 @@ function ChartShell({
 
 function MetricCard({ label, value, note, color = COLORS.ink }: { label: string; value: string; note: string; color?: string }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-3">
-      <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{label}</div>
-      <div className="mt-1 text-2xl font-semibold tabular-nums text-slate-950" style={{ color }}>
+    <div className="rounded-md border border-border bg-surface p-3">
+      <div className="text-[11px] font-semibold uppercase tracking-wide text-muted">{label}</div>
+      <div className="mt-1 text-2xl font-semibold tabular-nums text-body" style={{ color }}>
         {value}
       </div>
-      <div className="mt-1 text-xs leading-snug text-slate-500">{note}</div>
+      <div className="mt-1 text-xs leading-snug text-muted">{note}</div>
     </div>
   );
 }
@@ -95,7 +95,7 @@ function Segmented({
   onChange: (id: string) => void;
 }) {
   return (
-    <div className="inline-flex flex-wrap gap-1 rounded-md border border-slate-200 bg-white p-1">
+    <div className="inline-flex flex-wrap gap-1 rounded-md border border-border bg-surface p-1">
       {options.map((option) => (
         <button
           key={option.id}
@@ -103,7 +103,7 @@ function Segmented({
           onClick={() => onChange(option.id)}
           className={[
             'rounded px-2.5 py-1.5 text-xs font-semibold transition',
-            active === option.id ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-100',
+            active === option.id ? 'bg-body text-surface' : 'text-subtle hover:bg-code-bg',
           ].join(' ')}
         >
           {option.label}
@@ -134,22 +134,22 @@ function MetricComparisonRow({
 }) {
   const max = Math.max(left, right, 0.0001);
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-3">
-      <div className="mb-2 text-sm font-semibold text-slate-900">{label}</div>
+    <div className="rounded-md border border-border bg-surface p-3">
+      <div className="mb-2 text-sm font-semibold text-body">{label}</div>
       <div className="grid gap-2">
         <div className="grid grid-cols-[80px_1fr_64px] items-center gap-2 text-xs">
-          <span className="font-medium text-slate-600">{leftLabel}</span>
-          <div className="h-2 rounded bg-slate-100">
+          <span className="font-medium text-subtle">{leftLabel}</span>
+          <div className="h-2 rounded bg-code-bg">
             <div className="h-2 rounded" style={{ width: `${(left / max) * 100}%`, backgroundColor: colorLeft }} />
           </div>
-          <span className="text-right font-mono text-slate-700">{format(left)}</span>
+          <span className="text-right font-mono text-subtle">{format(left)}</span>
         </div>
         <div className="grid grid-cols-[80px_1fr_64px] items-center gap-2 text-xs">
-          <span className="font-medium text-slate-600">{rightLabel}</span>
-          <div className="h-2 rounded bg-slate-100">
+          <span className="font-medium text-subtle">{rightLabel}</span>
+          <div className="h-2 rounded bg-code-bg">
             <div className="h-2 rounded" style={{ width: `${(right / max) * 100}%`, backgroundColor: colorRight }} />
           </div>
-          <span className="text-right font-mono text-slate-700">{format(right)}</span>
+          <span className="text-right font-mono text-subtle">{format(right)}</span>
         </div>
       </div>
     </div>
@@ -169,7 +169,7 @@ export function TrumpSourceOverview({ data }: { data: AnyRecord }) {
   return (
     <ChartShell title="Device labels define two different communication streams" note={data.metadata.note}>
       <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-        <div className="h-[330px] min-w-0 rounded-md border border-slate-200 bg-white p-3">
+        <div className="h-[330px] min-w-0 rounded-md border border-border bg-surface p-3">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data.monthly} margin={{ top: 8, right: 8, bottom: 6, left: 0 }}>
               <CartesianGrid stroke={COLORS.grid} vertical={false} />
@@ -231,12 +231,12 @@ export function TrumpSignalExplorer({ data }: { data: AnyRecord }) {
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-2">
         {(['Android', 'iPhone'] as const).map((device) => (
-          <div key={device} className="rounded-md border border-slate-200 bg-white p-3">
-            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">{device}-label examples</div>
+          <div key={device} className="rounded-md border border-border bg-surface p-3">
+            <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{device}-label examples</div>
             <div className="space-y-2">
               {data.examples[device].map((row: AnyRecord) => (
-                <blockquote key={`${row.date}-${row.tweet}`} className="border-l-2 pl-3 text-xs leading-snug text-slate-700" style={{ borderColor: device === 'Android' ? COLORS.android : COLORS.iphone }}>
-                  <span className="mb-1 block font-mono text-[11px] text-slate-500">{row.date}</span>
+                <blockquote key={`${row.date}-${row.tweet}`} className="border-l-2 pl-3 text-xs leading-snug text-subtle" style={{ borderColor: device === 'Android' ? COLORS.android : COLORS.iphone }}>
+                  <span className="mb-1 block font-mono text-[11px] text-muted">{row.date}</span>
                   {row.tweet}
                 </blockquote>
               ))}
@@ -255,16 +255,16 @@ function ConfusionMatrix({ classifier }: { classifier: AnyRecord }) {
   const max = Math.max(...classifier.confusion.map((row: AnyRecord) => row.count));
 
   return (
-    <div className="overflow-hidden rounded-md border border-slate-200 bg-white">
-      <div className="grid grid-cols-[100px_repeat(2,1fr)] border-b border-slate-200 bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+    <div className="overflow-hidden rounded-md border border-border bg-surface">
+      <div className="grid grid-cols-[100px_repeat(2,1fr)] border-b border-border bg-code-bg text-xs font-semibold uppercase tracking-wide text-muted">
         <div className="px-3 py-2">Actual</div>
         {labels.map((label) => (
           <div key={label} className="px-3 py-2 text-center">Predicted {label}</div>
         ))}
       </div>
       {labels.map((actual) => (
-        <div key={actual} className="grid grid-cols-[100px_repeat(2,1fr)] border-b border-slate-100 last:border-0">
-          <div className="px-3 py-4 text-xs font-semibold text-slate-700">{actual}</div>
+        <div key={actual} className="grid grid-cols-[100px_repeat(2,1fr)] border-b border-border last:border-0">
+          <div className="px-3 py-4 text-xs font-semibold text-subtle">{actual}</div>
           {labels.map((predicted) => {
             const count = lookup.get(`${actual}-${predicted}`) ?? 0;
             const strength = count / max;
@@ -296,14 +296,14 @@ function TermLadder({ rows, device }: { rows: AnyRecord[]; device: 'Android' | '
     <div className="grid gap-2">
       {sorted.map((row) => (
         <div key={row.term} className="grid grid-cols-[120px_1fr_70px] items-center gap-2 text-xs">
-          <div className="truncate font-mono text-slate-700">{row.term}</div>
-          <div className="h-2 rounded bg-slate-100">
+          <div className="truncate font-mono text-subtle">{row.term}</div>
+          <div className="h-2 rounded bg-code-bg">
             <div
               className="h-2 rounded"
               style={{ width: `${((device === 'Android' ? row.androidRate : row.iphoneRate) / max) * 100}%`, backgroundColor: color }}
             />
           </div>
-          <div className="text-right font-mono text-slate-500">
+          <div className="text-right font-mono text-muted">
             {num((device === 'Android' ? row.androidRate : row.iphoneRate) * 100, 1)}/100
           </div>
         </div>
@@ -326,11 +326,11 @@ export function TrumpClassifierPanel({ data }: { data: AnyRecord }) {
         </div>
         <ConfusionMatrix classifier={classifier} />
       </div>
-      <div className="mt-4 rounded-md border border-slate-200 bg-white p-4">
+      <div className="mt-4 rounded-md border border-border bg-surface p-4">
         <div className="mb-3 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
-            <h4 className="text-sm font-semibold text-slate-950">Reader-facing cue terms</h4>
-            <p className="text-xs text-slate-500">Counts are shown as term hits per 100 campaign-window tweets in the selected source.</p>
+            <h4 className="text-sm font-semibold text-body">Reader-facing cue terms</h4>
+            <p className="text-xs text-muted">Counts are shown as term hits per 100 campaign-window tweets in the selected source.</p>
           </div>
           <Segmented
             active={device}
@@ -355,7 +355,7 @@ export function BeerAcquisitionOverview({ data }: { data: AnyRecord }) {
   return (
     <ChartShell title="The acquisition first shows up as a chatter spike, not a clean sentiment series" note={data.metadata.periodNote}>
       <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
-        <div className="h-[310px] rounded-md border border-slate-200 bg-white p-3">
+        <div className="h-[310px] rounded-md border border-border bg-surface p-3">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={data.periods} margin={{ top: 8, right: 8, bottom: 6, left: 0 }}>
               <CartesianGrid stroke={COLORS.grid} vertical={false} />
@@ -394,7 +394,7 @@ export function BeerAcquisitionTimeline({ data }: { data: AnyRecord }) {
       <div className="mb-4">
         <Segmented options={options} active={view} onChange={setView} />
       </div>
-      <div className="h-[360px] rounded-md border border-slate-200 bg-white p-3">
+      <div className="h-[360px] rounded-md border border-border bg-surface p-3">
         {view === 'volume' && (
           <ResponsiveContainer width="100%" height="100%">
             <ComposedChart data={data.daily} margin={{ top: 8, right: 16, bottom: 6, left: 0 }}>
@@ -448,11 +448,11 @@ function SourceMix({ rows, period }: { rows: AnyRecord[]; period: string }) {
     <div className="grid gap-2">
       {rows.map((row) => (
         <div key={row.sourceGroup} className="grid grid-cols-[150px_1fr_52px] items-center gap-2 text-xs">
-          <div className="truncate text-slate-700">{row.sourceGroup}</div>
-          <div className="h-2 rounded bg-slate-100">
-            <div className="h-2 rounded bg-slate-600" style={{ width: `${row[period] * 100}%` }} />
+          <div className="truncate text-subtle">{row.sourceGroup}</div>
+          <div className="h-2 rounded bg-code-bg">
+            <div className="h-2 rounded bg-card" style={{ width: `${row[period] * 100}%` }} />
           </div>
-          <div className="text-right font-mono text-slate-500">{pct(row[period], 0)}</div>
+          <div className="text-right font-mono text-muted">{pct(row[period], 0)}</div>
         </div>
       ))}
     </div>
@@ -466,14 +466,14 @@ function PeriodTerms({ rows, period }: { rows: AnyRecord[]; period: string }) {
     <div className="grid gap-2">
       {sorted.map((row) => (
         <div key={row.term} className="grid grid-cols-[110px_1fr_58px] items-center gap-2 text-xs">
-          <div className="truncate font-mono text-slate-700">{row.term}</div>
-          <div className="h-2 rounded bg-slate-100">
+          <div className="truncate font-mono text-subtle">{row.term}</div>
+          <div className="h-2 rounded bg-code-bg">
             <div
               className="h-2 rounded"
               style={{ width: `${(row[`${period}Rate`] / max) * 100}%`, backgroundColor: period === 'Acquisition' ? COLORS.acquisition : COLORS.positive }}
             />
           </div>
-          <div className="text-right font-mono text-slate-500">{num(row[`${period}Rate`] * 100, 1)}/100</div>
+          <div className="text-right font-mono text-muted">{num(row[`${period}Rate`] * 100, 1)}/100</div>
         </div>
       ))}
     </div>
@@ -501,20 +501,20 @@ export function BeerPeriodExplorer({ data }: { data: AnyRecord }) {
           <MetricCard label="URL share" value={pct(active.urlShare, 0)} note="High link share warns against reading volume as opinion." />
         </div>
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="rounded-md border border-slate-200 bg-white p-4">
-            <div className="mb-3 text-sm font-semibold text-slate-950">Cue terms in this period</div>
+          <div className="rounded-md border border-border bg-surface p-4">
+            <div className="mb-3 text-sm font-semibold text-body">Cue terms in this period</div>
             <PeriodTerms rows={data.periodCueTerms} period={period} />
           </div>
-          <div className="rounded-md border border-slate-200 bg-white p-4">
-            <div className="mb-3 text-sm font-semibold text-slate-950">Source mix</div>
+          <div className="rounded-md border border-border bg-surface p-4">
+            <div className="mb-3 text-sm font-semibold text-body">Source mix</div>
             <SourceMix rows={data.sourceGroups} period={period} />
           </div>
         </div>
       </div>
       <div className="mt-4 grid gap-3 md:grid-cols-3">
         {examples.map((row: AnyRecord) => (
-          <blockquote key={`${row.date}-${row.text}`} className="rounded-md border border-slate-200 bg-white p-3 text-xs leading-snug text-slate-700">
-            <span className="mb-1 block font-mono text-[11px] text-slate-500">{row.date} - {row.source}</span>
+          <blockquote key={`${row.date}-${row.text}`} className="rounded-md border border-border bg-surface p-3 text-xs leading-snug text-subtle">
+            <span className="mb-1 block font-mono text-[11px] text-muted">{row.date} - {row.source}</span>
             {row.text}
           </blockquote>
         ))}

@@ -120,7 +120,7 @@ export function SmallMultiples({
                   {label}
                 </div>
               )}
-              <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:shadow-none">
+              <div className="overflow-hidden rounded-md border border-border bg-surface dark:shadow-none">
                 {childWithProps}
               </div>
             </div>

@@ -237,10 +237,10 @@ function ChartFrame({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-md border border-border bg-surface p-4">
       <div className="mb-3">
-        <h3 className="text-sm font-semibold text-slate-950">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+        <h3 className="text-sm font-semibold text-body">{title}</h3>
+        {subtitle && <p className="mt-1 text-xs leading-snug text-muted">{subtitle}</p>}
       </div>
       {children}
     </div>
@@ -257,10 +257,10 @@ function Metric({
   detail: string;
 }) {
   return (
-    <div className="border-l border-white/15 pl-4">
-      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300">{label}</p>
-      <p className="mt-1 text-2xl font-semibold tabular-nums text-white">{value}</p>
-      <p className="mt-1 text-xs leading-snug text-slate-300">{detail}</p>
+    <div className="border-l border-surface/15 pl-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-border-strong">{label}</p>
+      <p className="mt-1 text-2xl font-semibold tabular-nums text-surface">{value}</p>
+      <p className="mt-1 text-xs leading-snug text-border-strong">{detail}</p>
     </div>
   );
 }
@@ -268,12 +268,12 @@ function Metric({
 export function RentHopCaseOverview({ data }: { data: RentHopCaseData }) {
   const best = data.modelMetrics.find(model => model.model === data.metadata.best_model) ?? data.modelMetrics[0];
   return (
-    <div className="rounded-md border border-slate-800 bg-slate-950 p-5 text-white shadow-sm">
+    <div className="rounded-md border border-border-strong bg-body p-5 text-surface">
       <div className="grid gap-6 lg:grid-cols-[1.2fr_2fr]">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Case evidence</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-border-strong">Case evidence</p>
           <h3 className="mt-2 text-2xl font-semibold leading-tight">A listing-level score for marketplace attention</h3>
-          <p className="mt-3 text-sm leading-relaxed text-slate-300">
+          <p className="mt-3 text-sm leading-relaxed text-border-strong">
             The unit is the apartment listing. The target is whether the listing was marked Hot. The action is a ranked queue for featuring,
             premium placement, or landlord coaching.
           </p>
@@ -358,23 +358,23 @@ export function RentHopSegmentMap({ data }: { data: RentHopCaseData }) {
               <g key={row.cluster}>
                 <circle cx={cx} cy={cy} r={9} fill={fill} stroke="#172033" strokeWidth={1.3} />
                 <line x1={cx + 8} x2={labelX - 4} y1={cy - 4} y2={labelY + 4} stroke="#64748b" strokeWidth={0.8} />
-                <text x={labelX} y={labelY} className="fill-slate-950 text-[10px] font-semibold">
+                <text x={labelX} y={labelY} className="fill-body text-[10px] font-semibold">
                   {row.segment.replace('Segment ', 'S')}
                 </text>
-                <text x={labelX} y={labelY + 12} className="fill-slate-600 text-[9px]">
+                <text x={labelX} y={labelY + 12} className="fill-subtle text-[9px]">
                   {pct(row.hot_rate, 0)} Hot
                 </text>
               </g>
             );
           })}
-          <text x={margin.left} y={H - 8} className="fill-slate-500 text-[10px]">
+          <text x={margin.left} y={H - 8} className="fill-muted text-[10px]">
             Longitude mapped left-right; latitude mapped bottom-top. Segment labels are approximate, derived from cluster centroids.
           </text>
         </svg>
-        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle">
           <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#c87c2a]" /> Hot listing</span>
           <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full bg-[#1f3a5f] opacity-60" /> Not Hot listing</span>
-          <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full border border-slate-900 bg-[#fed7aa]" /> Segment center</span>
+          <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-full border border-border-strong bg-[#fed7aa]" /> Segment center</span>
         </div>
       </ChartFrame>
       <ChartFrame
@@ -386,12 +386,12 @@ export function RentHopSegmentMap({ data }: { data: RentHopCaseData }) {
             <div key={row.cluster}>
               <div className="flex items-start justify-between gap-3 text-xs">
                 <div>
-                  <p className="font-semibold text-slate-900">{row.segment}: {row.label}</p>
-                  <p className="text-slate-500">{row.listings.toLocaleString()} listings, median {fmtMoney.format(row.median_price)}</p>
+                  <p className="font-semibold text-body">{row.segment}: {row.label}</p>
+                  <p className="text-muted">{row.listings.toLocaleString()} listings, median {fmtMoney.format(row.median_price)}</p>
                 </div>
-                <span className="tabular-nums font-semibold text-slate-900">{pct(row.hot_rate, 1)}</span>
+                <span className="tabular-nums font-semibold text-body">{pct(row.hot_rate, 1)}</span>
               </div>
-              <div className="mt-1 h-2 rounded-full bg-slate-100">
+              <div className="mt-1 h-2 rounded-full bg-code-bg">
                 <div
                   className="h-2 rounded-full"
                   style={{
@@ -422,7 +422,7 @@ function AmenityDivergingChart({ rows, baseline }: { rows: AmenitySignal[]; base
       {[-10, -5, 0, 5, 10].filter(t => Math.abs(t) <= bound).map(t => (
         <g key={t}>
           <line x1={x(t)} x2={x(t)} y1={margin.top} y2={H - margin.bottom} stroke={t === 0 ? '#94a3b8' : '#e2e8f0'} />
-          <text x={x(t)} y={H - 7} textAnchor="middle" className="fill-slate-500 text-[10px]">{t > 0 ? `+${t}` : t}</text>
+          <text x={x(t)} y={H - 7} textAnchor="middle" className="fill-muted text-[10px]">{t > 0 ? `+${t}` : t}</text>
         </g>
       ))}
       {rows.map((row, index) => {
@@ -432,7 +432,7 @@ function AmenityDivergingChart({ rows, baseline }: { rows: AmenitySignal[]; base
         const positive = row.lift_pp >= 0;
         return (
           <g key={row.amenity}>
-            <text x={margin.left - 10} y={y + 4} textAnchor="end" className="fill-slate-700 text-[11px]">{row.amenity}</text>
+            <text x={margin.left - 10} y={y + 4} textAnchor="end" className="fill-subtle text-[11px]">{row.amenity}</text>
             <rect
               x={start}
               y={y - 8}
@@ -442,13 +442,13 @@ function AmenityDivergingChart({ rows, baseline }: { rows: AmenitySignal[]; base
               fill={positive ? COLORS.orange : COLORS.blue}
               opacity={0.86}
             />
-            <text x={positive ? start + width + 6 : start - 6} y={y + 4} textAnchor={positive ? 'start' : 'end'} className="fill-slate-600 text-[10px] tabular-nums">
-              {row.lift_pp > 0 ? '+' : ''}{row.lift_pp.toFixed(1)} pp
+            <text x={positive ? start + width + 6 : start - 6} y={y + 4} textAnchor={positive ? 'start' : 'end'} className="fill-subtle text-[10px] tabular-nums">
+              {row.lift_pp > 0 ?' +' : ''}{row.lift_pp.toFixed(1)} pp
             </text>
           </g>
         );
       })}
-      <text x={(margin.left + W - margin.right) / 2} y={H - 1} textAnchor="middle" className="fill-slate-500 text-[10px]">
+      <text x={(margin.left + W - margin.right) / 2} y={H - 1} textAnchor="middle" className="fill-muted text-[10px]">
         Difference from {pct(baseline, 1)} overall Hot rate
       </text>
     </svg>
@@ -467,11 +467,11 @@ function PriceBandChart({ rows, baseline }: { rows: PriceBand[]; baseline: numbe
       {[0, 0.25, 0.5, 0.75].map(t => (
         <g key={t}>
           <line x1={margin.left} x2={W - margin.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={margin.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{pct(t)}</text>
+          <text x={margin.left - 8} y={y(t) + 4} textAnchor="end" className="fill-muted text-[10px]">{pct(t)}</text>
         </g>
       ))}
       <line x1={margin.left} x2={W - margin.right} y1={y(baseline)} y2={y(baseline)} stroke={COLORS.slate} strokeDasharray="4 4" />
-      <text x={W - margin.right - 4} y={y(baseline) - 6} textAnchor="end" className="fill-slate-500 text-[10px]">overall</text>
+      <text x={W - margin.right - 4} y={y(baseline) - 6} textAnchor="end" className="fill-muted text-[10px]">overall</text>
       {rows.map((row, index) => {
         const x0 = x(index) + 6;
         return (
@@ -484,11 +484,11 @@ function PriceBandChart({ rows, baseline }: { rows: PriceBand[]; baseline: numbe
               rx={4}
               fill={hotRateColor(row.hot_rate)}
             />
-            <text x={x0 + barWidth / 2} y={y(row.hot_rate) - 6} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">
+            <text x={x0 + barWidth / 2} y={y(row.hot_rate) - 6} textAnchor="middle" className="fill-subtle text-[10px] font-semibold">
               {pct(row.hot_rate)}
             </text>
-            <text x={x0 + barWidth / 2} y={H - 22} textAnchor="middle" className="fill-slate-600 text-[10px]">{row.price_band}</text>
-            <text x={x0 + barWidth / 2} y={H - 8} textAnchor="middle" className="fill-slate-400 text-[9px]">{fmtCompact.format(row.listings)}</text>
+            <text x={x0 + barWidth / 2} y={H - 22} textAnchor="middle" className="fill-subtle text-[10px]">{row.price_band}</text>
+            <text x={x0 + barWidth / 2} y={H - 8} textAnchor="middle" className="fill-muted text-[9px]">{fmtCompact.format(row.listings)}</text>
           </g>
         );
       })}
@@ -526,22 +526,22 @@ function ModelBars({ rows }: { rows: ModelMetric[] }) {
       {[0.5, 0.6, 0.7, 0.8].map(t => (
         <g key={t}>
           <line x1={x(t)} x2={x(t)} y1={margin.top} y2={H - margin.bottom} stroke="#e2e8f0" />
-          <text x={x(t)} y={H - 8} textAnchor="middle" className="fill-slate-500 text-[10px]">{t.toFixed(1)}</text>
+          <text x={x(t)} y={H - 8} textAnchor="middle" className="fill-muted text-[10px]">{t.toFixed(1)}</text>
         </g>
       ))}
       {rows.map((row, index) => {
         const y0 = margin.top + index * rowGap + 15;
         return (
           <g key={row.model}>
-            <text x={margin.left - 10} y={y0 + 15} textAnchor="end" className="fill-slate-700 text-[11px] font-semibold">{row.model}</text>
+            <text x={margin.left - 10} y={y0 + 15} textAnchor="end" className="fill-subtle text-[11px] font-semibold">{row.model}</text>
             <rect x={x(0.5)} y={y0} width={x(row.auc) - x(0.5)} height={13} rx={3} fill={MODEL_COLORS[row.model] ?? COLORS.blue} />
             <rect x={x(0.5)} y={y0 + 18} width={x(row.average_precision) - x(0.5)} height={13} rx={3} fill={MODEL_COLORS[row.model] ?? COLORS.blue} opacity={0.45} />
-            <text x={x(row.auc) + 5} y={y0 + 10} className="fill-slate-600 text-[10px] tabular-nums">AUC {row.auc.toFixed(3)}</text>
-            <text x={x(row.average_precision) + 5} y={y0 + 28} className="fill-slate-500 text-[10px] tabular-nums">AP {row.average_precision.toFixed(3)}</text>
+            <text x={x(row.auc) + 5} y={y0 + 10} className="fill-subtle text-[10px] tabular-nums">AUC {row.auc.toFixed(3)}</text>
+            <text x={x(row.average_precision) + 5} y={y0 + 28} className="fill-muted text-[10px] tabular-nums">AP {row.average_precision.toFixed(3)}</text>
           </g>
         );
       })}
-      <text x={(margin.left + W - margin.right) / 2} y={H - 1} textAnchor="middle" className="fill-slate-500 text-[10px]">
+      <text x={(margin.left + W - margin.right) / 2} y={H - 1} textAnchor="middle" className="fill-muted text-[10px]">
         Held-out ranking metrics
       </text>
     </svg>
@@ -560,8 +560,8 @@ function RocChart({ curves }: { curves: RocCurve[] }) {
         <g key={t}>
           <line x1={x(t)} x2={x(t)} y1={margin.top} y2={H - margin.bottom} stroke="#eef2f7" />
           <line x1={margin.left} x2={W - margin.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={x(t)} y={H - 20} textAnchor="middle" className="fill-slate-500 text-[9px]">{t.toFixed(2)}</text>
-          <text x={margin.left - 8} y={y(t) + 3} textAnchor="end" className="fill-slate-500 text-[9px]">{t.toFixed(2)}</text>
+          <text x={x(t)} y={H - 20} textAnchor="middle" className="fill-muted text-[9px]">{t.toFixed(2)}</text>
+          <text x={margin.left - 8} y={y(t) + 3} textAnchor="end" className="fill-muted text-[9px]">{t.toFixed(2)}</text>
         </g>
       ))}
       <line x1={x(0)} x2={x(1)} y1={y(0)} y2={y(1)} stroke="#94a3b8" strokeDasharray="4 4" />
@@ -577,8 +577,8 @@ function RocChart({ curves }: { curves: RocCurve[] }) {
           />
         );
       })}
-      <text x={(margin.left + W - margin.right) / 2} y={H - 2} textAnchor="middle" className="fill-slate-500 text-[10px]">False positive rate</text>
-      <text x={14} y={(margin.top + H - margin.bottom) / 2} transform={`rotate(-90 14 ${(margin.top + H - margin.bottom) / 2})`} textAnchor="middle" className="fill-slate-500 text-[10px]">True positive rate</text>
+      <text x={(margin.left + W - margin.right) / 2} y={H - 2} textAnchor="middle" className="fill-muted text-[10px]">False positive rate</text>
+      <text x={14} y={(margin.top + H - margin.bottom) / 2} transform={`rotate(-90 14 ${(margin.top + H - margin.bottom) / 2})`} textAnchor="middle" className="fill-muted text-[10px]">True positive rate</text>
     </svg>
   );
 }
@@ -599,11 +599,11 @@ function ScoreDecileChart({ rows, baseline }: { rows: ScoreDecile[]; baseline: n
       {[0, 0.25, 0.5, 0.75].map(t => (
         <g key={t}>
           <line x1={margin.left} x2={W - margin.right} y1={y(t)} y2={y(t)} stroke="#e2e8f0" />
-          <text x={margin.left - 8} y={y(t) + 4} textAnchor="end" className="fill-slate-500 text-[10px]">{pct(t)}</text>
+          <text x={margin.left - 8} y={y(t) + 4} textAnchor="end" className="fill-muted text-[10px]">{pct(t)}</text>
         </g>
       ))}
       <line x1={margin.left} x2={W - margin.right} y1={y(baseline)} y2={y(baseline)} stroke={COLORS.slate} strokeDasharray="4 4" />
-      <text x={W - margin.right + 8} y={y(baseline) + 3} className="fill-slate-500 text-[10px]">base</text>
+      <text x={W - margin.right + 8} y={y(baseline) + 3} className="fill-muted text-[10px]">base</text>
       {rows.map((row, index) => {
         const x0 = x(index) + 5;
         return (
@@ -616,10 +616,10 @@ function ScoreDecileChart({ rows, baseline }: { rows: ScoreDecile[]; baseline: n
               rx={4}
               fill={hotRateColor(row.hot_rate)}
             />
-            <text x={x0 + barWidth / 2} y={y(row.hot_rate) - 6} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">
+            <text x={x0 + barWidth / 2} y={y(row.hot_rate) - 6} textAnchor="middle" className="fill-subtle text-[10px] font-semibold">
               {pct(row.hot_rate)}
             </text>
-            <text x={x0 + barWidth / 2} y={H - 20} textAnchor="middle" className="fill-slate-600 text-[10px]">
+            <text x={x0 + barWidth / 2} y={H - 20} textAnchor="middle" className="fill-subtle text-[10px]">
               {row.rank === 1 ? 'Top 10' : `${row.rank}0s`}
             </text>
           </g>
@@ -630,7 +630,7 @@ function ScoreDecileChart({ rows, baseline }: { rows: ScoreDecile[]; baseline: n
         <circle key={index} cx={point.x} cy={point.y} r={3.5} fill={COLORS.navy} />
       ))}
       <text x={W - margin.right + 8} y={capturePoints[2].y + 4} className="fill-[#1f3a5f] text-[10px]">cumulative capture</text>
-      <text x={(margin.left + W - margin.right) / 2} y={H - 3} textAnchor="middle" className="fill-slate-500 text-[10px]">Score deciles, highest probability at left</text>
+      <text x={(margin.left + W - margin.right) / 2} y={H - 3} textAnchor="middle" className="fill-muted text-[10px]">Score deciles, highest probability at left</text>
     </svg>
   );
 }
@@ -644,7 +644,7 @@ export function RentHopModelComparison({ data }: { data: RentHopCaseData }) {
           subtitle="Feature engineering carries much of the lift; algorithm choice adds a narrower gain."
         >
           <ModelBars rows={data.modelMetrics} />
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-subtle">
             {data.modelMetrics.map(row => (
               <span key={row.model} className="inline-flex items-center gap-1.5">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: MODEL_COLORS[row.model] }} />
@@ -683,20 +683,20 @@ function FeatureImportanceBars({
       <div className="space-y-2">
         {rows.map(row => (
           <div key={row.feature} className="grid grid-cols-[145px_minmax(0,1fr)_48px] items-center gap-2 text-xs">
-            <span className="truncate text-slate-700">{row.feature}</span>
+            <span className="truncate text-subtle">{row.feature}</span>
             <span className="h-3.5 rounded-sm" style={{ width: `${(row.importance / max) * 100}%`, background: FAMILY_COLORS[row.family] ?? COLORS.slate }} />
-            <span className="text-right tabular-nums text-slate-500">{(row.importance * 100).toFixed(1)}%</span>
+            <span className="text-right tabular-nums text-muted">{(row.importance * 100).toFixed(1)}%</span>
           </div>
         ))}
       </div>
       <div className="space-y-2">
         {familyRows.map(row => (
-          <div key={row.family} className="rounded-md border border-slate-200 bg-slate-50 px-3 py-2">
+          <div key={row.family} className="rounded-md border border-border bg-code-bg px-3 py-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="font-semibold text-slate-800">{row.family}</span>
-              <span className="tabular-nums text-slate-600">{pct(row.importance, 1)}</span>
+              <span className="font-semibold text-body">{row.family}</span>
+              <span className="tabular-nums text-subtle">{pct(row.importance, 1)}</span>
             </div>
-            <div className="mt-1 h-1.5 rounded-full bg-white">
+            <div className="mt-1 h-1.5 rounded-full bg-surface">
               <div className="h-1.5 rounded-full" style={{ width: `${row.importance * 100}%`, background: FAMILY_COLORS[row.family] ?? COLORS.slate }} />
             </div>
           </div>
@@ -716,19 +716,19 @@ export function RentHopActionQueue({ data }: { data: RentHopCaseData }) {
         >
           <div className="grid grid-cols-3 gap-3">
             <div>
-              <p className="text-2xl font-semibold tabular-nums text-slate-950">{pct(data.top50Summary.actual_hot_rate, 0)}</p>
-              <p className="text-xs text-slate-500">actually Hot</p>
+              <p className="text-2xl font-semibold tabular-nums text-body">{pct(data.top50Summary.actual_hot_rate, 0)}</p>
+              <p className="text-xs text-muted">actually Hot</p>
             </div>
             <div>
-              <p className="text-2xl font-semibold tabular-nums text-slate-950">{fmtMoney.format(data.top50Summary.median_price)}</p>
-              <p className="text-xs text-slate-500">median rent</p>
+              <p className="text-2xl font-semibold tabular-nums text-body">{fmtMoney.format(data.top50Summary.median_price)}</p>
+              <p className="text-xs text-muted">median rent</p>
             </div>
             <div>
-              <p className="text-2xl font-semibold tabular-nums text-slate-950">{score(data.top50Summary.mean_score)}</p>
-              <p className="text-xs text-slate-500">mean score</p>
+              <p className="text-2xl font-semibold tabular-nums text-body">{score(data.top50Summary.mean_score)}</p>
+              <p className="text-xs text-muted">mean score</p>
             </div>
           </div>
-          <p className="mt-4 border-l-2 border-[#c87c2a] pl-3 text-sm leading-relaxed text-slate-700">
+          <p className="mt-4 border-l-2 border-[#c87c2a] pl-3 text-sm leading-relaxed text-subtle">
             The top 50 are not luxury trophy listings. They are mostly lower-rent, one- and two-bedroom listings in high-rate value segments.
           </p>
         </ChartFrame>
@@ -740,10 +740,10 @@ export function RentHopActionQueue({ data }: { data: RentHopCaseData }) {
             {data.top50SegmentMix.slice(0, 6).map(row => (
               <div key={row.segment}>
                 <div className="flex items-center justify-between gap-3 text-xs">
-                  <span className="font-semibold text-slate-800">{row.segment}: {row.label}</span>
-                  <span className="tabular-nums text-slate-600">{row.listings} listings</span>
+                  <span className="font-semibold text-body">{row.segment}: {row.label}</span>
+                  <span className="tabular-nums text-subtle">{row.listings} listings</span>
                 </div>
-                <div className="mt-1 h-2 rounded-full bg-slate-100">
+                <div className="mt-1 h-2 rounded-full bg-code-bg">
                   <div
                     className="h-2 rounded-full bg-[#1f3a5f]"
                     style={{ width: `${(row.listings / data.top50Summary.listings) * 100}%` }}
@@ -754,12 +754,12 @@ export function RentHopActionQueue({ data }: { data: RentHopCaseData }) {
           </div>
         </ChartFrame>
       </div>
-      <div className="overflow-x-auto rounded-md border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-x-auto rounded-md border border-border bg-surface">
         <table className="w-full min-w-[860px] border-collapse text-sm tabular-nums">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+            <tr className="border-b border-border bg-code-bg">
               {['Rank', 'Listing', 'Segment', 'Rent', 'Beds', 'Baths', 'Score', 'Actual'].map(header => (
-                <th key={header} className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+                <th key={header} className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-subtle">
                   {header}
                 </th>
               ))}
@@ -767,21 +767,21 @@ export function RentHopActionQueue({ data }: { data: RentHopCaseData }) {
           </thead>
           <tbody>
             {data.topListings.map(row => (
-              <tr key={row.id} className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50/80">
-                <td className="px-3 py-2.5 font-semibold text-slate-900">{row.rank}</td>
-                <td className="max-w-[260px] px-3 py-2.5 text-slate-700">
+              <tr key={row.id} className="border-b border-border last:border-b-0 hover:bg-code-bg/80">
+                <td className="px-3 py-2.5 font-semibold text-body">{row.rank}</td>
+                <td className="max-w-[260px] px-3 py-2.5 text-subtle">
                   <span className="line-clamp-2">{row.street_address}</span>
                 </td>
-                <td className="px-3 py-2.5 text-slate-700">
+                <td className="px-3 py-2.5 text-subtle">
                   <span className="font-semibold">{row.segment}</span>
-                  <span className="block text-xs text-slate-500">{row.segment_label}</span>
+                  <span className="block text-xs text-muted">{row.segment_label}</span>
                 </td>
-                <td className="px-3 py-2.5 text-slate-700">{fmtMoney.format(row.price)}</td>
-                <td className="px-3 py-2.5 text-slate-700">{row.bedrooms}</td>
-                <td className="px-3 py-2.5 text-slate-700">{row.bathrooms}</td>
-                <td className="px-3 py-2.5 font-semibold text-slate-900">{score(row.score)}</td>
+                <td className="px-3 py-2.5 text-subtle">{fmtMoney.format(row.price)}</td>
+                <td className="px-3 py-2.5 text-subtle">{row.bedrooms}</td>
+                <td className="px-3 py-2.5 text-subtle">{row.bathrooms}</td>
+                <td className="px-3 py-2.5 font-semibold text-body">{score(row.score)}</td>
                 <td className="px-3 py-2.5">
-                  <span className={row['Hot Apartments'] === 'Hot' ? 'font-semibold text-[#0f766e]' : 'font-semibold text-slate-500'}>
+                  <span className={row['Hot Apartments'] === 'Hot' ? 'font-semibold text-[#0f766e]' : 'font-semibold text-muted'}>
                     {row['Hot Apartments']}
                   </span>
                 </td>

@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { DiagramFrame, LEGACY_C, T } from '@/components/Book/diagram';
+
 type Segment = {
   id: string;
   label: string;
@@ -117,17 +119,15 @@ type LotteryCaseData = {
   };
 };
 
+/**
+ * Was twenty-one hardcoded light-mode hexes. Now the same names,
+ * resolved through the theme — see components/Book/diagram/legacy.ts for
+ * how the ten hues collapse onto ink, accent, pos, and neg.
+ */
 const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  panel: '#f8fafc',
-  blue: '#4E79A7',
-  teal: '#2A9D8F',
-  red: '#C85B47',
-  brown: '#8B6F47',
-  amber: '#D98E28',
-  purple: '#7C3AED',
+  ...LEGACY_C,
+  panel: T.paperAlt,
+  brown: T.ruleStrong,
 };
 
 const fmtCompact = new Intl.NumberFormat('en-US', {
@@ -178,6 +178,11 @@ function scale(domain: [number, number], range: [number, number]) {
   return (value: number) => r0 + ((value - d0) / denom) * (r1 - r0);
 }
 
+/**
+ * Local card wrapper, now a thin pass-through to the shared frame so this
+ * file's figures stop being white slabs on a dark page. `DiagramFrame` owns
+ * the ground, the hairline, and the absence of a shadow.
+ */
 function Card({
   title,
   children,
@@ -188,15 +193,9 @@ function Card({
   footer?: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {title}
-        </p>
-      )}
+    <DiagramFrame eyebrow={title} note={footer}>
       {children}
-      {footer && <div className="mt-3 text-[11px] leading-snug text-slate-500">{footer}</div>}
-    </div>
+    </DiagramFrame>
   );
 }
 
@@ -215,7 +214,7 @@ function Bar({
 }) {
   const width = `${clamp(value / max, 0, 1) * 100}%`;
   return (
-    <span className="block h-2 rounded bg-slate-100">
+    <span className="block h-2 rounded bg-code-bg">
       <span className="block h-2 rounded" style={{ width, background: color }} />
     </span>
   );
@@ -223,12 +222,12 @@ function Bar({
 
 function MiniMetric({ label, value, note }: { label: string; value: string; note?: string }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-slate-50 p-3">
-      <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+    <div className="rounded-md border border-border bg-code-bg p-3">
+      <div className="text-[11px] font-semibold uppercase tracking-wide text-muted">
         {label}
       </div>
-      <div className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">{value}</div>
-      {note && <div className="mt-1 text-[11px] leading-snug text-slate-500">{note}</div>}
+      <div className="mt-1 text-2xl font-semibold tabular-nums text-body">{value}</div>
+      {note && <div className="mt-1 text-[11px] leading-snug text-muted">{note}</div>}
     </div>
   );
 }
@@ -265,15 +264,15 @@ export function LotteryCaseOverview({ data }: { data: LotteryCaseData }) {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-slate-500">
+          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-muted">
             Sales concentration
           </p>
           <div className="space-y-2">
             {data.salesConcentration.rows.map(row => (
               <div key={row.label} className="grid grid-cols-[145px_1fr_52px] items-center gap-2 text-xs">
-                <span className="text-slate-600">{row.label}</span>
+                <span className="text-subtle">{row.label}</span>
                 <Bar value={row.salesShare} max={0.75} color={C.blue} />
-                <span className="text-right font-semibold tabular-nums text-slate-800">
+                <span className="text-right font-semibold tabular-nums text-body">
                   {pct(row.salesShare, 1)}
                 </span>
               </div>
@@ -281,19 +280,19 @@ export function LotteryCaseOverview({ data }: { data: LotteryCaseData }) {
           </div>
         </div>
         <div>
-          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-slate-500">
+          <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-muted">
             Region share of volume
           </p>
           <div className="space-y-2">
             {data.salesConcentration.regionSalesShare.slice(0, 5).map((row, i) => (
               <div key={row.label} className="grid grid-cols-[145px_1fr_52px] items-center gap-2 text-xs">
-                <span className="truncate text-slate-600">{row.label}</span>
+                <span className="truncate text-subtle">{row.label}</span>
                 <Bar
                   value={row.share}
                   max={0.45}
                   color={[C.blue, C.teal, C.amber, C.brown, C.red][i] ?? C.muted}
                 />
-                <span className="text-right font-semibold tabular-nums text-slate-800">
+                <span className="text-right font-semibold tabular-nums text-body">
                   {pct(row.share, 1)}
                 </span>
               </div>
@@ -367,7 +366,7 @@ export function LotteryPcaMap({ data }: { data: LotteryCaseData }) {
               />
             );
           })}
-          <text x={m.left + innerW / 2} y={H - 10} textAnchor="middle" className="fill-slate-600 text-[12px]">
+          <text x={m.left + innerW / 2} y={H - 10} textAnchor="middle" className="fill-subtle text-[12px]">
             PC1: portfolio breadth and daily routine →
           </text>
           <text
@@ -375,7 +374,7 @@ export function LotteryPcaMap({ data }: { data: LotteryCaseData }) {
             y={m.top + innerH / 2}
             transform={`rotate(-90 16 ${m.top + innerH / 2})`}
             textAnchor="middle"
-            className="fill-slate-600 text-[12px]"
+            className="fill-subtle text-[12px]"
           >
             PC2: checkout scratch retail →
           </text>
@@ -386,30 +385,30 @@ export function LotteryPcaMap({ data }: { data: LotteryCaseData }) {
             {data.segments.map(segment => (
               <div key={segment.id} className="flex items-center gap-2 text-xs">
                 <span className="h-2.5 w-2.5 rounded-sm" style={{ background: segment.color }} />
-                <span className="font-medium text-slate-800">{segment.shortLabel}</span>
-                <span className="ml-auto tabular-nums text-slate-500">{segment.zips}</span>
+                <span className="font-medium text-body">{segment.shortLabel}</span>
+                <span className="ml-auto tabular-nums text-muted">{segment.zips}</span>
               </div>
             ))}
           </div>
           {[pc1Load, pc2Load].map(load => (
-            <div key={load.component} className="rounded-md border border-slate-200 bg-slate-50 p-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+            <div key={load.component} className="rounded-md border border-border bg-code-bg p-3">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
                 {load.component} loadings
               </p>
-              <p className="mt-1 text-[12px] font-medium leading-snug text-slate-800">{load.name}</p>
+              <p className="mt-1 text-[12px] font-medium leading-snug text-body">{load.name}</p>
               <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] leading-tight">
                 <div>
-                  <p className="mb-1 font-semibold text-slate-500">Positive</p>
+                  <p className="mb-1 font-semibold text-muted">Positive</p>
                   {load.positive.slice(0, 4).map(item => (
-                    <p key={item.label} className="truncate text-slate-700">
+                    <p key={item.label} className="truncate text-subtle">
                       {item.label}
                     </p>
                   ))}
                 </div>
                 <div>
-                  <p className="mb-1 font-semibold text-slate-500">Negative</p>
+                  <p className="mb-1 font-semibold text-muted">Negative</p>
                   {load.negative.slice(0, 4).map(item => (
-                    <p key={item.label} className="truncate text-slate-700">
+                    <p key={item.label} className="truncate text-subtle">
                       {item.label}
                     </p>
                   ))}
@@ -430,17 +429,17 @@ export function LotterySegmentProfiles({ data }: { data: LotteryCaseData }) {
     <Card title="Four behavioral segments">
       <div className="grid gap-3 md:grid-cols-2">
         {data.segments.map(segment => (
-          <div key={segment.id} className="rounded-md border border-slate-200 p-3">
+          <div key={segment.id} className="rounded-md border border-border p-3">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
                   <span className="h-3 w-3 rounded-sm" style={{ background: segment.color }} />
-                  <h3 className="text-sm font-semibold leading-tight text-slate-900">{segment.label}</h3>
+                  <h3 className="text-sm font-semibold leading-tight text-body">{segment.label}</h3>
                 </div>
-                <p className="mt-1 text-[11px] leading-snug text-slate-500">{segment.description}</p>
+                <p className="mt-1 text-[11px] leading-snug text-muted">{segment.description}</p>
               </div>
-              <div className="text-right text-xs tabular-nums text-slate-500">
-                <div className="font-semibold text-slate-800">{segment.zips}</div>
+              <div className="text-right text-xs tabular-nums text-muted">
+                <div className="font-semibold text-body">{segment.zips}</div>
                 <div>{pct(segment.share, 1)}</div>
               </div>
             </div>
@@ -456,8 +455,8 @@ export function LotterySegmentProfiles({ data }: { data: LotteryCaseData }) {
               ].map(([label, value, max]) => (
                 <div key={String(label)}>
                   <div className="mb-0.5 flex items-center justify-between gap-2">
-                    <span className="text-slate-500">{label}</span>
-                    <span className="font-semibold tabular-nums text-slate-800">
+                    <span className="text-muted">{label}</span>
+                    <span className="font-semibold tabular-nums text-body">
                       {String(label) === 'Habit' || String(label) === 'Sales/resident'
                         ? num(Number(value), 1)
                         : pct(Number(value), 0)}
@@ -467,18 +466,18 @@ export function LotterySegmentProfiles({ data }: { data: LotteryCaseData }) {
                 </div>
               ))}
             </div>
-            <div className="mt-3 grid grid-cols-3 gap-2 rounded bg-slate-50 p-2 text-[11px]">
+            <div className="mt-3 grid grid-cols-3 gap-2 rounded bg-code-bg p-2 text-[11px]">
               <div>
-                <p className="text-slate-500">Median income</p>
-                <p className="font-semibold text-slate-800">{money(segment.medianIncome)}</p>
+                <p className="text-muted">Median income</p>
+                <p className="font-semibold text-body">{money(segment.medianIncome)}</p>
               </div>
               <div>
-                <p className="text-slate-500">Hispanic</p>
-                <p className="font-semibold text-slate-800">{pct(segment.hispanicShare, 1)}</p>
+                <p className="text-muted">Hispanic</p>
+                <p className="font-semibold text-body">{pct(segment.hispanicShare, 1)}</p>
               </div>
               <div>
-                <p className="text-slate-500">Black</p>
-                <p className="font-semibold text-slate-800">{pct(segment.blackShare, 1)}</p>
+                <p className="text-muted">Black</p>
+                <p className="font-semibold text-body">{pct(segment.blackShare, 1)}</p>
               </div>
             </div>
           </div>
@@ -502,13 +501,13 @@ function GroupBars({
   const max = Math.max(...rows.map(row => Number(row[metric] ?? 0)));
   return (
     <div>
-      <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-slate-500">{title}</p>
+      <p className="mb-2 text-[12px] font-semibold uppercase tracking-wide text-muted">{title}</p>
       <div className="space-y-2">
         {rows.map(row => (
           <div key={row.label} className="grid grid-cols-[150px_1fr_58px] items-center gap-2 text-xs">
-            <span className="truncate text-slate-600">{row.label}</span>
+            <span className="truncate text-subtle">{row.label}</span>
             <Bar value={Number(row[metric] ?? 0)} max={max} color={color} />
-            <span className="text-right font-semibold tabular-nums text-slate-800">
+            <span className="text-right font-semibold tabular-nums text-body">
               {metric === 'habitIndex' || metric === 'salesPerCapita'
                 ? num(Number(row[metric]), 1)
                 : pct(Number(row[metric]), 1)}
@@ -582,26 +581,26 @@ export function LotteryInteractionGrid({ data }: { data: LotteryCaseData }) {
           <div className="grid grid-cols-[145px_repeat(3,1fr)] gap-2">
             <div />
             {cols.map(col => (
-              <div key={col} className="text-center text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+              <div key={col} className="text-center text-[11px] font-semibold uppercase tracking-wide text-muted">
                 {col}
               </div>
             ))}
             {rows.map(row => (
               <React.Fragment key={row}>
-                <div className="flex items-center text-[12px] font-semibold text-slate-700">{row}</div>
+                <div className="flex items-center text-[12px] font-semibold text-subtle">{row}</div>
                 {cols.map(col => {
                   const cell = lookup.get(`${row}|${col}`);
                   const value = cell?.dailyShare ?? 0;
                   return (
                     <div
                       key={`${row}-${col}`}
-                      className="rounded-md border border-white p-3 text-center shadow-sm"
+                      className="rounded-md border border-border p-3 text-center"
                       style={{ background: color(value) }}
                     >
-                      <div className="text-lg font-semibold tabular-nums text-slate-900">
+                      <div className="text-lg font-semibold tabular-nums text-body">
                         {pct(value, 1)}
                       </div>
-                      <div className="mt-0.5 text-[11px] text-slate-600">
+                      <div className="mt-0.5 text-[11px] text-subtle">
                         habit {num(cell?.habitIndex, 1)} | n={cell?.zips ?? 0}
                       </div>
                     </div>
@@ -643,10 +642,10 @@ export function LotteryControlledAssociations({ data }: { data: LotteryCaseData 
     >
       <div className="grid gap-4 lg:grid-cols-2">
         {rows.map(model => (
-          <div key={model.outcome} className="rounded-md border border-slate-200 p-3">
+          <div key={model.outcome} className="rounded-md border border-border p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <p className="text-sm font-semibold text-slate-900">{model.outcome}</p>
-              <span className="text-[11px] tabular-nums text-slate-500">R2 {model.r2.toFixed(2)}</span>
+              <p className="text-sm font-semibold text-body">{model.outcome}</p>
+              <span className="text-[11px] tabular-nums text-muted">R2 {model.r2.toFixed(2)}</span>
             </div>
             <div className="space-y-1.5">
               {model.coefficients
@@ -654,8 +653,8 @@ export function LotteryControlledAssociations({ data }: { data: LotteryCaseData 
                 .slice(0, 6)
                 .map(coef => (
                   <div key={`${model.outcome}-${coef.label}`} className="grid grid-cols-[128px_1fr_42px] items-center gap-2 text-[11px]">
-                    <span className="truncate text-slate-600">{coef.label}</span>
-                    <span className="relative block h-3 rounded bg-slate-100">
+                    <span className="truncate text-subtle">{coef.label}</span>
+                    <span className="relative block h-3 rounded bg-code-bg">
                       <span
                         className="absolute top-0 block h-3 rounded"
                         style={{
@@ -666,10 +665,10 @@ export function LotteryControlledAssociations({ data }: { data: LotteryCaseData 
                           maxWidth: '50%',
                         }}
                       />
-                      <span className="absolute left-1/2 top-[-2px] h-4 w-px bg-slate-300" />
+                      <span className="absolute left-1/2 top-[-2px] h-4 w-px bg-card-hover" />
                     </span>
-                    <span className="text-right font-semibold tabular-nums text-slate-800">
-                      {coef.coefficient > 0 ? '+' : ''}
+                    <span className="text-right font-semibold tabular-nums text-body">
+                      {coef.coefficient > 0 ?' +' : ''}
                       {coef.coefficient.toFixed(2)}
                     </span>
                   </div>

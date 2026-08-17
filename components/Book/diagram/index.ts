@@ -57,4 +57,7 @@ export { connectorPath, fan, midRun } from './path';
 export type { Pt, Route, ConnectorPathOptions } from './path';
 
 export { T, S, R, FONT, CHAR_W, GRID, snap, snapUp, toneStroke } from './tokens';
+
+/** Migration aid for the out-of-scope data charts — see legacy.ts. */
+export { LEGACY_C } from './legacy';
 export type { Tone } from './tokens';

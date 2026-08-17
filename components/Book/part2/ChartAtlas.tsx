@@ -297,15 +297,15 @@ function CardShell({
   return (
     <article
       id={`atlas-${id}`}
-      className="flex h-full scroll-mt-24 flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800/40 dark:shadow-none"
+      className="flex h-full scroll-mt-24 flex-col overflow-hidden rounded-md border border-border bg-surface dark:shadow-none"
     >
-      <div className="border-b border-slate-100 bg-slate-50/80 p-4 dark:border-slate-700 dark:bg-slate-800/70">
+      <div className="border-b border-border bg-code-bg/80 p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">{family}</p>
-            <h3 className="mt-1 text-base font-semibold text-slate-950 dark:text-slate-100">{title}</h3>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">{family}</p>
+            <h3 className="mt-1 text-base font-semibold text-body">{title}</h3>
           </div>
-          <span className="shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold text-white" style={{ background: accent }}>
+          <span className="shrink-0 rounded-full px-2 py-1 text-[10px] font-semibold text-surface" style={{ background: accent }}>
             {badge ?? source}
           </span>
         </div>
@@ -313,32 +313,32 @@ function CardShell({
       {/* The Plot specs use fixed ink-on-transparent text (lib/chart-theme.ts),
           so the chart itself always sits on a light plate — in dark mode only
           the card chrome darkens, and the figure stays legible. */}
-      <div className="m-3 rounded-md bg-white px-1 pb-1 pt-2 ring-1 ring-slate-100 dark:ring-slate-700">{children}</div>
-      <div className="mx-4 rounded-md border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-700 dark:border-slate-700 dark:bg-slate-900/50 dark:text-slate-300">
-        <span className="font-semibold text-slate-950 dark:text-slate-100">Finding in this data: </span>
+      <div className="m-3 rounded-md bg-surface px-1 pb-1 pt-2 ring-1 ring-border">{children}</div>
+      <div className="mx-4 rounded-md border border-border bg-code-bg p-3 text-xs leading-relaxed text-subtle">
+        <span className="font-semibold text-body">Finding in this data: </span>
         {finding}
       </div>
-      <div className="mt-auto space-y-2 border-t border-slate-100 p-4 text-xs leading-relaxed dark:border-slate-700">
+      <div className="mt-auto space-y-2 border-t border-border p-4 text-xs leading-relaxed">
         <p>
-          <span className="font-semibold text-slate-900 dark:text-slate-100">Use:</span>{' '}
-          <span className="text-slate-600 dark:text-slate-400">{useWhen}</span>
+          <span className="font-semibold text-body">Use:</span>{' '}
+          <span className="text-subtle">{useWhen}</span>
         </p>
         <p>
-          <span className="font-semibold text-slate-900 dark:text-slate-100">Question:</span>{' '}
-          <span className="text-slate-600 dark:text-slate-400">{managerQuestion}</span>
+          <span className="font-semibold text-body">Question:</span>{' '}
+          <span className="text-subtle">{managerQuestion}</span>
         </p>
         <p>
-          <span className="font-semibold text-slate-900 dark:text-slate-100">Trap:</span>{' '}
-          <span className="text-slate-600 dark:text-slate-400">{avoid}</span>
+          <span className="font-semibold text-body">Trap:</span>{' '}
+          <span className="text-subtle">{avoid}</span>
         </p>
-        <p className="border-l-2 pl-2 text-slate-700 dark:text-slate-300" style={{ borderColor: accent }}>
+        <p className="border-l-2 pl-2 text-subtle" style={{ borderColor: accent }}>
           {caseExample}
         </p>
         {deepDive && (
           <p className="pt-1">
             <a
               href={deepDive.href}
-              className="font-medium text-sky-700 underline decoration-sky-300 underline-offset-2 hover:text-sky-900 dark:text-sky-300 dark:decoration-sky-700 dark:hover:text-sky-200"
+              className="font-medium text-accent-ink underline decoration-accent-ink underline-offset-2 hover:text-accent-ink dark:hover:text-accent-ink"
             >
               {deepDive.label}
             </a>
@@ -360,14 +360,14 @@ function Toggle<T extends string>({
   onChange: (v: T) => void;
 }) {
   return (
-    <div className="mb-2 ml-1 inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5 text-[11px] font-medium">
+    <div className="mb-2 ml-1 inline-flex rounded-md border border-border bg-code-bg p-0.5 text-[11px] font-medium">
       {options.map(opt => (
         <button
           key={opt.value}
           type="button"
           onClick={() => onChange(opt.value)}
           className={`rounded px-2.5 py-1 transition-colors ${
-            value === opt.value ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+            value === opt.value ? 'bg-surface text-body ' : 'text-muted hover:text-subtle'
           }`}
           aria-pressed={value === opt.value}
         >
@@ -1083,7 +1083,7 @@ function HeatmapFigure({ charts }: { charts: AtlasData['charts'] }) {
               fill: 'change',
               inset: 0.5,
               tip: true,
-              title: (d: any) => `${d.state} ${d.year}\n${d.change > 0 ? '+' : ''}${d.change}%`,
+              title: (d: any) => `${d.state} ${d.year}\n${d.change > 0 ?' +' : ''}${d.change}%`,
             }),
           ],
         })
@@ -1154,7 +1154,7 @@ function CoefficientFigure({ charts }: { charts: AtlasData['charts'] }) {
               fill: (d: any) => (d.estimate >= 0 ? CHART.rose : CHART.sky),
               r: 4,
               tip: true,
-              title: (d: any) => `${d.label}\n${d.estimate >= 0 ? '+' : ''}${d.estimate}\n95% CI [${d.ci_low}, ${d.ci_high}]`,
+              title: (d: any) => `${d.label}\n${d.estimate >= 0 ?' +' : ''}${d.estimate}\n95% CI [${d.ci_low}, ${d.ci_high}]`,
             }),
           ],
         })
@@ -1250,12 +1250,12 @@ function WaterfallFigure({ charts }: { charts: AtlasData['charts'] }) {
               fillOpacity: 0.85,
               tip: true,
               title: (d: any) =>
-                `${d.label}\n${d.kind === 'start' || d.kind === 'end' ? `level ${Math.round(d.y2)}` : `${d.value > 0 ? '+' : ''}${d.value}`}`,
+                `${d.label}\n${d.kind === 'start' || d.kind === 'end' ? `level ${Math.round(d.y2)}` : `${d.value > 0 ?' +' : ''}${d.value}`}`,
             }),
             Plot.text(bars, {
               x: 'label',
               y: (d: any) => Math.max(d.y1, d.y2),
-              text: (d: any) => (d.kind === 'start' || d.kind === 'end' ? `${Math.round(d.y2)}` : `${d.value > 0 ? '+' : ''}${d.value}`),
+              text: (d: any) => (d.kind === 'start' || d.kind === 'end' ? `${Math.round(d.y2)}` : `${d.value > 0 ?' +' : ''}${d.value}`),
               dy: -6,
               fontSize: 10,
               fill: CHART.body,
@@ -1424,7 +1424,7 @@ function PieTrapFigure() {
           </g>
         ))}
       </svg>
-      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-slate-600">
+      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-subtle">
         {PIE_DATA.map((d, i) => (
           <span key={d.name} className="inline-flex items-center gap-1">
             <span className="inline-block h-2 w-2 rounded-sm" style={{ background: palette[i % palette.length] }} />
@@ -1683,12 +1683,12 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
 
   return (
     <div className="space-y-8">
-      <div className="rounded-md border border-slate-200 bg-slate-950 p-5 text-white shadow-sm dark:border-slate-700 dark:shadow-none">
+      <div className="rounded-md border border-border bg-body p-5 text-surface dark:shadow-none">
         <div className="grid gap-4 lg:grid-cols-[1.3fr_2fr]">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-300">How to read the atlas</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-border-strong">How to read the atlas</p>
             <h3 className="mt-1 text-xl font-semibold">Start from the comparison, then choose the chart.</h3>
-            <p className="mt-3 text-sm leading-relaxed text-slate-300">
+            <p className="mt-3 text-sm leading-relaxed text-border-strong">
               Each card moves from business question to visual form to misuse risk. Charts are live: hover for values,
               and where two forms answer the same question, toggle between them. Filter by family or search the
               questions below, and follow a card&rsquo;s link when a form gets a full treatment elsewhere in Part II.
@@ -1696,10 +1696,10 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             {metrics.map(metric => (
-              <div key={metric.label} className="rounded-md border border-white/10 bg-white/5 p-3">
-                <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">{metric.label}</p>
-                <p className="mt-1 text-base font-semibold text-white">{metric.value}</p>
-                <p className="mt-1 text-xs leading-snug text-slate-300">{metric.detail}</p>
+              <div key={metric.label} className="rounded-md border border-surface/10 bg-surface/5 p-3">
+                <p className="text-[10px] font-semibold uppercase tracking-wide text-border-strong">{metric.label}</p>
+                <p className="mt-1 text-base font-semibold text-surface">{metric.value}</p>
+                <p className="mt-1 text-xs leading-snug text-border-strong">{metric.detail}</p>
               </div>
             ))}
           </div>
@@ -1710,19 +1710,19 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
         {data.sourceNotes.map(note => (
           <div
             key={note.case}
-            className="rounded-md border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-800/40 dark:shadow-none"
+            className="rounded-md border border-border bg-surface p-4 dark:shadow-none"
           >
             <p className="text-sm font-semibold" style={{ color: SOURCE_COLORS[note.case] ?? CHART.ink }}>
               {note.case}
             </p>
-            <p className="mt-1 text-xs leading-relaxed text-slate-600 dark:text-slate-400">{note.role}</p>
+            <p className="mt-1 text-xs leading-relaxed text-subtle">{note.role}</p>
           </div>
         ))}
       </div>
 
       {/* Filter bar — the atlas is a reference, so it needs a way in other than
           scrolling 26 cards. Sticks under the reading header while browsing. */}
-      <div className="sticky top-2 z-20 rounded-md border border-slate-200 bg-white/95 p-3 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/95 dark:shadow-none">
+      <div className="sticky top-2 z-20 rounded-md border border-border bg-surface p-3 backdrop-blur dark:shadow-none">
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
@@ -1730,8 +1730,8 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
             aria-pressed={activeFamily === null}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               activeFamily === null
-                ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                ? 'bg-body text-surface  '
+                : 'bg-code-bg text-subtle hover:bg-card-hover   dark:hover:bg-card'
             }`}
           >
             All forms
@@ -1744,8 +1744,8 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
               aria-pressed={activeFamily === family}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
                 activeFamily === family
-                  ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                  ? 'bg-body text-surface  '
+                  : 'bg-code-bg text-subtle hover:bg-card-hover   dark:hover:bg-card'
               }`}
             >
               {family}
@@ -1761,9 +1761,9 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Search a question — “over time”, “drop-off”…"
-              className="w-56 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs text-slate-800 placeholder:text-slate-400 focus:border-slate-400 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500"
+              className="w-56 rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-body placeholder:text-muted focus:border-border-strong focus:outline-none dark:placeholder:text-muted"
             />
-            <span className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+            <span className="whitespace-nowrap text-xs text-muted">
               {matches.length} of {allCards.length}
             </span>
           </div>
@@ -1771,7 +1771,7 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
       </div>
 
       {matches.length === 0 && (
-        <p className="rounded-md border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+        <p className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted">
           No chart form matches “{query}”. Try the comparison instead of the chart name — “composition”, “ranking”,
           “growth”, “spread”.
         </p>
@@ -1781,14 +1781,14 @@ export function ChartAtlas({ data }: { data: AtlasData }) {
         const cards = matches.filter(c => c.family === family);
         return (
           <section key={family} id={`family-${family.toLowerCase().replace(/\s+/g, '-')}`} className="scroll-mt-24">
-            <div className="mb-3 flex items-end justify-between gap-3 border-b border-slate-200 pb-2 dark:border-slate-700">
+            <div className="mb-3 flex items-end justify-between gap-3 border-b border-border pb-2">
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-700 dark:text-slate-300">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-subtle">
                   {family}
                 </h3>
-                <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{FAMILY_NOTES[family]}</p>
+                <p className="mt-1 text-xs text-muted">{FAMILY_NOTES[family]}</p>
               </div>
-              <p className="whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+              <p className="whitespace-nowrap text-xs text-muted">
                 {cards.length} chart{cards.length === 1 ? '' : 's'}
                 {isFiltered ? ' shown' : ''}
               </p>

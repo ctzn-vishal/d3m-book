@@ -139,11 +139,11 @@ function ChartFrame({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+    <div className="rounded-md border border-border bg-surface p-4">
       <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
-          {subtitle && <p className="mt-1 text-xs leading-snug text-slate-500">{subtitle}</p>}
+          <h3 className="text-sm font-semibold text-body">{title}</h3>
+          {subtitle && <p className="mt-1 text-xs leading-snug text-muted">{subtitle}</p>}
         </div>
         {right}
       </div>
@@ -165,8 +165,8 @@ function SegmentedControl<T extends string>({
 }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      {label && <span className="text-[11px] font-medium uppercase tracking-wide text-slate-400">{label}</span>}
-      <div className="inline-flex rounded-md border border-slate-200 bg-slate-50 p-0.5">
+      {label && <span className="text-[11px] font-medium uppercase tracking-wide text-muted">{label}</span>}
+      <div className="inline-flex rounded-md border border-border bg-code-bg p-0.5">
         {options.map(option => {
           const active = option.value === value;
           return (
@@ -176,7 +176,7 @@ function SegmentedControl<T extends string>({
               onClick={() => onChange(option.value)}
               aria-pressed={active}
               className={`rounded px-2.5 py-1 text-xs font-medium transition-colors ${
-                active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+                active ? 'bg-surface text-body ' : 'text-muted hover:text-subtle'
               }`}
             >
               {option.label}
@@ -405,20 +405,20 @@ export function SoupBaselineChart({
 
       <div className="grid gap-3 sm:grid-cols-2">
         {data.seasonSummary.map(season => (
-          <div key={String(season.soup_season)} className="rounded-md border border-slate-200 bg-slate-50 p-4">
-            <p className="text-xs uppercase tracking-wide text-slate-500">{String(season.soup_season)}</p>
+          <div key={String(season.soup_season)} className="rounded-md border border-border bg-code-bg p-4">
+            <p className="text-xs uppercase tracking-wide text-muted">{String(season.soup_season)}</p>
             <div className="mt-2 grid grid-cols-3 gap-3 text-sm">
               <div>
-                <p className="text-lg font-semibold text-slate-900">{fmtMoney(Number(season.progresso_price))}</p>
-                <p className="text-xs text-slate-500">avg price</p>
+                <p className="text-lg font-semibold text-body">{fmtMoney(Number(season.progresso_price))}</p>
+                <p className="text-xs text-muted">avg price</p>
               </div>
               <div>
-                <p className="text-lg font-semibold text-slate-900">{fmtPct(Number(season.progresso_share))}</p>
-                <p className="text-xs text-slate-500">share</p>
+                <p className="text-lg font-semibold text-body">{fmtPct(Number(season.progresso_share))}</p>
+                <p className="text-xs text-muted">share</p>
               </div>
               <div>
-                <p className="text-lg font-semibold text-slate-900">{Number(season.stores).toLocaleString()}</p>
-                <p className="text-xs text-slate-500">stores</p>
+                <p className="text-lg font-semibold text-body">{Number(season.stores).toLocaleString()}</p>
+                <p className="text-xs text-muted">stores</p>
               </div>
             </div>
           </div>
@@ -460,8 +460,8 @@ export function SoupRegionSmallMultiples({ data }: { data: { regionMonth: Region
         region,
         text:
           metric === 'progresso_price'
-            ? `slope ${slopes[region] >= 0 ? '+' : ''}${(slopes[region] * 100).toFixed(1)}¢/mo`
-            : `slope ${slopes[region] >= 0 ? '+' : ''}${(slopes[region] * 100).toFixed(2)} pp/mo`,
+            ? `slope ${slopes[region] >= 0 ?' +' : ''}${(slopes[region] * 100).toFixed(1)}¢/mo`
+            : `slope ${slopes[region] >= 0 ?' +' : ''}${(slopes[region] * 100).toFixed(2)} pp/mo`,
       })),
     [slopes, metric],
   );
@@ -1062,13 +1062,13 @@ const STATE_REGION: Record<string, string> = {
 };
 
 const MODE_BADGE: Record<DashboardMode, string> = {
-  Monitor: 'bg-sky-50 text-sky-700 ring-sky-200',
-  Diagnose: 'bg-amber-50 text-amber-700 ring-amber-200',
-  Decide: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  Monitor: 'bg-accent/10 text-accent-ink ring-accent/40',
+  Diagnose: 'bg-accent/10 text-accent-ink ring-accent/40',
+  Decide: 'bg-pos/10 text-pos ring-pos/40',
 };
 
 function ModeBadge({ mode }: { mode: string }) {
-  const cls = MODE_BADGE[mode as DashboardMode] ?? 'bg-slate-100 text-slate-600 ring-slate-200';
+  const cls = MODE_BADGE[mode as DashboardMode] ?? 'bg-code-bg text-subtle ring-border';
   return (
     <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ring-inset ${cls}`}>
       {mode}
@@ -1078,13 +1078,13 @@ function ModeBadge({ mode }: { mode: string }) {
 
 function KpiTile({ label, value, sub, mode }: { label: string; value: string; sub: string; mode: DashboardMode }) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+    <div className="rounded-md border border-border bg-surface p-3">
       <div className="flex items-center justify-between">
-        <p className="text-[11px] uppercase tracking-wide text-slate-400">{label}</p>
+        <p className="text-[11px] uppercase tracking-wide text-muted">{label}</p>
         <ModeBadge mode={mode} />
       </div>
-      <p className="mt-1 text-2xl font-semibold text-slate-900">{value}</p>
-      <p className="mt-0.5 text-xs text-slate-500">{sub}</p>
+      <p className="mt-1 text-2xl font-semibold text-body">{value}</p>
+      <p className="mt-0.5 text-xs text-muted">{sub}</p>
     </div>
   );
 }
@@ -1200,11 +1200,11 @@ export function SoupDashboardCritique({
   return (
     <div className="space-y-5">
       {/* ---- The live mini-dashboard ---- */}
-      <div className="rounded-lg border border-slate-200 bg-slate-50/60 p-4 shadow-sm">
+      <div className="rounded-lg border border-border bg-code-bg/60 p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-sm font-semibold text-slate-900">Progresso soup decision dashboard</h3>
-            <p className="text-xs text-slate-500">One screen, three modes: monitor the cycle, diagnose the heterogeneity, decide the next test.</p>
+            <h3 className="text-sm font-semibold text-body">Progresso soup decision dashboard</h3>
+            <p className="text-xs text-muted">One screen, three modes: monitor the cycle, diagnose the heterogeneity, decide the next test.</p>
           </div>
           <div className="flex gap-1.5">
             <ModeBadge mode="Monitor" />
@@ -1223,30 +1223,30 @@ export function SoupDashboardCritique({
 
         {/* Charts row */}
         <div className="mt-3 grid gap-3 lg:grid-cols-2">
-          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="rounded-md border border-border bg-surface p-3">
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-xs font-semibold text-slate-700">Category volume by month</p>
+              <p className="text-xs font-semibold text-subtle">Category volume by month</p>
               <ModeBadge mode="Monitor" />
             </div>
             <PlotFigure ariaLabel="Monthly soup category volume trend." options={trendOptions} />
           </div>
-          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="rounded-md border border-border bg-surface p-3">
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-xs font-semibold text-slate-700">Winter vs non-winter share by region</p>
+              <p className="text-xs font-semibold text-subtle">Winter vs non-winter share by region</p>
               <ModeBadge mode="Diagnose" />
             </div>
             <PlotFigure ariaLabel="Region small-multiple of winter and non-winter Progresso share." options={regionSmallMultOptions} />
           </div>
-          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="rounded-md border border-border bg-surface p-3">
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-xs font-semibold text-slate-700">Winter share with uncertainty band</p>
+              <p className="text-xs font-semibold text-subtle">Winter share with uncertainty band</p>
               <ModeBadge mode="Diagnose" />
             </div>
             <PlotFigure ariaLabel="Winter Progresso share by region with an uncertainty band on a shared axis." options={intervalTileOptions} />
           </div>
-          <div className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+          <div className="rounded-md border border-border bg-surface p-3">
             <div className="mb-1 flex items-center justify-between">
-              <p className="text-xs font-semibold text-slate-700">Where Progresso is strong (winter share)</p>
+              <p className="text-xs font-semibold text-subtle">Where Progresso is strong (winter share)</p>
               <ModeBadge mode="Diagnose" />
             </div>
             <ChoroplethMap
@@ -1257,18 +1257,18 @@ export function SoupDashboardCritique({
               valueFormat={v => fmtPct1(v)}
               ariaLabel="US map shaded by census-region winter Progresso share."
             />
-            <p className="mt-1 text-[10px] leading-snug text-slate-400">
+            <p className="mt-1 text-[10px] leading-snug text-muted">
               Binned by census region — an approximation. Map approximations are a caveat that belongs next to the chart.
             </p>
           </div>
         </div>
 
-        <div className="mt-3 rounded-md border border-emerald-200 bg-emerald-50/70 p-3">
+        <div className="mt-3 rounded-md border border-pos/40 bg-pos/10 p-3">
           <div className="flex items-center gap-2">
             <ModeBadge mode="Decide" />
-            <p className="text-xs font-semibold text-emerald-900">Next test, not a verdict</p>
+            <p className="text-xs font-semibold text-pos">Next test, not a verdict</p>
           </div>
-          <p className="mt-1 text-xs leading-relaxed text-emerald-900/90">
+          <p className="mt-1 text-xs leading-relaxed text-pos">
             The dashboard shows countercyclical pricing that varies by region. It cannot prove price caused the volume drop.
             The decision it earns is the next one: estimate elasticity with a design that separates price from seasonal demand,
             and run it region by region where the share levels differ most.
@@ -1278,32 +1278,32 @@ export function SoupDashboardCritique({
 
       {/* ---- Critique narrative: each current panel gets a job + upgrade ---- */}
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-slate-900">Critique: each panel gets a job, each job gets an upgrade</h3>
+        <h3 className="mb-2 text-sm font-semibold text-body">Critique: each panel gets a job, each job gets an upgrade</h3>
         <div className="grid gap-3 md:grid-cols-2">
           {data.currentDashboard.map(panel => (
-            <div key={panel.panel} className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
+            <div key={panel.panel} className="rounded-md border border-border bg-surface p-4">
               <div className="flex items-start justify-between gap-3">
-                <h4 className="text-sm font-semibold text-slate-900">{panel.panel}</h4>
+                <h4 className="text-sm font-semibold text-body">{panel.panel}</h4>
                 <ModeBadge mode={panel.mode} />
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-slate-600">{panel.current_job}</p>
-              <p className="mt-3 border-l-2 border-sky-400 pl-3 text-xs leading-relaxed text-slate-700">{panel.upgrade}</p>
+              <p className="mt-2 text-xs leading-relaxed text-subtle">{panel.current_job}</p>
+              <p className="mt-3 border-l-2 border-accent/40 pl-3 text-xs leading-relaxed text-subtle">{panel.upgrade}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* ---- Redesigned monitor→diagnose→decide sequence ---- */}
-      <div className="rounded-md border border-slate-800 bg-slate-900 p-4 text-white shadow-sm">
+      <div className="rounded-md border border-border-strong bg-body p-4 text-surface">
         <h3 className="text-sm font-semibold">Redesigned dashboard sequence</h3>
         <div className="mt-4 grid gap-3 lg:grid-cols-3">
           {data.redesignedSequence.map(step => (
-            <div key={step.step} className="rounded-md border border-white/10 bg-white/5 p-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-300">Step {step.step}</p>
+            <div key={step.step} className="rounded-md border border-surface/10 bg-surface p-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-border-strong">Step {step.step}</p>
               <h4 className="mt-1 text-sm font-semibold">{step.title}</h4>
-              <p className="mt-2 text-xs leading-relaxed text-slate-300">{step.question}</p>
-              <p className="mt-2 text-xs leading-relaxed text-slate-100">{step.visual}</p>
-              <p className="mt-2 text-xs leading-relaxed text-amber-200">{step.decision}</p>
+              <p className="mt-2 text-xs leading-relaxed text-border-strong">{step.question}</p>
+              <p className="mt-2 text-xs leading-relaxed text-border">{step.visual}</p>
+              <p className="mt-2 text-xs leading-relaxed text-accent-ink">{step.decision}</p>
             </div>
           ))}
         </div>
@@ -1312,7 +1312,7 @@ export function SoupDashboardCritique({
       {/* ---- Reusable rules ---- */}
       <div className="grid gap-2 sm:grid-cols-2">
         {data.dashboardRules.map(rule => (
-          <div key={rule} className="rounded-md bg-slate-50 px-3 py-2 text-xs text-slate-700">{rule}</div>
+          <div key={rule} className="rounded-md bg-code-bg px-3 py-2 text-xs text-subtle">{rule}</div>
         ))}
       </div>
     </div>

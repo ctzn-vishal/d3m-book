@@ -206,20 +206,20 @@ export function VisualBriefStoryboard() {
   )} index points ${gap >= 0 ? 'higher' : 'lower'} in winter (Oct–Feb) than out of season; ${cfg.gloss}.`;
 
   return (
-    <div className="not-prose my-6 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="not-prose my-6 rounded-lg border border-border bg-surface p-5">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-sky-600">
+          <p className="text-xs font-semibold uppercase tracking-wide text-accent-ink">
             Storyboard panel · fill the metric and the finding
           </p>
-          <h3 className="mt-1 text-base font-semibold text-slate-900">
+          <h3 className="mt-1 text-base font-semibold text-body">
             Which metric carries the seasonal argument?
           </h3>
         </div>
         <div
           role="group"
           aria-label="Choose the metric to chart"
-          className="inline-flex overflow-hidden rounded-md border border-slate-300 text-sm"
+          className="inline-flex overflow-hidden rounded-md border border-border text-sm"
         >
           {(Object.keys(METRICS) as MetricKey[]).map(key => (
             <button
@@ -230,8 +230,8 @@ export function VisualBriefStoryboard() {
               className={
                 'px-3 py-1.5 transition-colors ' +
                 (metric === key
-                  ? 'bg-sky-600 font-medium text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50')
+                  ? 'bg-accent/15 font-medium text-accent-ink'
+                  : 'bg-surface text-subtle hover:bg-code-bg')
               }
             >
               {METRICS[key].short}
@@ -242,7 +242,7 @@ export function VisualBriefStoryboard() {
 
       <div className="grid gap-5 lg:grid-cols-2">
         <figure className="m-0">
-          <figcaption className="mb-1 text-xs font-medium text-slate-600">
+          <figcaption className="mb-1 text-xs font-medium text-subtle">
             Panel A · {cfg.label} across the year
           </figcaption>
           <PlotFigure
@@ -251,7 +251,7 @@ export function VisualBriefStoryboard() {
           />
         </figure>
         <figure className="m-0">
-          <figcaption className="mb-1 text-xs font-medium text-slate-600">
+          <figcaption className="mb-1 text-xs font-medium text-subtle">
             Panel B · winter vs non-winter mean
           </figcaption>
           <PlotFigure
@@ -261,10 +261,10 @@ export function VisualBriefStoryboard() {
         </figure>
       </div>
 
-      <div className="mt-5 rounded-md bg-slate-50 p-4">
+      <div className="mt-5 rounded-md bg-code-bg p-4">
         <label
           htmlFor="brief-finding"
-          className="block text-xs font-semibold uppercase tracking-wide text-slate-500"
+          className="block text-xs font-semibold uppercase tracking-wide text-muted"
         >
           The descriptive finding these panels support
         </label>
@@ -274,16 +274,16 @@ export function VisualBriefStoryboard() {
           onChange={e => setNote(e.target.value)}
           placeholder="Write one sentence: which metric, which season, which comparison. Keep it descriptive — no cause yet."
           rows={2}
-          className="mt-2 w-full resize-none rounded-md border border-slate-300 bg-white p-2 text-sm text-slate-800 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+          className="mt-2 w-full resize-none rounded-md border border-border bg-surface p-2 text-sm text-body placeholder:text-muted focus:border-accent/40 focus:outline-none focus:ring-1 focus:ring-accent/40"
         />
         <button
           type="button"
           onClick={() => setNote(autoFinding)}
-          className="mt-2 rounded-md border border-slate-300 bg-white px-3 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50"
+          className="mt-2 rounded-md border border-border bg-surface px-3 py-1 text-xs font-medium text-subtle hover:bg-code-bg"
         >
           Use the computed comparison
         </button>
-        <p className="mt-3 border-l-2 border-amber-400 pl-3 text-xs leading-relaxed text-slate-600">
+        <p className="mt-3 border-l-2 border-accent/40 pl-3 text-xs leading-relaxed text-subtle">
           Limit to keep next to this panel: a {cfg.short.toLowerCase()} index gap is{' '}
           <em>descriptive</em>. It shows the seasonal pattern; it does not prove that price{' '}
           <em>caused</em> the volume move. That claim needs the pricing test named in the brief.
@@ -321,62 +321,62 @@ export function VisualBriefWorkflow({ brief }: { brief: DecisionBrief }) {
               className={
                 'rounded-lg border p-4 text-left transition-colors ' +
                 (open
-                  ? 'border-sky-500 bg-sky-50 shadow-sm'
-                  : 'border-slate-200 bg-white hover:border-slate-300')
+                  ? 'border-accent/40 bg-accent/10 '
+                  : 'border-border bg-surface hover:border-border')
               }
             >
               <div className="flex items-center gap-2">
                 <span
                   className={
                     'inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ' +
-                    (open ? 'bg-sky-600 text-white' : 'bg-slate-100 text-slate-600')
+                    (open ? 'bg-accent/15 text-accent-ink' : 'bg-code-bg text-subtle')
                   }
                 >
                   {i + 1}
                 </span>
-                <span className="text-sm font-semibold text-slate-900">{step.label}</span>
+                <span className="text-sm font-semibold text-body">{step.label}</span>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-slate-600">{step.question}</p>
+              <p className="mt-2 text-xs leading-relaxed text-subtle">{step.question}</p>
             </button>
           );
         })}
       </div>
 
       {openId && sectionById[openId] && (
-        <div className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="rounded-lg border border-border bg-surface p-5">
           {(() => {
             const step = brief.workflow.find(s => s.id === openId)!;
             const section = sectionById[openId];
             return (
               <>
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="text-base font-semibold text-slate-900">{step.label}</h3>
-                  <span className="text-xs font-medium uppercase tracking-wide text-sky-600">
+                  <h3 className="text-base font-semibold text-body">{step.label}</h3>
+                  <span className="text-xs font-medium uppercase tracking-wide text-accent-ink">
                     Deliverable
                   </span>
                 </div>
-                <p className="mt-1 text-sm leading-relaxed text-slate-700">{section.memo_text}</p>
+                <p className="mt-1 text-sm leading-relaxed text-subtle">{section.memo_text}</p>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-md bg-slate-50 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <div className="rounded-md bg-code-bg p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                       Artifact to produce
                     </p>
-                    <p className="mt-1 text-sm text-slate-700">{step.artifact}</p>
+                    <p className="mt-1 text-sm text-subtle">{step.artifact}</p>
                   </div>
-                  <div className="rounded-md bg-slate-50 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <div className="rounded-md bg-code-bg p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">
                       Evidence standard
                     </p>
-                    <p className="mt-1 text-sm text-slate-700">{section.evidence_standard}</p>
+                    <p className="mt-1 text-sm text-subtle">{section.evidence_standard}</p>
                   </div>
                 </div>
 
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  <p className="rounded-md border-l-2 border-rose-400 bg-rose-50/60 px-3 py-2 text-xs leading-relaxed text-rose-900">
+                  <p className="rounded-md border-l-2 border-neg/40 bg-neg/10 px-3 py-2 text-xs leading-relaxed text-neg">
                     <span className="font-semibold">Red flag:</span> {step.red_flag}
                   </p>
-                  <p className="rounded-md border-l-2 border-amber-400 bg-amber-50/60 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                  <p className="rounded-md border-l-2 border-accent/40 bg-accent/10 px-3 py-2 text-xs leading-relaxed text-accent-ink">
                     <span className="font-semibold">Limit to name:</span> {section.limit}
                   </p>
                 </div>
@@ -386,13 +386,13 @@ export function VisualBriefWorkflow({ brief }: { brief: DecisionBrief }) {
         </div>
       )}
 
-      <div className="rounded-lg border border-slate-200 bg-slate-50 p-5">
-        <h3 className="text-sm font-semibold text-slate-900">How the brief is graded</h3>
+      <div className="rounded-lg border border-border bg-code-bg p-5">
+        <h3 className="text-sm font-semibold text-body">How the brief is graded</h3>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           {brief.rubric.map(item => (
-            <div key={item.criterion} className="rounded-md bg-white p-3 shadow-sm">
-              <p className="text-sm font-semibold text-slate-800">{item.criterion}</p>
-              <p className="mt-1 text-xs leading-relaxed text-slate-600">{item.why_it_matters}</p>
+            <div key={item.criterion} className="rounded-md bg-surface p-3">
+              <p className="text-sm font-semibold text-body">{item.criterion}</p>
+              <p className="mt-1 text-xs leading-relaxed text-subtle">{item.why_it_matters}</p>
             </div>
           ))}
         </div>

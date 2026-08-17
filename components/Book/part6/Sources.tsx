@@ -55,7 +55,7 @@ export function Cite({ id, sources }: CiteProps) {
         <a
           key={e.id}
           href={`#src-${e.id}`}
-          className="rounded-[3px] bg-sky-50 px-[3px] py-px text-sky-700 no-underline ring-1 ring-inset ring-sky-100 transition-colors hover:bg-sky-100 hover:text-sky-900 dark:bg-sky-950/40 dark:text-sky-300 dark:ring-sky-800/50 dark:hover:bg-sky-900/50 dark:hover:text-sky-100"
+          className="rounded-[3px] bg-accent/10 px-[3px] py-px text-accent-ink no-underline ring-1 ring-inset ring-accent/40 transition-colors hover:bg-accent/10 hover:text-accent-ink dark:hover:bg-accent/10 dark:hover:text-accent-ink"
           aria-label={`Source ${e.n}`}
         >
           {e.n}
@@ -80,12 +80,12 @@ export interface SourceListProps {
 export function SourceList({ sources, title = 'Sources', note }: SourceListProps) {
   if (!sources || sources.length === 0) return null;
   return (
-    <section className="not-prose mt-14 border-t border-slate-200 pt-6 dark:border-slate-700">
+    <section className="not-prose mt-14 border-t border-border pt-6">
       <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
           {title}
         </h2>
-        {note && <p className="text-[11px] text-slate-400 dark:text-slate-500">{note}</p>}
+        {note && <p className="text-[11px] text-muted">{note}</p>}
       </div>
       <ol className="mt-4 space-y-2.5">
         {sources.map((s, i) => (
@@ -94,26 +94,26 @@ export function SourceList({ sources, title = 'Sources', note }: SourceListProps
             id={`src-${s.id}`}
             className="flex scroll-mt-24 gap-3 text-[13px] leading-snug"
           >
-            <span className="select-none pt-px font-mono text-[11px] text-slate-400 dark:text-slate-500">
+            <span className="select-none pt-px font-mono text-[11px] text-muted">
               {i + 1}
             </span>
-            <span className="text-slate-600 dark:text-slate-300">
+            <span className="text-subtle">
               <a
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-slate-800 underline decoration-slate-300 underline-offset-2 hover:text-sky-700 hover:decoration-sky-400 dark:text-slate-100 dark:decoration-slate-600 dark:hover:text-sky-400"
+                className="font-medium text-body underline decoration-border-strong underline-offset-2 hover:text-accent-ink hover:decoration-accent-ink dark:hover:text-accent-ink"
               >
                 {s.title}
               </a>
-              <span className="text-slate-500 dark:text-slate-400">
+              <span className="text-muted">
                 {' '}· {s.publisher}, {s.year}.
               </span>{' '}
               <a
                 href={s.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="break-all font-mono text-[11px] text-slate-400 hover:text-sky-600 dark:text-slate-500 dark:hover:text-sky-400"
+                className="break-all font-mono text-[11px] text-muted hover:text-accent-ink dark:hover:text-accent-ink"
               >
                 {prettyUrl(s.url)}
               </a>

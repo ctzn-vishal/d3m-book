@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+
 /**
  * Conceptual diagrams for Part V Chapters 18 and 19.1–19.2.
  *
@@ -20,42 +22,31 @@ import * as React from 'react';
  *   - SurveyVsTextMap: the bridge from §16.2 perceptual maps to text embeddings.
  */
 
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  navy: '#1f3a5f',
-  orange: '#c87c2a',
-  orangeLight: '#fed7aa',
-  green: '#0f766e',
-  greenLight: '#ccfbf1',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  purple: '#7c3aed',
-  purpleLight: '#ede9fe',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  teal: '#0d9488',
-  tealLight: '#a7f3d0',
-  pink: '#db2777',
-  pinkLight: '#fce7f3',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
+/**
+ * Was twenty-one hardcoded light-mode hexes. Now the same names,
+ * resolved through the theme — see components/Book/diagram/legacy.ts for
+ * how the ten hues collapse onto ink, accent, pos, and neg.
+ */
+const C = LEGACY_C;
 
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
+/**
+ * Local card wrapper, now a thin pass-through to the shared frame so this
+ * file's figures stop being white slabs on a dark page. `DiagramFrame` owns
+ * the ground, the hairline, and the absence of a shadow.
+ */
+function Card({
+  title,
+  children,
+  footer,
+}: {
+  title?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {title}
-        </p>
-      )}
+    <DiagramFrame eyebrow={title} note={footer}>
       {children}
-      {footer && <div className="mt-2 text-[11px] text-slate-500">{footer}</div>}
-    </div>
+    </DiagramFrame>
   );
 }
 
@@ -78,11 +69,11 @@ export function StructuredVsUnstructured() {
     <Card title="Structured rows vs. unstructured reviews — same customer, two evidence languages">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <div>
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Warehouse table</div>
-          <div className="overflow-hidden rounded-md border border-slate-200">
+          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">Warehouse table</div>
+          <div className="overflow-hidden rounded-md border border-border">
             <table className="w-full text-[11.5px]">
               <thead>
-                <tr className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-500">
+                <tr className="bg-code-bg text-[10px] uppercase tracking-wide text-muted">
                   <th className="px-2 py-1.5 text-left">customer_id</th>
                   <th className="px-2 py-1.5 text-right">orders_90d</th>
                   <th className="px-2 py-1.5 text-right">tenure_mo</th>
@@ -91,8 +82,8 @@ export function StructuredVsUnstructured() {
               </thead>
               <tbody>
                 {rows.map((r, i) => (
-                  <tr key={r.id} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}>
-                    <td className="px-2 py-1.5 font-mono text-slate-800">{r.id}</td>
+                  <tr key={r.id} className={i % 2 === 0 ? 'bg-surface' : 'bg-code-bg/60'}>
+                    <td className="px-2 py-1.5 font-mono text-body">{r.id}</td>
                     <td className="px-2 py-1.5 text-right tabular-nums">{r.orders}</td>
                     <td className="px-2 py-1.5 text-right tabular-nums">{r.lt}</td>
                     <td className="px-2 py-1.5 text-right tabular-nums">{r.last}</td>
@@ -101,21 +92,21 @@ export function StructuredVsUnstructured() {
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-[10.5px] text-slate-500">Three numbers per customer. Fast to model, easy to compare, no language signal.</p>
+          <p className="mt-2 text-[10.5px] text-muted">Three numbers per customer. Fast to model, easy to compare, no language signal.</p>
         </div>
         <div>
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Reviews (same customers)</div>
+          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">Reviews (same customers)</div>
           <ul className="space-y-1.5">
             {reviews.map((r, i) => (
-              <li key={i} className="rounded-md border border-slate-200 bg-slate-50/60 px-2.5 py-1.5 text-[11.5px] italic text-slate-700">
+              <li key={i} className="rounded-md border border-border bg-code-bg/60 px-2.5 py-1.5 text-[11.5px] italic text-subtle">
                 {r}
               </li>
             ))}
           </ul>
-          <p className="mt-2 text-[10.5px] text-slate-500">Three paragraphs per customer. Slow to compare, but loaded with intent, complaint type, and emotional tone.</p>
+          <p className="mt-2 text-[10.5px] text-muted">Three paragraphs per customer. Slow to compare, but loaded with intent, complaint type, and emotional tone.</p>
         </div>
       </div>
-      <p className="mt-3 text-center text-[11px] text-slate-500">
+      <p className="mt-3 text-center text-[11px] text-muted">
         Unstructured does not mean unusable. It means we need a representation layer.
       </p>
     </Card>
@@ -147,9 +138,9 @@ export function TextPipeline() {
           return (
             <g key={s.label}>
               <rect x={x + 6} y={yMid - 36} width={cellW - 12} height={72} rx={8} fill="white" stroke={s.color} strokeWidth={1.8} />
-              <text x={x + cellW / 2} y={yMid - 12} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold" style={{ fill: s.color }}>{s.label}</text>
-              <text x={x + cellW / 2} y={yMid + 8} textAnchor="middle" className="fill-slate-600 text-[10px]">{s.sub}</text>
-              <text x={x + cellW / 2} y={yMid + 22} textAnchor="middle" className="fill-slate-400 text-[10px] font-mono">{i + 1}</text>
+              <text x={x + cellW / 2} y={yMid - 12} textAnchor="middle" className="fill-body text-[12px] font-semibold" style={{ fill: s.color }}>{s.label}</text>
+              <text x={x + cellW / 2} y={yMid + 8} textAnchor="middle" className="fill-subtle text-[10px]">{s.sub}</text>
+              <text x={x + cellW / 2} y={yMid + 22} textAnchor="middle" className="fill-muted text-[10px] font-mono">{i + 1}</text>
               {i < stages.length - 1 && (
                 <line x1={x + cellW - 6} y1={yMid} x2={x + cellW + 6} y2={yMid} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tp-arrow)" />
               )}
@@ -161,7 +152,7 @@ export function TextPipeline() {
             <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
           </marker>
         </defs>
-        <text x={W / 2} y={H - 14} textAnchor="middle" className="fill-slate-500 text-[10px] italic">
+        <text x={W / 2} y={H - 14} textAnchor="middle" className="fill-muted text-[10px] italic">
           Each stage encodes choices — the representation is rarely neutral.
         </text>
       </svg>
@@ -198,9 +189,9 @@ export function TfIdfBars() {
       <ul className="space-y-1">
         {items.map(it => (
           <li key={it.w} className="grid grid-cols-[110px_minmax(0,1fr)_30px] items-center gap-2 text-[12px]">
-            <span className="font-mono text-slate-700">{it.w}</span>
+            <span className="font-mono text-subtle">{it.w}</span>
             <span className="block h-3 rounded" style={{ width: `${it.s * 100}%`, background: color, opacity: 0.85 }} />
-            <span className="text-right tabular-nums text-slate-500">{it.s.toFixed(2)}</span>
+            <span className="text-right tabular-nums text-muted">{it.s.toFixed(2)}</span>
           </li>
         ))}
       </ul>
@@ -212,7 +203,7 @@ export function TfIdfBars() {
         <Row items={pos} color={C.green} label="Positive reviews" />
         <Row items={neg} color={C.red} label="Negative reviews" />
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         TF-IDF tells us <em>which words appear</em> — not what they <em>mean</em> in context. "Cold" lands in the negative column even when a review says "cold brew is fine."
       </p>
     </Card>
@@ -235,20 +226,20 @@ export function TextConfusionMatrix() {
   const colMax = Math.max(...M.flat());
   return (
     <Card title="Confusion matrix for a support-ticket router (held-out, 360 tickets)">
-      <div className="overflow-hidden rounded-md border border-slate-200">
+      <div className="overflow-hidden rounded-md border border-border">
         <table className="w-full text-[11.5px]">
           <thead>
             <tr>
-              <th className="px-2 py-1.5 text-left text-[10px] uppercase tracking-wide text-slate-500">predicted ↓ / actual →</th>
+              <th className="px-2 py-1.5 text-left text-[10px] uppercase tracking-wide text-muted">predicted ↓ / actual →</th>
               {labels.map(l => (
-                <th key={l} className="px-2 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-slate-500">{l}</th>
+                <th key={l} className="px-2 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-muted">{l}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {labels.map((row, i) => (
               <tr key={row}>
-                <th className="px-2 py-1.5 text-left text-[10px] font-semibold uppercase tracking-wide text-slate-500">{row}</th>
+                <th className="px-2 py-1.5 text-left text-[10px] font-semibold uppercase tracking-wide text-muted">{row}</th>
                 {M[i].map((v, j) => {
                   const isDiag = i === j;
                   const alpha = v / colMax;
@@ -270,7 +261,7 @@ export function TextConfusionMatrix() {
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         The diagonal is the model getting tickets right. The brightest off-diagonal cell — quality tickets misrouted to billing — is where retraining will pay the most.
       </p>
     </Card>
@@ -312,18 +303,18 @@ export function SentimentOverTime() {
         ))}
         {/* event label */}
         <line x1={eventX} y1={m.top} x2={eventX} y2={yS(data[12].s) - 8} stroke={C.amber} strokeWidth={1.4} strokeDasharray="4 3" />
-        <text x={eventX} y={m.top - 6} textAnchor="middle" className="fill-amber-700 text-[10px] font-semibold">app outage</text>
+        <text x={eventX} y={m.top - 6} textAnchor="middle" className="fill-accent-ink text-[10px] font-semibold">app outage</text>
         {/* axes */}
         <line x1={m.left} y1={m.top} x2={m.left} y2={H - m.bottom} stroke={C.ink} strokeWidth={1} />
         <line x1={m.left} y1={H - m.bottom} x2={W - m.right} y2={H - m.bottom} stroke={C.ink} strokeWidth={1} />
         {[-0.4, -0.2, 0, 0.2, 0.4].map(v => (
-          <text key={v} x={m.left - 8} y={yS(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{v.toFixed(1)}</text>
+          <text key={v} x={m.left - 8} y={yS(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{v.toFixed(1)}</text>
         ))}
         {[1, 7, 13, 19, 26].map(w => (
-          <text key={w} x={xS(w - 1)} y={H - m.bottom + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{`wk ${w}`}</text>
+          <text key={w} x={xS(w - 1)} y={H - m.bottom + 14} textAnchor="middle" className="fill-muted text-[10px]">{`wk ${w}`}</text>
         ))}
-        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-slate-700 text-[11px]">Calendar week</text>
-        <text x={14} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 14 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-slate-700 text-[11px]">Mean sentiment</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-subtle text-[11px]">Calendar week</text>
+        <text x={14} y={(m.top + H - m.bottom) / 2} transform={`rotate(-90 14 ${(m.top + H - m.bottom) / 2})`} textAnchor="middle" className="fill-subtle text-[11px]">Mean sentiment</text>
       </svg>
     </Card>
   );
@@ -355,22 +346,22 @@ export function AspectHeatmap() {
   };
   return (
     <Card title="Aspect-based sentiment — Bean &amp; Basket, by store region">
-      <div className="overflow-hidden rounded-md border border-slate-200">
+      <div className="overflow-hidden rounded-md border border-border">
         <table className="w-full text-[11.5px]">
           <thead>
             <tr>
-              <th className="px-2 py-1.5 text-left text-[10px] uppercase tracking-wide text-slate-500"> </th>
+              <th className="px-2 py-1.5 text-left text-[10px] uppercase tracking-wide text-muted"> </th>
               {regions.map(r => (
-                <th key={r} className="px-2 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-slate-500">{r}</th>
+                <th key={r} className="px-2 py-1.5 text-center text-[10px] font-semibold uppercase tracking-wide text-muted">{r}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {aspects.map((a, i) => (
               <tr key={a}>
-                <th className="px-2 py-1.5 text-left text-[11px] font-semibold text-slate-700">{a}</th>
+                <th className="px-2 py-1.5 text-left text-[11px] font-semibold text-subtle">{a}</th>
                 {M[i].map((v, j) => (
-                  <td key={j} className="px-2 py-1.5 text-center font-mono text-slate-800" style={{ background: color(v) }}>
+                  <td key={j} className="px-2 py-1.5 text-center font-mono text-body" style={{ background: color(v) }}>
                     {v > 0 ? `+${v.toFixed(2)}` : v.toFixed(2)}
                   </td>
                 ))}
@@ -379,7 +370,7 @@ export function AspectHeatmap() {
           </tbody>
         </table>
       </div>
-      <div className="mt-2 flex items-center justify-center gap-4 text-[10.5px] text-slate-600">
+      <div className="mt-2 flex items-center justify-center gap-4 text-[10.5px] text-subtle">
         <span className="inline-flex items-center gap-1.5">
           <span className="inline-block h-3 w-6 rounded" style={{ background: 'rgba(220,38,38,0.7)' }} /> negative
         </span>
@@ -387,7 +378,7 @@ export function AspectHeatmap() {
           <span className="inline-block h-3 w-6 rounded" style={{ background: 'rgba(15,118,110,0.7)' }} /> positive
         </span>
       </div>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Overall sentiment hides the picture — coffee and staff are loved everywhere, the app is hurting everywhere, and the South-East has a separate wait-time problem.
       </p>
     </Card>
@@ -455,17 +446,17 @@ export function TopicWordBars() {
         {topics.map(t => {
           const max = Math.max(...t.words.map(w => w.p));
           return (
-            <div key={t.name} className="rounded-md border border-slate-200 p-3">
+            <div key={t.name} className="rounded-md border border-border p-3">
               <div className="mb-1 flex items-center gap-2">
                 <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: t.color }} />
-                <span className="text-[12px] font-semibold text-slate-800">{t.name}</span>
+                <span className="text-[12px] font-semibold text-body">{t.name}</span>
               </div>
               <ul className="space-y-1">
                 {t.words.map(w => (
                   <li key={w.w} className="grid grid-cols-[80px_minmax(0,1fr)_36px] items-center gap-2 text-[11.5px]">
-                    <span className="font-mono text-slate-700">{w.w}</span>
+                    <span className="font-mono text-subtle">{w.w}</span>
                     <span className="block h-2.5 rounded" style={{ width: `${(w.p / max) * 100}%`, background: t.color, opacity: 0.85 }} />
-                    <span className="text-right tabular-nums text-slate-500">{w.p.toFixed(2)}</span>
+                    <span className="text-right tabular-nums text-muted">{w.p.toFixed(2)}</span>
                   </li>
                 ))}
               </ul>
@@ -473,7 +464,7 @@ export function TopicWordBars() {
           );
         })}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         The algorithm produces word distributions. The names — "Mobile app issues", "Drink quality praise" — come from a human reading the words and a sample of documents.
       </p>
     </Card>
@@ -506,7 +497,7 @@ export function TopicTrendsChart() {
         {[0, 0.1, 0.2, 0.3, 0.4].map(v => (
           <g key={v}>
             <line x1={m.left} y1={yS(v)} x2={W - m.right} y2={yS(v)} stroke={C.grid} strokeWidth={1} />
-            <text x={m.left - 8} y={yS(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{`${(v * 100).toFixed(0)}%`}</text>
+            <text x={m.left - 8} y={yS(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{`${(v * 100).toFixed(0)}%`}</text>
           </g>
         ))}
         {series.map(s => {
@@ -522,9 +513,9 @@ export function TopicTrendsChart() {
           );
         })}
         {[0, 3, 6, 9, 11].map(i => (
-          <text key={i} x={xS(i)} y={H - m.bottom + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{`m${i + 1}`}</text>
+          <text key={i} x={xS(i)} y={H - m.bottom + 14} textAnchor="middle" className="fill-muted text-[10px]">{`m${i + 1}`}</text>
         ))}
-        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-slate-700 text-[11px]">Month</text>
+        <text x={(m.left + W - m.right) / 2} y={H - 6} textAnchor="middle" className="fill-subtle text-[11px]">Month</text>
       </svg>
     </Card>
   );
@@ -545,10 +536,10 @@ export function ClassicalNlpFailureGallery() {
   ];
   return (
     <Card title="Where bag-of-words and dictionary sentiment quietly fail">
-      <div className="overflow-hidden rounded-md border border-slate-200">
+      <div className="overflow-hidden rounded-md border border-border">
         <table className="w-full text-[11.5px]">
           <thead>
-            <tr className="bg-slate-50 text-[10px] uppercase tracking-wide text-slate-500">
+            <tr className="bg-code-bg text-[10px] uppercase tracking-wide text-muted">
               <th className="px-2 py-1.5 text-left">Kind</th>
               <th className="px-2 py-1.5 text-left">Example</th>
               <th className="px-2 py-1.5 text-left">Surface read</th>
@@ -557,17 +548,17 @@ export function ClassicalNlpFailureGallery() {
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={r.kind} className={i % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}>
-                <td className="px-2 py-1.5 font-semibold text-slate-700">{r.kind}</td>
-                <td className="px-2 py-1.5 italic text-slate-700">{r.text}</td>
-                <td className="px-2 py-1.5 text-rose-700">{r.surface}</td>
-                <td className="px-2 py-1.5 text-emerald-700">{r.truth}</td>
+              <tr key={r.kind} className={i % 2 === 0 ? 'bg-surface' : 'bg-code-bg/60'}>
+                <td className="px-2 py-1.5 font-semibold text-subtle">{r.kind}</td>
+                <td className="px-2 py-1.5 italic text-subtle">{r.text}</td>
+                <td className="px-2 py-1.5 text-neg">{r.surface}</td>
+                <td className="px-2 py-1.5 text-pos">{r.truth}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         Bag-of-words knows which words appear, not what they mean together. The fix is a representation that places similar meanings near each other.
       </p>
     </Card>
@@ -633,22 +624,22 @@ export function EmbeddingScatter() {
         ))}
         {/* query point */}
         <circle cx={xS(query.x)} cy={yS(query.y)} r={6} fill="white" stroke={C.ink} strokeWidth={2} />
-        <text x={xS(query.x) + 8} y={yS(query.y) - 6} className="fill-slate-900 text-[10px] font-semibold">query</text>
-        <text x={xS(query.x) + 8} y={yS(query.y) + 7} className="fill-slate-600 text-[9px] italic">"unhappy with refund process"</text>
+        <text x={xS(query.x) + 8} y={yS(query.y) - 6} className="fill-body text-[10px] font-semibold">query</text>
+        <text x={xS(query.x) + 8} y={yS(query.y) + 7} className="fill-subtle text-[9px] italic">"unhappy with refund process"</text>
         {/* neighbour panel */}
         <g transform={`translate(${W - m.right + 10},${m.top + 8})`}>
           <rect x={0} y={0} width={195} height={innerH - 8} rx={6} fill="white" stroke={C.grid} />
-          <text x={10} y={16} className="fill-slate-800 text-[11px] font-semibold">Nearest neighbours</text>
+          <text x={10} y={16} className="fill-body text-[11px] font-semibold">Nearest neighbours</text>
           {['refund', 'money back', 'return', 'cancel order', 'late delivery', 'arrived cold'].map((w, i) => (
             <g key={w}>
-              <text x={10} y={36 + i * 16} className="fill-slate-700 text-[10.5px] font-mono">{i + 1}. {w}</text>
+              <text x={10} y={36 + i * 16} className="fill-subtle text-[10.5px] font-mono">{i + 1}. {w}</text>
               <rect x={130} y={28 + i * 16} width={60 - i * 8} height={8} rx={2} fill={i < 4 ? C.red : C.amber} opacity={0.85} />
             </g>
           ))}
-          <text x={10} y={36 + 6 * 16 + 6} className="fill-slate-500 text-[9.5px] italic">distance ↑ as rank ↓</text>
+          <text x={10} y={36 + 6 * 16 + 6} className="fill-muted text-[9.5px] italic">distance ↑ as rank ↓</text>
         </g>
       </svg>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         The query never used the word "refund" outside the bracket. Yet "refund / money back / return / cancel order" surfaced — the embedding captured the <em>intent</em>, not the keywords.
       </p>
     </Card>
@@ -674,21 +665,21 @@ export function KeywordVsSemanticSearch() {
     { text: '"Food arrived cold after a long wait."', hit: true, why: 'semantic match — wait + frustration' },
   ];
   const Row = ({ items, label, color }: { items: typeof keyword; label: string; color: string }) => (
-    <div className="rounded-md border border-slate-200 p-3">
+    <div className="rounded-md border border-border p-3">
       <div className="mb-2 text-[11.5px] font-semibold uppercase tracking-wide" style={{ color }}>{label}</div>
       <ul className="space-y-1.5">
         {items.map((r, i) => (
           <li key={i} className="flex items-start gap-2 text-[11.5px]">
             <span
               className={`mt-0.5 inline-block min-w-[28px] rounded px-1.5 py-0.5 text-center text-[10px] font-semibold uppercase tracking-wide ${
-                r.hit ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'
+                r.hit ? 'bg-pos/10 text-pos' : 'bg-code-bg text-muted'
               }`}
             >
               {r.hit ? 'hit' : 'miss'}
             </span>
             <div>
-              <div className="italic text-slate-800">{r.text}</div>
-              <div className="text-[10px] text-slate-500">{r.why}</div>
+              <div className="italic text-body">{r.text}</div>
+              <div className="text-[10px] text-muted">{r.why}</div>
             </div>
           </li>
         ))}
@@ -701,7 +692,7 @@ export function KeywordVsSemanticSearch() {
         <Row items={keyword} label="Keyword retrieval" color={C.amber} />
         <Row items={semantic} label="Semantic retrieval" color={C.green} />
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
+      <p className="mt-3 text-[11px] text-muted">
         Keyword search recovers only the documents that share words with the query. Semantic search recovers the documents that share <em>meaning</em>.
       </p>
     </Card>
@@ -735,8 +726,8 @@ export function SurveyVsTextMap() {
     const yS = (v: number) => cy - v * (innerH / 2 - 14);
     return (
       <g>
-        <text x={offset + innerW / 2} y={22} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">{title}</text>
-        <text x={offset + innerW / 2} y={36} textAnchor="middle" className="fill-slate-500 text-[10px]">{sub}</text>
+        <text x={offset + innerW / 2} y={22} textAnchor="middle" className="fill-body text-[11px] font-semibold">{title}</text>
+        <text x={offset + innerW / 2} y={36} textAnchor="middle" className="fill-muted text-[10px]">{sub}</text>
         <rect x={offset} y={oy} width={innerW} height={innerH} fill={C.slate50} stroke={C.grid} />
         <line x1={offset} y1={cy} x2={offset + innerW} y2={cy} stroke={C.muted} strokeWidth={1} strokeDasharray="2 3" />
         <line x1={cx} y1={oy} x2={cx} y2={oy + innerH} stroke={C.muted} strokeWidth={1} strokeDasharray="2 3" />
@@ -755,7 +746,7 @@ export function SurveyVsTextMap() {
         {panel(left, 'PCA on attribute ratings', 'survey data, fixed scales', 'surveyX', 'surveyY')}
         {panel(left + colW + 30, 'UMAP on review embeddings', 'free text, learned space', 'textX', 'textY')}
       </svg>
-      <p className="mt-2 text-[11px] text-slate-500">
+      <p className="mt-2 text-[11px] text-muted">
         The same competitive structure surfaces from two evidence languages. Embeddings let us read positioning from text the way PCA lets us read it from surveys.
       </p>
     </Card>

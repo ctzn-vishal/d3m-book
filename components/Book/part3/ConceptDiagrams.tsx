@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+
 /**
  * Conceptual diagrams for Part III articles.
  *
@@ -16,37 +18,31 @@ import * as React from 'react';
  *  - all text uses the page font (no SVG text-family override)
  */
 
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  navy: '#1f3a5f',
-  orange: '#c87c2a',
-  orangeLight: '#fed7aa',
-  green: '#0f766e',
-  greenLight: '#ccfbf1',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  purple: '#7c3aed',
-  purpleLight: '#ede9fe',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
+/**
+ * Was twenty-one hardcoded light-mode hexes. Now the same names,
+ * resolved through the theme — see components/Book/diagram/legacy.ts for
+ * how the ten hues collapse onto ink, accent, pos, and neg.
+ */
+const C = LEGACY_C;
 
-function Card({ title, children }: { title?: string; children: React.ReactNode }) {
+/**
+ * Local card wrapper, now a thin pass-through to the shared frame so this
+ * file's figures stop being white slabs on a dark page. `DiagramFrame` owns
+ * the ground, the hairline, and the absence of a shadow.
+ */
+function Card({
+  title,
+  children,
+  footer,
+}: {
+  title?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}) {
   return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {title}
-        </p>
-      )}
+    <DiagramFrame eyebrow={title} note={footer}>
       {children}
-    </div>
+    </DiagramFrame>
   );
 }
 
@@ -90,10 +86,10 @@ export function RandomAssignmentBalance() {
     return (
       <g key={title}>
         <rect x={x0} y={m.top - 6} width={panelW} height={maxH + 80} rx={4} fill={C.slate50} stroke={C.grid} />
-        <text x={x0 + panelW / 2} y={m.top + 8} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">
+        <text x={x0 + panelW / 2} y={m.top + 8} textAnchor="middle" className="fill-body text-[11px] font-semibold">
           {title}
         </text>
-        <text x={x0 + panelW / 2} y={m.top + 22} textAnchor="middle" className="fill-slate-500 text-[10px]">
+        <text x={x0 + panelW / 2} y={m.top + 22} textAnchor="middle" className="fill-muted text-[10px]">
           {subtitle}
         </text>
         {dataA.map((v, i) => {
@@ -109,7 +105,7 @@ export function RandomAssignmentBalance() {
           );
         })}
         <line x1={x0 + 6} y1={baseY} x2={x0 + panelW - 6} y2={baseY} stroke={C.ink} strokeWidth={1} />
-        <text x={x0 + panelW / 2} y={baseY + 18} textAnchor="middle" className="fill-slate-500 text-[10px]">
+        <text x={x0 + panelW / 2} y={baseY + 18} textAnchor="middle" className="fill-muted text-[10px]">
           Pre-treatment covariate (e.g. baseline spend) →
         </text>
       </g>
@@ -122,7 +118,7 @@ export function RandomAssignmentBalance() {
         {drawPanel(left, [], [], 'Randomized assignment', 'Each bin split ~50/50 — arms balanced at baseline.', randA, randB)}
         {drawPanel(right, [], [], 'Self-selected adoption', 'High-spend customers opt in — arms differ before any treatment.', selectedA, selectedB)}
       </svg>
-      <div className="mt-2 flex items-center justify-center gap-4 text-[11px] text-slate-600">
+      <div className="mt-2 flex items-center justify-center gap-4 text-[11px] text-subtle">
         <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: C.blue }} /> Arm A (treatment)</span>
         <span className="inline-flex items-center gap-1.5"><span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: C.orange }} /> Arm B (control)</span>
       </div>
@@ -159,19 +155,19 @@ export function LiftWithCI() {
         <rect x={x(0)} y={m.top} width={x(threshold) - x(0)} height={H - m.bottom - m.top} fill={C.amberLight} opacity={0.45} />
         {/* zero line */}
         <line x1={x(0)} y1={m.top} x2={x(0)} y2={H - m.bottom} stroke={C.ink} strokeWidth={1.4} />
-        <text x={x(0)} y={H - 16} textAnchor="middle" className="fill-slate-600 text-[10px]">0 = no effect</text>
+        <text x={x(0)} y={H - 16} textAnchor="middle" className="fill-subtle text-[10px]">0 = no effect</text>
         {/* threshold line */}
         <line x1={x(threshold)} y1={m.top} x2={x(threshold)} y2={H - m.bottom} stroke={C.amber} strokeDasharray="4 4" strokeWidth={1.4} />
-        <text x={x(threshold)} y={H - 16} textAnchor="middle" className="fill-amber-700 text-[10px]">decision threshold</text>
+        <text x={x(threshold)} y={H - 16} textAnchor="middle" className="fill-accent-ink text-[10px]">decision threshold</text>
 
         {rows.map((r, i) => {
           const y = yFor(i);
           return (
             <g key={r.label}>
-              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-slate-800 text-[12px] font-medium">{r.label}</text>
+              <text x={m.left - 12} y={y + 4} textAnchor="end" className="fill-body text-[12px] font-medium">{r.label}</text>
               <line x1={x(r.lo)} y1={y} x2={x(r.hi)} y2={y} stroke={r.color} strokeWidth={3} />
               <circle cx={x(r.est)} cy={y} r={5} fill={r.color} />
-              <text x={x(r.hi) + 8} y={y + 4} className="fill-slate-500 text-[10px]">{r.hint}</text>
+              <text x={x(r.hi) + 8} y={y + 4} className="fill-muted text-[10px]">{r.hint}</text>
             </g>
           );
         })}
@@ -211,8 +207,8 @@ export function ConfounderDAG() {
         <line x1={nodes.Z.x + 26} y1={nodes.Z.y + 18} x2={nodes.Y.x - 22} y2={nodes.Y.y - 16} stroke={C.muted} strokeWidth={2} markerEnd="url(#cdg-arrow)" />
         {/* D -> Y (causal — what we want) */}
         <line x1={nodes.D.x + nodeR} y1={nodes.D.y} x2={nodes.Y.x - nodeR - 2} y2={nodes.Y.y} stroke={C.green} strokeWidth={2.5} markerEnd="url(#cdg-arrow-causal)" />
-        <text x={(nodes.D.x + nodes.Y.x) / 2} y={nodes.D.y - 8} textAnchor="middle" className="fill-emerald-700 text-[11px] font-semibold">causal effect (what we want)</text>
-        <text x={(nodes.D.x + nodes.Z.x) / 2 - 22} y={(nodes.D.y + nodes.Z.y) / 2 + 10} textAnchor="end" className="fill-slate-500 text-[10px]">backdoor path</text>
+        <text x={(nodes.D.x + nodes.Y.x) / 2} y={nodes.D.y - 8} textAnchor="middle" className="fill-pos text-[11px] font-semibold">causal effect (what we want)</text>
+        <text x={(nodes.D.x + nodes.Z.x) / 2 - 22} y={(nodes.D.y + nodes.Z.y) / 2 + 10} textAnchor="end" className="fill-muted text-[10px]">backdoor path</text>
 
         {(['Z','D','Y'] as const).map(k => {
           const n = nodes[k];
@@ -221,13 +217,13 @@ export function ConfounderDAG() {
           return (
             <g key={k}>
               <circle cx={n.x} cy={n.y} r={nodeR} fill={fill} stroke={stroke} strokeWidth={2} />
-              <text x={n.x} y={n.y + 6} textAnchor="middle" className="fill-slate-900 text-[16px] font-bold">{n.label}</text>
-              <text x={n.x} y={n.y + nodeR + 16} textAnchor="middle" className="fill-slate-600 text-[10px]">{n.sub}</text>
+              <text x={n.x} y={n.y + 6} textAnchor="middle" className="fill-body text-[16px] font-bold">{n.label}</text>
+              <text x={n.x} y={n.y + nodeR + 16} textAnchor="middle" className="fill-subtle text-[10px]">{n.sub}</text>
             </g>
           );
         })}
       </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
+      <p className="mt-1 text-center text-[11px] text-muted">
         Comparing treated and untreated units without controlling for Z mixes the causal D → Y arrow with the spurious D ← Z → Y path.
       </p>
     </Card>
@@ -248,12 +244,12 @@ export function ReverseCausalityDiagram() {
     return (
       <g key={label}>
         <rect x={x0} y={20} width={280} height={H - 30} rx={6} fill={good ? C.greenLight : C.redLight} opacity={0.25} stroke={good ? C.green : C.red} strokeWidth={1.2} />
-        <text x={x0 + 140} y={38} textAnchor="middle" className="fill-slate-800 text-[11px] font-semibold">{label}</text>
-        <text x={x0 + 140} y={H - 18} textAnchor="middle" className="fill-slate-500 text-[10px]">{sub}</text>
+        <text x={x0 + 140} y={38} textAnchor="middle" className="fill-body text-[11px] font-semibold">{label}</text>
+        <text x={x0 + 140} y={H - 18} textAnchor="middle" className="fill-muted text-[10px]">{sub}</text>
         <circle cx={D.x} cy={D.y} r={r} fill={C.blueLight} stroke={C.blue} strokeWidth={2} />
-        <text x={D.x} y={D.y + 5} textAnchor="middle" className="fill-slate-900 text-[14px] font-bold">D</text>
+        <text x={D.x} y={D.y + 5} textAnchor="middle" className="fill-body text-[14px] font-bold">D</text>
         <circle cx={Y.x} cy={Y.y} r={r} fill={C.greenLight} stroke={C.green} strokeWidth={2} />
-        <text x={Y.x} y={Y.y + 5} textAnchor="middle" className="fill-slate-900 text-[14px] font-bold">Y</text>
+        <text x={Y.x} y={Y.y + 5} textAnchor="middle" className="fill-body text-[14px] font-bold">Y</text>
         {arrow === 'forward' ? (
           <line x1={D.x + r} y1={D.y} x2={Y.x - r - 2} y2={Y.y} stroke={C.ink} strokeWidth={2.5} markerEnd="url(#rcd-arrow)" />
         ) : (
@@ -292,8 +288,8 @@ export function FrischWaughResidualization() {
   const box = (x0: number, y0: number, w: number, h: number, title: string, sub: string, fill: string, stroke: string) => (
     <g key={title + x0}>
       <rect x={x0} y={y0} width={w} height={h} rx={6} fill={fill} stroke={stroke} strokeWidth={1.4} />
-      <text x={x0 + w / 2} y={y0 + 24} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">{title}</text>
-      <text x={x0 + w / 2} y={y0 + 42} textAnchor="middle" className="fill-slate-600 text-[10px]">{sub}</text>
+      <text x={x0 + w / 2} y={y0 + 24} textAnchor="middle" className="fill-body text-[12px] font-semibold">{title}</text>
+      <text x={x0 + w / 2} y={y0 + 42} textAnchor="middle" className="fill-subtle text-[10px]">{sub}</text>
     </g>
   );
 
@@ -314,14 +310,14 @@ export function FrischWaughResidualization() {
         {box(520, 80, 180, 60, 'Coefficient on D', 'slope of Y-residual on D-residual', C.amberLight, C.amber)}
 
         <line x1={190} y1={60} x2={258} y2={60} stroke={C.muted} strokeWidth={1.8} markerEnd="url(#frw-arrow)" />
-        <text x={224} y={52} textAnchor="middle" className="fill-slate-500 text-[10px]">partial out X</text>
+        <text x={224} y={52} textAnchor="middle" className="fill-muted text-[10px]">partial out X</text>
         <line x1={190} y1={160} x2={258} y2={160} stroke={C.muted} strokeWidth={1.8} markerEnd="url(#frw-arrow)" />
-        <text x={224} y={152} textAnchor="middle" className="fill-slate-500 text-[10px]">partial out X</text>
+        <text x={224} y={152} textAnchor="middle" className="fill-muted text-[10px]">partial out X</text>
 
         <line x1={460} y1={60} x2={518} y2={100} stroke={C.muted} strokeWidth={1.8} markerEnd="url(#frw-arrow)" />
         <line x1={460} y1={160} x2={518} y2={120} stroke={C.muted} strokeWidth={1.8} markerEnd="url(#frw-arrow)" />
       </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
+      <p className="mt-1 text-center text-[11px] text-muted">
         The regression coefficient on D <em>after</em> adjusting for controls X equals the simple regression of Y's residuals on D's residuals.
       </p>
     </Card>
@@ -354,8 +350,8 @@ export function WithinUnitVariation() {
         {/* axes */}
         <line x1={m.left} y1={H - m.bottom} x2={W - m.right} y2={H - m.bottom} stroke={C.ink} />
         <line x1={m.left} y1={m.top} x2={m.left} y2={H - m.bottom} stroke={C.ink} />
-        <text x={W - m.right} y={H - 14} textAnchor="end" className="fill-slate-500 text-[10px]">time →</text>
-        <text x={m.left + 6} y={m.top - 12} textAnchor="start" className="fill-slate-500 text-[10px]">outcome</text>
+        <text x={W - m.right} y={H - 14} textAnchor="end" className="fill-muted text-[10px]">time →</text>
+        <text x={m.left + 6} y={m.top - 12} textAnchor="start" className="fill-muted text-[10px]">outcome</text>
 
         {/* unit-level lines & points */}
         {units.map(u => {
@@ -381,7 +377,7 @@ export function WithinUnitVariation() {
               <text
                 x={W - m.right + 4}
                 y={yScale(u.intercept + u.points[u.points.length - 1]) + 4}
-                className="fill-slate-700 text-[11px]"
+                className="fill-subtle text-[11px]"
                 style={{ fill: u.color }}
               >
                 {u.name}
@@ -390,7 +386,7 @@ export function WithinUnitVariation() {
           );
         })}
       </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
+      <p className="mt-1 text-center text-[11px] text-muted">
         Cross-store comparison mixes level differences (intercepts) with the lever's effect. Store fixed effects subtract each store's own mean (dashed) and identify the slope from <em>within-store</em> wiggles only.
       </p>
     </Card>
@@ -421,27 +417,27 @@ export function DiDTwoByTwo() {
     <Card title="Difference-in-differences as a 2×2 comparison">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="A 2x2 grid showing the four cells of a difference-in-differences design.">
         {/* column headers */}
-        <text x={x0 + cellW / 2} y={y0 - 14} textAnchor="middle" className="fill-slate-600 text-[11px] font-semibold">Pre</text>
-        <text x={x0 + cellW + cellW / 2} y={y0 - 14} textAnchor="middle" className="fill-slate-600 text-[11px] font-semibold">Post</text>
+        <text x={x0 + cellW / 2} y={y0 - 14} textAnchor="middle" className="fill-subtle text-[11px] font-semibold">Pre</text>
+        <text x={x0 + cellW + cellW / 2} y={y0 - 14} textAnchor="middle" className="fill-subtle text-[11px] font-semibold">Post</text>
         {/* row headers */}
-        <text x={x0 - 14} y={y0 + cellH / 2 + 4} textAnchor="end" className="fill-slate-600 text-[11px] font-semibold">Control</text>
-        <text x={x0 - 14} y={y0 + cellH + cellH / 2 + 4} textAnchor="end" className="fill-slate-600 text-[11px] font-semibold">Treated</text>
+        <text x={x0 - 14} y={y0 + cellH / 2 + 4} textAnchor="end" className="fill-subtle text-[11px] font-semibold">Control</text>
+        <text x={x0 - 14} y={y0 + cellH + cellH / 2 + 4} textAnchor="end" className="fill-subtle text-[11px] font-semibold">Treated</text>
 
         {cells.map((c, i) => (
           <g key={i}>
             <rect x={x0 + c.col * cellW} y={y0 + c.row * cellH} width={cellW} height={cellH} fill={c.fill} stroke={C.muted} strokeWidth={1.2} />
-            <text x={x0 + c.col * cellW + cellW / 2} y={y0 + c.row * cellH + cellH / 2 - 4} textAnchor="middle" className="fill-slate-900 text-[14px] font-bold">{c.value}</text>
-            <text x={x0 + c.col * cellW + cellW / 2} y={y0 + c.row * cellH + cellH / 2 + 14} textAnchor="middle" className="fill-slate-600 text-[10px]">{c.label}</text>
+            <text x={x0 + c.col * cellW + cellW / 2} y={y0 + c.row * cellH + cellH / 2 - 4} textAnchor="middle" className="fill-body text-[14px] font-bold">{c.value}</text>
+            <text x={x0 + c.col * cellW + cellW / 2} y={y0 + c.row * cellH + cellH / 2 + 14} textAnchor="middle" className="fill-subtle text-[10px]">{c.label}</text>
           </g>
         ))}
 
         {/* row-wise differences (post - pre) */}
-        <text x={x0 + 2 * cellW + 10} y={y0 + cellH / 2 + 4} className="fill-slate-700 text-[11px]">ΔControl = Y₀₁ − Y₀₀</text>
-        <text x={x0 + 2 * cellW + 10} y={y0 + cellH + cellH / 2 + 4} className="fill-slate-700 text-[11px]">ΔTreated = Y₁₁ − Y₁₀</text>
+        <text x={x0 + 2 * cellW + 10} y={y0 + cellH / 2 + 4} className="fill-subtle text-[11px]">ΔControl = Y₀₁ − Y₀₀</text>
+        <text x={x0 + 2 * cellW + 10} y={y0 + cellH + cellH / 2 + 4} className="fill-subtle text-[11px]">ΔTreated = Y₁₁ − Y₁₀</text>
 
         {/* DiD line */}
         <line x1={x0 + 2 * cellW + 8} y1={y0 + cellH / 2 + 12} x2={x0 + 2 * cellW + 8} y2={y0 + cellH + cellH / 2 - 6} stroke={C.amber} strokeWidth={2} />
-        <text x={x0 + 2 * cellW + 18} y={y0 + cellH + 8} className="fill-amber-700 text-[11px] font-semibold">
+        <text x={x0 + 2 * cellW + 18} y={y0 + cellH + 8} className="fill-accent-ink text-[11px] font-semibold">
           DiD = ΔTreated − ΔControl
         </text>
       </svg>
@@ -481,12 +477,12 @@ export function SyntheticControlBuilder() {
         </defs>
 
         {/* Column 1: donor pool */}
-        <text x={xCol1 + colW / 2} y={28} textAnchor="middle" className="fill-slate-700 text-[11px] font-semibold">Donor pool</text>
+        <text x={xCol1 + colW / 2} y={28} textAnchor="middle" className="fill-subtle text-[11px] font-semibold">Donor pool</text>
         {donors.map((d, i) => (
           <g key={d.label}>
             <rect x={xCol1} y={yStart + i * 26} width={colW} height={22} rx={4} fill={C.slate50} stroke={d.w > 0 ? d.color : C.grid} strokeWidth={1.2} />
-            <text x={xCol1 + 10} y={yStart + i * 26 + 15} className="fill-slate-700 text-[11px]">{d.label}</text>
-            <text x={xCol1 + colW - 10} y={yStart + i * 26 + 15} textAnchor="end" className="fill-slate-500 text-[10px]">
+            <text x={xCol1 + 10} y={yStart + i * 26 + 15} className="fill-subtle text-[11px]">{d.label}</text>
+            <text x={xCol1 + colW - 10} y={yStart + i * 26 + 15} textAnchor="end" className="fill-muted text-[10px]">
               {d.w > 0 ? `w = ${d.w.toFixed(2)}` : 'w = 0'}
             </text>
           </g>
@@ -494,12 +490,12 @@ export function SyntheticControlBuilder() {
 
         {/* Arrows to weights bar */}
         <line x1={xCol1 + colW + 6} y1={H / 2} x2={xCol2 - 6} y2={H / 2} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#scb-arrow)" />
-        <text x={(xCol1 + colW + xCol2) / 2} y={H / 2 - 10} textAnchor="middle" className="fill-slate-500 text-[10px]">
+        <text x={(xCol1 + colW + xCol2) / 2} y={H / 2 - 10} textAnchor="middle" className="fill-muted text-[10px]">
           fit pre-treatment trend
         </text>
 
         {/* Column 2: stacked weights bar */}
-        <text x={xCol2 + colW / 2} y={28} textAnchor="middle" className="fill-slate-700 text-[11px] font-semibold">Weights sum to 1</text>
+        <text x={xCol2 + colW / 2} y={28} textAnchor="middle" className="fill-subtle text-[11px] font-semibold">Weights sum to 1</text>
         {(() => {
           let acc = 0;
           const barH = 140;
@@ -514,7 +510,7 @@ export function SyntheticControlBuilder() {
             return (
               <g key={d.label}>
                 <rect x={barX} y={y} width={barW} height={h} fill={d.color} opacity={0.85} />
-                <text x={barX + barW / 2} y={y + h / 2 + 4} textAnchor="middle" className="fill-white text-[11px] font-semibold">
+                <text x={barX + barW / 2} y={y + h / 2 + 4} textAnchor="middle" className="fill-surface text-[11px] font-semibold">
                   {(d.w * 100).toFixed(0)}%
                 </text>
               </g>
@@ -524,16 +520,16 @@ export function SyntheticControlBuilder() {
 
         {/* Arrow to synthetic */}
         <line x1={xCol2 + colW + 6} y1={H / 2} x2={xCol3 - 6} y2={H / 2} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#scb-arrow)" />
-        <text x={(xCol2 + colW + xCol3) / 2} y={H / 2 - 10} textAnchor="middle" className="fill-slate-500 text-[10px]">
+        <text x={(xCol2 + colW + xCol3) / 2} y={H / 2 - 10} textAnchor="middle" className="fill-muted text-[10px]">
           weighted mix
         </text>
 
         {/* Column 3: synthetic */}
         <rect x={xCol3} y={70} width={colW - 30} height={100} rx={8} fill={C.orangeLight} stroke={C.orange} strokeWidth={1.6} />
-        <text x={xCol3 + (colW - 30) / 2} y={110} textAnchor="middle" className="fill-orange-900 text-[12px] font-semibold">Synthetic</text>
-        <text x={xCol3 + (colW - 30) / 2} y={128} textAnchor="middle" className="fill-orange-900 text-[12px] font-semibold">Counterfactual</text>
-        <text x={xCol3 + (colW - 30) / 2} y={148} textAnchor="middle" className="fill-orange-700 text-[10px]">tracks treated</text>
-        <text x={xCol3 + (colW - 30) / 2} y={162} textAnchor="middle" className="fill-orange-700 text-[10px]">unit pre-treatment</text>
+        <text x={xCol3 + (colW - 30) / 2} y={110} textAnchor="middle" className="fill-accent-ink text-[12px] font-semibold">Synthetic</text>
+        <text x={xCol3 + (colW - 30) / 2} y={128} textAnchor="middle" className="fill-accent-ink text-[12px] font-semibold">Counterfactual</text>
+        <text x={xCol3 + (colW - 30) / 2} y={148} textAnchor="middle" className="fill-accent-ink text-[10px]">tracks treated</text>
+        <text x={xCol3 + (colW - 30) / 2} y={162} textAnchor="middle" className="fill-accent-ink text-[10px]">unit pre-treatment</text>
       </svg>
     </Card>
   );
@@ -572,28 +568,28 @@ export function ElasticityZones() {
         {/* axes */}
         <line x1={m.left} y1={H - m.bottom} x2={W - m.right} y2={H - m.bottom} stroke={C.ink} />
         <line x1={m.left} y1={m.top} x2={m.left} y2={H - m.bottom} stroke={C.ink} />
-        <text x={W - m.right} y={H - 36} textAnchor="end" className="fill-slate-500 text-[10px]">price →</text>
-        <text x={m.left + 6} y={m.top - 12} className="fill-slate-500 text-[10px]">quantity</text>
+        <text x={W - m.right} y={H - 36} textAnchor="end" className="fill-muted text-[10px]">price →</text>
+        <text x={m.left + 6} y={m.top - 12} className="fill-muted text-[10px]">quantity</text>
 
         {/* demand curve */}
         <path d={path} fill="none" stroke={C.navy} strokeWidth={2.5} />
 
         {/* zone labels */}
-        <text x={(m.left + inelasticEnd) / 2} y={m.top + 18} textAnchor="middle" className="fill-emerald-700 text-[11px] font-semibold">Inelastic</text>
-        <text x={(m.left + inelasticEnd) / 2} y={m.top + 32} textAnchor="middle" className="fill-emerald-700 text-[10px]">|ε| &lt; 1 · price ↑ → revenue ↑</text>
+        <text x={(m.left + inelasticEnd) / 2} y={m.top + 18} textAnchor="middle" className="fill-pos text-[11px] font-semibold">Inelastic</text>
+        <text x={(m.left + inelasticEnd) / 2} y={m.top + 32} textAnchor="middle" className="fill-pos text-[10px]">|ε| &lt; 1 · price ↑ → revenue ↑</text>
 
-        <text x={(inelasticEnd + elasticStart) / 2} y={m.top + 18} textAnchor="middle" className="fill-amber-700 text-[11px] font-semibold">Unit</text>
-        <text x={(inelasticEnd + elasticStart) / 2} y={m.top + 32} textAnchor="middle" className="fill-amber-700 text-[10px]">|ε| = 1 · revenue flat</text>
+        <text x={(inelasticEnd + elasticStart) / 2} y={m.top + 18} textAnchor="middle" className="fill-accent-ink text-[11px] font-semibold">Unit</text>
+        <text x={(inelasticEnd + elasticStart) / 2} y={m.top + 32} textAnchor="middle" className="fill-accent-ink text-[10px]">|ε| = 1 · revenue flat</text>
 
-        <text x={(elasticStart + (W - m.right)) / 2} y={m.top + 18} textAnchor="middle" className="fill-red-700 text-[11px] font-semibold">Elastic</text>
-        <text x={(elasticStart + (W - m.right)) / 2} y={m.top + 32} textAnchor="middle" className="fill-red-700 text-[10px]">|ε| &gt; 1 · price ↑ → revenue ↓</text>
+        <text x={(elasticStart + (W - m.right)) / 2} y={m.top + 18} textAnchor="middle" className="fill-neg text-[11px] font-semibold">Elastic</text>
+        <text x={(elasticStart + (W - m.right)) / 2} y={m.top + 32} textAnchor="middle" className="fill-neg text-[10px]">|ε| &gt; 1 · price ↑ → revenue ↓</text>
 
         {/* zone boundary lines */}
         <line x1={inelasticEnd} y1={m.top} x2={inelasticEnd} y2={H - m.bottom} stroke={C.muted} strokeDasharray="3 4" />
         <line x1={elasticStart} y1={m.top} x2={elasticStart} y2={H - m.bottom} stroke={C.muted} strokeDasharray="3 4" />
 
         {/* bottom strategic-rule strip */}
-        <text x={m.left} y={H - 10} className="fill-slate-600 text-[10px]">
+        <text x={m.left} y={H - 10} className="fill-subtle text-[10px]">
           Strategy: harvest margin in the green zone · revenue-max in the amber · cut price or stop raising in red.
         </text>
       </svg>
@@ -623,12 +619,12 @@ export function SubstitutesComplements() {
         {cells.map((c, i) => (
           <g key={i}>
             <rect x={x0 + c.col * (cellW + 10)} y={y0} width={cellW} height={cellH + 60} rx={8} fill={c.fill} stroke={c.stroke} strokeWidth={1.4} opacity={0.6} />
-            <text x={x0 + c.col * (cellW + 10) + cellW / 2} y={y0 + 26} textAnchor="middle" className="fill-slate-900 text-[14px] font-semibold">{c.title}</text>
-            <text x={x0 + c.col * (cellW + 10) + cellW / 2} y={y0 + 50} textAnchor="middle" className="fill-slate-700 text-[12px] font-mono">{c.sign}</text>
-            <text x={x0 + c.col * (cellW + 10) + cellW / 2} y={y0 + 90} textAnchor="middle" className="fill-slate-600 text-[11px]">{c.sub}</text>
+            <text x={x0 + c.col * (cellW + 10) + cellW / 2} y={y0 + 26} textAnchor="middle" className="fill-body text-[14px] font-semibold">{c.title}</text>
+            <text x={x0 + c.col * (cellW + 10) + cellW / 2} y={y0 + 50} textAnchor="middle" className="fill-subtle text-[12px] font-mono">{c.sign}</text>
+            <text x={x0 + c.col * (cellW + 10) + cellW / 2} y={y0 + 90} textAnchor="middle" className="fill-subtle text-[11px]">{c.sub}</text>
           </g>
         ))}
-        <text x={W / 2} y={H - 10} textAnchor="middle" className="fill-slate-500 text-[10px]">
+        <text x={W / 2} y={H - 10} textAnchor="middle" className="fill-muted text-[10px]">
           Sign of the cross-price coefficient → competitive relationship between the two products.
         </text>
       </svg>
@@ -664,21 +660,21 @@ export function OptimalMarkupDiagram() {
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Optimal markup curve as a function of elasticity.">
         <line x1={m.left} y1={H - m.bottom} x2={W - m.right} y2={H - m.bottom} stroke={C.ink} />
         <line x1={m.left} y1={m.top} x2={m.left} y2={H - m.bottom} stroke={C.ink} />
-        <text x={W - m.right} y={H - 26} textAnchor="end" className="fill-slate-500 text-[10px]">|ε| (own-price elasticity, absolute value) →</text>
-        <text x={m.left + 6} y={m.top - 12} className="fill-slate-500 text-[10px]">optimal markup over MC (%)</text>
+        <text x={W - m.right} y={H - 26} textAnchor="end" className="fill-muted text-[10px]">|ε| (own-price elasticity, absolute value) →</text>
+        <text x={m.left + 6} y={m.top - 12} className="fill-muted text-[10px]">optimal markup over MC (%)</text>
 
         {/* x grid */}
         {[1, 2, 3, 4, 5, 6].map(v => (
           <g key={v}>
             <line x1={xScale(v)} y1={m.top} x2={xScale(v)} y2={H - m.bottom} stroke={C.grid} />
-            <text x={xScale(v)} y={H - m.bottom + 14} textAnchor="middle" className="fill-slate-500 text-[10px]">{v}</text>
+            <text x={xScale(v)} y={H - m.bottom + 14} textAnchor="middle" className="fill-muted text-[10px]">{v}</text>
           </g>
         ))}
         {/* y grid */}
         {[0, 50, 100, 150, 200].map(v => (
           <g key={v}>
             <line x1={m.left} y1={yScale(v)} x2={W - m.right} y2={yScale(v)} stroke={C.grid} />
-            <text x={m.left - 6} y={yScale(v) + 3} textAnchor="end" className="fill-slate-500 text-[10px]">{v}%</text>
+            <text x={m.left - 6} y={yScale(v) + 3} textAnchor="end" className="fill-muted text-[10px]">{v}%</text>
           </g>
         ))}
 
@@ -688,7 +684,7 @@ export function OptimalMarkupDiagram() {
           <g key={i}>
             <circle cx={xScale(mk.eps)} cy={yScale(100 / (mk.eps - 1))} r={6} fill={mk.color} />
             {mk.label && (
-              <text x={xScale(mk.eps) + 10} y={yScale(100 / (mk.eps - 1)) - 8} className="fill-slate-700 text-[10px]" style={{ fill: mk.color }}>
+              <text x={xScale(mk.eps) + 10} y={yScale(100 / (mk.eps - 1)) - 8} className="fill-subtle text-[10px]" style={{ fill: mk.color }}>
                 {mk.label}
               </text>
             )}
