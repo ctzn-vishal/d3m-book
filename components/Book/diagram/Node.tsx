@@ -1,7 +1,13 @@
 import * as React from 'react';
 
-import { SvgText } from './text';
+import { SvgText, lineCount } from './text';
 import { R, S, T } from './tokens';
+
+/** Line heights for the two text rows inside a node. Mirrors text.tsx. */
+const NAME_LH = 14;
+const SUB_LH = 11;
+/** Space between the name block and the sublabel block. */
+const BLOCK_GAP = 5;
 
 /**
  * A box in a schematic.
@@ -110,6 +116,12 @@ export interface NodeProps {
    */
   tag?: string;
   rx?: number;
+  /**
+   * `center` (default) or `start`. Left-align when the box is wide and the
+   * label is a sentence rather than a name — centred prose in a 600px box
+   * gives the eye a different left edge on every line.
+   */
+  align?: 'center' | 'start';
   /** Nudge the label block up or down inside the box. */
   labelDy?: number;
   children?: React.ReactNode;
@@ -173,16 +185,29 @@ export function Node({
   sublabel,
   tag,
   rx = R.md,
+  align = 'center',
   labelDy = 0,
   children,
 }: NodeProps) {
   const t = TREATMENT[variant];
-  const cx = x + width / 2;
-  // With a sublabel the name lifts so the pair stays optically centred; the
-  // tag pushes both down out of the corner chip's way.
-  const cy = y + height / 2 + labelDy + (sublabel ? -5 : 0) + (tag ? 5 : 0);
+  const cx = align === 'start' ? x + 12 : x + width / 2;
   // A diamond's usable text width is roughly half its box at mid-height.
-  const padded = shape === 'diamond' ? width * 0.62 : width - 20;
+  const padded = shape === 'diamond' ? width * 0.62 : width - (align === 'start' ? 24 : 20);
+  const textAnchor = align === 'start' ? 'start' : 'middle';
+
+  // Lay the name and sublabel out as one block, measured.
+  //
+  // The obvious version — name centred, sublabel at a fixed +18 — works right
+  // up until the name wraps, at which point its second line lands on the
+  // sublabel's first. That isn't a rare case: it happens to any label longer
+  // than about twenty characters, which is most of them.
+  const nameLines = lineCount(label, padded, 'node');
+  const subLines = sublabel ? lineCount(sublabel, padded, 'sub') : 0;
+  const blockH = nameLines * NAME_LH + (subLines ? BLOCK_GAP + subLines * SUB_LH : 0);
+  // The tag chip owns the top-left corner, so the block shifts clear of it.
+  const blockTop = y + (height - blockH) / 2 + labelDy + (tag ? 6 : 0);
+  const nameY = blockTop + 11;
+  const subY = blockTop + nameLines * NAME_LH + BLOCK_GAP + 8;
 
   return (
     <g>
@@ -232,20 +257,27 @@ export function Node({
           </SvgText>
         </>
       )}
-      <SvgText x={cx} y={cy + 4} width={padded} anchorY="middle" variant="node" tone={t.tone}>
+      <SvgText
+        x={cx}
+        y={nameY}
+        width={padded}
+        variant="node"
+        tone={t.tone}
+        textAnchor={textAnchor}
+      >
         {label}
       </SvgText>
       {sublabel && (
         <SvgText
           x={cx}
-          y={cy + 18}
+          y={subY}
           width={padded}
           variant="sub"
           // `muted`, not `soft`: a sublabel sitting on a tinted focal fill has
           // less contrast to work with than one on plain paper, and 9px type
           // has none to spare.
           tone="muted"
-          anchorY="middle"
+          textAnchor={textAnchor}
         >
           {sublabel}
         </SvgText>

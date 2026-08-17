@@ -39,6 +39,14 @@ export type { LegendItem, LegendProps, SwatchKind } from './Legend';
 export { Zone } from './Zone';
 export type { ZoneProps } from './Zone';
 
+export { Layers } from './LayerStack';
+export type { LayersProps, LayerSpec } from './LayerStack';
+
+export { TreeBus } from './Tree';
+export type { TreeBusProps } from './Tree';
+
+export { row, centeredRow, ring, ringArc, spoke } from './layout';
+
 export { SvgText, wrapText, textWidth, lineCount } from './text';
 export type { SvgTextProps } from './text';
 
