@@ -1,4 +1,5 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
 import { Callout } from '@/components/Book/Callout';
 import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
@@ -63,9 +64,9 @@ Holding marginal cost fixed at <M>{String.raw`MC = \$1.00`}</M> — the same ass
   latex={String.raw`P^*_{\text{winter}} \;=\; \frac{\$1.00}{1 + 1/(-2.820)} \;\approx\; \$1.55`}
 />
 
-<div className="not-prose">
+<Figure width="page-outset" caption="Figure 1. The same marginal cost, two elasticities, two optimal prices. Winter demand is more elastic, so the markup that maximises profit is smaller — the formula recommends charging less in the season when volume is highest, which is the opposite of most people's intuition.">
   <SeasonalOptimalPriceCompare data={data.soup} />
-</div>
+</Figure>
 
 The formula recommends a **higher** price in the non-winter months and a **lower** price in winter — roughly a 12-cent swing on a dollar of marginal cost, or about an 8% seasonal price differential.
 
