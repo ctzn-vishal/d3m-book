@@ -3,8 +3,11 @@ import { Figure } from '@/components/Book/Figure';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
+import { ZillowWideLong } from '@/components/Book/part1/DataLanguageVisuals';
 import wideRaw from './data/sales-wide.json';
 import longRaw from './data/sales-long.json';
+
+import zillowWideLong from './data/zillow-wide-long.json';
 
 export const wide = wideRaw.dataPoints;
 export const long = longRaw.dataPoints;
@@ -81,6 +84,12 @@ Long is the natural shape for almost everything that is not a human reading a sp
 </Figure>
 
 Figure 1 makes the trade-off concrete. The wide tab is easy for the eye. The long tab is easy for the machine — by which we mean the chart engine, the statistical model, the dashboard filter, the join to another time-indexed table. In R, the verbs that move between these shapes are `pivot_wider()` and `pivot_longer()`; in Python's pandas they are `.pivot()` and `.melt()`; in SQL they are sometimes `PIVOT` / `UNPIVOT` and more often a `UNION ALL` of one query per column. The mechanics differ; the conceptual move is the same: take information that is encoded as column position and turn it into information encoded as cell value, or vice versa.
+
+A nine-cell teaching table makes the shapes clear; a real file makes the stakes clear. Figure 2 is Zillow's state home-value extract, which arrives with one column per month.
+
+<Figure width="page-outset" caption="Figure 2. The Zillow state file in both shapes, and the chart that only the second one supports. Wide, every new month is a new column, so a dashboard built on column names breaks the month it ships. Long, a new month is a new row and nothing downstream changes. California is highlighted; all four series are indexed to January 2020 = 100.">
+  <ZillowWideLong data={zillowWideLong} />
+</Figure>
 
 ### Store it long, display it wide
 

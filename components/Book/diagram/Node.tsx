@@ -1,8 +1,5 @@
-'use client';
-
 import * as React from 'react';
 
-import { Mask } from './DiagramFrame';
 import { SvgText } from './text';
 import { R, S, T } from './tokens';
 
@@ -82,12 +79,26 @@ const TREATMENT: Record<NodeVariant, Treatment> = {
   neg: { fill: T.negTint, stroke: T.neg, strokeWidth: S.base, tone: 'neg' },
 };
 
+/**
+ * Shape carries *type*; colour carries emphasis. That division is what lets a
+ * flowchart stay legible in one hue — a diamond is a decision whether or not
+ * it's the focal one.
+ */
+export type NodeShape =
+  /** Step, service, entity. The default. */
+  | 'rect'
+  /** Decision. ≤3 exits, and every outgoing arrow labelled. */
+  | 'diamond'
+  /** Start or end of a flow. */
+  | 'oval';
+
 export interface NodeProps {
   x: number;
   y: number;
   width: number;
   height: number;
   variant?: NodeVariant;
+  shape?: NodeShape;
   /** Human-readable name. Inter, not mono — this is a name, not a port. */
   label: string;
   /** Technical detail under the name: a field type, a count, a unit, a table. */
@@ -104,12 +115,60 @@ export interface NodeProps {
   children?: React.ReactNode;
 }
 
+/** The node's outline, drawn twice: once opaque as a mask, once styled. */
+function Shape({
+  shape,
+  x,
+  y,
+  width,
+  height,
+  rx,
+  fill,
+  stroke,
+  strokeWidth,
+  dash,
+}: {
+  shape: NodeShape;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rx: number;
+  fill: string;
+  stroke?: string;
+  strokeWidth?: number;
+  dash?: string;
+}) {
+  const common = { fill, stroke, strokeWidth, strokeDasharray: dash };
+  if (shape === 'diamond') {
+    const cx = x + width / 2;
+    const cy = y + height / 2;
+    return (
+      <polygon
+        points={`${cx},${y} ${x + width},${cy} ${cx},${y + height} ${x},${cy}`}
+        {...common}
+      />
+    );
+  }
+  return (
+    <rect
+      x={x}
+      y={y}
+      width={width}
+      height={height}
+      rx={shape === 'oval' ? height / 2 : rx}
+      {...common}
+    />
+  );
+}
+
 export function Node({
   x,
   y,
   width,
   height,
   variant = 'step',
+  shape = 'rect',
   label,
   sublabel,
   tag,
@@ -122,14 +181,24 @@ export function Node({
   // With a sublabel the name lifts so the pair stays optically centred; the
   // tag pushes both down out of the corner chip's way.
   const cy = y + height / 2 + labelDy + (sublabel ? -5 : 0) + (tag ? 5 : 0);
-  const padded = width - 20;
+  // A diamond's usable text width is roughly half its box at mid-height.
+  const padded = shape === 'diamond' ? width * 0.62 : width - 20;
 
   return (
     <g>
       {/* Opaque ground first: a tinted fill alone would let a connector
           routed behind the node show through it. */}
-      <Mask x={x} y={y} width={width} height={height} rx={rx} />
-      <rect
+      <Shape
+        shape={shape}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx={rx}
+        fill={T.ground}
+      />
+      <Shape
+        shape={shape}
         x={x}
         y={y}
         width={width}
@@ -138,7 +207,7 @@ export function Node({
         fill={t.fill}
         stroke={t.stroke}
         strokeWidth={t.strokeWidth}
-        strokeDasharray={t.dash}
+        dash={t.dash}
       />
       {tag && (
         <>
@@ -172,7 +241,10 @@ export function Node({
           y={cy + 18}
           width={padded}
           variant="sub"
-          tone="soft"
+          // `muted`, not `soft`: a sublabel sitting on a tinted focal fill has
+          // less contrast to work with than one on plain paper, and 9px type
+          // has none to spare.
+          tone="muted"
           anchorY="middle"
         >
           {sublabel}
@@ -181,6 +253,14 @@ export function Node({
       {children}
     </g>
   );
+}
+
+/**
+ * The point where two branches of a flowchart rejoin. A small filled dot —
+ * not a box, because nothing happens here.
+ */
+export function MergeDot({ x, y, tone = 'ink' }: { x: number; y: number; tone?: 'ink' | 'accent' }) {
+  return <circle cx={x} cy={y} r={4} fill={tone === 'accent' ? T.accent : T.ink} />;
 }
 
 /* ------------------------------------------------------------------ */

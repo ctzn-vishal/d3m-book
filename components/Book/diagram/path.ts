@@ -185,17 +185,32 @@ export function fan(start: number, end: number, n: number): number[] {
   return Array.from({ length: n }, (_, i) => start + (span * (i + 1)) / (n + 1));
 }
 
-/** The midpoint of the middle run — where an `hvh`/`vhv` label belongs. */
+/**
+ * A point **on the path** where a label can hang.
+ *
+ * It has to be on the path, not on the straight line between the endpoints —
+ * otherwise the 6–10px clearance `ArrowLabel` measures is clearance from
+ * nothing, and the label drifts into open canvas or, worse, onto a node.
+ */
 export function midRun(from: Pt, to: Pt, route: Route, mid?: number): Pt {
   const [x1, y1] = from;
   const [x2, y2] = to;
-  if (route === 'hvh') {
-    const mx = mid ?? (x1 + x2) / 2;
-    return [mx, (y1 + y2) / 2];
+  switch (route) {
+    case 'hvh': {
+      const mx = mid ?? (x1 + x2) / 2;
+      return [mx, (y1 + y2) / 2];
+    }
+    case 'vhv': {
+      const my = mid ?? (y1 + y2) / 2;
+      return [(x1 + x2) / 2, my];
+    }
+    // Single-bend routes: the label rides the *first* run, which is the one
+    // that leaves the source and therefore the one the reader traces.
+    case 'hv':
+      return [(x1 + x2) / 2, y1];
+    case 'vh':
+      return [x1, (y1 + y2) / 2];
+    default:
+      return [(x1 + x2) / 2, (y1 + y2) / 2];
   }
-  if (route === 'vhv') {
-    const my = mid ?? (y1 + y2) / 2;
-    return [(x1 + x2) / 2, my];
-  }
-  return [(x1 + x2) / 2, (y1 + y2) / 2];
 }

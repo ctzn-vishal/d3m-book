@@ -3,6 +3,7 @@ import { Figure } from '@/components/Book/Figure';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
+import { JoinModelDiagram } from '@/components/Book/part1/DataLanguageVisuals';
 import transactionsRaw from './data/transactions.json';
 import customersRaw from './data/customers.json';
 import campaignsRaw from './data/campaigns.json';
@@ -180,6 +181,12 @@ Joining a customer-level table to transactions on `customer_id` correctly duplic
 </Pitfall>
 
 A subtler version, worth flagging once: **joining future information into a historical row**. If the customer master file has been updated to reflect today's loyalty tier, and you join it to a transaction from six months ago, the resulting row attributes the *current* loyalty tier to a *past* purchase. For descriptive reports this is usually harmless. For causal analysis — Chapter 5 onward — it is fatal: the model will learn that "Gold tier" predicts purchase behavior, but the Gold tier was assigned *because* of subsequent purchase behavior. We will come back to this trap several times; the name for it is **leakage**, and the defense is to use the customer attributes *as they were at the time of the transaction*, not as they are now.
+
+Figure 2 puts the whole model on one page, with the cardinality written on each relationship. It is the artefact that makes the third tab's error predictable rather than surprising: three of the four joins bring exactly one row per transaction, and one does not.
+
+<Figure width="page-outset" caption="Figure 2. The Bean & Basket model, with the row multiplier on every relationship. Customers, products, and stores each contribute one matching row per transaction, so the join preserves the grain. Campaign sends contribute many rows per customer — the dashed edge — which is why a revenue total computed after that join counts each sale once per send.">
+  <JoinModelDiagram />
+</Figure>
 
 <Takeaway label="The call">
 

@@ -5,12 +5,20 @@ import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import { DataTable } from '@/components/Book/DataTable';
 import { LadderPosition } from '@/components/Book/part0/Part0Diagrams';
+import {
+  GrainDecisionMap,
+  StructureCaseGrid,
+  VariableTypeCards,
+} from '@/components/Book/part1/DataLanguageVisuals';
 import transactionsData from './data/transactions-grain.json';
 import storeWeekData from './data/store-week-grain.json';
 import panelData from './data/panel.json';
 import crossSectionData from './data/cross-section.json';
 import timeSeriesData from './data/timeseries.json';
 import dictionary from './data/variable-dictionary.json';
+import grainMap from './data/case-grain-map.json';
+import caseStructures from './data/case-structures.json';
+import variableTypes from './data/case-variable-types.json';
 
 <div className="not-prose mb-6">
   <LadderPosition compact current={0} caption="Part I — where on the decision ladder we are." />
@@ -109,6 +117,12 @@ The other classic mistake is joining tables of different grains without aggregat
 If a campaign attribution table records *one row per email send* and you join it to the per-store-week table on store and week, every store-week that received more than one send gets its row multiplied, and every revenue figure downstream is inflated. The join executes cleanly; the numbers are wrong in a way no error message warns about. **Before joining two tables, write down what one row means in each, and check that the join key actually matches that grain.**
 </Pitfall>
 
+The same discipline applies to data the business did not generate itself. Figure 2 runs the row contract across the three outside case datasets this book uses, and in each one the grain rules a whole class of question out.
+
+<Figure width="page-outset" caption="Figure 2. The row contract decides the claim. Three real case datasets, each rich enough to look like it could answer anything — and each with a question it cannot support, no matter how the analysis is done. The scanner panel cannot see a household; the county cross-section cannot see a change; the state file cannot see a neighbourhood.">
+  <GrainDecisionMap data={grainMap} />
+</Figure>
+
 <Takeaway label="For the manager">
 
 Before asking *what model should I use?*, ask *what does one row mean?* The grain of a dataset is the first decision an analyst makes — usually implicitly, often before opening the file — and it **sets the ceiling on what the rest of the analysis can do**. The finest grain is not always the right one; it is just the most flexible, because it can be aggregated upward to anything coarser. Per-store-week is a natural reporting grain because each row is already a comparable unit. The art is keeping both available and knowing which one any given question wants.
@@ -131,9 +145,9 @@ A **cross-sectional** dataset has one row per unit at a single point in time —
 
 Two more structures matter, even though we will not generate synthetic data for them in this chapter. **Geo-spatial** data attaches location to each row — store coordinates, delivery zones, ZIP codes — and supports questions about distance, catchment, and territory. **Network** data describes relationships between entities — which customers refer which other customers, which products are bought together, which employees report to whom — and supports questions about influence, communities, and flow.
 
-Figure 2 shows the same eight weeks of Bean & Basket sales arranged three ways. The business question is identical across all three tabs: *which store is doing best, and is the chain growing?* The data is identical too — 24 store-week observations underneath. Only the arrangement changes. So does the answer.
+Figure 3 shows the same eight weeks of Bean & Basket sales arranged three ways. The business question is identical across all three tabs: *which store is doing best, and is the chain growing?* The data is identical too — 24 store-week observations underneath. Only the arrangement changes. So does the answer.
 
-<Figure caption="Figure 2. Three structures, one business. Toggle between the panel (24 rows, 3 stores × 8 weeks), the cross-section (just last week's 3 rows), and the time-series (the chain-wide weekly trend). Each view answers the question 'which store is doing best?' differently — only one of them answers it correctly.">
+<Figure caption="Figure 3. Three structures, one business. Toggle between the panel (24 rows, 3 stores × 8 weeks), the cross-section (just last week's 3 rows), and the time-series (the chain-wide weekly trend). Each view answers the question 'which store is doing best?' differently — only one of them answers it correctly.">
   <TabSet ariaLabel="Three data structures derived from the same business">
     <Tab label={`Cross-section (${crossSectionData.dataPoints.length} rows)`}>
       <p className="text-xs text-muted italic mb-3 leading-snug">One row per store, snapshot at week 8 only. <strong className="font-semibold not-italic text-body">Reads as:</strong> "Downtown is winning by a wide margin; Suburban is the runner-up; Campus is a distant third." Time has been thrown away.</p>
@@ -215,7 +229,7 @@ Figure 2 shows the same eight weeks of Bean & Basket sales arranged three ways. 
   </TabSet>
 </Figure>
 
-The cross-section in Figure 2 looks decisive. Downtown earned $145 last week; Suburban $90; Campus $60. If a regional manager built her Friday slide from this single table, she would walk into the room with a clean ranking and a quiet recommendation to invest more in Downtown. The time-series tells a different and equally tidy story: chain revenue is up. Both stories are true in their narrow way. Both miss the thing that should actually drive the decision.
+The cross-section in Figure 3 looks decisive. Downtown earned $145 last week; Suburban $90; Campus $60. If a regional manager built her Friday slide from this single table, she would walk into the room with a clean ranking and a quiet recommendation to invest more in Downtown. The time-series tells a different and equally tidy story: chain revenue is up. Both stories are true in their narrow way. Both miss the thing that should actually drive the decision.
 
 The panel makes the gap visible. Downtown's eight-week revenue line is flat — it is large, but it is not growing. Campus is bleeding out, slowly, every single week. Suburban started at $35 and ended at $90, nearly tripling. A manager who saw only the cross-section would invest in the wrong store; one who saw only the time-series would feel good about a chain-wide trend that is, in reality, the sum of one collapsing store, one stagnant store, and one breakout. The panel is the only structure of the three that lets you ask *and answer* the right question: *where is the growth coming from?* Once that question is on the table, the decision is no longer "give Downtown more marketing money" — it is "figure out what's happening at Suburban, and what's going wrong at Campus."
 
@@ -229,6 +243,12 @@ If the chain-wide weekly total is the only thing in the warehouse, the divergenc
 </Pitfall>
 
 Geographic and network data follow the same logic. A geo-spatial table that records each store's latitude and longitude lets you ask whether the Suburban breakout has anything to do with proximity to a new university campus three miles away — a question the panel alone cannot answer. A network table that records which customers introduced which other customers lets you ask whether the Suburban growth is driven by a single high-influence customer who brings friends — again, invisible at the store-week level. The deeper rule is that **adding structure unlocks questions**: each new layer (time, place, relationship) lets the same business evidence be asked something new.
+
+Figure 4 puts the same three structures on the case data, with the visual each one naturally wants and the question it closes off.
+
+<Figure width="page-outset" caption="Figure 4. Each structure comes with a default chart and a blind spot. Read the limitation line first: it is the question the structure cannot answer, and therefore the reason to reach for a different one.">
+  <StructureCaseGrid data={caseStructures} />
+</Figure>
 
 <Takeaway label="The operating posture">
 
@@ -256,10 +276,10 @@ Variables are not just columns. They are **measurement choices**. When the compa
 
 Seven types cover almost every business column. **Numeric** variables — price, revenue, quantity — support sums, means, ratios, and most of the textbook tools. **Categorical** variables — store, region, product family — support grouping and counting. **Ordered categorical** variables — satisfaction levels, T-shirt sizes, income brackets — support medians and rank comparisons, but not arithmetic, because the gaps between levels are not equal. **Date/time** is a category of its own: it sorts, supports lags and rolling windows, and decomposes into month, day-of-week, and hour. **Geographic** variables look numeric (ZIP, lat/lon) but behave categorically: distance and territory are sensible, sums are not. **Boolean** columns are simple — they support rates and conversions — but managers will sometimes report "average is_member = 0.43" instead of "43% are members," which is the same number stated badly. **Text** is its own world, treated in Part V; for now, the rule is that it does not belong in a normal table operation.
 
-The trap is that a column's storage type — what the database engine sees — is not the same as its measurement type. A `customer_id` of `12345` is stored as an integer and will gladly average with other integers, but the average customer ID is not a number. A ZIP of `10003` is stored as an integer too. A `rating` of 4 is also an integer but means something quite different. Figure 3 walks through a Bean & Basket variable dictionary, naming the measurement type for each column, the operations that are sensible on it, and the common mistake — the one your team will make if no one writes the dictionary down.
+The trap is that a column's storage type — what the database engine sees — is not the same as its measurement type. A `customer_id` of `12345` is stored as an integer and will gladly average with other integers, but the average customer ID is not a number. A ZIP of `10003` is stored as an integer too. A `rating` of 4 is also an integer but means something quite different. Figure 5 walks through a Bean & Basket variable dictionary, naming the measurement type for each column, the operations that are sensible on it, and the common mistake — the one your team will make if no one writes the dictionary down.
 
 <DataTable
-  caption="Figure 3. What you can do with a column depends on what kind of column it is. Bean & Basket variable dictionary, eleven representative columns. The 'common mistake' column is the one to read carefully — every entry corresponds to a real report someone wrote."
+  caption="Figure 5. What you can do with a column depends on what kind of column it is. Bean & Basket variable dictionary, eleven representative columns. The 'common mistake' column is the one to read carefully — every entry corresponds to a real report someone wrote."
   columns={[
     { key: 'variable',   label: 'Variable',            align: 'left' },
     { key: 'type',       label: 'Type',                align: 'left' },
@@ -270,7 +290,7 @@ The trap is that a column's storage type — what the database engine sees — i
   rows={dictionary.dataPoints}
 />
 
-Figure 3 is the single most useful artifact a new analytics team can produce in its first week. The act of writing it down forces every column's type to be decided, named, and shared. Once the dictionary exists, downstream errors are caught at the table-design stage instead of at the slide-review stage. Notice how many of the entries warn against arithmetic on things that look numeric: IDs, ZIPs, ratings, and booleans all live in this looks-like-a-number-but-isn't trap. The trap is so reliable that you can find a version of it in almost every business intelligence stack ever shipped.
+Figure 5 is the single most useful artifact a new analytics team can produce in its first week. The act of writing it down forces every column's type to be decided, named, and shared. Once the dictionary exists, downstream errors are caught at the table-design stage instead of at the slide-review stage. Notice how many of the entries warn against arithmetic on things that look numeric: IDs, ZIPs, ratings, and booleans all live in this looks-like-a-number-but-isn't trap. The trap is so reliable that you can find a version of it in almost every business intelligence stack ever shipped.
 
 <Pitfall title="Averaging what only looks like a number">
 IDs, ZIP codes, and ratings are all stored as integers and will all average without complaint — and the average is meaningless every time. A mean customer ID is nonsense; a mean ZIP is nonsense; even a 4.2-star average misleads, because the gap between a 4 and a 5 need not equal the gap between a 1 and a 2. **Treat IDs and geo codes as keys to group, count, and map — never to average — and report ratings as a top-2-box share or a median, not a mean.**
@@ -284,8 +304,14 @@ A string sort of dates puts "2024-13-01" before "2024-2-01," because string comp
 With sizes encoded Small / Medium / Large, rank-based operations make sense (the median order, which sizes are over-represented in returns) but arithmetic does not — there is no "average size" because the intervals are not equal. Worse, if someone recodes sizes as `1`, `2`, `3` "for convenience," the spreadsheet will happily return an average of `2.4` that means nothing but looks like it does. **Keep ordered categories as labels, not numbers, so the arithmetic that fails silently is never offered.**
 </Pitfall>
 
+Figure 6 works the same dictionary discipline across the case data, where the looks-like-a-number columns are easier to spot in the abstract than in a real file.
+
+<Figure width="page-outset" caption="Figure 6. Real columns from the case datasets, with the operation each one supports and the one it invites. Store IDs, FIPS codes, and dates all arrive as something that will average without complaint.">
+  <VariableTypeCards data={variableTypes} />
+</Figure>
+
 <Takeaway label="What this buys you">
 
-Before asking *what should we compute?*, ask *what is this column?* The variable dictionary in Figure 3 is the *cheapest insurance an analytics team can buy*: a one-page artifact, written once at the start of a project, that prevents most of the type confusions downstream reports will surface. When a new column arrives — from a vendor, from an API, from a freshly engineered feature — the dictionary entry is the first thing to write, before any chart, model, or memo. The discipline is small. The errors it prevents are not.
+Before asking *what should we compute?*, ask *what is this column?* The variable dictionary in Figure 5 is the *cheapest insurance an analytics team can buy*: a one-page artifact, written once at the start of a project, that prevents most of the type confusions downstream reports will surface. When a new column arrives — from a vendor, from an API, from a freshly engineered feature — the dictionary entry is the first thing to write, before any chart, model, or memo. The discipline is small. The errors it prevents are not.
 
 </Takeaway>

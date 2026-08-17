@@ -1,9 +1,12 @@
 import { DropCap } from '@/components/Book/DropCap';
+import { Figure } from '@/components/Book/Figure';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
+import { MetricFormulaLab } from '@/components/Book/part1/MetricFormulaLab';
 import transformsRaw from './data/transformations.json';
 import metricsRaw from './data/metrics.json';
+import metricLab from './data/metric-lab.json';
 
 export const transforms = transformsRaw.dataPoints;
 export const metrics = metricsRaw.dataPoints;
@@ -64,6 +67,12 @@ Reporting "total revenue + total tax + total tip" as one revenue figure inflates
 ### A metric is a contract
 
 There is a more general failure mode in this chapter worth flagging once. **A metric is a contract.** When a CMO sees "conversion rate: 4.2%" on a slide, she is reading a number that depends on a chain of definitional decisions — what is a visitor, what is a conversion, what is the window, how are bots excluded, are returning visitors deduplicated. Each link in the chain was made by someone, at some point, often without writing it down. The next time the metric is recomputed — by a different analyst, on a different data warehouse, with a slightly different filter — the answer will be different, and the disagreement will be invisible. Treating metric definitions as *governance artifacts*, not as engineering details, is the only way a multi-year dashboard remains comparable to itself. This is exactly the role of the **metric card** in the artifact family from Part 0: a one-page, versioned definition that travels with the number wherever it is reported, so a CMO and a data engineer reading the same word mean the same thing.
+
+Figure 3 is that contract, made clickable. Pick a metric and every degree of freedom the prose just warned about is on screen at once: the numerator, the denominator, the unit, the window, the owner, and the thing that will silently change the number.
+
+<Figure width="page-outset" caption="Figure 3. Nine metric contracts. The formula is the least interesting row — a metric argument is almost never about arithmetic. It is about the window, the exclusions, and who gets to change them, which is why the owner is on the card at all.">
+  <MetricFormulaLab items={metricLab.items} />
+</Figure>
 
 <Takeaway label="What to ship">
 

@@ -4,6 +4,7 @@ import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { DataTable } from '@/components/Book/DataTable';
 import { TabSet, Tab } from '@/components/Book/TabSet';
+import { QueryPipelineDiagram } from '@/components/Book/part1/DataLanguageVisuals';
 import mapping from './data/excel-sql-mapping.json';
 
 <DropCap>
@@ -105,6 +106,12 @@ Chapter 1's grain question reappears: grouping by `city` answers "revenue by cit
 <Pitfall title="Trusting that an Excel pivot scales">
 A spreadsheet with two thousand rows is comfortable; one with two million is a crash report, and most operational data crosses that threshold sooner than a manager expects. A pivot that is painfully slow or refuses to refresh is a signal that the question has outgrown the tool, not that the analyst needs a faster laptop. **Move the operation to SQL or a pandas data frame — it is the same operation, run somewhere that can hold the data.**
 </Pitfall>
+
+Strip the syntax away and every one of the four tabs is the same five operations in the same order. Figure 3 draws them, and marks the one that changes what a row means.
+
+<Figure width="body-outset" caption="Figure 3. Five operations, one query. Filter, calculate, group, summarize, sort — the vocabulary is the same in Excel, SQL, R, and Python. Only the fourth step changes the grain: before it, one row is one sale; after it, one row is one city-category pair. Every reconciliation argument about a dashboard number is really an argument about where this line falls.">
+  <QueryPipelineDiagram />
+</Figure>
 
 <Takeaway label="Net-net">
 

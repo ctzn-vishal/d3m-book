@@ -21,8 +21,11 @@
 export { DiagramFrame, DiagramSvg, Mask, useDiagramId, useMarker } from './DiagramFrame';
 export type { DiagramFrameProps, DiagramSvgProps } from './DiagramFrame';
 
-export { Node, anchor } from './Node';
-export type { NodeProps, NodeVariant, Box } from './Node';
+export { Node, MergeDot, anchor } from './Node';
+export type { NodeProps, NodeVariant, NodeShape, Box } from './Node';
+
+export { Entity, Cardinality, entityHeight, ENTITY_HEADER, ENTITY_ROW } from './Entity';
+export type { EntityProps, Field } from './Entity';
 
 export { Connector, PathConnector } from './Connector';
 export type { ConnectorProps } from './Connector';

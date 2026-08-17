@@ -59,7 +59,7 @@ export function MetricFormulaLab({ items }: MetricFormulaLabProps) {
   const ActiveIcon = iconFor(active.id);
 
   return (
-    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-white shadow-sm dark:bg-slate-900">
+    <div className="not-prose my-8 overflow-hidden rounded-md border border-border bg-card">
       <div className="grid gap-0 lg:grid-cols-[280px_1fr]">
         <div className="border-b border-border bg-card p-3 lg:border-b-0 lg:border-r">
           <div className="mb-3 px-1">
@@ -83,8 +83,8 @@ export function MetricFormulaLab({ items }: MetricFormulaLabProps) {
                   className={[
                     'flex min-h-12 items-center gap-2 rounded-md border px-3 py-2 text-left text-sm transition-colors',
                     selected
-                      ? 'border-body bg-white text-body shadow-sm dark:bg-slate-800'
-                      : 'border-transparent bg-transparent text-subtle hover:border-border hover:bg-white dark:hover:bg-slate-800',
+                      ? 'border-body bg-surface text-body'
+                      : 'border-transparent bg-transparent text-subtle hover:border-border hover:bg-surface',
                   ].join(' ')}
                 >
                   <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -106,7 +106,7 @@ export function MetricFormulaLab({ items }: MetricFormulaLabProps) {
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-sky-50 text-sky-700 dark:bg-sky-950/30 dark:text-sky-100">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-accent/10 text-accent-ink">
                   <ActiveIcon className="h-5 w-5" aria-hidden="true" />
                 </span>
                 <h3 className="text-xl font-semibold tracking-tight text-body">
@@ -130,7 +130,7 @@ export function MetricFormulaLab({ items }: MetricFormulaLabProps) {
             </div>
           </div>
 
-          <div className="mt-6 rounded-md border border-border bg-white p-4 dark:bg-slate-900">
+          <div className="mt-6 rounded-md border border-border bg-surface p-4">
             <div className="mb-3 text-[11px] font-semibold uppercase tracking-wide text-muted">
               Formula
             </div>
