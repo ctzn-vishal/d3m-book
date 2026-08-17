@@ -2,626 +2,1064 @@
 
 import * as React from 'react';
 
+import {
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  EyebrowLabel,
+  Lane,
+  Layers,
+  Legend,
+  Node,
+  PathConnector,
+  S,
+  SvgText,
+  T,
+  TreeBus,
+  Zone,
+  centeredRow,
+} from '@/components/Book/diagram';
+
 /**
- * Conceptual diagrams for Part V Chapters 20 (RAG/Vision/Multimodal) and 21 (LLMs/Agents).
+ * Part V's AI visuals — retrieval, vision, prompting, structured output, and
+ * the agent loop.
  *
- *   - RagPipeline: docs → chunk → embed → index ← query ← user → retrieve → LLM → answer.
- *   - CnnFeatureHierarchy: edges → textures → parts → objects column.
- *   - VisionPipeline: image → model → labels / boxes / segmentation / embedding.
- *   - DocumentAIFlow: scan → layout → OCR → field extraction → review.
- *   - MultimodalArchitecture: text + image + audio + video → shared space → use cases.
- *   - LlmCapabilityMap: a 2x4 grid of capabilities each with an example.
- *   - PromptStructureCard: a labelled prompt skeleton.
- *   - StructuredOutputFlow: free text → schema → validated JSON.
- *   - AgentWorkflowDiagram: the full agent loop with tools, memory, human gate.
- *   - HumanApprovalGate: schematic showing the decision point.
- *   - CustomerVoiceStudioFlow: end-to-end loop for §22.2 capstone.
+ *   - RagPipeline           swimlane      index-time and query-time as two lanes
+ *   - RagRetrievalDetail    data flow     the retrieval step, on its own
+ *   - CnnFeatureHierarchy   layer stack   pixels to objects
+ *   - VisionPipeline        data flow     one model, four output shapes
+ *   - DocumentAIFlow        process       scan to GL entry
+ *   - MultimodalArchitecture architecture encoders, shared space, tasks
+ *   - LlmCapabilityMap      cards         eight capabilities
+ *   - PromptStructureCard   nested        the six slots of a task brief
+ *   - StructuredOutputFlow  state machine parse, validate, retry, accept
+ *   - AgentWorkflowDiagram  process+loop  the customer-insights agent
+ *   - HumanApprovalGate     flowchart     three states, one decision point
+ *   - CustomerVoiceStudioFlow process     the Part V loop end to end
+ *
+ * This file had six `foreignObject` uses and four diagonal connectors, and was
+ * the worst offender in the book on both counts. Both are gone.
  */
 
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  navy: '#1f3a5f',
-  orange: '#c87c2a',
-  orangeLight: '#fed7aa',
-  green: '#0f766e',
-  greenLight: '#ccfbf1',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  purple: '#7c3aed',
-  purpleLight: '#ede9fe',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  teal: '#0d9488',
-  tealLight: '#a7f3d0',
-  pink: '#db2777',
-  pinkLight: '#fce7f3',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
-
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
-  return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-          {title}
-        </p>
-      )}
-      {children}
-      {footer && <div className="mt-2 text-[11px] text-slate-500">{footer}</div>}
-    </div>
-  );
-}
-
 /* ------------------------------------------------------------------ */
-/* 20.1 — RagPipeline                                                   */
+/* 20.1 — RagPipeline (overview)                                        */
 /* ------------------------------------------------------------------ */
 
+const INDEX_TIME = [
+  { label: 'Documents', sub: 'PDFs, tickets, wiki', variant: 'input' as const },
+  { label: 'Chunk', sub: 'split with overlap', variant: 'step' as const },
+  { label: 'Embed', sub: 'text becomes vectors', variant: 'step' as const },
+  { label: 'Vector index', sub: 'stored once, reused', variant: 'store' as const },
+];
+
+const QUERY_TIME = [
+  { label: 'Question', sub: 'from a person or an agent', variant: 'input' as const },
+  { label: 'Retrieve', sub: 'top-k nearest chunks', variant: 'focal' as const },
+  { label: 'Compose prompt', sub: 'question plus chunks', variant: 'step' as const },
+  { label: 'Grounded answer', sub: 'with citations', variant: 'step' as const },
+];
+
+/**
+ * Split into two lanes, because the single 800x320 figure this replaces was
+ * trying to carry indexing, retrieval, and generation at once — over the
+ * nine-node budget, which is why its connectors collided and why one of them
+ * ran diagonally under its own label.
+ *
+ * The lanes are the fix and also the lesson: indexing happens once, ahead of
+ * time; retrieval happens on every question. Readers who think RAG is slow
+ * usually have those two collapsed in their heads.
+ *
+ * The retrieval step is the only focal node, and it gets its own figure below.
+ */
 export function RagPipeline() {
-  const W = 800;
-  const H = 320;
+  const W = 792;
+  const laneH = 112;
+  const laneGap = 24;
+  const gutter = 104;
+  const top = 24;
+  const H = top + laneH * 2 + laneGap + 64;
+  const boxW = 144;
+  const boxH = 64;
+  const boxXs = centeredRow(gutter, W - gutter - 16, 4, boxW, 24);
+
+  const laneY = [top, top + laneH + laneGap];
+
   return (
-    <Card title="A retrieval-augmented generation pipeline, end to end">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="RAG flow from documents to chunks to embeddings to index, with user query routed through retrieval into the LLM.">
-        {/* docs */}
-        <g>
-          <rect x={20} y={40} width={120} height={70} rx={8} fill={C.amberLight} stroke={C.amber} strokeWidth={1.6} />
-          <text x={80} y={64} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Company docs</text>
-          <text x={80} y={80} textAnchor="middle" className="fill-slate-600 text-[10px]">manuals · policies</text>
-          <text x={80} y={94} textAnchor="middle" className="fill-slate-600 text-[10px]">FAQs · pricing decks</text>
-        </g>
-        {/* chunk */}
-        <line x1={140} y1={75} x2={170} y2={75} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <g>
-          <rect x={170} y={40} width={110} height={70} rx={8} fill="white" stroke={C.amber} strokeWidth={1.6} />
-          <text x={225} y={64} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Chunk</text>
-          <text x={225} y={80} textAnchor="middle" className="fill-slate-500 text-[10px]">500–800 tokens</text>
-          <text x={225} y={94} textAnchor="middle" className="fill-slate-500 text-[10px]">with overlap</text>
-        </g>
-        {/* embed */}
-        <line x1={280} y1={75} x2={310} y2={75} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <g>
-          <rect x={310} y={40} width={110} height={70} rx={8} fill="white" stroke={C.blue} strokeWidth={1.6} />
-          <text x={365} y={64} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Embed</text>
-          <text x={365} y={80} textAnchor="middle" className="fill-slate-500 text-[10px]">vector per chunk</text>
-        </g>
-        {/* index */}
-        <line x1={420} y1={75} x2={450} y2={75} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <g>
-          <rect x={450} y={40} width={120} height={70} rx={8} fill={C.purpleLight} stroke={C.purple} strokeWidth={1.6} />
-          <text x={510} y={64} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Vector index</text>
-          <text x={510} y={80} textAnchor="middle" className="fill-slate-500 text-[10px]">ANN search</text>
-        </g>
-        {/* user */}
-        <g>
-          <rect x={20} y={200} width={120} height={70} rx={8} fill={C.tealLight} stroke={C.teal} strokeWidth={1.6} />
-          <text x={80} y={224} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">User question</text>
-          <text x={80} y={240} textAnchor="middle" className="fill-slate-500 text-[10px]">"What's our refund</text>
-          <text x={80} y={252} textAnchor="middle" className="fill-slate-500 text-[10px]">policy for app users?"</text>
-        </g>
-        {/* embed query */}
-        <line x1={140} y1={235} x2={310} y2={235} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <g>
-          <rect x={310} y={200} width={110} height={70} rx={8} fill="white" stroke={C.blue} strokeWidth={1.6} />
-          <text x={365} y={224} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Embed query</text>
-          <text x={365} y={240} textAnchor="middle" className="fill-slate-500 text-[10px]">same model</text>
-        </g>
-        {/* retrieve - up arrow to index */}
-        <line x1={420} y1={235} x2={510} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" strokeDasharray="3 3" />
-        <text x={465} y={180} textAnchor="middle" className="fill-slate-600 text-[10px] italic">top-k retrieve</text>
-        {/* LLM */}
-        <line x1={570} y1={75} x2={620} y2={150} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <text x={605} y={108} textAnchor="middle" className="fill-slate-600 text-[10px] italic">retrieved chunks</text>
-        <line x1={420} y1={235} x2={620} y2={185} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <text x={520} y={222} textAnchor="middle" className="fill-slate-600 text-[10px] italic">original question</text>
-        <g>
-          <rect x={620} y={140} width={160} height={70} rx={8} fill={C.greenLight} stroke={C.green} strokeWidth={1.6} />
-          <text x={700} y={164} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">LLM</text>
-          <text x={700} y={180} textAnchor="middle" className="fill-slate-500 text-[10px]">answer + citations</text>
-          <text x={700} y={194} textAnchor="middle" className="fill-slate-500 text-[10px]">from retrieved chunks</text>
-        </g>
-        {/* answer */}
-        <line x1={700} y1={210} x2={700} y2={250} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#rag-arrow)" />
-        <g>
-          <rect x={620} y={250} width={160} height={50} rx={6} fill="white" stroke={C.ink} strokeWidth={1.4} />
-          <text x={700} y={272} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Answer with sources</text>
-          <text x={700} y={288} textAnchor="middle" className="fill-slate-500 text-[10px]">user can audit grounding</text>
-        </g>
-        <defs>
-          <marker id="rag-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
-        The retrieval step is where most RAG failures live. Bad retrieval → ungrounded answer; missing chunk → confident hallucination.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="Retrieval-augmented generation"
+      note="Indexing happens once, ahead of time; retrieval happens on every question. Collapsing the two is the most common misreading of RAG — and the reason people expect it to be slower than it is."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Retrieval-augmented generation, in two phases"
+        desc="At index time, documents are chunked, embedded, and stored in a vector index — done once. At query time, a question retrieves the nearest chunks from that index, those chunks are composed into a prompt, and the model answers with citations."
+      >
+        <Lane
+          x={0}
+          y={laneY[0]}
+          width={W - 16}
+          height={laneH}
+          gutter={gutter}
+          label="Index time"
+          sublabel="once, ahead"
+        />
+        <Lane
+          x={0}
+          y={laneY[1]}
+          width={W - 16}
+          height={laneH}
+          gutter={gutter}
+          label="Query time"
+          sublabel="every question"
+        />
+
+        {[INDEX_TIME, QUERY_TIME].map((lane, li) =>
+          lane.slice(0, -1).map((step, i) => (
+            <Connector
+              key={`${li}-${step.label}`}
+              from={[boxXs[i] + boxW, laneY[li] + laneH / 2]}
+              to={[boxXs[i + 1], laneY[li] + laneH / 2]}
+              route="straight"
+            />
+          ))
+        )}
+
+        {/* The one edge that crosses lanes: the index built above is what the
+            retrieval below reads. Dashed, because it is a lookup rather than a
+            step in either sequence. */}
+        <Connector
+          from={[boxXs[3] + boxW / 2, laneY[0] + laneH / 2 + boxH / 2]}
+          to={[boxXs[1] + boxW / 2, laneY[1] + laneH / 2 - boxH / 2]}
+          route="vhv"
+          mid={laneY[0] + laneH + laneGap / 2}
+          tone="accent"
+          dashed
+          label="READS THE INDEX"
+        />
+
+        {[INDEX_TIME, QUERY_TIME].map((lane, li) =>
+          lane.map((step, i) => (
+            <Node
+              key={`${li}-${step.label}`}
+              x={boxXs[i]}
+              y={laneY[li] + laneH / 2 - boxH / 2}
+              width={boxW}
+              height={boxH}
+              variant={step.variant}
+              label={step.label}
+              sublabel={step.sub}
+            />
+          ))
+        )}
+
+        <Legend
+          y={H - 12}
+          width={W}
+          x={16}
+          items={[
+            { kind: 'focal', label: 'Where most RAG failures live' },
+            { kind: 'store', label: 'Built once, read many times' },
+          ]}
+          pitch={320}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 20.2 — CnnFeatureHierarchy                                            */
+/* 20.1 — RagRetrievalDetail                                            */
 /* ------------------------------------------------------------------ */
+
+const RETRIEVAL_STEPS = [
+  { label: 'Question', sub: 'natural language', variant: 'input' as const },
+  { label: 'Embed', sub: 'same model as indexing', variant: 'step' as const },
+  { label: 'Nearest k', sub: 'cosine similarity', variant: 'step' as const },
+  { label: 'Rerank', sub: 'cross-encoder, optional', variant: 'optional' as const },
+  { label: 'Context window', sub: 'what the model actually sees', variant: 'focal' as const },
+];
+
+/**
+ * The detail half of the split. Everything the overview compresses into one
+ * box labelled "retrieve".
+ *
+ * It earns its own figure because it is where the failures are: the wrong
+ * embedding model, too small a k, no reranking, or a context window that
+ * silently drops the chunk containing the answer. Each of those is invisible
+ * in the overview and each produces the same symptom — a confident, ungrounded
+ * answer.
+ */
+export function RagRetrievalDetail() {
+  const W = 792;
+  const H = 216;
+  const boxW = 136;
+  const boxH = 72;
+  const y = 40;
+  const xs = centeredRow(0, W, RETRIEVAL_STEPS.length, boxW, 24);
+
+  return (
+    <DiagramFrame
+      eyebrow="Inside the retrieval step"
+      note="Bad retrieval gives an ungrounded answer; a missing chunk gives a confident hallucination. Both look identical from the outside, which is why the failure mode has to be found here rather than in the model."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Inside the retrieval step"
+        desc="A question is embedded with the same model used at index time, the nearest k chunks are found by cosine similarity, an optional reranker reorders them, and what survives becomes the context window the model actually sees."
+      >
+        {RETRIEVAL_STEPS.slice(0, -1).map((step, i) => (
+          <Connector
+            key={step.label}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+          />
+        ))}
+        {RETRIEVAL_STEPS.map((step, i) => (
+          <Node
+            key={step.label}
+            x={xs[i]}
+            y={y}
+            width={boxW}
+            height={boxH}
+            variant={step.variant}
+            label={step.label}
+            sublabel={step.sub}
+          />
+        ))}
+
+        <SvgText
+          x={xs[2] + boxW / 2}
+          y={y + boxH + 32}
+          width={boxW + 48}
+          variant="sub"
+          tone="muted"
+        >
+          k too small drops the answer
+        </SvgText>
+        <SvgText
+          x={W - 16}
+          y={y + boxH + 32}
+          width={boxW + 48}
+          variant="sub"
+          tone="muted"
+          textAnchor="end"
+        >
+          anything not here does not exist
+        </SvgText>
+
+        <Legend
+          y={H - 12}
+          width={W}
+          x={16}
+          items={[
+            { kind: 'focal', label: 'All the model ever sees' },
+            { kind: 'optional', label: 'Optional, and usually worth it' },
+          ]}
+          pitch={320}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* 20.2 — CnnFeatureHierarchy                                           */
+/* ------------------------------------------------------------------ */
+
+const CNN_LAYERS = [
+  { tag: 'TOP', name: 'Objects and scenes', sub: 'car · cat · espresso bar', note: 'top layer' },
+  { tag: 'L3', name: 'Object parts', sub: 'wheel · eye · leaf', note: 'deep layers' },
+  { tag: 'L2', name: 'Textures', sub: 'fur · brick · wood', note: 'mid layers' },
+  { tag: 'L1', name: 'Edges', sub: 'orientation and contrast', note: 'first conv layers' },
+  { tag: 'IN', name: 'Pixels', sub: '256 x 256 x 3', note: 'raw image' },
+];
 
 export function CnnFeatureHierarchy() {
-  const W = 760;
-  const H = 280;
-  const stages = [
-    { name: 'Pixels', sub: 'raw image', color: C.muted, ex: '256 × 256 × 3' },
-    { name: 'Edges', sub: 'first conv layers', color: C.blue, ex: '/  \\  —  |' },
-    { name: 'Textures', sub: 'mid layers', color: C.purple, ex: 'fur · brick · wood' },
-    { name: 'Object parts', sub: 'deep layers', color: C.amber, ex: 'wheel · eye · leaf' },
-    { name: 'Objects / scenes', sub: 'top layer', color: C.green, ex: 'car · cat · espresso bar' },
-  ];
-  const cellW = (W - 60) / stages.length;
-  const yMid = 140;
+  const W = 792;
+  const rowH = 60;
+  const H = rowH * CNN_LAYERS.length + 40;
+
   return (
-    <Card title="What a CNN actually learns — a hierarchy of visual features">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Five stages from pixels to objects, each one a deeper layer of a CNN.">
-        {stages.map((s, i) => {
-          const x = 30 + cellW * i;
-          return (
-            <g key={s.name}>
-              <rect x={x + 8} y={yMid - 60} width={cellW - 16} height={120} rx={10} fill="white" stroke={s.color} strokeWidth={1.8} />
-              <text x={x + cellW / 2} y={yMid - 36} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold" style={{ fill: s.color }}>{s.name}</text>
-              <text x={x + cellW / 2} y={yMid - 20} textAnchor="middle" className="fill-slate-500 text-[10px]">{s.sub}</text>
-              <text x={x + cellW / 2} y={yMid + 8} textAnchor="middle" className="fill-slate-700 text-[10px] font-mono">{s.ex}</text>
-              <text x={x + cellW / 2} y={yMid + 36} textAnchor="middle" className="fill-slate-400 text-[10px]">layer {i}</text>
-              {i < stages.length - 1 && (
-                <line x1={x + cellW - 8} y1={yMid} x2={x + cellW + 8} y2={yMid} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#cnn-arrow)" />
-              )}
-            </g>
-          );
-        })}
-        <defs>
-          <marker id="cnn-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-        <text x={W / 2} y={H - 14} textAnchor="middle" className="fill-slate-500 text-[10px] italic">
-          No human told the model what an edge or a wheel was. The layers emerged from training on labelled images.
-        </text>
-      </svg>
-    </Card>
+    <DiagramFrame
+      eyebrow="What a CNN actually learns"
+      note="No human told the model what an edge or a wheel was. The layers emerged from training on labelled images — which is also why a model trained on one domain's images often cannot see another's."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The visual feature hierarchy a CNN learns"
+        desc="Five levels from raw pixels at the bottom, through edges, textures, and object parts, to whole objects and scenes at the top. Each level is composed from the one below it, and none of the levels was specified by a human."
+      >
+        <Layers
+          x={48}
+          y={16}
+          width={W - 72}
+          rowHeight={rowH}
+          layers={CNN_LAYERS}
+          direction="abstraction"
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 20.2 — VisionPipeline                                                 */
+/* 20.2 — VisionPipeline                                                */
 /* ------------------------------------------------------------------ */
 
+const VISION_OUTPUTS = [
+  { label: 'Class label', sub: 'espresso machine', tag: 'CLASSIFY' },
+  { label: 'Bounding boxes', sub: 'x, y, w, h per object', tag: 'DETECT' },
+  { label: 'Segmentation mask', sub: 'a class per pixel', tag: 'SEGMENT' },
+  { label: 'Image embedding', sub: 'a vector for search', tag: 'SIMILARITY' },
+];
+
+/**
+ * A fan-out, drawn as a bus. The old version ran four dashed diagonals from the
+ * model box to four differently-coloured output boxes; the diagonals were the
+ * defect and the four colours were the noise — the outputs are alternatives,
+ * not categories, so nothing distinguishes them but their names.
+ */
 export function VisionPipeline() {
-  const W = 760;
-  const H = 280;
+  const W = 792;
+  const rowH = 56;
+  const pitch = 68;
+  const top = 20;
+  const outX = 424;
+  const outW = 344;
+  const H = top + pitch * (VISION_OUTPUTS.length - 1) + rowH + 24;
+  const centreY = top + (pitch * (VISION_OUTPUTS.length - 1) + rowH) / 2;
+
   return (
-    <Card title="Four common output shapes from a vision model">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Vision model fanning out to four output shapes.">
-        {/* image */}
-        <rect x={30} y={H / 2 - 40} width={130} height={80} rx={8} fill={C.slate100} stroke={C.muted} strokeWidth={1.4} />
-        <rect x={50} y={H / 2 - 30} width={90} height={60} rx={4} fill={C.amberLight} stroke={C.amber} strokeWidth={1.2} />
-        <text x={95} y={H / 2 + 8} textAnchor="middle" className="fill-slate-700 text-[10.5px]">image</text>
-        {/* model */}
-        <line x1={160} y1={H / 2} x2={210} y2={H / 2} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#vp-arrow)" />
-        <rect x={210} y={H / 2 - 36} width={140} height={72} rx={10} fill={C.purpleLight} stroke={C.purple} strokeWidth={1.8} />
-        <text x={280} y={H / 2 - 12} textAnchor="middle" className="fill-purple-900 text-[12px] font-semibold">Vision model</text>
-        <text x={280} y={H / 2 + 6} textAnchor="middle" className="fill-purple-700 text-[10px]">CNN or ViT</text>
-        <text x={280} y={H / 2 + 22} textAnchor="middle" className="fill-purple-700 text-[10px]">pretrained + fine-tuned</text>
-        {/* fan out */}
-        {[
-          { y: 30, label: 'Class label', sub: '"espresso machine"', color: C.blue, ex: 'classification' },
-          { y: 110, label: 'Bounding boxes', sub: '[(x,y,w,h, "cup"), ...]', color: C.green, ex: 'object detection' },
-          { y: 190, label: 'Segmentation mask', sub: 'per-pixel class', color: C.teal, ex: 'segmentation' },
-          { y: 240, label: 'Image embedding', sub: 'vector for search', color: C.amber, ex: 'similarity' },
-        ].map(o => (
-          <g key={o.label}>
-            <line x1={350} y1={H / 2} x2={420} y2={o.y + 28} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#vp-arrow)" strokeDasharray="3 3" />
-            <rect x={420} y={o.y} width={310} height={48} rx={8} fill="white" stroke={o.color} strokeWidth={1.6} />
-            <text x={432} y={o.y + 20} className="fill-slate-900 text-[11.5px] font-semibold" style={{ fill: o.color }}>{o.label}</text>
-            <text x={432} y={o.y + 36} className="fill-slate-500 text-[10px]">{o.sub}</text>
-            <text x={720} y={o.y + 36} textAnchor="end" className="fill-slate-400 text-[9.5px] italic">{o.ex}</text>
-          </g>
+    <DiagramFrame
+      eyebrow="One vision model, four output shapes"
+      note="The model is the same in all four cases; what changes is the head bolted onto it and the labels it was trained against. Choosing between these is a product decision, not a modelling one."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Four output shapes from one vision model"
+        desc="An image goes into a pretrained and fine-tuned vision model, which can emit a class label, a set of bounding boxes, a per-pixel segmentation mask, or an embedding vector for similarity search."
+      >
+        <Connector from={[136, centreY]} to={[176, centreY]} route="straight" />
+        <TreeBus
+          orientation="horizontal"
+          parentX={344}
+          parentY={centreY}
+          childXs={VISION_OUTPUTS.map((_, i) => top + i * pitch + rowH / 2)}
+          childY={outX}
+        />
+
+        <Node x={16} y={centreY - 32} width={120} height={64} variant="input" label="Image" />
+        <Node
+          x={176}
+          y={centreY - 40}
+          width={168}
+          height={80}
+          variant="focal"
+          label="Vision model"
+          sublabel="CNN or ViT, pretrained then fine-tuned"
+        />
+
+        {VISION_OUTPUTS.map((o, i) => (
+          <React.Fragment key={o.label}>
+            <Node
+              x={outX}
+              y={top + i * pitch}
+              width={outW}
+              height={rowH}
+              align="start"
+              label={o.label}
+              sublabel={o.sub}
+            />
+            <EyebrowLabel
+              x={outX + outW - 12}
+              y={top + i * pitch + rowH / 2 + 3}
+              anchor="end"
+              tone="soft"
+              masked={false}
+            >
+              {o.tag}
+            </EyebrowLabel>
+          </React.Fragment>
         ))}
-        <defs>
-          <marker id="vp-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-    </Card>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 20.3 — DocumentAIFlow                                                 */
+/* 20.3 — DocumentAIFlow                                                */
 /* ------------------------------------------------------------------ */
+
+const DOC_STAGES = [
+  { label: 'Scan or PDF', sub: 'invoice, receipt', variant: 'input' as const },
+  { label: 'Layout detection', sub: 'tables, headers, line items', variant: 'focal' as const },
+  { label: 'OCR', sub: 'pixels to text', variant: 'step' as const },
+  { label: 'LLM extraction', sub: 'apply a JSON schema', variant: 'step' as const },
+  { label: 'Human review', sub: 'low-confidence rows only', variant: 'boundary' as const },
+  { label: 'Downstream', sub: 'GL, ERP, CRM', variant: 'external' as const },
+];
 
 export function DocumentAIFlow() {
-  const W = 800;
-  const H = 220;
-  const stages = [
-    { name: 'Scan / PDF', sub: 'invoice or receipt', color: C.amber },
-    { name: 'Layout detection', sub: 'find tables, headers, line-items', color: C.blue },
-    { name: 'OCR', sub: 'pixels → text', color: C.purple },
-    { name: 'LLM extraction', sub: 'apply JSON schema', color: C.green },
-    { name: 'Human review', sub: 'spot-check low-confidence', color: C.red },
-    { name: 'Downstream system', sub: 'GL, ERP, CRM', color: C.teal },
-  ];
-  const cellW = (W - 60) / stages.length;
-  const yMid = 110;
+  const W = 792;
+  const H = 200;
+  const boxW = 112;
+  const boxH = 88;
+  const y = 32;
+  const xs = centeredRow(0, W, DOC_STAGES.length, boxW, 20);
+
   return (
-    <Card title="Document AI — what happens between a scanned invoice and a GL entry">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Six-stage document AI pipeline from scan to downstream system.">
-        {stages.map((s, i) => {
-          const x = 30 + cellW * i;
-          return (
-            <g key={s.name}>
-              <rect x={x + 6} y={yMid - 40} width={cellW - 12} height={80} rx={8} fill="white" stroke={s.color} strokeWidth={1.7} />
-              <text x={x + cellW / 2} y={yMid - 14} textAnchor="middle" className="fill-slate-900 text-[11.5px] font-semibold" style={{ fill: s.color }}>{s.name}</text>
-              <text x={x + cellW / 2} y={yMid + 4} textAnchor="middle" className="fill-slate-500 text-[10px]">{s.sub}</text>
-              <text x={x + cellW / 2} y={yMid + 22} textAnchor="middle" className="fill-slate-400 text-[10px] font-mono">{i + 1}</text>
-              {i < stages.length - 1 && (
-                <line x1={x + cellW - 6} y1={yMid} x2={x + cellW + 6} y2={yMid} stroke={C.muted} strokeWidth={1.4} markerEnd="url(#daf-arrow)" />
-              )}
-            </g>
-          );
-        })}
-        <defs>
-          <marker id="daf-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-        <text x={W / 2} y={H - 10} textAnchor="middle" className="fill-slate-500 text-[10px] italic">
-          Most of the engineering is in stage 2 (layout) and stage 5 (knowing what to send to a human).
-        </text>
-      </svg>
-    </Card>
+    <DiagramFrame
+      eyebrow="From a scanned invoice to a GL entry"
+      note="Most of the engineering is in stage 2 and stage 5 — finding the layout, and knowing which rows to send to a human. The OCR and the extraction are the parts that come out of a box."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="A document AI pipeline"
+        desc="A scanned invoice passes through layout detection, OCR, and schema-driven LLM extraction, then a human reviews the low-confidence rows before the result is written to a downstream finance system."
+      >
+        {DOC_STAGES.slice(0, -1).map((s, i) => (
+          <Connector
+            key={s.label}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+          />
+        ))}
+        {DOC_STAGES.map((s, i) => (
+          <React.Fragment key={s.label}>
+            <Node
+              x={xs[i]}
+              y={y}
+              width={boxW}
+              height={boxH}
+              variant={s.variant}
+              label={s.label}
+              sublabel={s.sub}
+            />
+            <SvgText x={xs[i] + boxW / 2} y={y - 12} variant="eyebrow" tone="soft">
+              {`0${i + 1}`}
+            </SvgText>
+          </React.Fragment>
+        ))}
+
+        <Legend
+          y={H - 12}
+          width={W}
+          x={16}
+          items={[
+            { kind: 'focal', label: 'Where the engineering actually goes' },
+            { kind: 'boundary', label: 'Where a human intervenes' },
+          ]}
+          pitch={320}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 20.4 — MultimodalArchitecture                                         */
+/* 20.4 — MultimodalArchitecture                                        */
 /* ------------------------------------------------------------------ */
 
+const MODALITIES = [
+  { label: 'Text', sub: 'reviews, tickets, docs' },
+  { label: 'Image', sub: 'shelf, product, ad' },
+  { label: 'Audio', sub: 'sales call, podcast' },
+  { label: 'Video', sub: 'in-store, ad spot' },
+];
+
+const MODAL_TASKS = [
+  { label: 'Product image search', sub: 'dark espresso mugs' },
+  { label: 'Caption generation', sub: 'image to alt-text' },
+  { label: 'Sales-call coaching', sub: 'audio to summary' },
+  { label: 'Shelf monitoring', sub: 'video to KPI' },
+];
+
+/**
+ * Two buses meeting at one box. The old version drew eight diagonals — four in,
+ * four out — each at a slightly different angle, which gave the eye eight
+ * separate slopes to measure on the way to a claim that is really about one
+ * thing: everything lands in the same coordinates.
+ */
 export function MultimodalArchitecture() {
-  const W = 760;
-  const H = 320;
-  const inputs = [
-    { y: 30, name: 'Text', sub: 'reviews, tickets, docs', color: C.blue },
-    { y: 95, name: 'Image', sub: 'shelf, product, ad', color: C.green },
-    { y: 160, name: 'Audio', sub: 'sales call, podcast', color: C.purple },
-    { y: 225, name: 'Video', sub: 'in-store, ad spot', color: C.red },
-  ];
-  const cx = W / 2;
+  const W = 792;
+  const rowH = 52;
+  const pitch = 64;
+  const top = 24;
+  const colW = 176;
+  const leftX = 16;
+  const rightX = W - 16 - colW;
+  const H = top + pitch * (MODALITIES.length - 1) + rowH + 24;
+  const centreY = top + (pitch * (MODALITIES.length - 1) + rowH) / 2;
+  const hubW = 200;
+  const hubX = (W - hubW) / 2;
+
   return (
-    <Card title="A multimodal model — different inputs, one shared meaning space, many use cases">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Four input modalities feeding a shared embedding space and fanning out to use cases.">
-        {inputs.map(inp => (
-          <g key={inp.name}>
-            <rect x={20} y={inp.y} width={150} height={48} rx={8} fill="white" stroke={inp.color} strokeWidth={1.6} />
-            <text x={95} y={inp.y + 20} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold" style={{ fill: inp.color }}>{inp.name}</text>
-            <text x={95} y={inp.y + 36} textAnchor="middle" className="fill-slate-500 text-[10px]">{inp.sub}</text>
-            <line x1={170} y1={inp.y + 24} x2={cx - 80} y2={H / 2 - 10 + (inp.y - 130) * 0.1} stroke={C.muted} strokeWidth={1.4} markerEnd="url(#mm-arrow)" />
-          </g>
+    <DiagramFrame
+      eyebrow="One shared meaning space"
+      note="The claim is not that the model handles four kinds of input. It is that all four land in the same coordinates — which is what lets a text query find an image, and an audio clip sit next to the ticket it is about."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="A multimodal model's shared embedding space"
+        desc="Text, image, audio, and video are each encoded into one shared embedding space, from which four different applications draw: image search from a text query, caption generation, sales-call coaching, and shelf monitoring."
+      >
+        <TreeBus
+          orientation="horizontal"
+          parentX={hubX}
+          parentY={centreY}
+          childXs={MODALITIES.map((_, i) => top + i * pitch + rowH / 2)}
+          childY={leftX + colW}
+        />
+        <TreeBus
+          orientation="horizontal"
+          parentX={hubX + hubW}
+          parentY={centreY}
+          childXs={MODAL_TASKS.map((_, i) => top + i * pitch + rowH / 2)}
+          childY={rightX}
+        />
+
+        {MODALITIES.map((m, i) => (
+          <Node
+            key={m.label}
+            x={leftX}
+            y={top + i * pitch}
+            width={colW}
+            height={rowH}
+            variant="input"
+            label={m.label}
+            sublabel={m.sub}
+          />
         ))}
-        {/* shared space */}
-        <rect x={cx - 80} y={H / 2 - 60} width={160} height={120} rx={12} fill={C.slate100} stroke={C.ink} strokeWidth={1.6} />
-        <text x={cx} y={H / 2 - 32} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Shared embedding space</text>
-        <text x={cx} y={H / 2 - 12} textAnchor="middle" className="fill-slate-500 text-[10px]">text + image + audio + video</text>
-        <text x={cx} y={H / 2 + 8} textAnchor="middle" className="fill-slate-500 text-[10px]">in the same coordinates</text>
-        {/* shared examples icons */}
-        {['T', 'I', 'A', 'V'].map((l, i) => (
-          <g key={l}>
-            <circle cx={cx - 50 + i * 30} cy={H / 2 + 36} r={10} fill="white" stroke={C.muted} strokeWidth={1.2} />
-            <text x={cx - 50 + i * 30} y={H / 2 + 40} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{l}</text>
-          </g>
+
+        <Node
+          x={hubX}
+          y={centreY - 56}
+          width={hubW}
+          height={112}
+          variant="focal"
+          label="Shared embedding space"
+          sublabel="text, image, audio, and video in the same coordinates"
+        />
+
+        {MODAL_TASKS.map((t, i) => (
+          <Node
+            key={t.label}
+            x={rightX}
+            y={top + i * pitch}
+            width={colW}
+            height={rowH}
+            label={t.label}
+            sublabel={t.sub}
+          />
         ))}
-        {/* outputs */}
-        {[
-          { y: 30, label: 'Product image search', sub: '"dark espresso mugs"' },
-          { y: 95, label: 'Caption generation', sub: 'image → alt-text' },
-          { y: 160, label: 'Sales-call coaching', sub: 'audio → summary' },
-          { y: 225, label: 'Shelf monitoring', sub: 'video → KPI' },
-        ].map(o => (
-          <g key={o.label}>
-            <line x1={cx + 80} y1={H / 2 - 10 + (o.y - 130) * 0.1} x2={W - 170} y2={o.y + 24} stroke={C.muted} strokeWidth={1.4} markerEnd="url(#mm-arrow)" />
-            <rect x={W - 170} y={o.y} width={150} height={48} rx={8} fill={C.amberLight} stroke={C.amber} strokeWidth={1.4} />
-            <text x={W - 95} y={o.y + 20} textAnchor="middle" className="fill-slate-900 text-[11px] font-semibold">{o.label}</text>
-            <text x={W - 95} y={o.y + 36} textAnchor="middle" className="fill-slate-500 text-[10px] italic">{o.sub}</text>
-          </g>
-        ))}
-        <defs>
-          <marker id="mm-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-    </Card>
+
+        <EyebrowLabel x={leftX} y={top - 10} anchor="start" tone="soft" masked={false}>
+          MODALITIES IN
+        </EyebrowLabel>
+        <EyebrowLabel x={W - 16} y={top - 10} anchor="end" tone="soft" masked={false}>
+          APPLICATIONS OUT
+        </EyebrowLabel>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 21.1 — LlmCapabilityMap                                               */
+/* 21.1 — LlmCapabilityMap                                              */
 /* ------------------------------------------------------------------ */
 
+const LLM_CAPABILITIES = [
+  { name: 'Summarise', ex: 'summarise this 40-page contract' },
+  { name: 'Classify', ex: 'this ticket goes to billing' },
+  { name: 'Extract', ex: 'pull the renewal date and parties' },
+  { name: 'Translate', ex: 'render this in French' },
+  { name: 'Draft', ex: 'reply to this customer' },
+  { name: 'Answer', ex: 'answer using these documents' },
+  { name: 'Reason and plan', ex: 'propose the next test' },
+  { name: 'Narrate', ex: 'explain this chart' },
+];
+
+/** Eight peers with no relationship between them: a grid, correctly. */
 export function LlmCapabilityMap() {
-  const cells = [
-    { name: 'Summarize', ex: '"summarize this 40-page contract"', color: C.blue },
-    { name: 'Classify', ex: '"this ticket → billing"', color: C.green },
-    { name: 'Extract', ex: '"pull renewal date, parties"', color: C.purple },
-    { name: 'Translate', ex: '"render in French"', color: C.teal },
-    { name: 'Draft', ex: '"reply to this customer"', color: C.amber },
-    { name: 'Q&A', ex: '"answer using these docs"', color: C.orange },
-    { name: 'Reason / plan', ex: '"propose next test"', color: C.pink },
-    { name: 'Narrate', ex: '"explain this chart"', color: C.red },
-  ];
   return (
-    <Card title="LLMs are language interfaces for workflows — eight capabilities, one substrate">
+    <DiagramFrame
+      eyebrow="Eight capabilities, one substrate"
+      note="None of these is a chatbot move. They are tasks a manager would have given to an analyst — now available as an API call, which is what changes about the org chart rather than about the model."
+      bare
+    >
       <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
-        {cells.map(c => (
-          <div key={c.name} className="rounded-md border border-slate-200 p-2.5">
-            <div className="flex items-center gap-2">
-              <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: c.color }} />
-              <span className="text-[12px] font-semibold text-slate-800">{c.name}</span>
-            </div>
-            <div className="mt-1 text-[10.5px] italic text-slate-500">{c.ex}</div>
+        {LLM_CAPABILITIES.map(c => (
+          <div key={c.name} className="rounded-md border border-border bg-card p-2.5">
+            <div className="text-[12px] font-semibold text-body">{c.name}</div>
+            <div className="mt-1 font-plex text-[10px] leading-snug text-muted">{c.ex}</div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] text-slate-500">
-        None of these are chatbot moves. They are tasks a manager would have given to an analyst — now available as an API call.
-      </p>
-    </Card>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 21.2 — PromptStructureCard                                            */
+/* 21.2 — PromptStructureCard                                           */
 /* ------------------------------------------------------------------ */
 
+const PROMPT_SLOTS = [
+  { name: 'Role', body: 'You are a customer insights analyst at a specialty coffee chain.' },
+  { name: 'Task', body: 'Summarise the main complaints in the following twenty reviews.' },
+  {
+    name: 'Context',
+    body: 'Reviews are from the iOS app, May 2026, after a checkout outage on May 12.',
+  },
+  {
+    name: 'Constraints',
+    body: 'Separate product, service, app, and pricing issues. Ignore non-English text. Flag any review verbatim if it threatens regulatory action.',
+  },
+  { name: 'Examples', body: 'Two labelled example reviews with their target output.' },
+  {
+    name: 'Output format',
+    body: 'Return JSON: topic, evidence_quotes, severity 1-5, suggested_action.',
+  },
+];
+
+/**
+ * Nested: six slots inside one container, because the container is the point.
+ * A prompt is not six things you send — it is one brief with six fields, the
+ * same brief a manager would hand an analyst.
+ */
 export function PromptStructureCard() {
-  const slots = [
-    { name: 'Role', body: 'You are a customer insights analyst at a specialty coffee chain.', color: C.blue },
-    { name: 'Task', body: 'Summarize the main complaints in the following twenty reviews.', color: C.green },
-    { name: 'Context', body: 'Reviews are from the iOS app, May 2026, after a checkout outage on May 12.', color: C.amber },
-    { name: 'Constraints', body: 'Separate product, service, app, and pricing issues. Ignore non-English text. Flag any single review verbatim if it threatens regulatory action.', color: C.red },
-    { name: 'Examples', body: 'Two labelled example reviews with their target output (omitted here for brevity).', color: C.purple },
-    { name: 'Output format', body: 'Return JSON: { topic, evidence_quotes, severity (1–5), suggested_action }.', color: C.teal },
-  ];
+  const W = 792;
+  // Room for the two-line Constraints slot without its second line running
+  // under the eyebrow chip above it.
+  const rowH = 56;
+  const pitch = 64;
+  const top = 44;
+  const slotX = 40;
+  const slotW = W - 80;
+  const H = top + pitch * (PROMPT_SLOTS.length - 1) + rowH + 24;
+
   return (
-    <Card title="A prompt is a structured task brief — same fields a manager would give an analyst">
-      <div className="grid grid-cols-1 gap-2">
-        {slots.map(s => (
-          <div key={s.name} className="grid grid-cols-[100px_minmax(0,1fr)] gap-3 rounded-md border border-slate-200 p-2.5">
-            <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: s.color }}>{s.name}</div>
-            <div className="text-[12px] text-slate-700">{s.body}</div>
-          </div>
+    <DiagramFrame
+      eyebrow="A prompt is a structured task brief"
+      note="Be clear about what you want. The GABRIEL paper shows wording matters less than people fear, once the construct itself is unambiguous — which is a statement about the brief, not about the model."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The six slots of a prompt"
+        desc="A prompt holds a role, a task, context, constraints, examples, and an output format — the same six fields a manager would put in a brief for an analyst."
+      >
+        <Zone x={16} y={16} width={W - 32} height={H - 32} label="ONE BRIEF" />
+        {PROMPT_SLOTS.map((slot, i) => (
+          <g key={slot.name}>
+            <Node
+              x={slotX}
+              y={top + i * pitch}
+              width={slotW}
+              height={rowH}
+              align="start"
+              variant={i === 5 ? 'focal' : 'step'}
+              label={slot.body}
+              labelDy={6}
+            />
+            <EyebrowLabel
+              x={slotX + 12}
+              y={top + i * pitch + 16}
+              anchor="start"
+              tone={i === 5 ? 'accent' : 'soft'}
+              masked={false}
+            >
+              {slot.name}
+            </EyebrowLabel>
+          </g>
         ))}
-      </div>
-      <p className="mt-3 text-[11px] text-slate-500">
-        Be clear about <em>what</em> you want — the GABRIEL paper shows wording matters less than people fear, once the construct is unambiguous.
-      </p>
-    </Card>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 21.3 — StructuredOutputFlow                                           */
+/* 21.3 — StructuredOutputFlow                                          */
 /* ------------------------------------------------------------------ */
 
+/**
+ * A state machine, which is what "the schema is the contract" actually means:
+ * output does not flow downstream, it *transitions* — and one of the
+ * transitions goes backwards.
+ *
+ * The previous version was three boxes in a row with the JSON rendered inside
+ * `foreignObject`, and it had no failure state at all. The retry edge is the
+ * whole argument: output that does not validate gets rejected and re-asked, not
+ * silently passed on.
+ */
 export function StructuredOutputFlow() {
-  const W = 760;
-  const H = 240;
+  const W = 792;
+  const H = 288;
+  const y = 40;
+  const boxH = 72;
+  const boxW = 152;
+  const xs = centeredRow(0, W, 4, boxW, 48);
+
   return (
-    <Card title="From messy text to validated JSON — the structured-output handoff">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Free-text input flows through LLM with schema into validated JSON used downstream.">
-        {/* input */}
-        <rect x={20} y={50} width={170} height={140} rx={10} fill={C.amberLight} stroke={C.amber} strokeWidth={1.6} />
-        <text x={105} y={74} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Free-text input</text>
-        <foreignObject x={28} y={84} width={154} height={100}>
-          <div style={{ fontFamily: 'inherit', fontSize: 10.5, color: '#475569', fontStyle: 'italic', lineHeight: 1.3 }}>
-            "Customer is upset — our contract renewed Aug 14 at $12k but the rep promised $9k. They're considering switching."
-          </div>
-        </foreignObject>
-        {/* arrow */}
-        <line x1={190} y1={120} x2={250} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#sof-arrow)" />
-        {/* LLM + schema */}
-        <rect x={250} y={50} width={200} height={140} rx={10} fill={C.purpleLight} stroke={C.purple} strokeWidth={1.6} />
-        <text x={350} y={74} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">LLM + schema</text>
-        <text x={350} y={94} textAnchor="middle" className="fill-slate-500 text-[10px]">JSON mode / instructor</text>
-        <foreignObject x={258} y={104} width={184} height={80}>
-          <div style={{ fontFamily: 'monospace', fontSize: 9.5, color: '#475569', lineHeight: 1.3 }}>
-            {`{
-  renewal_date: date,
-  amount_usd: number,
-  promised_amount: number?,
-  intent_to_switch: bool,
-  severity: enum
-}`}
-          </div>
-        </foreignObject>
-        {/* arrow */}
-        <line x1={450} y1={120} x2={510} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#sof-arrow)" />
-        {/* JSON */}
-        <rect x={510} y={50} width={230} height={140} rx={10} fill={C.greenLight} stroke={C.green} strokeWidth={1.6} />
-        <text x={625} y={74} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Validated JSON</text>
-        <foreignObject x={518} y={84} width={214} height={100}>
-          <div style={{ fontFamily: 'monospace', fontSize: 10, color: '#064e3b', lineHeight: 1.4 }}>
-            {`{
-  "renewal_date": "2026-08-14",
-  "amount_usd": 12000,
-  "promised_amount": 9000,
-  "intent_to_switch": true,
-  "severity": "high"
-}`}
-          </div>
-        </foreignObject>
-        <text x={W / 2} y={H - 14} textAnchor="middle" className="fill-slate-500 text-[10px] italic">
-          The schema is the contract. Output that doesn't validate gets rejected and retried — not silently passed downstream.
-        </text>
-        <defs>
-          <marker id="sof-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-    </Card>
+    <DiagramFrame
+      eyebrow="From messy text to validated JSON"
+      note="The schema is the contract. Output that does not validate is rejected and re-asked — not silently passed downstream, where a missing field becomes a null that someone eventually reads as a zero."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The structured-output state machine"
+        desc="Free text is parsed against a schema. Valid output is accepted; invalid output returns to the model with the validation error attached and is asked again. After a bounded number of retries the item is routed to a human rather than passed on."
+      >
+        {[0, 1, 2].map(i => (
+          <Connector
+            key={i}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+            label={i === 1 ? 'VALIDATE' : undefined}
+          />
+        ))}
+
+        {/* The transition that makes this a state machine rather than a
+            pipeline: invalid output goes back, carrying the error with it. */}
+        <Connector
+          from={[xs[2] + boxW / 2, y + boxH]}
+          to={[xs[1] + boxW / 2, y + boxH]}
+          route="vhv"
+          mid={y + boxH + 44}
+          tone="accent"
+          label="INVALID — RETRY"
+        />
+
+        {/* And the exit that stops it looping forever. */}
+        <Connector
+          from={[xs[2] + boxW / 2, y + boxH + 44]}
+          to={[xs[3] + boxW / 2, y + boxH + 72]}
+          route="vhv"
+          mid={y + boxH + 96}
+          dashed
+          label="AFTER N TRIES"
+          // Pulled left off the run's midpoint: the mask would otherwise land
+          // inside the node, which paints after it and clips the text.
+          labelOffset={-80}
+        />
+
+        <Node
+          x={xs[0]}
+          y={y}
+          width={boxW}
+          height={boxH}
+          variant="input"
+          label="Free text"
+          sublabel="a note, a review, a call"
+        />
+        <Node
+          x={xs[1]}
+          y={y}
+          width={boxW}
+          height={boxH}
+          variant="step"
+          tag="LLM"
+          label="Generate"
+          sublabel="against a schema"
+        />
+        <Node
+          x={xs[2]}
+          y={y}
+          width={boxW}
+          height={boxH}
+          variant="focal"
+          label="Parse and validate"
+          sublabel="the schema is the gate"
+        />
+        <Node
+          x={xs[3]}
+          y={y}
+          width={boxW}
+          height={boxH}
+          variant="pos"
+          label="Accepted"
+          sublabel="typed, safe to store"
+        />
+        <Node
+          x={xs[3]}
+          y={y + boxH + 72}
+          width={boxW}
+          height={48}
+          variant="neg"
+          label="Sent to a human"
+        />
+
+        <Legend
+          y={H - 12}
+          width={W}
+          x={16}
+          items={[
+            { kind: 'focal', label: 'The gate' },
+            { kind: 'pos', label: 'Valid' },
+            { kind: 'neg', label: 'Gave up' },
+          ]}
+          pitch={216}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 21.4 — AgentWorkflowDiagram                                           */
+/* 21.4 — AgentWorkflowDiagram                                          */
 /* ------------------------------------------------------------------ */
 
+const AGENT_STEPS = [
+  { label: 'Pull reviews', sub: 'tool: warehouse', variant: 'step' as const },
+  { label: 'Classify and cluster', sub: '§18.4, §19.2', variant: 'step' as const },
+  { label: 'Detect what is emerging', sub: 'topic delta', variant: 'step' as const },
+  { label: 'Retrieve tickets', sub: 'RAG, §20.1', variant: 'step' as const },
+  { label: 'Summarise', sub: 'LLM plus schema', variant: 'step' as const },
+  { label: 'Human review', sub: 'the approval gate', variant: 'boundary' as const },
+  { label: 'Send and log', sub: 'tool: Slack plus DB', variant: 'step' as const },
+];
+
+/**
+ * Seven steps, down from eight — "classify" and "embed + cluster" always
+ * travelled together, and two nodes that always travel together are one node.
+ *
+ * The old version had two Bézier curves sweeping across the whole canvas: a row
+ * turn from step 4 back to step 5, and a feedback loop that looped under
+ * everything and re-entered at the top left. Both are orthogonal now, and the
+ * feedback edge is the only accented element, because it is the thing that
+ * makes this an agent rather than a script.
+ */
 export function AgentWorkflowDiagram() {
-  const W = 800;
-  const H = 360;
+  const W = 792;
+  const rowH = 64;
+  const pitch = 76;
+  const top = 40;
+  const boxX = 176;
+  const boxW = 440;
+  const H = top + pitch * (AGENT_STEPS.length - 1) + rowH + 56;
+
   return (
-    <Card title="A customer-insights agent — LLM + tools + memory + a control loop">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="An eight-stage agent workflow with a human-approval gate before Slack alert.">
-        {/* control loop background */}
-        <rect x={20} y={30} width={W - 40} height={H - 60} rx={14} fill={C.slate50} stroke={C.grid} strokeWidth={1.4} strokeDasharray="6 5" />
-        <text x={40} y={50} className="fill-slate-500 text-[10px] uppercase tracking-wide">control loop</text>
-        {[
-          { x: 60, y: 90, label: '1. Pull reviews', sub: 'tool: warehouse', color: C.blue },
-          { x: 220, y: 90, label: '2. Classify', sub: '§18.4 model', color: C.blue },
-          { x: 380, y: 90, label: '3. Embed + cluster', sub: '§19.2', color: C.purple },
-          { x: 540, y: 90, label: '4. Detect emerging', sub: 'topic delta', color: C.purple },
-          { x: 60, y: 210, label: '5. Retrieve tickets', sub: 'RAG (§20.1)', color: C.teal },
-          { x: 220, y: 210, label: '6. Summarize', sub: 'LLM + schema', color: C.green },
-          { x: 380, y: 210, label: '7. Human review', sub: 'approval gate', color: C.red },
-          { x: 540, y: 210, label: '8. Send alert + log', sub: 'tool: Slack + DB', color: C.amber },
-        ].map((s) => {
-          const isGate = s.label.includes('Human');
-          return (
-            <g key={s.label}>
-              <rect x={s.x} y={s.y} width={140} height={60} rx={8} fill="white" stroke={s.color} strokeWidth={isGate ? 2.5 : 1.6} />
-              <text x={s.x + 70} y={s.y + 22} textAnchor="middle" className="fill-slate-900 text-[11px] font-semibold" style={{ fill: s.color }}>{s.label}</text>
-              <text x={s.x + 70} y={s.y + 38} textAnchor="middle" className="fill-slate-500 text-[10px]">{s.sub}</text>
-              {isGate && (
-                <text x={s.x + 70} y={s.y + 52} textAnchor="middle" className="fill-rose-700 text-[9px] font-semibold uppercase tracking-wide">human gate</text>
-              )}
-            </g>
-          );
-        })}
-        {/* arrows row 1 */}
-        <line x1={200} y1={120} x2={220} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" />
-        <line x1={360} y1={120} x2={380} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" />
-        <line x1={520} y1={120} x2={540} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" />
-        {/* row turn */}
-        <path d={`M 610 150 Q 700 180 130 200`} fill="none" stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" strokeDasharray="4 3" />
-        {/* arrows row 2 */}
-        <line x1={200} y1={240} x2={220} y2={240} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" />
-        <line x1={360} y1={240} x2={380} y2={240} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" />
-        <line x1={520} y1={240} x2={540} y2={240} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#agent-arrow)" />
-        {/* feedback */}
-        <path d={`M 610 270 Q 730 320 60 320 Q 30 200 60 130`} fill="none" stroke={C.amber} strokeWidth={1.5} markerEnd="url(#agent-arrow-amber)" strokeDasharray="6 4" />
-        <text x={W / 2} y={H - 14} textAnchor="middle" className="fill-amber-700 text-[10px] italic">feedback loop — what the agent did becomes signal for next run</text>
-        <defs>
-          <marker id="agent-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-          <marker id="agent-arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.amber} />
-          </marker>
-        </defs>
-      </svg>
-    </Card>
+    <DiagramFrame
+      eyebrow="A customer-insights agent"
+      note="What the agent did on the last run — which alerts a human approved, which they edited, which they killed — is the signal for the next one. Remove that edge and this is a scheduled script with a language model in it."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="A customer-insights agent's control loop"
+        desc="Seven steps run in order: pull reviews, classify and cluster them, detect emerging topics, retrieve related tickets, summarise, pass the summary to a human for approval, and send the alert. What the human approved or rejected feeds back into the next run."
+      >
+        <Zone x={112} y={16} width={W - 176} height={H - 48} label="CONTROL LOOP" boundary={false} />
+
+        {AGENT_STEPS.slice(0, -1).map((s, i) => (
+          <Connector
+            key={s.label}
+            from={[boxX + boxW / 2, top + i * pitch + rowH]}
+            to={[boxX + boxW / 2, top + (i + 1) * pitch]}
+            route="straight"
+          />
+        ))}
+
+        {/* Feedback, routed down the left gutter — the only accented edge. */}
+        <Connector
+          from={[boxX, top + (AGENT_STEPS.length - 1) * pitch + rowH / 2]}
+          to={[boxX, top + rowH / 2]}
+          route="hvh"
+          mid={144}
+          tone="accent"
+          dashed
+          label="NEXT RUN"
+          // Left of the run, not right: to the right it lands inside the step
+          // column, and the steps paint after the label.
+          labelSide="left"
+        />
+
+        {AGENT_STEPS.map((s, i) => (
+          <React.Fragment key={s.label}>
+            <Node
+              x={boxX}
+              y={top + i * pitch}
+              width={boxW}
+              height={rowH}
+              align="start"
+              variant={s.variant}
+              label={s.label}
+              sublabel={s.sub}
+            />
+            <SvgText
+              x={boxX + boxW - 16}
+              y={top + i * pitch + rowH / 2 + 4}
+              variant="sub"
+              tone="soft"
+              textAnchor="end"
+            >
+              {`0${i + 1}`}
+            </SvgText>
+          </React.Fragment>
+        ))}
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 21.4 — HumanApprovalGate                                               */
+/* 21.4 — HumanApprovalGate                                             */
 /* ------------------------------------------------------------------ */
+
+const GATE_BRANCHES = [
+  { label: 'Approve', sub: 'sent verbatim', variant: 'pos' as const, edge: 'AS IS' },
+  { label: 'Edit and approve', sub: 'sent with changes', variant: 'step' as const, edge: 'EDITED' },
+  { label: 'Reject', sub: 'logged, nothing sent', variant: 'neg' as const, edge: 'KILLED' },
+];
 
 export function HumanApprovalGate() {
-  const W = 720;
-  const H = 220;
+  const W = 792;
+  const H = 288;
+  const gateX = 264;
+  const gateW = 176;
+  const gateH = 112;
+  const gateY = 88;
+  const outX = 552;
+  const outW = 224;
+  const outH = 56;
+  const outY = [24, 116, 208];
+
   return (
-    <Card title="The human-approval gate — three states, one decision point">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="An approval gate with three branches: approve, edit-and-approve, or reject.">
-        {/* incoming */}
-        <rect x={30} y={H / 2 - 30} width={170} height={60} rx={8} fill={C.amberLight} stroke={C.amber} strokeWidth={1.6} />
-        <text x={115} y={H / 2 - 8} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold">Agent proposal</text>
-        <text x={115} y={H / 2 + 10} textAnchor="middle" className="fill-slate-500 text-[10px]">"Send this Slack alert"</text>
-        {/* gate */}
-        <line x1={200} y1={H / 2} x2={250} y2={H / 2} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#hag-arrow)" />
-        <polygon points={`260,${H / 2 - 40} 360,${H / 2} 260,${H / 2 + 40} 220,${H / 2}`} fill={C.redLight} stroke={C.red} strokeWidth={1.8} />
-        <text x={290} y={H / 2 + 4} textAnchor="middle" className="fill-rose-900 text-[12px] font-semibold">Human</text>
-        <text x={290} y={H / 2 + 20} textAnchor="middle" className="fill-rose-700 text-[10px]">reviews</text>
-        {/* branches */}
-        {[
-          { y: 30, label: 'Approve', sub: 'sent verbatim', color: C.green },
-          { y: H / 2 - 30, label: 'Edit + approve', sub: 'sent with edits', color: C.blue },
-          { y: H - 90, label: 'Reject', sub: 'logged, no send', color: C.red },
-        ].map(b => (
-          <g key={b.label}>
-            <line x1={360} y1={H / 2} x2={520} y2={b.y + 30} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#hag-arrow)" />
-            <rect x={520} y={b.y} width={160} height={60} rx={8} fill="white" stroke={b.color} strokeWidth={1.6} />
-            <text x={600} y={b.y + 24} textAnchor="middle" className="fill-slate-900 text-[12px] font-semibold" style={{ fill: b.color }}>{b.label}</text>
-            <text x={600} y={b.y + 42} textAnchor="middle" className="fill-slate-500 text-[10px]">{b.sub}</text>
-          </g>
+    <DiagramFrame
+      eyebrow="The human-approval gate"
+      note="Every approved, edited, or rejected decision becomes training data for the next iteration. A gate that only ever says yes is a rubber stamp; a gate whose edits are never captured is a wasted signal."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The human-approval gate"
+        desc="An agent's proposed action reaches a human reviewer, who can approve it as it stands, edit it and approve, or reject it. All three outcomes are logged, and all three feed the next iteration."
+      >
+        <Connector
+          from={[192, gateY + gateH / 2]}
+          to={[gateX, gateY + gateH / 2]}
+          route="straight"
+        />
+        {GATE_BRANCHES.map((b, i) => (
+          <Connector
+            key={b.label}
+            from={[gateX + gateW, gateY + gateH / 2]}
+            to={[outX, outY[i] + outH / 2]}
+            route="hvh"
+            mid={472 + i * 12}
+            label={b.edge}
+            labelSide={i === 1 ? 'above' : 'right'}
+          />
         ))}
-        <defs>
-          <marker id="hag-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-      <p className="mt-1 text-center text-[11px] text-slate-500">
-        Every approved or edited decision goes into the training data for the next iteration.
-      </p>
-    </Card>
+
+        <Node
+          x={16}
+          y={gateY + gateH / 2 - 36}
+          width={176}
+          height={72}
+          variant="input"
+          label="Agent proposal"
+          sublabel="send this Slack alert"
+        />
+        <Node
+          x={gateX}
+          y={gateY}
+          width={gateW}
+          height={gateH}
+          shape="diamond"
+          variant="focal"
+          label="A human reviews"
+        />
+        {GATE_BRANCHES.map((b, i) => (
+          <Node
+            key={b.label}
+            x={outX}
+            y={outY[i]}
+            width={outW}
+            height={outH}
+            variant={b.variant}
+            label={b.label}
+            sublabel={b.sub}
+          />
+        ))}
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/* 22.2 — CustomerVoiceStudioFlow                                         */
+/* 22.2 — CustomerVoiceStudioFlow                                       */
 /* ------------------------------------------------------------------ */
 
+const STUDIO_STAGES = [
+  { label: 'Classify', sub: 'route and tag · §18.4' },
+  { label: 'Measure', sub: 'constructs · §19.3' },
+  { label: 'Cluster', sub: 'embed · §19.2' },
+  { label: 'Retrieve', sub: 'RAG · §20.1' },
+  { label: 'Summarise and act', sub: 'agent · §21.4' },
+  { label: 'Monitor', sub: 'governance · §22.1', focal: true },
+];
+
 export function CustomerVoiceStudioFlow() {
-  const W = 800;
-  const H = 240;
-  const cells = [
-    { label: 'Classify', sub: 'route + tag (§18.4)', color: C.blue },
-    { label: 'Measure', sub: 'constructs (§19.3)', color: C.purple },
-    { label: 'Cluster', sub: 'embed (§19.2)', color: C.teal },
-    { label: 'Retrieve', sub: 'RAG (§20.1)', color: C.amber },
-    { label: 'Summarize + act', sub: 'agent (§21.4)', color: C.green },
-    { label: 'Monitor', sub: 'governance (§22.1)', color: C.red },
-  ];
-  const cellW = (W - 60) / cells.length;
+  const W = 792;
+  const H = 224;
+  const boxW = 112;
+  const boxH = 80;
+  const y = 32;
+  const xs = centeredRow(0, W, STUDIO_STAGES.length, boxW, 20);
+
   return (
-    <Card title="The Part V loop end to end — Customer Voice Intelligence Studio">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Six-stage customer voice studio loop with feedback to monitoring.">
-        {cells.map((c, i) => {
-          const x = 30 + cellW * i;
-          return (
-            <g key={c.label}>
-              <rect x={x + 10} y={60} width={cellW - 20} height={80} rx={10} fill="white" stroke={c.color} strokeWidth={1.8} />
-              <text x={x + cellW / 2} y={92} textAnchor="middle" className="fill-slate-900 text-[13px] font-semibold" style={{ fill: c.color }}>{c.label}</text>
-              <text x={x + cellW / 2} y={114} textAnchor="middle" className="fill-slate-500 text-[10px]">{c.sub}</text>
-              {i < cells.length - 1 && (
-                <line x1={x + cellW - 10} y1={100} x2={x + cellW + 10} y2={100} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#cvs-arrow)" />
-              )}
-            </g>
-          );
-        })}
-        <defs>
-          <marker id="cvs-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-          <marker id="cvs-feedback" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.amber} />
-          </marker>
-        </defs>
-        <path d={`M ${30 + cellW * (cells.length - 0.5)} 150 C ${30 + cellW * (cells.length - 0.5)} 200 ${30 + cellW * 0.5} 200 ${30 + cellW * 0.5} 150`} fill="none" stroke={C.amber} strokeWidth={1.5} strokeDasharray="6 4" markerEnd="url(#cvs-feedback)" />
-        <text x={W / 2} y={224} textAnchor="middle" className="fill-amber-700 text-[10px] italic">monitoring → revised classify / measure / cluster definitions next cycle</text>
-      </svg>
-    </Card>
+    <DiagramFrame
+      eyebrow="The Part V loop, end to end"
+      note="Monitoring is not the last step; it is the step that rewrites the first three. What the studio learns in production becomes the revised classify, measure, and cluster definitions of the next cycle."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The Customer Voice Intelligence Studio loop"
+        desc="Six stages run in order — classify, measure, cluster, retrieve, summarise and act, monitor — and monitoring feeds revised definitions back into the first three stages for the next cycle."
+      >
+        {STUDIO_STAGES.slice(0, -1).map((s, i) => (
+          <Connector
+            key={s.label}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+          />
+        ))}
+
+        <Connector
+          from={[xs[5] + boxW / 2, y + boxH]}
+          to={[xs[0] + boxW / 2, y + boxH]}
+          route="vhv"
+          mid={y + boxH + 48}
+          tone="accent"
+          dashed
+          label="REVISED DEFINITIONS"
+        />
+
+        {STUDIO_STAGES.map((s, i) => (
+          <Node
+            key={s.label}
+            x={xs[i]}
+            y={y}
+            width={boxW}
+            height={boxH}
+            variant={s.focal ? 'focal' : 'step'}
+            label={s.label}
+            sublabel={s.sub}
+          />
+        ))}
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }

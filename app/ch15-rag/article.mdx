@@ -4,7 +4,10 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
-import { RagPipeline } from '@/components/Book/part5/RagVisionAgentDiagrams';
+import {
+  RagPipeline,
+  RagRetrievalDetail,
+} from '@/components/Book/part5/RagVisionAgentDiagrams';
 
 <DropCap>
 
@@ -47,6 +50,12 @@ A walk-through:
 9.  **Answer.** The model writes a response that *should* be grounded in the retrieved chunks, with citations back to the source documents.
 
 The architecture's strength is in the separation of concerns. Language ability stays with the model. Facts stay with the firm's index. Updating the knowledge base is just re-indexing; the model itself never has to be re-trained.
+
+Steps 6 and 7 are compressed into a single box in Figure 1, and that compression is where the failures hide. Figure 2 opens it up.
+
+<Figure width="page-outset" caption="Figure 2. Inside the retrieval step. Four things happen between a question and the context the model sees, and each one can silently drop the chunk containing the answer — the wrong embedding model, too small a k, no reranking, or a context window that fills up before the right chunk arrives.">
+  <RagRetrievalDetail />
+</Figure>
 
 ---
 

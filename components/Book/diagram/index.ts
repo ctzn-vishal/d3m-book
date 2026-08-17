@@ -36,7 +36,7 @@ export type { ArrowLabelProps, LabelSide } from './ArrowLabel';
 export { Legend } from './Legend';
 export type { LegendItem, LegendProps, SwatchKind } from './Legend';
 
-export { Zone } from './Zone';
+export { Zone, Lane } from './Zone';
 export type { ZoneProps } from './Zone';
 
 export { Layers } from './LayerStack';

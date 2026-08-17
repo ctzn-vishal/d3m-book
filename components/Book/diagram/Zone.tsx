@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { EyebrowLabel } from './ArrowLabel';
+import { SvgText } from './text';
 import { R, S, T } from './tokens';
 
 /**
@@ -50,6 +51,77 @@ export function Zone({ x, y, width, height, label, boundary, children }: ZonePro
       />
       {/* Leave ≥16px between this label and the first enclosed node. */}
       {label && <EyebrowLabel x={x + 12} y={y + 14} tone="soft">{label}</EyebrowLabel>}
+      {children}
+    </g>
+  );
+}
+
+/**
+ * A swimlane: a full-width band with its name in a left gutter.
+ *
+ * Different from `Zone` in the one way that matters — the label lives *beside*
+ * the band rather than inside it, so the lane's whole height is usable and two
+ * lanes stacked read as parallel tracks rather than as nested containers.
+ *
+ * Five lanes is the ceiling. Past that the reader is doing a lookup, not
+ * reading a process.
+ */
+export function Lane({
+  x,
+  y,
+  width,
+  height,
+  label,
+  sublabel,
+  gutter = 96,
+  children,
+}: {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  label: string;
+  sublabel?: string;
+  /** Width of the name column to the left of the band. */
+  gutter?: number;
+  children?: React.ReactNode;
+}) {
+  return (
+    <g>
+      <rect
+        x={x + gutter}
+        y={y}
+        width={width - gutter}
+        height={height}
+        rx={R.md}
+        fill={T.paperAlt}
+        fillOpacity={0.5}
+        stroke={T.rule}
+        strokeWidth={S.thin}
+      />
+      <SvgText
+        x={x + gutter - 12}
+        y={y + height / 2 + (sublabel ? -2 : 4)}
+        width={gutter - 16}
+        anchorY="middle"
+        variant="nodeSm"
+        tone="muted"
+        textAnchor="end"
+      >
+        {label}
+      </SvgText>
+      {sublabel && (
+        <SvgText
+          x={x + gutter - 12}
+          y={y + height / 2 + 14}
+          width={gutter - 16}
+          variant="sub"
+          tone="soft"
+          textAnchor="end"
+        >
+          {sublabel}
+        </SvgText>
+      )}
       {children}
     </g>
   );
