@@ -16,7 +16,12 @@ import type { NodeVariant } from './Node';
  * obvious from the label. If every node in a diagram is a `step`, skip it.
  */
 
-export type SwatchKind = NodeVariant | 'arrow' | 'arrow-dashed' | 'arrow-accent';
+export type SwatchKind =
+  | NodeVariant
+  | 'arrow'
+  | 'arrow-dashed'
+  | 'arrow-accent'
+  | 'arrow-accent-dashed';
 
 export interface LegendItem {
   kind: SwatchKind;
@@ -48,8 +53,10 @@ const NODE_SWATCH: Partial<Record<NodeVariant, { fill: string; stroke: string; d
 };
 
 function Swatch({ kind, x, y }: { kind: SwatchKind; x: number; y: number }) {
-  if (kind === 'arrow' || kind === 'arrow-dashed' || kind === 'arrow-accent') {
-    const tone: Tone = kind === 'arrow-accent' ? 'accent' : 'default';
+  if (kind.startsWith('arrow')) {
+    const accent = kind.includes('accent');
+    const dashed = kind.includes('dashed');
+    const tone: Tone = accent ? 'accent' : 'default';
     return (
       <line
         x1={x}
@@ -58,11 +65,11 @@ function Swatch({ kind, x, y }: { kind: SwatchKind; x: number; y: number }) {
         y2={y}
         stroke={toneStroke[tone]}
         strokeWidth={S.strong}
-        strokeDasharray={kind === 'arrow-dashed' ? '3 2' : undefined}
+        strokeDasharray={dashed ? '3 2' : undefined}
       />
     );
   }
-  const s = NODE_SWATCH[kind] ?? NODE_SWATCH.step!;
+  const s = NODE_SWATCH[kind as NodeVariant] ?? NODE_SWATCH.step!;
   return (
     <rect
       x={x}

@@ -2,105 +2,130 @@
 
 import * as React from 'react';
 
+import {
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  Layers,
+  Legend,
+  Node,
+  PathConnector,
+  S,
+  SvgText,
+  T,
+  centeredRow,
+  ring,
+  ringArc,
+  spoke,
+} from '@/components/Book/diagram';
+
 /**
- * Visuals for §17.2 (Text-to-SQL & the semantic layer) and §17.3 (automated
- * predictive workflows).
+ * Visuals for §17.2 "Text to SQL" and §17.3 "The Predictive Loop".
  *
- *   - TextToSqlFlow: NL question -> semantic layer -> candidate SQL -> execute -> self-correct.
- *   - SqlAccuracyChart: execution accuracy across Spider/BIRD/Spider 2.0 vs the human baseline.
- *   - SemanticLayerDiagram: the semantic layer as the contract between agents/BI and the warehouse.
- *   - PredictiveAgentLoop: the monitor -> drift -> retrain -> approve -> deploy loop.
- *   - DsAgentScorecard: how far data-science agents are from experts, by benchmark.
+ *   - TextToSqlFlow        data flow    question -> governed SQL -> checked answer
+ *   - SqlAccuracyChart     bar chart    benchmark accuracy (chart, not schematic)
+ *   - SemanticLayerDiagram layer stack  the contract between language and SQL
+ *   - PredictiveAgentLoop  loop         train, deploy, monitor, drift, decide
+ *   - DsAgentScorecard     bar chart    agent performance by task shape
  *
- * All numbers shown are sourced and cited in the article prose; the components
- * are illustrative.
+ * The two charts stay charts: they compare quantities across categories, which
+ * is not what a schematic is for. They pick up the theme tokens and the single
+ * accent, and nothing else changes.
  */
-
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  sky: '#0284c7',
-  skyLight: '#e0f2fe',
-  teal: '#0d9488',
-  tealLight: '#ccfbf1',
-  green: '#0f766e',
-  greenLight: '#d1fae5',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  violet: '#7c3aed',
-  violetLight: '#ede9fe',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
-
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
-  return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">{title}</p>}
-      {children}
-      {footer && <div className="mt-3 text-[11px] leading-relaxed text-slate-500">{footer}</div>}
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* §17.2 — TextToSqlFlow                                                */
 /* ------------------------------------------------------------------ */
 
+const TTS_STEPS = [
+  { label: 'Question', sub: 'revenue by city, last quarter', variant: 'input' as const },
+  { label: 'Semantic layer', sub: 'tables, joins, certified metrics', variant: 'focal' as const },
+  { label: 'Generate candidates', sub: 'decompose, several SQL drafts', variant: 'step' as const },
+  { label: 'Execute and check', sub: 'run, read errors, validate', variant: 'step' as const },
+  { label: 'Answer', sub: 'table, chart, explanation', variant: 'step' as const },
+];
+
+/**
+ * A five-step data flow with one retry edge.
+ *
+ * The self-correction loop is the second-most important thing in the figure
+ * and used to be drawn as a red Bézier swooping under the pipeline. It is now
+ * an orthogonal path with the label at the visible end, because the claim it
+ * carries — the database's own error message drives the revision — is easier
+ * to trace when the line has corners you can follow.
+ *
+ * The semantic layer is focal. The accuracy gains of the last two years came
+ * from that box, not from a better model, which is the section's argument.
+ */
 export function TextToSqlFlow() {
-  const W = 820;
-  const H = 300;
-  const steps = [
-    { x: 24, label: 'Question', sub: '"revenue by city,\nlast quarter"', color: C.slate100, textColor: C.ink },
-    { x: 186, label: 'Schema + semantic layer', sub: 'tables, joins,\ncertified metrics', color: C.tealLight, textColor: C.teal },
-    { x: 360, label: 'Generate candidates', sub: 'decompose · multiple\nSQL drafts', color: C.skyLight, textColor: C.sky },
-    { x: 534, label: 'Execute & check', sub: 'run · read errors ·\nvalidate', color: C.amberLight, textColor: C.amber },
-    { x: 708, label: 'Answer', sub: 'table · chart ·\nexplanation', color: C.greenLight, textColor: C.green },
-  ];
+  const W = 792;
+  const H = 232;
+  const boxW = 136;
+  const boxH = 88;
+  const y = 32;
+  const xs = centeredRow(0, W, TTS_STEPS.length, boxW, 24);
+
   return (
-    <Card title="How a text-to-SQL agent actually answers a question">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="A pipeline from a natural-language question through the semantic layer, candidate SQL generation, execution and self-correction, to a verified answer.">
-        {steps.map((s, i) => (
-          <g key={s.label}>
-            <rect x={s.x} y={90} width={112} height={84} rx={10} fill={s.color} stroke={s.textColor} strokeWidth={1.4} />
-            <text x={s.x + 56} y={116} textAnchor="middle" className="text-[11px] font-semibold" fill={s.textColor}>
-              {s.label.length > 16 ? s.label.split(' ').slice(0, 2).join(' ') : s.label}
-            </text>
-            {s.label.length > 16 && (
-              <text x={s.x + 56} y={130} textAnchor="middle" className="text-[11px] font-semibold" fill={s.textColor}>{s.label.split(' ').slice(2).join(' ')}</text>
-            )}
-            {s.sub.split('\n').map((line, k) => (
-              <text key={k} x={s.x + 56} y={(s.label.length > 16 ? 148 : 138) + k * 12} textAnchor="middle" className="text-[8.5px]" fill={C.muted}>{line}</text>
-            ))}
-            {i < steps.length - 1 && (
-              <line x1={s.x + 112} y1={132} x2={steps[i + 1].x} y2={132} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tts-arrow)" />
-            )}
-          </g>
+    <DiagramFrame
+      eyebrow="How a text-to-SQL agent answers a question"
+      note="The accuracy gains of the last two years come less from a smarter model than from this scaffolding: grounding the question in a governed semantic layer, generating several candidate queries, and letting the database's own error messages drive the correction."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="A text-to-SQL agent's pipeline"
+        desc="A natural-language question is grounded in a governed semantic layer, several candidate SQL queries are generated, each is executed and checked, and a verified answer is returned. When execution fails, the database error is fed back to the generation step and the query is revised."
+      >
+        {TTS_STEPS.slice(0, -1).map((step, i) => (
+          <Connector
+            key={step.label}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+          />
         ))}
-        {/* self-correction loop from execute back to generate */}
-        <path d={`M 590 174 Q 590 235 460 235 Q 416 235 416 176`} fill="none" stroke={C.red} strokeWidth={1.4} strokeDasharray="5 4" markerEnd="url(#tts-arrow-red)" />
-        <text x={503} y={252} textAnchor="middle" className="text-[10px] italic" fill={C.red}>self-correct: &ldquo;no such column&rdquo; → revise and retry</text>
-        {/* governance note under semantic layer */}
-        <text x={242} y={210} textAnchor="middle" className="text-[9px]" fill={C.teal}>↑ enforces RBAC, masking, and the firm&rsquo;s metric definitions</text>
-        <defs>
-          <marker id="tts-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L8,3 z" fill={C.muted} />
-          </marker>
-          <marker id="tts-arrow-red" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L8,3 z" fill={C.red} />
-          </marker>
-        </defs>
-      </svg>
-      <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
-        The accuracy gains of the last two years come less from a smarter model than from this scaffolding: grounding the question in a
-        governed semantic layer, generating several candidate queries, and letting the database&rsquo;s own error messages drive correction.
-      </p>
-    </Card>
+
+        {/* Retry edge: down out of "execute", back along the bottom, up into
+            "generate". Label at the visible end so it can't fall behind a box. */}
+        <Connector
+          from={[xs[3] + boxW / 2, y + boxH]}
+          to={[xs[2] + boxW / 2, y + boxH]}
+          route="vhv"
+          mid={y + boxH + 40}
+          tone="accent"
+          dashed
+          label="NO SUCH COLUMN"
+        />
+
+        {TTS_STEPS.map((step, i) => (
+          <Node
+            key={step.label}
+            x={xs[i]}
+            y={y}
+            width={boxW}
+            height={boxH}
+            variant={step.variant}
+            label={step.label}
+            sublabel={step.sub}
+          />
+        ))}
+
+        <SvgText x={xs[1] + boxW / 2} y={y - 12} variant="eyebrow" tone="accent">
+          ENFORCES RBAC AND MASKING
+        </SvgText>
+
+        <Legend
+          y={H - 12}
+          width={W}
+          x={16}
+          items={[
+            { kind: 'focal', label: 'Where the accuracy actually comes from' },
+            { kind: 'arrow-accent-dashed', label: 'Self-correction: revise and retry' },
+          ]}
+          pitch={320}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -108,53 +133,114 @@ export function TextToSqlFlow() {
 /* §17.2 — SqlAccuracyChart                                             */
 /* ------------------------------------------------------------------ */
 
+const SQL_BENCHMARKS = [
+  { label: 'Spider 1.0 (sanitised academic DBs)', value: 91.2 },
+  { label: 'BIRD — best system', value: 81.95 },
+  { label: 'Spider 2.0 — best agent (enterprise DBs)', value: 21.3, focal: true },
+  { label: 'Spider 2.0 — GPT-4o baseline', value: 10.1 },
+];
+
+/**
+ * A chart, and left as one — it compares a quantity across categories, which is
+ * the job of a bar chart and not of a schematic. Only the palette changes: four
+ * bars used to carry four hues, which invited the reader to look for a
+ * categorical meaning that isn't there. The accent now marks the one bar the
+ * prose is about.
+ */
 export function SqlAccuracyChart() {
-  const rows = [
-    { label: 'Spider 1.0 (sanitized academic DBs)', value: 91.2, color: C.teal },
-    { label: 'BIRD — best system', value: 81.95, color: C.sky },
-    { label: 'Spider 2.0 — best agent (enterprise DBs)', value: 21.3, color: C.amber },
-    { label: 'Spider 2.0 — GPT-4o baseline', value: 10.1, color: C.red },
-  ];
+  const rows = SQL_BENCHMARKS;
   const human = 92.96;
-  const W = 760;
+  const W = 792;
   const rowH = 46;
-  const top = 18;
-  const left = 250;
-  const right = 40;
+  const top = 24;
+  const left = 288;
+  const right = 48;
   const plotW = W - left - right;
-  const H = top + rows.length * rowH + 46;
+  const H = top + rows.length * rowH + 44;
   const x = (v: number) => left + (v / 100) * plotW;
+
   return (
-    <Card title="Execution accuracy: from solved benchmark to open problem">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Bar chart of text-to-SQL execution accuracy across benchmarks, with a dashed human-expert baseline at 92.96 percent.">
-        {/* gridlines */}
-        {[0, 25, 50, 75, 100].map((g) => (
+    <DiagramFrame
+      eyebrow="Execution accuracy: from solved benchmark to open problem"
+      note="On clean academic schemas the problem looks nearly solved. On real enterprise databases — thousands of columns, vendor dialects, ambiguous business terms — the best agents still solve about a fifth of the tasks. The gap between those two bars is the whole story."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Text-to-SQL execution accuracy across benchmarks"
+        desc="Four benchmark results against a human-expert baseline of 92.96 per cent. Accuracy is above 80 per cent on sanitised academic schemas but falls to roughly 21 per cent for the best agent on real enterprise databases."
+      >
+        {[0, 25, 50, 75, 100].map(g => (
           <g key={g}>
-            <line x1={x(g)} y1={top} x2={x(g)} y2={top + rows.length * rowH} stroke={C.grid} strokeWidth={1} />
-            <text x={x(g)} y={top + rows.length * rowH + 16} textAnchor="middle" className="text-[9px]" fill={C.muted}>{g}%</text>
+            <line
+              x1={x(g)}
+              y1={top}
+              x2={x(g)}
+              y2={top + rows.length * rowH}
+              stroke={T.rule}
+              strokeWidth={S.thin}
+            />
+            <SvgText
+              x={x(g)}
+              y={top + rows.length * rowH + 18}
+              variant="sub"
+              tone="soft"
+            >{`${g}%`}</SvgText>
           </g>
         ))}
-        {/* bars */}
+
         {rows.map((r, i) => {
-          const y = top + i * rowH + 8;
+          const ry = top + i * rowH + 10;
           return (
             <g key={r.label}>
-              <text x={left - 10} y={y + 16} textAnchor="end" className="text-[10.5px]" fill={C.ink}>{r.label}</text>
-              <rect x={left} y={y} width={x(r.value) - left} height={22} rx={3} fill={r.color} />
-              <text x={x(r.value) + 6} y={y + 16} className="text-[10.5px] font-semibold" fill={r.color}>{r.value}%</text>
+              <SvgText
+                x={left - 16}
+                y={ry + 16}
+                width={left - 32}
+                anchorY="middle"
+                variant="body"
+                tone={r.focal ? 'ink' : 'muted'}
+                textAnchor="end"
+              >
+                {r.label}
+              </SvgText>
+              <rect
+                x={left}
+                y={ry}
+                width={x(r.value) - left}
+                height={22}
+                rx={3}
+                fill={r.focal ? T.accentTint : T.paperAlt}
+                stroke={r.focal ? T.accent : T.muted}
+                strokeWidth={r.focal ? S.strong : S.thin}
+              />
+              <SvgText
+                x={x(r.value) + 8}
+                y={ry + 16}
+                variant="sub"
+                tone={r.focal ? 'accent' : 'muted'}
+                textAnchor="start"
+              >
+                {`${r.value}%`}
+              </SvgText>
             </g>
           );
         })}
-        {/* human baseline */}
-        <line x1={x(human)} y1={top - 4} x2={x(human)} y2={top + rows.length * rowH + 2} stroke={C.ink} strokeWidth={1.5} strokeDasharray="4 3" />
-        <text x={x(human)} y={top - 8} textAnchor="middle" className="text-[9.5px] font-semibold" fill={C.ink}>human expert {human}%</text>
-      </svg>
-      <p className="mt-2 text-[11px] leading-relaxed text-slate-500">
-        On clean academic schemas the problem looks nearly solved. On <em>real</em> enterprise databases — thousands of columns, vendor
-        dialects, ambiguous business terms — the best agents still solve only about a fifth of the tasks. The gap between these two bars is
-        the whole story.
-      </p>
-    </Card>
+
+        <line
+          x1={x(human)}
+          y1={top - 6}
+          x2={x(human)}
+          y2={top + rows.length * rowH + 2}
+          stroke={T.ink}
+          strokeWidth={S.base}
+          strokeDasharray="4 3"
+        />
+        <SvgText x={x(human)} y={top - 10} variant="sub" tone="ink">
+          {`human expert ${human}%`}
+        </SvgText>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -162,44 +248,67 @@ export function SqlAccuracyChart() {
 /* §17.2 — SemanticLayerDiagram                                         */
 /* ------------------------------------------------------------------ */
 
+const SEMANTIC_LAYERS = [
+  {
+    tag: 'ASKS',
+    name: 'AI agent, dashboard, analyst in chat',
+    sub: 'three consumers, one vocabulary',
+    note: 'natural language and BI queries',
+  },
+  {
+    tag: 'MEANS',
+    name: 'Semantic layer',
+    sub: 'certified metric definitions, join paths, access rules',
+    note: 'net_revenue · active_user · churn_rate',
+    focal: true,
+  },
+  {
+    tag: 'STORES',
+    name: 'Warehouse',
+    sub: 'raw columns, row and column security',
+    note: 'tables the consumers never name directly',
+  },
+];
+
+/**
+ * Three layers, because the middle one is a genuine level of abstraction and
+ * not a step in a pipeline. Draw it left-to-right as an architecture and it
+ * reads as "the query passes through here"; draw it as a stack and it reads as
+ * "this is what the layer above is allowed to mean", which is the contract the
+ * section is describing.
+ */
 export function SemanticLayerDiagram() {
+  const W = 792;
+  const rowH = 68;
+  const H = rowH * SEMANTIC_LAYERS.length + 40;
+
   return (
-    <Card title="The semantic layer — the contract between language and SQL">
-      <div className="grid items-stretch gap-3 sm:grid-cols-[1fr_auto_1.1fr_auto_1fr]">
-        {/* consumers */}
-        <div className="flex flex-col justify-center gap-2 rounded-md border border-slate-200 bg-slate-50/70 p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Who asks</p>
-          {['AI data agent', 'BI dashboard', 'Analyst in chat'].map((t) => (
-            <span key={t} className="rounded border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700">{t}</span>
-          ))}
-        </div>
-        <div className="hidden items-center justify-center text-slate-400 sm:flex">→</div>
-        {/* semantic layer */}
-        <div className="flex flex-col justify-center rounded-md border-2 border-teal-300 bg-teal-50/60 p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-teal-700">Semantic layer</p>
-          <p className="mt-1 text-[11.5px] leading-snug text-slate-700">
-            Certified <strong>metric definitions</strong>, join paths, and access rules. One place where &ldquo;revenue&rdquo; means one thing.
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1">
-            {['net_revenue', 'active_user', 'churn_rate'].map((m) => (
-              <span key={m} className="rounded bg-white px-1.5 py-0.5 font-mono text-[9.5px] text-teal-800 ring-1 ring-inset ring-teal-200">{m}</span>
-            ))}
-          </div>
-        </div>
-        <div className="hidden items-center justify-center text-slate-400 sm:flex">→</div>
-        {/* warehouse */}
-        <div className="flex flex-col justify-center gap-2 rounded-md border border-slate-200 bg-slate-50/70 p-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Where data lives</p>
-          {['Warehouse tables', 'Raw columns', 'Row/column security'].map((t) => (
-            <span key={t} className="rounded border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-700">{t}</span>
-          ))}
-        </div>
-      </div>
-      <div className="mt-3 rounded-md border border-sky-200 bg-sky-50/60 px-3 py-2 text-[11.5px] text-sky-900">
-        Routed through a semantic model, one vendor&rsquo;s text-to-SQL jumped from <strong>51%</strong> (a raw model on bare tables) to
-        <strong> 90%+</strong> accuracy on real BI questions. The model didn&rsquo;t change — the context did.
-      </div>
-    </Card>
+    <DiagramFrame
+      eyebrow="The semantic layer — the contract between language and SQL"
+      note={
+        <>
+          Routed through a semantic model, one vendor&rsquo;s text-to-SQL jumped from{' '}
+          <strong>51%</strong> on bare tables to <strong>over 90%</strong> on real BI questions. The
+          model didn&rsquo;t change — the context did.
+        </>
+      }
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The semantic layer between consumers and the warehouse"
+        desc="Agents, dashboards, and analysts all ask questions in business language. A semantic layer holds the certified metric definitions, join paths, and access rules that translate those questions into warehouse SQL, so that revenue means one thing regardless of who asked."
+      >
+        <Layers
+          x={48}
+          y={16}
+          width={W - 72}
+          rowHeight={rowH}
+          layers={SEMANTIC_LAYERS}
+          direction="business meaning"
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -207,61 +316,101 @@ export function SemanticLayerDiagram() {
 /* §17.3 — PredictiveAgentLoop                                          */
 /* ------------------------------------------------------------------ */
 
+const PREDICTIVE_STATIONS = [
+  { name: 'Train', sub: 'fit or refit' },
+  { name: 'Deploy', sub: 'canary rollout' },
+  { name: 'Monitor', sub: 'live metrics' },
+  { name: 'Detect drift', sub: 'KS and PSI tests' },
+  { name: 'Decide', sub: 'retrain? alert?', focal: true },
+];
+
 export function PredictiveAgentLoop() {
-  const W = 760;
-  const H = 300;
+  const W = 792;
+  // Tall enough that the approval gate clears the two bottom stations. The
+  // ring puts them at cy + r*sin(54 deg), which is further down than it looks
+  // when you are reading the radius off the top of the diagram.
+  const H = 520;
   const cx = W / 2;
-  const cy = 142;
-  const rx = 250;
-  const ry = 96;
-  const nodes = [
-    { a: -90, label: 'Train', sub: 'fit / refit', color: C.blue },
-    { a: -18, label: 'Deploy', sub: 'canary rollout', color: C.teal },
-    { a: 54, label: 'Monitor', sub: 'live metrics', color: C.green },
-    { a: 126, label: 'Detect drift', sub: 'KS · PSI tests', color: C.amber },
-    { a: 198, label: 'Decide', sub: 'retrain? alert?', color: C.red },
-  ];
-  const pt = (a: number) => {
-    const rad = (a * Math.PI) / 180;
-    return { x: cx + rx * Math.cos(rad), y: cy + ry * Math.sin(rad) };
-  };
+  const cy = 224;
+  const radius = 192;
+  const stationW = 148;
+  const stationH = 60;
+  const hubW = 208;
+  const hubH = 88;
+
+  const points = ring(cx, cy, radius, PREDICTIVE_STATIONS.length);
+
   return (
-    <Card title="The predictive loop, now agent-driven">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="A closed loop: train, deploy, monitor, detect drift, decide, with a human approval gate before retraining, on a durable-execution substrate.">
-        {/* orbit */}
-        <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="none" stroke={C.grid} strokeWidth={1.4} strokeDasharray="4 4" />
-        {/* directional arrows along orbit */}
-        {nodes.map((n, i) => {
-          const next = nodes[(i + 1) % nodes.length];
-          const mid = pt((n.a + (((next.a - n.a + 360) % 360) / 2)) % 360);
-          return <circle key={`d${i}`} cx={mid.x} cy={mid.y} r={2.4} fill={C.muted} />;
-        })}
-        {/* center */}
-        <rect x={cx - 92} y={cy - 26} width={184} height={52} rx={10} fill={C.slate50} stroke={C.violet} strokeWidth={1.5} />
-        <text x={cx} y={cy - 5} textAnchor="middle" className="text-[11.5px] font-semibold" fill={C.violet}>Agent + durable execution</text>
-        <text x={cx} y={cy + 12} textAnchor="middle" className="text-[9px]" fill={C.muted}>survives crashes · runs for days · resumes</text>
-        {/* nodes */}
-        {nodes.map((n) => {
-          const p = pt(n.a);
-          return (
-            <g key={n.label}>
-              <rect x={p.x - 52} y={p.y - 20} width={104} height={40} rx={8} fill="white" stroke={n.color} strokeWidth={1.5} />
-              <text x={p.x} y={p.y - 2} textAnchor="middle" className="text-[11px] font-semibold" fill={n.color}>{n.label}</text>
-              <text x={p.x} y={p.y + 12} textAnchor="middle" className="text-[8.5px]" fill={C.muted}>{n.sub}</text>
-            </g>
-          );
-        })}
-        {/* human gate badge on Decide -> Train edge */}
-        <g>
-          <rect x={cx - 150} y={H - 34} width={300} height={26} rx={13} fill={C.amberLight} stroke={C.amber} strokeWidth={1.3} />
-          <text x={cx} y={H - 17} textAnchor="middle" className="text-[10.5px] font-medium" fill={C.amber}>human approves promotion before a new model goes live</text>
-        </g>
-      </svg>
-      <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
-        The loop itself is the same one Part IV deployed by hand. What is new is that an agent can run every station — watch the metrics,
-        run the drift tests, retrain, and stage a canary — while a human stays &ldquo;above the loop,&rdquo; approving the promotions that matter.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="The predictive loop, now agent-driven"
+      note="The loop itself is the one Part IV deployed by hand. What is new is that an agent can turn every station — watch the metrics, run the drift tests, retrain, stage a canary — while a human stays above the loop and approves the promotions that matter."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The agent-driven predictive loop"
+        desc="Five stations run clockwise — train, deploy, monitor, detect drift, decide — around an agent on a durable-execution substrate that survives crashes and resumes. The step from decide back to train passes through a human approval gate before any new model goes live."
+      >
+        {PREDICTIVE_STATIONS.map((s, i) => (
+          <PathConnector
+            key={`arc-${s.name}`}
+            d={ringArc(cx, cy, radius, PREDICTIVE_STATIONS.length, i, 0.26)}
+            // The return leg is where the human sits, so it reads as a gated
+            // hand-back rather than another automatic step.
+            tone={i === PREDICTIVE_STATIONS.length - 1 ? 'accent' : 'default'}
+            dashed={i === PREDICTIVE_STATIONS.length - 1}
+          />
+        ))}
+        {PREDICTIVE_STATIONS.map((s, i) => (
+          <PathConnector
+            key={`spoke-${s.name}`}
+            d={spoke(points[i], [cx, cy], stationH / 2 + 8, hubH / 2 + 10)}
+            dashed
+            arrow="none"
+          />
+        ))}
+
+        <Node
+          x={cx - hubW / 2}
+          y={cy - hubH / 2}
+          width={hubW}
+          height={hubH}
+          variant="store"
+          label="Agent + durable execution"
+          sublabel="survives crashes, runs for days, resumes"
+        />
+
+        {PREDICTIVE_STATIONS.map((s, i) => (
+          <Node
+            key={s.name}
+            x={points[i][0] - stationW / 2}
+            y={points[i][1] - stationH / 2}
+            width={stationW}
+            height={stationH}
+            variant={s.focal ? 'focal' : 'step'}
+            label={s.name}
+            sublabel={s.sub}
+          />
+        ))}
+
+        <Node
+          x={cx - 168}
+          y={H - 88}
+          width={336}
+          height={40}
+          shape="oval"
+          variant="boundary"
+          label="A human approves the promotion"
+        />
+
+        <Legend
+          y={H - 8}
+          width={W}
+          x={16}
+          items={[{ kind: 'arrow-dashed', label: 'Writes back to the shared run record' }]}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -269,40 +418,57 @@ export function PredictiveAgentLoop() {
 /* §17.3 — DsAgentScorecard                                             */
 /* ------------------------------------------------------------------ */
 
+const DS_BENCHMARKS = [
+  { bench: 'MLE-bench', task: 'Win a Kaggle medal (best agent, 1 try)', value: 16.9 },
+  { bench: 'MLE-bench', task: 'Win a Kaggle medal (8 tries)', value: 34.1 },
+  { bench: 'DSBench', task: 'Solve a realistic data-analysis task', value: 34.1 },
+  { bench: 'BixBench', task: 'Open-answer bioinformatics analysis', value: 17 },
+  { bench: 'InfiAgent-DABench', task: 'Closed-form analysis question', value: 74.6, focal: true },
+  { bench: 'GDPval', task: 'Match or beat an expert on real knowledge work', value: 47.6 },
+];
+
+/**
+ * Also a chart, also left as one. Six bars used to carry four hues keyed to
+ * nothing the reader could look up. The accent now marks the closed-form row —
+ * the outlier that makes the pattern legible, since it is the only task shape
+ * where agents are genuinely strong.
+ */
 export function DsAgentScorecard() {
-  const rows = [
-    { bench: 'MLE-bench', task: 'Win a Kaggle medal (best agent, 1 try)', value: 16.9, best: 'o1-preview + AIDE', color: C.red },
-    { bench: 'MLE-bench', task: 'Win a Kaggle medal (8 tries)', value: 34.1, best: 'o1-preview + AIDE', color: C.amber },
-    { bench: 'DSBench', task: 'Solve a realistic data-analysis task', value: 34.1, best: 'best agent', color: C.amber },
-    { bench: 'BixBench', task: 'Open-answer bioinformatics analysis', value: 17, best: 'Claude 3.5 Sonnet', color: C.red },
-    { bench: 'InfiAgent-DABench', task: 'Closed-form analysis question', value: 74.6, best: 'GPT-4', color: C.teal },
-    { bench: 'GDPval', task: 'Match/beat an expert on real knowledge work', value: 47.6, best: 'Claude Opus 4.1', color: C.sky },
-  ];
   return (
-    <Card title="How far are data-science agents from experts? It depends on the task">
+    <DiagramFrame
+      eyebrow="How far are data-science agents from experts?"
+      note="These benchmarks measure different things, so the bars are not directly comparable — but the pattern is. On narrow, closed-form questions agents are strong; on open-ended, end-to-end modelling work they still trail experts by a wide margin. A benchmark win is not production reliability."
+      bare
+    >
       <div className="space-y-2">
-        {rows.map((r, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <div className="w-[44px] shrink-0 text-right">
-              <span className="font-mono text-[13px] font-bold" style={{ color: r.color }}>{r.value}%</span>
-            </div>
+        {DS_BENCHMARKS.map(r => (
+          <div key={`${r.bench}-${r.task}`} className="flex items-center gap-3">
+            <span
+              className={`w-12 shrink-0 text-right font-plex text-[13px] font-semibold tabular-nums ${
+                r.focal ? 'text-accent-ink' : 'text-muted'
+              }`}
+            >
+              {r.value}%
+            </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-baseline justify-between gap-2">
-                <span className="truncate text-[12px] text-slate-700">{r.task}</span>
-                <span className="hidden shrink-0 font-mono text-[10px] text-slate-400 sm:inline">{r.bench}</span>
+                <span className={`truncate text-[12px] ${r.focal ? 'text-body' : 'text-subtle'}`}>
+                  {r.task}
+                </span>
+                <span className="hidden shrink-0 font-plex text-[10px] text-muted sm:inline">
+                  {r.bench}
+                </span>
               </div>
-              <div className="mt-1 h-2 w-full overflow-hidden rounded-sm bg-slate-100">
-                <div className="h-full rounded-sm" style={{ width: `${r.value}%`, background: r.color }} />
+              <div className="mt-1 h-2 w-full overflow-hidden rounded-sm bg-code-bg">
+                <div
+                  className={`h-full rounded-sm ${r.focal ? 'bg-accent' : 'bg-muted/50'}`}
+                  style={{ width: `${r.value}%` }}
+                />
               </div>
             </div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        These benchmarks measure different things, so the bars are not directly comparable — but the pattern is clear. On narrow,
-        closed-form questions, agents are strong; on open-ended, end-to-end modeling work, they still trail experts by a wide margin.
-        Benchmark wins are not the same as production reliability.
-      </p>
-    </Card>
+    </DiagramFrame>
   );
 }
