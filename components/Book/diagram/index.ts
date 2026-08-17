@@ -42,6 +42,9 @@ export type { ZoneProps } from './Zone';
 export { Layers } from './LayerStack';
 export type { LayersProps, LayerSpec } from './LayerStack';
 
+export { Venn } from './Venn';
+export type { VennProps, VennCircle } from './Venn';
+
 export { TreeBus } from './Tree';
 export type { TreeBusProps } from './Tree';
 
