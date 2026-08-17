@@ -258,6 +258,19 @@ body {
   --book-border-strong: 156 163 175;
   --book-link: 14 165 233;
   --book-link-hover: 2 132 199;
+
+  /* Diagram semantics — see docs/DIAGRAMS.md.
+     `accent` is the ONE focal hue for schematics (≤2 elements per
+     diagram); `--book-link` stays reserved for hyperlinks so a focal
+     node never reads as clickable. `accent-ink` is the AA-contrast
+     variant for the rare accent *text* label (the accent itself is
+     3.3:1 on paper — fine for strokes and fills, short of AA for
+     small type). `pos`/`neg` are the only two semantic hues that
+     survive, for genuine good/bad encodings. */
+  --book-accent: 200 124 42;        /* #c87c2a */
+  --book-accent-ink: 154 88 21;     /* #9a5815 — accent text on paper */
+  --book-pos: 15 118 110;           /* teal-700 */
+  --book-neg: 190 40 40;            /* #be2828 */
 }
 .dark {
   --book-surface: 15 23 42;      /* slate-900 */
@@ -271,6 +284,11 @@ body {
   --book-border-strong: 71 85 105; /* slate-600 */
   --book-link: 56 189 248;       /* sky-400 */
   --book-link-hover: 125 211 252; /* sky-300 */
+
+  --book-accent: 224 154 79;        /* #e09a4f */
+  --book-accent-ink: 240 176 106;   /* #f0b06a */
+  --book-pos: 45 212 191;           /* teal-400 */
+  --book-neg: 248 113 113;          /* red-400 */
 }
 
 /* ============================================================

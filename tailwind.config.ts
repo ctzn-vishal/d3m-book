@@ -37,6 +37,12 @@ const config: Config = {
         muted: 'rgb(var(--book-muted) / <alpha-value>)',
         link: 'rgb(var(--book-link) / <alpha-value>)',
         'link-hover': 'rgb(var(--book-link-hover) / <alpha-value>)',
+        // Diagram semantics (docs/DIAGRAMS.md): one focal accent plus the
+        // two surviving semantic hues. Kept theme-aware like the rest.
+        accent: 'rgb(var(--book-accent) / <alpha-value>)',
+        'accent-ink': 'rgb(var(--book-accent-ink) / <alpha-value>)',
+        pos: 'rgb(var(--book-pos) / <alpha-value>)',
+        neg: 'rgb(var(--book-neg) / <alpha-value>)',
         border: {
           DEFAULT: 'rgb(var(--book-border) / <alpha-value>)',
           strong: 'rgb(var(--book-border-strong) / <alpha-value>)',
