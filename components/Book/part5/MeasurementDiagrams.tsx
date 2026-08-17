@@ -208,11 +208,12 @@ export function ValidationLabSchematic() {
     const correct = v === truth;
     return (
       <td
-        className="px-2 py-1.5 text-center font-mono text-[11.5px]"
-        style={{
-          background: correct ? 'rgba(15,118,110,0.15)' : 'rgba(220,38,38,0.18)',
-          color: correct ? '#065f46' : '#7f1d1d',
-        }}
+        className={[
+          'px-2 py-1.5 text-center font-plex text-[11.5px]',
+          // The one place in this file a semantic hue is right: the cell says
+          // matched-ground-truth or didn't, which is a valence, not a category.
+          correct ? 'bg-pos/15 text-pos' : 'bg-neg/15 text-neg',
+        ].join(' ')}
       >
         {v}
       </td>
@@ -305,11 +306,11 @@ export function AIEvalRubric() {
 
 export function RiskControlMap() {
   const risks = [
-    { name: 'Hallucination', likelihood: 0.7, severity: 0.6, control: 'RAG + citation-required prompts' },
+    { name: 'Hallucination', likelihood: 0.7, severity: 0.6, control: 'RAG + citation-required prompts', focal: true },
     { name: 'Prompt injection', likelihood: 0.4, severity: 0.85, control: 'input filtering + tool allow-lists' },
     { name: 'PII leakage', likelihood: 0.3, severity: 0.95, control: 'redaction + retention policy' },
     { name: 'IP / copyright', likelihood: 0.5, severity: 0.7, control: 'source provenance + counsel review' },
-    { name: 'Bias amplification', likelihood: 0.55, severity: 0.75, control: 'segment-level eval + holdouts' },
+    { name: 'Bias amplification', likelihood: 0.55, severity: 0.75, control: 'segment-level eval + holdouts', focal: true },
     { name: 'Over-automation', likelihood: 0.7, severity: 0.55, control: 'human-approval gates' },
     { name: 'Model drift', likelihood: 0.65, severity: 0.4, control: 'monitoring + retraining cadence' },
     { name: 'Eval gaps', likelihood: 0.6, severity: 0.6, control: 'red-team + golden sets' },
@@ -324,18 +325,38 @@ export function RiskControlMap() {
   return (
     <Card title="Risk-control map — likelihood × severity, with the mitigating control">
       <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Risk scatter with likelihood on x, severity on y, and a side panel listing controls.">
-        {/* danger zone shading */}
-        <rect x={xS(0.5)} y={m.top} width={xS(1) - xS(0.5)} height={yS(0.5) - m.top} fill={C.redLight} opacity={0.45} />
-        <rect x={m.left} y={m.top} width={xS(0.5) - m.left} height={yS(0.5) - m.top} fill={C.amberLight} opacity={0.4} />
-        <rect x={xS(0.5)} y={yS(0.5)} width={xS(1) - xS(0.5)} height={H - m.bottom - yS(0.5)} fill={C.amberLight} opacity={0.4} />
-        <rect x={m.left} y={yS(0.5)} width={xS(0.5) - m.left} height={H - m.bottom - yS(0.5)} fill={C.greenLight} opacity={0.4} />
+        {/* One shaded quadrant, not four. Four tints rank the quadrants on a
+            scale nobody defined; the only one that changes what a team does
+            this quarter is likely *and* severe. */}
+        <rect
+          x={xS(0.5)}
+          y={m.top}
+          width={xS(1) - xS(0.5)}
+          height={yS(0.5) - m.top}
+          fill={C.negLight}
+        />
+        <line x1={xS(0.5)} y1={m.top} x2={xS(0.5)} y2={H - m.bottom} stroke={C.grid} strokeWidth={0.8} />
+        <line x1={m.left} y1={yS(0.5)} x2={W - m.right} y2={yS(0.5)} stroke={C.grid} strokeWidth={0.8} />
         {/* axes */}
         <line x1={m.left} y1={m.top} x2={m.left} y2={H - m.bottom} stroke={C.ink} strokeWidth={1} />
         <line x1={m.left} y1={H - m.bottom} x2={W - m.right} y2={H - m.bottom} stroke={C.ink} strokeWidth={1} />
         {risks.map(r => (
           <g key={r.name}>
-            <circle cx={xS(r.likelihood)} cy={yS(r.severity)} r={6} fill={C.purple} opacity={0.85} />
-            <text x={xS(r.likelihood) + 7} y={yS(r.severity) + 3} className="fill-subtle text-[9.5px]">{r.name}</text>
+            <circle
+              cx={xS(r.likelihood)}
+              cy={yS(r.severity)}
+              r={r.focal ? 7 : 5}
+              fill={r.focal ? C.orangeLight : C.slate100}
+              stroke={r.focal ? C.orange : C.muted}
+              strokeWidth={r.focal ? 1.2 : 1}
+            />
+            <text
+              x={xS(r.likelihood) + 9}
+              y={yS(r.severity) + 3}
+              className={r.focal ? 'fill-accent-ink text-[9.5px] font-semibold' : 'fill-subtle text-[9.5px]'}
+            >
+              {r.name}
+            </text>
           </g>
         ))}
         {[0, 0.5, 1].map(v => (
@@ -377,7 +398,7 @@ export function AIWorkflowCard() {
     { k: 'Known failure modes', v: 'Sarcasm in social posts; non-English reviews; competitor mentions misclassified as own brand.' },
     { k: 'Privacy', v: 'No raw customer PII passed to external LLM; redaction step before prompt assembly.' },
     { k: 'Escalation path', v: 'Workflow owner on-call; legal review for any external publication.' },
-    { k: 'Owner', v: 'Customer Insights, Bean &amp; Basket Coffee.' },
+    { k: 'Owner', v: 'Customer Insights, Bean & Basket Coffee.' },
   ];
   return (
     <Card title="The AI workflow card — one page, every shipped workflow">
@@ -387,7 +408,7 @@ export function AIWorkflowCard() {
             {rows.map((r, i) => (
               <tr key={r.k} className={i % 2 === 0 ? 'bg-code-bg' : 'bg-surface'}>
                 <th className="w-[170px] px-3 py-1.5 text-left align-top font-semibold text-subtle">{r.k}</th>
-                <td className="px-3 py-1.5 text-subtle" dangerouslySetInnerHTML={{ __html: r.v }} />
+                <td className="px-3 py-1.5 text-subtle">{r.v}</td>
               </tr>
             ))}
           </tbody>

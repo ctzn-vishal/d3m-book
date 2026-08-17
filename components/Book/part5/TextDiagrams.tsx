@@ -2,7 +2,18 @@
 
 import * as React from 'react';
 
-import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+import {
+  ArrowLabel,
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  LEGACY_C,
+  Node,
+  SvgText,
+  T,
+  Venn,
+  centeredRow,
+} from '@/components/Book/diagram';
 
 /**
  * Conceptual diagrams for Part V Chapters 18 and 19.1–19.2.
@@ -54,62 +65,64 @@ function Card({
 /* 18.1 — StructuredVsUnstructured                                      */
 /* ------------------------------------------------------------------ */
 
+/**
+ * A Venn, because the section's claim is about *overlap*: the two evidence
+ * languages describe the same customer and disagree about what is knowable.
+ *
+ * The side-by-side table-and-quotes layout this replaces showed the two
+ * languages but not the relationship between them, which is the part a reader
+ * needs — that neither is a superset, and that the interesting questions live
+ * where they meet.
+ */
 export function StructuredVsUnstructured() {
-  const rows = [
-    { id: 'C-204', orders: 14, lt: 18, last: 6 },
-    { id: 'C-205', orders: 22, lt: 9, last: 1 },
-    { id: 'C-206', orders: 7, lt: 24, last: 14 },
-  ];
-  const reviews = [
-    '“My latte was perfect but the wait felt forever. App crashed at checkout — second time this month. Still love the staff.”',
-    '“Cinnamon roll is incredible. Why is the music always so loud though?”',
-    '“Honestly the app is killing me. Cold brew is fine.”',
-  ];
+  const W = 640;
+  const H = 360;
+  const r = 132;
+  const cx = W / 2;
+
   return (
-    <Card title="Structured rows vs. unstructured reviews — same customer, two evidence languages">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <div>
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">Warehouse table</div>
-          <div className="overflow-hidden rounded-md border border-border">
-            <table className="w-full text-[11.5px]">
-              <thead>
-                <tr className="bg-code-bg text-[10px] uppercase tracking-wide text-muted">
-                  <th className="px-2 py-1.5 text-left">customer_id</th>
-                  <th className="px-2 py-1.5 text-right">orders_90d</th>
-                  <th className="px-2 py-1.5 text-right">tenure_mo</th>
-                  <th className="px-2 py-1.5 text-right">days_since</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r, i) => (
-                  <tr key={r.id} className={i % 2 === 0 ? 'bg-surface' : 'bg-code-bg/60'}>
-                    <td className="px-2 py-1.5 font-mono text-body">{r.id}</td>
-                    <td className="px-2 py-1.5 text-right tabular-nums">{r.orders}</td>
-                    <td className="px-2 py-1.5 text-right tabular-nums">{r.lt}</td>
-                    <td className="px-2 py-1.5 text-right tabular-nums">{r.last}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-2 text-[10.5px] text-muted">Three numbers per customer. Fast to model, easy to compare, no language signal.</p>
-        </div>
-        <div>
-          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted">Reviews (same customers)</div>
-          <ul className="space-y-1.5">
-            {reviews.map((r, i) => (
-              <li key={i} className="rounded-md border border-border bg-code-bg/60 px-2.5 py-1.5 text-[11.5px] italic text-subtle">
-                {r}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-2 text-[10.5px] text-muted">Three paragraphs per customer. Slow to compare, but loaded with intent, complaint type, and emotional tone.</p>
-        </div>
-      </div>
-      <p className="mt-3 text-center text-[11px] text-muted">
-        Unstructured does not mean unusable. It means we need a representation layer.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="Two evidence languages, one customer"
+      note="Unstructured does not mean unusable. It means the same customer is described twice, in two languages that answer different questions — and that the questions worth asking usually need both."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Structured rows against unstructured reviews"
+        desc="A warehouse table knows how often a customer ordered and how long ago; their reviews know why. Neither is a superset of the other. Questions like which complaint predicts churn need both, which is what the rest of Part V builds."
+      >
+        <Venn
+          intersection={{ label: 'Which complaint predicts churn?' }}
+          circles={[
+            {
+              cx: cx - 84,
+              cy: 168,
+              r,
+              label: 'Structured rows',
+              sublabel: 'orders_90d · tenure_mo · days_since',
+              labelAt: 'top',
+            },
+            {
+              cx: cx + 84,
+              cy: 168,
+              r,
+              label: 'Unstructured reviews',
+              sublabel: 'intent · complaint type · tone',
+              labelAt: 'bottom',
+            },
+          ]}
+        />
+        {/* Centred in each crescent rather than on the circle's own centre —
+            the crescent is the part of the set that isn't shared, and its
+            middle sits well outside the middle of the circle. */}
+        <SvgText x={cx - 128} y={196} width={128} variant="sub" tone="muted">
+          fast to compare, no language signal
+        </SvgText>
+        <SvgText x={cx + 128} y={196} width={128} variant="sub" tone="muted">
+          loaded with meaning, slow to compare
+        </SvgText>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -117,46 +130,71 @@ export function StructuredVsUnstructured() {
 /* 18.2 — TextPipeline                                                  */
 /* ------------------------------------------------------------------ */
 
+const TEXT_STAGES = [
+  { label: 'Raw text', sub: 'app crashed AGAIN! :(' },
+  { label: 'Cleaned', sub: 'lower, normalise, dedupe' },
+  { label: 'Tokens', sub: 'app, crash, again' },
+  { label: 'Features', sub: 'TF-IDF or embedding', focal: true },
+  { label: 'Model', sub: 'classify, cluster, search' },
+  { label: 'Action', sub: 'route, alert, summarise' },
+];
+
+/**
+ * A data flow with one focal stage.
+ *
+ * Six stages used to carry four hues in a warm-to-cool ramp, which read as a
+ * progression the colours did not actually encode. The one thing worth marking
+ * is where the *representation choice* is made — everything downstream inherits
+ * it, and no later stage can recover what it discarded.
+ */
 export function TextPipeline() {
-  const W = 760;
-  const H = 230;
-  const stages = [
-    { label: 'Raw text', sub: '"app crashed AGAIN! :("', color: C.amber },
-    { label: 'Cleaned', sub: 'lower, normalize, dedupe', color: C.amber },
-    { label: 'Tokens', sub: '[app, crash, again]', color: C.blue },
-    { label: 'Features', sub: 'TF-IDF / embedding', color: C.purple },
-    { label: 'Model', sub: 'classify / cluster / search', color: C.green },
-    { label: 'Action', sub: 'route, alert, summarize', color: C.green },
-  ];
-  const cellW = (W - 60) / stages.length;
-  const yMid = 120;
+  const W = 792;
+  const H = 184;
+  const boxW = 112;
+  const boxH = 80;
+  const y = 32;
+  const xs = centeredRow(0, W, TEXT_STAGES.length, boxW, 20);
+
   return (
-    <Card title="From raw text to a business action — the standard pipeline">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Six stages from raw text to business action.">
-        {stages.map((s, i) => {
-          const x = 30 + cellW * i;
-          return (
-            <g key={s.label}>
-              <rect x={x + 6} y={yMid - 36} width={cellW - 12} height={72} rx={8} fill="white" stroke={s.color} strokeWidth={1.8} />
-              <text x={x + cellW / 2} y={yMid - 12} textAnchor="middle" className="fill-body text-[12px] font-semibold" style={{ fill: s.color }}>{s.label}</text>
-              <text x={x + cellW / 2} y={yMid + 8} textAnchor="middle" className="fill-subtle text-[10px]">{s.sub}</text>
-              <text x={x + cellW / 2} y={yMid + 22} textAnchor="middle" className="fill-muted text-[10px] font-mono">{i + 1}</text>
-              {i < stages.length - 1 && (
-                <line x1={x + cellW - 6} y1={yMid} x2={x + cellW + 6} y2={yMid} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tp-arrow)" />
-              )}
-            </g>
-          );
-        })}
-        <defs>
-          <marker id="tp-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-        <text x={W / 2} y={H - 14} textAnchor="middle" className="fill-muted text-[10px] italic">
-          Each stage encodes choices — the representation is rarely neutral.
-        </text>
-      </svg>
-    </Card>
+    <DiagramFrame
+      eyebrow="From raw text to a business action"
+      note="Each stage encodes a choice, and the representation is rarely neutral. Lower-casing loses the shouting; a bag of words loses the order; an embedding loses the words. None of that is recoverable further down the line."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The standard text pipeline"
+        desc="Raw text is cleaned, tokenised, turned into features such as TF-IDF vectors or embeddings, passed to a model, and finally drives an action. The feature step is where the representation is chosen, and everything after it inherits that choice."
+      >
+        {TEXT_STAGES.slice(0, -1).map((stage, i) => (
+          <Connector
+            key={stage.label}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+          />
+        ))}
+        {TEXT_STAGES.map((stage, i) => (
+          <React.Fragment key={stage.label}>
+            <Node
+              x={xs[i]}
+              y={y}
+              width={boxW}
+              height={boxH}
+              variant={stage.focal ? 'focal' : 'step'}
+              label={stage.label}
+              sublabel={stage.sub}
+            />
+            <SvgText x={xs[i] + boxW / 2} y={y - 12} variant="eyebrow" tone="soft">
+              {`0${i + 1}`}
+            </SvgText>
+          </React.Fragment>
+        ))}
+        <ArrowLabel x={xs[3] + boxW / 2} y={y + boxH + 4} side="below" tone="accent">
+          THE CHOICE THAT STICKS
+        </ArrowLabel>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -249,7 +287,7 @@ export function TextConfusionMatrix() {
                       className="px-2 py-2 text-center font-mono"
                       style={{
                         background: isDiag ? `rgba(15,118,110,${0.15 + alpha * 0.45})` : `rgba(220,38,38,${alpha * 0.4})`,
-                        color: isDiag ? '#064e3b' : '#7f1d1d',
+                        color: isDiag ? T.pos : T.neg,
                       }}
                     >
                       {v}

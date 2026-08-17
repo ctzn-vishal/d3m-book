@@ -2,7 +2,16 @@
 
 import * as React from 'react';
 
-import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+import {
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  LEGACY_C,
+  Node,
+  SvgText,
+  TreeBus,
+  centeredRow,
+} from '@/components/Book/diagram';
 
 /**
  * Conceptual diagrams for Part IV Chapters 16–17.
@@ -332,36 +341,75 @@ export function TsneVsPca() {
 /* 17.1 — TargetingTaxonomy                                              */
 /* ------------------------------------------------------------------ */
 
+const TARGETING_FAMILIES = [
+  { name: 'Location', items: 'country · city · radius · resident vs. visitor' },
+  { name: 'Demographic', items: 'age · gender · education · job title · life event' },
+  { name: 'Interest', items: 'hobbies · entertainment · shopping · sport' },
+  { name: 'Behavioural', items: 'past purchase · device · travel · site visit' },
+  { name: 'Custom audience', items: 'site visitors · email list · app users · CRM upload' },
+  { name: 'Lookalike', items: 'seed audience · similarity threshold · reach', focal: true },
+];
+
+/**
+ * A tree, because the six families are not peers on a shelf — they are the ways
+ * one audience gets narrowed, and layering them is the strategy the section is
+ * teaching. Six coloured dots said "six categories"; a root that fans into six
+ * says "six cuts of the same thing".
+ *
+ * Lookalike is focal: it is the only family that is *derived* from the others
+ * rather than declared, which is why it behaves differently when you layer it.
+ */
 export function TargetingTaxonomy() {
-  const groups = [
-    { name: 'Location', color: C.green, items: ['country', 'city / zip', 'radius', 'residents vs. visitors'] },
-    { name: 'Demographic', color: C.amber, items: ['age', 'gender', 'education', 'job title', 'life events'] },
-    { name: 'Interest', color: C.purple, items: ['hobbies', 'entertainment', 'shopping', 'sports', 'cuisine'] },
-    { name: 'Behavioral', color: C.orange, items: ['past purchases', 'device usage', 'travel', 'site visits'] },
-    { name: 'Custom Audiences', color: C.teal, items: ['site visitors', 'email list', 'app users', 'CRM upload'] },
-    { name: 'Lookalike', color: C.blue, items: ['seed audience', 'similarity threshold', 'reach setting'] },
-  ];
+  const W = 792;
+  const rowH = 48;
+  const pitch = 60;
+  const top = 24;
+  const famX = 264;
+  const famW = 512;
+  const H = top + pitch * (TARGETING_FAMILIES.length - 1) + rowH + 24;
+  const centreY = top + (pitch * (TARGETING_FAMILIES.length - 1) + rowH) / 2;
+
   return (
-    <Card title="Ad-platform targeting — six families layered to find a customer">
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-        {groups.map(g => (
-          <div key={g.name} className="rounded-md border border-border p-3">
-            <div className="mb-1.5 flex items-center gap-2">
-              <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ background: g.color }} />
-              <span className="text-[12px] font-semibold text-body">{g.name}</span>
-            </div>
-            <ul className="space-y-0.5 text-[11px] text-subtle">
-              {g.items.map(it => (
-                <li key={it} className="font-mono">· {it}</li>
-              ))}
-            </ul>
-          </div>
+    <DiagramFrame
+      eyebrow="Ad-platform targeting"
+      note="Layering families is the standard strategy. Layer too many and the audience disappears; too few and the audience is everyone. The only family you cannot describe in words up front is the lookalike — it is defined by a seed, not by a rule."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Six families of ad targeting"
+        desc="One audience is narrowed by six families of criteria: location, demographics, interests, behaviour, custom audiences uploaded by the advertiser, and lookalike audiences derived from a seed."
+      >
+        <TreeBus
+          orientation="horizontal"
+          parentX={192}
+          parentY={centreY}
+          childXs={TARGETING_FAMILIES.map((_, i) => top + i * pitch + rowH / 2)}
+          childY={famX}
+        />
+        <Node
+          x={16}
+          y={centreY - 32}
+          width={176}
+          height={64}
+          variant="input"
+          label="Everyone on the platform"
+        />
+        {TARGETING_FAMILIES.map((f, i) => (
+          <Node
+            key={f.name}
+            x={famX}
+            y={top + i * pitch}
+            width={famW}
+            height={rowH}
+            align="start"
+            variant={f.focal ? 'focal' : 'step'}
+            label={f.name}
+            sublabel={f.items}
+          />
         ))}
-      </div>
-      <p className="mt-3 text-[11px] text-muted">
-        Layering families is the standard targeting strategy. Layer too many and the audience disappears; too few and the audience is everyone.
-      </p>
-    </Card>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -419,38 +467,97 @@ export function ReachSimilarityCurve() {
 /* 17.1 — RetargetingFunnel                                              */
 /* ------------------------------------------------------------------ */
 
+const FUNNEL_STAGES = [
+  { label: 'Impressions', value: 100 },
+  { label: 'Clicks', value: 18, drop: 'the creative did not land' },
+  { label: 'Site visits', value: 12, drop: 'the landing page did not match' },
+  { label: 'Add-to-cart', value: 4, drop: 'price or shipping', focal: true },
+  { label: 'Purchases', value: 1.4, drop: 'checkout friction' },
+];
+
+/**
+ * A funnel with the *drops* named, which is the only part a manager can act on.
+ * The bars alone say conversion falls; naming what falls out between each pair
+ * says where to spend.
+ *
+ * Five bars in five hues implied the stages were categories. They are one
+ * quantity shrinking, so they are one colour — except the leak where
+ * retargeting actually pays.
+ */
 export function RetargetingFunnel() {
-  const stages = [
-    { label: 'Impressions', value: 100, color: C.blue },
-    { label: 'Clicks', value: 18, color: C.purple },
-    { label: 'Site visits', value: 12, color: C.teal },
-    { label: 'Add-to-cart', value: 4, color: C.amber },
-    { label: 'Purchases', value: 1.4, color: C.green },
-  ];
-  const W = 640;
-  const H = 220;
-  const stageH = (H - 40) / stages.length;
-  const max = stages[0].value;
+  const W = 792;
+  const rowH = 44;
+  const pitch = 56;
+  const top = 24;
+  const barX = 176;
+  const barMax = 344;
+  const H = top + pitch * (FUNNEL_STAGES.length - 1) + rowH + 24;
+  const max = FUNNEL_STAGES[0].value;
+
   return (
-    <Card title="A simplified ad funnel — retargeting layers nudge each stage">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="A simple funnel from impressions to purchases.">
-        {stages.map((s, i) => {
-          const ratio = s.value / max;
-          const barW = ratio * (W - 200);
-          const y = 20 + i * stageH;
+    <DiagramFrame
+      eyebrow="A simplified ad funnel"
+      note="Retargeting re-engages the people who reached a stage and stopped. Which stage you retarget from is the decision — and the biggest absolute drop is not always the one worth buying back."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="An advertising funnel and its leaks"
+        desc="Of 100 impressions, 18 become clicks, 12 become site visits, 4 become add-to-cart, and 1.4 become purchases. Each step is labelled with what is lost there, since that is the part a budget can act on."
+      >
+        {FUNNEL_STAGES.map((stage, i) => {
+          const y = top + i * pitch;
+          const w = (stage.value / max) * barMax;
           return (
-            <g key={s.label}>
-              <text x={W / 2 - 110} y={y + stageH / 2 + 4} textAnchor="end" className="fill-body text-[12px] font-semibold">{s.label}</text>
-              <rect x={W / 2 - 100} y={y + 4} width={barW} height={stageH - 8} rx={3} fill={s.color} opacity={0.85} />
-              <text x={W / 2 - 100 + barW + 8} y={y + stageH / 2 + 4} className="fill-subtle text-[11px] tabular-nums">{s.value}%</text>
+            <g key={stage.label}>
+              <SvgText
+                x={barX - 16}
+                y={y + rowH / 2 + 4}
+                width={barX - 32}
+                anchorY="middle"
+                variant="nodeSm"
+                tone={stage.focal ? 'accent' : 'ink'}
+                textAnchor="end"
+              >
+                {stage.label}
+              </SvgText>
+              <rect
+                x={barX}
+                y={y + 6}
+                width={w}
+                height={rowH - 12}
+                rx={3}
+                fill={stage.focal ? C.orangeLight : C.slate100}
+                stroke={stage.focal ? C.orange : C.muted}
+                strokeWidth={stage.focal ? 1.2 : 0.8}
+              />
+              <SvgText
+                x={barX + w + 10}
+                y={y + rowH / 2 + 4}
+                variant="sub"
+                tone={stage.focal ? 'accent' : 'muted'}
+                textAnchor="start"
+              >
+                {stage.value + '%'}
+              </SvgText>
+              {stage.drop && (
+                <SvgText
+                  x={W - 16}
+                  y={y + rowH / 2 + 4}
+                  width={224}
+                  anchorY="middle"
+                  variant="sub"
+                  tone="muted"
+                  textAnchor="end"
+                >
+                  {'lost here: ' + stage.drop}
+                </SvgText>
+              )}
             </g>
           );
         })}
-      </svg>
-      <p className="mt-1 text-center text-[11px] text-muted">
-        Retargeting custom audiences re-engages users who reached a particular stage but didn’t convert.
-      </p>
-    </Card>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -663,54 +770,63 @@ export function DriftSchematic() {
 /* 17.4 — Capstone Summary                                               */
 /* ------------------------------------------------------------------ */
 
+const CI_STAGES = [
+  { label: 'Score', sub: 'churn risk' },
+  { label: 'Segment', sub: 'who they look like' },
+  { label: 'Target', sub: 'lookalikes, custom audiences' },
+  { label: 'Act', sub: 'offer, message, channel' },
+  { label: 'Monitor', sub: 'drift, lift, fairness', focal: true },
+];
+
 export function CustomerIntelligenceFlow() {
-  const W = 760;
-  const H = 200;
-  const cells = [
-    { label: 'Score', sub: 'churn risk', color: C.blue },
-    { label: 'Segment', sub: 'who they look like', color: C.purple },
-    { label: 'Target', sub: 'lookalikes + custom audiences', color: C.teal },
-    { label: 'Act', sub: 'offer / message / channel', color: C.amber },
-    { label: 'Monitor', sub: 'drift, lift, fairness', color: C.green },
-  ];
-  const cellW = (W - 60) / cells.length;
+  const W = 792;
+  const H = 208;
+  const boxW = 136;
+  const boxH = 76;
+  const y = 28;
+  const xs = centeredRow(0, W, CI_STAGES.length, boxW, 24);
+
   return (
-    <Card title="The Part IV decision loop, end to end">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Five stages of the customer intelligence loop from scoring to monitoring.">
-        {cells.map((c, i) => {
-          const x = 30 + cellW * i;
-          return (
-            <g key={c.label}>
-              <rect x={x + 10} y={50} width={cellW - 20} height={70} rx={8} fill="white" stroke={c.color} strokeWidth={1.8} />
-              <text x={x + cellW / 2} y={78} textAnchor="middle" className="fill-body text-[13px] font-semibold" style={{ fill: c.color }}>{c.label}</text>
-              <text x={x + cellW / 2} y={98} textAnchor="middle" className="fill-muted text-[10px]">{c.sub}</text>
-              {i < cells.length - 1 && (
-                <line x1={x + cellW - 10} y1={85} x2={x + cellW + 10} y2={85} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#cif-arrow)" />
-              )}
-            </g>
-          );
-        })}
-        <defs>
-          <marker id="cif-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-          <marker id="cif-feedback" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.amber} />
-          </marker>
-        </defs>
-        <path
-          d={`M ${30 + cellW * (cells.length - 0.5)} 130
-              C ${30 + cellW * (cells.length - 0.5)} 170
-                ${30 + cellW * 0.5} 170
-                ${30 + cellW * 0.5} 130`}
-          fill="none"
-          stroke={C.amber}
-          strokeWidth={1.5}
-          strokeDasharray="5 4"
-          markerEnd="url(#cif-feedback)"
+    <DiagramFrame
+      eyebrow="The Part IV decision loop, end to end"
+      note="Monitoring is not the last stage; it is the stage that rewrites the score. A loop whose last step reports to a dashboard nobody reads is a pipeline with a decoration on the end."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The customer intelligence loop"
+        desc="Customers are scored for churn risk, segmented, targeted with lookalike and custom audiences, acted on with an offer through a channel, and monitored for drift, lift, and fairness — and what monitoring finds feeds the next scoring run."
+      >
+        {CI_STAGES.slice(0, -1).map((c, i) => (
+          <Connector
+            key={c.label}
+            from={[xs[i] + boxW, y + boxH / 2]}
+            to={[xs[i + 1], y + boxH / 2]}
+            route="straight"
+          />
+        ))}
+        <Connector
+          from={[xs[4] + boxW / 2, y + boxH]}
+          to={[xs[0] + boxW / 2, y + boxH]}
+          route="vhv"
+          mid={y + boxH + 44}
+          tone="accent"
+          dashed
+          label="RESCORE"
         />
-        <text x={W / 2} y={184} textAnchor="middle" className="fill-accent-ink text-[10px] italic">Monitoring shapes the next problem definition.</text>
-      </svg>
-    </Card>
+        {CI_STAGES.map((c, i) => (
+          <Node
+            key={c.label}
+            x={xs[i]}
+            y={y}
+            width={boxW}
+            height={boxH}
+            variant={c.focal ? 'focal' : 'step'}
+            label={c.label}
+            sublabel={c.sub}
+          />
+        ))}
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }

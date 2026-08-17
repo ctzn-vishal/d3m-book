@@ -69,4 +69,6 @@ export const LEGACY_C = {
   teal: T.pos,
   red: T.neg,
   redLight: T.negTint,
+  negLight: T.negTint,
+  posLight: T.posTint,
 } as const;

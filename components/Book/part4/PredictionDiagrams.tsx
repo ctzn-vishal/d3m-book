@@ -2,7 +2,14 @@
 
 import * as React from 'react';
 
-import { DiagramFrame, LEGACY_C } from '@/components/Book/diagram';
+import {
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  LEGACY_C,
+  Node,
+  TreeBus,
+} from '@/components/Book/diagram';
 
 /**
  * Conceptual diagrams for Part IV Chapters 14–15.
@@ -135,45 +142,67 @@ export function AlgorithmicLifecycle() {
 /**
  * Two-column grid: classification vs regression business examples.
  */
+const SUPERVISED_TASKS = [
+  { kind: 'Classification', sub: 'discrete labels', items: 'churn · loan default · lead conversion' },
+  { kind: 'Regression', sub: 'continuous numbers', items: 'listing price · demand next month · customer LTV' },
+];
+
+/**
+ * A tree, because the point is that both branches descend from *one* setup.
+ * Two side-by-side cards in two hues said "here are two unrelated things";
+ * the split says "same unit, same features, same split — only the target's
+ * type differs", which is the sentence the section is trying to land.
+ */
 export function SupervisedTaskTaxonomy() {
-  const rows = [
-    { task: 'Churn', target: 'churned = yes/no', kind: 'class' },
-    { task: 'Loan default', target: 'default = yes/no', kind: 'class' },
-    { task: 'Lead conversion', target: 'converted = yes/no', kind: 'class' },
-    { task: 'Listing price', target: 'price in $', kind: 'reg' },
-    { task: 'Demand next month', target: 'units sold', kind: 'reg' },
-    { task: 'Customer LTV', target: 'expected revenue', kind: 'reg' },
-  ];
+  const W = 792;
+  const rootW = 264;
+  const rootH = 64;
+  const rootY = 16;
+  const kindW = 288;
+  const kindH = 88;
+  const kindY = 136;
+  const H = kindY + kindH + 24;
+  const kindXs = [96, 408];
+
   return (
-    <Card title="Same setup, two flavors of target">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {(['class', 'reg'] as const).map(kind => {
-          const label = kind === 'class' ? 'Classification' : 'Regression';
-          const sub = kind === 'class' ? 'discrete labels' : 'continuous numbers';
-          const color = kind === 'class' ? C.blue : C.teal;
-          const bg = kind === 'class' ? C.blueLight : C.tealLight;
-          return (
-            <div key={kind} className="rounded-md border border-border p-3">
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] font-semibold" style={{ color }}>{label}</span>
-                <span className="text-[10px] uppercase tracking-wide text-muted">{sub}</span>
-              </div>
-              <ul className="mt-2 space-y-1.5">
-                {rows.filter(r => r.kind === kind).map(r => (
-                  <li key={r.task} className="flex items-center justify-between text-[12px]">
-                    <span className="text-body">{r.task}</span>
-                    <span className="rounded px-1.5 py-0.5 text-[10px] font-mono text-subtle" style={{ background: bg }}>{r.target}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        })}
-      </div>
-      <p className="mt-3 text-center text-[11px] text-muted">
-        Choosing classification vs regression is a choice about <em>what action the answer must support</em>, not a property of the data.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="Same setup, two flavours of target"
+      note="Everything above the split is identical: the unit of prediction, the features, the moment the label is measured, and the train/test discipline. Only the target's type changes — and with it, the metric you are allowed to report."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Classification and regression as one setup"
+        desc="A supervised task splits into classification, where the target is a discrete label such as churned or not, and regression, where the target is a continuous number such as a price. Everything above the split — the unit, the features, the label timing — is shared."
+      >
+        <TreeBus
+          parentX={W / 2}
+          parentY={rootY + rootH}
+          childXs={kindXs.map(x => x + kindW / 2)}
+          childY={kindY}
+        />
+        <Node
+          x={(W - rootW) / 2}
+          y={rootY}
+          width={rootW}
+          height={rootH}
+          variant="focal"
+          label="One supervised setup"
+          sublabel="a unit, features, and a target"
+        />
+        {SUPERVISED_TASKS.map((t, i) => (
+          <Node
+            key={t.kind}
+            x={kindXs[i]}
+            y={kindY}
+            width={kindW}
+            height={kindH}
+            label={t.kind}
+            sublabel={t.sub + ' — ' + t.items}
+          />
+        ))}
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -181,49 +210,79 @@ export function SupervisedTaskTaxonomy() {
 /* 14.3a — TrainTestSplitDiagram                                        */
 /* ------------------------------------------------------------------ */
 
+/**
+ * One accent, on the test set.
+ *
+ * The old version gave four boxes four hues, which made the split look like a
+ * taxonomy. It isn't: it is one pile of data cut in two, and only one of the
+ * two halves is doing the thing the section is about — standing in for a
+ * future the model has not seen.
+ */
 export function TrainTestSplitDiagram() {
-  const W = 720;
-  const H = 200;
+  const W = 792;
+  const H = 208;
+  const y = 40;
+
   return (
-    <Card title="The test set is a rehearsal for the future">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Historical data is split into training and test; the model fits on training and is scored against held-out outcomes.">
-        <rect x={30} y={30} width={200} height={50} rx={6} fill={C.amberLight} stroke={C.amber} strokeWidth={1.5} />
-        <text x={130} y={52} textAnchor="middle" className="fill-body text-[12px] font-semibold">Historical labelled data</text>
-        <text x={130} y={68} textAnchor="middle" className="fill-subtle text-[10px]">past customers, known outcomes</text>
+    <DiagramFrame
+      eyebrow="The test set is a rehearsal for the future"
+      note="The test set is not spare data. It is the only evidence you will ever have about how the model behaves on rows it was not fitted to — and it stops being that the moment you tune against it."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Train and test as a rehearsal for the future"
+        desc="Historical labelled data is split into a training portion the model fits on and a held-out test portion it never sees during fitting. Scoring against the held-out outcomes is the only unbiased estimate of future performance."
+      >
+        <Connector from={[224, y + 40]} to={[280, y + 40]} route="straight" />
+        <Connector from={[464, y + 12]} to={[536, y + 12]} route="straight" label="FIT" />
+        <Connector from={[464, y + 76]} to={[536, y + 76]} route="straight" label="SCORE" />
 
-        <line x1={230} y1={55} x2={270} y2={55} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tt-arrow)" />
-
-        <rect x={280} y={20} width={170} height={30} rx={4} fill={C.blueLight} stroke={C.blue} strokeWidth={1.5} />
-        <text x={365} y={40} textAnchor="middle" className="fill-subtle text-[12px] font-semibold">Training (≈70%)</text>
-
-        <rect x={280} y={60} width={170} height={30} rx={4} fill={C.greenLight} stroke={C.green} strokeWidth={1.5} />
-        <text x={365} y={80} textAnchor="middle" className="fill-pos text-[12px] font-semibold">Test (≈30%)</text>
-
-        <line x1={450} y1={35} x2={520} y2={35} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tt-arrow)" />
-        <line x1={450} y1={75} x2={520} y2={75} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tt-arrow)" />
-
-        <rect x={520} y={20} width={170} height={30} rx={4} fill={C.purpleLight} stroke={C.purple} strokeWidth={1.5} />
-        <text x={605} y={40} textAnchor="middle" className="fill-subtle text-[12px] font-semibold">Fit model</text>
-
-        <rect x={520} y={60} width={170} height={30} rx={4} fill={C.purpleLight} stroke={C.purple} strokeWidth={1.5} />
-        <text x={605} y={80} textAnchor="middle" className="fill-subtle text-[12px] font-semibold">Predict &amp; score</text>
-
-        <line x1={605} y1={50} x2={605} y2={60} stroke={C.muted} strokeWidth={1.5} />
-
-        <rect x={280} y={120} width={410} height={50} rx={6} fill={C.slate50} stroke={C.grid} strokeWidth={1} />
-        <text x={485} y={142} textAnchor="middle" className="fill-body text-[12px] font-semibold">Compare predictions to known test outcomes</text>
-        <text x={485} y={158} textAnchor="middle" className="fill-subtle text-[10px]">If performance collapses outside training, the model overfit.</text>
-
-        <line x1={365} y1={90} x2={365} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tt-arrow)" />
-        <line x1={605} y1={90} x2={605} y2={120} stroke={C.muted} strokeWidth={1.5} markerEnd="url(#tt-arrow)" />
-
-        <defs>
-          <marker id="tt-arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L9,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-    </Card>
+        <Node
+          x={16}
+          y={y + 8}
+          width={208}
+          height={64}
+          variant="input"
+          label="Historical labelled data"
+          sublabel="past customers, known outcomes"
+        />
+        <Node
+          x={280}
+          y={y - 12}
+          width={184}
+          height={48}
+          label="Training (~70%)"
+          sublabel="the model sees these"
+        />
+        <Node
+          x={280}
+          y={y + 52}
+          width={184}
+          height={48}
+          variant="focal"
+          label="Test (~30%)"
+          sublabel="held back, never fitted"
+        />
+        <Node
+          x={536}
+          y={y - 12}
+          width={240}
+          height={48}
+          label="A fitted model"
+          sublabel="parameters chosen"
+        />
+        <Node
+          x={536}
+          y={y + 52}
+          width={240}
+          height={48}
+          variant="focal"
+          label="An honest error estimate"
+          sublabel="the only one you get"
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -243,9 +302,9 @@ export function LeakageMap() {
     { feature: 'loyalty_tier', verdict: 'safe', why: 'attribute at decision time' },
   ];
   const badge = (v: string) => {
-    if (v === 'leak') return { bg: C.redLight, fg: '#7f1d1d', label: 'leak' };
-    if (v === 'maybe') return { bg: C.amberLight, fg: '#7c2d12', label: 'maybe' };
-    return { bg: C.greenLight, fg: '#064e3b', label: 'safe' };
+    if (v === 'leak') return { bg: C.negLight, fg: C.red, label: 'leak' };
+    if (v === 'maybe') return { bg: C.orangeLight, fg: C.orange, label: 'maybe' };
+    return { bg: C.posLight, fg: C.green, label: 'safe' };
   };
   return (
     <Card title="Feature leakage gallery — would this be known at decision time?">
