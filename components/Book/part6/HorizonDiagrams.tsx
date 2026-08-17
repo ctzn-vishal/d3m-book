@@ -2,93 +2,105 @@
 
 import * as React from 'react';
 
+import {
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  Node,
+  PathConnector,
+  ring,
+  ringArc,
+  spoke,
+} from '@/components/Book/diagram';
+
 /**
  * Visuals for §17.6 "The Horizon" — the grounded forward look.
  *
- *   - HorizonScorecard: the bull case next to the reality check, both sourced.
- *   - AnalystShift: how the analyst's job moves from doing to stewarding.
- *   - D3MAgentSynthesis: the whole-book D3M loop, now operated by agents with a
- *     human above the loop. The closing image of the part and the book.
+ *   - HorizonScorecard   the bull case beside the reality check, both sourced
+ *   - AnalystShift       what the analyst's job becomes
+ *   - D3MAgentSynthesis  loop  the book's own loop, now operated by agents
  */
-
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  sky: '#0284c7',
-  skyLight: '#e0f2fe',
-  teal: '#0d9488',
-  tealLight: '#ccfbf1',
-  green: '#0f766e',
-  greenLight: '#d1fae5',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  violet: '#7c3aed',
-  violetLight: '#ede9fe',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
-
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
-  return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">{title}</p>}
-      {children}
-      {footer && <div className="mt-3 text-[11px] leading-relaxed text-slate-500">{footer}</div>}
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* §17.6 — HorizonScorecard                                             */
 /* ------------------------------------------------------------------ */
 
+const BULL = [
+  {
+    value: '33%',
+    label: 'of enterprise software will embed agentic AI by 2028, from under 1% in 2024',
+    src: 'Gartner',
+  },
+  {
+    value: '15%',
+    label: 'of day-to-day work decisions made autonomously by 2028, from 0%',
+    src: 'Gartner',
+  },
+];
+
+const REAL = [
+  { value: '~95%', label: 'of enterprise GenAI pilots show no measurable P&L impact', src: 'MIT NANDA' },
+  {
+    value: '42%',
+    label: 'of firms abandoning most AI initiatives — up from 17% a year earlier',
+    src: 'S&P Global',
+  },
+  {
+    value: '>40%',
+    label: 'of agentic-AI projects forecast to be cancelled by end of 2027',
+    src: 'Gartner',
+  },
+];
+
+/**
+ * The book's other legitimate use of the pos/neg pair. Two columns of sourced
+ * numbers that are *both true*, one optimistic and one not — a valence, which
+ * is the documented exception, and the only honest way to colour this figure.
+ */
 export function HorizonScorecard() {
-  const bull = [
-    { value: '33%', label: 'of enterprise software will embed agentic AI by 2028 (from <1% in 2024)', src: 'Gartner' },
-    { value: '15%', label: 'of day-to-day work decisions made autonomously by 2028 (from 0%)', src: 'Gartner' },
-  ];
-  const real = [
-    { value: '~95%', label: 'of enterprise GenAI pilots show no measurable P&L impact', src: 'MIT NANDA' },
-    { value: '42%', label: 'of firms abandoning most AI initiatives — up from 17% a year earlier', src: 'S&P Global' },
-    { value: '>40%', label: 'of agentic-AI projects forecast to be canceled by end of 2027', src: 'Gartner' },
-  ];
   return (
-    <Card title="Two true stories at once">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-md border border-sky-200 bg-sky-50/50 p-3">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-sky-700">The bull case</p>
-          <div className="space-y-2.5">
-            {bull.map((b) => (
-              <div key={b.label} className="flex gap-3">
-                <span className="w-12 shrink-0 font-mono text-[18px] font-bold text-sky-700">{b.value}</span>
-                <span className="text-[11.5px] leading-snug text-slate-600">{b.label} <span className="text-slate-400">· {b.src}</span></span>
-              </div>
-            ))}
+    <DiagramFrame
+      eyebrow="Two true stories at once"
+      note="Both columns are well sourced and both are true. The forecasts describe where the capability is heading; the failure rates describe what happens when firms deploy it without the discipline this book has been building. The winners treat agents as infrastructure to be governed, not magic to be bought."
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        {[
+          { title: 'The bull case', rows: BULL, tone: 'pos' as const },
+          { title: 'The reality check', rows: REAL, tone: 'neg' as const },
+        ].map(col => (
+          <div
+            key={col.title}
+            className={`rounded-md border p-3 ${
+              col.tone === 'pos' ? 'border-pos/40 bg-pos/5' : 'border-neg/40 bg-neg/5'
+            }`}
+          >
+            <p
+              className={`mb-3 font-plex text-[10px] font-medium uppercase tracking-[0.16em] ${
+                col.tone === 'pos' ? 'text-pos' : 'text-neg'
+              }`}
+            >
+              {col.title}
+            </p>
+            <div className="space-y-3">
+              {col.rows.map(r => (
+                <div key={r.label} className="flex gap-3">
+                  <span
+                    className={`w-14 shrink-0 font-plex text-[16px] font-semibold tabular-nums ${
+                      col.tone === 'pos' ? 'text-pos' : 'text-neg'
+                    }`}
+                  >
+                    {r.value}
+                  </span>
+                  <span className="text-[11.5px] leading-snug text-subtle">
+                    {r.label} <span className="text-muted">· {r.src}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="rounded-md border border-amber-200 bg-amber-50/50 p-3">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-amber-700">The reality check</p>
-          <div className="space-y-2.5">
-            {real.map((b) => (
-              <div key={b.label} className="flex gap-3">
-                <span className="w-12 shrink-0 font-mono text-[18px] font-bold text-amber-700">{b.value}</span>
-                <span className="text-[11.5px] leading-snug text-slate-600">{b.label} <span className="text-slate-400">· {b.src}</span></span>
-              </div>
-            ))}
-          </div>
-        </div>
+        ))}
       </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        Both columns are well-sourced and both are true. The forecasts describe where the capability is heading; the failure rates describe
-        what happens when firms deploy it without the discipline this book has been building. The winners will be the ones who treat agents
-        as infrastructure to be governed, not magic to be bought.
-      </p>
-    </Card>
+    </DiagramFrame>
   );
 }
 
@@ -96,37 +108,86 @@ export function HorizonScorecard() {
 /* §17.6 — AnalystShift                                                 */
 /* ------------------------------------------------------------------ */
 
+const SHIFT_FROM = ['Write the SQL by hand', 'Build the dashboard', 'Run the model', 'Format the deck'];
+const SHIFT_TO = [
+  'Own the semantic layer',
+  'Supervise the agents',
+  'Verify and approve outputs',
+  'Manage AI risk',
+];
+
 export function AnalystShift() {
-  const from = ['Write the SQL by hand', 'Build the dashboard', 'Run the model', 'Format the deck'];
-  const to = ['Own the semantic layer', 'Supervise the agents', 'Verify & approve outputs', 'Manage AI risk'];
+  const W = 792;
+  const H = 208;
+  const paneW = 336;
+  const paneH = 160;
+  const y = 16;
+  const rowPitch = 26;
+
   return (
-    <Card title="The job moves up a level">
-      <div className="grid items-center gap-3 sm:grid-cols-[1fr_auto_1fr]">
-        <div className="rounded-md border border-slate-200 bg-slate-50/70 p-3">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">From — doing the task</p>
-          <ul className="space-y-1.5">
-            {from.map((t) => (
-              <li key={t} className="flex gap-1.5 text-[12px] text-slate-600"><span className="text-slate-400">–</span>{t}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex items-center justify-center">
-          <span className="rounded-full border border-teal-300 bg-teal-50 px-3 py-1 text-[11px] font-semibold text-teal-700">becomes →</span>
-        </div>
-        <div className="rounded-md border border-teal-200 bg-teal-50/50 p-3">
-          <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-teal-700">To — steering the system</p>
-          <ul className="space-y-1.5">
-            {to.map((t) => (
-              <li key={t} className="flex gap-1.5 text-[12px] text-slate-700"><span className="text-teal-500">+</span>{t}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        Agents absorb the mechanical work; the human moves &ldquo;above the loop.&rdquo; The scarce skill becomes defining the question, curating
-        the metric definitions the agents depend on, and judging whether an answer is trustworthy — exactly the judgment this book trains.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="The job moves up a level"
+      note="Agents absorb the mechanical work and the human moves above the loop. The scarce skill becomes defining the question, curating the metric definitions the agents depend on, and judging whether an answer is trustworthy — exactly the judgment this book trains."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="How the analyst's job changes"
+        desc="Four tasks move off the analyst's desk — writing SQL by hand, building dashboards, running models, formatting decks — and four take their place: owning the semantic layer, supervising the agents, verifying and approving outputs, and managing AI risk."
+      >
+        <Connector
+          from={[16 + paneW, y + paneH / 2]}
+          to={[W - 16 - paneW, y + paneH / 2]}
+          route="straight"
+          tone="accent"
+          label="BECOMES"
+        />
+
+        <Node
+          x={16}
+          y={y}
+          width={paneW}
+          height={paneH}
+          variant="store"
+          align="start"
+          label="Doing the task"
+          labelDy={-((SHIFT_FROM.length * rowPitch) / 2)}
+        >
+          {SHIFT_FROM.map((t, i) => (
+            <text
+              key={t}
+              x={16 + 16}
+              y={y + 64 + i * rowPitch}
+              className="fill-muted font-sans text-[11px]"
+            >
+              {t}
+            </text>
+          ))}
+        </Node>
+
+        <Node
+          x={W - 16 - paneW}
+          y={y}
+          width={paneW}
+          height={paneH}
+          variant="focal"
+          align="start"
+          label="Steering the system"
+          labelDy={-((SHIFT_TO.length * rowPitch) / 2)}
+        >
+          {SHIFT_TO.map((t, i) => (
+            <text
+              key={t}
+              x={W - 16 - paneW + 16}
+              y={y + 64 + i * rowPitch}
+              className="fill-subtle font-sans text-[11px]"
+            >
+              {t}
+            </text>
+          ))}
+        </Node>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -134,61 +195,111 @@ export function AnalystShift() {
 /* §17.6 — D3MAgentSynthesis                                            */
 /* ------------------------------------------------------------------ */
 
-export function D3MAgentSynthesis() {
-  const W = 780;
-  const H = 360;
-  const cx = W / 2;
-  const cy = 196;
-  const rx = 280;
-  const ry = 116;
-  const stations = [
-    { a: -90, label: 'Frame the question', sub: 'Part I', color: C.sky },
-    { a: -34, label: 'Query the data', sub: 'text-to-SQL · §17.2', color: C.teal },
-    { a: 22, label: 'Analyze & predict', sub: 'agentic workflows · §17.3', color: C.blue },
-    { a: 90, label: 'Decide', sub: 'evidence → action', color: C.violet },
-    { a: 158, label: 'Act & monitor', sub: 'loops · §17.3', color: C.amber },
-    { a: 214, label: 'Learn', sub: 'feedback → next run', color: C.green },
-  ];
-  const pt = (a: number, r = 1) => {
-    const rad = (a * Math.PI) / 180;
-    return { x: cx + rx * r * Math.cos(rad), y: cy + ry * r * Math.sin(rad) };
-  };
-  return (
-    <Card title="The D3M loop, operated by agents — with a human above it">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="The data-to-decision loop drawn as a ring of six stations operated by agents, with a human supervising from above.">
-        {/* human above the loop */}
-        <rect x={cx - 130} y={14} width={260} height={40} rx={20} fill={C.greenLight} stroke={C.green} strokeWidth={1.6} />
-        <text x={cx} y={32} textAnchor="middle" className="text-[12px] font-semibold" fill={C.green}>Human — above the loop</text>
-        <text x={cx} y={47} textAnchor="middle" className="text-[9px]" fill={C.muted}>sets the question · owns the metrics · approves the calls</text>
-        <line x1={cx} y1={54} x2={cx} y2={cy - 34} stroke={C.green} strokeWidth={1.3} strokeDasharray="4 3" markerEnd="url(#syn-arrow-g)" />
+const SYNTHESIS_STATIONS = [
+  { name: 'Frame the question', sub: 'Part I' },
+  { name: 'Query the data', sub: 'text-to-SQL · §17.2' },
+  { name: 'Analyse and predict', sub: 'agentic workflows · §17.3' },
+  { name: 'Decide', sub: 'evidence becomes action' },
+  { name: 'Act and monitor', sub: 'loops · §17.3' },
+  { name: 'Learn', sub: 'feedback into the next run' },
+];
 
-        {/* orbit */}
-        <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill="none" stroke={C.grid} strokeWidth={1.4} strokeDasharray="4 4" />
-        {/* center */}
-        <circle cx={cx} cy={cy} r={30} fill={C.slate50} stroke={C.muted} strokeWidth={1.4} />
-        <text x={cx} y={cy - 2} textAnchor="middle" className="text-[11px] font-bold" fill={C.ink}>D3M</text>
-        <text x={cx} y={cy + 11} textAnchor="middle" className="text-[8px]" fill={C.muted}>agents</text>
-        {/* stations */}
-        {stations.map((s) => {
-          const p = pt(s.a);
-          return (
-            <g key={s.label}>
-              <rect x={p.x - 70} y={p.y - 22} width={140} height={44} rx={9} fill="white" stroke={s.color} strokeWidth={1.5} />
-              <text x={p.x} y={p.y - 3} textAnchor="middle" className="text-[10.5px] font-semibold" fill={s.color}>{s.label}</text>
-              <text x={p.x} y={p.y + 11} textAnchor="middle" className="text-[8.5px]" fill={C.muted}>{s.sub}</text>
-            </g>
-          );
-        })}
-        <defs>
-          <marker id="syn-arrow-g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L8,3 z" fill={C.green} />
-          </marker>
-        </defs>
-      </svg>
-      <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
-        This is the same data-to-decision loop the book opened with — only now an agent can turn each station&rsquo;s crank. The work that
-        does not get automated is the work this book exists to teach: framing the question, owning the definitions, and judging the answer.
-      </p>
-    </Card>
+/**
+ * The closing image of the book: the same loop Part 0 opened with, with a
+ * human placed deliberately outside the ring.
+ *
+ * That placement is the argument. Inside the ring the human is one more
+ * station and the loop can route around them; above it, every pass has to come
+ * back through a person who owns the question and the definitions. The dashed
+ * line down into the hub is the only connection that crosses the boundary.
+ */
+export function D3MAgentSynthesis() {
+  const W = 792;
+  const H = 568;
+  const cx = W / 2;
+  const cy = 320;
+  const radius = 196;
+  const stationW = 156;
+  const stationH = 60;
+  const hubW = 176;
+  const hubH = 72;
+
+  const points = ring(cx, cy, radius, SYNTHESIS_STATIONS.length);
+
+  return (
+    <DiagramFrame
+      eyebrow="The D3M loop, operated by agents"
+      note="This is the same data-to-decision loop the book opened with — only now an agent can turn each station's crank. The work that does not get automated is the work this book exists to teach: framing the question, owning the definitions, and judging the answer."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The D3M loop, operated by agents"
+        desc="Six stations run clockwise around a ring of agents: frame the question, query the data, analyse and predict, decide, act and monitor, learn. A human sits above the ring rather than in it, setting the question, owning the metric definitions, and approving the calls."
+      >
+        <Node
+          x={cx - 176}
+          y={8}
+          width={352}
+          height={56}
+          shape="oval"
+          variant="focal"
+          label="A human, above the loop"
+          sublabel="sets the question · owns the metrics · approves the calls"
+        />
+        {/* Out to the right of the ring, down the clear gutter between the
+            two right-hand stations, and back into the hub. Straight down the
+            middle would have passed behind "Frame the question", and a
+            governance line that disappears under a station is the one line in
+            this figure that must not. */}
+        <Connector
+          from={[cx + 176, 36]}
+          to={[cx + hubW / 2, cy]}
+          route="hvh"
+          mid={700}
+          tone="accent"
+          dashed
+          label="GOVERNS"
+          labelSide="right"
+        />
+
+        {SYNTHESIS_STATIONS.map((s, i) => (
+          <PathConnector
+            key={`arc-${s.name}`}
+            d={ringArc(cx, cy, radius, SYNTHESIS_STATIONS.length, i, 0.24)}
+          />
+        ))}
+        {SYNTHESIS_STATIONS.map((s, i) => (
+          <PathConnector
+            key={`spoke-${s.name}`}
+            d={spoke(points[i], [cx, cy], stationH / 2 + 8, hubH / 2 + 10)}
+            dashed
+            arrow="none"
+          />
+        ))}
+
+        <Node
+          x={cx - hubW / 2}
+          y={cy - hubH / 2}
+          width={hubW}
+          height={hubH}
+          variant="store"
+          label="D3M agents"
+          sublabel="one shared record"
+        />
+
+        {SYNTHESIS_STATIONS.map((s, i) => (
+          <Node
+            key={s.name}
+            x={points[i][0] - stationW / 2}
+            y={points[i][1] - stationH / 2}
+            width={stationW}
+            height={stationH}
+            label={s.name}
+            sublabel={s.sub}
+          />
+        ))}
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }

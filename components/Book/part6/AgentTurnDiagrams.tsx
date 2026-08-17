@@ -2,103 +2,173 @@
 
 import * as React from 'react';
 
+import {
+  Connector,
+  DiagramFrame,
+  DiagramSvg,
+  EyebrowLabel,
+  Layers,
+  Legend,
+  Node,
+  PathConnector,
+  S,
+  SvgText,
+  T,
+  Zone,
+  centeredRow,
+} from '@/components/Book/diagram';
+
 /**
- * Conceptual visuals for §17.1 "The Agentic Turn" (and reused in §17.6).
+ * Conceptual visuals for §17.1 "The Agentic Turn" (reused in §17.6).
  *
- *   - WorkflowVsAgent: predefined code paths vs. a model that directs its own loop.
- *   - AgentAnatomy: the augmented-LLM core + the plan/act/observe/reflect control loop.
- *   - AutonomyLadder: five rungs of autonomy, from suggest to supervise to act.
- *   - AdoptionGap: the experiment-vs-scale gap in enterprise agent adoption.
- *
- * Visual language matches the rest of the book (slate ink, sky/teal accents,
- * white card, small captions). All figures are decorative SVG/HTML — the load-
- * bearing claims and their citations live in the article prose.
+ *   - WorkflowVsAgent  comparison   who holds the steering wheel
+ *   - AgentAnatomy     nested       an augmented model inside a control loop
+ *   - AutonomyLadder   layer stack  five rungs, and the one most teams land on
+ *   - AdoptionGap      bar chart    experiment-to-scale (chart, not schematic)
  */
-
-const C = {
-  ink: '#172033',
-  muted: '#64748b',
-  grid: '#e2e8f0',
-  blue: '#2563eb',
-  blueLight: '#dbeafe',
-  sky: '#0284c7',
-  skyLight: '#e0f2fe',
-  teal: '#0d9488',
-  tealLight: '#ccfbf1',
-  green: '#0f766e',
-  greenLight: '#d1fae5',
-  amber: '#d97706',
-  amberLight: '#fef3c7',
-  red: '#dc2626',
-  redLight: '#fee2e2',
-  violet: '#7c3aed',
-  violetLight: '#ede9fe',
-  slate100: '#f1f5f9',
-  slate50: '#f8fafc',
-};
-
-function Card({ title, children, footer }: { title?: string; children: React.ReactNode; footer?: React.ReactNode }) {
-  return (
-    <div className="rounded-md border border-slate-200 bg-white p-4 shadow-sm">
-      {title && (
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">{title}</p>
-      )}
-      {children}
-      {footer && <div className="mt-3 text-[11px] leading-relaxed text-slate-500">{footer}</div>}
-    </div>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* §17.1 — WorkflowVsAgent                                              */
 /* ------------------------------------------------------------------ */
 
+const WORKFLOW_STEPS = ['Extract', 'Classify', 'Summarise', 'Route'];
+
+/**
+ * Two panels side by side, which is the shape of the claim: the same model,
+ * two different places to put the control.
+ *
+ * The audit filed this as a quadrant. It isn't one — a quadrant needs two axes
+ * to position things on, and there is only one distinction here. What it needs
+ * is for the *shape* of each side to differ, so the difference is visible
+ * before either label is read: a fixed left-to-right chain on one side, a
+ * two-way loop on the other.
+ */
 export function WorkflowVsAgent() {
+  const W = 792;
+  const H = 260;
+  const paneW = 372;
+  const paneY = 24;
+  const paneH = 188;
+  const leftX = 16;
+  const rightX = 404;
+
+  const chipW = 76;
+  const chipXs = centeredRow(leftX, paneW, WORKFLOW_STEPS.length, chipW, 12);
+  const chipY = 108;
+
   return (
-    <Card title="Two ways to put a model to work">
-      <div className="grid gap-3 sm:grid-cols-2">
-        {/* Workflow */}
-        <div className="rounded-md border border-slate-200 bg-slate-50/70 p-3.5">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: C.muted }} />
-            <span className="text-[12px] font-semibold uppercase tracking-wide text-slate-600">Workflow</span>
-          </div>
-          <p className="mb-3 text-[12.5px] leading-relaxed text-slate-600">
-            The developer fixes the steps in code. The model fills the blanks at each station.
-          </p>
-          <div className="flex items-center gap-1.5">
-            {['Extract', 'Classify', 'Summarize', 'Route'].map((s, i, a) => (
-              <React.Fragment key={s}>
-                <span className="rounded border border-slate-300 bg-white px-2 py-1 text-[10.5px] font-medium text-slate-700">{s}</span>
-                {i < a.length - 1 && <span className="text-slate-400">→</span>}
-              </React.Fragment>
-            ))}
-          </div>
-          <p className="mt-3 text-[11px] italic text-slate-500">Predictable, testable, bounded. The path never changes.</p>
-        </div>
-        {/* Agent */}
-        <div className="rounded-md border border-sky-200 bg-sky-50/60 p-3.5">
-          <div className="mb-2 flex items-center gap-2">
-            <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: C.sky }} />
-            <span className="text-[12px] font-semibold uppercase tracking-wide text-sky-700">Agent</span>
-          </div>
-          <p className="mb-3 text-[12.5px] leading-relaxed text-slate-600">
-            The model chooses the next step, calls a tool, reads the result, and decides again — until the goal is met.
-          </p>
-          <div className="relative flex items-center justify-center gap-1.5">
-            <span className="rounded-md border border-sky-300 bg-white px-2.5 py-1 text-[10.5px] font-semibold text-sky-800">Model decides</span>
-            <span className="text-sky-400">⇄</span>
-            <span className="rounded border border-sky-300 bg-white px-2 py-1 text-[10.5px] font-medium text-slate-700">Tool / environment</span>
-          </div>
-          <p className="mt-3 text-[11px] italic text-slate-500">Flexible and open-ended. The path is discovered at run time.</p>
-        </div>
-      </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        Anthropic draws the line here: a <strong>workflow</strong> orchestrates the model through predefined code paths; an
-        <strong> agent</strong> lets the model dynamically direct its own process and tool use. Both are &ldquo;agentic systems&rdquo; — the
-        difference is who holds the steering wheel.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="Two ways to put a model to work"
+      note={
+        <>
+          Anthropic draws the line here: a <strong>workflow</strong> orchestrates the model through
+          predefined code paths; an <strong>agent</strong> lets the model direct its own process and
+          tool use. Both are agentic systems — the difference is who holds the steering wheel, and
+          therefore who is accountable when the path goes somewhere nobody planned.
+        </>
+      }
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Workflow versus agent"
+        desc="On the left, a workflow: the developer fixes four steps in code and the model fills in each one, so the path never changes. On the right, an agent: the model decides the next step, calls a tool, reads the result, and decides again until the goal is met, so the path is discovered at run time."
+      >
+        <Zone x={leftX} y={paneY} width={paneW} height={paneH} label="WORKFLOW" />
+        <Zone x={rightX} y={paneY} width={paneW} height={paneH} label="AGENT" />
+
+        <SvgText
+          x={leftX + 16}
+          y={paneY + 44}
+          width={paneW - 32}
+          variant="body"
+          tone="subtle"
+          textAnchor="start"
+        >
+          The developer fixes the steps in code. The model fills the blanks at each station.
+        </SvgText>
+        <SvgText
+          x={rightX + 16}
+          y={paneY + 44}
+          width={paneW - 32}
+          variant="body"
+          tone="subtle"
+          textAnchor="start"
+        >
+          The model chooses the next step, calls a tool, reads the result, and decides again.
+        </SvgText>
+
+        {/* Left: a fixed chain. Every step the same size, because none of them
+            is a decision. */}
+        {WORKFLOW_STEPS.slice(0, -1).map((s, i) => (
+          <Connector
+            key={s}
+            from={[chipXs[i] + chipW, chipY + 18]}
+            to={[chipXs[i + 1], chipY + 18]}
+            route="straight"
+          />
+        ))}
+        {WORKFLOW_STEPS.map((s, i) => (
+          <Node key={s} x={chipXs[i]} y={chipY} width={chipW} height={36} label={s} />
+        ))}
+        <SvgText
+          x={leftX + paneW / 2}
+          y={chipY + 68}
+          width={paneW - 32}
+          variant="sub"
+          tone="muted"
+        >
+          Predictable, testable, bounded. The path never changes.
+        </SvgText>
+
+        {/* Right: a two-way loop. The shape is the argument. */}
+        {/* 68px of gutter between the two boxes, because OBSERVES needs 52
+            for its mask and the labels must clear the box edges on both
+            sides. The two runs are 36px apart so one label can sit above and
+            the other below without either touching a stroke. */}
+        <Connector
+          from={[rightX + 156, chipY + 4]}
+          to={[rightX + 224, chipY + 4]}
+          route="straight"
+          tone="accent"
+          label="CALLS"
+        />
+        <Connector
+          from={[rightX + 224, chipY + 40]}
+          to={[rightX + 156, chipY + 40]}
+          route="straight"
+          label="OBSERVES"
+          labelSide="below"
+        />
+        <Node
+          x={rightX + 36}
+          y={chipY - 8}
+          width={120}
+          height={56}
+          variant="focal"
+          label="Model decides"
+        />
+        <Node
+          x={rightX + 224}
+          y={chipY - 8}
+          width={120}
+          height={56}
+          variant="external"
+          label="Tool or environment"
+        />
+        <SvgText
+          x={rightX + paneW / 2}
+          // Lower than its opposite number, to clear the OBSERVES label that
+          // hangs below the return edge.
+          y={chipY + 80}
+          width={paneW - 32}
+          variant="sub"
+          tone="muted"
+        >
+          Flexible and open-ended. The path is discovered at run time.
+        </SvgText>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -106,78 +176,154 @@ export function WorkflowVsAgent() {
 /* §17.1 — AgentAnatomy                                                 */
 /* ------------------------------------------------------------------ */
 
+const AUGMENTATIONS = [
+  { label: 'Tools', sub: 'SQL, search, code' },
+  { label: 'Memory', sub: 'context, state' },
+  { label: 'Retrieval', sub: 'docs, semantic layer' },
+  { label: 'Planning', sub: 'decompose, reflect' },
+];
+
+const TURN_STEPS = [
+  { n: '01', label: 'Plan' },
+  { n: '02', label: 'Act — call a tool' },
+  { n: '03', label: 'Observe the result' },
+  { n: '04', label: 'Reflect' },
+];
+
+/**
+ * Nested: the augmented model sits *inside* a boundary, and the loop runs
+ * beside it.
+ *
+ * The old version drew four augmentation chips radiating diagonally from a
+ * circle, plus a diagonal dashed line labelled "drives" reaching across to the
+ * loop. Containment says the same thing without a single line: the tools,
+ * memory, retrieval, and planning are what the model *is* here, not things it
+ * connects to.
+ */
 export function AgentAnatomy() {
-  const W = 820;
-  const H = 380;
-  const cx = 250;
-  const cy = 175;
+  const W = 792;
+  const H = 356;
+  const zoneX = 16;
+  const zoneW = 384;
+  const coreY = 132;
+  const augW = 168;
+  const augH = 52;
+  const loopX = 464;
+  const loopW = 264;
+  const stepH = 44;
+  const stepPitch = 56;
+  const stepTop = 40;
+
   return (
-    <Card title="Anatomy of a data agent — an augmented model inside a control loop">
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="A reasoning model surrounded by tools, memory, retrieval and planning, running a plan-act-observe-reflect loop with a human checkpoint.">
-        {/* augmentation ring chips */}
-        {[
-          { label: 'Tools', sub: 'SQL · search · code', x: cx, y: cy - 128, color: C.blue },
-          { label: 'Memory', sub: 'context · state', x: cx + 168, y: cy - 36, color: C.violet },
-          { label: 'Retrieval', sub: 'docs · semantic layer', x: cx + 168, y: cy + 60, color: C.teal },
-          { label: 'Planning', sub: 'decompose · reflect', x: cx, y: cy + 128, color: C.amber },
-        ].map((a) => (
-          <g key={a.label}>
-            <line x1={cx} y1={cy} x2={a.x} y2={a.y} stroke={C.grid} strokeWidth={1.5} />
-            <rect x={a.x - 70} y={a.y - 20} width={140} height={40} rx={8} fill="white" stroke={a.color} strokeWidth={1.5} />
-            <text x={a.x} y={a.y - 3} textAnchor="middle" className="text-[11px] font-semibold" style={{ fill: a.color }}>{a.label}</text>
-            <text x={a.x} y={a.y + 12} textAnchor="middle" className="text-[9px]" fill={C.muted}>{a.sub}</text>
-          </g>
+    <DiagramFrame
+      eyebrow="Anatomy of a data agent"
+      note="The core is a language model augmented with tools, memory, retrieval, and planning. What makes it an agent is the loop: it acts on the world, reads the result back as ground truth, and decides what to do next — stopping when the goal is met, or when a human is asked to approve."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Anatomy of a data agent"
+        desc="A reasoning model augmented with tools, memory, retrieval, and planning, running a four-step loop each turn: plan, call a tool, observe the result, reflect. The loop repeats until the goal is met or a human checkpoint is reached."
+      >
+        <Zone x={zoneX} y={24} width={zoneW} height={296} label="THE AUGMENTED MODEL" />
+
+        <Node
+          x={zoneX + (zoneW - 224) / 2}
+          // Zones need >=16px between their eyebrow and the first enclosed
+          // node; the eyebrow baseline sits at zone_y + 14.
+          y={coreY - 76}
+          width={224}
+          height={64}
+          variant="focal"
+          label="Reasoning model"
+          sublabel="the LLM core"
+        />
+
+        {AUGMENTATIONS.map((a, i) => (
+          <Node
+            key={a.label}
+            x={zoneX + 20 + (i % 2) * (augW + 8)}
+            y={coreY + 20 + Math.floor(i / 2) * (augH + 12)}
+            width={augW}
+            height={augH}
+            variant="store"
+            label={a.label}
+            sublabel={a.sub}
+          />
         ))}
-        {/* core */}
-        <circle cx={cx} cy={cy} r={62} fill={C.skyLight} stroke={C.sky} strokeWidth={2} />
-        <text x={cx} y={cy - 6} textAnchor="middle" className="text-[13px] font-semibold" fill={C.ink}>Reasoning</text>
-        <text x={cx} y={cy + 11} textAnchor="middle" className="text-[13px] font-semibold" fill={C.ink}>model</text>
-        <text x={cx} y={cy + 28} textAnchor="middle" className="text-[9px] italic" fill={C.muted}>LLM core</text>
 
-        {/* loop on the right */}
-        <g>
-          <text x={640} y={36} textAnchor="middle" className="text-[10px] uppercase tracking-wide" fill={C.muted}>the loop, each turn</text>
-          {[
-            { label: '1 · Plan', y: 60, color: C.amber },
-            { label: '2 · Act (call a tool)', y: 110, color: C.blue },
-            { label: '3 · Observe result', y: 160, color: C.teal },
-            { label: '4 · Reflect', y: 210, color: C.violet },
-          ].map((s) => (
-            <g key={s.label}>
-              <rect x={540} y={s.y} width={200} height={36} rx={8} fill="white" stroke={s.color} strokeWidth={1.5} />
-              <text x={640} y={s.y + 23} textAnchor="middle" className="text-[11.5px] font-medium" fill={C.ink}>{s.label}</text>
-            </g>
-          ))}
-          {/* down arrows */}
-          {[96, 146, 196].map((y) => (
-            <line key={y} x1={640} y1={y} x2={640} y2={y + 14} stroke={C.muted} strokeWidth={1.4} markerEnd="url(#aa-arrow)" />
-          ))}
-          {/* loop-back */}
-          <path d={`M 740 228 Q 790 228 790 150 Q 790 78 742 78`} fill="none" stroke={C.muted} strokeWidth={1.4} strokeDasharray="5 4" markerEnd="url(#aa-arrow)" />
-          <text x={800} y={150} className="text-[9px] italic" fill={C.muted} transform="rotate(90 800 150)">repeat until done</text>
-          {/* stop / human gate */}
-          <rect x={540} y={262} width={200} height={40} rx={8} fill={C.greenLight} stroke={C.green} strokeWidth={1.6} />
-          <text x={640} y={279} textAnchor="middle" className="text-[11px] font-semibold" fill={C.green}>Stop · answer · log</text>
-          <text x={640} y={293} textAnchor="middle" className="text-[9px]" fill={C.muted}>or pause for a human checkpoint</text>
-          <line x1={640} y1={246} x2={640} y2={260} stroke={C.muted} strokeWidth={1.4} markerEnd="url(#aa-arrow)" />
-        </g>
+        <EyebrowLabel x={zoneX + zoneW / 2} y={coreY + 8} anchor="middle" tone="soft">
+          AUGMENTED WITH
+        </EyebrowLabel>
 
-        {/* connect core to loop */}
-        <line x1={cx + 62} y1={cy} x2={540} y2={150} stroke={C.grid} strokeWidth={1.5} strokeDasharray="4 4" />
-        <text x={420} y={140} textAnchor="middle" className="text-[9px] italic" fill={C.muted}>drives</text>
+        {/* One orthogonal line from the boundary to the loop — the model is
+            what runs the loop, and that is the only relationship between the
+            two halves. */}
+        <Connector
+          from={[zoneX + zoneW, 172]}
+          to={[loopX, 172]}
+          route="straight"
+          tone="accent"
+          label="RUNS"
+        />
 
-        <defs>
-          <marker id="aa-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L8,3 z" fill={C.muted} />
-          </marker>
-        </defs>
-      </svg>
-      <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
-        The core is a language model <em>augmented</em> with tools, memory, retrieval, and planning. What makes it an agent is the loop:
-        it acts on the world, reads the result back as ground truth, and decides what to do next — stopping when the goal is met or when a
-        human is asked to approve.
-      </p>
-    </Card>
+        <EyebrowLabel x={loopX + loopW / 2} y={26} anchor="middle" tone="soft" masked={false}>
+          THE LOOP, EACH TURN
+        </EyebrowLabel>
+
+        {TURN_STEPS.slice(0, -1).map((s, i) => (
+          <Connector
+            key={s.label}
+            from={[loopX + loopW / 2, stepTop + i * stepPitch + stepH]}
+            to={[loopX + loopW / 2, stepTop + (i + 1) * stepPitch]}
+            route="straight"
+          />
+        ))}
+        {TURN_STEPS.map((s, i) => (
+          <Node
+            key={s.label}
+            x={loopX}
+            y={stepTop + i * stepPitch}
+            width={loopW}
+            height={stepH}
+            label={s.label}
+          />
+        ))}
+
+        {/* Reflect -> Plan, routed round the right edge. */}
+        <PathConnector
+          d={`M ${loopX + loopW},${stepTop + 3 * stepPitch + stepH / 2} H ${W - 24} V ${stepTop + stepH / 2 + 8} Q ${W - 24},${stepTop + stepH / 2} ${W - 32},${stepTop + stepH / 2} H ${loopX + loopW}`}
+          dashed
+        />
+        <Node
+          x={loopX}
+          y={stepTop + 4 * stepPitch + 8}
+          width={loopW}
+          height={52}
+          shape="oval"
+          variant="boundary"
+          label="Stop, answer, log"
+          sublabel="or pause for a human checkpoint"
+        />
+        <Connector
+          from={[loopX + loopW / 2, stepTop + 3 * stepPitch + stepH]}
+          to={[loopX + loopW / 2, stepTop + 4 * stepPitch + 8]}
+          route="straight"
+        />
+
+        <Legend
+          y={H - 8}
+          width={W}
+          x={16}
+          items={[
+            { kind: 'focal', label: 'The model' },
+            { kind: 'store', label: 'What augments it' },
+            { kind: 'boundary', label: 'Where a human can intervene' },
+          ]}
+          pitch={216}
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -185,39 +331,68 @@ export function AgentAnatomy() {
 /* §17.1 — AutonomyLadder                                               */
 /* ------------------------------------------------------------------ */
 
+const AUTONOMY = [
+  { tag: '1', name: 'Assist', sub: 'Human does the work; the model suggests', note: 'no gate needed' },
+  { tag: '2', name: 'Draft', sub: 'Model proposes; a human edits and runs', note: 'review before use' },
+  {
+    tag: '3',
+    name: 'Act with approval',
+    sub: 'Model executes after a human gate',
+    note: 'where most teams should start',
+    focal: true,
+  },
+  {
+    tag: '4',
+    name: 'Supervised autonomy',
+    sub: 'Model runs the loop; a human monitors',
+    note: 'needs tracing and alerts',
+  },
+  {
+    tag: '5',
+    name: 'Delegated autonomy',
+    sub: 'Model owns the task end to end',
+    note: 'needs an audit trail and an owner',
+  },
+];
+
+/**
+ * A layer stack, not a set of progress bars.
+ *
+ * The bars were the problem: a half-filled bar invites the reader to read "50%
+ * autonomous", which is not a quantity anyone can measure. The rungs are
+ * ordinal — the order is the whole content — and a stack says ordinal without
+ * implying a scale.
+ *
+ * Rung 3 is focal because it is the setting the section argues most teams
+ * should default to, not because it is the middle one.
+ */
 export function AutonomyLadder() {
-  const rungs = [
-    { n: 1, label: 'Assist', who: 'Human does the work; model suggests', color: C.slate100, text: C.muted, fill: 0.2 },
-    { n: 2, label: 'Draft', who: 'Model proposes; human edits and runs', color: C.skyLight, text: C.sky, fill: 0.4 },
-    { n: 3, label: 'Act-with-approval', who: 'Model executes after a human gate', color: C.tealLight, text: C.teal, fill: 0.6 },
-    { n: 4, label: 'Supervised autonomy', who: 'Model runs the loop; human monitors', color: C.amberLight, text: C.amber, fill: 0.8 },
-    { n: 5, label: 'Delegated autonomy', who: 'Model owns the task end to end', color: C.redLight, text: C.red, fill: 1.0 },
-  ];
+  const W = 792;
+  const rowH = 60;
+  const H = rowH * AUTONOMY.length + 40;
+
   return (
-    <Card title="Levels of autonomy — the dial a manager actually sets">
-      <div className="space-y-1.5">
-        {rungs.map((r) => (
-          <div key={r.n} className="flex items-center gap-3">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[12px] font-bold" style={{ background: r.color, color: r.text }}>{r.n}</span>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="text-[13px] font-semibold text-slate-800">{r.label}</span>
-                <span className="hidden text-[11px] text-slate-500 sm:inline">{r.who}</span>
-              </div>
-              <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                <div className="h-full rounded-full" style={{ width: `${r.fill * 100}%`, background: r.text }} />
-              </div>
-              <span className="mt-0.5 block text-[11px] text-slate-500 sm:hidden">{r.who}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        Autonomy is not a property of the model — it is a setting the deploying team chooses, co-determined by the model, the human
-        oversight around it, and the product design. The same model can sit at rung 2 for a pricing change and rung 4 for a routine
-        data refresh.
-      </p>
-    </Card>
+    <DiagramFrame
+      eyebrow="Levels of autonomy — the dial a manager actually sets"
+      note="Autonomy is not a property of the model. It is a setting the deploying team chooses, co-determined by the model, the human oversight around it, and the product design. The same model can sit at rung 2 for a pricing change and rung 4 for a routine data refresh."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Five levels of agent autonomy"
+        desc="A ladder from assist, where a human does the work and the model suggests, through draft, act-with-approval, supervised autonomy, and finally delegated autonomy, where the model owns the task end to end. Each rung requires more oversight machinery than the one below it."
+      >
+        <Layers
+          x={48}
+          y={16}
+          width={W - 72}
+          rowHeight={rowH}
+          layers={AUTONOMY}
+          direction="autonomy"
+          directionDown
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 
@@ -225,32 +400,48 @@ export function AutonomyLadder() {
 /* §17.1 / §17.6 — AdoptionGap                                          */
 /* ------------------------------------------------------------------ */
 
+const ADOPTION = [
+  { label: 'Using AI regularly', value: 88 },
+  { label: 'At least experimenting with agents', value: 62 },
+  { label: 'Scaling an agent in one or more functions', value: 23 },
+  { label: 'Scaling agents in any single function', value: 10, focal: true },
+];
+
+/**
+ * A bar chart, left as one. The four hues are gone; the accent marks the bar
+ * the paragraph is about.
+ */
 export function AdoptionGap() {
-  const bars = [
-    { label: 'Using AI regularly', value: 88, color: C.teal, note: 'of organizations' },
-    { label: 'At least experimenting with agents', value: 62, color: C.sky, note: 'of organizations' },
-    { label: 'Scaling an agent in ≥1 function', value: 23, color: C.amber, note: 'of organizations' },
-    { label: 'Scaling agents in any single function', value: 10, color: C.red, note: 'fewer than 10%' },
-  ];
   return (
-    <Card title="The experiment-to-scale gap (McKinsey, State of AI 2025)">
+    <DiagramFrame
+      eyebrow="The experiment-to-scale gap (McKinsey, State of AI 2025)"
+      note="Almost everyone is trying agents; almost no one has them running the business yet. Gartner expects the same wave to thin out — more than 40% of agentic-AI projects are forecast to be cancelled by the end of 2027 over cost, unclear value, and weak controls."
+      bare
+    >
       <div className="space-y-2.5">
-        {bars.map((b) => (
+        {ADOPTION.map(b => (
           <div key={b.label}>
             <div className="mb-1 flex items-baseline justify-between gap-2">
-              <span className="text-[12px] text-slate-700">{b.label}</span>
-              <span className="font-mono text-[12px] font-semibold" style={{ color: b.color }}>{b.value}%</span>
+              <span className={`text-[12px] ${b.focal ? 'text-body' : 'text-subtle'}`}>
+                {b.label}
+              </span>
+              <span
+                className={`font-plex text-[12px] font-semibold tabular-nums ${
+                  b.focal ? 'text-accent-ink' : 'text-muted'
+                }`}
+              >
+                {b.value}%
+              </span>
             </div>
-            <div className="h-3 w-full overflow-hidden rounded-sm bg-slate-100">
-              <div className="h-full rounded-sm" style={{ width: `${b.value}%`, background: b.color }} />
+            <div className="h-3 w-full overflow-hidden rounded-sm bg-code-bg">
+              <div
+                className={`h-full rounded-sm ${b.focal ? 'bg-accent' : 'bg-muted/45'}`}
+                style={{ width: `${b.value}%` }}
+              />
             </div>
           </div>
         ))}
       </div>
-      <p className="mt-3 text-[11px] leading-relaxed text-slate-500">
-        Almost everyone is trying agents; almost no one has them running the business yet. Gartner expects the same wave to thin out —
-        more than 40% of agentic-AI projects are forecast to be canceled by the end of 2027 over cost, unclear value, and weak controls.
-      </p>
-    </Card>
+    </DiagramFrame>
   );
 }
