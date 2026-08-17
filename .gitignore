@@ -45,3 +45,6 @@ scripts/.curate/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local screenshot harness for diagram verification (see docs/DIAGRAMS.md).
+.shot.mjs

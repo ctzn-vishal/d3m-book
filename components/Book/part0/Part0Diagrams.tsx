@@ -2,6 +2,14 @@
 
 import * as React from 'react';
 
+import {
+  DiagramFrame,
+  DiagramSvg,
+  S,
+  SvgText,
+  T,
+} from '@/components/Book/diagram';
+
 /**
  * Shared visuals for Part 0 (and reused across the book).
  *
@@ -65,67 +73,106 @@ export interface LadderPositionProps {
 }
 
 const LADDER_RUNGS = [
-  { label: 'What happened?', lang: 'Description', color: '#475569', part: 'I' },
-  { label: 'Where & for whom?', lang: 'Visual comparison', color: C.blue, part: 'II' },
-  { label: 'What caused it?', lang: 'Causal designs', color: C.green, part: 'III' },
-  { label: 'How much does X matter?', lang: 'Regression / elasticity', color: C.teal, part: 'III' },
-  { label: 'What is likely next?', lang: 'Prediction', color: C.purple, part: 'IV' },
-  { label: 'What does the text/image say?', lang: 'AI workflows', color: C.amber, part: 'V' },
-  { label: 'How do we operate this?', lang: 'System view', color: C.red, part: 'VI' },
+  { label: 'What happened?', lang: 'Description', part: 'I' },
+  { label: 'Where and for whom?', lang: 'Visual comparison', part: 'II' },
+  { label: 'What caused it?', lang: 'Causal designs', part: 'III' },
+  { label: 'How much does X matter?', lang: 'Regression, elasticity', part: 'III' },
+  { label: 'What is likely next?', lang: 'Prediction', part: 'IV' },
+  { label: 'What does the text or image say?', lang: 'AI workflows', part: 'V' },
+  { label: 'How do we operate this?', lang: 'System view', part: 'VI' },
 ];
 
+/**
+ * A process strip, not a chart. Seven stations on one rail, at most one of them
+ * focal.
+ *
+ * The rungs used to carry seven different colours — one per Part — which made
+ * the ladder look like a legend for something. It isn't: the Parts are ordered,
+ * so their position on the rail already says which is which, and the only
+ * question the reader actually has is *where am I now*. That's the one thing
+ * colour is spent on.
+ */
 export function LadderPosition({ current, compact = false, caption }: LadderPositionProps) {
-  const W = compact ? 760 : 840;
-  const H = compact ? 90 : 220;
-  const cellW = (W - 60) / LADDER_RUNGS.length;
-  const yMid = compact ? 50 : 110;
+  const cellW = compact ? 104 : 112;
+  const marginX = compact ? 32 : 28;
+  const W = marginX * 2 + cellW * LADDER_RUNGS.length;
+  const H = compact ? 88 : 184;
+  const cy = compact ? 28 : 96;
+  const r = compact ? 16 : 24;
+
   return (
-    <Card title={compact ? undefined : 'The decision ladder'}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="The seven-rung decision ladder used throughout the book.">
-        {LADDER_RUNGS.map((r, i) => {
-          const x = 30 + cellW * i;
-          const isCurrent = current === i;
-          const ringStroke = isCurrent ? r.color : C.grid;
-          const ringFill = isCurrent ? 'white' : '#fff';
+    <DiagramFrame
+      eyebrow={compact ? undefined : 'The decision ladder'}
+      note={caption}
+      bare={compact}
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="The decision ladder"
+        desc={
+          'Seven decision questions in ascending order, from "what happened?" through ' +
+          '"what caused it?" and "what is likely next?" to "how do we operate this?", ' +
+          'each paired with the evidence language and the Part of the book that teaches it' +
+          (current === undefined ? '.' : `. The reader is at rung ${current + 1}.`)
+        }
+      >
+        {/* Rail first, so the station circles paint over its ends. Endpoints
+            share a y, which is the one case a straight line is legal. */}
+        {LADDER_RUNGS.slice(0, -1).map((rung, i) => (
+          <line
+            key={rung.label}
+            x1={marginX + cellW * i + cellW / 2 + r}
+            y1={cy}
+            x2={marginX + cellW * (i + 1) + cellW / 2 - r}
+            y2={cy}
+            stroke={T.ruleStrong}
+            strokeWidth={S.base}
+          />
+        ))}
+
+        {LADDER_RUNGS.map((rung, i) => {
+          const cx = marginX + cellW * i + cellW / 2;
+          const here = current === i;
           return (
-            <g key={r.label}>
-              <circle cx={x + cellW / 2} cy={yMid} r={compact ? 18 : 22} fill={ringFill} stroke={ringStroke} strokeWidth={isCurrent ? 3 : 1.5} />
-              <text x={x + cellW / 2} y={yMid + 5} textAnchor="middle" className="fill-slate-700 text-[11px] font-semibold" style={{ fill: isCurrent ? r.color : C.muted }}>
-                {r.part}
-              </text>
+            <g key={rung.label}>
               {!compact && (
-                <>
-                  <text x={x + cellW / 2} y={yMid - 38} textAnchor="middle" className="fill-slate-700 text-[10px] font-semibold">{r.lang}</text>
-                  <foreignObject x={x + 4} y={yMid + 30} width={cellW - 8} height={60}>
-                    <div style={{ fontSize: 10, color: '#475569', textAlign: 'center', lineHeight: 1.3 }}>
-                      {r.label}
-                    </div>
-                  </foreignObject>
-                </>
+                <SvgText
+                  x={cx}
+                  y={40}
+                  width={cellW - 8}
+                  anchorY="middle"
+                  variant="nodeSm"
+                  tone={here ? 'ink' : 'muted'}
+                >
+                  {rung.lang}
+                </SvgText>
               )}
-              {compact && (
-                <foreignObject x={x + 2} y={yMid + 24} width={cellW - 4} height={36}>
-                  <div style={{ fontSize: 9.5, color: isCurrent ? '#172033' : '#64748b', textAlign: 'center', lineHeight: 1.2, fontWeight: isCurrent ? 600 : 400 }}>
-                    {r.label}
-                  </div>
-                </foreignObject>
-              )}
-              {i < LADDER_RUNGS.length - 1 && (
-                <line
-                  x1={x + cellW / 2 + (compact ? 18 : 22)}
-                  y1={yMid}
-                  x2={x + cellW + cellW / 2 - (compact ? 18 : 22)}
-                  y2={yMid}
-                  stroke={C.muted}
-                  strokeWidth={1.2}
-                />
-              )}
+              <circle
+                cx={cx}
+                cy={cy}
+                r={r}
+                fill={here ? T.accentTint : T.paper}
+                stroke={here ? T.accent : T.rule}
+                strokeWidth={here ? S.strong : S.base}
+              />
+              <SvgText x={cx} y={cy + 4} variant="node" tone={here ? 'accent' : 'muted'}>
+                {rung.part}
+              </SvgText>
+              <SvgText
+                x={cx}
+                y={compact ? cy + r + 16 : cy + r + 20}
+                width={cellW - 8}
+                variant="body"
+                tone={here ? 'ink' : 'muted'}
+              >
+                {rung.label}
+              </SvgText>
             </g>
           );
         })}
-      </svg>
-      {caption && <p className="mt-1 text-center text-[10.5px] italic text-slate-500">{caption}</p>}
-    </Card>
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }
 

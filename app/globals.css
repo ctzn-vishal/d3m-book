@@ -271,6 +271,13 @@ body {
   --book-accent-ink: 154 88 21;     /* #9a5815 — accent text on paper */
   --book-pos: 15 118 110;           /* teal-700 */
   --book-neg: 190 40 40;            /* #be2828 */
+
+  /* Tints are full colours, not channels, because the alpha differs by
+     theme: a 10% wash that reads as "faint warm" on white needs more
+     weight to register on slate. Channels alone can't express that. */
+  --book-accent-tint: rgb(200 124 42 / 0.10);
+  --book-pos-tint: rgb(15 118 110 / 0.10);
+  --book-neg-tint: rgb(190 40 40 / 0.09);
 }
 .dark {
   --book-surface: 15 23 42;      /* slate-900 */
@@ -289,6 +296,10 @@ body {
   --book-accent-ink: 240 176 106;   /* #f0b06a */
   --book-pos: 45 212 191;           /* teal-400 */
   --book-neg: 248 113 113;          /* red-400 */
+
+  --book-accent-tint: rgb(224 154 79 / 0.16);
+  --book-pos-tint: rgb(45 212 191 / 0.14);
+  --book-neg-tint: rgb(248 113 113 / 0.14);
 }
 
 /* ============================================================
