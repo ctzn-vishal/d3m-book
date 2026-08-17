@@ -4,6 +4,10 @@ import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import { JoinModelDiagram } from '@/components/Book/part1/DataLanguageVisuals';
+import {
+  JoinFanOut,
+  JoinKindsVenn,
+} from '@/components/Book/part1/DataLanguageDiagrams';
 import transactionsRaw from './data/transactions.json';
 import customersRaw from './data/customers.json';
 import campaignsRaw from './data/campaigns.json';
@@ -60,11 +64,17 @@ A raw transaction is six numbers and an ID — a date, a customer reference, a s
 
 Four join flavors cover almost every business case. A **left join** keeps every row of the left table and attaches matching rows from the right, leaving blanks where nothing matched — this is the default for "enrich my transactions with whatever customer info we have." An **inner join** keeps only rows where both sides matched — useful when missing matches mean the row should be excluded entirely. An **anti-join** keeps only rows where *no* match was found — the right way to find data quality problems ("which transactions came from customer IDs we have never heard of?"). A **full outer join** keeps everything from both sides, matched or not. The four are not interchangeable. Choosing the wrong one is the most common silent error in business analytics.
 
+Figure 1 puts all four on one pair of tables. They are not four operations — they are four selections from the same three regions.
+
+<Figure width="body-outset" caption="Figure 1. Four joins, three regions. Once the regions exist the joins stop being definitions to memorise: inner takes the middle, left takes the middle plus the unmatched transactions, anti takes the unmatched alone, and full outer takes everything. The choice is really a choice about which region you are willing to lose.">
+  <JoinKindsVenn />
+</Figure>
+
 ### Joins change the grain
 
-The deeper rule, the one we already wrote down in Chapter 1, is about **grain**. A join multiplies rows. If the left table has six rows and the right table has, for each left-side key, exactly one matching row, the result has six rows. If the right table has, on average, three rows per left-side key, the result has eighteen. The join engine does this without complaint. It is the analyst's responsibility to know what the grain of each input is, and what the grain of the output will be. Figure 1 makes the three most common outcomes concrete on the same Bean & Basket data.
+The deeper rule, the one we already wrote down in Chapter 1, is about **grain**. A join multiplies rows. If the left table has six rows and the right table has, for each left-side key, exactly one matching row, the result has six rows. If the right table has, on average, three rows per left-side key, the result has eighteen. The join engine does this without complaint. It is the analyst's responsibility to know what the grain of each input is, and what the grain of the output will be. Figure 2 makes the three most common outcomes concrete on the same Bean & Basket data.
 
-<Figure caption="Figure 1. Three joins, three outcomes. Tab through to see the same week of transactions enriched correctly, diagnosed for data quality, and exploded by a too-eager campaign join. The 'inflated total revenue' on the third tab is the kind of number that ends up in a board deck.">
+<Figure caption="Figure 2. Three joins, three outcomes. Tab through to see the same week of transactions enriched correctly, diagnosed for data quality, and exploded by a too-eager campaign join. The 'inflated total revenue' on the third tab is the kind of number that ends up in a board deck.">
   <TabSet ariaLabel="Three join scenarios on the same week of Bean & Basket data">
     <Tab label={`Left join: transactions + customers (${leftJoined.length} rows)`}>
       <p className="text-xs text-muted italic mb-3 leading-snug">Every transaction is kept. T06 has no matching customer, so the customer columns are blank — a visible signal that something is wrong with the data, not a row to silently drop.</p>
@@ -164,7 +174,7 @@ The deeper rule, the one we already wrote down in Chapter 1, is about **grain**.
 
 ### Reading the three outcomes
 
-Read Figure 1 from left to right. The first tab is the join most managers actually want: every transaction kept, customer attributes attached when available, blanks made visible when not. The second tab is the join most managers should run *next*: the anti-join is the cheapest data-quality check in analytics. A single row in this table is one entry on the data-quality triage list — a transaction whose customer ID is unknown to the master file, which usually means a deleted account, a typo, or a sync gap with the loyalty system. The third tab is the join most managers should *never* run unaggregated. The inflated revenue total is not a calculation error; the SQL is correct. The error is conceptual: the joined table no longer has one row per transaction, and any column summed across that table is being double-counted by however many campaign rows attach to each customer.
+Read Figure 2 from left to right. The first tab is the join most managers actually want: every transaction kept, customer attributes attached when available, blanks made visible when not. The second tab is the join most managers should run *next*: the anti-join is the cheapest data-quality check in analytics. A single row in this table is one entry on the data-quality triage list — a transaction whose customer ID is unknown to the master file, which usually means a deleted account, a typo, or a sync gap with the loyalty system. The third tab is the join most managers should *never* run unaggregated. The inflated revenue total is not a calculation error; the SQL is correct. The error is conceptual: the joined table no longer has one row per transaction, and any column summed across that table is being double-counted by however many campaign rows attach to each customer.
 
 The fix on the third tab is to **aggregate before joining**. Roll the campaigns table down to one row per customer first — for example, a single flag `was_exposed_to_any_campaign` — and then join. The resulting table has six rows, the revenue total is right, and the campaign-exposure information is preserved. The general rule is to match grains before joining: if you want a result with one row per transaction, every table you join in must contribute exactly one row per transaction's join key.
 
@@ -182,14 +192,25 @@ Joining a customer-level table to transactions on `customer_id` correctly duplic
 
 A subtler version, worth flagging once: **joining future information into a historical row**. If the customer master file has been updated to reflect today's loyalty tier, and you join it to a transaction from six months ago, the resulting row attributes the *current* loyalty tier to a *past* purchase. For descriptive reports this is usually harmless. For causal analysis — Chapter 5 onward — it is fatal: the model will learn that "Gold tier" predicts purchase behavior, but the Gold tier was assigned *because* of subsequent purchase behavior. We will come back to this trap several times; the name for it is **leakage**, and the defense is to use the customer attributes *as they were at the time of the transaction*, not as they are now.
 
-Figure 2 puts the whole model on one page, with the cardinality written on each relationship. It is the artefact that makes the third tab's error predictable rather than surprising: three of the four joins bring exactly one row per transaction, and one does not.
+Figure 3 puts the whole model on one page, with the cardinality written on each relationship. It is the artefact that makes the third tab's error predictable rather than surprising: three of the four joins bring exactly one row per transaction, and one does not.
 
-<Figure width="page-outset" caption="Figure 2. The Bean & Basket model, with the row multiplier on every relationship. Customers, products, and stores each contribute one matching row per transaction, so the join preserves the grain. Campaign sends contribute many rows per customer — the dashed edge — which is why a revenue total computed after that join counts each sale once per send.">
+<Figure width="page-outset" caption="Figure 3. The Bean & Basket model, with the row multiplier on every relationship. Customers, products, and stores each contribute one matching row per transaction, so the join preserves the grain. Campaign sends contribute many rows per customer — the dashed edge — which is why a revenue total computed after that join counts each sale once per send.">
   <JoinModelDiagram />
+</Figure>
+
+Figure 4 runs the same SUM twice over the third tab's data, once with the campaigns aggregated first and once without.
+
+<Figure width="page-outset" caption={`Figure 4. Nothing here errors. The join is valid and the SUM is valid; the total is wrong by the average number of campaign sends per customer. The row count going from ${transactions.length} to ${innerJoinedCampaigns.length} is the only thing that changed visibly, which is why counting rows before and after a join is the habit that catches this.`}>
+  <JoinFanOut
+    transactionRows={transactions.length}
+    inflatedRows={innerJoinedCampaigns.length}
+    truthfulTotal={truthfulTotal}
+    inflatedTotal={inflatedTotal}
+  />
 </Figure>
 
 <Takeaway label="The call">
 
-A join is not a technical operation. It is a *change in what one row means*. Before approving any query that joins more than one table, the manager's question is simple: *what is the grain of the result, and is that the grain we want?* Run the anti-join afterwards to surface what fell out. If the row count grew, find out which side of the join contributed multiple rows per key. Most production data errors that ever reach a board deck started as a join that was technically correct and conceptually wrong; Figure 1's third tab is the cartoon version of that error, and once you have seen it, the reflex to *count rows before and after* becomes permanent. The grain question is the one that catches it every time.
+A join is not a technical operation. It is a *change in what one row means*. Before approving any query that joins more than one table, the manager's question is simple: *what is the grain of the result, and is that the grain we want?* Run the anti-join afterwards to surface what fell out. If the row count grew, find out which side of the join contributed multiple rows per key. Most production data errors that ever reach a board deck started as a join that was technically correct and conceptually wrong; Figure 2's third tab is the cartoon version of that error, and once you have seen it, the reflex to *count rows before and after* becomes permanent. The grain question is the one that catches it every time.
 
 </Takeaway>

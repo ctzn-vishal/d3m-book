@@ -5,7 +5,10 @@ import { Equation } from '@/components/Book/Equation';
 import { M } from '@/components/Book/M';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
-import { ProbabilityScoreToAction } from '@/components/Book/part4/PredictionDiagrams';
+import {
+  ProbabilityScoreToAction,
+  ScoreToActionQueue,
+} from '@/components/Book/part4/PredictionDiagrams';
 
 <DropCap>
 
@@ -111,6 +114,12 @@ Coefficients live on the scale of each feature, so a 0.001 coefficient on a 0–
 </Pitfall>
 
 ---
+
+A probability is not an action, and Figure 2 is the part of the pipeline that turns one into the other.
+
+<Figure width="page-outset" caption="Figure 2. From a score to a work queue. The threshold is not a modelling choice — it is a capacity constraint wearing a modelling costume. Ask how many customers the retention team can actually call this week, sort by score, and the cut-off falls out. A better model does not move the threshold; it changes who sits above it.">
+  <ScoreToActionQueue />
+</Figure>
 
 <Takeaway label="For the manager">
 

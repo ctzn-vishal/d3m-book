@@ -8,6 +8,8 @@ import {
   DiagramSvg,
   LEGACY_C,
   Node,
+  R,
+  SvgText,
   TreeBus,
 } from '@/components/Book/diagram';
 
@@ -896,5 +898,222 @@ export function ModelCard() {
         The card is the artifact, not the spreadsheet. If a peer cannot reproduce the decision context from this single page, the model is not ready to ship.
       </p>
     </Card>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* §5c.10 — LabelTimingDiagram                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * The supervised setup drawn on a *time axis*, which is the only way the
+ * leakage rule stops being a list of banned columns and becomes a line you can
+ * check any feature against.
+ *
+ * Everything left of the decision point is allowed. Everything right of it is
+ * the answer. A feature computed from the shaded window is not a bad feature —
+ * it is the label wearing a different name, which is why models built on one
+ * score 0.99 in testing and fail the week they ship.
+ */
+export function LabelTimingDiagram() {
+  const W = 792;
+  const H = 264;
+  const axisY = 152;
+  const left = 40;
+  const right = W - 40;
+  const cut = 456;
+
+  return (
+    <DiagramFrame
+      eyebrow="Where the label comes from"
+      note="Leakage is not a property of a column, it is a property of a column's timestamp. Ask one question of every feature: could a person standing at the decision point have computed this? If not, it belongs to the label window, however innocent its name."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="Feature window, decision point, and label window"
+        desc="Features are computed from a window of history that ends at the decision point. The label is observed in a window that begins after it. Any feature computed from the label window is leakage, however it is named, because a person standing at the decision point could not have known it."
+      >
+        {/* The label window, shaded, because "after the decision" is the
+            region the whole rule is about. */}
+        <rect
+          x={cut}
+          y={axisY - 88}
+          width={right - cut}
+          height={112}
+          rx={R.md}
+          fill={C.negLight}
+        />
+
+        <line x1={left} y1={axisY} x2={right} y2={axisY} stroke={C.ink} strokeWidth={1} />
+        <line
+          x1={cut}
+          y1={axisY - 96}
+          x2={cut}
+          y2={axisY + 16}
+          stroke={C.orange}
+          strokeWidth={1.6}
+        />
+
+        <Node
+          x={left + 24}
+          y={axisY - 76}
+          width={288}
+          height={64}
+          label="Feature window"
+          sublabel="orders, tickets, tenure — everything already true"
+        />
+        <Node
+          x={cut + 24}
+          y={axisY - 76}
+          width={248}
+          height={64}
+          variant="neg"
+          label="Label window"
+          sublabel="did they churn in the next 60 days?"
+        />
+
+        <SvgText
+          x={cut}
+          y={axisY - 108}
+          width={200}
+          variant="nodeSm"
+          tone="accent"
+          textAnchor="middle"
+        >
+          The decision point
+        </SvgText>
+
+        <SvgText x={left + 24} y={axisY + 28} variant="sub" tone="muted" textAnchor="start">
+          knowable
+        </SvgText>
+        <SvgText x={right - 24} y={axisY + 28} variant="sub" tone="neg" textAnchor="end">
+          not yet knowable — this is the answer
+        </SvgText>
+        <SvgText
+          x={W / 2}
+          y={axisY + 56}
+          width={W - 96}
+          variant="body"
+          tone="subtle"
+          textAnchor="middle"
+        >
+          A feature computed from the shaded window is the label wearing a different name.
+        </SvgText>
+      </DiagramSvg>
+    </DiagramFrame>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* §5c.12 — ScoreToActionQueue                                          */
+/* ------------------------------------------------------------------ */
+
+/**
+ * What happens *after* the threshold — the half of the pipeline that decides
+ * whether the model was worth building.
+ *
+ * A probability is not an action. Somebody has to decide how many people the
+ * retention team can call this week, and that capacity, not the model's AUC, is
+ * what sets the threshold. Drawing the queue makes the constraint visible; the
+ * threshold then reads as an output of the business rather than a modelling
+ * choice.
+ */
+export function ScoreToActionQueue() {
+  const W = 792;
+  const H = 296;
+  const dW = 208;
+  const dH = 88;
+  const dX = 288;
+  const outX = 568;
+  const outW = 208;
+
+  return (
+    <DiagramFrame
+      eyebrow="Score, threshold, queue"
+      note="The threshold is not a modelling choice; it is a capacity constraint wearing a modelling costume. Ask how many customers the team can actually call this week, sort by score, and the cut-off falls out — which also means a better model does not change the threshold, it changes who is above it."
+    >
+      <DiagramSvg
+        width={W}
+        height={H}
+        title="From a probability score to a work queue"
+        desc="Every customer gets a churn probability. The threshold is set by how many the retention team can contact, not by the model — above it customers enter a ranked call queue, below it they are left alone and logged as a holdout for measuring lift."
+      >
+        <Connector from={[224, 92]} to={[dX, 92]} route="straight" label="RANKED" />
+        {/* Both exits leave the diamond's right side, fanned onto its two
+            edges rather than sharing the single right vertex — and their
+            vertical runs are 20px apart, so neither hides the other. The
+            bottom vertex is left free for the capacity constraint. */}
+        <Connector
+          from={[dX + dW * 0.75, 92 - dH * 0.25]}
+          to={[outX, 60]}
+          route="hvh"
+          mid={516}
+          tone="accent"
+          label="ABOVE"
+          labelSide="left"
+        />
+        <Connector
+          from={[dX + dW * 0.75, 92 + dH * 0.25]}
+          to={[outX, 200]}
+          route="hvh"
+          mid={536}
+          label="BELOW"
+        />
+
+        <Node
+          x={16}
+          y={56}
+          width={208}
+          height={72}
+          variant="input"
+          label="A probability per customer"
+          sublabel="0.00 to 1.00"
+        />
+        <Node
+          x={dX}
+          y={92 - dH / 2}
+          width={dW}
+          height={dH}
+          shape="diamond"
+          variant="focal"
+          label="Above the threshold?"
+        />
+        <Node
+          x={outX}
+          y={32}
+          width={outW}
+          height={56}
+          variant="focal"
+          label="Retention call queue"
+          sublabel="as many as the team can work"
+        />
+        <Node
+          x={outX}
+          y={172}
+          width={outW}
+          height={56}
+          label="Left alone, logged"
+          sublabel="the holdout that measures lift"
+        />
+
+        <Node
+          x={dX - 40}
+          y={224}
+          width={288}
+          height={48}
+          shape="oval"
+          variant="boundary"
+          label="Capacity sets the threshold"
+        />
+        <Connector
+          from={[dX + dW / 2, 224]}
+          to={[dX + dW / 2, 92 + dH / 2]}
+          route="straight"
+          tone="accent"
+          dashed
+        />
+      </DiagramSvg>
+    </DiagramFrame>
   );
 }

@@ -4,7 +4,7 @@ import { Callout } from '@/components/Book/Callout';
 import { DataTable } from '@/components/Book/DataTable';
 import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
-import { SupervisedTaskTaxonomy } from '@/components/Book/part4/PredictionDiagrams';
+import { SupervisedTaskTaxonomy, LabelTimingDiagram } from '@/components/Book/part4/PredictionDiagrams';
 
 <DropCap>
 
@@ -32,7 +32,11 @@ The wording matters. "Predict churn" is a topic. "For each weekly active custome
 
 The target is the thing the model is supposed to guess. It comes in two flavours: a class label (yes/no, fraud/not, segment-A/B/C) or a number (price, demand, lifetime value). Almost every algorithmic choice in Chapter 10 follows from this choice.
 
-<Figure caption="Figure 1. The same modelling machinery powers both classification and regression — what changes is the shape of the target and the evaluation language.">
+<Figure width="page-outset" caption="Figure 1. The supervised setup on a time axis. Leakage is not a property of a column, it is a property of a column's timestamp — everything left of the decision point is a feature, everything right of it is the answer, and a column computed from the shaded window is the label wearing a different name.">
+  <LabelTimingDiagram />
+</Figure>
+
+<Figure caption="Figure 2. The same modelling machinery powers both classification and regression — what changes is the shape of the target and the evaluation language.">
   <div className="not-prose">
     <SupervisedTaskTaxonomy />
   </div>

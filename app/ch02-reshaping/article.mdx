@@ -4,6 +4,7 @@ import { Pitfall } from '@/components/Book/Pitfall';
 import { Takeaway } from '@/components/Book/Takeaway';
 import { TabSet, Tab } from '@/components/Book/TabSet';
 import { ZillowWideLong } from '@/components/Book/part1/DataLanguageVisuals';
+import { WideLongConsumers } from '@/components/Book/part1/DataLanguageDiagrams';
 import wideRaw from './data/sales-wide.json';
 import longRaw from './data/sales-long.json';
 
@@ -104,6 +105,12 @@ If Store C did not exist in January, its wide row carries a blank or zero for `s
 </Pitfall>
 
 The opposite mistake — long when wide is wanted — is much rarer and almost always cheap to fix. A manager who wants to see the three months side by side, with stores down the side, is asking for a wide presentation table. Pivoting nine long rows back to three wide rows is one verb in any modern data tool. The cost of starting from long and pivoting wider when needed is essentially zero. The cost of starting from wide and pivoting longer every time something downstream needs it is paid every analysis.
+
+Which shape to *store* is the only part of this that is a decision, and Figure 3 settles it by asking who the consumer is.
+
+<Figure width="page-outset" caption="Figure 3. Wide is a presentation, not a storage decision. Every downstream consumer except a human eye wants long, and pivoting long to wide is one line — while recovering long from wide means parsing column names, which is why the month a dashboard broke is usually the month a new column arrived.">
+  <WideLongConsumers />
+</Figure>
 
 <Takeaway label="Bottom line for the business">
 
