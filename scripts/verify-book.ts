@@ -17,6 +17,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { allArticles } from '../lib/book-toc';
 import { getArticleDescription } from '../lib/book-content';
+import snapshot from '../content/registry.snapshot.json';
+import { contentIndex } from '../lib/content-urls.mjs';
+
+contentIndex(snapshot.items);
 
 const appDir = path.join(process.cwd(), 'app');
 const problems: string[] = [];

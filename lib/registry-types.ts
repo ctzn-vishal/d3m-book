@@ -56,6 +56,7 @@ export type RegistryItem = {
    */
   part?: number;
   href: string;
+  sourceHref?: string;
   external: boolean;
   openInNewTab?: boolean;
   thumbnail?: string;

@@ -153,8 +153,7 @@ const nextConfig: NextConfig = {
       // to the content origin. Order matters: the bare gallery path and the pretty
       // single-segment slug resolve before the asset catch-all.
       { source: '/studios', destination: '/', permanent: true },
-      { source: '/studios/:slug', destination: `${CONTENT}/studios/:slug/index.html`, permanent: true },
-      { source: '/studios/:path*', destination: `${CONTENT}/studios/:path*`, permanent: true },
+
     ];
   },
 

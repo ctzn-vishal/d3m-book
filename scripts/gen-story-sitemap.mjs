@@ -9,6 +9,7 @@
 // Run: pnpm gen-story-sitemap
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { CONTENT_BUCKET } from './pipeline-config.mjs';
+import { publicPath, PUBLIC_SITE_URL } from '../lib/content-urls.mjs';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -28,7 +29,7 @@ const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishals
 // just not gallery cards — so they stay in the sitemap.
 const snap = JSON.parse(await readFile(fileURLToPath(new URL('../content/registry.snapshot.json', import.meta.url)), 'utf8'));
 const items = (snap.items || [])
-  .filter(i => (i.status === 'published' || i.status === 'unlisted') && typeof i.href === 'string' && i.href.startsWith(CONTENT + '/') && i.href.endsWith('.html'));
+  .filter(i => (i.status === 'published' || i.status === 'unlisted') && typeof i.href === 'string' && i.href.startsWith(CONTENT + '/') && i.href.endsWith('.html') && !publicPath(i));
 
 // One entry per unique URL; lastmod = the row's real last content change
 // ('YYYY-MM-DD HH:MM:SS' UTC → date part), falling back to created_at, else no
@@ -55,7 +56,7 @@ console.log(`Wrote ${DST}:sitemap.xml with ${byLoc.size} URLs (stories + studios
 // robots.txt on the content host: allow everything (same policy as the hub's
 // app/robots.ts — for an academic site we want crawler + AI-engine visibility)
 // and point at the sitemap so it's discoverable without Search Console.
-const robots = `User-agent: *\nAllow: /\n\nSitemap: ${CONTENT}/sitemap.xml\n`;
+const robots = `User-agent: *\nAllow: /\n\nSitemap: ${PUBLIC_SITE_URL}/sitemap.xml\n`;
 await client.send(new PutObjectCommand({
   Bucket: DST, Key: 'robots.txt', Body: robots,
   ContentType: 'text/plain; charset=utf-8', CacheControl: 'public, max-age=3600',

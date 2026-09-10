@@ -61,7 +61,7 @@ export default async function CollectionPage({ params }: Props) {
     description: collection.blurb,
     url: `${SITE_URL}/c/${slug}`,
     author: { '@type': 'Person', name: 'Vishal Singh' },
-    hasPart: members.map(m => ({ '@type': 'CreativeWork', name: m.title, url: m.href })),
+    hasPart: members.map(m => ({ '@type': 'CreativeWork', name: m.title, url: new URL(m.href, SITE_URL).href })),
   };
 
   return (

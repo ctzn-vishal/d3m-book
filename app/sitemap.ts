@@ -2,7 +2,8 @@ import type { MetadataRoute } from 'next';
 import { SITE_URL } from '@/lib/share-metadata';
 import { allArticles, getAllPartNumerals } from '@/lib/book-toc';
 import { getDatasetItems } from '@/lib/gallery';
-import { getRegistry } from '@/lib/registry-db';
+import { getRegistry, getRegistryIncludingUnlisted } from '@/lib/registry-db';
+import { publicPath, publicUrl } from '@/lib/content-urls.mjs';
 import { TOPICS, TOPIC_META } from '@/lib/taxonomy';
 import { LIVE_ANALYSES } from '@/lib/amazon';
 
@@ -88,7 +89,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     datasetPages = [];
   }
 
+  const contentPages: MetadataRoute.Sitemap = (await getRegistryIncludingUnlisted())
+    .filter(i => publicPath(i))
+    .map(i => {
+      const stamp = (i.updatedAt || i.createdAt || '').slice(0, 10);
+      return {
+        url: publicUrl(i),
+        ...(stamp ? { lastModified: stamp } : {}),
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      };
+    });
+
   return [
+    ...contentPages,
     ...corePages,
     ...amazonPages,
     ...topicPages,

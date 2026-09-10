@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import { studios } from '../lib/studios';
 import { domainToTopic } from '../lib/taxonomy';
 import gallery from '../content/gallery.json';
+import { contentIndex } from '../lib/content-urls.mjs';
 
 type RegistryType = 'App' | 'Teaching' | 'Blog' | 'Dataset';
 type RegistryItem = {
@@ -297,6 +298,11 @@ function rowChanged(prev: any, m: RegistryItem): boolean {
     (prev.sort ?? 0) !== (m.sort ?? 0)
   );
 }
+
+contentIndex([
+  ...existingRows.filter(r => !seen.has(r.id as string)),
+  ...derived.map(d => ({ ...d, status: existing.get(d.id)?.status ?? d.status })),
+]);
 
 let inserted = 0, refreshed = 0, touched = 0;
 for (const d of derived) {

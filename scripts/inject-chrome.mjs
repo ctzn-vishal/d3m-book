@@ -44,7 +44,7 @@ const snap = JSON.parse(await readFile(fileURLToPath(new URL('../content/registr
 const metaByKey = new Map();
 for (const it of snap.items ?? []) {
   if (typeof it.href === 'string' && it.href.startsWith(CONTENT + '/') && it.href.endsWith('.html')) {
-    try { metaByKey.set(new URL(it.href).pathname.replace(/^\//, ''), it); } catch { /* skip */ }
+    try { metaByKey.set(decodeURIComponent(new URL(it.href).pathname).replace(/^\//, ''), it); } catch { /* skip */ }
   }
 }
 // Related candidates: published, bucket-hosted stories/studios/apps (no datasets —

@@ -8,6 +8,8 @@
 // unchanged registry inputs — the caller PUTs only when bytes differ, so a
 // violation here would rewrite every bucket file on every run.
 
+import { publicUrl } from '../lib/content-urls.mjs';
+
 export const HOME = 'https://vishalsingh.org/';
 export const MARKER = 'data-vs-chrome';   // home pill (inject once)
 export const OGM = 'data-vs-og';          // social/SEO head tags (upserted)
@@ -27,12 +29,12 @@ export function ogBlock(m) {
   const img = m.thumbnail
     ? `\n<meta property="og:image" content="${esc(m.thumbnail)}" ${OGM}><meta name="twitter:image" content="${esc(m.thumbnail)}" ${OGM}>`
     : '';
-  return `\n<link rel="canonical" href="${esc(m.href)}" ${OGM}>`
+  return `\n<link rel="canonical" href="${esc(publicUrl(m))}" ${OGM}>`
     + `\n<meta property="og:type" content="article" ${OGM}>`
     + `\n<meta property="og:site_name" content="Vishal Singh" ${OGM}>`
     + `\n<meta property="og:title" content="${esc(m.title)}" ${OGM}>`
     + `\n<meta property="og:description" content="${esc(m.description)}" ${OGM}>`
-    + `\n<meta property="og:url" content="${esc(m.href)}" ${OGM}>`
+    + `\n<meta property="og:url" content="${esc(publicUrl(m))}" ${OGM}>`
     + `\n<meta name="twitter:card" content="summary_large_image" ${OGM}>`
     + `\n<meta name="twitter:title" content="${esc(m.title)}" ${OGM}>`
     + `\n<meta name="twitter:description" content="${esc(m.description)}" ${OGM}>`
@@ -61,8 +63,8 @@ export function ldBlock(m) {
     ...(m.thumbnail ? { image: [m.thumbnail] } : {}),
     ...(iso(m.createdAt) ? { datePublished: iso(m.createdAt) } : {}),
     ...(iso(m.updatedAt) ? { dateModified: iso(m.updatedAt) } : {}),
-    mainEntityOfPage: m.href,
-    url: m.href,
+    mainEntityOfPage: publicUrl(m),
+    url: publicUrl(m),
     ...(m.tags?.length ? { keywords: m.tags.join(', ') } : {}),
     author: {
       '@type': 'Person',
@@ -107,7 +109,7 @@ export function relatedFor(item, candidates) {
 export function relatedBlock(picks) {
   const lis = picks.map(o => {
     const label = [TYPE_WORD[o.type] ?? o.type, o.topic].filter(Boolean).join(' · ');
-    return `<li style="margin:0;padding:0"><a href="${esc(o.href)}" style="color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px">${esc(o.title)}</a><div style="font-size:12.5px;opacity:.62;margin-top:3px">${esc(label)}</div></li>`;
+    return `<li style="margin:0;padding:0"><a href="${esc(publicUrl(o))}" style="color:inherit;font-weight:600;text-decoration:underline;text-underline-offset:3px">${esc(o.title)}</a><div style="font-size:12.5px;opacity:.62;margin-top:3px">${esc(label)}</div></li>`;
   }).join('\n');
   // Theme-neutral: inherits the article's own colors; system font stack; no
   // background so it sits on dark and light pages alike.
@@ -184,7 +186,7 @@ export function seriesBlock(ctx) {
     : 'Part of';
 
   const link = (o, dir) =>
-    `<a href="${esc(o.href)}" style="display:block;flex:1 1 220px;color:inherit;text-decoration:none;padding:12px 14px;border:1px solid rgba(128,128,128,.3);border-radius:10px">`
+    `<a href="${esc(publicUrl(o))}" style="display:block;flex:1 1 220px;color:inherit;text-decoration:none;padding:12px 14px;border:1px solid rgba(128,128,128,.3);border-radius:10px">`
     + `<div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.55">${dir}</div>`
     + `<div style="margin-top:4px;font-weight:600;text-decoration:underline;text-underline-offset:3px">${esc(o.title)}</div>`
     + `</a>`;

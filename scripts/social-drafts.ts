@@ -21,6 +21,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { pickCandidates, type QueueRowLite } from './social-pick';
 import type { RegistryItem } from '../lib/registry-types';
+import { publicUrl } from '../lib/content-urls.mjs';
 
 const BATCH = Number(process.env.BATCH || '3') || 3;
 const COOLDOWN_DAYS = Number(process.env.COOLDOWN_DAYS || '60') || 60;
@@ -194,7 +195,7 @@ for (const item of picks) {
         item_id: item.id,
         platform,
         text: body,
-        link_url: utm(item.href, platform, item.id),
+        link_url: utm(publicUrl(item), platform, item.id),
         image_url: item.thumbnail ?? null,
         hook: d.hook,
       });

@@ -139,8 +139,8 @@ export function GalleryCard({
   const className =
     'group flex h-full flex-col overflow-hidden rounded-2xl border border-hub-line bg-hub-card shadow-hub transition-[transform,border-color] duration-200 hover:-translate-y-1 hover:border-hub-line-strong no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hub-teal focus-visible:ring-offset-2 focus-visible:ring-offset-hub-paper';
 
-  return newTab ? (
-    <a href={item.href} target="_blank" rel={relFor(item.href)} className={className}>
+  return newTab || item.sourceHref ? (
+    <a href={item.href} target={newTab ? '_blank' : undefined} rel={relFor(item.href)} className={className}>
       {inner}
     </a>
   ) : (

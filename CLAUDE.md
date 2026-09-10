@@ -58,3 +58,23 @@ For local Playwright checks, installed Edge is available through
 `chromium.launch({ channel: 'msedge', headless: true })`; the bundled
 Playwright Chromium browser may not be installed. Check teaching, part,
 and MDX article pages in both themes at mobile and desktop widths.
+
+## Public content URLs
+
+- Registry `href` values in Turso and the snapshot remain storage URLs. Public
+  registry readers project them into clean URLs and retain `sourceHref`; use
+  `lib/content-urls.mjs` rather than deriving links independently.
+- Default public slugs come from stable registry IDs, never titles. Editorial
+  overrides live in `content/gallery.json` under `publicSlugs`, keyed by ID.
+  When changing an override, retain the former slug in its `aliases` array.
+  Build and registry sync validate collisions, including aliases.
+- `/read/*`, `/studios/*`, and `/apps/*` serve registered HTML through route
+  handlers. `/_content/*` proxies assets without forwarding credentials;
+  its App Router directory is escaped as `app/%5Fcontent`.
+- `pnpm test:content-urls` covers mapping, HTML transformation, and proxy behavior.
+  With `pnpm dev --port 3100` running, `pnpm test:content-browser` checks Edge at
+  mobile/desktop widths in both themes (`CONTENT_TEST_URL` overrides the origin).
+- Deploy clean routes before running the content-publishing pipeline: injection
+  and sitemap generation now publish the clean canonical URLs. Old bucket
+  links remain available; HTTP redirects on the content domain require a
+  separate change to that domain's serving layer.

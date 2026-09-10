@@ -1,4 +1,5 @@
 import snapshot from '@/content/registry.snapshot.json';
+import { publicItem } from '@/lib/content-urls.mjs';
 import {
   REGISTRY_TYPES,
   TYPE_LABEL,
@@ -21,7 +22,7 @@ import {
 
 export * from '@/lib/registry-types';
 
-const SNAPSHOT = ((snapshot as { items?: RegistryItem[] }).items ?? []) as RegistryItem[];
+const SNAPSHOT: RegistryItem[] = ((snapshot as { items?: RegistryItem[] }).items ?? []).map(publicItem);
 
 /** Public origin for Tigris-hosted content (studios + data stories + datasets). */
 export const CONTENT_URL = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');

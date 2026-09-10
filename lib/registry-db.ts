@@ -3,6 +3,7 @@ import type { Client } from '@libsql/client';
 import { getDbClient, resetDbClient } from '@/lib/turso-admin';
 import { snapshotItems, snapshotItemsIncludingUnlisted, snapshotTopicOrder, sortItems } from '@/lib/registry';
 import type { RegistryItem, RegistryType } from '@/lib/registry-types';
+import { publicItem } from '@/lib/content-urls.mjs';
 
 /**
  * Live read of the Turso `gallery` registry, with the committed snapshot as a
@@ -50,7 +51,7 @@ function mapRows(rows: Record<string, any>[]): RegistryItem[] {
     sort: r.sort ?? 0,
     createdAt: r.created_at ?? undefined,
     updatedAt: r.updated_at ?? undefined,
-  }));
+  })).map(publicItem);
 }
 
 // Returns `run`'s result on success, or null when the DB is unreachable / times

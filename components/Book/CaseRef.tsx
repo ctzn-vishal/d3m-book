@@ -17,7 +17,7 @@ import { getRegistryItem, contentUrl } from '@/lib/registry';
 export function CaseRef({ id, from, children }: { id: string; from?: string; children?: ReactNode }) {
   const item = getRegistryItem(id);
   const base = item?.href ?? contentUrl(`studios/${id}/index.html`);
-  const external = item ? item.external || !!item.openInNewTab : true;
+  const external = item ? !!item.sourceHref || item.external || !!item.openInNewTab : true;
   // Only thread ?from onto self-contained artifact HTML (which reads it for the
   // back-to-the-book pill); skip it for internal routes like /datasets/[id].
   const href = from && external ? `${base}${base.includes('?') ? '&' : '?'}from=${encodeURIComponent(from)}` : base;
