@@ -13,6 +13,7 @@
     "fetch-amazon": "node scripts/fetch-amazon-aggregates.mjs",
     "fetch-amazon-phase2": "node scripts/fetch-amazon-phase2.mjs",
     "test:chrome": "node scripts/chrome-blocks.test.mjs",
+    "test:research": "node --import tsx --test scripts/research.test.ts",
     "sync-articles": "node --env-file=.env.local scripts/sync-articles.mjs",
     "rebuild-manifest": "node --env-file=.env.local scripts/rebuild-manifest.mjs",
     "sync-datasets": "node --env-file=.env.local scripts/sync-datasets.mjs",

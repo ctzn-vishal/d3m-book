@@ -84,6 +84,28 @@ export const published: Publication[] = [
   { authors: 'Guler, U., V. Singh', year: '2026', title: 'Polarized Consumption', venue: 'Quantitative Marketing and Economics', detail: '24(1), No. 2, 32 pp.', url: 'https://doi.org/10.1007/s11129-026-09308-y' },
 ];
 
+const highlightedJournals = [
+  ['Marketing Science', 'Mkt Sc'],
+  ['Journal of Marketing Research', 'JMR'],
+  ['Quantitative Marketing and Economics', 'QME'],
+  ['Management Science', 'Mgmt Sc'],
+  ['Journal of Marketing', 'JM'],
+  ['Journal of Consumer Research', 'JCR'],
+  ['Marketing Letters', 'Mkt Lett'],
+  ['Psychological Science', 'Psych Sc'],
+  ['American Political Science Review', 'APSR'],
+] as const;
+
+export function getJournalHighlights(publications: readonly Publication[] = published) {
+  const counts = new Map<string, number>();
+  for (const publication of publications) {
+    counts.set(publication.venue, (counts.get(publication.venue) ?? 0) + 1);
+  }
+  return highlightedJournals
+    .map(([venue, abbreviation]) => ({ venue, abbreviation, count: counts.get(venue) ?? 0 }))
+    .filter(journal => journal.count > 0);
+}
+
 export const working: Publication[] = [
   { authors: 'Hansen, K., K. Misra, V. Singh', title: 'Pricing a Participation-Dependent Product: Evidence from the Mega Millions Redesign', venue: 'Working paper', url: 'https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6760160' },
   { authors: 'Misra, K., U. Guler, V. Singh', title: 'Algorithmic Collusion Through Data Sharing', venue: 'Working paper', url: 'https://www.dropbox.com/scl/fi/pgl60b6fva7qeoxzm7bfo/algorithmic_pricing.pdf?rlkey=c8x2m1hv5fmcjowil83j3vujt&dl=1' },

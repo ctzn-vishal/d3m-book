@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowDown, ArrowUpRight } from 'lucide-react';
 import {
   profile,
   interests,
   published,
   working,
+  getJournalHighlights,
   type Publication,
 } from '@/lib/research';
 import { SITE_URL } from '@/lib/share-metadata';
@@ -31,11 +32,11 @@ const personLd = {
 
 function PubItem({ pub }: { pub: Publication }) {
   return (
-    <li className="border-b border-hub-line py-3.5 last:border-b-0">
-      <p className="text-[15px] leading-relaxed text-hub-ink">
+    <li className="border-b border-hub-line py-5 last:border-b-0">
+      <p className="text-[15px] leading-[1.8] text-hub-ink">
         <span className="text-hub-ink-soft">{pub.authors}</span>
         {pub.year ? <span className="text-hub-ink-faint"> ({pub.year})</span> : null}.{' '}
-        <span className="font-serif font-medium">“{pub.title}.”</span>{' '}
+        <span className="font-serif text-[16px] font-medium">“{pub.title}.”</span>{' '}
         <span className="italic text-hub-ink-soft">{pub.venue}</span>
         {pub.detail ? <span className="text-hub-ink-soft">, {pub.detail}</span> : null}.
         {pub.url ? (
@@ -43,14 +44,15 @@ function PubItem({ pub }: { pub: Publication }) {
             href={pub.url}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`Read ${pub.title} (opens in a new tab)`}
             className="ml-1.5 inline-flex items-center gap-0.5 font-plex text-[11px] uppercase tracking-[0.04em] text-hub-teal hover:underline"
           >
-            link <ArrowUpRight size={11} strokeWidth={2.5} />
+            link <ArrowUpRight size={11} strokeWidth={2.5} aria-hidden="true" />
           </a>
         ) : null}
       </p>
       {pub.note ? (
-        <span className="mt-1 inline-block rounded border border-[#e8cfa9] bg-hub-amber-soft px-2 py-0.5 font-plex text-[10px] uppercase tracking-[0.04em] text-hub-amber">
+        <span className="mt-2 inline-block rounded border border-hub-amber/30 bg-hub-amber-soft px-2 py-0.5 font-plex text-[10px] uppercase tracking-[0.04em] text-hub-amber">
           {pub.note}
         </span>
       ) : null}
@@ -58,17 +60,39 @@ function PubItem({ pub }: { pub: Publication }) {
   );
 }
 
-function Section({ title, count, children }: { title: string; count?: number; children: React.ReactNode }) {
+function Section({ id, title, count, children }: { id: string; title: string; count?: number; children: React.ReactNode }) {
   return (
-    <section className="mt-12">
-      <div className="flex items-baseline gap-3 border-b-2 border-hub-line-strong pb-2">
-        <h2 className="font-serif text-[24px] font-semibold text-hub-ink">{title}</h2>
+    <section id={id} aria-labelledby={`${id}-heading`} className="mt-12 scroll-mt-32 sm:mt-16 sm:scroll-mt-24">
+      <div className="flex items-baseline gap-3 border-b-2 border-hub-line-strong pb-3">
+        <h2 id={`${id}-heading`} className="font-serif text-[24px] font-medium leading-tight tracking-tight text-hub-ink sm:text-[28px]">{title}</h2>
         {count != null && (
-          <span className="font-plex text-[12px] text-hub-ink-faint">{count}</span>
+          <span className="rounded-full border border-hub-line px-2.5 py-0.5 font-plex text-[12px] tabular-nums text-hub-ink-soft">{count}</span>
         )}
       </div>
       {children}
     </section>
+  );
+}
+
+function JournalSummary() {
+  const journals = getJournalHighlights();
+  if (!journals.length) return null;
+
+  return (
+    <div role="group" aria-labelledby="journal-summary-heading" className="border-b border-hub-line bg-hub-paper2 px-4 py-4 sm:px-5">
+      <h3 id="journal-summary-heading" className="font-plex text-[10px] uppercase tracking-[0.14em] text-hub-ink-soft">Selected journals</h3>
+      <dl className="mt-3 flex flex-wrap gap-x-3 gap-y-2">
+        {journals.map(journal => (
+          <div key={journal.venue} className="flex items-center gap-2 rounded border border-hub-line bg-hub-card px-2.5 py-1.5" title={journal.venue}>
+            <dt className="text-[12px] text-hub-ink-soft">
+              <abbr title={journal.venue} className="cursor-help no-underline" aria-hidden="true">{journal.abbreviation}</abbr>
+              <span className="sr-only">{journal.venue}</span>
+            </dt>
+            <dd className="font-plex text-[13px] font-medium tabular-nums text-hub-teal">{journal.count}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
@@ -79,19 +103,19 @@ export default function ResearchPage() {
     <div>
       <JsonLd data={personLd} />
       <header className="hub-hero border-b border-hub-line">
-        <div className="mx-auto max-w-3xl px-5 py-14 sm:px-7">
-          <div className="font-plex text-[12px] uppercase tracking-[0.16em] text-hub-amber">
+        <div className="mx-auto max-w-4xl px-5 py-12 sm:px-8 sm:py-16">
+          <div className="font-plex text-[11px] uppercase tracking-[0.16em] text-hub-teal">
             Research &amp; Publications
           </div>
-          <h1 className="mt-3 font-serif text-[clamp(32px,5.4vw,52px)] font-semibold leading-[1.06] tracking-tight text-hub-ink">
+          <h1 className="mt-4 font-serif text-[clamp(36px,5.4vw,56px)] font-medium leading-[1.06] tracking-tight text-hub-ink">
             {profile.name}
           </h1>
-          <div className="mt-2 space-y-0.5 text-[16px] leading-snug text-hub-ink-soft">
-            <p>{profile.title}</p>
+          <div className="mt-4 space-y-1 text-[15px] leading-relaxed text-hub-ink-soft">
+            <p className="font-medium text-hub-ink">{profile.title}</p>
             <p>{profile.role}</p>
             <p>{profile.affiliation}</p>
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-plex text-[12px] text-hub-ink-soft">
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 font-plex text-[12px] text-hub-ink-soft">
             <a href={`mailto:${profile.email}`} className="hover:text-hub-teal">
               {profile.email}
             </a>
@@ -103,11 +127,11 @@ export default function ResearchPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-0.5 hover:text-hub-teal"
               >
-                {l.label} <ArrowUpRight size={11} strokeWidth={2.5} />
+                {l.label} <ArrowUpRight size={11} strokeWidth={2.5} aria-hidden="true" />
               </a>
             ))}
           </div>
-          <div className="mt-6 flex flex-wrap gap-1.5">
+          <div className="mt-7 flex flex-wrap gap-1.5">
             {interests.map(i => (
               <span
                 key={i}
@@ -117,11 +141,15 @@ export default function ResearchPage() {
               </span>
             ))}
           </div>
+          <nav aria-label="Research sections" className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-hub-line pt-5 text-[13px] font-medium text-hub-ink-soft">
+            <a href="#working-papers" className="inline-flex items-center gap-2 hover:text-hub-teal">Working papers <span className="font-plex text-[11px] text-hub-ink-faint">{working.length}</span><ArrowDown size={13} aria-hidden="true" /></a>
+            <a href="#publications" className="inline-flex items-center gap-2 hover:text-hub-teal">Refereed publications <span className="font-plex text-[11px] text-hub-ink-faint">{published.length}</span><ArrowDown size={13} aria-hidden="true" /></a>
+          </nav>
         </div>
       </header>
 
-      <div className="mx-auto max-w-3xl px-5 pb-24 sm:px-7">
-        <Section title="Working Papers & Under Review" count={working.length}>
+      <div className="mx-auto max-w-4xl px-5 pb-24 sm:px-8">
+        <Section id="working-papers" title="Working Papers & Under Review" count={working.length}>
           <ul>
             {working.map(p => (
               <PubItem key={p.title} pub={p} />
@@ -129,7 +157,8 @@ export default function ResearchPage() {
           </ul>
         </Section>
 
-        <Section title="Refereed Publications" count={published.length}>
+        <Section id="publications" title="Refereed Publications" count={published.length}>
+          <JournalSummary />
           <ul>
             {publishedNewestFirst.map(p => (
               <PubItem key={`${p.title}-${p.year}`} pub={p} />
