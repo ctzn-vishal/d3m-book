@@ -75,24 +75,13 @@ function Section({ id, title, count, children }: { id: string; title: string; co
 }
 
 function JournalSummary() {
-  const journals = getJournalHighlights();
-  if (!journals.length) return null;
+  const journal = getJournalHighlights().find(journal => journal.venue === 'Marketing Science');
+  if (!journal) return null;
 
   return (
-    <div role="group" aria-labelledby="journal-summary-heading" className="border-b border-hub-line bg-hub-paper2 px-4 py-4 sm:px-5">
-      <h3 id="journal-summary-heading" className="font-plex text-[10px] uppercase tracking-[0.14em] text-hub-ink-soft">Selected journals</h3>
-      <dl className="mt-3 flex flex-wrap gap-x-3 gap-y-2">
-        {journals.map(journal => (
-          <div key={journal.venue} className="flex items-center gap-2 rounded border border-hub-line bg-hub-card px-2.5 py-1.5" title={journal.venue}>
-            <dt className="text-[12px] text-hub-ink-soft">
-              <abbr title={journal.venue} className="cursor-help no-underline" aria-hidden="true">{journal.abbreviation}</abbr>
-              <span className="sr-only">{journal.venue}</span>
-            </dt>
-            <dd className="font-plex text-[13px] font-medium tabular-nums text-hub-teal">{journal.count}</dd>
-          </div>
-        ))}
-      </dl>
-    </div>
+    <p className="border-b border-hub-line bg-hub-paper2 px-4 py-3 text-[13px] text-hub-ink-soft sm:px-5">
+      Top Journal: <span className="font-medium text-hub-teal">{journal.venue} ({journal.count})</span>
+    </p>
   );
 }
 
