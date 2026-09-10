@@ -46,3 +46,15 @@ pre-check when iterating.
 
 Don't change `lib/book-toc.ts` status values or article structure as a side
 effect of other work.
+
+## Windows verification
+
+If `pnpm` is not on PATH, use `npx.cmd --yes pnpm@9.0.0 build` (the
+repository's pinned package-manager version). Use `npx.cmd tsc --noEmit`
+for the type check. The `.cmd` launcher works without changing PowerShell's
+execution policy.
+
+For local Playwright checks, installed Edge is available through
+`chromium.launch({ channel: 'msedge', headless: true })`; the bundled
+Playwright Chromium browser may not be installed. Check teaching, part,
+and MDX article pages in both themes at mobile and desktop widths.

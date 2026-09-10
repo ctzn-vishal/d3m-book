@@ -18,13 +18,17 @@ import { ThemeToggle } from '@/components/hub/ThemeToggle';
  */
 export function BookTopBar({ title }: { title: string }) {
   return (
-    <div className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[88rem] items-center justify-between gap-4 px-5 py-2.5 sm:px-6 lg:px-10">
+    <div className="book-topbar sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur-md">
+      <a href="#book-content" className="sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-3 focus:z-50 focus:bg-surface focus:p-3">Skip to content</a>
+      <div className="mx-auto flex h-[4.5rem] max-w-[88rem] items-center justify-between gap-3 px-5 sm:px-8 lg:px-10">
         <Link
           href="/teaching"
-          className="truncate text-sm font-display font-semibold text-body transition-colors hover:text-link"
+          aria-label={`${title} — contents`}
+          className="flex min-w-0 items-center gap-3 text-body transition-colors hover:text-accent-ink"
         >
-          {title}
+          <span className="border-r border-border pr-3 font-serif text-2xl font-medium tracking-tight">D3M<span className="text-accent-ink">.</span></span>
+          <span className="hidden truncate text-xs font-medium sm:block">{title}</span>
+          <span className="text-xs text-muted sm:hidden">The book</span>
         </Link>
         <div className="flex shrink-0 items-center gap-2">
           <Link

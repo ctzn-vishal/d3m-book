@@ -25,13 +25,33 @@ export interface ChapterTocDrawerPanelProps {
  * `open` state; this component is purely presentational.
  */
 export function ChapterTocDrawerPanel({ book, currentSlug = '', open, onOpenChange }: ChapterTocDrawerPanelProps) {
+  const panelRef = React.useRef<HTMLElement>(null);
+
   React.useEffect(() => {
     if (!open) return;
+    const previousFocus = document.activeElement;
+    const frame = requestAnimationFrame(() => panelRef.current?.querySelector<HTMLButtonElement>('button')?.focus());
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onOpenChange(false);
+      if (e.key !== 'Tab') return;
+      const controls = panelRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      if (!controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('keydown', onKey);
+      if (previousFocus instanceof HTMLElement) previousFocus.focus();
+    };
   }, [open, onOpenChange]);
 
   React.useEffect(() => {
@@ -61,6 +81,7 @@ export function ChapterTocDrawerPanel({ book, currentSlug = '', open, onOpenChan
 
           {/* Drawer */}
           <motion.aside
+            ref={panelRef}
             key="drawer"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}

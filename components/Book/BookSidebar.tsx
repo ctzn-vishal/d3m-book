@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import type { Book } from '@/lib/book-types';
 import { chapterHref } from '@/lib/book-toc';
-import { getPartContent } from '@/lib/book-content';
-import { resolveIcon, partColor } from '@/lib/book-visuals';
 
 export interface BookSidebarProps {
   book: Book;
@@ -64,27 +62,18 @@ export function BookSidebar({ book, currentSlug, activePartNumeral: activePartNu
   }, [currentSlug]);
 
   return (
-    <aside className="hidden lg:block" aria-label="Book contents">
-      <nav
-        ref={scrollRef}
-        className="sticky top-14 max-h-[calc(100vh-3.5rem)] overflow-y-auto overscroll-contain py-8 pr-2"
-      >
-        <Link
-          href="/teaching"
-          className="mb-4 flex items-center gap-2 px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted transition-colors hover:text-link"
-        >
-          <span aria-hidden="true">←</span> Contents
+    <aside className="hidden border-r border-border lg:block" aria-label="Book contents">
+      <nav ref={scrollRef} className="sticky top-[4.5rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto overscroll-contain py-10 pr-5">
+        <Link href="/teaching" className="book-kicker mb-6 flex items-center gap-2 text-muted transition-colors hover:text-body">
+          <span aria-hidden="true">←</span> All contents
         </Link>
-
-        <ol className="space-y-0.5">
-          {book.parts.map((part, index) => {
+        <ol className="space-y-3">
+          {book.parts.map(part => {
             const isOpen = open.has(part.numeral);
             const partActive = part.numeral === activePartNumeral;
-            const PartIcon = resolveIcon(getPartContent(part.numeral)?.icon);
-            const color = partColor(index);
             return (
               <li key={part.numeral}>
-                <div className="flex w-full items-start gap-1.5 rounded-md px-1 py-1.5 transition-colors hover:bg-card">
+                <div className="flex w-full items-start gap-2 py-1 transition-colors">
                   {/* Toggle-only: expands/collapses without navigating, so a
                       reader can peek at another part's chapters without
                       leaving the article they're on. */}
@@ -92,93 +81,51 @@ export function BookSidebar({ book, currentSlug, activePartNumeral: activePartNu
                     type="button"
                     onClick={() => toggle(part.numeral)}
                     aria-expanded={isOpen}
+                    aria-controls={`book-part-${part.numeral}`}
                     aria-label={`${isOpen ? 'Collapse' : 'Expand'} Part ${part.numeral}`}
-                    className="-m-1.5 shrink-0 rounded p-1.5 text-muted transition-colors hover:text-body"
+                    className="-ml-1 mt-0.5 shrink-0 rounded p-1 text-muted transition-colors hover:bg-card hover:text-body"
                   >
-                    <ChevronRight
-                      size={14}
-                      className={['transition-transform duration-200', isOpen ? 'rotate-90' : ''].join(' ')}
-                    />
+                    <ChevronRight size={13} className={`transition-transform duration-200 ${isOpen ? 'rotate-90' : ''}`} />
                   </button>
                   {/* Navigates to the part's overview page; does not toggle. */}
-                  <Link
-                    href={`/teaching/part/${part.numeral}`}
-                    className="flex min-w-0 flex-1 items-start gap-2 text-left"
-                  >
-                    <span
-                      className={`mt-0.5 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${color.chip} ${color.icon}`}
-                    >
-                      <PartIcon size={13} strokeWidth={2} />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="font-mono text-[10px] uppercase tracking-wider text-muted">
-                        Part {part.numeral}
-                      </span>
-                      <span
-                        className={[
-                          'block font-display text-[12.5px] font-semibold leading-snug',
-                          partActive ? 'text-body' : 'text-subtle',
-                        ].join(' ')}
-                      >
-                        {part.title}
-                      </span>
-                    </span>
+                  <Link href={`/teaching/part/${part.numeral}`} className="min-w-0 flex-1 text-left">
+                    <span className={`book-kicker ${partActive ? 'text-accent-ink' : 'text-muted'}`}>Part {part.numeral}</span>
+                    <span className={`mt-1 block text-[12px] font-medium leading-relaxed ${partActive ? 'text-body' : 'text-muted hover:text-body'}`}>{part.title}</span>
                   </Link>
                 </div>
 
-                {isOpen && (
-                  <ol className="mb-3 mt-1.5 space-y-3 pl-2.5">
-                    {part.chapters.map(chapter => (
-                      <li key={chapter.number}>
-                        <Link
-                          href={chapterHref(chapter)}
-                          className="flex gap-1.5 px-1 text-[11.5px] font-medium leading-snug text-subtle transition-colors hover:text-link"
-                        >
-                          <span className="font-mono tabular-nums text-muted">
-                            {String(chapter.number).padStart(2, '0')}
-                          </span>
-                          <span>{chapter.title}</span>
-                        </Link>
-
-                        <ul className="mt-1 border-l border-border">
-                          {chapter.articles.map(article => {
-                            const isCurrent = article.slug === currentSlug;
-                            const isLinkable = article.status === 'published' || isCurrent;
-                            if (!isLinkable) {
-                              return (
-                                <li key={article.slug}>
-                                  <span className="block py-1 pl-3.5 text-[12px] leading-snug text-muted/70">
-                                    {article.title}
-                                  </span>
-                                </li>
-                              );
-                            }
-                            return (
-                              <li key={article.slug}>
-                                <Link
-                                  ref={isCurrent ? activeRef : undefined}
-                                  href={`/${article.slug}`}
-                                  aria-current={isCurrent ? 'page' : undefined}
-                                  className={[
-                                    '-ml-px block border-l-2 py-1 pl-3.5 text-[12.5px] leading-snug transition-colors',
-                                    isCurrent
-                                      ? 'border-link bg-link/10 font-semibold text-body'
-                                      : 'border-transparent text-muted hover:border-border-strong hover:text-body',
-                                  ].join(' ')}
-                                >
-                                  <span className="mr-1.5 font-mono text-[10.5px] tabular-nums text-muted">
-                                    {formatArticleNumber(article.number)}
-                                  </span>
-                                  {article.title}
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </li>
-                    ))}
-                  </ol>
-                )}
+                <ol id={`book-part-${part.numeral}`} hidden={!isOpen} className="mb-5 mt-3 space-y-4 pl-6">
+                  {part.chapters.map(chapter => (
+                    <li key={chapter.number}>
+                      <Link href={chapterHref(chapter)} className="flex gap-2 text-[11.5px] font-medium leading-relaxed text-subtle transition-colors hover:text-accent-ink">
+                        <span className="font-plex text-[10px] tabular-nums text-muted">{String(chapter.number).padStart(2, '0')}</span>
+                        <span>{chapter.title}</span>
+                      </Link>
+                      <ul className="mt-2 border-l border-border">
+                        {chapter.articles.map(article => {
+                          const isCurrent = article.slug === currentSlug;
+                          const isLinkable = article.status === 'published' || isCurrent;
+                          if (!isLinkable) {
+                            return <li key={article.slug}><span className="block py-2 pl-3 text-xs leading-relaxed text-muted">{article.title}</span></li>;
+                          }
+                          return (
+                            <li key={article.slug}>
+                              <Link
+                                ref={isCurrent ? activeRef : undefined}
+                                href={`/${article.slug}`}
+                                aria-current={isCurrent ? 'page' : undefined}
+                                className={`-ml-px block border-l-2 px-3 py-2 text-xs leading-relaxed transition-colors ${isCurrent ? 'border-accent bg-card font-medium text-body' : 'border-transparent text-muted hover:border-border-strong hover:text-body'}`}
+                              >
+                                <span className="mr-1.5 font-plex text-[10px] tabular-nums text-muted">{formatArticleNumber(article.number)}</span>
+                                {article.title}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </li>
+                  ))}
+                </ol>
               </li>
             );
           })}

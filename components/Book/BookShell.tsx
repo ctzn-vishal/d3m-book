@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Link from 'next/link';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { Article } from '@/lib/book-types';
 import { book, findArticle, chapterHref } from '@/lib/book-toc';
+import { getArticleDescription } from '@/lib/book-content';
 import { ChapterTocDrawer } from '@/components/Book/ChapterTocDrawer';
 import { BookSidebar } from '@/components/Book/BookSidebar';
 import { OnThisPage } from '@/components/Book/OnThisPage';
@@ -30,68 +32,65 @@ export function BookShell({ slug, children }: BookShellProps) {
     p.chapters.some(c => c.articles.some(a => a.slug === slug))
   );
   const chapter = part?.chapters.find(c => c.articles.some(a => a.slug === slug));
+  const description = getArticleDescription(slug);
+  const articleIndex = chapter?.articles.findIndex(a => a.slug === slug) ?? -1;
 
   return (
-    <div className="bg-surface text-body min-h-screen flex flex-col">
-      <ReadingProgress />
+    <div className="book-scope bg-surface text-body min-h-screen flex flex-col">
+      <ReadingProgress key={slug} />
       <BookTopBar title={book.title} />
 
-      <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-8 xl:px-10 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[16rem_minmax(0,1fr)_13rem] xl:gap-10">
+      <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-8 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[14rem_minmax(0,1fr)_11rem] xl:gap-12 xl:px-10">
         {/* Persistent chapter navigation — fixed-open on lg+ screens; below lg
             the floating ChapterTocDrawer takes over. */}
-        <BookSidebar book={book} currentSlug={slug} />
+        <BookSidebar key={part?.numeral} book={book} currentSlug={slug} />
 
         {/* Content column (col2 of the grid). Marked as a size container so wide
             <Figure> zones can size against THIS column (via cqw units) and fill
             it — growing rightward into available space rather than sliding left
             under the sticky sidebar. */}
-        <div className="min-w-0 [container-type:inline-size]">
-        <div className="mx-auto w-full max-w-3xl lg:max-w-[44rem]">
-          <nav className="pt-8 text-sm text-muted" aria-label="Breadcrumb">
-            <Link href="/teaching" className="hover:text-link">
-              {book.title}
-            </Link>
-            {part && (
-              <>
-                <span className="mx-2 text-subtle">/</span>
-                <Link href={`/teaching/part/${part.numeral}`} className="hover:text-link">
-                  Part {part.numeral}
-                </Link>
-              </>
-            )}
-            {chapter && (
-              <>
-                <span className="mx-2 text-subtle">/</span>
-                <Link href={chapterHref(chapter)} className="text-subtle hover:text-link">
-                  {chapter.title}
-                </Link>
-              </>
-            )}
-          </nav>
+        <div id="book-content" tabIndex={-1} className="min-w-0 scroll-mt-24 outline-none [container-type:inline-size]">
+          <div className="mx-auto w-full max-w-[44rem]">
+            <nav className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-8 text-xs leading-relaxed text-muted sm:pt-10" aria-label="Breadcrumb">
+              <Link href="/teaching" className="hover:text-body">The book</Link>
+              {part && (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <Link href={`/teaching/part/${part.numeral}`} className="hover:text-body">Part {part.numeral}</Link>
+                </>
+              )}
+              {chapter && (
+                <>
+                  <span aria-hidden="true">/</span>
+                  <Link href={chapterHref(chapter)} className="hover:text-body">Chapter {chapter.number}</Link>
+                </>
+              )}
+            </nav>
 
-          <article className="mx-auto w-full min-w-0 py-10 prose prose-brand prose-headings:font-display prose-headings:tracking-normal prose-h2:mt-12 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h3:mt-8 prose-h3:text-[1.2rem] prose-h3:leading-snug prose-p:leading-7 prose-li:leading-7">
-            <header className="mb-9 not-prose">
-              <p className="text-xs uppercase tracking-wider text-muted">
-                {formatArticleNumber(article.number)}
-              </p>
-              <h1 className="mt-2 text-3xl font-display font-semibold leading-tight text-body sm:text-[2.35rem]">
-                {article.title}
-              </h1>
-            </header>
-            {children}
-          </article>
-        </div>
+            <article className="book-prose prose prose-brand mx-auto w-full min-w-0 max-w-none pb-8 pt-9 sm:pt-12">
+              <header className="not-prose mb-10 border-b border-border pb-8 sm:mb-12 sm:pb-10">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <p className="book-kicker text-accent-ink">{formatArticleNumber(article.number)}</p>
+                  {chapter && <p className="book-kicker text-muted">Article {articleIndex + 1} of {chapter.articles.length}</p>}
+                </div>
+                <h1 className="mt-5 font-serif text-[clamp(2.4rem,3.8vw,3.65rem)] font-normal leading-[1.08] tracking-[-0.04em] text-body">{article.title}</h1>
+                {description && <p className="mt-5 text-base leading-relaxed text-subtle sm:text-lg">{description}</p>}
+                <p className="mt-6 text-xs text-muted">Vishal Singh <span className="mx-2" aria-hidden="true">/</span> NYU Stern</p>
+              </header>
+              {children}
+            </article>
+            <BookFooter prev={prev} next={next} />
+          </div>
         </div>
 
         {/* Right rail — in-page "On this page" TOC, sticky under the book bar. */}
         <aside className="hidden xl:block">
-          <div className="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto py-10 pr-1">
-            <OnThisPage />
+          <div className="sticky top-[4.5rem] max-h-[calc(100vh-4.5rem)] overflow-y-auto py-10 pr-1">
+            <OnThisPage key={slug} />
+            <Link href="/teaching" className="mt-8 block border-t border-border pt-5 text-xs text-muted transition-colors hover:text-body">← Explore the full book</Link>
           </div>
         </aside>
       </div>
-
-      <BookFooter prev={prev} next={next} />
 
       <ChapterTocDrawer book={book} currentSlug={slug} />
       <KeyboardNav
@@ -105,38 +104,23 @@ export function BookShell({ slug, children }: BookShellProps) {
 
 function BookFooter({ prev, next }: { prev: Article | null; next: Article | null }) {
   return (
-    <footer className="mt-auto border-t border-border bg-card">
-      <nav className="mx-auto flex max-w-3xl items-stretch gap-3 px-5 sm:px-6 py-7">
-        <div className="flex-1">
-          {prev && (
-            <Link
-              href={`/${prev.slug}`}
-              className="block rounded-md border border-border bg-surface p-3.5 hover:border-border-strong transition-colors"
-            >
-              <p className="text-xs uppercase tracking-wider text-muted">
-                ← Previous
-              </p>
-              <p className="mt-1 text-sm font-medium text-body">
-                {formatArticleNumber(prev.number)} {prev.title}
-              </p>
-            </Link>
-          )}
-        </div>
-        <div className="flex-1">
-          {next && (
-            <Link
-              href={`/${next.slug}`}
-              className="block rounded-md border border-border bg-surface p-3.5 text-right hover:border-border-strong transition-colors"
-            >
-              <p className="text-xs uppercase tracking-wider text-muted">
-                Next →
-              </p>
-              <p className="mt-1 text-sm font-medium text-body">
-                {formatArticleNumber(next.number)} {next.title}
-              </p>
-            </Link>
-          )}
-        </div>
+    <footer className="mt-8 border-t border-border pb-28 pt-8 sm:pb-14">
+      <p className="book-kicker mb-5 text-muted">Continue reading</p>
+      <nav aria-label="Article navigation" className="grid gap-3 sm:grid-cols-2">
+        {prev ? (
+          <Link href={`/${prev.slug}`} className="group flex h-full flex-col border border-border p-5 transition-colors hover:border-border-strong hover:bg-card">
+            <span className="book-kicker flex items-center gap-2 text-muted"><ArrowLeft size={13} aria-hidden="true" /> Previous</span>
+            <span className="mt-4 text-xs text-muted">{formatArticleNumber(prev.number)}</span>
+            <span className="mt-1 font-serif text-xl leading-snug text-body">{prev.title}</span>
+          </Link>
+        ) : <div className="hidden sm:block" />}
+        {next && (
+          <Link href={`/${next.slug}`} className="group flex h-full flex-col border border-border bg-card p-5 transition-colors hover:border-border-strong">
+            <span className="book-kicker flex items-center justify-between gap-2 text-accent-ink">Up next <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" aria-hidden="true" /></span>
+            <span className="mt-4 text-xs text-muted">{formatArticleNumber(next.number)}</span>
+            <span className="mt-1 font-serif text-xl leading-snug text-body">{next.title}</span>
+          </Link>
+        )}
       </nav>
     </footer>
   );

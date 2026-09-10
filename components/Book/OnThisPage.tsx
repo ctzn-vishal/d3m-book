@@ -55,7 +55,7 @@ export function OnThisPage() {
 
   return (
     <nav aria-label="On this page" className="text-[13px]">
-      <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted">
+      <p className="book-kicker mb-4 text-muted">
         On this page
       </p>
       <ul className="space-y-1 border-l border-border">
@@ -67,10 +67,10 @@ export function OnThisPage() {
                 href={`#${h.id}`}
                 onClick={() => setActiveId(h.id)}
                 className={[
-                  'block border-l-2 -ml-px py-0.5 leading-snug transition-colors',
-                  h.level === 3 ? 'pl-5 text-[12px]' : 'pl-3.5',
+                  'block border-l-2 -ml-px py-1 leading-relaxed transition-colors',
+                  h.level === 3 ? 'pl-5 text-[11px]' : 'pl-3.5 text-xs',
                   isActive
-                    ? 'border-link text-body font-medium'
+                    ? 'border-accent text-body font-medium'
                     : 'border-transparent text-muted hover:text-body hover:border-border-strong',
                 ].join(' ')}
               >

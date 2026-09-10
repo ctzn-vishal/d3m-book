@@ -382,3 +382,50 @@ body {
 .dark .hub-part-4 { background: linear-gradient(110deg, #16302e, #1b1813); }
 .dark .hub-part-5 { background: linear-gradient(110deg, #2a2216, #2a1c2c); }
 .dark .hub-part-6 { background: linear-gradient(110deg, #2a1c2c, #16222e); }
+
+@layer components {
+  .book-kicker {
+    @apply font-plex text-[10px] font-medium uppercase tracking-[0.16em] leading-relaxed;
+  }
+
+  .book-button-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-sm border border-body bg-body px-5 py-3 text-sm font-medium text-surface transition-colors hover:border-subtle hover:bg-subtle;
+  }
+
+  .book-button-secondary {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-sm border border-border bg-surface px-4 py-3 text-sm font-medium text-body transition-colors hover:border-border-strong hover:bg-card;
+  }
+
+  .book-prose {
+    --tw-prose-hr: rgb(var(--book-border));
+    --tw-prose-th-borders: rgb(var(--book-border-strong));
+    --tw-prose-td-borders: rgb(var(--book-border));
+    @apply text-base leading-[1.85] sm:text-[17px] prose-headings:font-serif prose-headings:font-normal prose-headings:tracking-[-0.025em] prose-h2:mt-14 prose-h2:text-[1.9rem] prose-h2:leading-tight prose-h3:mt-9 prose-h3:text-[1.4rem] prose-h3:leading-snug prose-a:font-medium prose-a:decoration-border-strong prose-a:underline-offset-4 hover:prose-a:decoration-accent-ink prose-strong:font-semibold prose-code:font-mono prose-code:text-[0.85em] prose-hr:my-12;
+  }
+}
+
+.book-scope .book-prose {
+  --tw-prose-body: rgb(var(--book-subtle));
+  --tw-prose-headings: rgb(var(--book-body));
+  --tw-prose-links: rgb(var(--book-accent-ink));
+  --tw-prose-bold: rgb(var(--book-body));
+  --tw-prose-code: rgb(var(--book-body));
+  --tw-prose-quotes: rgb(var(--book-subtle));
+  --tw-prose-quote-borders: rgb(var(--book-accent));
+}
+
+.book-topbar button,
+.book-topbar a[aria-label="Go to the gallery"] {
+  min-height: 2.5rem;
+  min-width: 2.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .book-scope *, .book-scope *::before, .book-scope *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

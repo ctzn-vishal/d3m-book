@@ -22,6 +22,7 @@ export function PartPage({ book, part, index, prev, next }: PartPageProps) {
   const color = partColor(index);
   const chapterCount = part.chapters.length;
   const articleCount = part.chapters.reduce((n, c) => n + c.articles.length, 0);
+  const firstArticle = part.chapters.flatMap(chapter => chapter.articles).find(article => article.status === 'published');
 
   // Gallery items paired to any article in this part. These used to live on the
   // (now-removed) chapter overview page; surfaced here so the studios and data
@@ -34,7 +35,7 @@ export function PartPage({ book, part, index, prev, next }: PartPageProps) {
 
   return (
     <BookFrame book={book} activePartNumeral={part.numeral}>
-      <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-4xl py-10 sm:py-12 lg:px-4">
         {/* Breadcrumb */}
         <nav className="text-sm text-muted" aria-label="Breadcrumb">
           <Link href="/teaching" className="hover:text-link">
@@ -45,27 +46,17 @@ export function PartPage({ book, part, index, prev, next }: PartPageProps) {
         </nav>
 
         {/* Header */}
-        <header className="mt-7 border-b border-border pb-8">
-          <div className="flex items-start gap-4">
-            <span className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-lg ${color.chip} ${color.icon}`}>
-              <Icon size={24} strokeWidth={1.7} />
-            </span>
-            <div className="min-w-0">
-              <p className="font-mono text-xs uppercase tracking-wider text-muted">Part {part.numeral}</p>
-              <h1 className="mt-1.5 font-display text-[clamp(26px,4.5vw,40px)] font-semibold leading-[1.1] tracking-tight text-body">
-                {part.title}
-              </h1>
-              {content?.tagline && <p className="mt-2 text-[17px] leading-snug text-muted">{content.tagline}</p>}
-            </div>
+        <header className="mt-10 border-b border-border pb-10">
+          <p className="book-kicker flex items-center gap-2 text-accent-ink"><Icon size={14} aria-hidden="true" /> Part {part.numeral}</p>
+          <h1 className="mt-5 font-serif text-[clamp(2.5rem,4.4vw,4rem)] font-normal leading-[1.08] tracking-[-0.045em] text-body">{part.title}</h1>
+          {content?.tagline && <p className="mt-5 font-serif text-xl italic text-accent-ink sm:text-2xl">{content.tagline}</p>}
+          {content?.summary && <p className="mt-6 text-base leading-[1.85] text-subtle">{content.summary}</p>}
+          <div className="mt-7 flex flex-wrap items-center justify-between gap-5">
+            <p className="book-kicker text-muted">{chapterCount} {chapterCount === 1 ? 'chapter' : 'chapters'} · {articleCount} articles</p>
+            {firstArticle && (
+              <Link href={`/${firstArticle.slug}`} className="book-button-primary">Start this part <ArrowRight size={15} aria-hidden="true" /></Link>
+            )}
           </div>
-
-          {content?.summary && (
-            <p className="mt-6 text-[16.5px] leading-relaxed text-subtle">{content.summary}</p>
-          )}
-
-          <p className="mt-5 font-mono text-xs uppercase tracking-wider text-muted">
-            {chapterCount} {chapterCount === 1 ? 'chapter' : 'chapters'} · {articleCount} articles
-          </p>
         </header>
 
         {/* What you'll learn */}

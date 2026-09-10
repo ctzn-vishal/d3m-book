@@ -18,7 +18,7 @@ export function ChapterCard({ chapter, color }: { chapter: Chapter; color: PartC
   const Icon = resolveIcon(content?.icon);
 
   return (
-    <div className="flex flex-col rounded-lg border border-border bg-surface p-5 transition-colors hover:border-border-strong">
+    <div className="flex flex-col border border-border bg-surface p-5 transition-colors hover:border-border-strong sm:p-6">
       <Link href={chapterHref(chapter)} className="group flex items-start gap-3">
         <span className={`mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md ${color.chip} ${color.icon}`}>
           <Icon size={18} strokeWidth={1.9} />
@@ -27,7 +27,7 @@ export function ChapterCard({ chapter, color }: { chapter: Chapter; color: PartC
           <span className="block font-mono text-[11px] uppercase tracking-wider text-muted">
             Chapter {chapter.number}
           </span>
-          <span className="mt-0.5 block font-display text-[17px] font-semibold leading-snug text-body transition-colors group-hover:text-link">
+          <span className="mt-1 block font-serif text-[22px] font-normal leading-tight tracking-tight text-body transition-colors group-hover:text-accent-ink">
             {chapter.title}
           </span>
         </span>

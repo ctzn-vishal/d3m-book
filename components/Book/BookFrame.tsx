@@ -12,6 +12,7 @@ export interface BookFrameProps {
   /** Rendered full-width, above the sidebar grid — e.g. the cover's full-bleed hero. */
   beforeContent?: React.ReactNode;
   children: React.ReactNode;
+  showSidebar?: boolean;
 }
 
 /**
@@ -23,16 +24,18 @@ export interface BookFrameProps {
  * footer, arrow-key nav) — neither the cover nor a part page has a single
  * linear article to track.
  */
-export function BookFrame({ book, activePartNumeral, beforeContent, children }: BookFrameProps) {
+export function BookFrame({ book, activePartNumeral, beforeContent, children, showSidebar = true }: BookFrameProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-surface text-body">
+    <div className="book-scope flex min-h-screen flex-col bg-surface text-body">
       <BookTopBar title={book.title} />
-      {beforeContent}
-      <div className="mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-8 xl:px-10 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[16rem_minmax(0,1fr)] xl:gap-10">
-        <BookSidebar book={book} activePartNumeral={activePartNumeral} />
-        <div className="min-w-0">{children}</div>
+      {beforeContent && <div id="book-content" tabIndex={-1} className="scroll-mt-24 outline-none">{beforeContent}</div>}
+      <div className={showSidebar
+        ? 'mx-auto w-full max-w-[88rem] flex-1 px-5 sm:px-6 lg:px-8 xl:px-10 lg:grid lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[15rem_minmax(0,1fr)] xl:gap-14'
+        : 'mx-auto w-full max-w-[80rem] flex-1 px-5 sm:px-8 lg:px-12'}>
+        {showSidebar && <BookSidebar book={book} activePartNumeral={activePartNumeral} />}
+        <div id={beforeContent ? undefined : 'book-content'} tabIndex={beforeContent ? undefined : -1} className="min-w-0 scroll-mt-24 outline-none">{children}</div>
       </div>
-      <ChapterTocDrawer book={book} />
+      {showSidebar && <ChapterTocDrawer book={book} />}
       <CommandPalette book={book} />
     </div>
   );
