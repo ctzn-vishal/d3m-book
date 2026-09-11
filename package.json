@@ -13,6 +13,8 @@
     "fetch-amazon": "node scripts/fetch-amazon-aggregates.mjs",
     "fetch-amazon-phase2": "node scripts/fetch-amazon-phase2.mjs",
     "test:chrome": "node scripts/chrome-blocks.test.mjs",
+    "test:thumbnails": "node --test scripts/thumbnails.test.mjs",
+    "verify-thumbnails": "node --env-file=.env.local scripts/gen-thumbnails.mjs --check",
     "test:content-urls": "node --import tsx --test scripts/content-urls.test.mjs scripts/content-response.test.ts",
     "test:content-browser": "node scripts/content-urls.browser.mjs",
     "test:research": "node --import tsx --test scripts/research.test.ts",
@@ -31,11 +33,12 @@
     "inject-chrome:dry": "node --env-file=.env.local scripts/inject-chrome.mjs --dry-run",
     "gen-story-sitemap": "node --env-file=.env.local scripts/gen-story-sitemap.mjs",
     "gen-thumbnails": "node --env-file=.env.local scripts/gen-thumbnails.mjs",
+    "gen-thumbnails:upload": "node --env-file=.env.local scripts/gen-thumbnails.mjs --upload",
     "verify-content": "node --env-file=.env.local scripts/verify-content.mjs",
     "curate-new": "node --env-file=.env.local --import tsx scripts/curate-new.ts",
     "social-drafts": "node --env-file=.env.local --import tsx scripts/social-drafts.ts",
     "social-deliver": "node --env-file=.env.local scripts/social-deliver.mjs",
-    "publish-content": "pnpm rebuild-manifest && pnpm sync-registry && pnpm inject-chrome && pnpm gen-story-sitemap && pnpm verify-content",
+    "publish-content": "pnpm rebuild-manifest && pnpm sync-registry && pnpm gen-thumbnails:upload && pnpm rebuild-manifest && pnpm sync-registry && pnpm inject-chrome && pnpm gen-story-sitemap && pnpm verify-content",
     "ship": "pnpm publish-content && pnpm curate-new"
   },
   "dependencies": {

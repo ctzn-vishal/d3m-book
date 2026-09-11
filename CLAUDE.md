@@ -78,3 +78,24 @@ and MDX article pages in both themes at mobile and desktop widths.
   and sitemap generation now publish the clean canonical URLs. Old bucket
   links remain available; HTTP redirects on the content domain require a
   separate change to that domain's serving layer.
+
+## Gallery thumbnails
+
+- The publish workflow polls Tigris hourly at minute 20 UTC; it is not an
+  immediate upload webhook. GitHub schedules may be delayed. A manual run
+  with thumbnails enabled publishes sooner.
+- Thumbnail storage keys must decode URL escapes exactly once. Public URLs
+  encode each key segment; never use an encoded URL pathname as an S3 key.
+- `scripts/thumbnail-utils.mjs` shares image paths between screenshot generation
+  and registry discovery. It covers published/unlisted articles, studios, and
+  bucket-hosted apps; authored external/local images are left alone.
+- Generation checks object existence, not just whether the registry has an image
+  URL. Uploads use `If-None-Match: *` so existing images are never overwritten.
+  Registry sync discovers generated app previews without a gallery.json edit.
+- Local `pnpm publish-content` also generates/uploads missing thumbnails and
+  folds them back into the manifest and registry before injecting metadata.
+- `pnpm test:thumbnails` is offline. `pnpm verify-thumbnails` checks Tigris
+  read-only. `pnpm gen-thumbnails` makes local review screenshots without uploads.
+  Windows uses installed Edge; `PLAYWRIGHT_CHANNEL` can override the browser.
+- `node scripts/gallery-images.browser.mjs` checks gallery image loading;
+  `GALLERY_TEST_URL` selects the site (defaults to localhost:3100).

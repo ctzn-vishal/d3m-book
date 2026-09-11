@@ -8,45 +8,44 @@
 //   pnpm gen-thumbnails              # DRY: writes scripts/.thumbs/<slug>.png for review
 //   UPLOAD=1 pnpm gen-thumbnails     # upload all
 //   UPLOAD=1 ONLY=a,b pnpm gen-thumbnails   # upload only these slugs
-// Then (Blog) pnpm rebuild-manifest && pnpm sync-registry ; (app) edit gallery.json thumbnail + sync.
+// Then pnpm rebuild-manifest && pnpm sync-registry discovers the generated images.
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { CONTENT_BUCKET } from './pipeline-config.mjs';
+import { thumbnailTarget, bucketObjectExists, missingThumbnails } from './thumbnail-utils.mjs';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
-const UPLOAD = process.env.UPLOAD === '1';
+const UPLOAD = process.env.UPLOAD === '1' || process.argv.includes('--upload');
+const CHECK = process.argv.includes('--check');
 const ONLY = (process.env.ONLY || '').split(',').map(s => s.trim()).filter(Boolean);
 const OUT = fileURLToPath(new URL('./.thumbs/', import.meta.url));
 const W = 1000, H = 625; // 16:10
 
-// Targets = Blog/App items with a bucket-hosted .html href and no thumbnail.
+// Targets = public bucket-hosted HTML whose thumbnail object is missing.
 const snap = JSON.parse(await readFile(fileURLToPath(new URL('../content/registry.snapshot.json', import.meta.url)), 'utf8'));
-const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
-let targets = (snap.items ?? []).filter(
-  i => (i.type === 'Blog' || i.type === 'App') && typeof i.href === 'string' && i.href.startsWith(CONTENT + '/') && i.href.endsWith('.html') && !i.thumbnail
-);
-if (ONLY.length) targets = targets.filter(t => ONLY.includes(t.id));
-if (!targets.length) { console.log('No targets (all have thumbnails, or ONLY matched none).'); process.exit(0); }
-
-await mkdir(OUT, { recursive: true });
 const s3 = new S3Client({
   region: process.env.AWS_REGION || 'auto',
   endpoint: process.env.TIGRIS_ENDPOINT,
   credentials: { accessKeyId: process.env.TIGRIS_CLIENT_ID, secretAccessKey: process.env.TIGRIS_CLIENT_SECRET },
   forcePathStyle: false,
 });
+const candidates = (snap.items ?? []).filter(i => !ONLY.length || ONLY.includes(i.id));
+const targets = await missingThumbnails(candidates, key => bucketObjectExists(s3, CONTENT_BUCKET, key));
+console.log(`Checked ${candidates.filter(thumbnailTarget).length} managed thumbnail objects.`);
+if (!targets.length) { console.log('No missing thumbnail objects in the selected public content.'); process.exit(0); }
+for (const item of targets) console.log(`Missing thumbnail: ${item.id} -> ${thumbnailTarget(item).key}`);
+if (CHECK) process.exit(1);
 
-const browser = await chromium.launch({ headless: true });
-const ctx = await browser.newContext({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 2 });
+await mkdir(OUT, { recursive: true });
+const browser = await chromium.launch({ headless: true, channel: process.env.PLAYWRIGHT_CHANNEL || (process.platform === 'win32' ? 'msedge' : undefined) });
+const ctx = await browser.newContext({ viewport: { width: 1440, height: 960 }, deviceScaleFactor: 2, colorScheme: 'light' });
 
 function bucketKey(item) {
-  if (item.type === 'App') return { key: `apps/${item.id}/preview.jpg`, format: 'jpeg' };
   // Blog: derive from the href path so sub-folder stories (articles/HF/<slug>.html)
   // get their thumb where rebuild-manifest looks: articles/HF/<slug>/_thumb.webp.
-  const path = new URL(item.href).pathname.replace(/^\//, '').replace(/\.html$/, '');
-  return { key: `${path}/_thumb.webp`, format: 'webp' };
+  return thumbnailTarget(item);
 }
 
 const results = [];
@@ -54,12 +53,13 @@ for (const item of targets) {
   const page = await ctx.newPage();
   let how = 'fallback';
   try {
-    await page.goto(item.href, { waitUntil: 'load', timeout: 60000 });
+    const response = await page.goto(item.href, { waitUntil: 'load', timeout: 60000 });
+    if (!response?.ok()) throw new Error(`Page returned HTTP ${response?.status() ?? 'unknown'}`);
     await page.addStyleTag({ content: 'a[data-vs-chrome],[data-vs-chrome]{display:none!important}' }).catch(() => {});
     // Wait (best-effort) for a chart to render.
     await page.waitForFunction(
       () => [...document.querySelectorAll('svg,canvas')].some(el => { const r = el.getBoundingClientRect(); return r.width > 320 && r.height > 180; }),
-      { timeout: 18000 }
+      null, { timeout: 18000 }
     ).catch(() => {});
     await page.waitForTimeout(1500); // settle animations/transitions
 
@@ -80,17 +80,19 @@ for (const item of targets) {
     }
 
     const png = await sharp(raw).flatten({ background: '#ffffff' }).resize(W, H, { fit: 'contain', background: '#ffffff' }).png().toBuffer();
-    await writeFile(OUT + `${item.id}.png`, png);
-    results.push({ id: item.id, type: item.type, how, ok: true });
-
+    await writeFile(OUT + `${encodeURIComponent(item.id)}.png`, png);
+    let uploaded;
     if (UPLOAD) {
       const { key, format } = bucketKey(item);
-      const body = format === 'webp'
-        ? await sharp(png).webp({ quality: 82 }).toBuffer()
-        : await sharp(png).jpeg({ quality: 86 }).toBuffer();
-      await s3.send(new PutObjectCommand({ Bucket: CONTENT_BUCKET, Key: key, Body: body, ContentType: `image/${format}`, CacheControl: 'public, max-age=3600' }));
-      results[results.length - 1].uploaded = key;
+      const body = await sharp(png).toFormat(format, { quality: format === 'webp' ? 82 : 86 }).toBuffer();
+      try {
+        await s3.send(new PutObjectCommand({ Bucket: CONTENT_BUCKET, Key: key, Body: body, ContentType: `image/${format}`, CacheControl: 'public, max-age=3600', IfNoneMatch: '*' }));
+        uploaded = key;
+      } catch (error) {
+        if (error?.$metadata?.httpStatusCode !== 412) throw error;
+      }
     }
+    results.push({ id: item.id, type: item.type, how, ok: true, uploaded });
   } catch (e) {
     results.push({ id: item.id, type: item.type, ok: false, error: e.message });
   } finally {
@@ -104,4 +106,4 @@ for (const r of results) {
   console.log(`  ${r.ok ? '✓' : '✗'} ${r.id.padEnd(34)} [${r.type}] ${r.how || ''}${r.uploaded ? ' → ' + r.uploaded : ''}${r.error ? '  ERR ' + r.error : ''}`);
 }
 if (!UPLOAD) console.log('\nReview scripts/.thumbs/*.png, then: UPLOAD=1 pnpm gen-thumbnails  (or ONLY=slug,slug to pick).');
-process.exit(0);
+process.exit(results.some(r => !r.ok) ? 1 : 0);

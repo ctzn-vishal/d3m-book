@@ -17,6 +17,7 @@ import { studios } from '../lib/studios';
 import { domainToTopic } from '../lib/taxonomy';
 import gallery from '../content/gallery.json';
 import { contentIndex } from '../lib/content-urls.mjs';
+import { discoverThumbnail, bucketObjectExists } from './thumbnail-utils.mjs';
 
 type RegistryType = 'App' | 'Teaching' | 'Blog' | 'Dataset';
 type RegistryItem = {
@@ -172,6 +173,9 @@ function applyCurate(it: RegistryItem): RegistryItem {
 let sources: RegistryItem[];
 try {
   sources = [...fromStudios(), ...fromApps(), ...(await fromArticles()), ...(await fromDatasets())];
+  for (const item of sources) {
+    item.thumbnail = await discoverThumbnail(item, (key: string) => bucketObjectExists(s3, CONTENT_BUCKET, key));
+  }
 } catch (e) {
   console.error(`Aborting sync — a content source failed to load (NOT treating as deletions): ${(e as Error).message}`);
   process.exit(1);

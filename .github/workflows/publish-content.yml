@@ -1,4 +1,4 @@
-# Full content-publish pipeline — nightly, plus on demand (Actions → run workflow).
+# Full content-publish pipeline — hourly, plus on demand (Actions → run workflow).
 # Mirrors `pnpm publish-content` but with env from repo secrets, so new bucket
 # uploads are ingested without a dev machine:
 #   rebuild-manifest → sync-registry → [gen-thumbnails → rebuild+sync again]
@@ -32,11 +32,11 @@ name: Publish content pipeline
 
 on:
   schedule:
-    # 06:20 UTC daily — an hour ahead of sync-snapshot.yml (07:17 UTC) so this
-    # heavier job lands its snapshot commit first and the lighter one usually
-    # finds nothing to do. Both share the `content-pipeline` concurrency group,
+    # Hourly at :20 UTC; the 06:20 run precedes sync-snapshot.yml (07:17 UTC).
+    # This catches bucket uploads without requiring an upload webhook or a
+    # developer machine. Both share the `content-pipeline` concurrency group,
     # so even if this overruns they serialize rather than racing on git push.
-    - cron: '20 6 * * *'
+    - cron: '20 * * * *'
   workflow_dispatch:
     inputs:
       thumbnails:
@@ -64,6 +64,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm test:thumbnails
 
       # Load secrets into the job env, stripping stray CR/LF/whitespace that a
       # copy-paste can smuggle in (a trailing newline inside TIGRIS_CLIENT_ID
@@ -106,6 +107,7 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Generate + upload missing thumbnails
+        id: thumbnails
         # `inputs` is empty on a schedule trigger, so a bare `inputs.thumbnails`
         # would be falsey and silently skip thumbnails on every nightly run.
         # Default ON unless a manual run unticked the box.
@@ -122,6 +124,12 @@ jobs:
         run: |
           node scripts/rebuild-manifest.mjs
           node --import tsx scripts/sync-registry.ts
+
+      - name: Verify gallery thumbnail objects
+        id: thumbnail_check
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.thumbnails }}
+        continue-on-error: true
+        run: node scripts/gen-thumbnails.mjs --check
 
       - name: Inject chrome (pill, OG, Article JSON-LD, related stories)
         run: node scripts/inject-chrome.mjs
@@ -152,3 +160,9 @@ jobs:
               git push
             }
           fi
+
+      - name: Report thumbnail failures
+        if: ${{ always() && (steps.thumbnails.outcome == 'failure' || steps.thumbnail_check.outcome == 'failure') }}
+        run: |
+          echo "::error::Some gallery thumbnails could not be generated or verified. Successful images and metadata were still published; inspect the thumbnail steps above."
+          exit 1
