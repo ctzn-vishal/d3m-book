@@ -1,7 +1,8 @@
-// Pure HTML-transformation layer for inject-chrome: builds and upserts the four
+// Pure HTML-transformation layer for inject-chrome: builds and upserts the
 // chrome concerns (home pill, OG/canonical, Article JSON-LD, related-stories
-// footer) into a bucket HTML string. No S3 / network — everything here is
-// deterministic on (html, registry item, candidate pool), so it can be tested
+// footer, series strip, canonical front matter) into a bucket HTML string. No
+// S3 / network — everything here is deterministic on (html, registry item,
+// candidate pool), so it can be tested
 // locally against fixtures before a pipeline run touches production files.
 //
 // Idempotence contract: applyChrome(applyChrome(html)) === applyChrome(html) for
@@ -9,6 +10,7 @@
 // violation here would rewrite every bucket file on every run.
 
 import { publicUrl } from '../lib/content-urls.mjs';
+import { applyFrontMatter } from './front-matter.mjs';
 
 export const HOME = 'https://vishalsingh.org/';
 export const MARKER = 'data-vs-chrome';   // home pill (inject once)
@@ -16,6 +18,7 @@ export const OGM = 'data-vs-og';          // social/SEO head tags (upserted)
 export const LDM = 'data-vs-ld';          // Article JSON-LD (upserted, articles only)
 export const RELM = 'data-vs-related';    // related-stories footer (upserted, articles only)
 export const SERM = 'data-vs-series';     // collection/series strip (upserted, articles only)
+export const FMM = 'data-vs-fm';          // canonical front matter (rebuilt, reading surfaces only)
 
 // ── Home pill (reads ?from=<chapter-slug>; points back to that chapter else home) ──
 export const SNIPPET = `
@@ -76,7 +79,10 @@ export function ldBlock(m) {
   };
   return `\n<script type="application/ld+json" ${LDM}>${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`;
 }
-const LD_RE = /\n?<script type="application\/ld\+json" data-vs-ld>[\s\S]*?<\/script>/;
+// Tolerant of `data-vs-ld=""`: the front-matter pass serialises the document
+// through cheerio, which expands bare boolean attributes. Matching only the
+// bare form would miss the previous block and append a second one per run.
+const LD_RE = /\n?<script type="application\/ld\+json"[^>]*\bdata-vs-ld\b[^>]*>[\s\S]*?<\/script>/;
 export function upsertLd(html, m) {
   const block = ldBlock(m);
   if (LD_RE.test(html)) return html.replace(LD_RE, block);
@@ -215,6 +221,9 @@ export function upsertSeries(html, ctx) {
   return i === -1 ? `${html}\n${block}` : `${html.slice(0, i)}\n${block}\n${html.slice(i)}`;
 }
 
+// articles/ and studios/ are read; apps/ are used.
+const READABLE = /^(articles|studios)\//;
+
 /**
  * Apply every applicable concern to one file. `meta` is the registry snapshot
  * item for this bucket key (or undefined when unregistered — pill only),
@@ -223,7 +232,7 @@ export function upsertSeries(html, ctx) {
  * Returns the transformed HTML plus which concerns changed it.
  */
 export function applyChrome(html, { key, meta, candidates, siblings = [], collections = [] }) {
-  const did = { pill: false, og: false, ld: false, rel: false, series: false };
+  const did = { pill: false, og: false, ld: false, rel: false, series: false, fm: false };
   let out = html;
 
   if (!out.includes(MARKER)) {
@@ -252,6 +261,17 @@ export function applyChrome(html, { key, meta, candidates, siblings = [], collec
       const withSeries = upsertSeries(out, ctx);
       if (withSeries !== out) { did.series = true; out = withSeries; }
     }
+  }
+
+  // Front matter last, because it's the one concern that round-trips the
+  // document through cheerio: running it here lets a single pass converge.
+  // Ahead of it the blocks above are regenerated as written (bare boolean
+  // markers); behind it they come back normalised (data-vs-og=""), and the
+  // upsert patterns match both. Reading surfaces only — an app shell has no
+  // byline to give.
+  if (READABLE.test(key)) {
+    const fm = applyFrontMatter(out, meta);
+    if (fm.changed && fm.html !== out) { did.fm = true; out = fm.html; }
   }
 
   return { html: out, did };

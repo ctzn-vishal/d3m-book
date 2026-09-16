@@ -79,6 +79,27 @@ and MDX article pages in both themes at mobile and desktop widths.
   links remain available; HTTP redirects on the content domain require a
   separate change to that domain's serving layer.
 
+## Front matter on bucket HTML
+
+- `scripts/front-matter.mjs` rebuilds the kicker/title/dek/byline of every
+  `articles/**` and `studios/**` file. It runs inside `applyChrome`, so it
+  reaches both the served route (`lib/content-html.mjs`) and the bucket rewrite
+  (`pnpm inject-chrome`) from one implementation. Apps are excluded.
+- It hides the file's original parts (`data-vs-fm="hidden"`) instead of
+  deleting them, and never moves or rewrites the `<h1>` — the rendered title
+  disagrees with the registry title in a third of files, and the file wins.
+  `reset()` returns a document to exactly what it was.
+- Byline dates come from `CORPUS_DATE`, one date for everything. The registry's
+  `createdAt` is ingest time (129 stories across 11 days) and `updatedAt` tracks
+  pipeline runs; neither is editorial. Put a `publishedAt` on a registry row to
+  override one file.
+- It's the only concern that round-trips the document through cheerio, which is
+  why it runs last and why the marker patterns above it tolerate both
+  `data-vs-og` and `data-vs-og=""`.
+- These files have no copy in git. Run `pnpm backup-content` before any pipeline
+  change that touches file bodies, then `pnpm inject-chrome:dry` to see the
+  blast radius.
+
 ## Gallery thumbnails
 
 - The publish workflow polls Tigris hourly at minute 20 UTC; it is not an

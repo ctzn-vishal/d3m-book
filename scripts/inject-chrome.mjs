@@ -6,16 +6,21 @@
 //   2. social/SEO <head> tags — og:*, twitter:*, and <link rel="canonical"> —
 //      sourced per-file from content/registry.snapshot.json,
 //   3. (articles only) a schema.org Article JSON-LD block — headline, dates,
-//      author — for rich results and correct authorship attribution, and
+//      author — for rich results and correct authorship attribution,
 //   4. (articles only) a "Related stories" footer computed from the registry's
-//      topic/tags — the internal-link graph between bucket stories.
+//      topic/tags — the internal-link graph between bucket stories, and
+//   5. (articles + studios) canonical front matter — kicker, title, dek and a
+//      Distill byline grid — rebuilt over whatever the file was authored with.
 // Run `pnpm sync-registry` first so the snapshot is current.
 //
 // Idempotence & refresh: the pill is inject-once (marker data-vs-chrome). The
 // OG/LD/related blocks are UPSERTED — each run strips the previously injected
 // block (by its marker attribute) and regenerates from the current registry, so
 // curated titles/descriptions, late-arriving thumbnails, and a growing catalog
-// all propagate. A file is only rewritten (PUT) when its bytes actually change.
+// all propagate. Front matter is rebuilt the same way, from the file's own
+// header, which it hides rather than deletes (see front-matter.mjs) — so these
+// files, which have no copy in git, can always be returned to what they were.
+// A file is only rewritten (PUT) when its bytes actually change.
 // The transformations live in scripts/chrome-blocks.mjs (pure, testable).
 // Run: pnpm inject-chrome   (node --env-file=.env.local scripts/inject-chrome.mjs)
 import { S3Client, ListObjectsV2Command, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
@@ -75,7 +80,7 @@ for (const p of PREFIXES) keys.push(...(await listAll(DST, `${p}/`)).filter(k =>
 const inCollections = siblings.filter(i => i.collection).length;
 console.log(`Found ${keys.length} HTML files across ${PREFIXES.join(', ')} (registry meta for ${metaByKey.size}, ${candidates.length} related-link candidates, ${inCollections} rows in ${collections.length} collections).`);
 
-let pill = 0, og = 0, ld = 0, rel = 0, series = 0, changed = 0, skipped = 0, err = 0;
+let pill = 0, og = 0, ld = 0, rel = 0, series = 0, fm = 0, changed = 0, skipped = 0, err = 0;
 await pool(keys, 6, async key => {
   try {
     const html = await getText(DST, key);
@@ -85,10 +90,11 @@ await pool(keys, 6, async key => {
     if (did.ld) ld++;
     if (did.rel) rel++;
     if (did.series) series++;
+    if (did.fm) fm++;
     if (out === html) { skipped++; return; }
     changed++;
     if (DRY) { console.log('  would rewrite', key, Object.entries(did).filter(([, v]) => v).map(([k]) => k).join(',')); return; }
     await client.send(new PutObjectCommand({ Bucket: DST, Key: key, Body: out, ContentType: 'text/html; charset=utf-8', CacheControl: 'public, max-age=3600' }));
   } catch (e) { err++; console.log('  ERR', key, e.message); }
 });
-console.log(`${DRY ? 'DRY RUN — would rewrite' : 'Rewrote'} ${changed} file(s) — pill +${pill}, og ±${og}, json-ld ±${ld}, related ±${rel}, series ±${series} | unchanged: ${skipped} | errors: ${err}`);
+console.log(`${DRY ? 'DRY RUN — would rewrite' : 'Rewrote'} ${changed} file(s) — pill +${pill}, og ±${og}, json-ld ±${ld}, related ±${rel}, series ±${series}, front matter ±${fm} | unchanged: ${skipped} | errors: ${err}`);

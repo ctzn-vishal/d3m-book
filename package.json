@@ -29,6 +29,7 @@
     "migrate-timestamps": "node --env-file=.env.local scripts/migrate-timestamps.mjs",
     "mint-db-token": "node --env-file=.env.local scripts/mint-db-token.mjs",
     "studio": "drizzle-kit studio",
+    "backup-content": "node --env-file=.env.local scripts/backup-content.mjs",
     "inject-chrome": "node --env-file=.env.local scripts/inject-chrome.mjs",
     "inject-chrome:dry": "node --env-file=.env.local scripts/inject-chrome.mjs --dry-run",
     "gen-story-sitemap": "node --env-file=.env.local scripts/gen-story-sitemap.mjs",
