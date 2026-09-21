@@ -32,6 +32,11 @@ const nextConfig: NextConfig = {
       // alive — it is linked from teaching notes. Mirror of
       // lib/taxonomy.ts#RETIRED_TOPIC_SLUGS.
       { source: '/topic/methods-ai-data', destination: '/topic/ai-language-models', permanent: true },
+      // The Political Almanac moved from the content bucket to ctzn.pub. The
+      // /_content form is what the address bar showed after the app's
+      // replaceState(#year=…), so that is the URL people copied.
+      { source: '/apps/political-history', destination: 'https://www.ctzn.pub/atlas/political-almanac/index.html', permanent: true },
+      { source: '/_content/apps/political-history', destination: 'https://www.ctzn.pub/atlas/political-almanac/index.html', permanent: true },
       { source: '/ch00-0-foreword', destination: '/ch00-foreword', permanent: true },
       // Part 0 §0.1–§0.4 (Where Data Comes From / How Data Is Stored / How Data Is
       // Used / The Data-to-Decision Loop) were merged into one chapter,
