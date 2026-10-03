@@ -20,6 +20,24 @@
   ],
   "items": [
     {
+      "id": "03_bud_light_boycott",
+      "type": "Teaching",
+      "title": "Bud Light and the price of a political brand",
+      "description": "Bud Light’s share of beer units in the average ZIP fell from 13.7% to 10.5% within a year of April 2023, and the loss was 17% in ZIPs under 40% Republican against 29% in ZIPs at least 70% Republican.",
+      "topic": "Business & Markets",
+      "tags": [],
+      "href": "https://content.vishalsingh.org/articles/03_bud_light_boycott.html",
+      "external": true,
+      "openInNewTab": true,
+      "thumbnail": "https://content.vishalsingh.org/articles/03_bud_light_boycott/_thumb.webp",
+      "accent": "#46688f",
+      "featured": true,
+      "status": "published",
+      "sort": 0,
+      "createdAt": "2026-10-03 00:52:39",
+      "updatedAt": "2026-10-03 13:47:59"
+    },
+    {
       "id": "political-history",
       "type": "App",
       "title": "The American Political Almanac · 1976–2024",
@@ -440,6 +458,31 @@
       "updatedAt": "2026-08-09 19:52:55"
     },
     {
+      "id": "coefficient-zoo",
+      "type": "Teaching",
+      "title": "The Coefficient Zoo",
+      "description": "Fifty-one regressions per health behavior: what doubling a neighborhood's income does to smoking, obesity, and — running the other way in 98% of states — binge drinking.",
+      "topic": "Health & Mortality",
+      "tags": [
+        "Regression",
+        "Scatter plot",
+        "Small multiples",
+        "Correlation",
+        "Health / mortality data"
+      ],
+      "teaching": "ch04-statistical-charts",
+      "href": "https://content.vishalsingh.org/articles/coefficient-zoo.html",
+      "external": true,
+      "openInNewTab": true,
+      "thumbnail": "https://content.vishalsingh.org/articles/coefficient-zoo/_thumb.webp",
+      "accent": "#46688f",
+      "featured": true,
+      "status": "published",
+      "sort": 113,
+      "createdAt": "2026-06-23 01:11:24",
+      "updatedAt": "2026-10-03 13:47:32"
+    },
+    {
       "id": "religious-composition-dashboard",
       "type": "Blog",
       "title": "The Shape of Belief: World Religious Composition",
@@ -467,28 +510,30 @@
       "updatedAt": "2026-06-24 01:11:14"
     },
     {
-      "id": "southwest-regression",
+      "id": "slope-factory",
       "type": "Teaching",
-      "title": "The Southwest Effect",
-      "description": "Does a low-cost carrier entering a route really pull fares down — and by how much, once you hold distance and demand fixed? A visual walk through the classic regression.",
-      "domain": "Airlines",
-      "topic": "Business & Markets",
+      "title": "The Slope Factory",
+      "description": "We fit the deprivation–life-expectancy regression separately in 266 American metros. Every single slope came back negative. Many small models, one law.",
+      "topic": "Inequality & Mobility",
       "tags": [
         "Regression",
-        "Dashboard",
-        "Controls"
+        "Small multiples",
+        "Distribution",
+        "Decomposition",
+        "Scatter plot",
+        "Health / mortality data"
       ],
-      "teaching": "ch06-regression",
-      "href": "https://content.vishalsingh.org/studios/southwest-regression/index.html",
+      "teaching": "ch04-small-multiples",
+      "href": "https://content.vishalsingh.org/articles/slope-factory.html",
       "external": true,
       "openInNewTab": true,
-      "thumbnail": "https://content.vishalsingh.org/studios/southwest-regression/preview.jpg",
-      "accent": "#10B981",
+      "thumbnail": "https://content.vishalsingh.org/articles/slope-factory/_thumb.webp",
+      "accent": "#46688f",
       "featured": true,
       "status": "published",
-      "sort": 139,
+      "sort": 138,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-06-24 01:11:16"
+      "updatedAt": "2026-10-03 13:47:24"
     },
     {
       "id": "well-being-atlas",
@@ -568,24 +613,6 @@
       "updatedAt": "2026-06-24 01:11:11"
     },
     {
-      "id": "03_bud_light_boycott",
-      "type": "Teaching",
-      "title": "Bud Light and the price of a political brand",
-      "description": "Bud Light’s share of beer units in the average ZIP fell from 13.7% to 10.5% within a year of April 2023, and the loss was 17% in ZIPs under 40% Republican against 29% in ZIPs at least 70% Republican.",
-      "topic": "Business & Markets",
-      "tags": [],
-      "href": "https://content.vishalsingh.org/articles/03_bud_light_boycott.html",
-      "external": true,
-      "openInNewTab": true,
-      "thumbnail": "https://content.vishalsingh.org/articles/03_bud_light_boycott/_thumb.webp",
-      "accent": "#46688f",
-      "featured": false,
-      "status": "published",
-      "sort": 0,
-      "createdAt": "2026-10-03 00:52:39",
-      "updatedAt": "2026-10-03 01:13:14"
-    },
-    {
       "id": "04_coke_2025",
       "type": "Teaching",
       "title": "Coca-Cola, a rumor and a different constituency",
@@ -641,9 +668,10 @@
     },
     {
       "id": "teaching_note",
-      "type": "Blog",
+      "type": "Teaching",
       "title": "Matching the unit of analysis to the shock: Amazon HQ2, Arlington and Long Island City",
       "description": "Typical home values in Crystal City’s ZIP averaged 3.7 percent above a matched comparison from November 2018 to February 2020 and rank 1 among 305 ZIPs on a placebo test. Long Island City’s ZIP shows no gap in the announcement window and…",
+      "topic": "Business & Markets",
       "tags": [],
       "href": "https://content.vishalsingh.org/articles/teaching_note.html",
       "external": true,
@@ -654,7 +682,7 @@
       "status": "published",
       "sort": 0,
       "createdAt": "2026-10-03 03:45:07",
-      "updatedAt": "2026-10-03 03:45:46"
+      "updatedAt": "2026-10-03 13:45:56"
     },
     {
       "id": "The Economics of Scientific Publishing",
@@ -3100,31 +3128,6 @@
       "updatedAt": "2026-06-24 01:11:13"
     },
     {
-      "id": "coefficient-zoo",
-      "type": "Teaching",
-      "title": "The Coefficient Zoo",
-      "description": "Fifty-one regressions per health behavior: what doubling a neighborhood's income does to smoking, obesity, and — running the other way in 98% of states — binge drinking.",
-      "topic": "Health & Mortality",
-      "tags": [
-        "Regression",
-        "Scatter plot",
-        "Small multiples",
-        "Correlation",
-        "Health / mortality data"
-      ],
-      "teaching": "ch04-statistical-charts",
-      "href": "https://content.vishalsingh.org/articles/coefficient-zoo.html",
-      "external": true,
-      "openInNewTab": true,
-      "thumbnail": "https://content.vishalsingh.org/articles/coefficient-zoo/_thumb.webp",
-      "accent": "#46688f",
-      "featured": false,
-      "status": "published",
-      "sort": 113,
-      "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-08-09 19:52:55"
-    },
-    {
       "id": "the-abortion-sort",
       "type": "Blog",
       "title": "The Abortion Sort",
@@ -3711,30 +3714,28 @@
       "updatedAt": "2026-08-09 19:52:55"
     },
     {
-      "id": "slope-factory",
+      "id": "southwest-regression",
       "type": "Teaching",
-      "title": "The Slope Factory",
-      "description": "We fit the deprivation–life-expectancy regression separately in 266 American metros. Every single slope came back negative. Many small models, one law.",
-      "topic": "Inequality & Mobility",
+      "title": "The Southwest Effect",
+      "description": "Does a low-cost carrier entering a route really pull fares down — and by how much, once you hold distance and demand fixed? A visual walk through the classic regression.",
+      "domain": "Airlines",
+      "topic": "Business & Markets",
       "tags": [
         "Regression",
-        "Small multiples",
-        "Distribution",
-        "Decomposition",
-        "Scatter plot",
-        "Health / mortality data"
+        "Dashboard",
+        "Controls"
       ],
-      "teaching": "ch04-small-multiples",
-      "href": "https://content.vishalsingh.org/articles/slope-factory.html",
+      "teaching": "ch06-regression",
+      "href": "https://content.vishalsingh.org/studios/southwest-regression/index.html",
       "external": true,
       "openInNewTab": true,
-      "thumbnail": "https://content.vishalsingh.org/articles/slope-factory/_thumb.webp",
-      "accent": "#46688f",
+      "thumbnail": "https://content.vishalsingh.org/studios/southwest-regression/preview.jpg",
+      "accent": "#10B981",
       "featured": false,
       "status": "published",
-      "sort": 138,
+      "sort": 139,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-08-09 19:52:55"
+      "updatedAt": "2026-10-03 13:47:21"
     },
     {
       "id": "starting-line",
