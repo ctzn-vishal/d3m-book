@@ -38,6 +38,24 @@
       "updatedAt": "2026-10-03 13:47:59"
     },
     {
+      "id": "genai-landscape-oct-2026",
+      "type": "Teaching",
+      "title": "Generative AI Market Briefing",
+      "description": "Revenue, users, enterprise adoption, token volume and capital in the generative AI market, as of October 2026. Vishal Singh, NYU Stern.",
+      "topic": "AI & Language Models",
+      "tags": [],
+      "href": "https://content.vishalsingh.org/articles/genai-landscape-oct-2026.html",
+      "external": true,
+      "openInNewTab": true,
+      "thumbnail": "https://content.vishalsingh.org/articles/genai-landscape-oct-2026/_thumb.webp",
+      "accent": "#46688f",
+      "featured": true,
+      "status": "published",
+      "sort": 0,
+      "createdAt": "2026-10-06 02:43:50",
+      "updatedAt": "2026-10-06 13:01:23"
+    },
+    {
       "id": "political-history",
       "type": "App",
       "title": "The American Political Almanac · 1976–2024",
@@ -629,23 +647,6 @@
       "sort": 0,
       "createdAt": "2026-10-03 00:52:39",
       "updatedAt": "2026-10-03 01:13:26"
-    },
-    {
-      "id": "genai-landscape-oct-2026",
-      "type": "Blog",
-      "title": "Generative AI Market Briefing",
-      "description": "Revenue, users, enterprise adoption, token volume and capital in the generative AI market, as of October 2026. Vishal Singh, NYU Stern.",
-      "tags": [],
-      "href": "https://content.vishalsingh.org/articles/genai-landscape-oct-2026.html",
-      "external": true,
-      "openInNewTab": true,
-      "thumbnail": "https://content.vishalsingh.org/articles/genai-landscape-oct-2026/_thumb.webp",
-      "accent": "#46688f",
-      "featured": false,
-      "status": "published",
-      "sort": 0,
-      "createdAt": "2026-10-06 02:43:50",
-      "updatedAt": "2026-10-06 02:44:36"
     },
     {
       "id": "05_gas_elasticity",
