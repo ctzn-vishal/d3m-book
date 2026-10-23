@@ -6,6 +6,8 @@ import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { RegistryItem } from '@/lib/registry-types';
 import { GalleryCard } from '@/components/hub/GalleryCard';
 import { CollectionCard } from '@/components/hub/CollectionCard';
+import { BookCard } from '@/components/hub/BookCard';
+import { BOOKS } from '@/lib/books';
 import { findCollection, type Collection } from '@/lib/collections';
 import { galleryTopicOrder, topicSlug, TOPIC_META } from '@/lib/taxonomy';
 
@@ -224,6 +226,46 @@ export function GallerySections({
 
   return (
     <div className="mt-2">
+      {/* Format shelf, pinned above the subject shelves. Not a topic: see
+          lib/books.ts for why it is curated separately. */}
+      <section className="py-10 pt-4">
+        <Shelf
+          label="Interactive books"
+          heading={
+            <>
+              <h2 className="font-serif text-[clamp(22px,2.6vw,29px)] font-semibold leading-[1.1] tracking-tight text-hub-ink">
+                <Link href="/booklets" className="transition-colors hover:text-hub-teal">
+                  Interactive books
+                </Link>
+              </h2>
+              <span className="inline-flex shrink-0 items-center rounded-full border border-hub-line bg-hub-card px-2.5 py-1 font-plex text-[11px] font-medium tracking-[0.04em] text-hub-ink-soft">
+                {BOOKS.length}
+                <span className="sr-only"> pieces</span>
+              </span>
+              <Link
+                href="/booklets"
+                className="group inline-flex items-center gap-1.5 font-plex text-[11.5px] font-medium uppercase tracking-[0.06em] text-hub-teal hover:underline"
+              >
+                All books
+                <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </>
+          }
+          blurb={
+            <p className="mt-2 max-w-2xl text-[13.5px] leading-relaxed text-hub-ink-soft">
+              Book-length projects, most built as their own sites, and two chart and map toolkits on ctzn.pub. Most are
+              written in public: chapters are drafted and revised on the live site.
+            </p>
+          }
+        >
+          {BOOKS.map(book => (
+            <div key={book.id} className="w-[80vw] max-w-[320px] shrink-0 snap-start sm:w-[300px] xl:w-[318px]">
+              <BookCard book={book} sizes={SHELF_SIZES} />
+            </div>
+          ))}
+        </Shelf>
+      </section>
+
       {order.map(topic => {
         const all = byTopic.get(topic)!;
         // Collapse collections first, then take the top entries — a five-part

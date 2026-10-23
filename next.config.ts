@@ -4,6 +4,17 @@ import createMDX from '@next/mdx';
 // Public origin for Tigris-hosted content (studios + data stories + datasets).
 const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishalsingh.org').replace(/\/$/, '');
 
+// Book zones: mount path on vishalsingh.org → the book's own Vercel deployment.
+// Each book is built with `basePath` equal to its mount path (zipcode-book and
+// politics-book: content/book.json; weights-book: next.config.ts), so its pages
+// and /_next assets resolve through the same two rules. Listed on the
+// "Interactive books" shelf and /booklets via lib/books.ts.
+const BOOK_ZONES: Record<string, string> = {
+  '/zipcode': 'https://zipcode-book.vercel.app',
+  '/politics': 'https://politics-book.vercel.app',
+  '/weights': 'https://weights-book.vercel.app',
+};
+
 const nextConfig: NextConfig = {
   ...(process.env.NEXT_DIST_DIR ? { distDir: process.env.NEXT_DIST_DIR } : {}),
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
@@ -175,6 +186,11 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return {
       beforeFiles: [
+        // Must be beforeFiles: app/[slug] would otherwise match /zipcode etc.
+        ...Object.entries(BOOK_ZONES).flatMap(([base, origin]) => [
+          { source: base, destination: `${origin}${base}` },
+          { source: `${base}/:path*`, destination: `${origin}${base}/:path*` },
+        ]),
         // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
         // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
         // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
