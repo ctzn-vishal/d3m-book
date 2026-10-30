@@ -13,6 +13,7 @@ const BOOK_ZONES: Record<string, string> = {
   '/zipcode': 'https://zipcode-book.vercel.app',
   '/politics': 'https://politics-book.vercel.app',
   '/weights': 'https://weights-book.vercel.app',
+  '/decisionai': 'https://decisionai-book.vercel.app',
 };
 
 const nextConfig: NextConfig = {

@@ -78,6 +78,19 @@ export const BOOKS: ShelfBook[] = [
     inProgress: true,
   },
   {
+    id: 'decision-ai',
+    kind: 'Book',
+    title: 'Decision AI',
+    subtitle: 'Case studies in turning model judgments into actions',
+    description:
+      'Case studies on decision models, systems that take evidence and typed questions and return a choice, a rubric score or a probability, in customer operations, code review and agent workflows.',
+    href: '/decisionai',
+    host: 'vishalsingh.org/decisionai',
+    newTab: true,
+    thumbnail: '/books/decision-ai.jpg',
+    inProgress: true,
+  },
+  {
     id: 'well-being-atlas',
     kind: 'Book',
     title: 'The Well-Being Atlas',
