@@ -9,14 +9,19 @@ const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishals
 // politics-book: content/book.json; weights-book: next.config.ts), so its pages
 // and /_next assets resolve through the same two rules. Listed on the
 // "Interactive books" shelf and /booklets via lib/books.ts. Gallery apps use the
-// same mount (basePath set in the app's own repo); their registry href is the
-// mount path. /ai-frontier: repo ctzn-vishal/ai_table, registry id ai-models.
+// same mount (basePath, or Vite `base`, set in the app's own repo); their
+// registry href is the mount path. Repos are ctzn-vishal/<name> unless noted.
 const BOOK_ZONES: Record<string, string> = {
   '/zipcode': 'https://zipcode-book.vercel.app',
   '/politics': 'https://politics-book.vercel.app',
   '/weights': 'https://weights-book.vercel.app',
   '/decisionai': 'https://decisionai-book.vercel.app',
-  '/ai-frontier': 'https://v0-interactive-table-lac.vercel.app',
+  // Gallery apps (registry id → repo).
+  '/ai-frontier': 'https://v0-interactive-table-lac.vercel.app', // ai-models → ai_table
+  '/fal': 'https://fal-case-studies.vercel.app', // fal-case-studies
+  '/insight-digest': 'https://insight-digest-ten.vercel.app', // insight-digest
+  '/scrc': 'https://scrc-data.vercel.app', // scrc-data (Vite, built into dist/scrc)
+  '/trade': 'https://world-trade-atlas.vercel.app', // world-trade-atlas
 };
 
 const nextConfig: NextConfig = {
@@ -196,9 +201,7 @@ const nextConfig: NextConfig = {
           { source: `${base}/:path*`, destination: `${origin}${base}/:path*` },
         ]),
         // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
-        // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
         // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
-        // { source: '/apps/scrc/:path*',        destination: 'https://scrc-data.vercel.app/apps/scrc/:path*' },
       ],
     };
   },

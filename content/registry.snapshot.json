@@ -416,7 +416,7 @@
         "generative",
         "marketing"
       ],
-      "href": "https://fal-case-studies.vercel.app/",
+      "href": "/fal",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/app-fal-case-studies.jpg",
@@ -464,7 +464,7 @@
         "audio",
         "learning"
       ],
-      "href": "https://insight-digest-ten.vercel.app/",
+      "href": "/insight-digest",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/app-insight-digest.jpg",
@@ -592,7 +592,7 @@
         "baci",
         "explorer"
       ],
-      "href": "https://world-trade-atlas.vercel.app/",
+      "href": "/trade",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/world_trade.png",
@@ -2547,7 +2547,7 @@
         "gallery",
         "datasets"
       ],
-      "href": "https://scrc-data.vercel.app/",
+      "href": "/scrc",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/scrc_data.png",

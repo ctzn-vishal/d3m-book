@@ -45,14 +45,13 @@
       "domain": "Trade",
       "topic": "Trade",
       "tags": ["trade", "geography", "baci", "explorer"],
-      "href": "https://world-trade-atlas.vercel.app/",
+      "href": "/trade",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/world_trade.png",
       "accent": "#46688f",
       "featured": true,
-      "status": "published",
-      "proxyPath": "/atlas/trade"
+      "status": "published"
     },
     {
       "id": "zip-health",
@@ -95,14 +94,13 @@
       "domain": "Research data",
       "topic": "AI & Data",
       "tags": ["research-data", "gallery", "datasets"],
-      "href": "https://scrc-data.vercel.app/",
+      "href": "/scrc",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/scrc_data.png",
       "accent": "#2f6f6b",
       "featured": false,
-      "status": "published",
-      "proxyPath": "/apps/scrc"
+      "status": "published"
     },
     {
       "id": "insight-digest",
@@ -112,7 +110,7 @@
       "domain": "Learning",
       "topic": "AI & Data",
       "tags": ["ai", "book summaries", "audio", "learning"],
-      "href": "https://insight-digest-ten.vercel.app/",
+      "href": "/insight-digest",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/app-insight-digest.jpg",
@@ -144,7 +142,7 @@
       "domain": "Advertising",
       "topic": "Media & Advertising",
       "tags": ["ai", "advertising", "generative", "marketing"],
-      "href": "https://fal-case-studies.vercel.app/",
+      "href": "/fal",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/app-fal-case-studies.jpg",
