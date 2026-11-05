@@ -8,12 +8,15 @@ const CONTENT = (process.env.NEXT_PUBLIC_CONTENT_URL || 'https://content.vishals
 // Each book is built with `basePath` equal to its mount path (zipcode-book and
 // politics-book: content/book.json; weights-book: next.config.ts), so its pages
 // and /_next assets resolve through the same two rules. Listed on the
-// "Interactive books" shelf and /booklets via lib/books.ts.
+// "Interactive books" shelf and /booklets via lib/books.ts. Gallery apps use the
+// same mount (basePath set in the app's own repo); their registry href is the
+// mount path. /ai-frontier: repo ctzn-vishal/ai_table, registry id ai-models.
 const BOOK_ZONES: Record<string, string> = {
   '/zipcode': 'https://zipcode-book.vercel.app',
   '/politics': 'https://politics-book.vercel.app',
   '/weights': 'https://weights-book.vercel.app',
   '/decisionai': 'https://decisionai-book.vercel.app',
+  '/ai-frontier': 'https://v0-interactive-table-lac.vercel.app',
 };
 
 const nextConfig: NextConfig = {
@@ -195,7 +198,6 @@ const nextConfig: NextConfig = {
         // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
         // { source: '/atlas/trade/:path*',      destination: 'https://world-trade-atlas.vercel.app/atlas/trade/:path*' },
         // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
-        // { source: '/apps/ai-models/:path*',   destination: 'https://v0-interactive-table-lac.vercel.app/apps/ai-models/:path*' },
         // { source: '/apps/scrc/:path*',        destination: 'https://scrc-data.vercel.app/apps/scrc/:path*' },
       ],
     };

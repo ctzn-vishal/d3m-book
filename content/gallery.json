@@ -79,14 +79,13 @@
       "domain": "AI reference",
       "topic": "AI & Data",
       "tags": ["ai", "benchmarks", "reference", "table"],
-      "href": "https://v0-interactive-table-lac.vercel.app/",
+      "href": "/ai-frontier",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/app-ai-frontier.jpg",
       "accent": "#b9762a",
       "featured": false,
-      "status": "published",
-      "proxyPath": "/apps/ai-models"
+      "status": "published"
     },
     {
       "id": "scrc-data",
