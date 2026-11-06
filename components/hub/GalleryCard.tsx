@@ -116,7 +116,7 @@ export function GalleryCard({
         <h3 className={`line-clamp-2 font-serif text-[17px] font-semibold leading-snug text-hub-ink ${showTopic && item.topic ? 'mt-1.5' : ''}`}>
           {item.title}
         </h3>
-        <p className="mt-1.5 line-clamp-2 flex-grow text-[13px] leading-relaxed text-hub-ink-soft">
+        <p className="mt-1.5 mb-auto line-clamp-2 text-[13px] leading-relaxed text-hub-ink-soft">
           {item.description}
         </p>
         {/* One row of tags. max-h clips a wrapped second row cleanly (the gap

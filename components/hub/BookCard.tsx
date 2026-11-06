@@ -65,7 +65,7 @@ export function BookCard({ book, sizes = GRID_SIZES }: { book: ShelfBook; sizes?
         {book.subtitle && (
           <p className="mt-0.5 line-clamp-1 font-serif text-[13.5px] italic text-hub-ink-soft">{book.subtitle}</p>
         )}
-        <p className="mt-1.5 line-clamp-3 flex-grow text-[13px] leading-relaxed text-hub-ink-soft">{book.description}</p>
+        <p className="mt-1.5 mb-auto line-clamp-3 text-[13px] leading-relaxed text-hub-ink-soft">{book.description}</p>
         <div className="mt-2.5 truncate font-plex text-[11px] tracking-[0.02em] text-hub-teal">
           {book.host}
           {book.credit && <span className="text-hub-ink-soft"> · {book.credit}</span>}

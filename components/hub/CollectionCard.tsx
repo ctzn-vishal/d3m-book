@@ -67,7 +67,7 @@ export function CollectionCard({
         <h3 className="mt-1.5 line-clamp-2 font-serif text-[17px] font-semibold leading-snug text-hub-ink transition-colors group-hover:text-hub-teal">
           {collection.title}
         </h3>
-        <p className="mt-1.5 line-clamp-2 flex-1 text-[13px] leading-relaxed text-hub-ink-soft">{collection.blurb}</p>
+        <p className="mt-1.5 mb-auto line-clamp-2 text-[13px] leading-relaxed text-hub-ink-soft">{collection.blurb}</p>
 
         <span className="mt-2.5 inline-flex items-center gap-1.5 border-t border-hub-line pt-2.5 text-[12px] font-medium text-hub-ink-faint transition-colors group-hover:text-hub-teal">
           Open the collection
