@@ -201,7 +201,6 @@ const nextConfig: NextConfig = {
           { source: `${base}/:path*`, destination: `${origin}${base}/:path*` },
         ]),
         // { source: '/atlas/well-being/:path*', destination: 'https://well-being-atlas.vercel.app/atlas/well-being/:path*' },
-        // { source: '/apps/zip-health/:path*',  destination: 'https://health-of-americas-zip-codes.vercel.app/apps/zip-health/:path*' },
       ],
     };
   },

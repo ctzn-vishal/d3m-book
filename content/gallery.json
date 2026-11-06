@@ -61,14 +61,13 @@
       "domain": "Public health",
       "topic": "Public Health",
       "tags": ["public-health", "zip", "places", "maps"],
-      "href": "https://health-of-americas-zip-codes.vercel.app/",
+      "href": "https://www.ctzn.pub/apps/health-of-americas-zip-codes/",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/zip_health.png",
       "accent": "#7a4a6e",
       "featured": false,
-      "status": "published",
-      "proxyPath": "/apps/zip-health"
+      "status": "published"
     },
     {
       "id": "ai-models",
