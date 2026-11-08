@@ -94,15 +94,14 @@ export const BOOKS: ShelfBook[] = [
     id: 'south-asians-in-america',
     kind: 'Book',
     title: 'South Asians in America',
-    subtitle: 'A data booklet in nine chapters',
+    subtitle: 'A data book in nine chapters',
     description:
       'The 6.45 million US residents who reported a single South Asian race in 2024: who they are, where they live, how they earn and form families, and how they vote.',
-    // One bucket file served through the /read route handler, so a plain <a>.
-    href: '/read/south-asians-in-america',
-    host: 'vishalsingh.org/read/south-asians-in-america',
+    href: '/south-asians',
+    host: 'vishalsingh.org/south-asians',
     newTab: true,
     thumbnail: '/books/south-asians-in-america.jpg',
-    inProgress: false,
+    inProgress: true,
   },
   {
     id: 'well-being-atlas',
