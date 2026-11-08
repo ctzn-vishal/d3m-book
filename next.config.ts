@@ -16,6 +16,7 @@ const BOOK_ZONES: Record<string, string> = {
   '/politics': 'https://politics-book.vercel.app',
   '/weights': 'https://weights-book.vercel.app',
   '/decisionai': 'https://decisionai-book.vercel.app',
+  '/south-asians': 'https://south-asians-in-america.vercel.app',
   // Gallery apps (registry id → repo).
   '/ai-frontier': 'https://v0-interactive-table-lac.vercel.app', // ai-models → ai_table
   '/fal': 'https://fal-case-studies.vercel.app', // fal-case-studies
