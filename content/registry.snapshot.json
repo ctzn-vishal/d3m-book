@@ -136,7 +136,7 @@
         "wellbeing",
         "explorer"
       ],
-      "href": "https://wb-app-blush.vercel.app/",
+      "href": "/worldlines",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/world_app.png",
@@ -145,7 +145,7 @@
       "status": "published",
       "sort": 2,
       "createdAt": "2026-07-06 16:00:50",
-      "updatedAt": "2026-08-12 18:48:55"
+      "updatedAt": "2026-11-20 21:50:44"
     },
     {
       "id": "five-subway-stops",
@@ -4504,7 +4504,7 @@
         "forecasting",
         "prediction markets"
       ],
-      "href": "https://llm-predict-alpha.vercel.app/",
+      "href": "/llm-arena",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/app-llm-predict.jpg",
@@ -4513,7 +4513,7 @@
       "status": "published",
       "sort": 161,
       "createdAt": "2026-06-23 01:11:24",
-      "updatedAt": "2026-08-09 19:52:55"
+      "updatedAt": "2026-11-20 21:50:44"
     },
     {
       "id": "party-beats-place-seven-to-one",

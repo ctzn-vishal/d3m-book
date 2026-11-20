@@ -23,6 +23,8 @@ const BOOK_ZONES: Record<string, string> = {
   '/insight-digest': 'https://insight-digest-ten.vercel.app', // insight-digest
   '/scrc': 'https://scrc-data.vercel.app', // scrc-data (Vite, built into dist/scrc)
   '/trade': 'https://world-trade-atlas.vercel.app', // world-trade-atlas
+  '/worldlines': 'https://wb-app-blush.vercel.app', // worldlines → ctzn-pub/wb-app
+  '/llm-arena': 'https://llm-predict-alpha.vercel.app', // llm-predict
   // Gallery apps under /apps/<slug>. These win over app/apps/[...path] (bucket
   // HTML apps) because they are beforeFiles rewrites, so a slug here must not
   // also exist in the content bucket.
