@@ -64,6 +64,12 @@ export type RegistryItem = {
   featured: boolean;
   status: RegistryStatus;
   sort?: number;
+  /**
+   * Editorial publication date, 'YYYY-MM-DD'. Overrides the corpus-wide byline
+   * date (CORPUS_DATE in scripts/front-matter.mjs) for this one file. Unset for
+   * nearly every row.
+   */
+  publishedAt?: string;
   /** 'YYYY-MM-DD HH:MM:SS' (UTC) — from the Turso row; absent in older snapshots. */
   createdAt?: string;
   updatedAt?: string;

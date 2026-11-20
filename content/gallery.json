@@ -240,11 +240,11 @@
     "smiles_and_ladders": { "teaching": "ch03-uncertainty" },
     "flip_counties": { "teaching": "ch04-dashboards" },
     "deadliest-to-be-poor": { "teaching": "ch04-dashboards" },
-    "zillow-housing-data": { "type": "Teaching", "topic": "Business & Markets", "tags": ["Trend analysis", "Decomposition", "Geospatial analysis", "Time series", "Choropleth", "Panel data", "Prices"] },
-    "zillow-1-what-zillow-publishes": { "type": "Teaching", "topic": "Business & Markets", "tags": ["Time series", "Distribution", "Panel data", "Prices"] },
-    "zillow-2-geography-ladder": { "type": "Teaching", "topic": "Business & Markets", "tags": ["Decomposition", "Geospatial analysis", "Census / ACS", "Panel data"] },
-    "zillow-3-states-and-metros": { "type": "Teaching", "topic": "Business & Markets", "tags": ["Trend analysis", "Inequality analysis", "Time series", "Scatter plot", "Prices"] },
-    "zillow-4-new-york-metro-to-zips": { "type": "Teaching", "topic": "Business & Markets", "tags": ["Geospatial analysis", "Choropleth", "Time series", "Prices"] },
-    "zillow-5-nyc-neighborhoods": { "type": "Teaching", "topic": "Business & Markets", "tags": ["Geospatial analysis", "Choropleth", "Scatter plot", "Small multiples"] }
+    "zillow-housing-data": { "type": "Teaching", "topic": "Business & Markets", "publishedAt": "2026-11-19", "tags": ["Trend analysis", "Decomposition", "Geospatial analysis", "Time series", "Choropleth", "Panel data", "Prices"] },
+    "zillow-1-what-zillow-publishes": { "type": "Teaching", "topic": "Business & Markets", "publishedAt": "2026-11-19", "tags": ["Time series", "Distribution", "Panel data", "Prices"] },
+    "zillow-2-geography-ladder": { "type": "Teaching", "topic": "Business & Markets", "publishedAt": "2026-11-19", "tags": ["Decomposition", "Geospatial analysis", "Census / ACS", "Panel data"] },
+    "zillow-3-states-and-metros": { "type": "Teaching", "topic": "Business & Markets", "publishedAt": "2026-11-19", "tags": ["Trend analysis", "Inequality analysis", "Time series", "Scatter plot", "Prices"] },
+    "zillow-4-new-york-metro-to-zips": { "type": "Teaching", "topic": "Business & Markets", "publishedAt": "2026-11-19", "tags": ["Geospatial analysis", "Choropleth", "Time series", "Prices"] },
+    "zillow-5-nyc-neighborhoods": { "type": "Teaching", "topic": "Business & Markets", "publishedAt": "2026-11-19", "tags": ["Geospatial analysis", "Choropleth", "Scatter plot", "Small multiples"] }
   }
 }

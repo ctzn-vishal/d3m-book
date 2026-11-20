@@ -37,6 +37,7 @@ type RegistryItem = {
   featured: boolean;
   status: 'published' | 'hidden' | 'draft' | 'unlisted';
   sort: number;
+  publishedAt?: string;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -242,6 +243,7 @@ await db.execute(`CREATE TABLE IF NOT EXISTS gallery (
   featured INTEGER NOT NULL DEFAULT 0 CHECK (featured IN (0,1)),
   status TEXT NOT NULL DEFAULT 'published' CHECK (status IN ('published','hidden','draft','unlisted')),
   sort INTEGER NOT NULL DEFAULT 0,
+  published_at TEXT,
   created_at TEXT DEFAULT (datetime('now')),
   updated_at TEXT DEFAULT (datetime('now'))
 )`);
@@ -257,6 +259,10 @@ for (const col of ['created_at', 'updated_at']) {
 // nothing changes until rows are filed in /admin.
 if (!cols.has('collection')) await db.execute('ALTER TABLE gallery ADD COLUMN collection TEXT');
 if (!cols.has('part')) await db.execute('ALTER TABLE gallery ADD COLUMN part INTEGER');
+// Editorial publication date ('YYYY-MM-DD') for the byline, overriding
+// CORPUS_DATE in scripts/front-matter.mjs. Curated: seeded from gallery.json
+// `curate` while the row has none, and never cleared by a sync.
+if (!cols.has('published_at')) await db.execute('ALTER TABLE gallery ADD COLUMN published_at TEXT');
 // Home-page shelf order, curated by drag in /admin. Its own table because shelf
 // order is a property of the topic, not of any row — including topics that have
 // no rows yet. Created here as well as by the /admin write so the read path
@@ -299,7 +305,8 @@ function rowChanged(prev: any, m: RegistryItem): boolean {
     norm(prev.accent) !== norm(m.accent ?? null) ||
     (prev.featured ? 1 : 0) !== (m.featured ? 1 : 0) ||
     prev.status !== m.status ||
-    (prev.sort ?? 0) !== (m.sort ?? 0)
+    (prev.sort ?? 0) !== (m.sort ?? 0) ||
+    norm(prev.published_at) !== norm(m.publishedAt ?? null)
   );
 }
 
@@ -323,6 +330,7 @@ for (const d of derived) {
         featured: prev.featured != null ? !!prev.featured : d.featured,
         status: (prev.status as RegistryItem['status']) ?? d.status,
         sort: prev.sort ?? d.sort,
+        publishedAt: prev.published_at ?? d.publishedAt,
       }
     : d;
   const changed = !prev || rowChanged(prev, merged);
@@ -330,20 +338,20 @@ for (const d of derived) {
   const updatedAt = changed ? NOW : (prev?.updated_at ?? NOW);
   await db.execute({
     sql: `INSERT INTO gallery
-      (id,type,title,description,domain,topic,tags,teaching,href,external,open_in_new_tab,thumbnail,accent,featured,status,sort,created_at,updated_at)
-      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+      (id,type,title,description,domain,topic,tags,teaching,href,external,open_in_new_tab,thumbnail,accent,featured,status,sort,published_at,created_at,updated_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET
         type=excluded.type, title=excluded.title, description=excluded.description,
         domain=excluded.domain, topic=excluded.topic, tags=excluded.tags, teaching=excluded.teaching,
         href=excluded.href, external=excluded.external, open_in_new_tab=excluded.open_in_new_tab,
         thumbnail=excluded.thumbnail, accent=excluded.accent, featured=excluded.featured,
-        status=excluded.status, sort=excluded.sort,
+        status=excluded.status, sort=excluded.sort, published_at=excluded.published_at,
         created_at=excluded.created_at, updated_at=excluded.updated_at`,
     args: [
       merged.id, merged.type, merged.title, merged.description ?? '', merged.domain ?? null,
       merged.topic ?? null, JSON.stringify(merged.tags ?? []), merged.teaching ?? null, merged.href,
       merged.external ? 1 : 0, merged.openInNewTab ? 1 : 0, merged.thumbnail ?? null, merged.accent,
-      merged.featured ? 1 : 0, merged.status, merged.sort ?? 0, createdAt, updatedAt,
+      merged.featured ? 1 : 0, merged.status, merged.sort ?? 0, merged.publishedAt ?? null, createdAt, updatedAt,
     ],
   });
   if (prev) { refreshed++; if (changed) touched++; } else inserted++;
@@ -386,6 +394,8 @@ const items: RegistryItem[] = rows.map(r => ({
   href: r.href, external: !!r.external, openInNewTab: !!r.open_in_new_tab,
   thumbnail: r.thumbnail ?? undefined, accent: r.accent ?? '#46688f',
   featured: !!r.featured, status: r.status, sort: r.sort ?? 0,
+  // inject-chrome reads the byline date from the snapshot, not the DB.
+  publishedAt: r.published_at ?? undefined,
   createdAt: r.created_at ?? undefined, updatedAt: r.updated_at ?? undefined,
 }));
 // Shelf order travels with the items: without it a Turso outage would serve the

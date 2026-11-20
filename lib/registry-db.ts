@@ -49,6 +49,8 @@ function mapRows(rows: Record<string, any>[]): RegistryItem[] {
     featured: !!r.featured,
     status: r.status,
     sort: r.sort ?? 0,
+    // Same as `part`: absent until sync-registry has added the column.
+    publishedAt: r.published_at ?? undefined,
     createdAt: r.created_at ?? undefined,
     updatedAt: r.updated_at ?? undefined,
   })).map(publicItem);

@@ -92,7 +92,9 @@ and MDX article pages in both themes at mobile and desktop widths.
 - Byline dates come from `CORPUS_DATE`, one date for everything. The registry's
   `createdAt` is ingest time (129 stories across 11 days) and `updatedAt` tracks
   pipeline runs; neither is editorial. Put a `publishedAt` on a registry row to
-  override one file.
+  override one file: add `"publishedAt": "YYYY-MM-DD"` to its `curate` entry in
+  `content/gallery.json`, then `pnpm sync-registry` (fills the Turso
+  `published_at` column while it is empty) and `pnpm inject-chrome`.
 - It's the only concern that round-trips the document through cheerio, which is
   why it runs last and why the marker patterns above it tolerate both
   `data-vs-og` and `data-vs-og=""`.

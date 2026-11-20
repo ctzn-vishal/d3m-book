@@ -686,8 +686,9 @@
       "featured": false,
       "status": "unlisted",
       "sort": 0,
+      "publishedAt": "2026-11-19",
       "createdAt": "2026-11-20 04:09:14",
-      "updatedAt": "2026-11-20 04:10:00"
+      "updatedAt": "2026-11-20 04:23:01"
     },
     {
       "id": "05_gas_elasticity",
@@ -818,8 +819,9 @@
       "featured": false,
       "status": "unlisted",
       "sort": 0,
+      "publishedAt": "2026-11-19",
       "createdAt": "2026-11-20 04:09:14",
-      "updatedAt": "2026-11-20 04:10:00"
+      "updatedAt": "2026-11-20 04:23:01"
     },
     {
       "id": "The Economics of Scientific Publishing",
@@ -916,8 +918,9 @@
       "featured": false,
       "status": "unlisted",
       "sort": 0,
+      "publishedAt": "2026-11-19",
       "createdAt": "2026-11-20 04:09:14",
-      "updatedAt": "2026-11-20 04:10:00"
+      "updatedAt": "2026-11-20 04:23:01"
     },
     {
       "id": "Two Social Sciences",
@@ -957,8 +960,9 @@
       "featured": false,
       "status": "unlisted",
       "sort": 0,
+      "publishedAt": "2026-11-19",
       "createdAt": "2026-11-20 04:09:14",
-      "updatedAt": "2026-11-20 04:10:00"
+      "updatedAt": "2026-11-20 04:23:01"
     },
     {
       "id": "02_brand_map",
@@ -1019,8 +1023,9 @@
       "featured": false,
       "status": "published",
       "sort": 0,
+      "publishedAt": "2026-11-19",
       "createdAt": "2026-11-20 04:09:14",
-      "updatedAt": "2026-11-20 04:09:14"
+      "updatedAt": "2026-11-20 04:23:01"
     },
     {
       "id": "zillow-5-nyc-neighborhoods",
@@ -1042,8 +1047,9 @@
       "featured": false,
       "status": "unlisted",
       "sort": 0,
+      "publishedAt": "2026-11-19",
       "createdAt": "2026-11-20 04:09:14",
-      "updatedAt": "2026-11-20 04:10:00"
+      "updatedAt": "2026-11-20 04:23:01"
     },
     {
       "id": "state-home-values",
