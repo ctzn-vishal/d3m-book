@@ -20,7 +20,7 @@ export const CONTENT_BUCKET = process.env.TIGRIS_CONTENT_BUCKET || 'vishal';
  * at articles/<sub>/<slug>/_thumb.webp. Non-HTML assets in the folder
  * (style.css, charts.js, *.md) are ignored by the pipeline.
  */
-export const ARTICLE_SUBDIRS = ['HF', 'india'];
+export const ARTICLE_SUBDIRS = ['HF', 'india', 'zillow'];
 
 /**
  * Article slugs ingested with status 'unlisted' instead of 'published':
@@ -49,6 +49,12 @@ export const UNLISTED_ON_INGEST = new Set([
   'shadow-campaign',
   'govt-second-advertiser',
   'ledger-5-what-the-ads-say',
+  // Zillow Housing Data (cover: articles/zillow/zillow-housing-data.html).
+  'zillow-1-what-zillow-publishes',
+  'zillow-2-geography-ladder',
+  'zillow-3-states-and-metros',
+  'zillow-4-new-york-metro-to-zips',
+  'zillow-5-nyc-neighborhoods',
 ]);
 
 /**

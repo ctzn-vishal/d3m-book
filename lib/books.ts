@@ -104,6 +104,20 @@ export const BOOKS: ShelfBook[] = [
     inProgress: true,
   },
   {
+    id: 'zillow-housing-data',
+    kind: 'Book',
+    title: 'Zillow Housing Data',
+    subtitle: 'A data booklet in five chapters',
+    description:
+      "Zillow's home-value, rent and listing data, from what Zillow publishes and how it revises it down to counties, ZIP codes and neighborhoods, with New York as the worked example.",
+    // Bucket files served through the /read route handler, so a plain <a>.
+    href: '/read/zillow-housing-data',
+    host: 'vishalsingh.org/read/zillow-housing-data',
+    newTab: true,
+    thumbnail: '/books/zillow-housing-data.jpg',
+    inProgress: false,
+  },
+  {
     id: 'well-being-atlas',
     kind: 'Book',
     title: 'The Well-Being Atlas',
