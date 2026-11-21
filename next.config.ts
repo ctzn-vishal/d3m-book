@@ -29,6 +29,7 @@ const BOOK_ZONES: Record<string, string> = {
   // HTML apps) because they are beforeFiles rewrites, so a slug here must not
   // also exist in the content bucket.
   '/apps/chatfred': 'https://chatfred7.vercel.app', // chat-fred
+  '/apps/zip-health': 'https://health-of-americas-zip-codes.vercel.app', // zip-health (repo ctzn-pub/health-of-americas-zip-codes)
 };
 
 const nextConfig: NextConfig = {

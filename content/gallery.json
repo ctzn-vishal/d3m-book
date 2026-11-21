@@ -61,7 +61,7 @@
       "domain": "Public health",
       "topic": "Public Health",
       "tags": ["public-health", "zip", "places", "maps"],
-      "href": "https://www.ctzn.pub/apps/health-of-americas-zip-codes/",
+      "href": "/apps/zip-health",
       "external": true,
       "openInNewTab": true,
       "thumbnail": "/zip_health.png",
