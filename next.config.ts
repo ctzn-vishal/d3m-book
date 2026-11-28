@@ -18,6 +18,7 @@ const BOOK_ZONES: Record<string, string> = {
   '/decisionai': 'https://decisionai-book.vercel.app',
   '/south-asians': 'https://south-asians-in-america.vercel.app',
   '/religion': 'https://religion-book.vercel.app', // religion-book (basePath in content/book.json)
+  '/chinese-korean': 'https://chinese-korean-americans.vercel.app', // chinese-korean-americans (basePath in content/book.json)
   // Gallery apps (registry id → repo).
   '/ai-frontier': 'https://v0-interactive-table-lac.vercel.app', // ai-models → ai_table
   '/fal': 'https://fal-case-studies.vercel.app', // fal-case-studies
