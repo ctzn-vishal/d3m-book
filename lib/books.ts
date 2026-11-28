@@ -104,6 +104,19 @@ export const BOOKS: ShelfBook[] = [
     inProgress: true,
   },
   {
+    id: 'chinese-korean-americans',
+    kind: 'Book',
+    title: 'Chinese and Korean Americans',
+    subtitle: 'A data book in nine chapters',
+    description:
+      'The 4.82 million US residents who reported a single Chinese or Taiwanese race and the 1.55 million who reported a single Korean race in 2024: who they are, where they live, how they earn and form families, and how they vote.',
+    href: '/chinese-korean',
+    host: 'vishalsingh.org/chinese-korean',
+    newTab: true,
+    thumbnail: '/books/chinese-korean-americans.jpg',
+    inProgress: true,
+  },
+  {
     id: 'zillow-housing-data',
     kind: 'Book',
     title: 'Zillow Housing Data',
